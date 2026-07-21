@@ -1334,7 +1334,7 @@ declare namespace Internal {
          * sleep(1000);
          * @example Source code summary (zh-CN: 源代码摘要)
          * if (ui.isUiThread()) {
-         *     throw new Error('不能在ui线程执行阻塞操作，请使用setTimeout代替');
+         *     throw new Error('不能在ui线程执行阻塞操作, 请使用setTimeout代替');
          * }
          * runtime.sleep(t);
          * @see java.lang.Thread.sleep

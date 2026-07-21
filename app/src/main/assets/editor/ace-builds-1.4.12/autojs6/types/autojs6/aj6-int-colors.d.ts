@@ -5446,7 +5446,7 @@ declare namespace Internal {
         TOMATO: number;
 
         /**
-         * <p style="background-color: #00000000">#00000000　　</
+         * <p style="background-color: #00000000">#00000000  </
          * <p>Name (en): <b>Transparent</b></p>
          * <p>Name (zh): <b>透明</b></p>
          * <p>Hex: <b>#00000000</b></p>

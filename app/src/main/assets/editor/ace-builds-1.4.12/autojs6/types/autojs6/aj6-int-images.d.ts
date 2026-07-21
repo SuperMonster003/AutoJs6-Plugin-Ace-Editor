@@ -853,7 +853,7 @@ declare namespace Internal {
          * @example
          * // set colors within the range of channel color value ±tolerance into #ffffff,
          * // and set colors out of range above to #000000
-         * // zh-CN: 每个通道的颜色值均为 0x88 ，加减偏差 16 之后的范围是 [0x78, 0x98]
+         * // zh-CN: 每个通道的颜色值均为 0x88, 加减偏差 16 之后的范围是 [0x78, 0x98]
          * // 因此此方法将 #787878 - #989898 范围颜色值变成 #ffffff 范围外变成 #000000
          * images.interval(img, "#888888", 16);
          * @example Source code summary (zh-CN: 源代码摘要)
