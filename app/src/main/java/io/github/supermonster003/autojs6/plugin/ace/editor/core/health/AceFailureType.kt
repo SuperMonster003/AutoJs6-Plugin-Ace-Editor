@@ -1,0 +1,19 @@
+package io.github.supermonster003.autojs6.plugin.ace.editor.core.health
+
+enum class AceFailureType {
+    ASSET_MISSING,
+    PAGE_LOAD_ERROR,
+    PAGE_LOAD_TIMEOUT,
+    READY_TIMEOUT,
+    BRIDGE_NOT_READY,
+    JS_INIT_ERROR,
+    JS_RUNTIME_ERROR,
+    CONSOLE_FATAL,
+    EVALUATE_JAVASCRIPT_ERROR,
+    RENDER_PROCESS_GONE,
+    HEARTBEAT_TIMEOUT,
+    SECURITY_BLOCKED_URL,
+    LSP_ERROR,
+    COMPLETION_ERROR,
+    UNKNOWN,
+}

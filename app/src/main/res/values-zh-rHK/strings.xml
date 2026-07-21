@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ace 編輯器</string>
+    <string name="entry_ace_editor_font_system_monospace">Android 系統默認等寬字體</string>
+    <string name="plugin_description">用於 AutoJs6 的嵌入式 Ace 代碼編輯器.</string>
+    <string name="plugin_instruction">安裝插件, 然後在 AutoJs6 中選擇 Ace 作為腳本編輯器.</string>
+    <string name="text_copy_line">複製行</string>
+    <string name="text_delete_line">刪除行</string>
+    <string name="text_select_all">全選</string>
+    <string name="text_sort_by_name_asc">名稱 (A-Z)</string>
+    <string name="text_sort_by_name_desc">名稱 (Z-A)</string>
+    <string name="text_sort_by_size_asc">大小 (最小優先)</string>
+    <string name="text_sort_by_size_desc">大小 (最大優先)</string>
+</resources>

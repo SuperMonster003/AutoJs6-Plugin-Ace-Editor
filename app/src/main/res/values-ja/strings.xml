@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ace エディター</string>
+    <string name="entry_ace_editor_font_system_monospace">Android システム等幅フォント</string>
+    <string name="plugin_description">AutoJs6 用の組み込み Ace コードエディター.</string>
+    <string name="plugin_instruction">プラグインをインストールし, AutoJs6 でスクリプトエディターとして Ace を選択します.</string>
+    <string name="text_copy_line">行をコピー</string>
+    <string name="text_delete_line">行削除</string>
+    <string name="text_select_all">全て選択</string>
+    <string name="text_sort_by_name_asc">名前 (A-Z)</string>
+    <string name="text_sort_by_name_desc">名前 (Z-A)</string>
+    <string name="text_sort_by_size_asc">サイズ (小さい順)</string>
+    <string name="text_sort_by_size_desc">サイズ (大きい順)</string>
+</resources>

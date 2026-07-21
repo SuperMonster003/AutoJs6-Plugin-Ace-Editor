@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="entry_ace_editor_font_cascadia_code" translatable="false">Cascadia Code</string>
+    <string name="entry_ace_editor_font_fira_code" translatable="false">Fira Code</string>
+    <string name="entry_ace_editor_font_hack" translatable="false">Hack</string>
+    <string name="entry_ace_editor_font_ibm_plex_mono" translatable="false">IBM Plex Mono</string>
+    <string name="entry_ace_editor_font_intel_one_mono" translatable="false">Intel One Mono</string>
+    <string name="entry_ace_editor_font_iosevka" translatable="false">Iosevka</string>
+    <string name="entry_ace_editor_font_iosevka_slab" translatable="false">Iosevka Slab</string>
+    <string name="entry_ace_editor_font_jetbrains_mono" translatable="false">JetBrains Mono</string>
+    <string name="entry_ace_editor_font_source_code_pro" translatable="false">Source Code Pro</string>
+    <string name="plugin_author" translatable="false">SuperMonster003</string>
+</resources>

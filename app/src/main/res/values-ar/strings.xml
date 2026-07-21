@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">محرر Ace</string>
+    <string name="entry_ace_editor_font_system_monospace">خط Android أحادي المسافة</string>
+    <string name="plugin_description">محرر أكواد Ace مضمن لتطبيق AutoJs6.</string>
+    <string name="plugin_instruction">ثبت المكون الإضافي, ثم اختر Ace كمحرر البرامج النصية في AutoJs6.</string>
+    <string name="text_copy_line">خط النسخ</string>
+    <string name="text_delete_line">حذف الخط</string>
+    <string name="text_select_all">تحديد الكل</string>
+    <string name="text_sort_by_name_asc">الاسم (A-Z)</string>
+    <string name="text_sort_by_name_desc">الاسم (Z-A)</string>
+    <string name="text_sort_by_size_asc">الحجم (الاصغر اولا)</string>
+    <string name="text_sort_by_size_desc">الحجم (الاكبر اولا)</string>
+</resources>

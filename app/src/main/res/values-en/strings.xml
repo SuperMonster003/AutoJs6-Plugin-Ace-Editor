@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ace Editor</string>
+    <string name="entry_ace_editor_font_system_monospace">Android system monospace</string>
+    <string name="plugin_description">Embedded Ace code editor for AutoJs6.</string>
+    <string name="plugin_instruction">Install the plugin, then select Ace as the script editor in AutoJs6.</string>
+    <string name="text_copy_line">Copy line</string>
+    <string name="text_delete_line">Delete line</string>
+    <string name="text_select_all">Select all</string>
+    <string name="text_sort_by_name_asc">Name (A-Z)</string>
+    <string name="text_sort_by_name_desc">Name (Z-A)</string>
+    <string name="text_sort_by_size_asc">Size (smallest first)</string>
+    <string name="text_sort_by_size_desc">Size (largest first)</string>
+</resources>
