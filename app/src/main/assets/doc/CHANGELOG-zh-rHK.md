@@ -1,0 +1,12 @@
+# v1.0.0
+
+###### 2026/07/21
+
+* `新增` Ace 編輯器獨立插件, 插件 ID 為 `ace-editor`, 引擎為 `editor`, 變體為 `ace`
+* `新增` 支援透過受 `org.autojs.permission.PLUGIN` 保護的 `org.autojs.plugin.INFO` 和 `org.autojs.plugin.EDITOR` 組件發現插件, Editor API 合約為 1, 最低宿主 build 為 `5234`
+* `新增` Ace `1.4.12` 編輯功能, 包括撤銷/重做, 搜尋及取代, 正則表達式及全詞搜尋, 游標及選區導覽, 行操作, 斷點, 註釋切換和代碼格式化
+* `新增` 內置 JavaScript/TypeScript 語言服務及 AutoJs6 類型聲明, 支援 completion, hover, diagnostics 和 signature help; JSON 僅提供語法診斷
+* `新增` 增量文本同步, 保留 CRLF, 大文本分塊載入, 超長行輕量模式和 IME 適配
+* `新增` 主題及顯示設定, 以及具備簽名目錄和文件完整性驗證的字體下載, 緩存, 安裝及刪除功能
+* `新增` WebView 運行健康監測, 心跳檢測和切回宿主原生編輯器的通知
+* `新增` 插件資訊, README 和 CHANGELOG 的西班牙語/法語/俄語/阿拉伯語/日語/韓語/英語/簡體中文/香港繁體/台灣繁體本地化

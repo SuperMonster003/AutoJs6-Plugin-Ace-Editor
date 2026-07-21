@@ -9,7 +9,9 @@
 /build-logic/.gradle/
 /build-logic/build/
 /build-logic/*/build/
+/.python/__pycache__/
 *.iml
+*.log
 *.apk
 *.jks
 *.keystore

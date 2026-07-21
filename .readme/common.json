@@ -1,0 +1,7 @@
+{
+  "repo_url": "https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor",
+  "autojs6_url": "https://github.com/SuperMonster003/AutoJs6",
+  "ace_url": "https://ace.c9.io",
+  "third_party_notices_url": "{{ repo_url }}/blob/master/THIRD_PARTY_NOTICES.md",
+  "license_url": "{{ repo_url }}/blob/master/LICENSE"
+}
