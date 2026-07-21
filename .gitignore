@@ -2,7 +2,14 @@
 /.idea/
 /local.properties
 /sign.properties
-**/build/
+/build/
+/app/build/
+/app/release/
+/app/releases/
+/build-logic/.gradle/
+/build-logic/build/
+/build-logic/*/build/
 *.iml
+*.apk
 *.jks
 *.keystore
