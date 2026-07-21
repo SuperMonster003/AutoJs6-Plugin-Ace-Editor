@@ -2,13 +2,13 @@
 <resources>
     <string name="app_name">Редактор Ace</string>
     <string name="entry_ace_editor_font_system_monospace">Системный моноширинный шрифт Android</string>
-    <string name="plugin_description">Встроенный редактор кода Ace для AutoJs6.</string>
+    <string name="plugin_description">Встроенный редактор кода Ace для AutoJs6</string>
     <string name="plugin_instruction">Установите плагин, затем выберите Ace в качестве редактора скриптов в AutoJs6.</string>
     <string name="text_copy_line">Копировать строку</string>
     <string name="text_delete_line">Удалить строку</string>
     <string name="text_select_all">Выбрать все</string>
     <string name="text_sort_by_name_asc">Имя (A-Z)</string>
     <string name="text_sort_by_name_desc">Имя (Z-A)</string>
-    <string name="text_sort_by_size_asc">Размер (сначала маленькие)</string>
-    <string name="text_sort_by_size_desc">Размер (сначала большие)</string>
+    <string name="text_sort_by_size_asc">Размер (по возрастанию)</string>
+    <string name="text_sort_by_size_desc">Размер (по убыванию)</string>
 </resources>

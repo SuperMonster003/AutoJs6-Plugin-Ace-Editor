@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Ace 编辑器</string>
     <string name="entry_ace_editor_font_system_monospace">Android 系统默认等宽字体</string>
-    <string name="plugin_description">用于 AutoJs6 的嵌入式 Ace 代码编辑器.</string>
+    <string name="plugin_description">用于 AutoJs6 的嵌入式 Ace 代码编辑器</string>
     <string name="plugin_instruction">安装插件, 然后在 AutoJs6 中选择 Ace 作为脚本编辑器.</string>
     <string name="text_copy_line">复制行</string>
     <string name="text_delete_line">删除行</string>

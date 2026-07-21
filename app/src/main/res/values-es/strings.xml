@@ -2,13 +2,13 @@
 <resources>
     <string name="app_name">Editor Ace</string>
     <string name="entry_ace_editor_font_system_monospace">Fuente monoespaciada del sistema Android</string>
-    <string name="plugin_description">Editor de código Ace integrado para AutoJs6.</string>
+    <string name="plugin_description">Editor de código Ace integrado para AutoJs6</string>
     <string name="plugin_instruction">Instala el complemento y selecciona Ace como editor de scripts en AutoJs6.</string>
     <string name="text_copy_line">Copiar línea</string>
     <string name="text_delete_line">Borrar línea</string>
     <string name="text_select_all">Seleccionar todo</string>
     <string name="text_sort_by_name_asc">Nombre (A-Z)</string>
     <string name="text_sort_by_name_desc">Nombre (Z-A)</string>
-    <string name="text_sort_by_size_asc">Tamano (mas pequeno primero)</string>
-    <string name="text_sort_by_size_desc">Tamano (mas grande primero)</string>
+    <string name="text_sort_by_size_asc">Tamaño (más pequeño primero)</string>
+    <string name="text_sort_by_size_desc">Tamaño (más grande primero)</string>
 </resources>

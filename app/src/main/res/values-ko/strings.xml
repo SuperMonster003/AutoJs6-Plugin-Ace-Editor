@@ -2,13 +2,13 @@
 <resources>
     <string name="app_name">Ace 편집기</string>
     <string name="entry_ace_editor_font_system_monospace">Android 시스템 고정폭 글꼴</string>
-    <string name="plugin_description">AutoJs6용 내장 Ace 코드 편집기.</string>
+    <string name="plugin_description">AutoJs6용 내장 Ace 코드 편집기</string>
     <string name="plugin_instruction">플러그인을 설치한 다음 AutoJs6에서 스크립트 편집기로 Ace를 선택하세요.</string>
-    <string name="text_copy_line">사본 라인</string>
-    <string name="text_delete_line">라인 삭제</string>
+    <string name="text_copy_line">줄 복사</string>
+    <string name="text_delete_line">줄 삭제</string>
     <string name="text_select_all">전체 선택</string>
     <string name="text_sort_by_name_asc">이름 (A-Z)</string>
     <string name="text_sort_by_name_desc">이름 (Z-A)</string>
-    <string name="text_sort_by_size_asc">크기 (작은순)</string>
-    <string name="text_sort_by_size_desc">크기 (큰순)</string>
+    <string name="text_sort_by_size_asc">크기 (작은 순)</string>
+    <string name="text_sort_by_size_desc">크기 (큰 순)</string>
 </resources>
