@@ -46,7 +46,7 @@ AutoJs6 Ace Editor 플러그인은 Ace WebView 런타임, JavaScript 브리지, 
 ******
 
 - 플러그인 ID `ace-editor`, 엔진 `editor`, 변형 `ace`를 제공하며 `org.autojs.plugin.INFO` 및 `org.autojs.plugin.EDITOR`를 통한 검색을 지원합니다.
-- Editor API 계약 1을 사용하며 AutoJs6 `6.8.0 Alpha7` build `5234` 이상 및 Android API 24 이상이 필요합니다.
+- Editor API 계약 1을 사용하며 AutoJs6 `6.8.0 Alpha7` build `5235` 이상 및 Android API 24 이상이 필요합니다.
 - 텍스트 편집, 실행 취소/다시 실행, 검색 및 바꾸기, 정규식 및 단어 단위 검색, 커서 및 선택 영역 탐색, 줄 작업, 중단점, 주석 전환 및 코드 서식을 지원합니다.
 - JavaScript/TypeScript 언어 서비스와 AutoJs6 타입 선언이 포함되어 있으며 자동 완성, hover, diagnostics 및 signature help를 제공합니다. JSON에는 syntax diagnostics만 제공합니다.
 - CRLF 보존, 증분 텍스트 동기화, 대용량 텍스트의 청크 로딩, 매우 긴 줄을 위한 경량 모드, IME 적응, 런타임 상태 모니터링 및 호스트 기본 편집기로의 폴백 알림을 지원합니다.
@@ -73,6 +73,14 @@ Release 빌드:
 
 빌드 매개변수와 버전은 `version.properties`에서 가져옵니다. 현재 최소 SDK는 24이고 대상 SDK는 36입니다.
 
+`autojs6/types/**/*.d.ts`를 업데이트하거나 추가한 후 다음 작업을 단독으로 실행할 수 있습니다:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LspDeclarations
+```
+
+이 작업은 선언 참조와 TypeScript 6 구문을 검증한 다음 `core`, `android`, `libraries`, `resources`, `main-app`의 5개 LSP 자산과 manifest를 생성합니다. `assemble`과 `mergeAssets`는 이미 이 작업에 의존하므로 일반 빌드에는 추가 단계가 필요하지 않으며 외부 스크립트에서도 직접 호출할 수 있습니다. 생성 결과는 `app/build/generated/aceLspAssets`에만 기록되고 `src/main/assets`의 전체 원본 선언을 덮어쓰거나 삭제하지 않습니다. Node가 `PATH`에 없다면 `-Pautojs6.nodeExecutable=<node-path>`를 전달하십시오.
+
 ******
 
 ### 설치
@@ -82,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -94,6 +102,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 ### 릴리스 기록
 
 ******
+
+# v1.1.0
+
+###### 2026/07/27
+
+* `기능` 전체 원본 선언을 그대로 유지하면서 선택 가능한 AutoJs6 LSP 선언 그룹을 추가: `core`는 항상 활성화되고 `android`, `libraries`, `resources`, `main-app`은 기본적으로 비활성화됨. `libraries`를 선택하면 `android`도 활성화되고, `main-app`을 선택하면 `android`, `libraries`, `resources`도 활성화됨
+* `기능` 선언을 검증하고 5개 LSP 그룹과 manifest를 생성하는 `:app:generateAutoJs6LspDeclarations` Gradle 작업을 추가. 일반 자산 병합 시 자동으로 실행되며 외부 스크립트에서도 직접 호출 가능
+* `의존성` 내장 TypeScript 언어 서비스와 표준 라이브러리 선언을 `4.2.4`에서 `6.0.3`으로 업그레이드
 
 # v1.0.0
 
@@ -110,7 +126,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 
 ##### 더 많은 릴리스 기록
 
-* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/.changelog/CHANGELOG-ko.md)
+* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/assets/doc/CHANGELOG-ko.md)
 
 ******
 

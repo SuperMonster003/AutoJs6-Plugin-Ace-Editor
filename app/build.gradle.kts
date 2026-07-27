@@ -1,5 +1,7 @@
 import com.android.build.api.variant.FilterConfiguration
+import org.autojs.build.GenerateAutoJs6LspDeclarationsTask
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Exec
 import java.util.Properties
 
 plugins {
@@ -13,6 +15,88 @@ plugins {
 val globalApplicationId = "io.github.supermonster003.autojs6.plugin.ace.editor"
 
 var isSignsValid = false
+
+val autoJs6LspDeclarationsDirectory = layout.projectDirectory.dir(
+    "src/main/assets/editor/ace-builds-1.4.12/autojs6/types",
+)
+val autoJs6TypeScriptDirectory = layout.projectDirectory.dir(
+    "src/main/assets/editor/ace-builds-1.4.12/autojs6/typescript",
+)
+val autoJs6EditorAssetsDirectory = layout.projectDirectory.dir(
+    "src/main/assets/editor/ace-builds-1.4.12/autojs6",
+)
+val autoJs6NodeExecutable = providers.gradleProperty("autojs6.nodeExecutable").orElse("node")
+val generateAutoJs6LspDeclarations = tasks.register<GenerateAutoJs6LspDeclarationsTask>(
+    "generateAutoJs6LspDeclarations",
+) {
+    group = "build"
+    description = "Generates grouped AutoJs6 declarations and a manifest for the ACE LSP."
+    declarationsDirectory.set(autoJs6LspDeclarationsDirectory)
+    declarationFiles.from(
+        fileTree(autoJs6LspDeclarationsDirectory) {
+            include("**/*.d.ts")
+            exclude("generated/**")
+        },
+    )
+    packageMetadataFile.set(autoJs6LspDeclarationsDirectory.file("autojs6/package.json"))
+    generatorScript.set(
+        rootProject.layout.projectDirectory.file("tools/ace-lsp/generate-declarations.mjs"),
+    )
+    typescriptRuntime.set(autoJs6TypeScriptDirectory.file("typescript.js"))
+    typescriptLibraryFiles.from(
+        fileTree(autoJs6TypeScriptDirectory) {
+            include("lib*.d.ts")
+        },
+    )
+    nodeExecutable.convention(autoJs6NodeExecutable)
+    outputDirectory.set(layout.buildDirectory.dir("generated/aceLspAssets"))
+}
+
+tasks.register("generateAutoJs6EditorAssets") {
+    group = "build"
+    description = "Alias for generateAutoJs6LspDeclarations."
+    dependsOn(generateAutoJs6LspDeclarations)
+}
+
+val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
+    group = "verification"
+    description = "Verifies TypeScript 6 declarations and the old-WebView static fallback."
+    dependsOn(generateAutoJs6LspDeclarations)
+
+    val verifier = rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-runtime.mjs")
+    val runtime = autoJs6TypeScriptDirectory.file("typescript.js")
+    val service = autoJs6EditorAssetsDirectory.file("autojs6_ts_language_service.js")
+    val client = autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js")
+    val compatibility = autoJs6LspDeclarationsDirectory.file("lib.autojs6.extra.d.ts")
+    val generatedCore = generateAutoJs6LspDeclarations.flatMap { task ->
+        task.outputDirectory.file(
+            "editor/ace-builds-1.4.12/autojs6/types/generated/lib.autojs6.core.d.ts",
+        )
+    }
+    inputs.files(verifier, runtime, service, client, compatibility, generatedCore)
+
+    workingDir(rootProject.layout.projectDirectory)
+    doFirst {
+        executable(autoJs6NodeExecutable.get())
+        args(
+            verifier.asFile.absolutePath,
+            "--runtime",
+            runtime.asFile.absolutePath,
+            "--service",
+            service.asFile.absolutePath,
+            "--client",
+            client.asFile.absolutePath,
+            "--core",
+            generatedCore.get().asFile.absolutePath,
+            "--compatibility",
+            compatibility.asFile.absolutePath,
+        )
+    }
+}
+
+tasks.named("check") {
+    dependsOn(verifyAutoJs6LspRuntime)
+}
 
 android {
     namespace = globalApplicationId
@@ -102,6 +186,10 @@ android {
 
 androidComponents {
     onVariants { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            generateAutoJs6LspDeclarations,
+            GenerateAutoJs6LspDeclarationsTask::outputDirectory,
+        )
         variant.outputs.forEach { output ->
             val architecture = output.filters.find {
                 it.filterType == FilterConfiguration.FilterType.ABI

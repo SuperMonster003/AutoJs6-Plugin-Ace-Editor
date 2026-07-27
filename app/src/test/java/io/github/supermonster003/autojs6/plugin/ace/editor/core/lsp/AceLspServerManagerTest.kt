@@ -1,5 +1,6 @@
 package io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp
 
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.AceEditorLspPreferences
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -42,6 +43,17 @@ class AceLspServerManagerTest {
         assertEquals(AceLspServerManager.MAX_DOCUMENT_LENGTH, snapshot.maxDocumentLength)
         assertEquals(AceLspServerManager.SYNTHETIC_ROOT_URI, snapshot.rootUri)
         assertEquals(AceLspServerManager.SYNTHETIC_DOCUMENT_URI, snapshot.documentUri)
+        assertTrue(snapshot.declarationGroups.isEmpty())
+        assertTrue(snapshot.effectiveDeclarationGroups.isEmpty())
+        assertEquals(
+            listOf(
+                AceLspServerManager.TYPESCRIPT_DEFAULT_LIBRARY_URI,
+                AceLspServerManager.CORE_LIBRARY_URI,
+                AceLspServerManager.COMPATIBILITY_LIBRARY_URI,
+            ),
+            AceLspServerManager.DEFAULT_LIBRARY_URIS,
+        )
+        assertEquals(AceLspServerManager.DEFAULT_LIBRARY_URIS, snapshot.libraryUris)
 
         assertTrue(optionsJson.contains("\"enabled\":true"))
         assertTrue(optionsJson.contains("\"manager\":\"${AceLspServerManager.MANAGER_NAME}\""))
@@ -50,6 +62,8 @@ class AceLspServerManagerTest {
         assertTrue(optionsJson.contains("\"serverUri\":null"))
         assertTrue(optionsJson.contains("\"rootUri\":\"${AceLspServerManager.SYNTHETIC_ROOT_URI}\""))
         assertTrue(optionsJson.contains("\"documentUri\":\"${AceLspServerManager.SYNTHETIC_DOCUMENT_URI}\""))
+        assertTrue(optionsJson.contains("\"declarationGroups\":[]"))
+        assertTrue(optionsJson.contains("\"effectiveDeclarationGroups\":[]"))
         AceLspServerManager.DEFAULT_LIBRARY_URIS.forEach { uri ->
             assertTrue(optionsJson.contains("\"$uri\""))
         }
@@ -133,7 +147,77 @@ class AceLspServerManagerTest {
         assertTrue(optionsJson.contains("\"documentUri\":\"file:///autojs6/editor/config%20file.json\""))
     }
 
-    private fun manager(enabled: Boolean): AceLspServerManager {
+    @Test
+    fun selectedDeclarationGroupsAndDependencyClosureAreReported() {
+        val manager = manager(
+            enabled = true,
+            declarationGroups = listOf(
+                AceEditorLspPreferences.DECLARATION_GROUP_RESOURCES,
+                AceEditorLspPreferences.DECLARATION_GROUP_LIBRARIES,
+                "unsupported",
+            ),
+        )
+
+        val snapshot = manager.snapshot()
+        val optionsJson = manager.bridgeOptionsJson()
+
+        assertEquals(
+            listOf(
+                AceEditorLspPreferences.DECLARATION_GROUP_LIBRARIES,
+                AceEditorLspPreferences.DECLARATION_GROUP_RESOURCES,
+            ),
+            snapshot.declarationGroups,
+        )
+        assertEquals(
+            listOf(
+                AceEditorLspPreferences.DECLARATION_GROUP_ANDROID,
+                AceEditorLspPreferences.DECLARATION_GROUP_LIBRARIES,
+                AceEditorLspPreferences.DECLARATION_GROUP_RESOURCES,
+            ),
+            snapshot.effectiveDeclarationGroups,
+        )
+        assertEquals(
+            AceLspServerManager.DEFAULT_LIBRARY_URIS + listOf(
+                AceLspServerManager.ANDROID_LIBRARY_URI,
+                AceLspServerManager.LIBRARIES_LIBRARY_URI,
+                AceLspServerManager.RESOURCES_LIBRARY_URI,
+            ),
+            snapshot.libraryUris,
+        )
+        assertTrue(optionsJson.contains("\"declarationGroups\":[\"libraries\", \"resources\"]"))
+        assertTrue(
+            optionsJson.contains(
+                "\"effectiveDeclarationGroups\":[\"android\", \"libraries\", \"resources\"]",
+            ),
+        )
+    }
+
+    @Test
+    fun mainAppDeclarationGroupEnablesEveryGeneratedLibrary() {
+        val manager = manager(
+            enabled = true,
+            declarationGroups = listOf(AceEditorLspPreferences.DECLARATION_GROUP_MAIN_APP),
+        )
+
+        assertEquals(
+            AceEditorLspPreferences.SUPPORTED_DECLARATION_GROUPS,
+            manager.snapshot().effectiveDeclarationGroups,
+        )
+        assertEquals(
+            AceLspServerManager.DEFAULT_LIBRARY_URIS + listOf(
+                AceLspServerManager.ANDROID_LIBRARY_URI,
+                AceLspServerManager.LIBRARIES_LIBRARY_URI,
+                AceLspServerManager.RESOURCES_LIBRARY_URI,
+                AceLspServerManager.MAIN_APP_LIBRARY_URI,
+            ),
+            manager.snapshot().libraryUris,
+        )
+    }
+
+    private fun manager(
+        enabled: Boolean,
+        declarationGroups: Collection<String> = emptyList(),
+    ): AceLspServerManager {
         return AceLspServerManager(
             enabledProvider = { enabled },
             documentAllowedProvider = { path ->
@@ -141,6 +225,7 @@ class AceLspServerManagerTest {
                     path?.lowercase()?.endsWith(suffix) == true
                 }
             },
+            declarationGroupsProvider = { declarationGroups },
         )
     }
 }

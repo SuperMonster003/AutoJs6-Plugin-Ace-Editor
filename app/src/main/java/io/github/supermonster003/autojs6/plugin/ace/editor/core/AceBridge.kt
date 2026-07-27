@@ -227,7 +227,7 @@ class AceBridge(
     }
 
     private fun isAllowedReadAsset(path: String): Boolean {
-        if (path == "autojs6/types/lib.autojs6.d.ts" || path == "autojs6/types/lib.autojs6.extra.d.ts") {
+        if (path == "autojs6/types/lib.autojs6.extra.d.ts" || path in GENERATED_DECLARATION_ASSETS) {
             return true
         }
         if (!path.startsWith("autojs6/typescript/")) {
@@ -239,5 +239,13 @@ class AceBridge(
 
     private companion object {
         const val EDITOR_ASSET_ROOT = "editor/ace-builds-1.4.12"
+        val GENERATED_DECLARATION_ASSETS = setOf(
+            "autojs6/types/generated/manifest.json",
+            "autojs6/types/generated/lib.autojs6.core.d.ts",
+            "autojs6/types/generated/lib.autojs6.android.d.ts",
+            "autojs6/types/generated/lib.autojs6.libraries.d.ts",
+            "autojs6/types/generated/lib.autojs6.resources.d.ts",
+            "autojs6/types/generated/lib.autojs6.main-app.d.ts",
+        )
     }
 }

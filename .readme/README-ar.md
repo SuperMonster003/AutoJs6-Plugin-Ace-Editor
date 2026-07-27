@@ -46,7 +46,7 @@
 ******
 
 - يوفر معرف المكون الإضافي `ace-editor` والمحرك `editor` والمتغير `ace`, مع الاكتشاف عبر `org.autojs.plugin.INFO` و`org.autojs.plugin.EDITOR`.
-- يستخدم عقد Editor API 1 ويتطلب AutoJs6 `6.8.0 Alpha7` build `5234` أو أحدث وAndroid API 24 أو أحدث.
+- يستخدم عقد Editor API 1 ويتطلب AutoJs6 `6.8.0 Alpha7` build `5235` أو أحدث وAndroid API 24 أو أحدث.
 - يدعم تحرير النص والتراجع/الإعادة والبحث والاستبدال والبحث بالتعبيرات النمطية والكلمات الكاملة والتنقل بالمؤشر والتحديد وعمليات الأسطر ونقاط التوقف وتبديل التعليقات وتنسيق الأكواد.
 - يتضمن خدمات لغات JavaScript/TypeScript وتصريحات الأنواع الخاصة بـ AutoJs6, مع الإكمال وhover وdiagnostics وsignature help. ويوفر syntax diagnostics فقط لملفات JSON.
 - يدعم الحفاظ على CRLF ومزامنة النص التزايدية والتحميل المجزأ للنصوص الكبيرة ووضعا خفيفا للأسطر الطويلة جدا وتكييف IME ومراقبة سلامة بيئة التشغيل وإشعارات الرجوع إلى محرر المضيف الأصلي.
@@ -73,6 +73,14 @@
 
 تأتي معلمات البناء والإصدار من `version.properties`; الحد الأدنى الحالي لـ SDK هو 24 والـ SDK المستهدف هو 36.
 
+بعد تحديث أو إضافة `autojs6/types/**/*.d.ts`, يمكن تشغيل المهمة التالية مباشرة:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LspDeclarations
+```
+
+تتحقق المهمة من مراجع التصريحات وصياغة TypeScript 6, ثم تنشئ أصول مجموعات LSP الخمس `core` و`android` و`libraries` و`resources` و`main-app` وملف manifest الخاص بها. تعتمد `assemble` و`mergeAssets` عليها بالفعل, لذلك لا يتطلب البناء المعتاد أي خطوة إضافية; ويمكن للبرامج النصية الخارجية استدعاؤها مباشرة أيضا. تكتب الملفات الناتجة في `app/build/generated/aceLspAssets` فقط ولا تستبدل أو تحذف التصريحات المصدرية الكاملة ضمن `src/main/assets`. إذا لم يكن Node موجودا في `PATH`, فمرر `-Pautojs6.nodeExecutable=<node-path>`.
+
 ******
 
 ### التثبيت
@@ -82,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -94,6 +102,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 ### سجل الإصدارات
 
 ******
+
+# v1.1.0
+
+###### 2026/07/27
+
+* `ميزة` تم الاحتفاظ بالتصريحات المصدرية الكاملة وإضافة مجموعات تصريحات LSP قابلة للاختيار في AutoJs6: تظل `core` مفعلة دائما, بينما تكون `android` و`libraries` و`resources` و`main-app` معطلة افتراضيا; يؤدي اختيار `libraries` أيضا إلى تفعيل `android`, ويؤدي اختيار `main-app` أيضا إلى تفعيل `android` و`libraries` و`resources`
+* `ميزة` تمت إضافة مهمة Gradle المسماة `:app:generateAutoJs6LspDeclarations` للتحقق من التصريحات وإنشاء مجموعات LSP الخمس وملف manifest الخاص بها; يستدعيها دمج الأصول المعتاد تلقائيا ويمكن للبرامج النصية الخارجية استدعاؤها مباشرة
+* `تبعية` تمت ترقية خدمة لغة TypeScript المضمنة وتصريحات المكتبة القياسية من `4.2.4` إلى `6.0.3`
 
 # v1.0.0
 
@@ -110,7 +126,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 
 ##### لمزيد من سجل الإصدارات
 
-* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/.changelog/CHANGELOG-ar.md)
+* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/assets/doc/CHANGELOG-ar.md)
 
 ******
 

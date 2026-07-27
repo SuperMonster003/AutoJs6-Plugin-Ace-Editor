@@ -46,7 +46,7 @@ The AutoJs6 Ace Editor Plugin separates the Ace WebView runtime, JavaScript brid
 ******
 
 - Provides plugin ID `ace-editor`, engine `editor`, and variant `ace`, with discovery through `org.autojs.plugin.INFO` and `org.autojs.plugin.EDITOR`.
-- Uses Editor API contract 1 and requires AutoJs6 `6.8.0 Alpha7` build `5234` or later and Android API 24 or later.
+- Uses Editor API contract 1 and requires AutoJs6 `6.8.0 Alpha7` build `5235` or later and Android API 24 or later.
 - Supports text editing, undo/redo, search and replace, regex and whole-word search, cursor and selection navigation, line operations, breakpoints, comment toggling, and code formatting.
 - Includes JavaScript/TypeScript language services and AutoJs6 type declarations with completion, hover, diagnostics, and signature help; JSON files receive syntax diagnostics.
 - Supports CRLF preservation, incremental text synchronization, chunked loading for large text, a lightweight mode for very long lines, IME adaptation, runtime health monitoring, and host native editor fallback notifications.
@@ -73,6 +73,14 @@ Release build:
 
 Build parameters and the version come from `version.properties`; the current minimum SDK is 24 and target SDK is 36.
 
+After updating or adding `autojs6/types/**/*.d.ts`, run this task directly:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LspDeclarations
+```
+
+The task validates declaration references and TypeScript 6 syntax, then generates the `core`, `android`, `libraries`, `resources`, and `main-app` LSP assets and their manifest. `assemble` and `mergeAssets` already depend on it, so normal builds require no extra step; external scripts can also invoke it directly. Generated files are written only to `app/build/generated/aceLspAssets` and never overwrite or delete the complete source declarations under `src/main/assets`. If Node is not in `PATH`, pass `-Pautojs6.nodeExecutable=<node-path>`.
+
 ******
 
 ### Installation
@@ -82,7 +90,7 @@ Build parameters and the version come from `version.properties`; the current min
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -94,6 +102,14 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.1.0
+
+###### 2026/07/27
+
+* `Feature` Kept the complete source declarations bundled and added selectable AutoJs6 LSP declaration groups: `core` is always enabled, while `android`, `libraries`, `resources`, and `main-app` are disabled by default; selecting `libraries` also enables `android`, and selecting `main-app` also enables `android`, `libraries`, and `resources`
+* `Feature` Added the `:app:generateAutoJs6LspDeclarations` Gradle task to validate declarations and generate the five LSP groups and their manifest; normal asset merging invokes it automatically, and external scripts can call it directly
+* `Dependency` Upgraded the bundled TypeScript language service and standard library declarations from `4.2.4` to `6.0.3`
 
 # v1.0.0
 
@@ -110,7 +126,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ##### Complete release history
 
-* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/.changelog/CHANGELOG-en.md)
+* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/assets/doc/CHANGELOG-en.md)
 
 ******
 

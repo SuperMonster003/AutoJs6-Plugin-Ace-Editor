@@ -58,6 +58,14 @@
 
 {{ p_build_params }}.
 
+{{ p_lsp_declarations_update }}:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LspDeclarations
+```
+
+{{ p_lsp_declarations_generation }}.
+
 ******
 
 ### {{ h3_installation }}

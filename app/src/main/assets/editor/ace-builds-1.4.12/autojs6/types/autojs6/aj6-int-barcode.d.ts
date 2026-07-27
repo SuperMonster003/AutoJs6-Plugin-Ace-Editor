@@ -3,7 +3,7 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 5.1.3
 //
-// Last modified: Jun 14, 2026
+// Last modified: Jul 27, 2026
 
 /// <reference path="./index.d.ts" />
 
@@ -14,22 +14,52 @@
 declare namespace Internal {
 
     import DetectOptions = Internal.Barcode.DetectOptions;
-
     interface Barcode {
 
-        (options?: DetectOptions): string | string[] | null;
+        (options: Barcode.DetectAllOptions): string[];
+        (options: DetectOptions, isAll: true): string[];
         (isAll: true): string[];
+        (img: ImageWrapper | string, options: Barcode.DetectAllOptions): string[];
+        (img: ImageWrapper | string, isAll: true): string[];
+        (img: ImageWrapper | string, options: DetectOptions, isAll: true): string[];
+        (options?: DetectOptions): string | string[] | null;
+        (options: DetectOptions, isAll: boolean): string | string[] | null;
         (isAll: false): string | null;
+        (isAll: boolean): string | string[] | null;
         (img: ImageWrapper | string, options?: DetectOptions): string | string[] | null;
+        (img: ImageWrapper | string, isAll: boolean): string | string[] | null;
+        (img: ImageWrapper | string, options: DetectOptions, isAll: boolean): string | string[] | null;
 
+        detect(options: Barcode.DetectAllOptions): Barcode.Result[];
+        detect(options: DetectOptions, isAll: true): Barcode.Result[];
+        detect(isAll: true): Barcode.Result[];
+        detect(img: ImageWrapper | string, options: Barcode.DetectAllOptions): Barcode.Result[];
+        detect(img: ImageWrapper | string, isAll: true): Barcode.Result[];
+        detect(img: ImageWrapper | string, options: DetectOptions, isAll: true): Barcode.Result[];
         detect(options?: DetectOptions): Barcode.Result | Barcode.Result[] | null;
+        detect(options: DetectOptions, isAll: boolean): Barcode.Result | Barcode.Result[] | null;
+        detect(isAll: false): Barcode.Result | null;
+        detect(isAll: boolean): Barcode.Result | Barcode.Result[] | null;
         detect(img: ImageWrapper | string, options?: DetectOptions): Barcode.Result | Barcode.Result[] | null;
+        detect(img: ImageWrapper | string, isAll: boolean): Barcode.Result | Barcode.Result[] | null;
+        detect(img: ImageWrapper | string, options: DetectOptions, isAll: boolean): Barcode.Result | Barcode.Result[] | null;
 
         detectAll(options?: DetectOptions): Barcode.Result[];
         detectAll(img: ImageWrapper | string, options?: DetectOptions): Barcode.Result[];
 
+        recognizeText(options: Barcode.DetectAllOptions): string[];
+        recognizeText(options: DetectOptions, isAll: true): string[];
+        recognizeText(isAll: true): string[];
+        recognizeText(img: ImageWrapper | string, options: Barcode.DetectAllOptions): string[];
+        recognizeText(img: ImageWrapper | string, isAll: true): string[];
+        recognizeText(img: ImageWrapper | string, options: DetectOptions, isAll: true): string[];
         recognizeText(options?: DetectOptions): string | string[] | null;
+        recognizeText(options: DetectOptions, isAll: boolean): string | string[] | null;
+        recognizeText(isAll: false): string | null;
+        recognizeText(isAll: boolean): string | string[] | null;
         recognizeText(img: ImageWrapper | string, options?: DetectOptions): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, isAll: boolean): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, options: DetectOptions, isAll: boolean): string | string[] | null;
 
         recognizeTexts(options?: DetectOptions): string[];
         recognizeTexts(img: ImageWrapper | string, options?: DetectOptions): string[];
@@ -61,7 +91,7 @@ declare namespace Internal {
             /**
              * @default 0
              * @example
-             * org.autojs.plugin.mlkit.barcode.api.BarcodeFormats.FORMAT_QR_CODE;
+             * com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE;
              * "qr-code";
              * "QR_CODE";
              * "qrcode"; // specially adaptation
@@ -70,28 +100,32 @@ declare namespace Internal {
             format?: number | number[] | Format | Format[];
         }
 
+        interface DetectAllOptions extends DetectOptions {
+            isAll: true;
+        }
+
         class Result extends org.autojs.autojs.runtime.api.WrappedBarcode {
 
             boundingBox: Android.Rect | null;
-            calendarEvent: org.json.JSONObject | null;
-            contactInfo: org.json.JSONObject | null;
+            calendarEvent: any | null;
+            contactInfo: any | null;
             cornerPoints: android.graphics.Point[] | null;
             displayValue: string | null;
-            driverLicense: org.json.JSONObject | null;
-            email: org.json.JSONObject | null;
+            driverLicense: any | null;
+            email: any | null;
             format: number;
             formatName: string;
-            geoPoint: org.json.JSONObject | null;
-            phone: org.json.JSONObject | null;
+            geoPoint: any | null;
+            phone: any | null;
             rawBytes: number[] | null;
             rawValue: string | null;
-            sms: org.json.JSONObject | null;
+            sms: any | null;
             type: number;
             typeName: string;
-            url: org.json.JSONObject | null;
+            url: any | null;
             valueType: number;
             valueTypeName: string;
-            wifi: org.json.JSONObject | null;
+            wifi: any | null;
 
         }
 

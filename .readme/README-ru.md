@@ -46,7 +46,7 @@
 ******
 
 - Предоставляет идентификатор плагина `ace-editor`, движок `editor` и вариант `ace` с обнаружением через `org.autojs.plugin.INFO` и `org.autojs.plugin.EDITOR`.
-- Использует контракт Editor API 1 и требует AutoJs6 `6.8.0 Alpha7` build `5234` или новее, а также Android API 24 или новее.
+- Использует контракт Editor API 1 и требует AutoJs6 `6.8.0 Alpha7` build `5235` или новее, а также Android API 24 или новее.
 - Поддерживает редактирование текста, отмену и повтор действий, поиск и замену, поиск по регулярным выражениям и целым словам, перемещение курсора и выделения, операции со строками, точки останова, переключение комментариев и форматирование кода.
 - Включает встроенные языковые службы JavaScript/TypeScript и объявления типов AutoJs6 с автодополнением, информацией при наведении, диагностикой и подсказками сигнатур, тогда как служба JSON предоставляет только диагностику синтаксиса.
 - Поддерживает сохранение CRLF, инкрементальную синхронизацию текста, порционную загрузку больших текстов, облегченный режим для очень длинных строк, адаптацию IME, мониторинг состояния среды выполнения и уведомления о переключении обратно на нативный редактор хоста.
@@ -73,6 +73,14 @@ Release-сборка:
 
 Параметры сборки и версия берутся из `version.properties`; текущий минимальный SDK равен 24, целевой SDK равен 36.
 
+После обновления или добавления `autojs6/types/**/*.d.ts` можно отдельно запустить следующую задачу:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LspDeclarations
+```
+
+Задача проверяет ссылки объявлений и синтаксис TypeScript 6, затем создает ресурсы пяти групп LSP: `core`, `android`, `libraries`, `resources`, `main-app`, а также их manifest. `assemble` и `mergeAssets` уже зависят от нее, поэтому обычная сборка не требует дополнительных действий; внешние скрипты также могут вызывать ее напрямую. Результат записывается только в `app/build/generated/aceLspAssets` и не перезаписывает и не удаляет полные исходные объявления в `src/main/assets`. Если Node отсутствует в `PATH`, передайте `-Pautojs6.nodeExecutable=<путь-к-node>`.
+
 ******
 
 ### Установка
@@ -82,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -94,6 +102,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 ### История выпусков
 
 ******
+
+# v1.1.0
+
+###### 2026/07/27
+
+* `Функция` Сохранены полные исходные объявления и добавлены выбираемые группы объявлений LSP AutoJs6: `core` всегда включена, а `android`, `libraries`, `resources` и `main-app` по умолчанию отключены; выбор `libraries` также включает `android`, а выбор `main-app` также включает `android`, `libraries` и `resources`
+* `Функция` Добавлена задача Gradle `:app:generateAutoJs6LspDeclarations` для проверки объявлений и создания пяти групп LSP и их manifest; обычное объединение ресурсов запускает ее автоматически, а внешние скрипты могут вызывать ее напрямую
+* `Зависимость` Встроенная языковая служба TypeScript и объявления стандартной библиотеки обновлены с `4.2.4` до `6.0.3`
 
 # v1.0.0
 
@@ -110,7 +126,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 
 ##### Подробнее об истории выпусков
 
-* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/.changelog/CHANGELOG-ru.md)
+* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/assets/doc/CHANGELOG-ru.md)
 
 ******
 

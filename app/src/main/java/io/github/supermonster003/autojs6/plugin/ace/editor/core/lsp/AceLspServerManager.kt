@@ -11,6 +11,9 @@ class AceLspServerManager(
             ?.let { AceEditorLspPreferences.matchesFileType(it, AceEditorLspPreferences.DEFAULT_FILE_TYPES) }
             ?: false
     },
+    private val declarationGroupsProvider: () -> Collection<String> = {
+        AceEditorLspPreferences.DEFAULT_DECLARATION_GROUPS
+    },
 ) {
 
     @Volatile
@@ -50,12 +53,18 @@ class AceLspServerManager(
 
     @Synchronized
     fun snapshot(): AceLspServerSnapshot {
+        val declarationGroups = AceEditorLspPreferences.normalizeDeclarationGroups(declarationGroupsProvider())
+        val effectiveDeclarationGroups = AceEditorLspPreferences.resolveDeclarationGroups(declarationGroups)
+        val libraryUris = libraryUrisFor(effectiveDeclarationGroups)
         val enabled = enabledProvider()
         if (!enabled) {
             return AceLspServerSnapshot(
                 enabled = false,
                 attached = attached,
                 state = STATE_DISABLED,
+                declarationGroups = declarationGroups,
+                effectiveDeclarationGroups = effectiveDeclarationGroups,
+                libraryUris = libraryUris,
                 sessionRevision = sessionRevision,
             )
         }
@@ -65,6 +74,9 @@ class AceLspServerManager(
                 attached = attached,
                 state = STATE_DISABLED_FILE_TYPE,
                 reason = REASON_DISABLED_FILE_TYPE,
+                declarationGroups = declarationGroups,
+                effectiveDeclarationGroups = effectiveDeclarationGroups,
+                libraryUris = libraryUris,
                 sessionRevision = sessionRevision,
             )
         }
@@ -76,7 +88,9 @@ class AceLspServerManager(
             serverUri = null,
             rootUri = SYNTHETIC_ROOT_URI,
             documentUri = documentUriForPath(documentPath),
-            libraryUris = DEFAULT_LIBRARY_URIS,
+            declarationGroups = declarationGroups,
+            effectiveDeclarationGroups = effectiveDeclarationGroups,
+            libraryUris = libraryUris,
             fallback = FALLBACK_STATIC_COMPLETION,
             startSupported = false,
             serverAvailable = false,
@@ -105,6 +119,10 @@ class AceLspServerManager(
             append(",\"serverUri\":null")
             append(",\"rootUri\":").appendJsonString(snapshot.rootUri)
             append(",\"documentUri\":").appendJsonString(snapshot.documentUri)
+            append(",\"declarationGroups\":")
+            append(snapshot.declarationGroups.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
+            append(",\"effectiveDeclarationGroups\":")
+            append(snapshot.effectiveDeclarationGroups.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
             append(",\"libraryUris\":")
             append(snapshot.libraryUris.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
             append(",\"fallback\":").appendJsonString(snapshot.fallback)
@@ -146,13 +164,36 @@ class AceLspServerManager(
         const val SYNTHETIC_ROOT_URI = "file:///autojs6/editor"
         const val SYNTHETIC_DOCUMENT_URI = "file:///autojs6/editor/current.js"
         const val MAX_DOCUMENT_LENGTH = 512 * 1024
+        const val TYPESCRIPT_DEFAULT_LIBRARY_URI = "autojs6/typescript/lib.es2022.d.ts"
+        const val CORE_LIBRARY_URI = "autojs6/types/generated/lib.autojs6.core.d.ts"
+        const val COMPATIBILITY_LIBRARY_URI = "autojs6/types/lib.autojs6.extra.d.ts"
+        const val ANDROID_LIBRARY_URI = "autojs6/types/generated/lib.autojs6.android.d.ts"
+        const val LIBRARIES_LIBRARY_URI = "autojs6/types/generated/lib.autojs6.libraries.d.ts"
+        const val RESOURCES_LIBRARY_URI = "autojs6/types/generated/lib.autojs6.resources.d.ts"
+        const val MAIN_APP_LIBRARY_URI = "autojs6/types/generated/lib.autojs6.main-app.d.ts"
 
         val DEFAULT_LIBRARY_URIS = listOf(
-            "autojs6/typescript/lib.es2020.d.ts",
-            "autojs6/types/lib.autojs6.d.ts",
-            "autojs6/types/lib.autojs6.extra.d.ts",
+            TYPESCRIPT_DEFAULT_LIBRARY_URI,
+            CORE_LIBRARY_URI,
+            COMPATIBILITY_LIBRARY_URI,
         )
         val DEFAULT_FEATURES = listOf("completion", "hover", "diagnostics", "signatureHelp")
+
+        private val DECLARATION_GROUP_LIBRARY_URIS = mapOf(
+            AceEditorLspPreferences.DECLARATION_GROUP_ANDROID to ANDROID_LIBRARY_URI,
+            AceEditorLspPreferences.DECLARATION_GROUP_LIBRARIES to LIBRARIES_LIBRARY_URI,
+            AceEditorLspPreferences.DECLARATION_GROUP_RESOURCES to RESOURCES_LIBRARY_URI,
+            AceEditorLspPreferences.DECLARATION_GROUP_MAIN_APP to MAIN_APP_LIBRARY_URI,
+        )
+
+        fun libraryUrisFor(declarationGroups: Collection<String>): List<String> {
+            return buildList {
+                addAll(DEFAULT_LIBRARY_URIS)
+                AceEditorLspPreferences.resolveDeclarationGroups(declarationGroups).forEach { group ->
+                    DECLARATION_GROUP_LIBRARY_URIS[group]?.let(::add)
+                }
+            }
+        }
 
         fun preferenceSnapshot(): AceLspServerSnapshot {
             return AceLspServerManager().snapshot()
@@ -217,6 +258,8 @@ data class AceLspServerSnapshot(
     val serverUri: String? = null,
     val rootUri: String? = null,
     val documentUri: String? = null,
+    val declarationGroups: List<String> = emptyList(),
+    val effectiveDeclarationGroups: List<String> = emptyList(),
     val libraryUris: List<String> = emptyList(),
     val fallback: String? = null,
     val startSupported: Boolean = false,

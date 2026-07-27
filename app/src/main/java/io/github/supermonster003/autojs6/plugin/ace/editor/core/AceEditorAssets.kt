@@ -27,9 +27,14 @@ object AceEditorAssets {
         "$EDITOR_ASSET_ROOT/autojs6/autojs6_signature_help.js",
         "$EDITOR_ASSET_ROOT/autojs6/autojs6_ace_bridge.js",
         "$EDITOR_ASSET_ROOT/autojs6/autojs6_ts_language_service.js",
-        "$EDITOR_ASSET_ROOT/autojs6/typescript/typescriptServices.js",
-        "$EDITOR_ASSET_ROOT/autojs6/typescript/lib.es2020.d.ts",
-        "$EDITOR_ASSET_ROOT/autojs6/types/lib.autojs6.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/typescript/typescript.js",
+        "$EDITOR_ASSET_ROOT/autojs6/typescript/lib.es2022.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/manifest.json",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.core.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.android.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.libraries.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.resources.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.main-app.d.ts",
         "$EDITOR_ASSET_ROOT/autojs6/types/lib.autojs6.extra.d.ts",
     )
 

@@ -3,76 +3,23 @@
 
     var CURRENT_FILE = "file:///autojs6/editor/current.js";
     var CURRENT_DIR = "file:///autojs6/editor";
-    var AUTOJS6_LIB = "file:///autojs6/types/lib.autojs6.d.ts";
-    var AUTOJS6_LIB_ASSET = "./autojs6/types/lib.autojs6.d.ts";
-    var AUTOJS6_EXTRA_LIB = "file:///autojs6/types/lib.autojs6.extra.d.ts";
-    var AUTOJS6_EXTRA_LIB_ASSET = "./autojs6/types/lib.autojs6.extra.d.ts";
+    var AUTOJS6_CORE_LIB = "file:///autojs6/types/generated/lib.autojs6.core.d.ts";
+    var AUTOJS6_COMPATIBILITY_LIB = "file:///autojs6/types/lib.autojs6.extra.d.ts";
     var TS_LIB_ROOT = "file:///autojs6/typescript/";
-    var TS_LIB_ASSET_ROOT = "./autojs6/typescript/";
-    var DEFAULT_LIB = "lib.es2020.d.ts";
+    var AUTOJS6_ASSET_ROOT = "./autojs6/";
+    var DEFAULT_LIB = "lib.es2022.d.ts";
+    var DEFAULT_LIBRARY_URIS = [
+        TS_LIB_ROOT + DEFAULT_LIB,
+        AUTOJS6_CORE_LIB,
+        AUTOJS6_COMPATIBILITY_LIB
+    ];
     var TS_DIAGNOSTIC_SOURCE = "autojs6-ts";
     var SINGLE_FILE_UNRELIABLE_DIAGNOSTIC_CODES = {
         2307: true,
         2792: true,
         7016: true
     };
-
-    var TS_LIB_NAMES = [
-        "lib.d.ts",
-        "lib.es2015.collection.d.ts",
-        "lib.es2015.core.d.ts",
-        "lib.es2015.d.ts",
-        "lib.es2015.generator.d.ts",
-        "lib.es2015.iterable.d.ts",
-        "lib.es2015.promise.d.ts",
-        "lib.es2015.proxy.d.ts",
-        "lib.es2015.reflect.d.ts",
-        "lib.es2015.symbol.d.ts",
-        "lib.es2015.symbol.wellknown.d.ts",
-        "lib.es2016.array.include.d.ts",
-        "lib.es2016.d.ts",
-        "lib.es2016.full.d.ts",
-        "lib.es2017.d.ts",
-        "lib.es2017.full.d.ts",
-        "lib.es2017.intl.d.ts",
-        "lib.es2017.object.d.ts",
-        "lib.es2017.sharedmemory.d.ts",
-        "lib.es2017.string.d.ts",
-        "lib.es2017.typedarrays.d.ts",
-        "lib.es2018.asyncgenerator.d.ts",
-        "lib.es2018.asynciterable.d.ts",
-        "lib.es2018.d.ts",
-        "lib.es2018.full.d.ts",
-        "lib.es2018.intl.d.ts",
-        "lib.es2018.promise.d.ts",
-        "lib.es2018.regexp.d.ts",
-        "lib.es2019.array.d.ts",
-        "lib.es2019.d.ts",
-        "lib.es2019.full.d.ts",
-        "lib.es2019.object.d.ts",
-        "lib.es2019.string.d.ts",
-        "lib.es2019.symbol.d.ts",
-        "lib.es2020.bigint.d.ts",
-        "lib.es2020.d.ts",
-        "lib.es2020.intl.d.ts",
-        "lib.es2020.promise.d.ts",
-        "lib.es2020.sharedmemory.d.ts",
-        "lib.es2020.string.d.ts",
-        "lib.es2020.symbol.wellknown.d.ts",
-        "lib.es5.d.ts",
-        "lib.es6.d.ts",
-        "lib.esnext.d.ts",
-        "lib.esnext.full.d.ts",
-        "lib.esnext.intl.d.ts",
-        "lib.esnext.promise.d.ts",
-        "lib.esnext.string.d.ts",
-        "lib.esnext.weakref.d.ts",
-        "lib.scripthost.d.ts"
-    ];
-    var TS_LIB_NAME_SET = Object.create(null);
-    TS_LIB_NAMES.forEach(function(name) {
-        TS_LIB_NAME_SET[name] = true;
-    });
+    var SAFE_DECLARATION_ASSET_NAME = /^[A-Za-z0-9_.-]+\.d\.ts$/;
 
     function noop() {
     }
@@ -93,11 +40,22 @@
 
     function normalizeFileName(fileName) {
         fileName = String(fileName || "").replace(/\\/g, "/");
-        if (fileName.indexOf(TS_LIB_ROOT) === 0) {
+        if (fileName.indexOf("file:///autojs6/typescript/") === 0 ||
+            fileName.indexOf("file:///autojs6/types/") === 0) {
             return fileName;
+        }
+        fileName = fileName.replace(/^\.?\//, "");
+        if (fileName.indexOf("autojs6/typescript/") === 0 ||
+            fileName.indexOf("autojs6/types/") === 0) {
+            return "file:///" + fileName;
         }
         if (fileName.indexOf("/autojs6/typescript/") >= 0) {
             return TS_LIB_ROOT + fileName.substring(fileName.lastIndexOf("/") + 1);
+        }
+        if (fileName.indexOf("/autojs6/types/") >= 0) {
+            return "file:///autojs6/types/" + fileName.substring(
+                fileName.indexOf("/autojs6/types/") + "/autojs6/types/".length
+            );
         }
         if (fileName.indexOf("/typescript/") >= 0) {
             return TS_LIB_ROOT + fileName.substring(fileName.lastIndexOf("/") + 1);
@@ -108,10 +66,20 @@
         if (fileName === "typescriptServices.d.ts" || fileName === "typescript.d.ts" || fileName === "tsserverlibrary.d.ts") {
             return TS_LIB_ROOT + fileName;
         }
-        if (fileName.indexOf("/autojs6/types/lib.autojs6.d.ts") >= 0 || /(^|\/)lib\.autojs6\.d\.ts$/.test(fileName)) {
-            return AUTOJS6_LIB;
-        }
         return fileName || CURRENT_FILE;
+    }
+
+    function assetUrlForLibraryUri(uri) {
+        uri = normalizeFileName(uri);
+        var prefix = "file:///autojs6/";
+        if (uri.indexOf(prefix) !== 0) {
+            return null;
+        }
+        var path = uri.substring(prefix.length);
+        if (!/(^typescript\/|^types\/)/.test(path) || !/\.d\.ts$/.test(path)) {
+            return null;
+        }
+        return AUTOJS6_ASSET_ROOT + path;
     }
 
     function normalizeDocumentUri(uri) {
@@ -360,6 +328,8 @@
         var currentText = "";
         var currentFile = normalizeDocumentUri(config.documentUri);
         var libraryUris = [];
+        var rootLibraryUris = [];
+        var libraryAssetUrls = Object.create(null);
         var disposed = false;
         var diagnosticsLimit = Math.max(1, Number(config.diagnosticsLimit) || 100);
         var completionLimit = Math.max(1, Number(config.completionLimit) || 300);
@@ -370,11 +340,12 @@
                 checkJs: !!config.checkJs,
                 noEmit: true,
                 allowNonTsExtensions: true,
-                target: ts.ScriptTarget.ES2020 || ts.ScriptTarget.ES2019 || ts.ScriptTarget.Latest,
+                target: ts.ScriptTarget.ES2022 || ts.ScriptTarget.ES2020 || ts.ScriptTarget.Latest,
                 module: ts.ModuleKind.CommonJS,
-                moduleResolution: ts.ModuleResolutionKind.NodeJs,
+                moduleResolution: ts.ModuleResolutionKind.Bundler || ts.ModuleResolutionKind.NodeJs,
                 jsx: ts.JsxEmit && ts.JsxEmit.Preserve,
                 lib: [DEFAULT_LIB],
+                strict: false,
                 skipLibCheck: true,
                 skipDefaultLibCheck: true
             };
@@ -397,6 +368,10 @@
             if (hasOwn(libraryTextByUri, uri)) {
                 return libraryTextByUri[uri];
             }
+            var relativeUri = uri.replace(/^file:\/\/\//, "");
+            if (hasOwn(libraryTextByUri, relativeUri)) {
+                return libraryTextByUri[relativeUri];
+            }
             return loadText(assetUrl);
         }
 
@@ -409,15 +384,54 @@
                 return false;
             }
             var name = fileName.substring(TS_LIB_ROOT.length);
-            if (!TS_LIB_NAME_SET[name]) {
+            if (!SAFE_DECLARATION_ASSET_NAME.test(name)) {
                 return false;
             }
-            var text = readConfiguredText(fileName, TS_LIB_ASSET_ROOT + name);
+            var text = readConfiguredText(fileName, AUTOJS6_ASSET_ROOT + "typescript/" + name);
             if (text === null || text === undefined) {
                 return false;
             }
             libraryUris.push(addFile(fileName, text));
             return true;
+        }
+
+        function ensureConfiguredLibrary(fileName) {
+            fileName = normalizeFileName(fileName);
+            if (hasOwn(files, fileName)) {
+                return true;
+            }
+            if (fileName.indexOf(TS_LIB_ROOT) === 0) {
+                return ensureTsLibrary(fileName);
+            }
+            var assetUrl = libraryAssetUrls[fileName];
+            if (!assetUrl) {
+                return false;
+            }
+            var text = readConfiguredText(fileName, assetUrl);
+            if (text === null || text === undefined) {
+                return false;
+            }
+            libraryUris.push(addFile(fileName, text));
+            return true;
+        }
+
+        function configureRootLibraries() {
+            var configured = copyArray(config.libraryUris);
+            if (!configured.length) {
+                configured = copyArray(DEFAULT_LIBRARY_URIS);
+            }
+            configured.forEach(function(uri) {
+                var normalized = normalizeFileName(uri);
+                var assetUrl = assetUrlForLibraryUri(normalized);
+                if (!assetUrl || rootLibraryUris.indexOf(normalized) >= 0) {
+                    return;
+                }
+                rootLibraryUris.push(normalized);
+                libraryAssetUrls[normalized] = assetUrl;
+            });
+            if (rootLibraryUris.indexOf(TS_LIB_ROOT + DEFAULT_LIB) < 0) {
+                rootLibraryUris.unshift(TS_LIB_ROOT + DEFAULT_LIB);
+            }
         }
 
         function initialize() {
@@ -429,37 +443,29 @@
                 return ready;
             }
             if (!ts || typeof ts.createLanguageService !== "function") {
-                reason = "typescriptServices.js unavailable";
+                reason = "typescript.js unavailable";
                 return false;
             }
             try {
-                ensureTsLibrary(TS_LIB_ROOT + DEFAULT_LIB);
-                var autojsText = readConfiguredText(AUTOJS6_LIB, AUTOJS6_LIB_ASSET);
-                if (autojsText !== null && autojsText !== undefined) {
-                    libraryUris.push(addFile(AUTOJS6_LIB, autojsText));
-                }
-                var autojsExtraText = readConfiguredText(AUTOJS6_EXTRA_LIB, AUTOJS6_EXTRA_LIB_ASSET);
-                if (autojsExtraText !== null && autojsExtraText !== undefined) {
-                    libraryUris.push(addFile(AUTOJS6_EXTRA_LIB, autojsExtraText));
-                }
+                configureRootLibraries();
+                rootLibraryUris.forEach(ensureConfiguredLibrary);
                 addFile(currentFile, "");
                 if (!hasOwn(files, TS_LIB_ROOT + DEFAULT_LIB)) {
                     reason = "TypeScript default lib missing: " + DEFAULT_LIB;
                     return false;
                 }
-                if (!hasOwn(files, AUTOJS6_LIB)) {
-                    reason = "AutoJs6 declaration lib missing";
+                if (!hasOwn(files, AUTOJS6_CORE_LIB)) {
+                    reason = "AutoJs6 core declaration lib missing";
+                    return false;
+                }
+                if (!hasOwn(files, AUTOJS6_COMPATIBILITY_LIB)) {
+                    reason = "AutoJs6 compatibility declaration lib missing";
                     return false;
                 }
                 service = ts.createLanguageService({
                     getCompilationSettings: compilerOptions,
                     getScriptFileNames: function() {
-                        return [
-                            currentFile,
-                            TS_LIB_ROOT + DEFAULT_LIB,
-                            AUTOJS6_LIB,
-                            AUTOJS6_EXTRA_LIB
-                        ].filter(function(fileName) {
+                        return [currentFile].concat(rootLibraryUris).filter(function(fileName) {
                             return hasOwn(files, fileName);
                         });
                     },
@@ -468,7 +474,7 @@
                     },
                     getScriptSnapshot: function(fileName) {
                         fileName = normalizeFileName(fileName);
-                        ensureTsLibrary(fileName);
+                        ensureConfiguredLibrary(fileName);
                         return hasOwn(files, fileName) ? ts.ScriptSnapshot.fromString(files[fileName]) : undefined;
                     },
                     getScriptKind: function(fileName) {
@@ -482,12 +488,12 @@
                     },
                     readFile: function(fileName) {
                         fileName = normalizeFileName(fileName);
-                        ensureTsLibrary(fileName);
+                        ensureConfiguredLibrary(fileName);
                         return hasOwn(files, fileName) ? files[fileName] : undefined;
                     },
                     fileExists: function(fileName) {
                         fileName = normalizeFileName(fileName);
-                        return hasOwn(files, fileName) || ensureTsLibrary(fileName);
+                        return hasOwn(files, fileName) || ensureConfiguredLibrary(fileName);
                     },
                     directoryExists: function() {
                         return true;
@@ -769,6 +775,8 @@
             files = Object.create(null);
             versions = Object.create(null);
             libraryUris = [];
+            rootLibraryUris = [];
+            libraryAssetUrls = Object.create(null);
             currentText = "";
             reason = "typescript language service disposed";
         }
@@ -793,10 +801,10 @@
         create: createLanguageService,
         constants: {
             currentFile: CURRENT_FILE,
-            autojs6Lib: AUTOJS6_LIB,
-            autojs6ExtraLib: AUTOJS6_EXTRA_LIB,
+            autojs6Lib: AUTOJS6_CORE_LIB,
+            autojs6CompatibilityLib: AUTOJS6_COMPATIBILITY_LIB,
             defaultLib: DEFAULT_LIB,
-            libraryNames: copyArray(TS_LIB_NAMES),
+            defaultLibraryUris: copyArray(DEFAULT_LIBRARY_URIS),
             diagnosticSource: TS_DIAGNOSTIC_SOURCE
         }
     };

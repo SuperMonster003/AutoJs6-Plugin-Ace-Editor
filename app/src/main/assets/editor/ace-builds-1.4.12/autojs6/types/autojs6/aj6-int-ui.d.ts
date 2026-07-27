@@ -3,7 +3,7 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 5.1.3
 //
-// Last modified: Jun 14, 2026
+// Last modified: Jul 27, 2026
 //
 // noinspection JSUnusedGlobalSymbols
 
@@ -93,13 +93,10 @@ declare namespace Internal {
         layout(layout: Xml): void;
 
         /**
+         * Inflates an Android source layout file with the current resource-aware UI context.
          * @example
          * "ui";
          * ui.layoutFile("./test.xml");
-         * @example Source code summary (zh-CN: 源代码摘要)
-         * ui.layoutFile = function (file) {
-         *     ui.layout(files.read(file));
-         * };
          */
         layoutFile(path: string): void;
 

@@ -56,7 +56,7 @@ declare namespace Internal {
          * @example Source code summary (zh-CN: 源代码摘要)
          * console.verbose = function () {
          *     runtime.console.verbose(util.format.apply(util, arguments));
-         * };
+         * }；
          * @see org.autojs.autojs.core.console.ConsoleImpl.verbose
          */
         verbose(data?: any, ...text): void;
@@ -76,7 +76,7 @@ declare namespace Internal {
          * @example Source code summary (zh-CN: 源代码摘要)
          * console.into = function () {
          *     runtime.console.into(util.format.apply(util, arguments));
-         * };
+         * }；
          * @see org.autojs.autojs.core.console.ConsoleImpl.into
          */
         info(data?: any, ...text): void;
@@ -85,7 +85,7 @@ declare namespace Internal {
          * @example Source code summary (zh-CN: 源代码摘要)
          * console.warn = function () {
          *     runtime.console.warn(util.format.apply(util, arguments));
-         * };
+         * }；
          * @see org.autojs.autojs.core.console.ConsoleImpl.warn
          */
         warn(data?: any, ...text): void;
@@ -94,7 +94,7 @@ declare namespace Internal {
          * @example Source code summary (zh-CN: 源代码摘要)
          * console.error = function () {
          *     runtime.console.error(util.format.apply(util, arguments));
-         * };
+         * }；
          * @see org.autojs.autojs.core.console.ConsoleImpl.error
          */
         error(data?: any, ...text): void;

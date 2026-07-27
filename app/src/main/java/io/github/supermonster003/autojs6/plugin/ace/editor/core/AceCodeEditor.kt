@@ -99,6 +99,7 @@ class AceCodeEditor @JvmOverloads constructor(
     private val lspServerManager = AceLspServerManager(
         enabledProvider = { AceEditorLspPreferences.isEnabled(hostPreferences) },
         documentAllowedProvider = { AceEditorLspPreferences.isDocumentAllowed(hostPreferences, it) },
+        declarationGroupsProvider = { AceEditorLspPreferences.getDeclarationGroups(hostPreferences) },
     )
     @Volatile
     private var lspRuntimeState: String? = null

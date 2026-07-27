@@ -1,11 +1,8 @@
-// Manual AutoJs6 editor-only declarations that supplement generated lib.autojs6.d.ts.
-
-declare class RootMode {
-}
-
-declare namespace Internal {
-    type Autojs = AutoJs6.Autojs;
-}
+// Legacy AutoJs6 namespace aliases retained for editor compatibility.
+//
+// Current declarations provide RootMode, Internal.Autojs, and the global App
+// namespace directly. Do not redeclare them here: doing so creates duplicate
+// identifiers when this compatibility root is loaded with the generated core.
 
 declare namespace AutoJs6 {
     namespace App {
@@ -13,10 +10,4 @@ declare namespace AutoJs6 {
         type AppName = string;
         type Alias = string;
     }
-}
-
-declare namespace App {
-    type PackageName = AutoJs6.App.PackageName;
-    type AppName = AutoJs6.App.AppName;
-    type Alias = AutoJs6.App.Alias;
 }

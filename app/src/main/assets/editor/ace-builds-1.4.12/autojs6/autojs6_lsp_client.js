@@ -26,9 +26,9 @@
     var TS_LOAD_TIMEOUT_MS = 5000;
     var TS_SERVICE_INIT_MAX_ATTEMPTS = 2;
     var SEMANTIC_SLOW_OPERATION_LIMIT_MS = 1000;
-    var SEMANTIC_SLOW_OPERATION_MAX_COUNT = 1;
+    var SEMANTIC_SLOW_OPERATION_MAX_COUNT = 2;
     var JSHINT_SCRIPT_SRC = "./src-min-noconflict/worker-javascript.js";
-    var TS_RUNTIME_SCRIPT_SRC = "./autojs6/typescript/typescriptServices.js";
+    var TS_RUNTIME_SCRIPT_SRC = "./autojs6/typescript/typescript.js";
     var TS_SERVICE_SCRIPT_SRC = "./autojs6/autojs6_ts_language_service.js";
 
     var jshintLoadState = "idle";
@@ -36,6 +36,9 @@
     var tsLoadState = "idle";
     var tsLoadCallbacks = [];
     var tsLoadAttempts = 0;
+    var tsRuntimeCompatibilityReason = "";
+    var tsRuntimeSyntaxCompatible = null;
+    var tsRuntimeCompatibilityNotified = false;
 
     function noop() {
     }
@@ -50,6 +53,38 @@
 
     function copyArray(value) {
         return Array.isArray(value) ? value.slice(0) : [];
+    }
+
+    function arraysEqual(left, right) {
+        left = copyArray(left);
+        right = copyArray(right);
+        if (left.length !== right.length) {
+            return false;
+        }
+        for (var i = 0; i < left.length; i++) {
+            if (String(left[i]) !== String(right[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function supportsTypeScriptRuntimeSyntax() {
+        if (tsRuntimeSyntaxCompatible !== null) {
+            return tsRuntimeSyntaxCompatible;
+        }
+        try {
+            // TypeScript 6's official browser bundle targets modern evergreen runtimes.
+            // Keeping the probe in a string lets older WebViews parse this client and
+            // fall back to the static completer instead of failing the whole editor.
+            global.Function("return ({ value: null }).value?.x ?? 1;")();
+            tsRuntimeSyntaxCompatible = true;
+        } catch (error) {
+            tsRuntimeCompatibilityReason =
+                "TypeScript 6 requires an Android System WebView with modern JavaScript syntax support";
+            tsRuntimeSyntaxCompatible = false;
+        }
+        return tsRuntimeSyntaxCompatible;
     }
 
     function positiveInteger(value, fallback) {
@@ -105,6 +140,8 @@
             rootUri: options && options.rootUri || "",
             documentUri: options && options.documentUri || "",
             libraryUris: copyArray(options && options.libraryUris),
+            declarationGroups: copyArray(options && options.declarationGroups),
+            effectiveDeclarationGroups: copyArray(options && options.effectiveDeclarationGroups),
             fallback: options && options.fallback || FALLBACK_STATIC_COMPLETION,
             startSupported: !!(options && options.startSupported),
             serverAvailable: !!(options && options.serverAvailable),
@@ -301,6 +338,16 @@
             callback(true);
             return true;
         }
+        if (!hasTsRuntime() && !supportsTypeScriptRuntimeSyntax()) {
+            tsLoadState = "failed";
+            tsLoadAttempts = TS_LOAD_MAX_ATTEMPTS;
+            if (!tsRuntimeCompatibilityNotified) {
+                tsRuntimeCompatibilityNotified = true;
+                notify(config, tsRuntimeCompatibilityReason);
+            }
+            callback(false);
+            return false;
+        }
         if (tsLoadState === "failed" && tsLoadAttempts >= TS_LOAD_MAX_ATTEMPTS) {
             callback(false);
             return false;
@@ -334,7 +381,7 @@
         } else {
             appendScript(TS_RUNTIME_SCRIPT_SRC, loadServiceScript, function(error) {
                 tsLoadState = "failed";
-                notify(config, "ACE TypeScript runtime script unavailable", error);
+                notify(config, "ACE TypeScript 6 runtime script unavailable", error);
                 flushTsLoadCallbacks(false);
             });
         }
@@ -695,6 +742,7 @@
         var lastAnnotations = [];
         var tsService = null;
         var tsServiceInitAttempts = 0;
+        var semanticColdStartPending = false;
         var documentLengthKnown = false;
         var semanticCircuitOpen = false;
         var consecutiveSlowSemanticOperations = 0;
@@ -719,8 +767,10 @@
                     notifyError: config.notifyError,
                     checkJs: options && options.checkJs === true,
                     completionLimit: MAX_COMPLETION_ITEMS,
-                    documentUri: state.documentUri
+                    documentUri: state.documentUri,
+                    libraryUris: copyArray(state.libraryUris)
                 });
+                semanticColdStartPending = true;
             }
             return tsService;
         }
@@ -735,6 +785,7 @@
                     notify(config, "ACE TS language service disposal failed: " + error, error);
                 }
             }
+            semanticColdStartPending = false;
         }
 
         function cancelTsRetry() {
@@ -847,6 +898,10 @@
             var durationMs = Math.max(0, Date.now() - startedAt);
             state.lastSemanticOperation = operation;
             state.lastSemanticDurationMs = durationMs;
+            if (circuitEligible !== false && semanticColdStartPending) {
+                semanticColdStartPending = false;
+                circuitEligible = false;
+            }
             if (circuitEligible !== false && durationMs >= SEMANTIC_SLOW_OPERATION_LIMIT_MS) {
                 consecutiveSlowSemanticOperations++;
                 if (consecutiveSlowSemanticOperations >= SEMANTIC_SLOW_OPERATION_MAX_COUNT) {
@@ -1056,6 +1111,7 @@
                 return getState();
             }
             var shouldWarmUp = hasRefreshed;
+            var previousOptions = options;
             configurationRevision++;
             cancelTsRetry();
             semanticCircuitOpen = false;
@@ -1063,6 +1119,13 @@
             var rawOptions = typeof config.getOptions === "function" ? config.getOptions() : "{}";
             options = parseOptions(rawOptions, config);
             state = stateFromOptions(options);
+            var serviceConfigurationChanged =
+                !arraysEqual(previousOptions && previousOptions.libraryUris, options.libraryUris) ||
+                !!(previousOptions && previousOptions.checkJs) !== !!options.checkJs;
+            if (serviceConfigurationChanged) {
+                disposeTsService();
+                tsServiceInitAttempts = 0;
+            }
             documentLengthKnown = false;
             updateSemanticState(session);
             if (state.enabled) {
@@ -1104,6 +1167,8 @@
                 rootUri: state.rootUri,
                 documentUri: state.documentUri,
                 libraryUris: copyArray(state.libraryUris),
+                declarationGroups: copyArray(state.declarationGroups),
+                effectiveDeclarationGroups: copyArray(state.effectiveDeclarationGroups),
                 fallback: state.fallback,
                 startSupported: state.startSupported,
                 serverAvailable: state.serverAvailable,
@@ -1117,7 +1182,8 @@
                 tsLoader: {
                     state: tsLoadState,
                     attempts: tsLoadAttempts,
-                    maxAttempts: TS_LOAD_MAX_ATTEMPTS
+                    maxAttempts: TS_LOAD_MAX_ATTEMPTS,
+                    compatibilityReason: tsRuntimeCompatibilityReason
                 },
                 tsService: getTsServiceState(),
                 maxDocumentLength: state.maxDocumentLength,

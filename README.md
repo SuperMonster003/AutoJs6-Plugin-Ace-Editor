@@ -46,7 +46,7 @@ AutoJs6 Ace Editor Plugin 将 Ace WebView 运行时, JavaScript bridge, 输入�
 ******
 
 - 提供插件 ID `ace-editor`, 引擎 `editor` 和变体 `ace`, 支持通过 `org.autojs.plugin.INFO` 与 `org.autojs.plugin.EDITOR` 发现.
-- 使用 Editor API 合约 1, 最低支持 AutoJs6 `6.8.0 Alpha7` build `5234` 或更高版本, 以及 Android API 24 或更高版本.
+- 使用 Editor API 合约 1, 最低支持 AutoJs6 `6.8.0 Alpha7` build `5235` 或更高版本, 以及 Android API 24 或更高版本.
 - 支持文本编辑, 撤销/重做, 搜索替换, 正则与整词查找, 光标/选区导航, 行操作, 断点, 注释切换和代码格式化.
 - 内置 JavaScript/TypeScript 语言服务和 AutoJs6 类型声明, 提供补全, hover, diagnostics 与 signature help; JSON 文件支持语法诊断.
 - 支持 CRLF 保留, 增量文本同步, 大文本分块加载, 超长行轻量模式, IME 适配, 运行健康监测和宿主原生编辑器回退通知.
@@ -73,6 +73,14 @@ Release 构建:
 
 构建参数和版本号来自 `version.properties`, 当前最低 SDK 为 24, 目标 SDK 为 36.
 
+更新或新增 `autojs6/types/**/*.d.ts` 后, 可单独执行:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LspDeclarations
+```
+
+该任务会校验声明引用和 TypeScript 6 语法, 生成 `core`, `android`, `libraries`, `resources`, `main-app` 五组 LSP 资产及 manifest. `assemble` 和 `mergeAssets` 已自动依赖该任务, 因此正常构建无需额外执行; 外部脚本也可以直接调用它. 生成结果只写入 `app/build/generated/aceLspAssets`, 不会覆盖或删除 `src/main/assets` 下的完整原始声明. 若 Node 不在 `PATH`, 可传入 `-Pautojs6.nodeExecutable=<node路径>`.
+
 ******
 
 ### 安装
@@ -82,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -94,6 +102,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 ### 发行历史
 
 ******
+
+# v1.1.0
+
+###### 2026/07/27
+
+* `新增` 保留完整原始声明, 并支持选择 AutoJs6 LSP 声明分组: `core` 始终启用, `android`, `libraries`, `resources` 和 `main-app` 默认关闭; 选择 `libraries` 会同时启用 `android`, 选择 `main-app` 会同时启用 `android`, `libraries` 和 `resources`
+* `新增` 提供 `:app:generateAutoJs6LspDeclarations` Gradle 任务, 用于校验声明并生成五个 LSP 分组及其 manifest; 常规资产合并会自动调用该任务, 外部脚本也可直接调用
+* `依赖` 内置 TypeScript 语言服务和标准库声明由 `4.2.4` 升级至 `6.0.3`
 
 # v1.0.0
 
@@ -110,7 +126,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.0.0-un
 
 ##### 更多发行历史可参阅
 
-* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/.changelog/CHANGELOG-zh-Hans.md)
+* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/assets/doc/CHANGELOG-zh-Hans.md)
 
 ******
 

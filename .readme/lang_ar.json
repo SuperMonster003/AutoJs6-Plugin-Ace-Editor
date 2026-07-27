@@ -9,7 +9,7 @@
   "h3_functions": "الميزات",
   "features": [
     "يوفر معرف المكون الإضافي `ace-editor` والمحرك `editor` والمتغير `ace`, مع الاكتشاف عبر `org.autojs.plugin.INFO` و`org.autojs.plugin.EDITOR`.",
-    "يستخدم عقد Editor API 1 ويتطلب AutoJs6 `6.8.0 Alpha7` build `5234` أو أحدث وAndroid API 24 أو أحدث.",
+    "يستخدم عقد Editor API 1 ويتطلب AutoJs6 `6.8.0 Alpha7` build `5235` أو أحدث وAndroid API 24 أو أحدث.",
     "يدعم تحرير النص والتراجع/الإعادة والبحث والاستبدال والبحث بالتعبيرات النمطية والكلمات الكاملة والتنقل بالمؤشر والتحديد وعمليات الأسطر ونقاط التوقف وتبديل التعليقات وتنسيق الأكواد.",
     "يتضمن خدمات لغات JavaScript/TypeScript وتصريحات الأنواع الخاصة بـ AutoJs6, مع الإكمال وhover وdiagnostics وsignature help. ويوفر syntax diagnostics فقط لملفات JSON.",
     "يدعم الحفاظ على CRLF ومزامنة النص التزايدية والتحميل المجزأ للنصوص الكبيرة ووضعا خفيفا للأسطر الطويلة جدا وتكييف IME ومراقبة سلامة بيئة التشغيل وإشعارات الرجوع إلى محرر المضيف الأصلي.",
@@ -20,6 +20,8 @@
   "p_build_requirements": "استخدم Gradle Wrapper المرفق مع JDK 17 أو أحدث وAndroid SDK 36",
   "text_release_build": "بناء Release",
   "p_build_params": "تأتي معلمات البناء والإصدار من `version.properties`; الحد الأدنى الحالي لـ SDK هو 24 والـ SDK المستهدف هو 36",
+  "p_lsp_declarations_update": "بعد تحديث أو إضافة `autojs6/types/**/*.d.ts`, يمكن تشغيل المهمة التالية مباشرة",
+  "p_lsp_declarations_generation": "تتحقق المهمة من مراجع التصريحات وصياغة TypeScript 6, ثم تنشئ أصول مجموعات LSP الخمس `core` و`android` و`libraries` و`resources` و`main-app` وملف manifest الخاص بها. تعتمد `assemble` و`mergeAssets` عليها بالفعل, لذلك لا يتطلب البناء المعتاد أي خطوة إضافية; ويمكن للبرامج النصية الخارجية استدعاؤها مباشرة أيضا. تكتب الملفات الناتجة في `app/build/generated/aceLspAssets` فقط ولا تستبدل أو تحذف التصريحات المصدرية الكاملة ضمن `src/main/assets`. إذا لم يكن Node موجودا في `PATH`, فمرر `-Pautojs6.nodeExecutable=<node-path>`",
   "h3_installation": "التثبيت",
   "p_install_intro": "ثبت ملف APK الناتج بعد البناء",
   "p_install_restart": "ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه",

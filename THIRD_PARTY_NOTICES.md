@@ -10,7 +10,7 @@ AutoJs6 Ace Editor Plugin includes the components listed below. Copyright notice
 - Use: Browser-based code editor runtime, modes, themes, workers, and extensions
 - Bundled license: [`app/src/main/assets/editor/ace-builds-1.4.12/LICENSE`](app/src/main/assets/editor/ace-builds-1.4.12/LICENSE)
 
-## TypeScript 4.2.4
+## TypeScript 6.0.3
 
 - Project: [TypeScript](https://github.com/microsoft/TypeScript)
 - Copyright: Microsoft Corporation and TypeScript contributors
@@ -40,4 +40,3 @@ The font files may be embedded and redistributed under the OFL conditions. The f
 - Repository license: [`LICENSE`](LICENSE)
 
 AutoJs6-specific bridge scripts, style sheets, declarations, and other project-authored editor assets are covered by the repository license unless a file carries a more specific notice.
-

@@ -1,3 +1,17 @@
+******
+
+### 發行歷史
+
+******
+
+# v1.1.0
+
+###### 2026/07/27
+
+* `新增` 保留完整原始聲明, 並支援選擇 AutoJs6 LSP 聲明分組: `core` 始終啟用, `android`, `libraries`, `resources` 和 `main-app` 預設關閉; 選擇 `libraries` 會同時啟用 `android`, 選擇 `main-app` 會同時啟用 `android`, `libraries` 和 `resources`
+* `新增` 提供 `:app:generateAutoJs6LspDeclarations` Gradle 任務, 用於驗證聲明並生成五個 LSP 分組及其 manifest; 常規資產合併會自動調用該任務, 外部腳本亦可直接調用
+* `依賴` 內置 TypeScript 語言服務和標準庫聲明由 `4.2.4` 升級至 `6.0.3`
+
 # v1.0.0
 
 ###### 2026/07/21

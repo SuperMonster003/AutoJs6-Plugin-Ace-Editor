@@ -5,6 +5,16 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.0": {
+      "released_date": "2026/07/27",
+      "feature": [
+        "تم الاحتفاظ بالتصريحات المصدرية الكاملة وإضافة مجموعات تصريحات LSP قابلة للاختيار في AutoJs6: تظل `core` مفعلة دائما, بينما تكون `android` و`libraries` و`resources` و`main-app` معطلة افتراضيا; يؤدي اختيار `libraries` أيضا إلى تفعيل `android`, ويؤدي اختيار `main-app` أيضا إلى تفعيل `android` و`libraries` و`resources`",
+        "تمت إضافة مهمة Gradle المسماة `:app:generateAutoJs6LspDeclarations` للتحقق من التصريحات وإنشاء مجموعات LSP الخمس وملف manifest الخاص بها; يستدعيها دمج الأصول المعتاد تلقائيا ويمكن للبرامج النصية الخارجية استدعاؤها مباشرة"
+      ],
+      "dependency": [
+        "تمت ترقية خدمة لغة TypeScript المضمنة وتصريحات المكتبة القياسية من `4.2.4` إلى `6.0.3`"
+      ]
+    },
     "v1.0.0": {
       "released_date": "2026/07/21",
       "feature": [

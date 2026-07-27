@@ -1,4 +1,5 @@
 /.gradle/
+/.bak/
 /.idea/
 /local.properties
 /sign.properties

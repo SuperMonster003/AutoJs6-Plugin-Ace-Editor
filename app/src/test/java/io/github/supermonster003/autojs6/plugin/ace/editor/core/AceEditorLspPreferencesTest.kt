@@ -40,4 +40,49 @@ class AceEditorLspPreferencesTest {
             AceEditorLspPreferences.normalizeFileTypes(AceEditorLspPreferences.DEFAULT_FILE_TYPES),
         )
     }
+
+    @Test
+    fun declarationGroupsAreDisabledByDefault() {
+        assertTrue(AceEditorLspPreferences.DEFAULT_DECLARATION_GROUPS.isEmpty())
+    }
+
+    @Test
+    fun declarationGroupsAreNormalizedToSupportedCanonicalOrder() {
+        assertEquals(
+            listOf(
+                AceEditorLspPreferences.DECLARATION_GROUP_ANDROID,
+                AceEditorLspPreferences.DECLARATION_GROUP_RESOURCES,
+                AceEditorLspPreferences.DECLARATION_GROUP_MAIN_APP,
+            ),
+            AceEditorLspPreferences.normalizeDeclarationGroups(
+                listOf(" RESOURCES ", "unknown", "MAIN-APP", "android", "resources"),
+            ),
+        )
+        assertEquals(
+            listOf(
+                AceEditorLspPreferences.DECLARATION_GROUP_ANDROID,
+                AceEditorLspPreferences.DECLARATION_GROUP_LIBRARIES,
+            ),
+            AceEditorLspPreferences.normalizeDeclarationGroups("libraries; ANDROID,unsupported"),
+        )
+    }
+
+    @Test
+    fun declarationGroupDependenciesResolveTransitively() {
+        assertEquals(
+            listOf(
+                AceEditorLspPreferences.DECLARATION_GROUP_ANDROID,
+                AceEditorLspPreferences.DECLARATION_GROUP_LIBRARIES,
+            ),
+            AceEditorLspPreferences.resolveDeclarationGroups(listOf("libraries")),
+        )
+        assertEquals(
+            AceEditorLspPreferences.SUPPORTED_DECLARATION_GROUPS,
+            AceEditorLspPreferences.resolveDeclarationGroups(listOf("main-app")),
+        )
+        assertEquals(
+            listOf(AceEditorLspPreferences.DECLARATION_GROUP_RESOURCES),
+            AceEditorLspPreferences.resolveDeclarationGroups(listOf("resources")),
+        )
+    }
 }

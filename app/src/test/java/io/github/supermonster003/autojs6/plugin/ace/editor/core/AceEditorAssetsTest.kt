@@ -21,9 +21,14 @@ class AceEditorAssetsTest {
                     "$ASSET_ROOT/autojs6/autojs6_ace_bridge.js",
                     "$ASSET_ROOT/autojs6/autojs6_lsp_client.js",
                     "$ASSET_ROOT/autojs6/autojs6_ts_language_service.js",
-                    "$ASSET_ROOT/autojs6/typescript/typescriptServices.js",
-                    "$ASSET_ROOT/autojs6/typescript/lib.es2020.d.ts",
-                    "$ASSET_ROOT/autojs6/types/lib.autojs6.d.ts",
+                    "$ASSET_ROOT/autojs6/typescript/typescript.js",
+                    "$ASSET_ROOT/autojs6/typescript/lib.es2022.d.ts",
+                    "$ASSET_ROOT/autojs6/types/generated/manifest.json",
+                    "$ASSET_ROOT/autojs6/types/generated/lib.autojs6.core.d.ts",
+                    "$ASSET_ROOT/autojs6/types/generated/lib.autojs6.android.d.ts",
+                    "$ASSET_ROOT/autojs6/types/generated/lib.autojs6.libraries.d.ts",
+                    "$ASSET_ROOT/autojs6/types/generated/lib.autojs6.resources.d.ts",
+                    "$ASSET_ROOT/autojs6/types/generated/lib.autojs6.main-app.d.ts",
                     "$ASSET_ROOT/autojs6/types/lib.autojs6.extra.d.ts",
                 ),
             ),
@@ -48,8 +53,8 @@ class AceEditorAssetsTest {
     fun validationReportsEveryMissingAssetAndForcesFallback() {
         val missingPaths = setOf(
             "$ASSET_ROOT/autojs6/autojs6_lsp_client.js",
-            "$ASSET_ROOT/autojs6/typescript/typescriptServices.js",
-            "$ASSET_ROOT/autojs6/types/lib.autojs6.d.ts",
+            "$ASSET_ROOT/autojs6/typescript/typescript.js",
+            "$ASSET_ROOT/autojs6/types/generated/lib.autojs6.core.d.ts",
         )
 
         val result = AceEditorAssets.validateRequiredAssets { assetPath ->

@@ -3,7 +3,7 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 4.8.4
 //
-// Last modified: Jun 14, 2026
+// Last modified: Jul 27, 2026
 
 /// <reference path="./index.d.ts" />
 
@@ -5446,7 +5446,7 @@ declare namespace Internal {
         TOMATO: number;
 
         /**
-         * <p style="background-color: #00000000">#00000000  </
+         * <p style="background-color: #00000000">#00000000　　</
          * <p>Name (en): <b>Transparent</b></p>
          * <p>Name (zh): <b>透明</b></p>
          * <p>Hex: <b>#00000000</b></p>
@@ -6159,8 +6159,8 @@ declare namespace Internal {
 
     interface Color {
 
-        new(color?: OmniColor);
-        new(r: ColorComponent, g: ColorComponent, b: ColorComponent, a?: ColorComponent);
+        new(color?: OmniColor): Color;
+        new(r: ColorComponent, g: ColorComponent, b: ColorComponent, a?: ColorComponent): Color;
 
         (color?: OmniColor): Color;
         (r: ColorComponent, g: ColorComponent, b: ColorComponent, a?: ColorComponent): Color;

@@ -1,3 +1,17 @@
+******
+
+### Release History
+
+******
+
+# v1.1.0
+
+###### 2026/07/27
+
+* `Feature` Kept the complete source declarations bundled and added selectable AutoJs6 LSP declaration groups: `core` is always enabled, while `android`, `libraries`, `resources`, and `main-app` are disabled by default; selecting `libraries` also enables `android`, and selecting `main-app` also enables `android`, `libraries`, and `resources`
+* `Feature` Added the `:app:generateAutoJs6LspDeclarations` Gradle task to validate declarations and generate the five LSP groups and their manifest; normal asset merging invokes it automatically, and external scripts can call it directly
+* `Dependency` Upgraded the bundled TypeScript language service and standard library declarations from `4.2.4` to `6.0.3`
+
 # v1.0.0
 
 ###### 2026/07/21

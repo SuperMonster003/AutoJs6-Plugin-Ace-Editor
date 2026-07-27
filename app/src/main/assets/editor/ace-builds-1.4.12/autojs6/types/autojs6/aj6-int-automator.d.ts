@@ -3,7 +3,7 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 5.1.3
 //
-// Last modified: Jun 14, 2026
+// Last modified: Jul 27, 2026
 
 /// <reference path="./index.d.ts" />
 
@@ -372,6 +372,13 @@ declare namespace Internal {
         headsethook(): boolean;
 
         // @RequiresApi(30)
+        headsetHook(): boolean;
+
+        switchToInputMethodWithId(id: string): boolean;
+
+        switchToInputMethod(name: string): boolean;
+
+        // @RequiresApi(30)
         accessibilityButton(): boolean;
 
         // @RequiresApi(30)
@@ -511,6 +518,8 @@ declare namespace Internal {
          * @see org.autojs.autojs.core.automator.UiObject.Companion.createRoot
          */
         get windowRoots(): UiObject[];
+
+        getWindowRoot(window: android.view.accessibility.AccessibilityWindowInfo): UiObject | null;
 
         get state(): Automator.AutoState;
 

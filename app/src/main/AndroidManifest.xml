@@ -8,6 +8,7 @@
     <application
         android:allowBackup="false"
         android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true">
 
         <meta-data
@@ -21,7 +22,7 @@
             android:value="io.github.supermonster003.autojs6.plugin.ace.editor.AceEditorPluginEntrypoint" />
         <meta-data
             android:name="requiresHostVersion"
-            android:value="5234" />
+            android:value="5235" />
         <meta-data
             android:name="org.autojs.plugin.info.AUTHOR"
             android:value="@string/plugin_author" />

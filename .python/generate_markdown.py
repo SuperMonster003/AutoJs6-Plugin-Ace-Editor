@@ -261,7 +261,7 @@ def build_readme_values(code, languages, changelogs):
     ).rstrip()
     content["placeholder_read_more_in_changelog_md"] = markdown_link(
         "CHANGELOG.md",
-        f"{content['repo_url']}/blob/master/.changelog/CHANGELOG-{code}.md",
+        f"{content['repo_url']}/blob/master/app/src/main/assets/doc/CHANGELOG-{code}.md",
     )
     return content
 
@@ -296,14 +296,11 @@ def generate_changelogs(languages, changelogs):
             changelogs[code]
         ).rstrip()
         output = render_template(template, values)
-        write_text(CHANGELOG_DIR / f"CHANGELOG-{code}.md", output)
-
-        latest_only = format_changelog_items(changelogs[code], limit=1)
         names = ANDROID_CHANGELOG_ALIASES.get(code, [code])
         for name in names:
-            write_text(ANDROID_CHANGELOG_DIR / f"CHANGELOG-{name}.md", latest_only)
+            write_text(ANDROID_CHANGELOG_DIR / f"CHANGELOG-{name}.md", output)
         if code == LANGUAGE_CODE_DEFAULT:
-            write_text(ANDROID_CHANGELOG_DIR / "CHANGELOG.md", latest_only)
+            write_text(ANDROID_CHANGELOG_DIR / "CHANGELOG.md", output)
 
 
 def validate_localized_resources():
@@ -347,7 +344,9 @@ def main():
             f"Default language code {LANGUAGE_CODE_DEFAULT!r} is not in LANGUAGE_CODES"
         )
     if (ROOT / "CHANGELOG.md").exists():
-        raise ValueError("Root CHANGELOG.md is not allowed; use .changelog outputs")
+        raise ValueError(
+            "Root CHANGELOG.md is not allowed; use app/src/main/assets/doc outputs"
+        )
     validate_localized_resources()
     languages, changelogs = load_languages()
     generate_changelogs(languages, changelogs)
