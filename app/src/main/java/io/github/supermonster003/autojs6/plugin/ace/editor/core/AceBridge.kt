@@ -48,6 +48,21 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun isThemeDark(): Boolean {
+        return editor.bridgeThemeIsDark()
+    }
+
+    @JavascriptInterface
+    fun getThemeBackgroundColor(): Int {
+        return editor.bridgeThemeBackgroundColor()
+    }
+
+    @JavascriptInterface
+    fun getThemeForegroundColor(): Int {
+        return editor.bridgeThemeForegroundColor()
+    }
+
+    @JavascriptInterface
     fun getFontFamily(): String {
         return editor.bridgeFontFamily()
     }

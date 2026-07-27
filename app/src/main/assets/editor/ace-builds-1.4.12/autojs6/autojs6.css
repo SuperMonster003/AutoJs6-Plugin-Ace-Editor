@@ -10,6 +10,12 @@
     --autojs6-editor-font-family: "Iosevka", monospace;
     --autojs6-editor-font-ligatures: normal;
     --autojs6-editor-font-feature-settings: "liga" 1, "calt" 1;
+    --autojs6-theme-background: #f7f8fa;
+    --autojs6-theme-foreground: #172033;
+    --autojs6-theme-border: rgba(23, 32, 51, 0.2);
+    --autojs6-theme-muted-foreground: rgba(23, 32, 51, 0.72);
+    --autojs6-theme-caption-foreground: rgba(23, 32, 51, 0.88);
+    --autojs6-theme-shadow: rgba(15, 23, 42, 0.2);
 }
 
 html,
@@ -23,22 +29,22 @@ body,
 }
 
 html {
-    background: #f7f8fa;
+    background: var(--autojs6-theme-background);
 }
 
 body {
-    background: #f7f8fa;
+    background: var(--autojs6-theme-background);
 }
 
 #editor {
-    background: #f7f8fa;
+    background: var(--autojs6-theme-background);
     visibility: hidden;
 }
 
 html.ace-theme-dark,
 body.ace-theme-dark,
 body.ace-theme-dark #editor {
-    background: #1e1e1e;
+    background: var(--autojs6-theme-background);
 }
 
 body.ace-ready #editor {
@@ -161,11 +167,11 @@ body.autojs6-host-selection-action-mode .ace_mobile-menu {
     max-height: 45vh;
     overflow: auto;
     padding: 7px 10px;
-    border: 1px solid rgba(31, 41, 55, 0.2);
+    border: 1px solid var(--autojs6-theme-border);
     border-radius: 2px;
-    background: #ffffff;
-    color: #172033;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+    background: var(--autojs6-theme-background);
+    color: var(--autojs6-theme-foreground);
+    box-shadow: 0 4px 16px var(--autojs6-theme-shadow);
     font-family: var(--autojs6-editor-font-family);
     font-size: 13px;
     line-height: 1.35;
@@ -232,7 +238,7 @@ body.autojs6-host-selection-action-mode .ace_mobile-menu {
     margin-bottom: 3px;
     font-size: 11px;
     font-weight: 700;
-    color: #0f5e5e;
+    color: var(--autojs6-theme-caption-foreground);
 }
 
 .autojs6_signature_tooltip_signature {
@@ -246,7 +252,7 @@ body.autojs6-host-selection-action-mode .ace_mobile-menu {
 
 .autojs6_signature_tooltip_summary {
     margin-top: 4px;
-    color: #4b5563;
+    color: var(--autojs6-theme-muted-foreground);
     font-size: 11px;
     white-space: nowrap;
 }
@@ -297,10 +303,10 @@ body.ace-theme-dark .autojs6_hover_tooltip {
 }
 
 body.ace-theme-dark .autojs6_signature_tooltip {
-    border-color: rgba(226, 232, 240, 0.2);
-    background: #f7f7f7;
-    color: #111827;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.42);
+    border-color: var(--autojs6-theme-border);
+    background: var(--autojs6-theme-background);
+    color: var(--autojs6-theme-foreground);
+    box-shadow: 0 4px 16px var(--autojs6-theme-shadow);
 }
 
 body.ace-theme-dark .autojs6_hover_tooltip_caption {
@@ -308,11 +314,11 @@ body.ace-theme-dark .autojs6_hover_tooltip_caption {
 }
 
 body.ace-theme-dark .autojs6_signature_tooltip_caption {
-    color: #0f5e5e;
+    color: var(--autojs6-theme-caption-foreground);
 }
 
 body.ace-theme-dark .autojs6_signature_tooltip_summary {
-    color: #4b5563;
+    color: var(--autojs6-theme-muted-foreground);
 }
 
 body.ace-theme-dark .ace_marker-layer .ace_selection {

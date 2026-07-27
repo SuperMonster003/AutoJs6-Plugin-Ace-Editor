@@ -109,6 +109,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 * `Fix` Fixed static-member completion for optional declaration groups, including `App.CHROME` and large `R.string.text_*` resource sets; truncated Ace completion lists are now refreshed with a debounce as the prefix changes
 * `Fix` Fixed ordinary large documents being mistaken for very long lines, causing them to switch to plain-text mode and lose JavaScript highlighting, completion, and semantic services; genuinely very long individual lines still use safety mode
+* `Fix` Fixed the Ace signature/parameter-hint bubble always using a light background; it now follows the editor theme's background and foreground colors dynamically, while an already-open autocomplete candidate popup is refreshed separately when the theme changes
 
 # v1.1.0
 

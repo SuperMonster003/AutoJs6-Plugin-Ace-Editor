@@ -348,7 +348,12 @@ class AceEditorPluginSession internal constructor(
 
     override fun setTheme(theme: EditorPluginTheme) {
         themeId = theme.id
-        editor.setTheme(theme.aceTheme ?: if (theme.isDark) DARK_THEME else LIGHT_THEME)
+        editor.setTheme(
+            theme = theme.aceTheme ?: if (theme.isDark) DARK_THEME else LIGHT_THEME,
+            isDark = theme.isDark,
+            backgroundColor = theme.backgroundColor,
+            foregroundColor = theme.foregroundColor,
+        )
     }
 
     override fun setTextSizeSp(size: Float) {

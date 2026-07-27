@@ -228,13 +228,122 @@
         notifyError(payload.message);
     }
 
-    function applyThemeClass(theme) {
+    function isDarkAceTheme(theme) {
         var themeName = String(theme || "").toLowerCase();
-        var dark = Object.prototype.hasOwnProperty.call(DARK_ACE_THEMES, themeName)
+        return Object.prototype.hasOwnProperty.call(DARK_ACE_THEMES, themeName)
             ? DARK_ACE_THEMES[themeName]
             : themeName.indexOf("night") >= 0 || themeName.indexOf("dark") >= 0;
+    }
+
+    function applyThemeClass(theme, explicitDark) {
+        var dark = typeof explicitDark === "boolean" ? explicitDark : isDarkAceTheme(theme);
         document.documentElement.classList.toggle("ace-theme-dark", dark);
         document.body.classList.toggle("ace-theme-dark", dark);
+        return dark;
+    }
+
+    function androidColorChannels(color) {
+        if (color === null || typeof color === "undefined" || color === "") {
+            return null;
+        }
+        var numeric = Number(color);
+        if (!isFinite(numeric)) {
+            return null;
+        }
+        var argb = numeric >>> 0;
+        return {
+            alpha: (argb >>> 24) & 255,
+            red: (argb >>> 16) & 255,
+            green: (argb >>> 8) & 255,
+            blue: argb & 255
+        };
+    }
+
+    function cssColorFromAndroid(color, fallback) {
+        var channels = androidColorChannels(color);
+        if (!channels) {
+            return fallback;
+        }
+        if (channels.alpha === 255) {
+            return "rgb(" + channels.red + ", " + channels.green + ", " + channels.blue + ")";
+        }
+        var alpha = Math.round(channels.alpha / 255 * 1000) / 1000;
+        return "rgba(" + channels.red + ", " + channels.green + ", " + channels.blue + ", " + alpha + ")";
+    }
+
+    function cssColorFromAndroidWithOpacity(color, opacity, fallback) {
+        var channels = androidColorChannels(color);
+        if (!channels) {
+            return fallback;
+        }
+        var alpha = Math.round(channels.alpha / 255 * opacity * 1000) / 1000;
+        return "rgba(" + channels.red + ", " + channels.green + ", " + channels.blue + ", " + alpha + ")";
+    }
+
+    function applyThemePalette(backgroundColor, foregroundColor, isDark) {
+        if (!document || !document.documentElement || !document.documentElement.style) {
+            return;
+        }
+        var rootStyle = document.documentElement.style;
+        var fallbackBackground = isDark ? "#1e1e1e" : "#f7f8fa";
+        var fallbackForeground = isDark ? "#ebebeb" : "#172033";
+        rootStyle.setProperty(
+            "--autojs6-theme-background",
+            cssColorFromAndroid(backgroundColor, fallbackBackground)
+        );
+        rootStyle.setProperty(
+            "--autojs6-theme-foreground",
+            cssColorFromAndroid(foregroundColor, fallbackForeground)
+        );
+        rootStyle.setProperty(
+            "--autojs6-theme-border",
+            cssColorFromAndroidWithOpacity(
+                foregroundColor,
+                0.2,
+                isDark ? "rgba(235, 235, 235, 0.2)" : "rgba(23, 32, 51, 0.2)"
+            )
+        );
+        rootStyle.setProperty(
+            "--autojs6-theme-muted-foreground",
+            cssColorFromAndroidWithOpacity(
+                foregroundColor,
+                0.72,
+                isDark ? "rgba(235, 235, 235, 0.72)" : "rgba(23, 32, 51, 0.72)"
+            )
+        );
+        rootStyle.setProperty(
+            "--autojs6-theme-caption-foreground",
+            cssColorFromAndroidWithOpacity(
+                foregroundColor,
+                0.88,
+                isDark ? "rgba(235, 235, 235, 0.88)" : "rgba(23, 32, 51, 0.88)"
+            )
+        );
+        rootStyle.setProperty(
+            "--autojs6-theme-shadow",
+            isDark ? "rgba(0, 0, 0, 0.42)" : "rgba(15, 23, 42, 0.2)"
+        );
+    }
+
+    function refreshAutocompletePopupTheme(theme) {
+        var popup = editor && editor.completer && editor.completer.popup;
+        if (!popup || typeof popup.setTheme !== "function") {
+            return;
+        }
+        try {
+            popup.setTheme(theme);
+        } catch (error) {
+            notifyRecoverableError("autocompleteTheme", error);
+        }
+    }
+
+    function applyEditorTheme(theme, explicitDark, backgroundColor, foregroundColor) {
+        var nextTheme = theme || "ace/theme/textmate";
+        var dark = applyThemeClass(nextTheme, explicitDark);
+        applyThemePalette(backgroundColor, foregroundColor, dark);
+        editor.setTheme(nextTheme);
+        refreshAutocompletePopupTheme(nextTheme);
+        return nextTheme;
     }
 
     function applyFontFamily(fontFamily) {
@@ -3636,10 +3745,8 @@
         }, false);
     }
 
-    function setTheme(theme) {
-        var nextTheme = theme || "ace/theme/textmate";
-        applyThemeClass(nextTheme);
-        editor.setTheme(nextTheme);
+    function setTheme(theme, isDark, backgroundColor, foregroundColor) {
+        applyEditorTheme(theme, isDark, backgroundColor, foregroundColor);
         notifyStateChanged("themeChanged");
     }
 
@@ -4565,6 +4672,9 @@
         session.setUseSoftTabs(true);
 
         var initialTheme = callBridge("getTheme") || "ace/theme/textmate";
+        var initialThemeIsDark = callBridgeBoolean("isThemeDark", isDarkAceTheme(initialTheme));
+        var initialThemeBackgroundColor = callBridge("getThemeBackgroundColor");
+        var initialThemeForegroundColor = callBridge("getThemeForegroundColor");
         var wordWrapEnabled = callBridgeBoolean("isWordWrapEnabled", false);
         preferredWordWrapEnabled = wordWrapEnabled;
         var wordWrapIndentStyle = callBridgeString("getWordWrapIndentStyle", "continuation");
@@ -4591,8 +4701,12 @@
             applyFontFamily(hasInitialFontDescriptor ? DEFAULT_FONT_FAMILY : callBridge("getFontFamily") || DEFAULT_FONT_FAMILY);
         applyFontLigaturesEnabled(callBridgeBoolean("isFontLigaturesEnabled", true));
         applyFontStylesEnabled(callBridgeBoolean("isFontStylesEnabled", true));
-        applyThemeClass(initialTheme);
-        editor.setTheme(initialTheme);
+        applyEditorTheme(
+            initialTheme,
+            initialThemeIsDark,
+            initialThemeBackgroundColor,
+            initialThemeForegroundColor
+        );
         editor.setOptions({
             enableBasicAutocompletion: true,
             enableLiveAutocompletion: true,

@@ -82,6 +82,10 @@ class AceCodeEditor @JvmOverloads constructor(
         hostPreferences = hostPreferences,
     )
     private var requestedFontId = AceEditorFontPreferences.getId(hostPreferences)
+    private var editorThemeIsDark = isSystemNightModeEnabled()
+    private var editorTheme = if (editorThemeIsDark) DEFAULT_DARK_THEME else DEFAULT_LIGHT_THEME
+    private var editorThemeBackgroundColor = defaultEditorBackgroundColor(editorThemeIsDark)
+    private var editorThemeForegroundColor = defaultEditorForegroundColor(editorThemeIsDark)
     private val assetLoader = WebViewAssetLoader.Builder()
         .addPathHandler(APP_ASSET_PATH, WebViewAssetLoader.AssetsPathHandler(pluginContext))
         .addPathHandler(VIRTUAL_FONT_PATH, WebViewAssetLoader.PathHandler(::virtualFontResponse))
@@ -653,8 +657,22 @@ class AceCodeEditor @JvmOverloads constructor(
         invokeAce("setReadOnly", readOnly.toString())
     }
 
-    fun setTheme(theme: String) {
-        invokeAce("setTheme", quote(theme))
+    fun setTheme(
+        theme: String,
+        isDark: Boolean,
+        backgroundColor: Int,
+        foregroundColor: Int?,
+    ) {
+        val resolvedForegroundColor = foregroundColor ?: defaultEditorForegroundColor(isDark)
+        editorTheme = theme
+        editorThemeIsDark = isDark
+        editorThemeBackgroundColor = backgroundColor
+        editorThemeForegroundColor = resolvedForegroundColor
+        applyEditorBackground()
+        invokeAce(
+            "setTheme",
+            "${quote(theme)}, $isDark, $backgroundColor, $resolvedForegroundColor",
+        )
     }
 
     fun setTextSizeSp(size: Float) {
@@ -1208,14 +1226,13 @@ class AceCodeEditor @JvmOverloads constructor(
         healthMonitor.reportFailure(failure)
     }
 
-    internal fun bridgeTheme(): String {
-        val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        return if (nightMode == Configuration.UI_MODE_NIGHT_YES) {
-            "ace/theme/tomorrow_night"
-        } else {
-            "ace/theme/textmate"
-        }
-    }
+    internal fun bridgeTheme(): String = editorTheme
+
+    internal fun bridgeThemeIsDark(): Boolean = editorThemeIsDark
+
+    internal fun bridgeThemeBackgroundColor(): Int = editorThemeBackgroundColor
+
+    internal fun bridgeThemeForegroundColor(): Int = editorThemeForegroundColor
 
     internal fun bridgeFontFamily(): String {
         return AceEditorFontPreferences.get(hostPreferences).cssFontFamily
@@ -1893,14 +1910,18 @@ class AceCodeEditor @JvmOverloads constructor(
         loadingOverlay.setBackgroundColor(color)
     }
 
-    private fun editorBackgroundColor(): Int {
+    private fun editorBackgroundColor(): Int = editorThemeBackgroundColor
+
+    private fun isSystemNightModeEnabled(): Boolean {
         val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        return if (nightMode == Configuration.UI_MODE_NIGHT_YES) {
-            Color.rgb(30, 30, 30)
-        } else {
-            Color.rgb(247, 248, 250)
-        }
+        return nightMode == Configuration.UI_MODE_NIGHT_YES
     }
+
+    private fun defaultEditorBackgroundColor(isDark: Boolean): Int =
+        if (isDark) Color.rgb(30, 30, 30) else Color.rgb(247, 248, 250)
+
+    private fun defaultEditorForegroundColor(isDark: Boolean): Int =
+        if (isDark) Color.rgb(235, 235, 235) else Color.rgb(23, 32, 51)
 
     private fun imeHeightThresholdPx(): Int {
         return (resources.displayMetrics.density * IME_HEIGHT_THRESHOLD_DP).toInt()
@@ -2897,6 +2918,8 @@ class AceCodeEditor @JvmOverloads constructor(
         private const val ASSET_URL_PREFIX = "$APP_ASSET_ORIGIN${APP_ASSET_PATH}editor/ace-builds-1.4.12/"
         private const val EDITOR_URL = "${ASSET_URL_PREFIX}autojs6_editor.html"
         private const val ACE_RUNTIME_REVISION = "ace-builds-1.4.12-autojs6"
+        private const val DEFAULT_DARK_THEME = "ace/theme/tomorrow_night"
+        private const val DEFAULT_LIGHT_THEME = "ace/theme/textmate"
         private const val FONT_ERROR_DIAGNOSTIC_LIMIT = 1_024
         private const val TEXT_MIRROR_CALIBRATION_DELAY_MS = 500L
         private const val IME_REQUEST_COALESCE_MS = 150L
