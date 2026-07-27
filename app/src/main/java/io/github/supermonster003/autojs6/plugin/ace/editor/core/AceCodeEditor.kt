@@ -407,7 +407,7 @@ class AceCodeEditor @JvmOverloads constructor(
         dirty = false
         invokeAce(
             "setText",
-            "${quote(textSnapshot)}, false, ${AceEditorTextLoadPolicy.requiresAceLightweightMode(textSnapshot)}",
+            "${quote(textSnapshot)}, false, ${AceEditorTextLoadPolicy.requiresAceLongLineSafetyMode(textSnapshot)}",
         )
     }
 
@@ -416,7 +416,7 @@ class AceCodeEditor @JvmOverloads constructor(
         dirty = true
         invokeAce(
             "setTextDirty",
-            "${quote(textSnapshot)}, false, ${AceEditorTextLoadPolicy.requiresAceLightweightMode(textSnapshot)}",
+            "${quote(textSnapshot)}, false, ${AceEditorTextLoadPolicy.requiresAceLongLineSafetyMode(textSnapshot)}",
         )
     }
 
@@ -443,7 +443,7 @@ class AceCodeEditor @JvmOverloads constructor(
         resetTextMirror(text)
         invokeAceBoolean(
             method = "replaceAllTextUndoably",
-            args = "${quote(text)}, ${quote(token)}, false, ${AceEditorTextLoadPolicy.requiresAceLightweightMode(text)}",
+            args = "${quote(text)}, ${quote(token)}, false, ${AceEditorTextLoadPolicy.requiresAceLongLineSafetyMode(text)}",
         ) { succeeded ->
             if (succeeded) {
                 // A true bridge acknowledgement means the group is already attached to ACE's

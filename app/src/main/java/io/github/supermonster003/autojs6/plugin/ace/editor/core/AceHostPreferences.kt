@@ -23,10 +23,8 @@ internal object AceEditorPinchPreferences {
 
 internal object AceEditorTextLoadPolicy {
     const val ACE_UNSAFE_LINE_LENGTH = 64 * 1024
-    const val ACE_LIGHTWEIGHT_DOCUMENT_LENGTH = 256 * 1024
 
-    fun requiresAceLightweightMode(text: CharSequence): Boolean =
-        text.length >= ACE_LIGHTWEIGHT_DOCUMENT_LENGTH || hasAceUnsafeLine(text)
+    fun requiresAceLongLineSafetyMode(text: CharSequence): Boolean = hasAceUnsafeLine(text)
 
     fun hasAceUnsafeLine(text: CharSequence): Boolean {
         var currentLineLength = 0

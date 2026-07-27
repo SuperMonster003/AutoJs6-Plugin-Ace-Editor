@@ -9,6 +9,7 @@
 ###### 2026/07/27
 
 * `Fix` Fixed static-member completion for optional declaration groups, including `App.CHROME` and large `R.string.text_*` resource sets; truncated Ace completion lists are now refreshed with a debounce as the prefix changes
+* `Fix` Fixed ordinary large documents being mistaken for very long lines, causing them to switch to plain-text mode and lose JavaScript highlighting, completion, and semantic services; genuinely very long individual lines still use safety mode
 
 # v1.1.0
 

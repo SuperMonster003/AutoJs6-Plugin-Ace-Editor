@@ -108,6 +108,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-un
 ###### 2026/07/27
 
 * `修复` 修复可选声明组的静态成员补全, 包括 `App.CHROME` 和大型 `R.string.text_*` 资源集; Ace 截断候选列表现在会随前缀变化进行防抖刷新
+* `修复` 修复普通大文档被误判为超长行并切换到纯文本模式, 导致 JavaScript 高亮, 补全和语义服务失效的问题; 真正的超长单行仍会启用安全模式
 
 # v1.1.0
 
