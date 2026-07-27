@@ -2580,7 +2580,11 @@
             return;
         }
         try {
-            programmaticScrollUntil = Date.now() + 300;
+            var programmaticScrollProtectionMs =
+                String(reason || "").indexOf("resize:") === 0
+                    ? ACTION_MODE_SCROLL_SUPPRESS_GRACE_MS + 300
+                    : 300;
+            programmaticScrollUntil = Date.now() + programmaticScrollProtectionMs;
             editor.renderer.scrollCursorIntoView();
         } catch (error) {
             notifyRecoverableError(reason || "scrollCursorIntoView", error);
@@ -3539,6 +3543,7 @@
             return false;
         }
         try {
+            var hadSelection = hasActiveSelection();
             if (memberCompletionRestartTimer !== null) {
                 clearTimeout(memberCompletionRestartTimer);
                 memberCompletionRestartTimer = null;
@@ -3549,6 +3554,10 @@
             }
             if (editor.commands && editor.commands.exec) {
                 editor.commands.exec("esc", editor);
+            }
+            if (hadSelection && hasActiveSelection() && editor.clearSelection) {
+                editor.clearSelection();
+                notifySelectionChanged();
             }
             editor.focus();
             notifyStateChanged("escapeKey");
@@ -4823,6 +4832,7 @@
             acceptCompletionOrInsertTab: acceptCompletionOrInsertTab,
             moveCompletionSelectionOrCursor: moveCompletionSelectionOrCursor,
             handleEscapeKey: handleEscapeKey,
+            refreshSelectionActionMode: updateActionModeFromSelection,
             suppressSelectionActionModeMenu: suppressSelectionActionModeMenu,
             suppressTextMutationSelectionMenu: suppressTextMutationSelectionMenu,
             cancelTouchInteraction: cancelAceMobileTouchInteraction,

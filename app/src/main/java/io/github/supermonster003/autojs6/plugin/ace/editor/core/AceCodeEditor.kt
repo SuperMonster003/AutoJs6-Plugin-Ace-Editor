@@ -19,8 +19,6 @@ import android.view.ActionMode
 import android.view.HapticFeedbackConstants
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
@@ -139,7 +137,7 @@ class AceCodeEditor @JvmOverloads constructor(
             suppressTextMutationSelectionMenu(reason)
         },
         allowHostActionModeStart = {
-            startingHostSelectionActionMode
+            false
         },
         suppressHostActionModeStart = {
             shouldSuppressSelectionActionModeForTextMutation() || isPinchSelectionActionModeSuppressed()
@@ -223,11 +221,11 @@ class AceCodeEditor @JvmOverloads constructor(
     private var lastAceResizeCompletedAtUptimeMillis = 0L
     private var lastActionModeAtUptimeMillis = 0L
     private var actionModeActive = false
-    private var selectionActionMode: ActionMode? = null
+    private var selectionActionMode: AceSelectionToolbar? = null
     private val selectionActionModeRect = Rect()
-    private var startingHostSelectionActionMode = false
     private var pendingSelectionActionModeRequest: SelectionActionModeRequest? = null
     private var lastSelectionActionModeRequest: SelectionActionModeRequest? = null
+    private var selectionActionModeRectRefreshPending = false
     private var selectionActionModeExpectedFinish = false
     private var selectionActionModeStabilizeUntilUptimeMillis = 0L
     private var selectionActionModeStabilizeRestarted = false
@@ -370,6 +368,7 @@ class AceCodeEditor @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        finishSelectionActionMode()
         fontCatalogChangeSubscription?.cancel()
         fontCatalogChangeSubscription = null
         super.onDetachedFromWindow()
@@ -523,6 +522,10 @@ class AceCodeEditor @JvmOverloads constructor(
     }
 
     fun handleEscapeKey() {
+        pendingSelectionActionModeRequest = null
+        mainHandler.removeCallbacks(pendingSelectionActionModeRunnable)
+        cancelSelectionActionModeRestore()
+        finishSelectionActionMode()
         invokeAce("handleEscapeKey")
     }
 
@@ -669,6 +672,7 @@ class AceCodeEditor @JvmOverloads constructor(
         editorThemeBackgroundColor = backgroundColor
         editorThemeForegroundColor = resolvedForegroundColor
         applyEditorBackground()
+        selectionActionMode?.updatePalette(backgroundColor, resolvedForegroundColor)
         invokeAce(
             "setTheme",
             "${quote(theme)}, $isDark, $backgroundColor, $resolvedForegroundColor",
@@ -1019,6 +1023,7 @@ class AceCodeEditor @JvmOverloads constructor(
             "view_size_changed"
         }
         eventHistory.record("view_size_changed", "reason=$reason,old=${oldw}x$oldh,new=${w}x$h")
+        selectionActionModeRectRefreshPending = selectionActionMode != null
         scheduleTransientResize(reason, RESIZE_SETTLE_DELAY_MS)
     }
 
@@ -1190,6 +1195,17 @@ class AceCodeEditor @JvmOverloads constructor(
         lastAceResizeCompletedAtUptimeMillis = now
         lastAceResizeCompletedReason = resizeReasonFromPayload(payloadJson, lastAceResizeDispatchedReason)
         eventHistory.record("resize_done", "reason=${lastAceResizeCompletedReason.orEmpty()}", now)
+        if (
+            selectionActionModeRectRefreshPending &&
+            selectionActionMode != null &&
+            selectedTextSnapshot.isNotEmpty()
+        ) {
+            selectionActionModeRectRefreshPending = false
+            invokeAce("refreshSelectionActionMode")
+        } else {
+            selectionActionModeRectRefreshPending = false
+            invalidateSelectionActionMode()
+        }
     }
 
     private fun reportFatalFailure(type: AceFailureType, message: String, detail: String? = null) {
@@ -1412,6 +1428,7 @@ class AceCodeEditor @JvmOverloads constructor(
             } else {
                 "host_ime_hidden"
             }
+            selectionActionModeRectRefreshPending = selectionActionMode != null
             scheduleTransientResize(reason, RESIZE_SETTLE_DELAY_MS)
         }
     }
@@ -1505,10 +1522,6 @@ class AceCodeEditor @JvmOverloads constructor(
         } else {
             invalidateSelectionActionMode()
         }
-        scheduleAceResize(
-            "action_mode_started:${request.left.toFloat()},${request.top.toFloat()},${request.right.toFloat()},${request.bottom.toFloat()},${request.hasSelection},${request.selectAll}",
-            RESIZE_SETTLE_DELAY_MS,
-        )
     }
 
     private fun schedulePendingSelectionActionModeAfterTouch() {
@@ -1530,101 +1543,78 @@ class AceCodeEditor @JvmOverloads constructor(
         startSelectionActionMode(request)
     }
 
-    private fun createSelectionActionMode(): ActionMode? {
-        val callback = createSelectionActionModeCallback()
-        startingHostSelectionActionMode = true
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                webView.startActionMode(callback, ActionMode.TYPE_FLOATING)
-            } else {
-                webView.startActionMode(callback)
-            }
-        } finally {
-            startingHostSelectionActionMode = false
-        }
+    private fun createSelectionActionMode(): AceSelectionToolbar? {
+        lateinit var toolbar: AceSelectionToolbar
+        toolbar = AceSelectionToolbar(
+            context = context,
+            anchor = webView,
+            labels = AceSelectionToolbar.Labels(
+                copy = context.getString(android.R.string.copy),
+                paste = context.getString(android.R.string.paste),
+                selectAll = pluginContext.getString(R.string.text_select_all),
+                deleteLine = pluginContext.getString(R.string.text_delete_line),
+                copyLine = pluginContext.getString(R.string.text_copy_line),
+                more = pluginContext.getString(R.string.text_more),
+            ),
+            stateProvider = ::selectionActionToolbarState,
+            onAction = { action -> performSelectionAction(toolbar, action) },
+            onDismissed = onDismissed@{ dismissedToolbar ->
+                if (selectionActionMode !== dismissedToolbar) {
+                    return@onDismissed
+                }
+                val expected = selectionActionModeExpectedFinish
+                selectionActionModeExpectedFinish = false
+                markSelectionActionModeFinished(dismissedToolbar, expected)
+            },
+            backgroundColor = editorThemeBackgroundColor,
+            foregroundColor = editorThemeForegroundColor,
+        )
+        return toolbar.takeIf { it.show(selectionActionModeRect) }
     }
 
     private fun invalidateSelectionActionMode() {
         val mode = selectionActionMode ?: return
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mode.invalidateContentRect()
-        }
-        mode.invalidate()
+        mode.update(selectionActionModeRect)
     }
 
-    private fun createSelectionActionModeCallback(): ActionMode.Callback {
-        return object : ActionMode.Callback2() {
+    private fun selectionActionToolbarState() = AceSelectionToolbar.State(
+        canCopy = selectedTextSnapshot.isNotEmpty(),
+        canPaste = !readOnly && clipboardText().isNotEmpty(),
+        canSelectAll = textSnapshot.isNotEmpty(),
+        showDeleteLine = !readOnly,
+        canDeleteLine = !readOnly && textSnapshot.isNotEmpty(),
+        canCopyLine = cursorLineText.isNotEmpty(),
+    )
 
-            override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-                mode.title = null
-                menu.add(0, ACTION_MODE_COPY, 0, android.R.string.copy)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-                menu.add(0, ACTION_MODE_PASTE, 1, android.R.string.paste)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-                menu.add(0, ACTION_MODE_SELECT_ALL, 2, pluginContext.getString(R.string.text_select_all))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-                if (!readOnly) {
-                    menu.add(0, R.id.action_delete_line, 3, pluginContext.getString(R.string.text_delete_line))
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-                }
-                menu.add(0, R.id.action_copy_line, 4, pluginContext.getString(R.string.text_copy_line))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-                return true
+    private fun performSelectionAction(
+        toolbar: AceSelectionToolbar,
+        action: SelectionAction,
+    ) {
+        when (action) {
+            SelectionAction.Copy -> {
+                copySelectedTextToClipboard()
+                listener?.onSelectionAction(action)
+                finishSelectionActionModeForMenuItem(toolbar)
             }
-
-            override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-                menu.findItem(ACTION_MODE_COPY)?.isEnabled = selectedTextSnapshot.isNotEmpty()
-                menu.findItem(ACTION_MODE_PASTE)?.isEnabled = !readOnly && clipboardText().isNotEmpty()
-                menu.findItem(ACTION_MODE_SELECT_ALL)?.isEnabled = textSnapshot.isNotEmpty()
-                menu.findItem(R.id.action_delete_line)?.isEnabled = !readOnly && textSnapshot.isNotEmpty()
-                menu.findItem(R.id.action_copy_line)?.isEnabled = cursorLineText.isNotEmpty()
-                return true
+            SelectionAction.Paste -> {
+                pasteClipboardIntoSelection()
+                listener?.onSelectionAction(action)
+                finishSelectionActionModeForMenuItem(toolbar)
             }
-
-            override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-                return when (item.itemId) {
-                    ACTION_MODE_COPY -> {
-                        copySelectedTextToClipboard()
-                        listener?.onSelectionAction(SelectionAction.Copy)
-                        finishSelectionActionModeForMenuItem(mode)
-                        true
-                    }
-                    ACTION_MODE_PASTE -> {
-                        pasteClipboardIntoSelection()
-                        listener?.onSelectionAction(SelectionAction.Paste)
-                        finishSelectionActionModeForMenuItem(mode)
-                        true
-                    }
-                    ACTION_MODE_SELECT_ALL -> {
-                        selectRange(0, textSnapshot.length)
-                        listener?.onSelectionAction(SelectionAction.SelectAll)
-                        mode.invalidate()
-                        true
-                    }
-                    R.id.action_delete_line -> {
-                        deleteLine()
-                        listener?.onSelectionAction(SelectionAction.DeleteLine)
-                        finishSelectionActionModeForMenuItem(mode)
-                        true
-                    }
-                    R.id.action_copy_line -> {
-                        copyCurrentLineToClipboard()
-                        listener?.onSelectionAction(SelectionAction.CopyLine)
-                        finishSelectionActionModeForMenuItem(mode)
-                        true
-                    }
-                    else -> false
-                }
+            SelectionAction.SelectAll -> {
+                selectRange(0, textSnapshot.length)
+                listener?.onSelectionAction(action)
+                toolbar.invalidate()
             }
-
-            override fun onDestroyActionMode(mode: ActionMode) {
-                val expected = selectionActionModeExpectedFinish
-                selectionActionModeExpectedFinish = false
-                markSelectionActionModeFinished(mode, expected)
+            SelectionAction.DeleteLine -> {
+                deleteLine()
+                listener?.onSelectionAction(action)
+                finishSelectionActionModeForMenuItem(toolbar)
             }
-
-            override fun onGetContentRect(mode: ActionMode, view: View, outRect: Rect) {
-                outRect.set(selectionActionModeRect)
+            SelectionAction.CopyLine -> {
+                copyCurrentLineToClipboard()
+                listener?.onSelectionAction(action)
+                finishSelectionActionModeForMenuItem(toolbar)
             }
         }
     }
@@ -1750,20 +1740,21 @@ class AceCodeEditor @JvmOverloads constructor(
         val mode = selectionActionMode
         if (mode != null) {
             selectionActionModeExpectedFinish = true
-            mode.finish()
+            mode.dismiss()
             return
         }
         markSelectionActionModeFinished(expected = true)
     }
 
-    private fun finishSelectionActionModeForMenuItem(mode: ActionMode) {
+    private fun finishSelectionActionModeForMenuItem(mode: AceSelectionToolbar) {
         selectionActionModeExpectedFinish = true
-        mode.finish()
+        mode.dismiss()
     }
 
-    private fun markSelectionActionModeFinished(mode: ActionMode? = null, expected: Boolean = false) {
+    private fun markSelectionActionModeFinished(mode: AceSelectionToolbar? = null, expected: Boolean = false) {
         if (mode == null || selectionActionMode === mode) {
             selectionActionMode = null
+            selectionActionModeRectRefreshPending = false
         }
         if (expected) {
             cancelSelectionActionModeRestore()
@@ -2940,9 +2931,6 @@ class AceCodeEditor @JvmOverloads constructor(
         private const val SINGLE_TOUCH_SCROLL_CANCEL_SLOP_DP = 2.5f
         private const val BRIDGE_EVENT_WINDOW_MS = 1_000L
         private const val BRIDGE_EVENT_STORM_THRESHOLD = 60
-        private const val ACTION_MODE_COPY = 1
-        private const val ACTION_MODE_PASTE = 2
-        private const val ACTION_MODE_SELECT_ALL = 3
         private const val DEFAULT_TEXT_SIZE_SP = 14f
         private const val MIN_TEXT_SIZE_SP = 1f
         private const val MAX_TEXT_SIZE_SP = 96f

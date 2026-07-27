@@ -6,6 +6,7 @@
     <string name="plugin_instruction">安装插件, 然后在 AutoJs6 中选择 Ace 作为脚本编辑器.</string>
     <string name="text_copy_line">复制行</string>
     <string name="text_delete_line">删除行</string>
+    <string name="text_more">更多</string>
     <string name="text_select_all">全选</string>
     <string name="text_sort_by_name_asc">名称 (A-Z)</string>
     <string name="text_sort_by_name_desc">名称 (Z-A)</string>
