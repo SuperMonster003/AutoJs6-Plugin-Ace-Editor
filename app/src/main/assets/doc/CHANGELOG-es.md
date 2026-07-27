@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.1
+
+###### 2026/07/27
+
+* `Corrección` Se corrigió el autocompletado de miembros estáticos de los grupos de declaraciones opcionales, incluidos `App.CHROME` y los grandes conjuntos de recursos `R.string.text_*`; las listas de candidatos truncadas de Ace ahora se actualizan con antirrebote cuando cambia el prefijo
+
 # v1.1.0
 
 ###### 2026/07/27

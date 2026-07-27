@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-un
 ### История выпусков
 
 ******
+
+# v1.1.1
+
+###### 2026/07/27
+
+* `Исправление` Исправлено автодополнение статических членов необязательных групп объявлений, включая `App.CHROME` и большие наборы ресурсов `R.string.text_*`; усеченные списки вариантов Ace теперь обновляются с debounce-задержкой при изменении префикса
 
 # v1.1.0
 

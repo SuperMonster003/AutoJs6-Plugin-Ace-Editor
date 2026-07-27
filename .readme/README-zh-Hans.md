@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-un
 ### 发行历史
 
 ******
+
+# v1.1.1
+
+###### 2026/07/27
+
+* `修复` 修复可选声明组的静态成员补全, 包括 `App.CHROME` 和大型 `R.string.text_*` 资源集; Ace 截断候选列表现在会随前缀变化进行防抖刷新
 
 # v1.1.0
 

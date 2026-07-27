@@ -7,6 +7,7 @@
     var Range = null;
     var staticCompleter = null;
     var lspCompletionCompleter = null;
+    var lspCompletionRefreshController = null;
     var lspClient = null;
     var lastPublishedLspStateJson = "";
     var lspWarmUpHandle = null;
@@ -700,6 +701,9 @@
     }
 
     function refreshLspAndPublish() {
+        if (lspCompletionRefreshController) {
+            lspCompletionRefreshController.cancel();
+        }
         return publishLspState(lspClient && lspClient.refresh ? lspClient.refresh() : null);
     }
 
@@ -708,6 +712,14 @@
     }
 
     function destroyLspClient() {
+        if (memberCompletionRestartTimer !== null) {
+            clearTimeout(memberCompletionRestartTimer);
+            memberCompletionRestartTimer = null;
+        }
+        if (lspCompletionRefreshController) {
+            lspCompletionRefreshController.destroy();
+            lspCompletionRefreshController = null;
+        }
         if (lspWarmUpHandle !== null) {
             if (lspWarmUpUsesIdleCallback && typeof global.cancelIdleCallback === "function") {
                 global.cancelIdleCallback(lspWarmUpHandle);
@@ -3131,6 +3143,20 @@
         return !!(completer && completer.activated && popup && popup.isOpen);
     }
 
+    function cancelLspCompletionRefresh() {
+        if (lspCompletionRefreshController &&
+            typeof lspCompletionRefreshController.cancel === "function") {
+            lspCompletionRefreshController.cancel();
+        }
+    }
+
+    function scheduleLspCompletionRefresh() {
+        if (lspCompletionRefreshController &&
+            typeof lspCompletionRefreshController.schedule === "function") {
+            lspCompletionRefreshController.schedule();
+        }
+    }
+
     function commandInsertedText(event) {
         var args = event && event.args;
         if (typeof args === "string") {
@@ -3168,6 +3194,7 @@
 
     function restartMemberCompletionAfterDot() {
         memberCompletionRestartTimer = null;
+        cancelLspCompletionRefresh();
         if (!editor || !isCursorAfterMemberDot()) {
             return;
         }
@@ -3181,6 +3208,7 @@
     }
 
     function scheduleMemberCompletionAfterDot() {
+        cancelLspCompletionRefresh();
         if (memberCompletionRestartTimer !== null) {
             clearTimeout(memberCompletionRestartTimer);
         }
@@ -3192,13 +3220,16 @@
             return;
         }
         editor.commands.on("afterExec", function(event) {
-            if (!event || !event.command || event.command.name !== "insertstring") {
+            if (!event || !event.command) {
                 return;
             }
-            if (commandInsertedText(event) !== ".") {
+            if (event.command.name === "insertstring" && commandInsertedText(event) === ".") {
+                scheduleMemberCompletionAfterDot();
                 return;
             }
-            scheduleMemberCompletionAfterDot();
+            if (!event.command.readOnly) {
+                scheduleLspCompletionRefresh();
+            }
         });
         editor.$autojs6MemberCompletionDotTriggerInstalled = true;
     }
@@ -3345,6 +3376,17 @@
         if (!languageTools || typeof languageTools.addCompleter !== "function") {
             return;
         }
+        if (!lspCompletionRefreshController &&
+            global.AutoJsAceLspClient &&
+            typeof global.AutoJsAceLspClient.createCompletionRefreshController === "function") {
+            lspCompletionRefreshController =
+                global.AutoJsAceLspClient.createCompletionRefreshController({
+                    editor: editor,
+                    onRestart: function() {
+                        notifyStateChanged("memberCompletionRefreshed");
+                    }
+                });
+        }
         lspCompletionCompleter = {
             identifierRegexps: staticCompleter && staticCompleter.identifierRegexps,
             retrievePrecedingIdentifier: staticCompleter && staticCompleter.retrievePrecedingIdentifier,
@@ -3355,6 +3397,14 @@
                 }
                 lspClient.getCompletions(activeEditor, activeSession, pos, prefix, function(error, results) {
                     publishLspState();
+                    if (lspCompletionRefreshController) {
+                        lspCompletionRefreshController.recordRequest(
+                            activeSession,
+                            pos,
+                            prefix,
+                            results
+                        );
+                    }
                     callback(error, results);
                 });
             },
@@ -3380,6 +3430,11 @@
             return false;
         }
         try {
+            if (memberCompletionRestartTimer !== null) {
+                clearTimeout(memberCompletionRestartTimer);
+                memberCompletionRestartTimer = null;
+            }
+            cancelLspCompletionRefresh();
             if (editor.completer && editor.completer.detach) {
                 editor.completer.detach();
             }
@@ -4576,6 +4631,8 @@
             }
             if (isSingleInsertedText(delta, ".")) {
                 scheduleMemberCompletionAfterDot();
+            } else {
+                scheduleLspCompletionRefresh();
             }
             markTextMutationSelectionMenuSuppressed("session_change:" + String(delta && delta.action || ""));
             var undoManager = getUndoManager();

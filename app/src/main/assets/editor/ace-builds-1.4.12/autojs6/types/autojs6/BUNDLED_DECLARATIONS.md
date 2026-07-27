@@ -11,3 +11,6 @@
   and `main-app` are generated separately and are disabled by default.
 - Generated files are written below `app/build/generated/aceLspAssets`; source
   declarations in this directory are never overwritten by the task.
+- Generation-only compatibility normalization makes the empty core `App`
+  forward declaration mergeable with the complete `main-app` declaration;
+  the imported source declaration remains unchanged.

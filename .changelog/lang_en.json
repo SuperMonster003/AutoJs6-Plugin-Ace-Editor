@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.1": {
+      "released_date": "2026/07/27",
+      "fix": [
+        "Fixed static-member completion for optional declaration groups, including `App.CHROME` and large `R.string.text_*` resource sets; truncated Ace completion lists are now refreshed with a debounce as the prefix changes"
+      ]
+    },
     "v1.1.0": {
       "released_date": "2026/07/27",
       "feature": [

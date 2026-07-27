@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-un
 ### 릴리스 기록
 
 ******
+
+# v1.1.1
+
+###### 2026/07/27
+
+* `수정` `App.CHROME` 및 대규모 `R.string.text_*` 리소스를 포함한 선택적 선언 그룹의 정적 멤버 자동 완성을 수정하고, Ace의 잘린 완성 후보 목록이 접두사 변경 시 디바운스 방식으로 새로 고쳐지도록 개선
 
 # v1.1.0
 

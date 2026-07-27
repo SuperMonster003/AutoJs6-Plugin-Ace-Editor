@@ -24,6 +24,9 @@ const LIB_REFERENCE_PATTERN =
     /^[ \t]*\/\/\/[ \t]*<reference[ \t]+lib[ \t]*=[ \t]*["']([^"']+)["'][ \t]*\/?>[ \t]*$/gim;
 const LEGACY_IDENTIFIER_MODULE_PATTERN =
     /^([ \t]*(?:(?:export|declare)[ \t]+)*)module([ \t]+)([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)([ \t]*\{)/gm;
+const CORE_APP_FORWARD_SOURCE = "autojs6/aj6-int-init.d.ts";
+const CORE_APP_FORWARD_CLASS_PATTERN =
+    /(^[ \t]*export[ \t]+)class([ \t]+App[ \t]+extends[ \t]+java\.lang\.Enum<org\.autojs\.autojs\.util\.App>[ \t]*\{\n[ \t]*\/\*[ \t]*Empty body\.[ \t]*\*\/\n[ \t]*\})/gm;
 const IGNORED_DECLARATIONS = new Set([
     "lib.autojs6.d.ts",
     "lib.autojs6.extra.d.ts",
@@ -176,13 +179,14 @@ function isProtectedOffset(ranges, offset) {
     return false;
 }
 
-function normalizeDeclarationText(text) {
+function normalizeDeclarationText(sourcePath, text) {
     // Keep an empty line in place of each directive so diagnostics retain useful source-relative
     // line numbers inside every concatenated section.
     const normalization = {
         referencePathDirectivesRemoved: 0,
         referenceLibDirectivesRemoved: 0,
         legacyIdentifierModulesRewritten: 0,
+        coreAppForwardClassesRewritten: 0,
     };
     REFERENCE_DIRECTIVE_PATTERN.lastIndex = 0;
     let normalized = normalizeSourceText(text).replace(
@@ -209,6 +213,26 @@ function normalizeDeclarationText(text) {
             return `${modifiers}namespace${whitespace}${identifier}${openingBrace}`;
         },
     );
+    if (sourcePath === CORE_APP_FORWARD_SOURCE) {
+        // The core declarations contain an empty value-side forward for the App enum.
+        // A second class declaration from the optional main-app group cannot merge with it,
+        // so TypeScript keeps the empty class and hides members such as App.CHROME. Rewriting
+        // only this known empty forward to an interface keeps the source package untouched
+        // while allowing the complete main-app class to provide the value and static side.
+        CORE_APP_FORWARD_CLASS_PATTERN.lastIndex = 0;
+        normalized = normalized.replace(
+            CORE_APP_FORWARD_CLASS_PATTERN,
+            (_declaration, modifiers, remainder) => {
+                normalization.coreAppForwardClassesRewritten += 1;
+                return `${modifiers}interface${remainder}`;
+            },
+        );
+        if (normalization.coreAppForwardClassesRewritten > 1) {
+            fail(
+                `Expected at most one empty App forward class in ${CORE_APP_FORWARD_SOURCE}`,
+            );
+        }
+    }
     return { text: normalized, normalization };
 }
 
@@ -436,9 +460,13 @@ function buildBundle(groupId, group, sourceTextByPath, sourcePackage) {
         referencePathDirectivesRemoved: 0,
         referenceLibDirectivesRemoved: 0,
         legacyIdentifierModulesRewritten: 0,
+        coreAppForwardClassesRewritten: 0,
     };
     for (const sourcePath of group.sourceFiles) {
-        const normalizedSource = normalizeDeclarationText(sourceTextByPath.get(sourcePath));
+        const normalizedSource = normalizeDeclarationText(
+            sourcePath,
+            sourceTextByPath.get(sourcePath),
+        );
         for (const key of Object.keys(normalization)) {
             normalization[key] += normalizedSource.normalization[key];
         }

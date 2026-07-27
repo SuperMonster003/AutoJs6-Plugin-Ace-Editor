@@ -284,24 +284,58 @@
         return name + (signatureHasParameters(signature, name) ? "(${1})" : "()");
     }
 
-    function matchesCompletionFilter(value, prefix) {
+    function completionMatchTier(value, prefix) {
         value = String(value || "").toLowerCase();
         prefix = String(prefix || "").toLowerCase();
         if (!prefix) {
-            return true;
+            return 0;
         }
         var directIndex = value.indexOf(prefix);
-        if (directIndex >= 0) {
-            return true;
+        if (directIndex === 0) {
+            return 0;
+        }
+        if (directIndex > 0) {
+            return 1;
         }
         var valueIndex = -1;
         for (var i = 0; i < prefix.length; i++) {
             valueIndex = value.indexOf(prefix.charAt(i), valueIndex + 1);
             if (valueIndex < 0) {
-                return false;
+                return -1;
             }
         }
-        return true;
+        return 2;
+    }
+
+    function matchesCompletionFilter(value, prefix) {
+        return completionMatchTier(value, prefix) >= 0;
+    }
+
+    function filterAndRankCompletionEntries(entries, prefix) {
+        entries = entries || [];
+        prefix = String(prefix || "");
+        if (!prefix) {
+            return entries.filter(function(entry) {
+                return !isNoisyCompletionEntry(entry);
+            });
+        }
+        var startsWithMatches = [];
+        var substringMatches = [];
+        var subsequenceMatches = [];
+        entries.forEach(function(entry) {
+            if (isNoisyCompletionEntry(entry)) {
+                return;
+            }
+            var tier = completionMatchTier(entry && entry.name, prefix);
+            if (tier === 0) {
+                startsWithMatches.push(entry);
+            } else if (tier === 1) {
+                substringMatches.push(entry);
+            } else if (tier === 2) {
+                subsequenceMatches.push(entry);
+            }
+        });
+        return startsWithMatches.concat(substringMatches, subsequenceMatches);
     }
 
     function annotationFromDiagnostic(ts, text, diagnostic) {
@@ -592,11 +626,12 @@
                     includeInsertTextCompletions: true,
                     triggerCharacter: memberContext ? "." : undefined
                 });
-                var completions = (result && result.entries || [])
-                    .filter(function(entry) {
-                        return !isNoisyCompletionEntry(entry) &&
-                            matchesCompletionFilter(entry && entry.name, prefix);
-                    })
+                var completionEntries = filterAndRankCompletionEntries(
+                    result && result.entries,
+                    prefix
+                );
+                var incomplete = completionEntries.length > completionLimit;
+                var completions = completionEntries
                     .slice(0, completionLimit)
                     .map(function(entry, index) {
                         var name = entry.name || "";
@@ -609,7 +644,8 @@
                             score: 1200 - Math.min(index, 300),
                             docText: entry.kindModifiers || "",
                             sortText: entry.sortText || "",
-                            autojs6Ts: true
+                            autojs6Ts: true,
+                            autojs6Incomplete: incomplete
                         };
                         var replacementSpan = entry.replacementSpan;
                         if (replacementSpan && typeof replacementSpan.start === "number") {

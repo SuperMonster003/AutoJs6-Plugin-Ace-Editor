@@ -19,6 +19,7 @@
     var SIGNATURE_PROVIDER_TYPESCRIPT = "typescript-language-service";
     var DIAGNOSTIC_SOURCE = "autojs6-lsp";
     var VALIDATION_DELAY_MS = 450;
+    var COMPLETION_REFRESH_DELAY_MS = 100;
     var DEFAULT_MAX_DOCUMENT_LENGTH = 512 * 1024;
     var MAX_COMPLETION_ITEMS = 300;
     var TS_LOAD_MAX_ATTEMPTS = 2;
@@ -201,6 +202,335 @@
             }
         }
         return { row: row, column: column };
+    }
+
+    function completionMemberContext(session, pos) {
+        if (!session || typeof session.getLine !== "function") {
+            return null;
+        }
+        pos = normalizePosition(pos);
+        var line = String(session.getLine(pos.row) || "").substring(0, pos.column);
+        var match = /((?:[A-Za-z_$][A-Za-z0-9_$]*\.)*[A-Za-z_$][A-Za-z0-9_$]*)\.([A-Za-z_$][A-Za-z0-9_$]*)?$/.exec(line);
+        if (!match) {
+            match = /((?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\[[^\]\r\n]*\]|\([^()\r\n]*\)|\{[^{}\r\n]*\}))\.([A-Za-z_$][A-Za-z0-9_$]*)?$/.exec(line);
+        }
+        if (!match) {
+            return null;
+        }
+        var prefix = match[2] || "";
+        return {
+            session: session,
+            row: pos.row,
+            column: pos.column,
+            prefixStart: pos.column - prefix.length,
+            receiver: match[1],
+            prefix: prefix
+        };
+    }
+
+    function createCompletionRefreshController(config) {
+        config = config || {};
+        var destroyed = false;
+        var request = null;
+        var requestSerial = 0;
+        var snapshotSerial = 0;
+        var timerHandle = null;
+        var pending = null;
+        var restartCount = 0;
+        var lastRestartAt = 0;
+        var lastDecision = "idle";
+        var customTimer = config.timer || null;
+        var delayMs = COMPLETION_REFRESH_DELAY_MS;
+
+        function now() {
+            return typeof config.now === "function" ? Number(config.now()) || 0 : Date.now();
+        }
+
+        function scheduleTimer(callback) {
+            if (customTimer && typeof customTimer.setTimeout === "function") {
+                return customTimer.setTimeout(callback, delayMs);
+            }
+            if (customTimer && typeof customTimer.schedule === "function") {
+                return customTimer.schedule(callback, delayMs);
+            }
+            if (typeof customTimer === "function") {
+                return customTimer(callback, delayMs);
+            }
+            return timerSet(callback, delayMs);
+        }
+
+        function clearScheduledTimer(handle) {
+            if (handle === null || typeof handle === "undefined") {
+                return;
+            }
+            if (customTimer && typeof customTimer.clearTimeout === "function") {
+                customTimer.clearTimeout(handle);
+                return;
+            }
+            if (customTimer && typeof customTimer.cancel === "function") {
+                customTimer.cancel(handle);
+                return;
+            }
+            timerClear(handle);
+        }
+
+        function editorFromConfig() {
+            if (typeof config.getEditor === "function") {
+                return config.getEditor() || null;
+            }
+            return config.editor || null;
+        }
+
+        function editorSession(editor) {
+            if (!editor) {
+                return null;
+            }
+            if (typeof config.getSession === "function") {
+                return config.getSession(editor) || null;
+            }
+            return editor.session ||
+                (typeof editor.getSession === "function" ? editor.getSession() : null);
+        }
+
+        function editorPosition(editor) {
+            if (typeof config.getPosition === "function") {
+                return normalizePosition(config.getPosition(editor));
+            }
+            return normalizePosition(
+                editor && typeof editor.getCursorPosition === "function" ?
+                    editor.getCursorPosition() :
+                    null
+            );
+        }
+
+        function popupIsOpen(editor) {
+            if (typeof config.isPopupOpen === "function") {
+                return !!config.isPopupOpen(editor);
+            }
+            if (typeof config.popupIsOpen === "function") {
+                return !!config.popupIsOpen(editor);
+            }
+            var completer = editor && editor.completer;
+            var popup = completer && completer.popup;
+            return !!(completer && completer.activated && popup && popup.isOpen);
+        }
+
+        function publicSnapshot(value) {
+            if (!value) {
+                return null;
+            }
+            return {
+                row: value.row,
+                column: value.column,
+                prefixStart: value.prefixStart,
+                receiver: value.receiver,
+                prefix: value.prefix,
+                incomplete: !!value.incomplete,
+                recordedAt: value.recordedAt,
+                scheduledAt: value.scheduledAt
+            };
+        }
+
+        function cancelPending(reason) {
+            var hadPending = timerHandle !== null || pending !== null;
+            if (timerHandle !== null) {
+                clearScheduledTimer(timerHandle);
+            }
+            timerHandle = null;
+            pending = null;
+            snapshotSerial++;
+            if (reason) {
+                lastDecision = reason;
+            }
+            return hadPending;
+        }
+
+        function sameMemberLocation(left, right) {
+            return !!left && !!right &&
+                left.session === right.session &&
+                left.row === right.row &&
+                left.prefixStart === right.prefixStart &&
+                left.receiver === right.receiver;
+        }
+
+        function shouldRefresh(previous, current) {
+            if (!sameMemberLocation(previous, current) || !current.prefix ||
+                current.prefix === previous.prefix) {
+                return false;
+            }
+            if (current.prefix.length > previous.prefix.length &&
+                current.prefix.indexOf(previous.prefix) === 0) {
+                return !!previous.incomplete;
+            }
+            return true;
+        }
+
+        function restartIfCurrent(scheduled) {
+            timerHandle = null;
+            pending = null;
+            if (destroyed ||
+                scheduled.snapshotSerial !== snapshotSerial ||
+                scheduled.requestSerial !== requestSerial ||
+                request !== scheduled.request) {
+                lastDecision = "stale";
+                return false;
+            }
+            var editor = editorFromConfig();
+            var current = completionMemberContext(
+                editorSession(editor),
+                editorPosition(editor)
+            );
+            if (!sameMemberLocation(scheduled, current) ||
+                current.prefix !== scheduled.prefix ||
+                !popupIsOpen(editor)) {
+                lastDecision = "snapshot-changed";
+                return false;
+            }
+            var completer = editor && editor.completer;
+            if (!completer || typeof completer.detach !== "function" ||
+                !editor || typeof editor.execCommand !== "function") {
+                lastDecision = "restart-unavailable";
+                return false;
+            }
+
+            requestSerial++;
+            request = null;
+            completer.detach();
+            editor.execCommand("startAutocomplete");
+            restartCount++;
+            lastRestartAt = now();
+            lastDecision = "restarted";
+            if (typeof config.onRestart === "function") {
+                config.onRestart(publicSnapshot(scheduled), getState());
+            }
+            return true;
+        }
+
+        function recordRequest(session, pos, prefix, results) {
+            if (destroyed) {
+                return false;
+            }
+            cancelPending();
+            requestSerial++;
+            request = null;
+            var context = completionMemberContext(session, pos);
+            prefix = String(prefix || "");
+            if (!context || context.prefix !== prefix) {
+                lastDecision = "not-member";
+                return false;
+            }
+            results = Array.isArray(results) ? results : [];
+            var hasTypeScriptResult = false;
+            var incomplete = false;
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                if (item && item.autojs6Ts === true) {
+                    hasTypeScriptResult = true;
+                    if (item.autojs6Incomplete === true) {
+                        incomplete = true;
+                    }
+                }
+            }
+            if (!hasTypeScriptResult) {
+                lastDecision = "not-typescript";
+                return false;
+            }
+            context.prefix = prefix;
+            context.incomplete = incomplete;
+            context.recordedAt = now();
+            request = context;
+            lastDecision = incomplete ? "recorded-incomplete" : "recorded-complete";
+            return true;
+        }
+
+        function schedule() {
+            if (destroyed) {
+                return false;
+            }
+            cancelPending();
+            if (!request) {
+                lastDecision = "no-request";
+                return false;
+            }
+            var editor = editorFromConfig();
+            var current = completionMemberContext(
+                editorSession(editor),
+                editorPosition(editor)
+            );
+            if (!sameMemberLocation(request, current)) {
+                lastDecision = "different-member";
+                return false;
+            }
+            if (!current.prefix) {
+                lastDecision = "empty-prefix";
+                return false;
+            }
+            if (!shouldRefresh(request, current)) {
+                lastDecision = "cache-valid";
+                return false;
+            }
+            var scheduled = {
+                session: current.session,
+                row: current.row,
+                column: current.column,
+                prefixStart: current.prefixStart,
+                receiver: current.receiver,
+                prefix: current.prefix,
+                incomplete: request.incomplete,
+                recordedAt: request.recordedAt,
+                scheduledAt: now(),
+                request: request,
+                requestSerial: requestSerial,
+                snapshotSerial: snapshotSerial
+            };
+            pending = scheduled;
+            lastDecision = "scheduled";
+            timerHandle = scheduleTimer(function() {
+                restartIfCurrent(scheduled);
+            });
+            return true;
+        }
+
+        function cancel() {
+            if (destroyed) {
+                return false;
+            }
+            return cancelPending("cancelled");
+        }
+
+        function destroy() {
+            if (destroyed) {
+                return;
+            }
+            cancelPending();
+            requestSerial++;
+            request = null;
+            destroyed = true;
+            lastDecision = "destroyed";
+        }
+
+        function getState() {
+            return {
+                destroyed: destroyed,
+                pending: pending !== null,
+                delayMs: delayMs,
+                requestSerial: requestSerial,
+                snapshotSerial: snapshotSerial,
+                request: publicSnapshot(request),
+                scheduled: publicSnapshot(pending),
+                restartCount: restartCount,
+                lastRestartAt: lastRestartAt,
+                lastDecision: lastDecision
+            };
+        }
+
+        return {
+            recordRequest: recordRequest,
+            schedule: schedule,
+            cancel: cancel,
+            destroy: destroy,
+            getState: getState
+        };
     }
 
     function annotation(row, column, text, type, raw) {
@@ -1366,6 +1696,7 @@
 
     global.AutoJsAceLspClient = {
         install: createClient,
-        createClient: createClient
+        createClient: createClient,
+        createCompletionRefreshController: createCompletionRefreshController
     };
 })(window);

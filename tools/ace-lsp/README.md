@@ -22,7 +22,8 @@ The task:
 - emits deterministic `core`, `android`, `libraries`, `resources`, and
   `main-app` bundles plus `manifest.json`;
 - removes recursive path directives, hoists required TypeScript `lib`
-  directives, and normalizes legacy identifier `module` declarations only in
+  directives, normalizes legacy identifier `module` declarations, and changes
+  the known empty core `App` forward class into a mergeable interface only in
   generated output;
 - writes only below `app/build/generated/aceLspAssets`.
 
@@ -42,7 +43,8 @@ Optional group dependencies are:
 
 All optional groups are disabled by default in the host editor settings.
 
-Run the TypeScript semantic and old-WebView fallback verification with:
+Run the all-group TypeScript completion/semantic checks and old-WebView
+fallback verification with:
 
 ```powershell
 .\gradlew.bat :app:verifyAutoJs6LspRuntime

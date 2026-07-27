@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.1
+
+###### 2026/07/27
+
+* `Correctif` Correction de la complétion des membres statiques des groupes de déclarations facultatifs, notamment `App.CHROME` et les grands ensembles de ressources `R.string.text_*`; les listes de candidats tronquées d'Ace sont désormais actualisées avec une temporisation anti-rebond lorsque le préfixe change
+
 # v1.1.0
 
 ###### 2026/07/27

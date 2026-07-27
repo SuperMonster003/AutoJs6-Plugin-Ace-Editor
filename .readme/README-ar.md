@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.0-un
 ### سجل الإصدارات
 
 ******
+
+# v1.1.1
+
+###### 2026/07/27
+
+* `إصلاح` تم إصلاح إكمال الأعضاء الثابتة لمجموعات التصريحات الاختيارية, بما في ذلك `App.CHROME` ومجموعات موارد `R.string.text_*` الكبيرة; يتم الآن تحديث قوائم مرشحي Ace المقتطعة بأسلوب منع الارتداد عند تغير البادئة
 
 # v1.1.0
 

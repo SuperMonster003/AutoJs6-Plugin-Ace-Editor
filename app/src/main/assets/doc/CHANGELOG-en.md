@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.1
+
+###### 2026/07/27
+
+* `Fix` Fixed static-member completion for optional declaration groups, including `App.CHROME` and large `R.string.text_*` resource sets; truncated Ace completion lists are now refreshed with a debounce as the prefix changes
+
 # v1.1.0
 
 ###### 2026/07/27

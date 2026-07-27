@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.1.1": {
+      "released_date": "2026/07/27",
+      "fix": [
+        "修復可選聲明分組的靜態成員補全, 包括 `App.CHROME` 和大型 `R.string.text_*` 資源集; Ace 截斷的候選清單現在會在前綴變更時以防抖方式重新整理"
+      ]
+    },
     "v1.1.0": {
       "released_date": "2026/07/27",
       "feature": [

@@ -60,7 +60,7 @@ tasks.register("generateAutoJs6EditorAssets") {
 
 val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     group = "verification"
-    description = "Verifies TypeScript 6 declarations and the old-WebView static fallback."
+    description = "Verifies all TypeScript 6 declaration groups and the old-WebView static fallback."
     dependsOn(generateAutoJs6LspDeclarations)
 
     val verifier = rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-runtime.mjs")
@@ -68,12 +68,28 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     val service = autoJs6EditorAssetsDirectory.file("autojs6_ts_language_service.js")
     val client = autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js")
     val compatibility = autoJs6LspDeclarationsDirectory.file("lib.autojs6.extra.d.ts")
-    val generatedCore = generateAutoJs6LspDeclarations.flatMap { task ->
+    fun generatedDeclaration(groupId: String) = generateAutoJs6LspDeclarations.flatMap { task ->
         task.outputDirectory.file(
-            "editor/ace-builds-1.4.12/autojs6/types/generated/lib.autojs6.core.d.ts",
+            "editor/ace-builds-1.4.12/autojs6/types/generated/lib.autojs6.$groupId.d.ts",
         )
     }
-    inputs.files(verifier, runtime, service, client, compatibility, generatedCore)
+    val generatedCore = generatedDeclaration("core")
+    val generatedAndroid = generatedDeclaration("android")
+    val generatedLibraries = generatedDeclaration("libraries")
+    val generatedResources = generatedDeclaration("resources")
+    val generatedMainApp = generatedDeclaration("main-app")
+    inputs.files(
+        verifier,
+        runtime,
+        service,
+        client,
+        compatibility,
+        generatedCore,
+        generatedAndroid,
+        generatedLibraries,
+        generatedResources,
+        generatedMainApp,
+    )
 
     workingDir(rootProject.layout.projectDirectory)
     doFirst {
@@ -88,6 +104,14 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
             client.asFile.absolutePath,
             "--core",
             generatedCore.get().asFile.absolutePath,
+            "--android",
+            generatedAndroid.get().asFile.absolutePath,
+            "--libraries",
+            generatedLibraries.get().asFile.absolutePath,
+            "--resources",
+            generatedResources.get().asFile.absolutePath,
+            "--main-app",
+            generatedMainApp.get().asFile.absolutePath,
             "--compatibility",
             compatibility.asFile.absolutePath,
         )
