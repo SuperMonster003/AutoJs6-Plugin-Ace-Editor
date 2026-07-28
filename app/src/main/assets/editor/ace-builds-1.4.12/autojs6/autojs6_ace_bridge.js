@@ -31,6 +31,7 @@
     var textNotifyTimer = null;
     var textNotifyIncludeText = false;
     var cursorNotifyTimer = null;
+    var cursorNotifySuppressionDepth = 0;
     var actionModeNotifyTimer = null;
     var memberCompletionRestartTimer = null;
     var fontMetricsRefreshTimer = null;
@@ -2292,7 +2293,7 @@
     }
 
     function dispatchCursorChanged() {
-        if (!editor) {
+        if (!editor || cursorNotifySuppressionDepth > 0) {
             return;
         }
         var position = editor.getCursorPosition();
@@ -2307,11 +2308,17 @@
 
     function flushCursorChanged() {
         cursorNotifyTimer = null;
+        if (cursorNotifySuppressionDepth > 0) {
+            return;
+        }
         lastCursorNotifyAt = Date.now();
         dispatchCursorChanged();
     }
 
     function notifyCursorChanged() {
+        if (cursorNotifySuppressionDepth > 0) {
+            return;
+        }
         var now = Date.now();
         var elapsed = now - lastCursorNotifyAt;
         if (elapsed >= CURSOR_NOTIFY_THROTTLE_MS && cursorNotifyTimer === null) {
@@ -2848,6 +2855,18 @@
         }
     }
 
+    function beginCursorNotificationSuppression() {
+        cursorNotifySuppressionDepth += 1;
+        if (cursorNotifyTimer !== null) {
+            clearTimeout(cursorNotifyTimer);
+            cursorNotifyTimer = null;
+        }
+    }
+
+    function endCursorNotificationSuppression() {
+        cursorNotifySuppressionDepth = Math.max(0, cursorNotifySuppressionDepth - 1);
+    }
+
     function applyDocumentLongLineSafetyMode(enabled) {
         enabled = !!enabled;
         var changed = documentLongLineSafetyMode !== enabled;
@@ -2873,34 +2892,50 @@
 
     function setText(text, echoText, unsafeLine) {
         var targetUnsafeLine = !!unsafeLine;
-        if (documentLongLineSafetyMode || targetUnsafeLine) {
-            applyDocumentLongLineSafetyMode(true);
+        beginCursorNotificationSuppression();
+        try {
+            if (documentLongLineSafetyMode || targetUnsafeLine) {
+                applyDocumentLongLineSafetyMode(true);
+            }
+            suppressChange = true;
+            try {
+                session.setValue(text || "");
+            } finally {
+                suppressChange = false;
+            }
+            applyDocumentLongLineSafetyMode(targetUnsafeLine);
+            dirty = false;
+            var undoManager = getUndoManager();
+            if (undoManager && undoManager.reset) {
+                undoManager.reset();
+            }
+            editor.clearSelection();
+            editor.moveCursorTo(0, 0);
+        } finally {
+            endCursorNotificationSuppression();
         }
-        suppressChange = true;
-        session.setValue(text || "");
-        suppressChange = false;
-        applyDocumentLongLineSafetyMode(targetUnsafeLine);
-        dirty = false;
-        var undoManager = getUndoManager();
-        if (undoManager && undoManager.reset) {
-            undoManager.reset();
-        }
-        editor.clearSelection();
-        editor.moveCursorTo(0, 0);
         notifyTextChanged(echoText !== false);
         notifyCursorChanged();
     }
 
     function setTextDirty(text, echoText, unsafeLine) {
         var targetUnsafeLine = !!unsafeLine;
-        if (documentLongLineSafetyMode || targetUnsafeLine) {
-            applyDocumentLongLineSafetyMode(true);
+        beginCursorNotificationSuppression();
+        try {
+            if (documentLongLineSafetyMode || targetUnsafeLine) {
+                applyDocumentLongLineSafetyMode(true);
+            }
+            suppressChange = true;
+            try {
+                session.setValue(text || "");
+            } finally {
+                suppressChange = false;
+            }
+            applyDocumentLongLineSafetyMode(targetUnsafeLine);
+            markDirty();
+        } finally {
+            endCursorNotificationSuppression();
         }
-        suppressChange = true;
-        session.setValue(text || "");
-        suppressChange = false;
-        applyDocumentLongLineSafetyMode(targetUnsafeLine);
-        markDirty();
         notifyTextChanged(echoText !== false);
         notifyCursorChanged();
     }

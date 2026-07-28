@@ -94,6 +94,45 @@ class AceHistoryOperationBridgeTest {
     }
 
     @Test
+    fun `whole document replacement publishes only its final cursor position`() {
+        val setTextStart = bridgeSource.indexOf("function setText(text, echoText, unsafeLine)")
+        val setTextDirtyStart =
+            bridgeSource.indexOf("function setTextDirty(text, echoText, unsafeLine)", setTextStart)
+        val nextFunctionStart = bridgeSource.indexOf("function cloneHistoryPosition", setTextDirtyStart)
+        val setTextSource = bridgeSource.substring(setTextStart, setTextDirtyStart)
+        val setTextDirtySource = bridgeSource.substring(setTextDirtyStart, nextFunctionStart)
+
+        assertTrue(bridgeSource.contains("var cursorNotifySuppressionDepth = 0"))
+        assertTrue(bridgeSource.contains("function beginCursorNotificationSuppression()"))
+        assertTrue(bridgeSource.contains("function endCursorNotificationSuppression()"))
+        assertTrue(bridgeSource.contains("if (cursorNotifySuppressionDepth > 0)"))
+
+        assertTrue(setTextSource.indexOf("beginCursorNotificationSuppression()") >= 0)
+        assertTrue(
+            setTextSource.indexOf("session.setValue(text || \"\")") >
+                setTextSource.indexOf("beginCursorNotificationSuppression()"),
+        )
+        assertTrue(
+            setTextSource.indexOf("endCursorNotificationSuppression()") >
+                setTextSource.indexOf("editor.moveCursorTo(0, 0)"),
+        )
+        assertTrue(
+            setTextSource.indexOf("notifyCursorChanged()") >
+                setTextSource.indexOf("endCursorNotificationSuppression()"),
+        )
+
+        assertTrue(setTextDirtySource.indexOf("beginCursorNotificationSuppression()") >= 0)
+        assertTrue(
+            setTextDirtySource.indexOf("endCursorNotificationSuppression()") >
+                setTextDirtySource.indexOf("session.setValue(text || \"\")"),
+        )
+        assertTrue(
+            setTextDirtySource.indexOf("notifyCursorChanged()") >
+                setTextDirtySource.indexOf("endCursorNotificationSuppression()"),
+        )
+    }
+
+    @Test
     fun `pathological long lines use lightweight safe mode`() {
         assertTrue(bridgeSource.contains("function applyDocumentLongLineSafetyMode(enabled)"))
         assertTrue(bridgeSource.contains("session.setMode(enabled ? \"ace/mode/text\" : \"ace/mode/javascript\")"))
