@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-un
 ### 릴리스 기록
 
 ******
+
+# v1.1.4
+
+###### 2026/08/20
+
+* `기능` AutoJs6 AI 플러그인의 `Ask`, `Chat`, `Stream` 형식 선언을 동기화하고 공식/서드파티 플러그인 선택, 로컬 생성 제어, 라우트 응답 및 스트리밍 이벤트 형식을 지원
 
 # v1.1.1
 
@@ -119,19 +125,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-un
 * `기능` 전체 원본 선언을 그대로 유지하면서 선택 가능한 AutoJs6 LSP 선언 그룹을 추가: `core`는 항상 활성화되고 `android`, `libraries`, `resources`, `main-app`은 기본적으로 비활성화됨. `libraries`를 선택하면 `android`도 활성화되고, `main-app`을 선택하면 `android`, `libraries`, `resources`도 활성화됨
 * `기능` 선언을 검증하고 5개 LSP 그룹과 manifest를 생성하는 `:app:generateAutoJs6LspDeclarations` Gradle 작업을 추가. 일반 자산 병합 시 자동으로 실행되며 외부 스크립트에서도 직접 호출 가능
 * `의존성` 내장 TypeScript 언어 서비스와 표준 라이브러리 선언을 `4.2.4`에서 `6.0.3`으로 업그레이드
-
-# v1.0.0
-
-###### 2026/07/21
-
-* `기능` 플러그인 ID `ace-editor`, 엔진 `editor`, 변형 `ace`를 갖춘 독립형 Ace 편집기 플러그인을 추가
-* `기능` `org.autojs.permission.PLUGIN`으로 보호되는 `org.autojs.plugin.INFO` 및 `org.autojs.plugin.EDITOR` 구성 요소를 통한 플러그인 검색을 추가하고 Editor API 계약은 1, 최소 호스트 build는 `5234`로 설정
-* `기능` 실행 취소/다시 실행, 검색 및 바꾸기, 정규식 및 단어 단위 검색, 커서 및 선택 영역 탐색, 줄 작업, 중단점, 주석 전환 및 코드 서식을 포함한 Ace `1.4.12` 편집 기능을 추가
-* `기능` 자동 완성, hover, diagnostics 및 signature help를 제공하는 내장 JavaScript/TypeScript 언어 서비스와 AutoJs6 타입 선언을 추가하고 JSON에는 syntax diagnostics만 추가
-* `기능` 증분 텍스트 동기화, CRLF 보존, 대용량 텍스트의 청크 로딩, 매우 긴 줄을 위한 경량 모드 및 IME 적응을 추가
-* `기능` 테마와 표시 설정 및 서명된 카탈로그와 파일 무결성 검증을 갖춘 글꼴 다운로드, 캐싱, 설치 및 제거 기능을 추가
-* `기능` WebView 런타임 상태 모니터링, 하트비트 감지 및 호스트 기본 편집기로의 폴백 알림을 추가
-* `기능` 플러그인 메타데이터, README 및 CHANGELOG 콘텐츠에 스페인어, 프랑스어, 러시아어, 아랍어, 일본어, 한국어, 영어, 중국어 간체, 홍콩 중국어 번체 및 대만 중국어 번체 현지화를 추가
 
 ##### 더 많은 릴리스 기록
 

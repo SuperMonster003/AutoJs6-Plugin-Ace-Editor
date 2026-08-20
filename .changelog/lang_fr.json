@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.4": {
+      "released_date": "2026/08/20",
+      "feature": [
+        "Synchronisation des déclarations de types `Ask`, `Chat` et `Stream` du plugin d'IA AutoJs6, notamment la sélection des plugins officiels et tiers, les paramètres de génération locale, les réponses de routage et les types d'événements de streaming"
+      ]
+    },
     "v1.1.1": {
       "released_date": "2026/07/28",
       "fix": [

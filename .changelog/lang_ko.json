@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.1.4": {
+      "released_date": "2026/08/20",
+      "feature": [
+        "AutoJs6 AI 플러그인의 `Ask`, `Chat`, `Stream` 형식 선언을 동기화하고 공식/서드파티 플러그인 선택, 로컬 생성 제어, 라우트 응답 및 스트리밍 이벤트 형식을 지원"
+      ]
+    },
     "v1.1.1": {
       "released_date": "2026/07/28",
       "fix": [

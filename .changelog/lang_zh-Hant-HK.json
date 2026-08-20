@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.1.4": {
+      "released_date": "2026/08/20",
+      "feature": [
+        "同步 AutoJs6 AI 插件的 `Ask`, `Chat` 和 `Stream` 類型聲明, 包括官方/第三方插件選擇, 本地生成參數, 路由響應和串流事件類型"
+      ]
+    },
     "v1.1.1": {
       "released_date": "2026/07/28",
       "fix": [

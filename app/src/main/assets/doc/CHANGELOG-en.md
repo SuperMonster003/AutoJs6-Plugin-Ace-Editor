@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.4
+
+###### 2026/08/20
+
+* `Feature` Mirror the AutoJs6 AI plugin `Ask`, `Chat`, and `Stream` type declarations, including official and third-party plugin selection, local generation controls, route responses, and streaming event types
+
 # v1.1.1
 
 ###### 2026/07/28

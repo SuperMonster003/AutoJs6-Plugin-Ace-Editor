@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-un
 ### リリース履歴
 
 ******
+
+# v1.1.4
+
+###### 2026/08/20
+
+* `機能` AutoJs6 AI プラグインの `Ask`, `Chat`, `Stream` 型宣言を同期し, 公式/サードパーティープラグインの選択, ローカル生成パラメータ, ルート応答, ストリーミングイベント型に対応
 
 # v1.1.1
 
@@ -119,19 +125,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-un
 * `機能` 完全な元の宣言を保持したまま, 選択可能な AutoJs6 LSP 宣言グループを追加: `core` は常に有効で, `android`, `libraries`, `resources`, `main-app` は既定で無効. `libraries` を選択すると `android` も有効になり, `main-app` を選択すると `android`, `libraries`, `resources` も有効化
 * `機能` 宣言を検証して 5 つの LSP グループと manifest を生成する Gradle タスク `:app:generateAutoJs6LspDeclarations` を追加. 通常のアセットマージから自動的に実行され, 外部スクリプトから直接呼び出すことも可能
 * `依存関係` 組み込みの TypeScript 言語サービスと標準ライブラリ宣言を `4.2.4` から `6.0.3` にアップグレード
-
-# v1.0.0
-
-###### 2026/07/21
-
-* `機能` プラグイン ID `ace-editor`, エンジン `editor`, バリアント `ace` を備えたスタンドアロン Ace エディタプラグインを追加
-* `機能` `org.autojs.permission.PLUGIN` で保護された `org.autojs.plugin.INFO` および `org.autojs.plugin.EDITOR` コンポーネントを介した検出を追加し, Editor API コントラクト 1 と最小ホスト build `5234` に対応
-* `機能` Ace `1.4.12` の編集機能を追加: 元に戻す/やり直し, 検索と置換, 正規表現検索と単語単位検索, カーソルと選択範囲の移動, 行操作, ブレークポイント, コメントの切り替え, コード整形
-* `機能` 組み込みの JavaScript/TypeScript 言語サービスと AutoJs6 型宣言を追加し, 補完, hover, diagnostics, signature help に対応. JSON には syntax diagnostics のみを追加
-* `機能` 増分テキスト同期, CRLF の保持, 大容量テキストのチャンク読み込み, 非常に長い行向けの軽量モード, IME 適応を追加
-* `機能` テーマと表示設定に加え, 署名付きカタログとファイル整合性の検証を備えたフォントのダウンロード, キャッシュ, インストール, 削除機能を追加
-* `機能` WebView ランタイムの健全性監視, ハートビート検出, ホストのネイティブエディタへのフォールバック通知を追加
-* `機能` プラグインメタデータ, README, CHANGELOG のコンテンツに, スペイン語, フランス語, ロシア語, アラビア語, 日本語, 韓国語, 英語, 簡体字中国語, 香港繁体字中国語, 台湾繁体字中国語のローカライズを追加
 
 ##### その他のリリース履歴
 

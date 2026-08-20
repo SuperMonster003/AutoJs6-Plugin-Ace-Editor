@@ -25,7 +25,11 @@ declare namespace Internal {
 
         ask(input: Ai.Input, options?: Ai.Options): Promise<string>;
 
+        chat(input: Ai.PluginAskInput, options: Ai.PluginChatOptions): Promise<Ai.PluginChatResponse>;
+
         chat(input: Ai.Input, options?: Ai.Options): Promise<Ai.Response>;
+
+        stream(input: Ai.PluginAskInput, options: Ai.PluginStreamOptions): Ai.PluginStream;
 
         stream(input: Ai.Input, options?: Ai.Options): Ai.Stream;
 
@@ -87,10 +91,10 @@ declare namespace Internal {
         type PluginSelector = true | OfficialPluginSelection | PluginSelection;
 
         /**
-         * Explicit, ask-only local plugin route. Cloud provider controls and
+         * Explicit prompt-only local plugin route. Cloud provider controls and
          * provider-native request options cannot be combined with this shape.
          */
-        interface PluginAskOptions {
+        interface PluginRouteOptions {
             plugin: PluginSelector;
             /** Finite, non-negative sampling temperature. */
             temperature?: number | null;
@@ -118,6 +122,12 @@ declare namespace Internal {
             api_key?: never;
             stream?: never;
         }
+
+        type PluginAskOptions = PluginRouteOptions;
+
+        type PluginChatOptions = PluginRouteOptions;
+
+        type PluginStreamOptions = PluginRouteOptions;
 
         interface Options {
             plugin?: never;
@@ -217,6 +227,21 @@ declare namespace Internal {
             model: string;
         }
 
+        interface PluginChatResponse {
+            text: string;
+            reasoning: '';
+            toolCalls: [];
+            usage: null;
+            finishReason: null;
+            message: null;
+            error: null;
+            raw: null;
+            profile: null;
+            route: 'plugin';
+            provider: string;
+            model: string;
+        }
+
         interface StreamChunk {
             text: string;
             reasoning: string;
@@ -225,6 +250,37 @@ declare namespace Internal {
             finishReason: string | null;
             done: boolean;
             raw: JsonValue;
+        }
+
+        interface PluginStreamMetadata {
+            route: 'plugin';
+            provider: string;
+            model: string;
+        }
+
+        interface PluginStreamChunk {
+            text: string;
+            reasoning: '';
+            toolCalls: [];
+            usage: null;
+            finishReason: null;
+            done: false;
+            raw: null;
+        }
+
+        interface PluginStreamResponse {
+            text: string;
+            reasoning: '';
+            toolCalls: [];
+            usage: null;
+            finishReason: null;
+            message: null;
+            error: null;
+            raw: null;
+            profile: null;
+            route: 'plugin';
+            provider: string;
+            model: string;
         }
 
         interface PublicError {
@@ -236,6 +292,13 @@ declare namespace Internal {
             code?: string | null;
             type?: string | null;
             requestId?: string | null;
+        }
+
+        interface PluginStreamError {
+            name: string;
+            message: string;
+            route: 'plugin';
+            code: string;
         }
 
         interface Stream extends EventEmitter$ {
@@ -259,6 +322,29 @@ declare namespace Internal {
             once(eventName: 'usage', listener: (usage: Usage) => void): this;
             once(eventName: 'done', listener: (response: Response) => void): this;
             once(eventName: 'error', listener: (error: PublicError) => void): this;
+            once(eventName: 'cancelled', listener: () => void): this;
+            once(eventName: string, listener: (...args: any[]) => void): this;
+
+            cancel(): this;
+        }
+
+        interface PluginStream extends EventEmitter$ {
+            readonly state: 'created' | 'open' | 'done' | 'error' | 'cancelled';
+            readonly isDone: boolean;
+
+            on(eventName: 'open', listener: (metadata: PluginStreamMetadata) => void): this;
+            on(eventName: 'delta', listener: (text: string, chunk: PluginStreamChunk) => void): this;
+            on(eventName: 'chunk', listener: (chunk: PluginStreamChunk) => void): this;
+            on(eventName: 'done', listener: (response: PluginStreamResponse) => void): this;
+            on(eventName: 'error', listener: (error: PluginStreamError) => void): this;
+            on(eventName: 'cancelled', listener: () => void): this;
+            on(eventName: string, listener: (...args: any[]) => void): this;
+
+            once(eventName: 'open', listener: (metadata: PluginStreamMetadata) => void): this;
+            once(eventName: 'delta', listener: (text: string, chunk: PluginStreamChunk) => void): this;
+            once(eventName: 'chunk', listener: (chunk: PluginStreamChunk) => void): this;
+            once(eventName: 'done', listener: (response: PluginStreamResponse) => void): this;
+            once(eventName: 'error', listener: (error: PluginStreamError) => void): this;
             once(eventName: 'cancelled', listener: () => void): this;
             once(eventName: string, listener: (...args: any[]) => void): this;
 

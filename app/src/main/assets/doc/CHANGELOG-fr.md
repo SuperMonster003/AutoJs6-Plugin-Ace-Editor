@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.4
+
+###### 2026/08/20
+
+* `Fonctionnalité` Synchronisation des déclarations de types `Ask`, `Chat` et `Stream` du plugin d'IA AutoJs6, notamment la sélection des plugins officiels et tiers, les paramètres de génération locale, les réponses de routage et les types d'événements de streaming
+
 # v1.1.1
 
 ###### 2026/07/28

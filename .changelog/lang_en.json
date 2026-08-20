@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.4": {
+      "released_date": "2026/08/20",
+      "feature": [
+        "Mirror the AutoJs6 AI plugin `Ask`, `Chat`, and `Stream` type declarations, including official and third-party plugin selection, local generation controls, route responses, and streaming event types"
+      ]
+    },
     "v1.1.1": {
       "released_date": "2026/07/28",
       "fix": [

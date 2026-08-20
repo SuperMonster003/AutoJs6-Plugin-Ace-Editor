@@ -90,7 +90,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-un
 ### 發行歷史
 
 ******
+
+# v1.1.4
+
+###### 2026/08/20
+
+* `新增` 同步 AutoJs6 AI 外掛的 `Ask`, `Chat` 和 `Stream` 型別宣告, 包含官方/第三方外掛選擇, 本機生成參數, 路由回應和串流事件型別
 
 # v1.1.1
 
@@ -119,19 +125,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.1-un
 * `新增` 保留完整原始宣告, 並支援選擇 AutoJs6 LSP 宣告群組: `core` 一律啟用, `android`, `libraries`, `resources` 和 `main-app` 預設關閉; 選擇 `libraries` 會同時啟用 `android`, 選擇 `main-app` 會同時啟用 `android`, `libraries` 和 `resources`
 * `新增` 提供 `:app:generateAutoJs6LspDeclarations` Gradle 工作, 用於驗證宣告並產生五個 LSP 群組及其 manifest; 一般資產合併會自動呼叫該工作, 外部指令碼也可直接呼叫
 * `相依性` 內建 TypeScript 語言服務和標準函式庫宣告由 `4.2.4` 升級至 `6.0.3`
-
-# v1.0.0
-
-###### 2026/07/21
-
-* `新增` Ace 編輯器獨立外掛, 外掛 ID 為 `ace-editor`, 引擎為 `editor`, 變體為 `ace`
-* `新增` 供宿主透過受 `org.autojs.permission.PLUGIN` 保護的 `org.autojs.plugin.INFO` 和 `org.autojs.plugin.EDITOR` 元件發現外掛, Editor API 合約為 1, 最低宿主 build 為 `5234`
-* `新增` Ace `1.4.12` 編輯功能, 包含復原/重做, 尋找與取代, 規則運算式與全字詞搜尋, 游標與選取範圍導覽, 行操作, 中斷點, 註解切換和程式碼格式化
-* `新增` 內建 JavaScript/TypeScript 語言服務及 AutoJs6 型別宣告, 支援 completion, hover, diagnostics 和 signature help; JSON 僅提供語法診斷
-* `新增` 增量文字同步, 保留 CRLF, 大型文字分塊載入, 超長行輕量模式和 IME 調整
-* `新增` 主題與顯示設定, 以及具備簽章目錄和檔案完整性驗證的字型下載, 快取, 安裝與移除功能
-* `新增` WebView 執行狀況監控, 心跳偵測和切回宿主原生編輯器的通知
-* `新增` 外掛資訊, README 和 CHANGELOG 的西班牙文/法文/俄文/阿拉伯文/日文/韓文/英文/簡體中文/香港繁體/台灣繁體在地化
 
 ##### 更多發行歷史可參閱
 
