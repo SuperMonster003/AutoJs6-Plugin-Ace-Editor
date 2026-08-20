@@ -3,7 +3,7 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 5.1.3
 //
-// Last modified: Aug 11, 2026
+// Last modified: Aug 20, 2026
 
 /// <reference path="./index.d.ts" />
 
@@ -75,15 +75,31 @@ declare namespace Internal {
         interface PluginSelection {
             component: PluginComponent;
             providerId: string;
-            modelId: string;
+            modelId?: string;
         }
+
+        interface OfficialPluginSelection {
+            component?: never;
+            providerId?: string;
+            modelId?: string;
+        }
+
+        type PluginSelector = true | OfficialPluginSelection | PluginSelection;
 
         /**
          * Explicit, ask-only local plugin route. Cloud provider controls and
          * provider-native request options cannot be combined with this shape.
          */
         interface PluginAskOptions {
-            plugin: PluginSelection;
+            plugin: PluginSelector;
+            /** Finite, non-negative sampling temperature. */
+            temperature?: number | null;
+            /** Positive-integer top-K sampling limit. */
+            topK?: number | null;
+            /** Finite top-P sampling threshold in the inclusive range 0 through 1. */
+            topP?: number | null;
+            /** Provider-enforced output-token ceiling from 1 through 2,147,483,647. */
+            maxTokens?: number | null;
             timeout?: number | null;
             timeoutMillis?: number | null;
             timeoutMs?: number | null;
