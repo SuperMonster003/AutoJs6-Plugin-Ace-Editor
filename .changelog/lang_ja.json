@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.1.6": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "AutoJs6 ローカル AI プラグインの型宣言を拡充し, 複数ロールのメッセージ履歴, 公式/サードパーティー選択, 生成パラメータ, 正確な使用量とストリーミングペイロード, `ai.models` によるモデル探索に対応"
+      ]
+    },
     "v1.1.5": {
       "released_date": "2026/08/21",
       "feature": [

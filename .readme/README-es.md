@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -103,6 +103,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.6
+
+###### 2026/08/21
+
+* `Función` Completa las declaraciones del plugin de IA local de AutoJs6 con historial de mensajes multirrol, selectores oficiales y de terceros, controles de generación, cargas útiles exactas de uso y streaming, y el descubrimiento de modelos mediante `ai.models`
+
 # v1.1.5
 
 ###### 2026/08/21
@@ -114,15 +120,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/20
 
 * `Función` Sincronización de las declaraciones de tipos `Ask`, `Chat` y `Stream` del plugin de IA de AutoJs6, incluidas la selección de plugins oficiales y de terceros, los controles de generación local, las respuestas de ruta y los tipos de eventos de streaming
-
-# v1.1.1
-
-###### 2026/07/28
-
-* `Corrección` Se corrigió el autocompletado de miembros estáticos de los grupos de declaraciones opcionales, incluidos `App.CHROME` y los grandes conjuntos de recursos `R.string.text_*`; las listas de candidatos truncadas de Ace ahora se actualizan con antirrebote cuando cambia el prefijo
-* `Corrección` Se corrigió que los documentos grandes normales se confundieran con líneas muy largas y pasaran al modo de texto sin formato, lo que deshabilitaba el resaltado de JavaScript, el autocompletado y los servicios semánticos; las líneas individuales realmente muy largas siguen usando el modo seguro
-* `Corrección` Se corrigió que la burbuja de ayuda de firmas/parámetros de Ace usara siempre un fondo claro; ahora adopta dinámicamente los colores de fondo y primer plano del tema del editor, mientras que una ventana emergente de candidatos de autocompletado ya abierta se actualiza por separado al cambiar el tema
-* `Corrección` Se corrigió que el ActionMode de selección de texto del sistema no siguiera los colores de Ace sustituyéndolo por una barra de herramientas de selección propia del editor y sensible a la paleta; las acciones de selección, los estados pulsados y el panel de desbordamiento ahora siguen los colores actuales de Ace en todas las versiones de Android
 
 ##### Para ver más historial de versiones
 

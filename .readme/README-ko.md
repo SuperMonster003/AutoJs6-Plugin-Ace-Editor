@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-un
 
 ******
 
+# v1.1.6
+
+###### 2026/08/21
+
+* `기능` AutoJs6 로컬 AI 플러그인 형식 선언을 보완하여 다중 역할 메시지 기록, 공식/서드파티 선택기, 생성 제어, 정확한 사용량 및 스트리밍 페이로드, `ai.models` 모델 검색을 지원
+
 # v1.1.5
 
 ###### 2026/08/21
@@ -114,15 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-un
 ###### 2026/08/20
 
 * `기능` AutoJs6 AI 플러그인의 `Ask`, `Chat`, `Stream` 형식 선언을 동기화하고 공식/서드파티 플러그인 선택, 로컬 생성 제어, 라우트 응답 및 스트리밍 이벤트 형식을 지원
-
-# v1.1.1
-
-###### 2026/07/28
-
-* `수정` `App.CHROME` 및 대규모 `R.string.text_*` 리소스를 포함한 선택적 선언 그룹의 정적 멤버 자동 완성을 수정하고, Ace의 잘린 완성 후보 목록이 접두사 변경 시 디바운스 방식으로 새로 고쳐지도록 개선
-* `수정` 일반적인 대용량 문서가 매우 긴 줄로 잘못 판정되어 일반 텍스트 모드로 전환되면서 JavaScript 구문 강조, 자동 완성 및 의미 서비스가 비활성화되는 문제를 수정. 실제로 매우 긴 단일 줄에는 계속 안전 모드를 적용
-* `수정` Ace 시그니처/매개변수 힌트 버블이 항상 밝은 배경을 사용하는 문제를 수정하여 편집기 테마의 배경색과 전경색을 동적으로 반영. 테마 전환 시 이미 열려 있는 자동 완성 후보 팝업도 별도로 새로 고침
-* `수정` 시스템 텍스트 선택 ActionMode를 편집기 자체의 팔레트 인식 선택 도구 모음으로 교체하여, 선택 작업, 눌림 상태 및 더보기 패널이 모든 Android 버전에서 현재 Ace 색상표를 따르도록 수정
 
 ##### 더 많은 릴리스 기록
 

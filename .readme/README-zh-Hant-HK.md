@@ -90,7 +90,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-un
 
 ******
 
+# v1.1.6
+
+###### 2026/08/21
+
+* `新增` 完善 AutoJs6 本機 AI 插件類型聲明, 涵蓋多角色訊息歷史, 官方與第三方選擇器, 生成參數, 精確用量及串流負載, 以及 `ai.models` 模型探索
+
 # v1.1.5
 
 ###### 2026/08/21
@@ -114,15 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-un
 ###### 2026/08/20
 
 * `新增` 同步 AutoJs6 AI 插件的 `Ask`, `Chat` 和 `Stream` 類型聲明, 包括官方/第三方插件選擇, 本地生成參數, 路由響應和串流事件類型
-
-# v1.1.1
-
-###### 2026/07/28
-
-* `修復` 修復可選聲明分組的靜態成員補全, 包括 `App.CHROME` 和大型 `R.string.text_*` 資源集; Ace 截斷的候選清單現在會在前綴變更時以防抖方式重新整理
-* `修復` 修復一般大型文件被誤判為超長行並切換到純文字模式, 導致 JavaScript 語法高亮, 補全和語義服務失效的問題; 真正的超長單行仍會啟用安全模式
-* `修復` 修復 Ace 簽名/參數提示氣泡一直使用淺色背景的問題, 現在會隨編輯器主題動態套用背景色和前景色; 切換主題時亦會獨立重新整理已開啟的自動補全候選選單
-* `修復` 修復系統文本選擇 ActionMode 無法跟隨 Ace 配色的問題, 現改用編輯器自有且可感知調色板的選擇工具欄, 讓選擇操作, 按壓狀態和更多面板在各 Android 版本中均跟隨當前 Ace 配色
 
 ##### 更多發行歷史可參閱
 

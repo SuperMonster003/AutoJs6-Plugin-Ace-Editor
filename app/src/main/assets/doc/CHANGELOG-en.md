@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.6
+
+###### 2026/08/21
+
+* `Feature` Complete the AutoJs6 local AI plugin declarations with multi-role message history, official and third-party selectors, generation controls, exact usage and streaming payloads, and `ai.models` model discovery
+
 # v1.1.5
 
 ###### 2026/08/21

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.6
+
+###### 2026/08/21
+
+* `Función` Completa las declaraciones del plugin de IA local de AutoJs6 con historial de mensajes multirrol, selectores oficiales y de terceros, controles de generación, cargas útiles exactas de uso y streaming, y el descubrimiento de modelos mediante `ai.models`
+
 # v1.1.5
 
 ###### 2026/08/21

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.6": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "Complete the AutoJs6 local AI plugin declarations with multi-role message history, official and third-party selectors, generation controls, exact usage and streaming payloads, and `ai.models` model discovery"
+      ]
+    },
     "v1.1.5": {
       "released_date": "2026/08/21",
       "feature": [

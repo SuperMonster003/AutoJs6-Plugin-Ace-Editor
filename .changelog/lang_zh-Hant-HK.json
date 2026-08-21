@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.1.6": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "完善 AutoJs6 本機 AI 插件類型聲明, 涵蓋多角色訊息歷史, 官方與第三方選擇器, 生成參數, 精確用量及串流負載, 以及 `ai.models` 模型探索"
+      ]
+    },
     "v1.1.5": {
       "released_date": "2026/08/21",
       "feature": [

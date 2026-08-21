@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.6
+
+###### 2026/08/21
+
+* `Feature` Complete the AutoJs6 local AI plugin declarations with multi-role message history, official and third-party selectors, generation controls, exact usage and streaming payloads, and `ai.models` model discovery
+
 # v1.1.5
 
 ###### 2026/08/21
@@ -114,15 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/20
 
 * `Feature` Mirror the AutoJs6 AI plugin `Ask`, `Chat`, and `Stream` type declarations, including official and third-party plugin selection, local generation controls, route responses, and streaming event types
-
-# v1.1.1
-
-###### 2026/07/28
-
-* `Fix` Fixed static-member completion for optional declaration groups, including `App.CHROME` and large `R.string.text_*` resource sets; truncated Ace completion lists are now refreshed with a debounce as the prefix changes
-* `Fix` Fixed ordinary large documents being mistaken for very long lines, causing them to switch to plain-text mode and lose JavaScript highlighting, completion, and semantic services; genuinely very long individual lines still use safety mode
-* `Fix` Fixed the Ace signature/parameter-hint bubble always using a light background; it now follows the editor theme's background and foreground colors dynamically, while an already-open autocomplete candidate popup is refreshed separately when the theme changes
-* `Fix` Fixed the system text-selection ActionMode not following Ace colors by replacing it with Ace's own palette-aware selection toolbar; selection actions, pressed states, and the overflow panel now follow the current Ace palette across Android versions
 
 ##### Complete release history
 
