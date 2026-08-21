@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 명시적 backend profile 타입 선언, `cpu`/`gpu`/`npu`, `ai.models` 기기 가용성, 안정적 사용 불가 사유 및 CPU fallback 금지 포함
+
 # v1.1.8
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 ###### 2026/08/21
 
 * `기능` `ai.session` 영구 온디바이스 대화 형식 선언을 추가하여 고정 세션 옵션, 턴마다 새 프롬프트 하나만 받는 `ask`/`chat`/`stream` 메서드, 수명 주기 상태 및 명시적 종료 의미를 지원
-
-# v1.1.6
-
-###### 2026/08/21
-
-* `기능` AutoJs6 로컬 AI 플러그인 형식 선언을 보완하여 다중 역할 메시지 기록, 공식/서드파티 선택기, 생성 제어, 정확한 사용량 및 스트리밍 페이로드, `ai.models` 모델 검색을 지원
 
 ##### 더 많은 릴리스 기록
 

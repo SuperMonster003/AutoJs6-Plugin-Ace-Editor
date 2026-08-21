@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 명시적 backend profile 타입 선언, `cpu`/`gpu`/`npu`, `ai.models` 기기 가용성, 안정적 사용 불가 사유 및 CPU fallback 금지 포함
+
 # v1.1.8
 
 ###### 2026/08/21

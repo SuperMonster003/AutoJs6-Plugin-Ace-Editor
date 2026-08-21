@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v1.1.9": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "Declarar perfiles backend explícitos para `ai.ask`/`ai.chat`/`ai.stream` y `ai.session` persistente, incluidos `cpu`/`gpu`/`npu`, disponibilidad por dispositivo en `ai.models`, razones estables de no disponibilidad y ausencia de fallback a CPU"
+      ]
+    },
     "v1.1.8": {
       "released_date": "2026/08/21",
       "feature": [

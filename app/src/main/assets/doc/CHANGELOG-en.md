@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `Feature` Declare explicit backend profiles for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `cpu`/`gpu`/`npu`, `ai.models` device availability, stable unavailable reasons, and no CPU fallback
+
 # v1.1.8
 
 ###### 2026/08/21

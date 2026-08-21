@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -103,6 +103,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `Función` Declarar perfiles backend explícitos para `ai.ask`/`ai.chat`/`ai.stream` y `ai.session` persistente, incluidos `cpu`/`gpu`/`npu`, disponibilidad por dispositivo en `ai.models`, razones estables de no disponibilidad y ausencia de fallback a CPU
+
 # v1.1.8
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/21
 
 * `Función` Añade las declaraciones de conversación persistente en el dispositivo de `ai.session`, con opciones fijas de sesión, métodos `ask`/`chat`/`stream` de un prompt nuevo por turno, estado del ciclo de vida y cierre explícito
-
-# v1.1.6
-
-###### 2026/08/21
-
-* `Función` Completa las declaraciones del plugin de IA local de AutoJs6 con historial de mensajes multirrol, selectores oficiales y de terceros, controles de generación, cargas útiles exactas de uso y streaming, y el descubrimiento de modelos mediante `ai.models`
 
 ##### Para ver más historial de versiones
 

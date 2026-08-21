@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `新增` `ai.ask`/`ai.chat`/`ai.stream` 與持久 `ai.session` 的明確 backend profile 型別宣告, 涵蓋 `cpu`/`gpu`/`npu`, `ai.models` 裝置可用性, 穩定不可用原因及禁止 CPU 回退語意
+
 # v1.1.8
 
 ###### 2026/08/21

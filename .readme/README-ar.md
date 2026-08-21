@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `ميزة` تعريف backend profile صريح لـ `ai.ask` و`ai.chat` و`ai.stream` و`ai.session` الدائمة, يشمل `cpu` و`gpu` و`npu` وتوافر الجهاز في `ai.models` وأسباب عدم التوافر الثابتة ومنع الرجوع إلى CPU
+
 # v1.1.8
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 ###### 2026/08/21
 
 * `ميزة` إضافة تعريفات محادثة `ai.session` المحلية الدائمة, بما يشمل خيارات جلسة ثابتة, وطرق `ask`/`chat`/`stream` التي تستقبل مطالبة جديدة واحدة لكل دورة, وحالة دورة الحياة, ودلالات الإغلاق الصريح
-
-# v1.1.6
-
-###### 2026/08/21
-
-* `ميزة` استكمال تعريفات إضافة الذكاء الاصطناعي المحلية في AutoJs6 مع سجل رسائل متعدد الأدوار, ومحددات الإضافات الرسمية والخارجية, وعناصر تحكم التوليد, وبيانات الاستخدام والبث الدقيقة, واكتشاف النماذج عبر `ai.models`
 
 ##### لمزيد من سجل الإصدارات
 

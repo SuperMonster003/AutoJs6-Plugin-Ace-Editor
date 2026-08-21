@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.1.9": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "Объявить явные backend profile для `ai.ask`/`ai.chat`/`ai.stream` и постоянной `ai.session`, включая `cpu`/`gpu`/`npu`, доступность устройства в `ai.models`, стабильные причины недоступности и запрет отката на CPU"
+      ]
+    },
     "v1.1.8": {
       "released_date": "2026/08/21",
       "feature": [

@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `Feature` Declare explicit backend profiles for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `cpu`/`gpu`/`npu`, `ai.models` device availability, stable unavailable reasons, and no CPU fallback
+
 # v1.1.8
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/21
 
 * `Feature` Add `ai.session` persistent on-device Conversation declarations, including fixed session options, one-prompt-per-turn `ask`/`chat`/`stream` methods, lifecycle state, and explicit close semantics
-
-# v1.1.6
-
-###### 2026/08/21
-
-* `Feature` Complete the AutoJs6 local AI plugin declarations with multi-role message history, official and third-party selectors, generation controls, exact usage and streaming payloads, and `ai.models` model discovery
 
 ##### Complete release history
 

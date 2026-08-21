@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `Función` Declarar perfiles backend explícitos para `ai.ask`/`ai.chat`/`ai.stream` y `ai.session` persistente, incluidos `cpu`/`gpu`/`npu`, disponibilidad por dispositivo en `ai.models`, razones estables de no disponibilidad y ausencia de fallback a CPU
+
 # v1.1.8
 
 ###### 2026/08/21

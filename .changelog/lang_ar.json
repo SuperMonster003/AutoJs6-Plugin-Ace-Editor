@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.9": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "تعريف backend profile صريح لـ `ai.ask` و`ai.chat` و`ai.stream` و`ai.session` الدائمة, يشمل `cpu` و`gpu` و`npu` وتوافر الجهاز في `ai.models` وأسباب عدم التوافر الثابتة ومنع الرجوع إلى CPU"
+      ]
+    },
     "v1.1.8": {
       "released_date": "2026/08/21",
       "feature": [

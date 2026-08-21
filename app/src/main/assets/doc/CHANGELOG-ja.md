@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `機能` `ai.ask`/`ai.chat`/`ai.stream` と永続 `ai.session` の明示的 backend profile 型宣言, `cpu`/`gpu`/`npu`, `ai.models` のデバイス可用性, 安定した使用不可理由, CPU フォールバック禁止を網羅
+
 # v1.1.8
 
 ###### 2026/08/21

@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `新增` `ai.ask`/`ai.chat`/`ai.stream` 与持久 `ai.session` 的显式 backend profile 类型声明, 覆盖 `cpu`/`gpu`/`npu`, `ai.models` 设备可用性, 稳定不可用原因及禁止 CPU 回退语义
+
 # v1.1.8
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 ###### 2026/08/21
 
 * `新增` 新增 `ai.session` 持久本机会话类型声明, 覆盖固定会话选项, 每轮仅接收新提示词的 `ask`/`chat`/`stream` 方法, 生命周期状态及显式关闭语义
-
-# v1.1.6
-
-###### 2026/08/21
-
-* `新增` 完善 AutoJs6 本机 AI 插件类型声明, 覆盖多角色消息历史, 官方与第三方选择器, 生成参数, 精确用量及流式负载, 以及 `ai.models` 模型发现
 
 ##### 更多发行历史可参阅
 

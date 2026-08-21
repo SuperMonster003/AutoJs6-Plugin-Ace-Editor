@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 
 ******
 
+# v1.1.9
+
+###### 2026/08/21
+
+* `機能` `ai.ask`/`ai.chat`/`ai.stream` と永続 `ai.session` の明示的 backend profile 型宣言, `cpu`/`gpu`/`npu`, `ai.models` のデバイス可用性, 安定した使用不可理由, CPU フォールバック禁止を網羅
+
 # v1.1.8
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-un
 ###### 2026/08/21
 
 * `機能` `ai.session` の永続オンデバイス会話型宣言を追加し, 固定セッション設定, 各ターンで新しいプロンプトだけを受け取る `ask`/`chat`/`stream`, ライフサイクル状態, 明示的な終了セマンティクスに対応
-
-# v1.1.6
-
-###### 2026/08/21
-
-* `機能` AutoJs6 ローカル AI プラグインの型宣言を拡充し, 複数ロールのメッセージ履歴, 公式/サードパーティー選択, 生成パラメータ, 正確な使用量とストリーミングペイロード, `ai.models` によるモデル探索に対応
 
 ##### その他のリリース履歴
 
