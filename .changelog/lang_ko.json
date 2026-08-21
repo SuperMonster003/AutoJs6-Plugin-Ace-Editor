@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.1.5": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "AutoJs6 독립 YOLO 플러그인 객체 감지 형식 선언 동기화, 명시적 Provider 컴포넌트, 세션 및 감지 옵션, 감지 결과, 안정적인 오류 코드 포함"
+      ]
+    },
     "v1.1.4": {
       "released_date": "2026/08/20",
       "feature": [

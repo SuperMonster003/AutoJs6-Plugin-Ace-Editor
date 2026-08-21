@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.1.5": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "同步 AutoJs6 YOLO 獨立外掛目標偵測型別宣告, 包含明確 Provider 元件, 工作階段與偵測選項, 偵測結果和穩定錯誤代碼"
+      ]
+    },
     "v1.1.4": {
       "released_date": "2026/08/20",
       "feature": [

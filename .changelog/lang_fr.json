@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.5": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "Synchronisation des déclarations de types de détection d'objets du plugin YOLO autonome d'AutoJs6, notamment le composant Provider explicite, les options de session et de détection, les résultats et les codes d'erreur stables"
+      ]
+    },
     "v1.1.4": {
       "released_date": "2026/08/20",
       "feature": [

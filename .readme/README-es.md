@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -102,6 +102,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.1.5
+
+###### 2026/08/21
+
+* `Función` Sincronización de las declaraciones de tipos de detección de objetos del plugin YOLO independiente de AutoJs6, incluidos el componente Provider explícito, las opciones de sesión y detección, los resultados y los códigos de error estables
 
 # v1.1.4
 
@@ -117,14 +123,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Corrección` Se corrigió que los documentos grandes normales se confundieran con líneas muy largas y pasaran al modo de texto sin formato, lo que deshabilitaba el resaltado de JavaScript, el autocompletado y los servicios semánticos; las líneas individuales realmente muy largas siguen usando el modo seguro
 * `Corrección` Se corrigió que la burbuja de ayuda de firmas/parámetros de Ace usara siempre un fondo claro; ahora adopta dinámicamente los colores de fondo y primer plano del tema del editor, mientras que una ventana emergente de candidatos de autocompletado ya abierta se actualiza por separado al cambiar el tema
 * `Corrección` Se corrigió que el ActionMode de selección de texto del sistema no siguiera los colores de Ace sustituyéndolo por una barra de herramientas de selección propia del editor y sensible a la paleta; las acciones de selección, los estados pulsados y el panel de desbordamiento ahora siguen los colores actuales de Ace en todas las versiones de Android
-
-# v1.1.0
-
-###### 2026/07/27
-
-* `Función` Se conservaron las declaraciones fuente completas y se añadieron grupos seleccionables de declaraciones LSP de AutoJs6: `core` permanece siempre habilitado, mientras que `android`, `libraries`, `resources` y `main-app` están deshabilitados de forma predeterminada; seleccionar `libraries` también habilita `android`, y seleccionar `main-app` también habilita `android`, `libraries` y `resources`
-* `Función` Se añadió la tarea de Gradle `:app:generateAutoJs6LspDeclarations` para validar las declaraciones y generar los cinco grupos LSP y su manifest; la combinación normal de recursos la ejecuta automáticamente y los scripts externos pueden invocarla directamente
-* `Dependencia` Se actualizaron el servicio de lenguaje TypeScript integrado y las declaraciones de la biblioteca estándar de `4.2.4` a `6.0.3`
 
 ##### Para ver más historial de versiones
 

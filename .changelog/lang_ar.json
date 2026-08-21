@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.5": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "مزامنة تعريفات أنواع اكتشاف الكائنات لإضافة YOLO المستقلة في AutoJs6, بما في ذلك مكون Provider الصريح, وخيارات الجلسة والاكتشاف, والنتائج, ورموز الأخطاء الثابتة"
+      ]
+    },
     "v1.1.4": {
       "released_date": "2026/08/20",
       "feature": [

@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-un
 ### 发行历史
 
 ******
+
+# v1.1.5
+
+###### 2026/08/21
+
+* `新增` 同步 AutoJs6 YOLO 独立插件目标检测类型声明, 包括显式 Provider 组件, 会话与检测选项, 检测结果和稳定错误代码
 
 # v1.1.4
 
@@ -117,14 +123,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-un
 * `修复` 修复普通大文档被误判为超长行并切换到纯文本模式, 导致 JavaScript 高亮, 补全和语义服务失效的问题; 真正的超长单行仍会启用安全模式
 * `修复` 修复 Ace 签名/参数提示气泡始终使用亮色背景的问题, 现在会随编辑器主题动态应用背景色和前景色; 切换主题时也会单独刷新已存在的自动补全候选菜单
 * `修复` 修复系统文本选择 ActionMode 无法跟随 Ace 配色的问题, 现改用编辑器自有且可感知调色板的选择工具栏, 使选择操作, 按压状态和更多面板在各 Android 版本中均跟随当前 Ace 配色
-
-# v1.1.0
-
-###### 2026/07/27
-
-* `新增` 保留完整原始声明, 并支持选择 AutoJs6 LSP 声明分组: `core` 始终启用, `android`, `libraries`, `resources` 和 `main-app` 默认关闭; 选择 `libraries` 会同时启用 `android`, 选择 `main-app` 会同时启用 `android`, `libraries` 和 `resources`
-* `新增` 提供 `:app:generateAutoJs6LspDeclarations` Gradle 任务, 用于校验声明并生成五个 LSP 分组及其 manifest; 常规资产合并会自动调用该任务, 外部脚本也可直接调用
-* `依赖` 内置 TypeScript 语言服务和标准库声明由 `4.2.4` 升级至 `6.0.3`
 
 ##### 更多发行历史可参阅
 

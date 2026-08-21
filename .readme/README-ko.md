@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-un
 ### 릴리스 기록
 
 ******
+
+# v1.1.5
+
+###### 2026/08/21
+
+* `기능` AutoJs6 독립 YOLO 플러그인 객체 감지 형식 선언 동기화, 명시적 Provider 컴포넌트, 세션 및 감지 옵션, 감지 결과, 안정적인 오류 코드 포함
 
 # v1.1.4
 
@@ -117,14 +123,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-un
 * `수정` 일반적인 대용량 문서가 매우 긴 줄로 잘못 판정되어 일반 텍스트 모드로 전환되면서 JavaScript 구문 강조, 자동 완성 및 의미 서비스가 비활성화되는 문제를 수정. 실제로 매우 긴 단일 줄에는 계속 안전 모드를 적용
 * `수정` Ace 시그니처/매개변수 힌트 버블이 항상 밝은 배경을 사용하는 문제를 수정하여 편집기 테마의 배경색과 전경색을 동적으로 반영. 테마 전환 시 이미 열려 있는 자동 완성 후보 팝업도 별도로 새로 고침
 * `수정` 시스템 텍스트 선택 ActionMode를 편집기 자체의 팔레트 인식 선택 도구 모음으로 교체하여, 선택 작업, 눌림 상태 및 더보기 패널이 모든 Android 버전에서 현재 Ace 색상표를 따르도록 수정
-
-# v1.1.0
-
-###### 2026/07/27
-
-* `기능` 전체 원본 선언을 그대로 유지하면서 선택 가능한 AutoJs6 LSP 선언 그룹을 추가: `core`는 항상 활성화되고 `android`, `libraries`, `resources`, `main-app`은 기본적으로 비활성화됨. `libraries`를 선택하면 `android`도 활성화되고, `main-app`을 선택하면 `android`, `libraries`, `resources`도 활성화됨
-* `기능` 선언을 검증하고 5개 LSP 그룹과 manifest를 생성하는 `:app:generateAutoJs6LspDeclarations` Gradle 작업을 추가. 일반 자산 병합 시 자동으로 실행되며 외부 스크립트에서도 직접 호출 가능
-* `의존성` 내장 TypeScript 언어 서비스와 표준 라이브러리 선언을 `4.2.4`에서 `6.0.3`으로 업그레이드
 
 ##### 더 많은 릴리스 기록
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.5
+
+###### 2026/08/21
+
+* `Feature` Mirror the AutoJs6 standalone YOLO plugin object-detection type declarations, including the explicit provider component, session and detection options, detection results, and stable error codes
+
 # v1.1.4
 
 ###### 2026/08/20

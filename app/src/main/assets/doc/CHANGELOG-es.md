@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.5
+
+###### 2026/08/21
+
+* `Función` Sincronización de las declaraciones de tipos de detección de objetos del plugin YOLO independiente de AutoJs6, incluidos el componente Provider explícito, las opciones de sesión y detección, los resultados y los códigos de error estables
+
 # v1.1.4
 
 ###### 2026/08/20

@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.5-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-un
 ### リリース履歴
 
 ******
+
+# v1.1.5
+
+###### 2026/08/21
+
+* `機能` AutoJs6 の独立 YOLO プラグイン向け物体検出型宣言を同期し, 明示的な Provider コンポーネント, セッションと検出のオプション, 検出結果, 安定したエラーコードに対応
 
 # v1.1.4
 
@@ -117,14 +123,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.4-un
 * `修正` 通常の大きなドキュメントが超長行と誤判定されてプレーンテキストモードへ切り替わり, JavaScript のハイライト, 補完, セマンティックサービスが無効になる問題を修正. 実際に非常に長い単一行には引き続きセーフモードを適用
 * `修正` Ace のシグネチャ/パラメータヒント用バブルが常に明るい背景になる問題を修正し, エディタテーマの背景色と前景色を動的に反映. テーマ切り替え時には, 既に開いているオートコンプリート候補ポップアップも別個に更新
 * `修正` システムのテキスト選択 ActionMode をエディタ独自のパレット対応選択ツールバーに置き換え, 選択操作, 押下状態, オーバーフローパネルが各 Android バージョンで現在の Ace 配色に追従するよう修正
-
-# v1.1.0
-
-###### 2026/07/27
-
-* `機能` 完全な元の宣言を保持したまま, 選択可能な AutoJs6 LSP 宣言グループを追加: `core` は常に有効で, `android`, `libraries`, `resources`, `main-app` は既定で無効. `libraries` を選択すると `android` も有効になり, `main-app` を選択すると `android`, `libraries`, `resources` も有効化
-* `機能` 宣言を検証して 5 つの LSP グループと manifest を生成する Gradle タスク `:app:generateAutoJs6LspDeclarations` を追加. 通常のアセットマージから自動的に実行され, 外部スクリプトから直接呼び出すことも可能
-* `依存関係` 組み込みの TypeScript 言語サービスと標準ライブラリ宣言を `4.2.4` から `6.0.3` にアップグレード
 
 ##### その他のリリース履歴
 
