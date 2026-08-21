@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `機能` `ai.ask`/`ai.chat`/`ai.stream` と永続 `ai.session` のネイティブ構造化 JSON 型宣言. `structuredJson`, JSON オブジェクト `responseSchema`, セッション固定 schema を含む
+
 # v1.1.7
 
 ###### 2026/08/21

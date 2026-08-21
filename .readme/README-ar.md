@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `ميزة` تصريحات JSON منظم أصلي في `ai.ask` و`ai.chat` و`ai.stream` وجلسة `ai.session` الدائمة, مع `structuredJson` وكائن JSON باسم `responseSchema` وschema ثابت لكل جلسة
+
 # v1.1.7
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 ###### 2026/08/21
 
 * `ميزة` استكمال تعريفات إضافة الذكاء الاصطناعي المحلية في AutoJs6 مع سجل رسائل متعدد الأدوار, ومحددات الإضافات الرسمية والخارجية, وعناصر تحكم التوليد, وبيانات الاستخدام والبث الدقيقة, واكتشاف النماذج عبر `ai.models`
-
-# v1.1.5
-
-###### 2026/08/21
-
-* `ميزة` مزامنة تعريفات أنواع اكتشاف الكائنات لإضافة YOLO المستقلة في AutoJs6, بما في ذلك مكون Provider الصريح, وخيارات الجلسة والاكتشاف, والنتائج, ورموز الأخطاء الثابتة
 
 ##### لمزيد من سجل الإصدارات
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `Función` Declara JSON estructurado nativo para `ai.ask`/`ai.chat`/`ai.stream` y la sesión persistente `ai.session`, con `structuredJson`, el objeto JSON `responseSchema` y un schema fijo por sesión
+
 # v1.1.7
 
 ###### 2026/08/21

@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 네이티브 구조화 JSON 타입 선언. `structuredJson`, JSON 객체 `responseSchema`, 세션 고정 schema 포함
+
 # v1.1.7
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 ###### 2026/08/21
 
 * `기능` AutoJs6 로컬 AI 플러그인 형식 선언을 보완하여 다중 역할 메시지 기록, 공식/서드파티 선택기, 생성 제어, 정확한 사용량 및 스트리밍 페이로드, `ai.models` 모델 검색을 지원
-
-# v1.1.5
-
-###### 2026/08/21
-
-* `기능` AutoJs6 독립 YOLO 플러그인 객체 감지 형식 선언 동기화, 명시적 Provider 컴포넌트, 세션 및 감지 옵션, 감지 결과, 안정적인 오류 코드 포함
 
 ##### 더 많은 릴리스 기록
 

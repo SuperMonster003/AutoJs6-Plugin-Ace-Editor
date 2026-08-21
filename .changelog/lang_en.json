@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.8": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "Declare native structured JSON for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `structuredJson`, JSON-object `responseSchema`, and fixed per-session schemas"
+      ]
+    },
     "v1.1.7": {
       "released_date": "2026/08/21",
       "feature": [

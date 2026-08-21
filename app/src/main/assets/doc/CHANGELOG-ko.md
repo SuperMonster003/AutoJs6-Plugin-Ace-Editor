@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 네이티브 구조화 JSON 타입 선언. `structuredJson`, JSON 객체 `responseSchema`, 세션 고정 schema 포함
+
 # v1.1.7
 
 ###### 2026/08/21

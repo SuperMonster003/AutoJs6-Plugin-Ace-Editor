@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.1.8": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "`ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 네이티브 구조화 JSON 타입 선언. `structuredJson`, JSON 객체 `responseSchema`, 세션 고정 schema 포함"
+      ]
+    },
     "v1.1.7": {
       "released_date": "2026/08/21",
       "feature": [

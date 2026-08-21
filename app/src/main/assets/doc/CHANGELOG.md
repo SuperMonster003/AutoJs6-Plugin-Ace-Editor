@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `新增` `ai.ask`/`ai.chat`/`ai.stream` 与持久 `ai.session` 的原生结构化 JSON 类型声明, 覆盖 `structuredJson`, JSON 对象 `responseSchema` 及固定会话 schema
+
 # v1.1.7
 
 ###### 2026/08/21

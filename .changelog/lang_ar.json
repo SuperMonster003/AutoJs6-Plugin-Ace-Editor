@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.8": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "تصريحات JSON منظم أصلي في `ai.ask` و`ai.chat` و`ai.stream` وجلسة `ai.session` الدائمة, مع `structuredJson` وكائن JSON باسم `responseSchema` وschema ثابت لكل جلسة"
+      ]
+    },
     "v1.1.7": {
       "released_date": "2026/08/21",
       "feature": [

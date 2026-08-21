@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `新增` `ai.ask`/`ai.chat`/`ai.stream` 与持久 `ai.session` 的原生结构化 JSON 类型声明, 覆盖 `structuredJson`, JSON 对象 `responseSchema` 及固定会话 schema
+
 # v1.1.7
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 ###### 2026/08/21
 
 * `新增` 完善 AutoJs6 本机 AI 插件类型声明, 覆盖多角色消息历史, 官方与第三方选择器, 生成参数, 精确用量及流式负载, 以及 `ai.models` 模型发现
-
-# v1.1.5
-
-###### 2026/08/21
-
-* `新增` 同步 AutoJs6 YOLO 独立插件目标检测类型声明, 包括显式 Provider 组件, 会话与检测选项, 检测结果和稳定错误代码
 
 ##### 更多发行历史可参阅
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `Feature` Declare native structured JSON for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `structuredJson`, JSON-object `responseSchema`, and fixed per-session schemas
+
 # v1.1.7
 
 ###### 2026/08/21

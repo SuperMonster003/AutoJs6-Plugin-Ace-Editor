@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `機能` `ai.ask`/`ai.chat`/`ai.stream` と永続 `ai.session` のネイティブ構造化 JSON 型宣言. `structuredJson`, JSON オブジェクト `responseSchema`, セッション固定 schema を含む
+
 # v1.1.7
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-un
 ###### 2026/08/21
 
 * `機能` AutoJs6 ローカル AI プラグインの型宣言を拡充し, 複数ロールのメッセージ履歴, 公式/サードパーティー選択, 生成パラメータ, 正確な使用量とストリーミングペイロード, `ai.models` によるモデル探索に対応
-
-# v1.1.5
-
-###### 2026/08/21
-
-* `機能` AutoJs6 の独立 YOLO プラグイン向け物体検出型宣言を同期し, 明示的な Provider コンポーネント, セッションと検出のオプション, 検出結果, 安定したエラーコードに対応
 
 ##### その他のリリース履歴
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `ميزة` تصريحات JSON منظم أصلي في `ai.ask` و`ai.chat` و`ai.stream` وجلسة `ai.session` الدائمة, مع `structuredJson` وكائن JSON باسم `responseSchema` وschema ثابت لكل جلسة
+
 # v1.1.7
 
 ###### 2026/08/21

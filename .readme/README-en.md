@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.8-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.8
+
+###### 2026/08/21
+
+* `Feature` Declare native structured JSON for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `structuredJson`, JSON-object `responseSchema`, and fixed per-session schemas
+
 # v1.1.7
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/21
 
 * `Feature` Complete the AutoJs6 local AI plugin declarations with multi-role message history, official and third-party selectors, generation controls, exact usage and streaming payloads, and `ai.models` model discovery
-
-# v1.1.5
-
-###### 2026/08/21
-
-* `Feature` Mirror the AutoJs6 standalone YOLO plugin object-detection type declarations, including the explicit provider component, session and detection options, detection results, and stable error codes
 
 ##### Complete release history
 
