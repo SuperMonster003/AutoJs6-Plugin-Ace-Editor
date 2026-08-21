@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.7
+
+###### 2026/08/21
+
+* `Feature` Add `ai.session` persistent on-device Conversation declarations, including fixed session options, one-prompt-per-turn `ask`/`chat`/`stream` methods, lifecycle state, and explicit close semantics
+
 # v1.1.6
 
 ###### 2026/08/21

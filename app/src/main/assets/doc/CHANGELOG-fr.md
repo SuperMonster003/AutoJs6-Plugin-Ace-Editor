@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.7
+
+###### 2026/08/21
+
+* `Fonctionnalité` Ajoute les déclarations de conversation locale persistante `ai.session`, avec options de session fixes, méthodes `ask`/`chat`/`stream` recevant un nouveau prompt par tour, état du cycle de vie et fermeture explicite
+
 # v1.1.6
 
 ###### 2026/08/21

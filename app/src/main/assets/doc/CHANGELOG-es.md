@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.7
+
+###### 2026/08/21
+
+* `Función` Añade las declaraciones de conversación persistente en el dispositivo de `ai.session`, con opciones fijas de sesión, métodos `ask`/`chat`/`stream` de un prompt nuevo por turno, estado del ciclo de vida y cierre explícito
+
 # v1.1.6
 
 ###### 2026/08/21

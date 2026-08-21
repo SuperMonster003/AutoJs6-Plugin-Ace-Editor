@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-un
 
 ******
 
+# v1.1.7
+
+###### 2026/08/21
+
+* `機能` `ai.session` の永続オンデバイス会話型宣言を追加し, 固定セッション設定, 各ターンで新しいプロンプトだけを受け取る `ask`/`chat`/`stream`, ライフサイクル状態, 明示的な終了セマンティクスに対応
+
 # v1.1.6
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-un
 ###### 2026/08/21
 
 * `機能` AutoJs6 の独立 YOLO プラグイン向け物体検出型宣言を同期し, 明示的な Provider コンポーネント, セッションと検出のオプション, 検出結果, 安定したエラーコードに対応
-
-# v1.1.4
-
-###### 2026/08/20
-
-* `機能` AutoJs6 AI プラグインの `Ask`, `Chat`, `Stream` 型宣言を同期し, 公式/サードパーティープラグインの選択, ローカル生成パラメータ, ルート応答, ストリーミングイベント型に対応
 
 ##### その他のリリース履歴
 

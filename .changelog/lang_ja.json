@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.1.7": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "`ai.session` の永続オンデバイス会話型宣言を追加し, 固定セッション設定, 各ターンで新しいプロンプトだけを受け取る `ask`/`chat`/`stream`, ライフサイクル状態, 明示的な終了セマンティクスに対応"
+      ]
+    },
     "v1.1.6": {
       "released_date": "2026/08/21",
       "feature": [

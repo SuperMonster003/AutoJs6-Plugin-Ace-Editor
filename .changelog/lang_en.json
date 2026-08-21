@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.7": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "Add `ai.session` persistent on-device Conversation declarations, including fixed session options, one-prompt-per-turn `ask`/`chat`/`stream` methods, lifecycle state, and explicit close semantics"
+      ]
+    },
     "v1.1.6": {
       "released_date": "2026/08/21",
       "feature": [

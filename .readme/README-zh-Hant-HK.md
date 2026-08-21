@@ -90,7 +90,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.7-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-un
 
 ******
 
+# v1.1.7
+
+###### 2026/08/21
+
+* `新增` 新增 `ai.session` 持久本機會話類型聲明, 涵蓋固定會話選項, 每輪只接收新提示詞的 `ask`/`chat`/`stream` 方法, 生命週期狀態及明確關閉語義
+
 # v1.1.6
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.6-un
 ###### 2026/08/21
 
 * `新增` 同步 AutoJs6 YOLO 獨立插件目標偵測類型聲明, 包括明確 Provider 元件, 工作階段與偵測選項, 偵測結果和穩定錯誤代碼
-
-# v1.1.4
-
-###### 2026/08/20
-
-* `新增` 同步 AutoJs6 AI 插件的 `Ask`, `Chat` 和 `Stream` 類型聲明, 包括官方/第三方插件選擇, 本地生成參數, 路由響應和串流事件類型
 
 ##### 更多發行歷史可參閱
 

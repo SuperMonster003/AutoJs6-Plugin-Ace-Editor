@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.1.7": {
+      "released_date": "2026/08/21",
+      "feature": [
+        "新增 `ai.session` 持久本機會話型別宣告, 涵蓋固定會話選項, 每輪僅接收新提示詞的 `ask`/`chat`/`stream` 方法, 生命週期狀態及明確關閉語意"
+      ]
+    },
     "v1.1.6": {
       "released_date": "2026/08/21",
       "feature": [
