@@ -22,6 +22,7 @@ class AceEditorAssetsTest {
                     "$ASSET_ROOT/autojs6/autojs6_lsp_client.js",
                     "$ASSET_ROOT/autojs6/autojs6_ts_language_service.js",
                     "$ASSET_ROOT/autojs6/typescript/typescript.js",
+                    "$ASSET_ROOT/autojs6/typescript/lib.es2018.d.ts",
                     "$ASSET_ROOT/autojs6/typescript/lib.es2022.d.ts",
                     "$ASSET_ROOT/autojs6/types/generated/manifest.json",
                     "$ASSET_ROOT/autojs6/types/generated/lib.autojs6.core.d.ts",

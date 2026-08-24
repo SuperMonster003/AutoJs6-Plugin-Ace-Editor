@@ -28,6 +28,7 @@ object AceEditorAssets {
         "$EDITOR_ASSET_ROOT/autojs6/autojs6_ace_bridge.js",
         "$EDITOR_ASSET_ROOT/autojs6/autojs6_ts_language_service.js",
         "$EDITOR_ASSET_ROOT/autojs6/typescript/typescript.js",
+        "$EDITOR_ASSET_ROOT/autojs6/typescript/lib.es2018.d.ts",
         "$EDITOR_ASSET_ROOT/autojs6/typescript/lib.es2022.d.ts",
         "$EDITOR_ASSET_ROOT/autojs6/types/generated/manifest.json",
         "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.core.d.ts",

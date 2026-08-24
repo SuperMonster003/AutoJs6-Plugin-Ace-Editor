@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `新增` Ace TypeScript 诊断与编译插件的 TypeScript 6.0.3 revision-2 Rhino/Node profile 对齐 (ES2018, strict, CommonJS/Node10 或 NodeNext), 支持 Node 项目路由并默认启用 .mts/.cts 及其声明文件, 同时保留静态回退
+
 # v1.1.9
 
 ###### 2026/08/21

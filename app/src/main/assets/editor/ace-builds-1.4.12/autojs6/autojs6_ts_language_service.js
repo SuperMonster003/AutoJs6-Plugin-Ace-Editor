@@ -7,9 +7,15 @@
     var AUTOJS6_COMPATIBILITY_LIB = "file:///autojs6/types/lib.autojs6.extra.d.ts";
     var TS_LIB_ROOT = "file:///autojs6/typescript/";
     var AUTOJS6_ASSET_ROOT = "./autojs6/";
-    var DEFAULT_LIB = "lib.es2022.d.ts";
+    var TYPESCRIPT_VERSION = "6.0.3";
+    var PROFILE_RHINO = "rhino";
+    var PROFILE_NODE = "node";
+    var PROFILE_JAVASCRIPT = "javascript";
+    var EXECUTION_PROFILE_REVISION = 2;
+    var EDITOR_DEFAULT_LIB = "lib.es2022.d.ts";
+    var EXECUTION_DEFAULT_LIB = "lib.es2018.d.ts";
     var DEFAULT_LIBRARY_URIS = [
-        TS_LIB_ROOT + DEFAULT_LIB,
+        TS_LIB_ROOT + EDITOR_DEFAULT_LIB,
         AUTOJS6_CORE_LIB,
         AUTOJS6_COMPATIBILITY_LIB
     ];
@@ -85,6 +91,38 @@
     function normalizeDocumentUri(uri) {
         uri = normalizeFileName(uri || CURRENT_FILE);
         return uri || CURRENT_FILE;
+    }
+
+    function inferredProfileForDocumentUri(uri) {
+        var clean = cleanFileNameForKind(uri);
+        if (/\.(?:mts|cts)$/.test(clean) || /\.d\.(?:mts|cts)$/.test(clean)) {
+            return PROFILE_NODE;
+        }
+        if (/\.(?:ts|tsx)$/.test(clean) || /\.d\.ts$/.test(clean)) {
+            return PROFILE_RHINO;
+        }
+        return PROFILE_JAVASCRIPT;
+    }
+
+    function normalizeExecutionProfile(profile, documentUri) {
+        profile = String(profile || "").toLowerCase();
+        if (profile === PROFILE_RHINO || profile === PROFILE_NODE) {
+            return profile;
+        }
+        return inferredProfileForDocumentUri(documentUri);
+    }
+
+    function defaultLibForProfile(profile) {
+        return profile === PROFILE_RHINO || profile === PROFILE_NODE ?
+            EXECUTION_DEFAULT_LIB : EDITOR_DEFAULT_LIB;
+    }
+
+    function defaultLibraryUrisForProfile(profile) {
+        return [
+            TS_LIB_ROOT + defaultLibForProfile(profile),
+            AUTOJS6_CORE_LIB,
+            AUTOJS6_COMPATIBILITY_LIB
+        ];
     }
 
     function cleanFileNameForKind(fileName) {
@@ -361,6 +399,9 @@
         var service = null;
         var currentText = "";
         var currentFile = normalizeDocumentUri(config.documentUri);
+        var executionProfile = normalizeExecutionProfile(config.executionProfile, currentFile);
+        var expectedTypeScriptVersion = String(config.typescriptVersion || TYPESCRIPT_VERSION);
+        var defaultLib = defaultLibForProfile(executionProfile);
         var libraryUris = [];
         var rootLibraryUris = [];
         var libraryAssetUrls = Object.create(null);
@@ -369,6 +410,55 @@
         var completionLimit = Math.max(1, Number(config.completionLimit) || 300);
 
         function compilerOptions() {
+            if (executionProfile === PROFILE_RHINO) {
+                return {
+                    allowJs: false,
+                    checkJs: false,
+                    ignoreDeprecations: "6.0",
+                    incremental: false,
+                    inlineSourceMap: false,
+                    inlineSources: false,
+                    jsx: ts.JsxEmit.React,
+                    jsxFactory: "__autojs6Tsx",
+                    jsxFragmentFactory: "__autojs6TsxFragment",
+                    lib: [EXECUTION_DEFAULT_LIB],
+                    module: ts.ModuleKind.CommonJS,
+                    moduleResolution: ts.ModuleResolutionKind.Node10 || ts.ModuleResolutionKind.NodeJs,
+                    newLine: ts.NewLineKind.LineFeed,
+                    noEmitOnError: true,
+                    noLib: false,
+                    outDir: "/outputs",
+                    rootDir: "/sources",
+                    skipLibCheck: false,
+                    sourceMap: true,
+                    strict: true,
+                    target: ts.ScriptTarget.ES2018,
+                    types: []
+                };
+            }
+            if (executionProfile === PROFILE_NODE) {
+                return {
+                    allowJs: false,
+                    checkJs: false,
+                    ignoreDeprecations: "6.0",
+                    incremental: false,
+                    inlineSourceMap: false,
+                    inlineSources: false,
+                    lib: [EXECUTION_DEFAULT_LIB],
+                    module: ts.ModuleKind.NodeNext,
+                    moduleResolution: ts.ModuleResolutionKind.NodeNext,
+                    newLine: ts.NewLineKind.LineFeed,
+                    noEmitOnError: true,
+                    noLib: false,
+                    outDir: "/outputs",
+                    rootDir: "/sources",
+                    skipLibCheck: false,
+                    sourceMap: true,
+                    strict: true,
+                    target: ts.ScriptTarget.ES2018,
+                    types: []
+                };
+            }
             return {
                 allowJs: true,
                 checkJs: !!config.checkJs,
@@ -378,7 +468,7 @@
                 module: ts.ModuleKind.CommonJS,
                 moduleResolution: ts.ModuleResolutionKind.Bundler || ts.ModuleResolutionKind.NodeJs,
                 jsx: ts.JsxEmit && ts.JsxEmit.Preserve,
-                lib: [DEFAULT_LIB],
+                lib: [EDITOR_DEFAULT_LIB],
                 strict: false,
                 skipLibCheck: true,
                 skipDefaultLibCheck: true
@@ -452,7 +542,7 @@
         function configureRootLibraries() {
             var configured = copyArray(config.libraryUris);
             if (!configured.length) {
-                configured = copyArray(DEFAULT_LIBRARY_URIS);
+                configured = defaultLibraryUrisForProfile(executionProfile);
             }
             configured.forEach(function(uri) {
                 var normalized = normalizeFileName(uri);
@@ -463,8 +553,8 @@
                 rootLibraryUris.push(normalized);
                 libraryAssetUrls[normalized] = assetUrl;
             });
-            if (rootLibraryUris.indexOf(TS_LIB_ROOT + DEFAULT_LIB) < 0) {
-                rootLibraryUris.unshift(TS_LIB_ROOT + DEFAULT_LIB);
+            if (rootLibraryUris.indexOf(TS_LIB_ROOT + defaultLib) < 0) {
+                rootLibraryUris.unshift(TS_LIB_ROOT + defaultLib);
             }
         }
 
@@ -480,12 +570,17 @@
                 reason = "typescript.js unavailable";
                 return false;
             }
+            if (String(ts.version || "") !== expectedTypeScriptVersion) {
+                reason = "TypeScript version mismatch: expected " + expectedTypeScriptVersion +
+                    ", got " + String(ts.version || "unknown");
+                return false;
+            }
             try {
                 configureRootLibraries();
                 rootLibraryUris.forEach(ensureConfiguredLibrary);
                 addFile(currentFile, "");
-                if (!hasOwn(files, TS_LIB_ROOT + DEFAULT_LIB)) {
-                    reason = "TypeScript default lib missing: " + DEFAULT_LIB;
+                if (!hasOwn(files, TS_LIB_ROOT + defaultLib)) {
+                    reason = "TypeScript default lib missing: " + defaultLib;
                     return false;
                 }
                 if (!hasOwn(files, AUTOJS6_CORE_LIB)) {
@@ -518,7 +613,7 @@
                         return CURRENT_DIR;
                     },
                     getDefaultLibFileName: function() {
-                        return TS_LIB_ROOT + DEFAULT_LIB;
+                        return TS_LIB_ROOT + defaultLib;
                     },
                     readFile: function(fileName) {
                         fileName = normalizeFileName(fileName);
@@ -787,7 +882,12 @@
                 ready: ready,
                 reason: reason,
                 version: ts && ts.version || "",
-                defaultLib: DEFAULT_LIB,
+                expectedVersion: expectedTypeScriptVersion,
+                executionProfile: executionProfile,
+                executionProfileRevision: executionProfile === PROFILE_JAVASCRIPT ?
+                    null : EXECUTION_PROFILE_REVISION,
+                compilerOptions: compilerOptions(),
+                defaultLib: defaultLib,
                 libraryCount: libraryUris.length,
                 currentFile: currentFile,
                 diagnosticSource: TS_DIAGNOSTIC_SOURCE
@@ -839,7 +939,12 @@
             currentFile: CURRENT_FILE,
             autojs6Lib: AUTOJS6_CORE_LIB,
             autojs6CompatibilityLib: AUTOJS6_COMPATIBILITY_LIB,
-            defaultLib: DEFAULT_LIB,
+            typescriptVersion: TYPESCRIPT_VERSION,
+            profileRhino: PROFILE_RHINO,
+            profileNode: PROFILE_NODE,
+            executionProfileRevision: EXECUTION_PROFILE_REVISION,
+            defaultLib: EDITOR_DEFAULT_LIB,
+            executionDefaultLib: EXECUTION_DEFAULT_LIB,
             defaultLibraryUris: copyArray(DEFAULT_LIBRARY_URIS),
             diagnosticSource: TS_DIAGNOSTIC_SOURCE
         }

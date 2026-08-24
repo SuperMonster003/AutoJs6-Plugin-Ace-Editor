@@ -210,6 +210,10 @@ function verifyBrowserLanguageService(paths, expectedVersion) {
 
     assert(state.ready, `Browser language service is not ready: ${state.reason}`);
     assert(state.version === expectedVersion, `Expected TypeScript ${expectedVersion}, got ${state.version}`);
+    assert(state.expectedVersion === expectedVersion, "Browser service did not enforce the bundled TypeScript version");
+    assert(state.executionProfile === "rhino", `Expected inferred Rhino profile, got ${state.executionProfile}`);
+    assert(state.executionProfileRevision === 2, "Rhino profile revision is not aligned with execution");
+    assert(state.defaultLib === "lib.es2018.d.ts", `Unexpected Rhino default lib: ${state.defaultLib}`);
     assert(errors.length === 0, `Browser language service reported: ${errors.join("; ")}`);
     assert(
         diagnostics.length === 0,
@@ -220,6 +224,119 @@ function verifyBrowserLanguageService(paths, expectedVersion) {
         defaultRootCount: expectedRoots.length,
         loadedLibraryCount: state.libraryCount,
         aliasDiagnosticCount: diagnostics.length,
+    };
+}
+
+function verifyExecutionProfileConsistency(paths, ts) {
+    const context = createBrowserTypeScriptContext(paths);
+    const libraryTextByUri = typeScriptLibraryTextByUri(paths);
+    libraryTextByUri["file:///autojs6/types/generated/lib.autojs6.core.d.ts"] =
+        readFileSync(paths.core, "utf8");
+    libraryTextByUri["file:///autojs6/types/lib.autojs6.extra.d.ts"] =
+        readFileSync(paths.compatibility, "utf8");
+    const executionLibraryUris = [
+        "file:///autojs6/typescript/lib.es2018.d.ts",
+        "file:///autojs6/types/generated/lib.autojs6.core.d.ts",
+        "file:///autojs6/types/lib.autojs6.extra.d.ts",
+    ];
+    const constants = context.AutoJsAceTsLanguageService?.constants;
+    assert(constants?.typescriptVersion === "6.0.3", "Browser profile contract has the wrong TypeScript version");
+    assert(constants?.executionProfileRevision === 2, "Browser profile contract has the wrong revision");
+    assert(constants?.executionDefaultLib === "lib.es2018.d.ts", "Browser profile contract has the wrong default lib");
+
+    function profileState(profile, documentUri) {
+        const service = context.AutoJsAceTsLanguageService.create({
+            documentUri,
+            executionProfile: profile,
+            typescriptVersion: "6.0.3",
+            libraryTextByUri,
+            libraryUris: executionLibraryUris,
+        });
+        const text = "const __profileStrictValue: string = null;";
+        const diagnostics = service.getDiagnostics(sessionFor(text), text) || [];
+        const state = service.getState();
+        service.dispose();
+        assert(state.ready, `${profile} profile failed to initialize: ${state.reason}`);
+        assert(
+            diagnostics.some((diagnostic) => String(diagnostic.raw) === "2322"),
+            `${profile} profile did not enforce strict null checking`,
+        );
+        return state;
+    }
+
+    const rhino = profileState("rhino", "file:///autojs6/editor/profile-smoke.tsx");
+    const node = profileState("node", "file:///autojs6/editor/profile-smoke.mts");
+    const rhinoOptions = rhino.compilerOptions || {};
+    const nodeOptions = node.compilerOptions || {};
+    const commonExpected = {
+        allowJs: false,
+        checkJs: false,
+        ignoreDeprecations: "6.0",
+        incremental: false,
+        inlineSourceMap: false,
+        inlineSources: false,
+        lib: ["lib.es2018.d.ts"],
+        newLine: ts.NewLineKind.LineFeed,
+        noEmitOnError: true,
+        noLib: false,
+        outDir: "/outputs",
+        rootDir: "/sources",
+        skipLibCheck: false,
+        sourceMap: true,
+        strict: true,
+        target: ts.ScriptTarget.ES2018,
+        types: [],
+    };
+    for (const [name, options] of [["rhino", rhinoOptions], ["node", nodeOptions]]) {
+        for (const [key, expected] of Object.entries(commonExpected)) {
+            assert(
+                JSON.stringify(options[key]) === JSON.stringify(expected),
+                `${name} profile option ${key} expected ${JSON.stringify(expected)}, got ${JSON.stringify(options[key])}`,
+            );
+        }
+    }
+    assert(rhinoOptions.module === ts.ModuleKind.CommonJS, "Rhino module is not CommonJS");
+    assert(
+        rhinoOptions.moduleResolution === ts.ModuleResolutionKind.Node10,
+        "Rhino module resolution is not Node10",
+    );
+    assert(rhinoOptions.jsx === ts.JsxEmit.React, "Rhino JSX lowering is not classic React mode");
+    assert(rhinoOptions.jsxFactory === "__autojs6Tsx", "Rhino JSX factory is not aligned");
+    assert(
+        rhinoOptions.jsxFragmentFactory === "__autojs6TsxFragment",
+        "Rhino JSX fragment factory is not aligned",
+    );
+    assert(nodeOptions.module === ts.ModuleKind.NodeNext, "Node module is not NodeNext");
+    assert(
+        nodeOptions.moduleResolution === ts.ModuleResolutionKind.NodeNext,
+        "Node module resolution is not NodeNext",
+    );
+    assert(!Object.hasOwn(nodeOptions, "jsx"), "Node profile unexpectedly enables JSX lowering");
+
+    const mismatched = context.AutoJsAceTsLanguageService.create({
+        documentUri: "file:///autojs6/editor/version-mismatch.ts",
+        executionProfile: "rhino",
+        typescriptVersion: "0.0.0",
+        libraryTextByUri,
+        libraryUris: executionLibraryUris,
+    });
+    const mismatchedState = mismatched.getState();
+    mismatched.dispose();
+    assert(!mismatchedState.ready, "Mismatched TypeScript runtime was accepted");
+    assert(
+        String(mismatchedState.reason).includes("TypeScript version mismatch"),
+        `Unexpected TypeScript mismatch reason: ${mismatchedState.reason}`,
+    );
+
+    return {
+        typescriptVersion: rhino.version,
+        profileRevision: rhino.executionProfileRevision,
+        rhinoDefaultLib: rhino.defaultLib,
+        rhinoModule: rhinoOptions.module,
+        rhinoModuleResolution: rhinoOptions.moduleResolution,
+        nodeModule: nodeOptions.module,
+        nodeModuleResolution: nodeOptions.moduleResolution,
+        versionMismatchRejected: true,
     };
 }
 
@@ -813,6 +930,7 @@ function main() {
 
     const semantics = verifyCompatibilitySemantics(paths, ts);
     const browserService = verifyBrowserLanguageService(paths, ts.version);
+    const executionProfiles = verifyExecutionProfileConsistency(paths, ts);
     const optionalGroups = verifyOptionalGroupCompletions(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const oldWebView = verifyOldWebViewFallback(paths);
@@ -821,6 +939,7 @@ function main() {
             typescriptVersion: ts.version,
             semantics,
             browserService,
+            executionProfiles,
             optionalGroups,
             completionRefresh,
             oldWebView,

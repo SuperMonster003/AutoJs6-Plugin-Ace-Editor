@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `기능` Ace TypeScript 진단을 컴파일러 플러그인의 TypeScript 6.0.3 revision-2 Rhino/Node 프로필(ES2018, strict, CommonJS/Node10 또는 NodeNext)과 일치시키고, Node 프로젝트 라우팅 및 .mts/.cts 선언 파일 기본 지원을 추가하면서 정적 폴백을 유지
+
 # v1.1.9
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 ###### 2026/08/21
 
 * `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 네이티브 구조화 JSON 타입 선언. `structuredJson`, JSON 객체 `responseSchema`, 세션 고정 schema 포함
-
-# v1.1.7
-
-###### 2026/08/21
-
-* `기능` `ai.session` 영구 온디바이스 대화 형식 선언을 추가하여 고정 세션 옵션, 턴마다 새 프롬프트 하나만 받는 `ask`/`chat`/`stream` 메서드, 수명 주기 상태 및 명시적 종료 의미를 지원
 
 ##### 더 많은 릴리스 기록
 

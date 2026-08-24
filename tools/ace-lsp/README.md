@@ -43,8 +43,34 @@ Optional group dependencies are:
 
 All optional groups are disabled by default in the host editor settings.
 
+## TypeScript execution-profile diagnostics
+
+The bundled language service is pinned to TypeScript `6.0.3`, the same version
+used by the compiler plugin. TypeScript documents use the compiler's current
+revision-2 defaults instead of the more permissive JavaScript editor defaults:
+
+| Editor document | Profile | Target | Module | Resolution | Strict | Default lib |
+| --- | --- | --- | --- | --- | --- | --- |
+| standalone `.ts` / `.tsx` | `rhino` | ES2018 | CommonJS | Node10 | yes | `lib.es2018.d.ts` |
+| `.ts` / `.tsx` below the nearest `project.json` with `type: node` | `node` | ES2018 | NodeNext | NodeNext | yes | `lib.es2018.d.ts` |
+| `.mts` / `.cts` | `node` | ES2018 | NodeNext | NodeNext | yes | `lib.es2018.d.ts` |
+
+Rhino diagnostics also use the execution factories `__autojs6Tsx` and
+`__autojs6TsxFragment`. Declaration files follow the corresponding `.d.ts`,
+`.d.mts`, or `.d.cts` profile. JavaScript documents retain the editor-oriented
+ES2022 configuration because they do not pass through the TypeScript execution
+compiler.
+
+The Ace service remains a single-document hinting layer: controlled project
+`tsconfig.json` overrides and cross-file compilation diagnostics are still
+authoritative only in the pre-execution compiler. If TypeScript cannot load,
+has the wrong bundled version, or exceeds the editor's semantic limit, Ace
+falls back to static/JSHint assistance; script execution does not depend on the
+editor service.
+
 Run the all-group TypeScript completion/semantic checks and old-WebView
-fallback verification with:
+fallback verification, including the exact Rhino/Node profile option gate,
+with:
 
 ```powershell
 .\gradlew.bat :app:verifyAutoJs6LspRuntime

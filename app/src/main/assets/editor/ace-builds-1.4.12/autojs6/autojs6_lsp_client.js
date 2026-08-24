@@ -140,6 +140,10 @@
             serverUri: options && options.serverUri || null,
             rootUri: options && options.rootUri || "",
             documentUri: options && options.documentUri || "",
+            typescriptVersion: options && options.typescriptVersion || "",
+            typescriptProfile: options && options.typescriptProfile || "",
+            typescriptProfileRevision: options && options.typescriptProfileRevision != null ?
+                Number(options.typescriptProfileRevision) : null,
             libraryUris: copyArray(options && options.libraryUris),
             declarationGroups: copyArray(options && options.declarationGroups),
             effectiveDeclarationGroups: copyArray(options && options.effectiveDeclarationGroups),
@@ -1098,6 +1102,8 @@
                     checkJs: options && options.checkJs === true,
                     completionLimit: MAX_COMPLETION_ITEMS,
                     documentUri: state.documentUri,
+                    typescriptVersion: state.typescriptVersion,
+                    executionProfile: state.typescriptProfile,
                     libraryUris: copyArray(state.libraryUris)
                 });
                 semanticColdStartPending = true;
@@ -1451,7 +1457,13 @@
             state = stateFromOptions(options);
             var serviceConfigurationChanged =
                 !arraysEqual(previousOptions && previousOptions.libraryUris, options.libraryUris) ||
-                !!(previousOptions && previousOptions.checkJs) !== !!options.checkJs;
+                !!(previousOptions && previousOptions.checkJs) !== !!options.checkJs ||
+                String(previousOptions && previousOptions.typescriptVersion || "") !==
+                    String(options && options.typescriptVersion || "") ||
+                String(previousOptions && previousOptions.typescriptProfile || "") !==
+                    String(options && options.typescriptProfile || "") ||
+                Number(previousOptions && previousOptions.typescriptProfileRevision || 0) !==
+                    Number(options && options.typescriptProfileRevision || 0);
             if (serviceConfigurationChanged) {
                 disposeTsService();
                 tsServiceInitAttempts = 0;
@@ -1496,6 +1508,9 @@
                 serverUri: state.serverUri,
                 rootUri: state.rootUri,
                 documentUri: state.documentUri,
+                typescriptVersion: state.typescriptVersion,
+                typescriptProfile: state.typescriptProfile,
+                typescriptProfileRevision: state.typescriptProfileRevision,
                 libraryUris: copyArray(state.libraryUris),
                 declarationGroups: copyArray(state.declarationGroups),
                 effectiveDeclarationGroups: copyArray(state.effectiveDeclarationGroups),

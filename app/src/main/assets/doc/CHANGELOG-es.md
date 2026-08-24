@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `Función` Alinea los diagnósticos TypeScript de Ace con los perfiles Rhino/Node revisión 2 de TypeScript 6.0.3 del complemento compilador (ES2018, strict, CommonJS/Node10 o NodeNext), incluido el enrutamiento de proyectos Node y la compatibilidad predeterminada con declaraciones .mts/.cts, conservando el modo alternativo estático
+
 # v1.1.9
 
 ###### 2026/08/21

@@ -60,7 +60,7 @@ tasks.register("generateAutoJs6EditorAssets") {
 
 val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     group = "verification"
-    description = "Verifies all TypeScript 6 declaration groups and the old-WebView static fallback."
+    description = "Verifies execution-profile diagnostics, declaration groups, and old-WebView fallback."
     dependsOn(generateAutoJs6LspDeclarations)
 
     val verifier = rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-runtime.mjs")

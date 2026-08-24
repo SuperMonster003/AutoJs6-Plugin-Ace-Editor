@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `機能` Ace の TypeScript 診断をコンパイラープラグインの TypeScript 6.0.3 revision-2 Rhino/Node プロファイル (ES2018, strict, CommonJS/Node10 または NodeNext) に合わせ, Node プロジェクトのルーティングと .mts/.cts 宣言ファイルの既定サポートを追加しつつ静的フォールバックを維持
+
 # v1.1.9
 
 ###### 2026/08/21

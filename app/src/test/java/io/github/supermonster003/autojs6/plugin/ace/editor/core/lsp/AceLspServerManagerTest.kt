@@ -43,6 +43,9 @@ class AceLspServerManagerTest {
         assertEquals(AceLspServerManager.MAX_DOCUMENT_LENGTH, snapshot.maxDocumentLength)
         assertEquals(AceLspServerManager.SYNTHETIC_ROOT_URI, snapshot.rootUri)
         assertEquals(AceLspServerManager.SYNTHETIC_DOCUMENT_URI, snapshot.documentUri)
+        assertEquals(AceTypeScriptExecutionProfiles.TYPESCRIPT_VERSION, snapshot.typescriptVersion)
+        assertEquals(null, snapshot.typescriptProfile)
+        assertEquals(null, snapshot.typescriptProfileRevision)
         assertTrue(snapshot.declarationGroups.isEmpty())
         assertTrue(snapshot.effectiveDeclarationGroups.isEmpty())
         assertEquals(
@@ -62,6 +65,13 @@ class AceLspServerManagerTest {
         assertTrue(optionsJson.contains("\"serverUri\":null"))
         assertTrue(optionsJson.contains("\"rootUri\":\"${AceLspServerManager.SYNTHETIC_ROOT_URI}\""))
         assertTrue(optionsJson.contains("\"documentUri\":\"${AceLspServerManager.SYNTHETIC_DOCUMENT_URI}\""))
+        assertTrue(
+            optionsJson.contains(
+                "\"typescriptVersion\":\"${AceTypeScriptExecutionProfiles.TYPESCRIPT_VERSION}\"",
+            ),
+        )
+        assertTrue(optionsJson.contains("\"typescriptProfile\":null"))
+        assertTrue(optionsJson.contains("\"typescriptProfileRevision\":null"))
         assertTrue(optionsJson.contains("\"declarationGroups\":[]"))
         assertTrue(optionsJson.contains("\"effectiveDeclarationGroups\":[]"))
         AceLspServerManager.DEFAULT_LIBRARY_URIS.forEach { uri ->
@@ -145,6 +155,33 @@ class AceLspServerManagerTest {
         assertTrue(snapshot.enabled)
         assertEquals("file:///autojs6/editor/config%20file.json", snapshot.documentUri)
         assertTrue(optionsJson.contains("\"documentUri\":\"file:///autojs6/editor/config%20file.json\""))
+    }
+
+    @Test
+    fun rhinoTypeScriptUsesExecutionCompilerProfileAndEs2018Library() {
+        val manager = AceLspServerManager(enabledProvider = { true })
+
+        manager.setDocumentPath("D:\\scripts\\main.tsx")
+        val snapshot = manager.snapshot()
+        val optionsJson = manager.bridgeOptionsJson()
+
+        assertEquals(AceTypeScriptExecutionProfiles.PROFILE_RHINO, snapshot.typescriptProfile)
+        assertEquals(AceTypeScriptExecutionProfiles.RHINO_PROFILE_REVISION, snapshot.typescriptProfileRevision)
+        assertEquals(AceLspServerManager.TYPESCRIPT_ES2018_LIBRARY_URI, snapshot.libraryUris.first())
+        assertTrue(optionsJson.contains("\"typescriptProfile\":\"rhino\""))
+        assertTrue(optionsJson.contains("\"typescriptProfileRevision\":2"))
+    }
+
+    @Test
+    fun nodeTypeScriptUsesNodeNextExecutionProfileAndEs2018Library() {
+        val manager = AceLspServerManager(enabledProvider = { true })
+
+        manager.setDocumentPath("/storage/emulated/0/Scripts/main.mts")
+        val snapshot = manager.snapshot()
+
+        assertEquals(AceTypeScriptExecutionProfiles.PROFILE_NODE, snapshot.typescriptProfile)
+        assertEquals(AceTypeScriptExecutionProfiles.NODE_PROFILE_REVISION, snapshot.typescriptProfileRevision)
+        assertEquals(AceLspServerManager.TYPESCRIPT_ES2018_LIBRARY_URI, snapshot.libraryUris.first())
     }
 
     @Test

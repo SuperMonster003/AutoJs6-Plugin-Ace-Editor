@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.1.10": {
+      "released_date": "2026/08/24",
+      "feature": [
+        "Диагностика TypeScript в Ace согласована с профилями Rhino/Node ревизии 2 компилятора TypeScript 6.0.3 (ES2018, strict, CommonJS/Node10 или NodeNext), включая маршрутизацию проектов Node и поддержку деклараций .mts/.cts по умолчанию с сохранением статического резервного режима"
+      ]
+    },
     "v1.1.9": {
       "released_date": "2026/08/21",
       "feature": [

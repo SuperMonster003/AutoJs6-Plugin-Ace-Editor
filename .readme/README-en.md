@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `Feature` Align Ace TypeScript diagnostics with the compiler plugin's TypeScript 6.0.3 revision-2 Rhino/Node profiles (ES2018, strict, CommonJS/Node10 or NodeNext), including Node-project routing and default .mts/.cts declaration support while preserving static fallback
+
 # v1.1.9
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/21
 
 * `Feature` Declare native structured JSON for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `structuredJson`, JSON-object `responseSchema`, and fixed per-session schemas
-
-# v1.1.7
-
-###### 2026/08/21
-
-* `Feature` Add `ai.session` persistent on-device Conversation declarations, including fixed session options, one-prompt-per-turn `ask`/`chat`/`stream` methods, lifecycle state, and explicit close semantics
 
 ##### Complete release history
 

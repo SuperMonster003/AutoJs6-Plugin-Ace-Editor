@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 object AceEditorLspPreferences {
     const val KEY_ACE_LSP_ENABLED = "key_\$_ace_lsp_enabled"
     const val KEY_ACE_LSP_FILE_TYPES = "key_\$_ace_lsp_file_types"
+    const val KEY_ACE_LSP_FILE_TYPES_REVISION = "key_\$_ace_lsp_file_types_revision"
     const val KEY_ACE_LSP_DECLARATION_GROUPS = "key_\$_ace_lsp_declaration_groups"
     const val DEFAULT_ENABLED = true
     const val DECLARATION_GROUP_ANDROID = "android"
@@ -14,6 +15,23 @@ object AceEditorLspPreferences {
     private val TYPE_SCRIPT_DECLARATION_EXTENSIONS = listOf(".d.ts", ".d.mts", ".d.cts")
 
     val DEFAULT_FILE_TYPES = listOf(
+        ".js",
+        ".mjs",
+        ".cjs",
+        ".jsx",
+        ".ts",
+        ".tsx",
+        ".mts",
+        ".cts",
+        ".d.ts",
+        ".d.mts",
+        ".d.cts",
+        ".json",
+        ".auto.js",
+        ".node.js",
+    )
+
+    private val LEGACY_DEFAULT_FILE_TYPES = listOf(
         ".js",
         ".mjs",
         ".cjs",
@@ -55,19 +73,33 @@ object AceEditorLspPreferences {
         if (!preferences.contains(KEY_ACE_LSP_FILE_TYPES)) {
             return DEFAULT_FILE_TYPES
         }
-        return normalizeFileTypes(preferences.getString(KEY_ACE_LSP_FILE_TYPES, ""))
+        val revision = preferences.getInt(KEY_ACE_LSP_FILE_TYPES_REVISION, 1)
+        return resolveStoredFileTypes(preferences.getString(KEY_ACE_LSP_FILE_TYPES, ""), revision)
+    }
+
+    internal fun resolveStoredFileTypes(raw: String?, revision: Int): List<String> {
+        val fileTypes = normalizeFileTypes(raw)
+        return if (revision < FILE_TYPES_REVISION && fileTypes.toSet() == LEGACY_DEFAULT_FILE_TYPES.toSet()) {
+            DEFAULT_FILE_TYPES
+        } else {
+            fileTypes
+        }
     }
 
     @JvmStatic
     fun setFileTypes(preferences: SharedPreferences, fileTypes: Collection<String>) {
         preferences.edit()
             .putString(KEY_ACE_LSP_FILE_TYPES, normalizeFileTypes(fileTypes).joinToString(","))
+            .putInt(KEY_ACE_LSP_FILE_TYPES_REVISION, FILE_TYPES_REVISION)
             .apply()
     }
 
     @JvmStatic
     fun resetFileTypes(preferences: SharedPreferences) {
-        preferences.edit().remove(KEY_ACE_LSP_FILE_TYPES).apply()
+        preferences.edit()
+            .remove(KEY_ACE_LSP_FILE_TYPES)
+            .remove(KEY_ACE_LSP_FILE_TYPES_REVISION)
+            .apply()
     }
 
     @JvmStatic
@@ -168,4 +200,6 @@ object AceEditorLspPreferences {
         }
         return SUPPORTED_DECLARATION_GROUPS.filter { it in effective }
     }
+
+    private const val FILE_TYPES_REVISION = 2
 }

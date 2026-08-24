@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `Feature` Align Ace TypeScript diagnostics with the compiler plugin's TypeScript 6.0.3 revision-2 Rhino/Node profiles (ES2018, strict, CommonJS/Node10 or NodeNext), including Node-project routing and default .mts/.cts declaration support while preserving static fallback
+
 # v1.1.9
 
 ###### 2026/08/21

@@ -53,6 +53,46 @@ class AceCodeEditorSmokeTest {
     }
 
     @Test
+    fun sessionDiagnosticsExposeExecutionAlignedTypeScriptProfiles() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
+        val nodeProject = File(context.cacheDir, "ace-typescript-profile-smoke").apply { mkdirs() }
+        File(nodeProject, "project.json").writeText("""{"type":"node"}""")
+        val nodeProjectEntry = File(nodeProject, "main.ts").apply { writeText("export const value = 1") }
+        val cases = listOf(
+            Triple("/storage/emulated/0/Scripts/main.tsx", "rhino", 2),
+            Triple("/storage/emulated/0/Scripts/main.mts", "node", 2),
+            Triple(nodeProjectEntry.absolutePath, "node", 2),
+        )
+
+        instrumentation.runOnMainSync {
+            cases.forEach { (documentPath, expectedProfile, expectedRevision) ->
+                val session = AceEditorPluginEntrypoint().createSession(
+                    hostContext = context,
+                    pluginContext = context,
+                    config = EditorPluginSessionConfig(
+                        hostPackageName = context.packageName,
+                        hostVersionName = "instrumentation",
+                        hostVersionCode = 5234L,
+                        storageDirectoryPath =
+                            File(context.cacheDir, "ace-editor-profile-smoke-fonts").absolutePath,
+                        documentPath = documentPath,
+                    ),
+                    callback = object : EditorPluginCallback {},
+                )
+                try {
+                    val diagnostics = session.createDiagnosticsSnapshot(null, "auto").values
+                    assertEquals("6.0.3", diagnostics.getString("lspTypeScriptVersion"))
+                    assertEquals(expectedProfile, diagnostics.getString("lspTypeScriptProfile"))
+                    assertEquals(expectedRevision, diagnostics.getInt("lspTypeScriptProfileRevision"))
+                } finally {
+                    session.destroy()
+                }
+            }
+        }
+    }
+
+    @Test
     fun initialTextPublishesOnlyTheFinalCursorPosition() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext

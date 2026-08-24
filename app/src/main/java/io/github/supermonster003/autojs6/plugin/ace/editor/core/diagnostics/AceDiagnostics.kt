@@ -27,6 +27,9 @@ object AceDiagnostics {
             lspServerUri = lspSnapshot.serverUri,
             lspRootUri = lspSnapshot.rootUri,
             lspDocumentUri = lspSnapshot.documentUri,
+            lspTypeScriptVersion = lspSnapshot.typescriptVersion,
+            lspTypeScriptProfile = lspSnapshot.typescriptProfile,
+            lspTypeScriptProfileRevision = lspSnapshot.typescriptProfileRevision,
             lspFallback = lspSnapshot.fallback,
             lspCompletionProvider = lspSnapshot.completionProvider,
             lspHoverProvider = lspSnapshot.hoverProvider,
@@ -99,6 +102,12 @@ object AceDiagnostics {
             appendLine("lspServerUri=${snapshot.lspServerUri.orUnknown()}")
             appendLine("lspRootUri=${snapshot.lspRootUri.orUnknown()}")
             appendLine("lspDocumentUri=${snapshot.lspDocumentUri.orUnknown()}")
+            appendLine("lspTypeScriptVersion=${snapshot.lspTypeScriptVersion.orUnknown()}")
+            appendLine("lspTypeScriptProfile=${snapshot.lspTypeScriptProfile.orUnknown()}")
+            appendLine(
+                "lspTypeScriptProfileRevision=" +
+                    snapshot.lspTypeScriptProfileRevision?.toString().orUnknown(),
+            )
             appendLine("lspFallback=${snapshot.lspFallback.orUnknown()}")
             appendLine("lspCompletionProvider=${snapshot.lspCompletionProvider.orUnknown()}")
             appendLine("lspHoverProvider=${snapshot.lspHoverProvider.orUnknown()}")

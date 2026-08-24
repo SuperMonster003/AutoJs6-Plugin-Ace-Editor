@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `新增` Ace TypeScript 诊断与编译插件的 TypeScript 6.0.3 revision-2 Rhino/Node profile 对齐 (ES2018, strict, CommonJS/Node10 或 NodeNext), 支持 Node 项目路由并默认启用 .mts/.cts 及其声明文件, 同时保留静态回退
+
 # v1.1.9
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 ###### 2026/08/21
 
 * `新增` `ai.ask`/`ai.chat`/`ai.stream` 与持久 `ai.session` 的原生结构化 JSON 类型声明, 覆盖 `structuredJson`, JSON 对象 `responseSchema` 及固定会话 schema
-
-# v1.1.7
-
-###### 2026/08/21
-
-* `新增` 新增 `ai.session` 持久本机会话类型声明, 覆盖固定会话选项, 每轮仅接收新提示词的 `ask`/`chat`/`stream` 方法, 生命周期状态及显式关闭语义
 
 ##### 更多发行历史可参阅
 

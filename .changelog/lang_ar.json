@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.10": {
+      "released_date": "2026/08/24",
+      "feature": [
+        "مواءمة تشخيصات TypeScript في Ace مع ملفي Rhino وNode بالمراجعة 2 في إضافة المترجم TypeScript 6.0.3 (ES2018 وstrict وCommonJS/Node10 أو NodeNext)، مع توجيه مشاريع Node ودعم ملفات تعريف .mts/.cts افتراضياً مع الإبقاء على الرجوع الثابت"
+      ]
+    },
     "v1.1.9": {
       "released_date": "2026/08/21",
       "feature": [

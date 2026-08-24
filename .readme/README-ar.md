@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `ميزة` مواءمة تشخيصات TypeScript في Ace مع ملفي Rhino وNode بالمراجعة 2 في إضافة المترجم TypeScript 6.0.3 (ES2018 وstrict وCommonJS/Node10 أو NodeNext)، مع توجيه مشاريع Node ودعم ملفات تعريف .mts/.cts افتراضياً مع الإبقاء على الرجوع الثابت
+
 # v1.1.9
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 ###### 2026/08/21
 
 * `ميزة` تصريحات JSON منظم أصلي في `ai.ask` و`ai.chat` و`ai.stream` وجلسة `ai.session` الدائمة, مع `structuredJson` وكائن JSON باسم `responseSchema` وschema ثابت لكل جلسة
-
-# v1.1.7
-
-###### 2026/08/21
-
-* `ميزة` إضافة تعريفات محادثة `ai.session` المحلية الدائمة, بما يشمل خيارات جلسة ثابتة, وطرق `ask`/`chat`/`stream` التي تستقبل مطالبة جديدة واحدة لكل دورة, وحالة دورة الحياة, ودلالات الإغلاق الصريح
 
 ##### لمزيد من سجل الإصدارات
 

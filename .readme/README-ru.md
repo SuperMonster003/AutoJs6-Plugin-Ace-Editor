@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `Функция` Диагностика TypeScript в Ace согласована с профилями Rhino/Node ревизии 2 компилятора TypeScript 6.0.3 (ES2018, strict, CommonJS/Node10 или NodeNext), включая маршрутизацию проектов Node и поддержку деклараций .mts/.cts по умолчанию с сохранением статического резервного режима
+
 # v1.1.9
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 ###### 2026/08/21
 
 * `Функция` Объявлен нативный структурированный JSON для `ai.ask`/`ai.chat`/`ai.stream` и постоянной `ai.session`, включая `structuredJson`, JSON-объект `responseSchema` и фиксированную schema сеанса
-
-# v1.1.7
-
-###### 2026/08/21
-
-* `Функция` Добавлены объявления типов постоянного локального диалога `ai.session`: фиксированные параметры сессии, методы `ask`/`chat`/`stream` с одной новой подсказкой на ход, состояние жизненного цикла и явное закрытие
 
 ##### Подробнее об истории выпусков
 

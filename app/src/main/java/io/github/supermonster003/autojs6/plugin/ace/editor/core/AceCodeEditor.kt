@@ -286,6 +286,9 @@ class AceCodeEditor @JvmOverloads constructor(
             lspServerUri = lspSnapshot.serverUri,
             lspRootUri = lspSnapshot.rootUri,
             lspDocumentUri = lspSnapshot.documentUri,
+            lspTypeScriptVersion = lspSnapshot.typescriptVersion,
+            lspTypeScriptProfile = lspSnapshot.typescriptProfile,
+            lspTypeScriptProfileRevision = lspSnapshot.typescriptProfileRevision,
             lspFallback = lspSnapshot.fallback,
             lspCompletionProvider = lspSnapshot.completionProvider,
             lspHoverProvider = lspSnapshot.hoverProvider,
@@ -1279,6 +1282,9 @@ class AceCodeEditor @JvmOverloads constructor(
             put("hoverProvider", state.optString("hoverProvider", "unknown"))
             put("diagnosticProvider", state.optString("diagnosticProvider", "unknown"))
             put("signatureProvider", state.optString("signatureProvider", "unknown"))
+            put("typescriptVersion", state.optString("typescriptVersion", ""))
+            put("typescriptProfile", state.optString("typescriptProfile", ""))
+            put("typescriptProfileRevision", state.optInt("typescriptProfileRevision", 0))
             put("semanticServiceSuppressed", state.optBoolean("semanticServiceSuppressed", false))
             put("semanticServiceReason", state.optString("semanticServiceReason", ""))
             put("documentLength", state.optLong("documentLength", 0L))
@@ -1289,6 +1295,12 @@ class AceCodeEditor @JvmOverloads constructor(
             put("tsLoaderAttempts", loader?.optInt("attempts", 0) ?: 0)
             put("tsReady", service?.optBoolean("ready", false) ?: false)
             put("tsVersion", service?.optString("version", "") ?: "")
+            put("tsExpectedVersion", service?.optString("expectedVersion", "") ?: "")
+            put("tsExecutionProfile", service?.optString("executionProfile", "") ?: "")
+            put(
+                "tsExecutionProfileRevision",
+                service?.optInt("executionProfileRevision", 0) ?: 0,
+            )
             put("tsReason", service?.optString("reason", "") ?: "")
         }.toString()
         eventHistory.record(

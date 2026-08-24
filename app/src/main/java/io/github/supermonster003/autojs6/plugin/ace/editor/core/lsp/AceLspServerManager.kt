@@ -55,7 +55,11 @@ class AceLspServerManager(
     fun snapshot(): AceLspServerSnapshot {
         val declarationGroups = AceEditorLspPreferences.normalizeDeclarationGroups(declarationGroupsProvider())
         val effectiveDeclarationGroups = AceEditorLspPreferences.resolveDeclarationGroups(declarationGroups)
-        val libraryUris = libraryUrisFor(effectiveDeclarationGroups)
+        val typescriptProfile = AceTypeScriptExecutionProfiles.resolve(documentPath)
+        val libraryUris = libraryUrisFor(
+            effectiveDeclarationGroups,
+            typescriptProfile?.defaultLibraryUri ?: TYPESCRIPT_DEFAULT_LIBRARY_URI,
+        )
         val enabled = enabledProvider()
         if (!enabled) {
             return AceLspServerSnapshot(
@@ -88,6 +92,9 @@ class AceLspServerManager(
             serverUri = null,
             rootUri = SYNTHETIC_ROOT_URI,
             documentUri = documentUriForPath(documentPath),
+            typescriptVersion = AceTypeScriptExecutionProfiles.TYPESCRIPT_VERSION,
+            typescriptProfile = typescriptProfile?.id,
+            typescriptProfileRevision = typescriptProfile?.revision,
             declarationGroups = declarationGroups,
             effectiveDeclarationGroups = effectiveDeclarationGroups,
             libraryUris = libraryUris,
@@ -119,6 +126,10 @@ class AceLspServerManager(
             append(",\"serverUri\":null")
             append(",\"rootUri\":").appendJsonString(snapshot.rootUri)
             append(",\"documentUri\":").appendJsonString(snapshot.documentUri)
+            append(",\"typescriptVersion\":").appendJsonString(snapshot.typescriptVersion)
+            append(",\"typescriptProfile\":").appendJsonString(snapshot.typescriptProfile)
+            append(",\"typescriptProfileRevision\":")
+            append(snapshot.typescriptProfileRevision ?: "null")
             append(",\"declarationGroups\":")
             append(snapshot.declarationGroups.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
             append(",\"effectiveDeclarationGroups\":")
@@ -165,6 +176,7 @@ class AceLspServerManager(
         const val SYNTHETIC_DOCUMENT_URI = "file:///autojs6/editor/current.js"
         const val MAX_DOCUMENT_LENGTH = 512 * 1024
         const val TYPESCRIPT_DEFAULT_LIBRARY_URI = "autojs6/typescript/lib.es2022.d.ts"
+        const val TYPESCRIPT_ES2018_LIBRARY_URI = "autojs6/typescript/lib.es2018.d.ts"
         const val CORE_LIBRARY_URI = "autojs6/types/generated/lib.autojs6.core.d.ts"
         const val COMPATIBILITY_LIBRARY_URI = "autojs6/types/lib.autojs6.extra.d.ts"
         const val ANDROID_LIBRARY_URI = "autojs6/types/generated/lib.autojs6.android.d.ts"
@@ -186,9 +198,14 @@ class AceLspServerManager(
             AceEditorLspPreferences.DECLARATION_GROUP_MAIN_APP to MAIN_APP_LIBRARY_URI,
         )
 
-        fun libraryUrisFor(declarationGroups: Collection<String>): List<String> {
+        fun libraryUrisFor(
+            declarationGroups: Collection<String>,
+            defaultLibraryUri: String = TYPESCRIPT_DEFAULT_LIBRARY_URI,
+        ): List<String> {
             return buildList {
-                addAll(DEFAULT_LIBRARY_URIS)
+                add(defaultLibraryUri)
+                add(CORE_LIBRARY_URI)
+                add(COMPATIBILITY_LIBRARY_URI)
                 AceEditorLspPreferences.resolveDeclarationGroups(declarationGroups).forEach { group ->
                     DECLARATION_GROUP_LIBRARY_URIS[group]?.let(::add)
                 }
@@ -258,6 +275,9 @@ data class AceLspServerSnapshot(
     val serverUri: String? = null,
     val rootUri: String? = null,
     val documentUri: String? = null,
+    val typescriptVersion: String? = null,
+    val typescriptProfile: String? = null,
+    val typescriptProfileRevision: Int? = null,
     val declarationGroups: List<String> = emptyList(),
     val effectiveDeclarationGroups: List<String> = emptyList(),
     val libraryUris: List<String> = emptyList(),

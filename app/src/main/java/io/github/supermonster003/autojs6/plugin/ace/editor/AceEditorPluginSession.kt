@@ -738,6 +738,9 @@ private fun AceDiagnosticsSnapshot.toBundle(): Bundle = Bundle().apply {
     putString("lspServerUri", lspServerUri)
     putString("lspRootUri", lspRootUri)
     putString("lspDocumentUri", lspDocumentUri)
+    putString("lspTypeScriptVersion", lspTypeScriptVersion)
+    putString("lspTypeScriptProfile", lspTypeScriptProfile)
+    lspTypeScriptProfileRevision?.let { putInt("lspTypeScriptProfileRevision", it) }
     putString("lspFallback", lspFallback)
     putString("lspCompletionProvider", lspCompletionProvider)
     putString("lspHoverProvider", lspHoverProvider)

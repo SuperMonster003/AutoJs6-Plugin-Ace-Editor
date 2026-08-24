@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `機能` Ace の TypeScript 診断をコンパイラープラグインの TypeScript 6.0.3 revision-2 Rhino/Node プロファイル (ES2018, strict, CommonJS/Node10 または NodeNext) に合わせ, Node プロジェクトのルーティングと .mts/.cts 宣言ファイルの既定サポートを追加しつつ静的フォールバックを維持
+
 # v1.1.9
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-un
 ###### 2026/08/21
 
 * `機能` `ai.ask`/`ai.chat`/`ai.stream` と永続 `ai.session` のネイティブ構造化 JSON 型宣言. `structuredJson`, JSON オブジェクト `responseSchema`, セッション固定 schema を含む
-
-# v1.1.7
-
-###### 2026/08/21
-
-* `機能` `ai.session` の永続オンデバイス会話型宣言を追加し, 固定セッション設定, 各ターンで新しいプロンプトだけを受け取る `ask`/`chat`/`stream`, ライフサイクル状態, 明示的な終了セマンティクスに対応
 
 ##### その他のリリース履歴
 

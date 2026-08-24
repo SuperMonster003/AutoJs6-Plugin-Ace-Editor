@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `기능` Ace TypeScript 진단을 컴파일러 플러그인의 TypeScript 6.0.3 revision-2 Rhino/Node 프로필(ES2018, strict, CommonJS/Node10 또는 NodeNext)과 일치시키고, Node 프로젝트 라우팅 및 .mts/.cts 선언 파일 기본 지원을 추가하면서 정적 폴백을 유지
+
 # v1.1.9
 
 ###### 2026/08/21

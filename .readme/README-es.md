@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.9-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -103,6 +103,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.10
+
+###### 2026/08/24
+
+* `Función` Alinea los diagnósticos TypeScript de Ace con los perfiles Rhino/Node revisión 2 de TypeScript 6.0.3 del complemento compilador (ES2018, strict, CommonJS/Node10 o NodeNext), incluido el enrutamiento de proyectos Node y la compatibilidad predeterminada con declaraciones .mts/.cts, conservando el modo alternativo estático
+
 # v1.1.9
 
 ###### 2026/08/21
@@ -114,12 +120,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/21
 
 * `Función` Declara JSON estructurado nativo para `ai.ask`/`ai.chat`/`ai.stream` y la sesión persistente `ai.session`, con `structuredJson`, el objeto JSON `responseSchema` y un schema fijo por sesión
-
-# v1.1.7
-
-###### 2026/08/21
-
-* `Función` Añade las declaraciones de conversación persistente en el dispositivo de `ai.session`, con opciones fijas de sesión, métodos `ask`/`chat`/`stream` de un prompt nuevo por turno, estado del ciclo de vida y cierre explícito
 
 ##### Para ver más historial de versiones
 
