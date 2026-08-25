@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.11": {
+      "released_date": "2026/08/25",
+      "feature": [
+        "Intégrer les trois surcharges explicites de `ScriptRuntime.loadJarWithR8` aux déclarations AutoJs6 et aux groupes LSP générés, couvrant les keep rules, le classpath ordonné et les liaisons ordinales des consumer rules"
+      ]
+    },
     "v1.1.10": {
       "released_date": "2026/08/24",
       "feature": [

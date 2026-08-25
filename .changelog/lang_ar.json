@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.11": {
+      "released_date": "2026/08/25",
+      "feature": [
+        "تضمين التحميلات الثلاثة الصريحة لـ `ScriptRuntime.loadJarWithR8` في تعريفات AutoJs6 ومجموعات LSP المولدة, بما يشمل keep rules وclasspath المرتب وارتباطات ordinal لقواعد المستهلك"
+      ]
+    },
     "v1.1.10": {
       "released_date": "2026/08/24",
       "feature": [

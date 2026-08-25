@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `新增` 在 AutoJs6 声明与生成的 LSP 分组中内置 `ScriptRuntime.loadJarWithR8` 的 3 个显式重载, 覆盖 keep rules, 有序 classpath 与 consumer-rule ordinal 绑定
+
 # v1.1.10
 
 ###### 2026/08/24

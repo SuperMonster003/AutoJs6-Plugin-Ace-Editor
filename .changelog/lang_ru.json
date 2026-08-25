@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.1.11": {
+      "released_date": "2026/08/25",
+      "feature": [
+        "Включить три явные перегрузки `ScriptRuntime.loadJarWithR8` в объявления AutoJs6 и создаваемые группы LSP, охватывая keep rules, упорядоченный classpath и ordinal-привязки consumer rules"
+      ]
+    },
     "v1.1.10": {
       "released_date": "2026/08/24",
       "feature": [

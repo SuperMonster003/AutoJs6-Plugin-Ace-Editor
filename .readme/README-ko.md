@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `기능` AutoJs6 선언 및 생성 LSP 그룹에 `ScriptRuntime.loadJarWithR8`의 명시적 오버로드 3개를 포함하고 keep rules, 순서 지정 classpath 및 consumer-rule ordinal 연결 지원
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 ###### 2026/08/21
 
 * `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 명시적 backend profile 타입 선언, `cpu`/`gpu`/`npu`, `ai.models` 기기 가용성, 안정적 사용 불가 사유 및 CPU fallback 금지 포함
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 네이티브 구조화 JSON 타입 선언. `structuredJson`, JSON 객체 `responseSchema`, 세션 고정 schema 포함
 
 ##### 더 많은 릴리스 기록
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `기능` AutoJs6 선언 및 생성 LSP 그룹에 `ScriptRuntime.loadJarWithR8`의 명시적 오버로드 3개를 포함하고 keep rules, 순서 지정 classpath 및 consumer-rule ordinal 연결 지원
+
 # v1.1.10
 
 ###### 2026/08/24

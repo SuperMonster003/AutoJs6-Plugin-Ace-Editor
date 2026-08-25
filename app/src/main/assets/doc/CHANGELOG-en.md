@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `Feature` Bundle the three explicit `ScriptRuntime.loadJarWithR8` overloads in AutoJs6 declarations and generated LSP groups, covering keep rules, ordered classpath, and consumer-rule ordinal bindings
+
 # v1.1.10
 
 ###### 2026/08/24

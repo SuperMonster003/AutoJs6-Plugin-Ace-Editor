@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `機能` AutoJs6 型宣言と生成 LSP グループに `ScriptRuntime.loadJarWithR8` の 3 つの明示的オーバーロードを同梱し, keep rules, 順序付き classpath, consumer-rule ordinal 対応を網羅
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 ###### 2026/08/21
 
 * `機能` `ai.ask`/`ai.chat`/`ai.stream` と永続 `ai.session` の明示的 backend profile 型宣言, `cpu`/`gpu`/`npu`, `ai.models` のデバイス可用性, 安定した使用不可理由, CPU フォールバック禁止を網羅
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `機能` `ai.ask`/`ai.chat`/`ai.stream` と永続 `ai.session` のネイティブ構造化 JSON 型宣言. `structuredJson`, JSON オブジェクト `responseSchema`, セッション固定 schema を含む
 
 ##### その他のリリース履歴
 

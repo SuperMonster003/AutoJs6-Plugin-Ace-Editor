@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `機能` AutoJs6 型宣言と生成 LSP グループに `ScriptRuntime.loadJarWithR8` の 3 つの明示的オーバーロードを同梱し, keep rules, 順序付き classpath, consumer-rule ordinal 対応を網羅
+
 # v1.1.10
 
 ###### 2026/08/24

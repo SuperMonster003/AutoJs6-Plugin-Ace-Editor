@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `Функция` Включить три явные перегрузки `ScriptRuntime.loadJarWithR8` в объявления AutoJs6 и создаваемые группы LSP, охватывая keep rules, упорядоченный classpath и ordinal-привязки consumer rules
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 ###### 2026/08/21
 
 * `Функция` Объявить явные backend profile для `ai.ask`/`ai.chat`/`ai.stream` и постоянной `ai.session`, включая `cpu`/`gpu`/`npu`, доступность устройства в `ai.models`, стабильные причины недоступности и запрет отката на CPU
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `Функция` Объявлен нативный структурированный JSON для `ai.ask`/`ai.chat`/`ai.stream` и постоянной `ai.session`, включая `structuredJson`, JSON-объект `responseSchema` и фиксированную schema сеанса
 
 ##### Подробнее об истории выпусков
 

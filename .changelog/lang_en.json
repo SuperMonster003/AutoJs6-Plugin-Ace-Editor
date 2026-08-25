@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.11": {
+      "released_date": "2026/08/25",
+      "feature": [
+        "Bundle the three explicit `ScriptRuntime.loadJarWithR8` overloads in AutoJs6 declarations and generated LSP groups, covering keep rules, ordered classpath, and consumer-rule ordinal bindings"
+      ]
+    },
     "v1.1.10": {
       "released_date": "2026/08/24",
       "feature": [

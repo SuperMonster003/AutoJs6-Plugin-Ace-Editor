@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `ميزة` تضمين التحميلات الثلاثة الصريحة لـ `ScriptRuntime.loadJarWithR8` في تعريفات AutoJs6 ومجموعات LSP المولدة, بما يشمل keep rules وclasspath المرتب وارتباطات ordinal لقواعد المستهلك
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 ###### 2026/08/21
 
 * `ميزة` تعريف backend profile صريح لـ `ai.ask` و`ai.chat` و`ai.stream` و`ai.session` الدائمة, يشمل `cpu` و`gpu` و`npu` وتوافر الجهاز في `ai.models` وأسباب عدم التوافر الثابتة ومنع الرجوع إلى CPU
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `ميزة` تصريحات JSON منظم أصلي في `ai.ask` و`ai.chat` و`ai.stream` وجلسة `ai.session` الدائمة, مع `structuredJson` وكائن JSON باسم `responseSchema` وschema ثابت لكل جلسة
 
 ##### لمزيد من سجل الإصدارات
 

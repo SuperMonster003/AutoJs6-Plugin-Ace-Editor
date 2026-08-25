@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `Feature` Bundle the three explicit `ScriptRuntime.loadJarWithR8` overloads in AutoJs6 declarations and generated LSP groups, covering keep rules, ordered classpath, and consumer-rule ordinal bindings
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/21
 
 * `Feature` Declare explicit backend profiles for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `cpu`/`gpu`/`npu`, `ai.models` device availability, stable unavailable reasons, and no CPU fallback
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `Feature` Declare native structured JSON for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `structuredJson`, JSON-object `responseSchema`, and fixed per-session schemas
 
 ##### Complete release history
 

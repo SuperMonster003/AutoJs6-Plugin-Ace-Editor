@@ -90,7 +90,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `新增` 在 AutoJs6 聲明及生成的 LSP 分組中內置 `ScriptRuntime.loadJarWithR8` 的 3 個明確重載, 覆蓋 keep rules, 有序 classpath 及 consumer-rule ordinal 綁定
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-u
 ###### 2026/08/21
 
 * `新增` `ai.ask`/`ai.chat`/`ai.stream` 同持久 `ai.session` 的明確 backend profile 類型聲明, 覆蓋 `cpu`/`gpu`/`npu`, `ai.models` 裝置可用性, 穩定不可用原因及禁止 CPU 回退語義
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `新增` `ai.ask`/`ai.chat`/`ai.stream` 同持久 `ai.session` 嘅原生結構化 JSON 類型宣告, 涵蓋 `structuredJson`, JSON 物件 `responseSchema` 同固定會話 schema
 
 ##### 更多發行歷史可參閱
 

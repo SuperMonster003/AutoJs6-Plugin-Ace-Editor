@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `Función` Incluir las tres sobrecargas explícitas de `ScriptRuntime.loadJarWithR8` en las declaraciones de AutoJs6 y los grupos LSP generados, abarcando keep rules, classpath ordenado y enlaces ordinales de consumer rules
+
 # v1.1.10
 
 ###### 2026/08/24

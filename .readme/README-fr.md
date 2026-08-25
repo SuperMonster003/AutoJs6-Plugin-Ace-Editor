@@ -90,7 +90,7 @@ La tâche valide les références des déclarations et la syntaxe TypeScript 6, 
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -103,6 +103,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `Fonctionnalité` Intégrer les trois surcharges explicites de `ScriptRuntime.loadJarWithR8` aux déclarations AutoJs6 et aux groupes LSP générés, couvrant les keep rules, le classpath ordonné et les liaisons ordinales des consumer rules
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/21
 
 * `Fonctionnalité` Déclarer des profils backend explicites pour `ai.ask`/`ai.chat`/`ai.stream` et `ai.session` persistante, couvrant `cpu`/`gpu`/`npu`, la disponibilité par appareil dans `ai.models`, les raisons stables d'indisponibilité et l'absence de repli CPU
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `Fonctionnalité` Déclare le JSON structuré natif pour `ai.ask`/`ai.chat`/`ai.stream` et la session persistante `ai.session`, avec `structuredJson`, l'objet JSON `responseSchema` et un schema fixe par session
 
 ##### Pour plus d'historique des versions
 

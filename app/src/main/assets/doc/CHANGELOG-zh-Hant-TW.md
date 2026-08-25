@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `新增` 在 AutoJs6 宣告與產生的 LSP 群組中內建 `ScriptRuntime.loadJarWithR8` 的 3 個明確多載, 涵蓋 keep rules, 有序 classpath 與 consumer-rule ordinal 綁定
+
 # v1.1.10
 
 ###### 2026/08/24

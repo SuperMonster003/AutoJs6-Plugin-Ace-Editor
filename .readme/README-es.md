@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.10-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -103,6 +103,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.11
+
+###### 2026/08/25
+
+* `Función` Incluir las tres sobrecargas explícitas de `ScriptRuntime.loadJarWithR8` en las declaraciones de AutoJs6 y los grupos LSP generados, abarcando keep rules, classpath ordenado y enlaces ordinales de consumer rules
+
 # v1.1.10
 
 ###### 2026/08/24
@@ -114,12 +120,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/21
 
 * `Función` Declarar perfiles backend explícitos para `ai.ask`/`ai.chat`/`ai.stream` y `ai.session` persistente, incluidos `cpu`/`gpu`/`npu`, disponibilidad por dispositivo en `ai.models`, razones estables de no disponibilidad y ausencia de fallback a CPU
-
-# v1.1.8
-
-###### 2026/08/21
-
-* `Función` Declara JSON estructurado nativo para `ai.ask`/`ai.chat`/`ai.stream` y la sesión persistente `ai.session`, con `structuredJson`, el objeto JSON `responseSchema` y un schema fijo por sesión
 
 ##### Para ver más historial de versiones
 
