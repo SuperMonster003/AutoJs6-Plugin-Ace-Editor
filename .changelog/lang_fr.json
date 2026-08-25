@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.12": {
+      "released_date": "2026/08/26",
+      "feature": [
+        "Intègre les déclarations unifiées des cibles IA d’AutoJs6 : `ai.catalog`, routage exact par `target`, cibles locales et en ligne, métadonnées complètes des réponses et sessions, sortie de raisonnement et erreurs stables sans repli ; supprime toutes les anciennes API et tous les alias non publiés du catalogue IA"
+      ]
+    },
     "v1.1.11": {
       "released_date": "2026/08/25",
       "feature": [
@@ -20,7 +26,7 @@
     "v1.1.9": {
       "released_date": "2026/08/21",
       "feature": [
-        "Déclarer des profils backend explicites pour `ai.ask`/`ai.chat`/`ai.stream` et `ai.session` persistante, couvrant `cpu`/`gpu`/`npu`, la disponibilité par appareil dans `ai.models`, les raisons stables d'indisponibilité et l'absence de repli CPU"
+        "Déclarer des profils backend explicites pour `ai.ask`/`ai.chat`/`ai.stream` et `ai.session` persistante, couvrant `cpu`/`gpu`/`npu`, la disponibilité par appareil dans `ai.catalog`, les raisons stables d'indisponibilité et l'absence de repli CPU"
       ]
     },
     "v1.1.8": {
@@ -38,7 +44,7 @@
     "v1.1.6": {
       "released_date": "2026/08/21",
       "feature": [
-        "Complète les déclarations du plugin d'IA local AutoJs6 avec l'historique des messages multirôle, les sélecteurs officiels et tiers, les paramètres de génération, les charges utiles précises d'utilisation et de streaming, ainsi que la découverte des modèles via `ai.models`"
+        "Complète les déclarations du plugin d'IA local AutoJs6 avec l'historique des messages multirôle, les sélecteurs officiels et tiers, les paramètres de génération, les charges utiles précises d'utilisation et de streaming, ainsi que la découverte des modèles via `ai.catalog`"
       ]
     },
     "v1.1.5": {

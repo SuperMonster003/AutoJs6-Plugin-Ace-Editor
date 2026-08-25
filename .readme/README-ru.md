@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 
 ******
 
+# v1.1.12
+
+###### 2026/08/26
+
+* `Функция` Встроены унифицированные объявления целей ИИ AutoJs6: `ai.catalog`, точная маршрутизация через `target`, локальные и сетевые цели, полные метаданные ответов и сеансов, вывод рассуждений и стабильные ошибки без отката; удалены все неопубликованные устаревшие API и псевдонимы каталога ИИ
+
 # v1.1.11
 
 ###### 2026/08/25
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 ###### 2026/08/24
 
 * `Функция` Диагностика TypeScript в Ace согласована с профилями Rhino/Node ревизии 2 компилятора TypeScript 6.0.3 (ES2018, strict, CommonJS/Node10 или NodeNext), включая маршрутизацию проектов Node и поддержку деклараций .mts/.cts по умолчанию с сохранением статического резервного режима
-
-# v1.1.9
-
-###### 2026/08/21
-
-* `Функция` Объявить явные backend profile для `ai.ask`/`ai.chat`/`ai.stream` и постоянной `ai.session`, включая `cpu`/`gpu`/`npu`, доступность устройства в `ai.models`, стабильные причины недоступности и запрет отката на CPU
 
 ##### Подробнее об истории выпусков
 

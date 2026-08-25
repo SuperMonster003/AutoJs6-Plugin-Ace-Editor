@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.12
+
+###### 2026/08/26
+
+* `Feature` Bundle the unified AutoJs6 AI target declarations: `ai.catalog`, exact `target` routing, local and online targets, complete response and session metadata, reasoning output, and stable no-fallback failures; remove all unpublished legacy AI catalog APIs and aliases
+
 # v1.1.11
 
 ###### 2026/08/25
@@ -20,7 +26,7 @@
 
 ###### 2026/08/21
 
-* `Feature` Declare explicit backend profiles for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `cpu`/`gpu`/`npu`, `ai.models` device availability, stable unavailable reasons, and no CPU fallback
+* `Feature` Declare explicit backend profiles for `ai.ask`/`ai.chat`/`ai.stream` and persistent `ai.session`, covering `cpu`/`gpu`/`npu`, `ai.catalog` device availability, stable unavailable reasons, and no CPU fallback
 
 # v1.1.8
 
@@ -38,7 +44,7 @@
 
 ###### 2026/08/21
 
-* `Feature` Complete the AutoJs6 local AI plugin declarations with multi-role message history, official and third-party selectors, generation controls, exact usage and streaming payloads, and `ai.models` model discovery
+* `Feature` Complete the AutoJs6 local AI plugin declarations with multi-role message history, official and third-party selectors, generation controls, exact usage and streaming payloads, and `ai.catalog` model discovery
 
 # v1.1.5
 

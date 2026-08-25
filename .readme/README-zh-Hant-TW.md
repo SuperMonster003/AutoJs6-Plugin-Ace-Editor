@@ -90,7 +90,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 
 ******
 
+# v1.1.12
+
+###### 2026/08/26
+
+* `新增` 內建 AutoJs6 統一 AI 目標宣告: `ai.catalog`, `target` 精確路由, 本機與線上目標, 完整回應及工作階段中繼資料, reasoning 輸出和穩定的禁止回退錯誤; 同時移除所有未發布的舊 AI 目錄 API 與相容別名
+
 # v1.1.11
 
 ###### 2026/08/25
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 ###### 2026/08/24
 
 * `新增` Ace TypeScript 診斷與編譯外掛的 TypeScript 6.0.3 revision-2 Rhino/Node profile 對齊 (ES2018, strict, CommonJS/Node10 或 NodeNext), 支援 Node 專案路由並預設啟用 .mts/.cts 及其宣告檔, 同時保留靜態回退
-
-# v1.1.9
-
-###### 2026/08/21
-
-* `新增` `ai.ask`/`ai.chat`/`ai.stream` 與持久 `ai.session` 的明確 backend profile 型別宣告, 涵蓋 `cpu`/`gpu`/`npu`, `ai.models` 裝置可用性, 穩定不可用原因及禁止 CPU 回退語意
 
 ##### 更多發行歷史可參閱
 

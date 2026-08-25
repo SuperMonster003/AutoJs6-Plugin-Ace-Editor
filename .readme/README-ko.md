@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 
 ******
 
+# v1.1.12
+
+###### 2026/08/26
+
+* `기능` AutoJs6 통합 AI 대상 선언을 내장: `ai.catalog`, `target` 정확 라우팅, 로컬 및 온라인 대상, 완전한 응답·세션 메타데이터, reasoning 출력과 폴백 없는 안정 오류를 포함하며 공개되지 않은 이전 AI 카탈로그 API 및 호환 별칭을 모두 제거
+
 # v1.1.11
 
 ###### 2026/08/25
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 ###### 2026/08/24
 
 * `기능` Ace TypeScript 진단을 컴파일러 플러그인의 TypeScript 6.0.3 revision-2 Rhino/Node 프로필(ES2018, strict, CommonJS/Node10 또는 NodeNext)과 일치시키고, Node 프로젝트 라우팅 및 .mts/.cts 선언 파일 기본 지원을 추가하면서 정적 폴백을 유지
-
-# v1.1.9
-
-###### 2026/08/21
-
-* `기능` `ai.ask`/`ai.chat`/`ai.stream` 및 영구 `ai.session`의 명시적 backend profile 타입 선언, `cpu`/`gpu`/`npu`, `ai.models` 기기 가용성, 안정적 사용 불가 사유 및 CPU fallback 금지 포함
 
 ##### 더 많은 릴리스 기록
 

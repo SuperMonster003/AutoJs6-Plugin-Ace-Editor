@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 
 ******
 
+# v1.1.12
+
+###### 2026/08/26
+
+* `新增` 内置 AutoJs6 统一 AI 目标声明: `ai.catalog`, `target` 精确路由, 本机与在线目标, 完整响应及会话元数据, reasoning 输出和稳定的禁止回退错误; 同时移除所有未发布的旧 AI 目录 API 与兼容别名
+
 # v1.1.11
 
 ###### 2026/08/25
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 ###### 2026/08/24
 
 * `新增` Ace TypeScript 诊断与编译插件的 TypeScript 6.0.3 revision-2 Rhino/Node profile 对齐 (ES2018, strict, CommonJS/Node10 或 NodeNext), 支持 Node 项目路由并默认启用 .mts/.cts 及其声明文件, 同时保留静态回退
-
-# v1.1.9
-
-###### 2026/08/21
-
-* `新增` `ai.ask`/`ai.chat`/`ai.stream` 与持久 `ai.session` 的显式 backend profile 类型声明, 覆盖 `cpu`/`gpu`/`npu`, `ai.models` 设备可用性, 稳定不可用原因及禁止 CPU 回退语义
 
 ##### 更多发行历史可参阅
 

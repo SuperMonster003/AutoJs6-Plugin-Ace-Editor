@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.12
+
+###### 2026/08/26
+
+* `Función` Incluye las declaraciones unificadas de destinos de IA de AutoJs6: `ai.catalog`, enrutamiento exacto mediante `target`, destinos locales y en línea, metadatos completos de respuestas y sesiones, salida de razonamiento y errores estables sin retroceso; elimina todas las API y alias antiguos del catálogo de IA que no se publicaron
+
 # v1.1.11
 
 ###### 2026/08/25
@@ -20,7 +26,7 @@
 
 ###### 2026/08/21
 
-* `Función` Declarar perfiles backend explícitos para `ai.ask`/`ai.chat`/`ai.stream` y `ai.session` persistente, incluidos `cpu`/`gpu`/`npu`, disponibilidad por dispositivo en `ai.models`, razones estables de no disponibilidad y ausencia de fallback a CPU
+* `Función` Declarar perfiles backend explícitos para `ai.ask`/`ai.chat`/`ai.stream` y `ai.session` persistente, incluidos `cpu`/`gpu`/`npu`, disponibilidad por dispositivo en `ai.catalog`, razones estables de no disponibilidad y ausencia de fallback a CPU
 
 # v1.1.8
 
@@ -38,7 +44,7 @@
 
 ###### 2026/08/21
 
-* `Función` Completa las declaraciones del plugin de IA local de AutoJs6 con historial de mensajes multirrol, selectores oficiales y de terceros, controles de generación, cargas útiles exactas de uso y streaming, y el descubrimiento de modelos mediante `ai.models`
+* `Función` Completa las declaraciones del plugin de IA local de AutoJs6 con historial de mensajes multirrol, selectores oficiales y de terceros, controles de generación, cargas útiles exactas de uso y streaming, y el descubrimiento de modelos mediante `ai.catalog`
 
 # v1.1.5
 

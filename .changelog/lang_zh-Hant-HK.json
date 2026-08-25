@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.1.12": {
+      "released_date": "2026/08/26",
+      "feature": [
+        "內置 AutoJs6 統一 AI 目標聲明: `ai.catalog`, `target` 精確路由, 本機與網上目標, 完整回應及會話元數據, reasoning 輸出和穩定的禁止回退錯誤; 同時移除所有未發佈的舊 AI 目錄 API 與兼容別名"
+      ]
+    },
     "v1.1.11": {
       "released_date": "2026/08/25",
       "feature": [
@@ -20,7 +26,7 @@
     "v1.1.9": {
       "released_date": "2026/08/21",
       "feature": [
-        "`ai.ask`/`ai.chat`/`ai.stream` 同持久 `ai.session` 的明確 backend profile 類型聲明, 覆蓋 `cpu`/`gpu`/`npu`, `ai.models` 裝置可用性, 穩定不可用原因及禁止 CPU 回退語義"
+        "`ai.ask`/`ai.chat`/`ai.stream` 同持久 `ai.session` 的明確 backend profile 類型聲明, 覆蓋 `cpu`/`gpu`/`npu`, `ai.catalog` 裝置可用性, 穩定不可用原因及禁止 CPU 回退語義"
       ]
     },
     "v1.1.8": {
@@ -38,7 +44,7 @@
     "v1.1.6": {
       "released_date": "2026/08/21",
       "feature": [
-        "完善 AutoJs6 本機 AI 插件類型聲明, 涵蓋多角色訊息歷史, 官方與第三方選擇器, 生成參數, 精確用量及串流負載, 以及 `ai.models` 模型探索"
+        "完善 AutoJs6 本機 AI 插件類型聲明, 涵蓋多角色訊息歷史, 官方與第三方選擇器, 生成參數, 精確用量及串流負載, 以及 `ai.catalog` 模型探索"
       ]
     },
     "v1.1.5": {

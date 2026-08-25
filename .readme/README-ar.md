@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 
 ******
 
+# v1.1.12
+
+###### 2026/08/26
+
+* `ميزة` تضمين تعريفات أهداف الذكاء الاصطناعي الموحدة في AutoJs6: ‏`ai.catalog` والتوجيه الدقيق عبر `target` والأهداف المحلية والمتصلة وبيانات الاستجابة والجلسة الكاملة ومخرجات الاستدلال والأخطاء الثابتة من دون رجوع؛ مع إزالة جميع واجهات وأسماء كتالوج الذكاء الاصطناعي القديمة غير المنشورة
+
 # v1.1.11
 
 ###### 2026/08/25
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.11-u
 ###### 2026/08/24
 
 * `ميزة` مواءمة تشخيصات TypeScript في Ace مع ملفي Rhino وNode بالمراجعة 2 في إضافة المترجم TypeScript 6.0.3 (ES2018 وstrict وCommonJS/Node10 أو NodeNext)، مع توجيه مشاريع Node ودعم ملفات تعريف .mts/.cts افتراضياً مع الإبقاء على الرجوع الثابت
-
-# v1.1.9
-
-###### 2026/08/21
-
-* `ميزة` تعريف backend profile صريح لـ `ai.ask` و`ai.chat` و`ai.stream` و`ai.session` الدائمة, يشمل `cpu` و`gpu` و`npu` وتوافر الجهاز في `ai.models` وأسباب عدم التوافر الثابتة ومنع الرجوع إلى CPU
 
 ##### لمزيد من سجل الإصدارات
 
