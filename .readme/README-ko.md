@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `기능` 최종 플러그인 전용 AutoJs6 `4.1.0` AI 선언을 번들: 선택자를 생략하면 공식 3-Stone AI 기본 대상을 사용하고, 모든 요청은 플러그인 `target` 라우팅과 표준 `timeout`만 허용하며, 호스트 측 직접 연결, 자격 증명 및 전환 이벤트 타입을 제거
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 ###### 2026/08/25
 
 * `기능` AutoJs6 선언 및 생성 LSP 그룹에 `ScriptRuntime.loadJarWithR8`의 명시적 오버로드 3개를 포함하고 keep rules, 순서 지정 classpath 및 consumer-rule ordinal 연결 지원
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `기능` Ace TypeScript 진단을 컴파일러 플러그인의 TypeScript 6.0.3 revision-2 Rhino/Node 프로필(ES2018, strict, CommonJS/Node10 또는 NodeNext)과 일치시키고, Node 프로젝트 라우팅 및 .mts/.cts 선언 파일 기본 지원을 추가하면서 정적 폴백을 유지
 
 ##### 더 많은 릴리스 기록
 

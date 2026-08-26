@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `機能` AutoJs6 `4.1.0` の最終的なプラグイン専用 AI 宣言を同梱: セレクター省略時は公式 3-Stone AI の既定ターゲットを使用し, すべての要求はプラグインの `target` ルーティングと標準 `timeout` のみを受け付け, ホスト側の直接接続, 認証情報, 移行用イベント型を削除
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 ###### 2026/08/25
 
 * `機能` AutoJs6 型宣言と生成 LSP グループに `ScriptRuntime.loadJarWithR8` の 3 つの明示的オーバーロードを同梱し, keep rules, 順序付き classpath, consumer-rule ordinal 対応を網羅
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `機能` Ace の TypeScript 診断をコンパイラープラグインの TypeScript 6.0.3 revision-2 Rhino/Node プロファイル (ES2018, strict, CommonJS/Node10 または NodeNext) に合わせ, Node プロジェクトのルーティングと .mts/.cts 宣言ファイルの既定サポートを追加しつつ静的フォールバックを維持
 
 ##### その他のリリース履歴
 

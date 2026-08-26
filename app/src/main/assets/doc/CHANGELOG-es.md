@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `Función` Incluye las declaraciones de AI finales de AutoJs6 `4.1.0`, exclusivamente mediante plugin: al omitir el selector se usa el objetivo predeterminado del plugin oficial 3-Stone AI, cada solicitud solo acepta el enrutamiento `target` del plugin y el `timeout` canónico, y se eliminan los tipos de conexión directa, credenciales y eventos transitorios del anfitrión
+
 # v1.1.12
 
 ###### 2026/08/26

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.1.13": {
+      "released_date": "2026/08/26",
+      "feature": [
+        "AutoJs6 `4.1.0` の最終的なプラグイン専用 AI 宣言を同梱: セレクター省略時は公式 3-Stone AI の既定ターゲットを使用し, すべての要求はプラグインの `target` ルーティングと標準 `timeout` のみを受け付け, ホスト側の直接接続, 認証情報, 移行用イベント型を削除"
+      ]
+    },
     "v1.1.12": {
       "released_date": "2026/08/26",
       "feature": [

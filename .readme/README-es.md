@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -103,6 +103,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `Función` Incluye las declaraciones de AI finales de AutoJs6 `4.1.0`, exclusivamente mediante plugin: al omitir el selector se usa el objetivo predeterminado del plugin oficial 3-Stone AI, cada solicitud solo acepta el enrutamiento `target` del plugin y el `timeout` canónico, y se eliminan los tipos de conexión directa, credenciales y eventos transitorios del anfitrión
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/25
 
 * `Función` Incluir las tres sobrecargas explícitas de `ScriptRuntime.loadJarWithR8` en las declaraciones de AutoJs6 y los grupos LSP generados, abarcando keep rules, classpath ordenado y enlaces ordinales de consumer rules
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `Función` Alinea los diagnósticos TypeScript de Ace con los perfiles Rhino/Node revisión 2 de TypeScript 6.0.3 del complemento compilador (ES2018, strict, CommonJS/Node10 o NodeNext), incluido el enrutamiento de proyectos Node y la compatibilidad predeterminada con declaraciones .mts/.cts, conservando el modo alternativo estático
 
 ##### Para ver más historial de versiones
 

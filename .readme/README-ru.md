@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `Функция` Встроены финальные AI-декларации AutoJs6 `4.1.0`, работающие только через плагин: при отсутствии селектора используется цель по умолчанию официального 3-Stone AI, все запросы принимают только маршрутизацию `target` плагина и канонический `timeout`, а типы прямого подключения, учетных данных и переходных событий на стороне хоста удалены
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 ###### 2026/08/25
 
 * `Функция` Включить три явные перегрузки `ScriptRuntime.loadJarWithR8` в объявления AutoJs6 и создаваемые группы LSP, охватывая keep rules, упорядоченный classpath и ordinal-привязки consumer rules
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `Функция` Диагностика TypeScript в Ace согласована с профилями Rhino/Node ревизии 2 компилятора TypeScript 6.0.3 (ES2018, strict, CommonJS/Node10 или NodeNext), включая маршрутизацию проектов Node и поддержку деклараций .mts/.cts по умолчанию с сохранением статического резервного режима
 
 ##### Подробнее об истории выпусков
 

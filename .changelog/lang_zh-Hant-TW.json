@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.1.13": {
+      "released_date": "2026/08/26",
+      "feature": [
+        "內建 AutoJs6 `4.1.0` 最終僅經外掛的 AI 宣告: 省略選擇器時使用官方 3-Stone AI 預設目標, 所有請求只接受外掛 `target` 路由和標準 `timeout`, 並移除主機端直連設定, 認證和過渡事件型別"
+      ]
+    },
     "v1.1.12": {
       "released_date": "2026/08/26",
       "feature": [

@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `Feature` Bundle the final plugin-only AutoJs6 `4.1.0` AI declarations: omitted selectors use the official 3-Stone AI default target, every request accepts only plugin `target` routing and canonical `timeout`, and host-side direct-connection, credential, and transitional event types are removed
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/25
 
 * `Feature` Bundle the three explicit `ScriptRuntime.loadJarWithR8` overloads in AutoJs6 declarations and generated LSP groups, covering keep rules, ordered classpath, and consumer-rule ordinal bindings
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `Feature` Align Ace TypeScript diagnostics with the compiler plugin's TypeScript 6.0.3 revision-2 Rhino/Node profiles (ES2018, strict, CommonJS/Node10 or NodeNext), including Node-project routing and default .mts/.cts declaration support while preserving static fallback
 
 ##### Complete release history
 

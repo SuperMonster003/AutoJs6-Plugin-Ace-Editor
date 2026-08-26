@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `Feature` Bundle the final plugin-only AutoJs6 `4.1.0` AI declarations: omitted selectors use the official 3-Stone AI default target, every request accepts only plugin `target` routing and canonical `timeout`, and host-side direct-connection, credential, and transitional event types are removed
+
 # v1.1.12
 
 ###### 2026/08/26

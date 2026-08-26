@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `新增` 内置 AutoJs6 `4.1.0` 最终插件唯一 AI 声明: 省略选择器时使用官方 3-Stone AI 默认目标, 所有请求只接受插件 `target` 路由和标准 `timeout`, 并移除宿主侧直连配置, 凭据和过渡事件类型
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 ###### 2026/08/25
 
 * `新增` 在 AutoJs6 声明与生成的 LSP 分组中内置 `ScriptRuntime.loadJarWithR8` 的 3 个显式重载, 覆盖 keep rules, 有序 classpath 与 consumer-rule ordinal 绑定
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `新增` Ace TypeScript 诊断与编译插件的 TypeScript 6.0.3 revision-2 Rhino/Node profile 对齐 (ES2018, strict, CommonJS/Node10 或 NodeNext), 支持 Node 项目路由并默认启用 .mts/.cts 及其声明文件, 同时保留静态回退
 
 ##### 更多发行历史可参阅
 

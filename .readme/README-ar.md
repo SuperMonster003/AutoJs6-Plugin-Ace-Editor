@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `ميزة` تضمين تعريفات AI النهائية الخاصة بالإضافة فقط في AutoJs6 `4.1.0`: عند حذف المحدد يستخدم الهدف الافتراضي لإضافة 3-Stone AI الرسمية, ولا تقبل الطلبات سوى توجيه `target` عبر الإضافة و`timeout` القياسي, مع إزالة أنواع الاتصال المباشر وبيانات الاعتماد والأحداث الانتقالية من المضيف
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-u
 ###### 2026/08/25
 
 * `ميزة` تضمين التحميلات الثلاثة الصريحة لـ `ScriptRuntime.loadJarWithR8` في تعريفات AutoJs6 ومجموعات LSP المولدة, بما يشمل keep rules وclasspath المرتب وارتباطات ordinal لقواعد المستهلك
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `ميزة` مواءمة تشخيصات TypeScript في Ace مع ملفي Rhino وNode بالمراجعة 2 في إضافة المترجم TypeScript 6.0.3 (ES2018 وstrict وCommonJS/Node10 أو NodeNext)، مع توجيه مشاريع Node ودعم ملفات تعريف .mts/.cts افتراضياً مع الإبقاء على الرجوع الثابت
 
 ##### لمزيد من سجل الإصدارات
 

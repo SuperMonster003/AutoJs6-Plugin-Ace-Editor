@@ -90,7 +90,7 @@ La tâche valide les références des déclarations et la syntaxe TypeScript 6, 
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.12-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -103,6 +103,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.13
+
+###### 2026/08/26
+
+* `Fonctionnalité` Intègre les déclarations AI finales d'AutoJs6 `4.1.0`, exclusivement via plugin: un sélecteur omis utilise la cible par défaut du plugin officiel 3-Stone AI, chaque requête n'accepte que le routage `target` du plugin et le `timeout` canonique, et les types de connexion directe, d'identifiant secret et d'événement transitoire côté hôte sont supprimés
+
 # v1.1.12
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/25
 
 * `Fonctionnalité` Intégrer les trois surcharges explicites de `ScriptRuntime.loadJarWithR8` aux déclarations AutoJs6 et aux groupes LSP générés, couvrant les keep rules, le classpath ordonné et les liaisons ordinales des consumer rules
-
-# v1.1.10
-
-###### 2026/08/24
-
-* `Fonctionnalité` Aligne les diagnostics TypeScript d'Ace sur les profils Rhino/Node révision 2 de TypeScript 6.0.3 du plugin compilateur (ES2018, strict, CommonJS/Node10 ou NodeNext), avec routage des projets Node et prise en charge par défaut des déclarations .mts/.cts, tout en conservant le repli statique
 
 ##### Pour plus d'historique des versions
 
