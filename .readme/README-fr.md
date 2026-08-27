@@ -90,7 +90,7 @@ La tâche valide les références des déclarations et la syntaxe TypeScript 6, 
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -103,6 +103,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `Fonctionnalité` Intègre les déclarations R8 AutoJs6 `4.2.0` et les groupes LSP générés: six surcharges de `ScriptRuntime.loadJarWithR8` ajoutent l'export vérifié de mapping/seeds/usage/retrace metadata, tandis que `retraceR8Stack` restaure la pile liée à la provenance via le protocole 1.1 avec une sélection de fournisseur sans repli
+
 # v1.1.13
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/26
 
 * `Fonctionnalité` Intègre les déclarations unifiées des cibles IA d’AutoJs6 : `ai.catalog`, routage exact par `target`, cibles locales et en ligne, métadonnées complètes des réponses et sessions, sortie de raisonnement et erreurs stables sans repli ; supprime toutes les anciennes API et tous les alias non publiés du catalogue IA
-
-# v1.1.11
-
-###### 2026/08/25
-
-* `Fonctionnalité` Intégrer les trois surcharges explicites de `ScriptRuntime.loadJarWithR8` aux déclarations AutoJs6 et aux groupes LSP générés, couvrant les keep rules, le classpath ordonné et les liaisons ordinales des consumer rules
 
 ##### Pour plus d'historique des versions
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `機能` AutoJs6 `4.2.0` の R8 宣言と生成済み LSP グループを同梱: `ScriptRuntime.loadJarWithR8` の 6 つのオーバーロードは検証済み mapping/seeds/usage/retrace metadata のエクスポートを追加し, `retraceR8Stack` はプロトコル 1.1 で来歴に結び付けたスタック復元を実行. Provider 選択失敗時はフォールバックしない
+
 # v1.1.13
 
 ###### 2026/08/26

@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `ميزة` تضمين تعريفات R8 الخاصة بـ AutoJs6 `4.2.0` ومجموعات LSP المولدة: تضيف التحميلات الستة لـ `ScriptRuntime.loadJarWithR8` تصدير mapping/seeds/usage/retrace metadata بعد التحقق, بينما ينفذ `retraceR8Stack` استعادة المكدس المرتبطة بالمصدر عبر البروتوكول 1.1 مع فشل مغلق عند تعذر اختيار Provider
+
 # v1.1.13
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 ###### 2026/08/26
 
 * `ميزة` تضمين تعريفات أهداف الذكاء الاصطناعي الموحدة في AutoJs6: ‏`ai.catalog` والتوجيه الدقيق عبر `target` والأهداف المحلية والمتصلة وبيانات الاستجابة والجلسة الكاملة ومخرجات الاستدلال والأخطاء الثابتة من دون رجوع؛ مع إزالة جميع واجهات وأسماء كتالوج الذكاء الاصطناعي القديمة غير المنشورة
-
-# v1.1.11
-
-###### 2026/08/25
-
-* `ميزة` تضمين التحميلات الثلاثة الصريحة لـ `ScriptRuntime.loadJarWithR8` في تعريفات AutoJs6 ومجموعات LSP المولدة, بما يشمل keep rules وclasspath المرتب وارتباطات ordinal لقواعد المستهلك
 
 ##### لمزيد من سجل الإصدارات
 

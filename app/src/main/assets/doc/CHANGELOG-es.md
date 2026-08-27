@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `Función` Incluye las declaraciones R8 de AutoJs6 `4.2.0` y los grupos LSP generados: seis sobrecargas de `ScriptRuntime.loadJarWithR8` añaden la exportación verificada de mapping/seeds/usage/retrace metadata, mientras `retraceR8Stack` restaura la pila vinculada a la procedencia mediante el protocolo 1.1 con selección de proveedor sin fallback
+
 # v1.1.13
 
 ###### 2026/08/26

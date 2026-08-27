@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `新增` 内置 AutoJs6 `4.2.0` R8 声明与生成的 LSP 分组: `ScriptRuntime.loadJarWithR8` 的 6 个重载支持经校验的 mapping/seeds/usage/retrace metadata 导出, `retraceR8Stack` 通过协议 1.1 执行溯源绑定的堆栈还原, 提供者选择失败时禁止回退
+
 # v1.1.13
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 ###### 2026/08/26
 
 * `新增` 内置 AutoJs6 统一 AI 目标声明: `ai.catalog`, `target` 精确路由, 本机与在线目标, 完整响应及会话元数据, reasoning 输出和稳定的禁止回退错误; 同时移除所有未发布的旧 AI 目录 API 与兼容别名
-
-# v1.1.11
-
-###### 2026/08/25
-
-* `新增` 在 AutoJs6 声明与生成的 LSP 分组中内置 `ScriptRuntime.loadJarWithR8` 的 3 个显式重载, 覆盖 keep rules, 有序 classpath 与 consumer-rule ordinal 绑定
 
 ##### 更多发行历史可参阅
 

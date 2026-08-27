@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `Функция` Встроены R8-декларации AutoJs6 `4.2.0` и сгенерированные группы LSP: шесть перегрузок `ScriptRuntime.loadJarWithR8` добавляют проверенный экспорт mapping/seeds/usage/retrace metadata, а `retraceR8Stack` восстанавливает стек с привязкой к происхождению по протоколу 1.1 и без fallback при ошибке выбора Provider
+
 # v1.1.13
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 ###### 2026/08/26
 
 * `Функция` Встроены унифицированные объявления целей ИИ AutoJs6: `ai.catalog`, точная маршрутизация через `target`, локальные и сетевые цели, полные метаданные ответов и сеансов, вывод рассуждений и стабильные ошибки без отката; удалены все неопубликованные устаревшие API и псевдонимы каталога ИИ
-
-# v1.1.11
-
-###### 2026/08/25
-
-* `Функция` Включить три явные перегрузки `ScriptRuntime.loadJarWithR8` в объявления AutoJs6 и создаваемые группы LSP, охватывая keep rules, упорядоченный classpath и ordinal-привязки consumer rules
 
 ##### Подробнее об истории выпусков
 

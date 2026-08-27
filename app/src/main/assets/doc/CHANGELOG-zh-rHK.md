@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `新增` 內置 AutoJs6 `4.2.0` R8 聲明與生成的 LSP 分組: `ScriptRuntime.loadJarWithR8` 的 6 個多載支援經驗證的 mapping/seeds/usage/retrace metadata 匯出, `retraceR8Stack` 透過協議 1.1 執行來源綁定的堆疊還原, 外掛選擇失敗時禁止回退
+
 # v1.1.13
 
 ###### 2026/08/26

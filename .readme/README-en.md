@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `Feature` Bundle the AutoJs6 `4.2.0` R8 declarations and generated LSP groups: six `ScriptRuntime.loadJarWithR8` overloads add verified mapping/seeds/usage/retrace-metadata export, while `retraceR8Stack` performs protocol 1.1 provenance-bound stack retrace with fail-closed provider selection
+
 # v1.1.13
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/26
 
 * `Feature` Bundle the unified AutoJs6 AI target declarations: `ai.catalog`, exact `target` routing, local and online targets, complete response and session metadata, reasoning output, and stable no-fallback failures; remove all unpublished legacy AI catalog APIs and aliases
-
-# v1.1.11
-
-###### 2026/08/25
-
-* `Feature` Bundle the three explicit `ScriptRuntime.loadJarWithR8` overloads in AutoJs6 declarations and generated LSP groups, covering keep rules, ordered classpath, and consumer-rule ordinal bindings
 
 ##### Complete release history
 

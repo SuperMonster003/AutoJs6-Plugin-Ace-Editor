@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `기능` AutoJs6 `4.2.0` R8 선언과 생성된 LSP 그룹을 내장: `ScriptRuntime.loadJarWithR8`의 6개 오버로드는 검증된 mapping/seeds/usage/retrace metadata 내보내기를 추가하고, `retraceR8Stack`은 프로토콜 1.1로 출처에 결합된 스택 복원을 수행하며 Provider 선택 실패 시 fallback하지 않음
+
 # v1.1.13
 
 ###### 2026/08/26
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.13-u
 ###### 2026/08/26
 
 * `기능` AutoJs6 통합 AI 대상 선언을 내장: `ai.catalog`, `target` 정확 라우팅, 로컬 및 온라인 대상, 완전한 응답·세션 메타데이터, reasoning 출력과 폴백 없는 안정 오류를 포함하며 공개되지 않은 이전 AI 카탈로그 API 및 호환 별칭을 모두 제거
-
-# v1.1.11
-
-###### 2026/08/25
-
-* `기능` AutoJs6 선언 및 생성 LSP 그룹에 `ScriptRuntime.loadJarWithR8`의 명시적 오버로드 3개를 포함하고 keep rules, 순서 지정 classpath 및 consumer-rule ordinal 연결 지원
 
 ##### 더 많은 릴리스 기록
 

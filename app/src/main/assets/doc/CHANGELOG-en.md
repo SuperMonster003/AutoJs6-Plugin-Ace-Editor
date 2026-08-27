@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `Feature` Bundle the AutoJs6 `4.2.0` R8 declarations and generated LSP groups: six `ScriptRuntime.loadJarWithR8` overloads add verified mapping/seeds/usage/retrace-metadata export, while `retraceR8Stack` performs protocol 1.1 provenance-bound stack retrace with fail-closed provider selection
+
 # v1.1.13
 
 ###### 2026/08/26

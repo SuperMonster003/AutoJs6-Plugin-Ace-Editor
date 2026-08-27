@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.14
+
+###### 2026/08/27
+
+* `기능` AutoJs6 `4.2.0` R8 선언과 생성된 LSP 그룹을 내장: `ScriptRuntime.loadJarWithR8`의 6개 오버로드는 검증된 mapping/seeds/usage/retrace metadata 내보내기를 추가하고, `retraceR8Stack`은 프로토콜 1.1로 출처에 결합된 스택 복원을 수행하며 Provider 선택 실패 시 fallback하지 않음
+
 # v1.1.13
 
 ###### 2026/08/26
