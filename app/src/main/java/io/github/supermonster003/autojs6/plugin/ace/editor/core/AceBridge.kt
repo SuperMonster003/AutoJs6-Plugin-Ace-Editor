@@ -18,6 +18,11 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun notifyCurrentDocumentCodeActions(payloadJson: String?) {
+        editor.handleCurrentDocumentCodeActions(payloadJson)
+    }
+
+    @JavascriptInterface
     fun notifyReady(stateJson: String?) {
         editor.handleReady(stateJson)
     }

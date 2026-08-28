@@ -837,6 +837,28 @@
         return true;
     }
 
+    function requestCurrentDocumentCodeAction(pos) {
+        if (!editor || (typeof editor.getReadOnly === "function" && editor.getReadOnly()) ||
+            !lspClient || typeof lspClient.getCodeActions !== "function") {
+            return false;
+        }
+        var actions = lspClient.getCodeActions(pos || editor.getCursorPosition()) || [];
+        publishLspState();
+        if (!actions.length || actions.length > 16) {
+            return false;
+        }
+        var payload = JSON.stringify({
+            baseLength: session && typeof session.getValue === "function" ?
+                String(session.getValue() || "").length : -1,
+            actions: actions
+        });
+        if (!payload || payload.length > 300000) {
+            return false;
+        }
+        callBridge("notifyCurrentDocumentCodeActions", [payload]);
+        return true;
+    }
+
     function destroyLspClient() {
         if (memberCompletionRestartTimer !== null) {
             clearTimeout(memberCompletionRestartTimer);
@@ -4791,6 +4813,14 @@
                     requestDefinitionNavigation(editor.getCursorPosition());
                 }
             });
+            editor.commands.addCommand({
+                name: "autojs6QuickFix",
+                bindKey: { win: "Ctrl-.", mac: "Command-." },
+                readOnly: false,
+                exec: function() {
+                    requestCurrentDocumentCodeAction(editor.getCursorPosition());
+                }
+            });
         }
         installMemberCompletionDotTrigger();
         installTouchCursorSelectionGuard();
@@ -4967,8 +4997,17 @@
                 publishLspState();
                 return result;
             },
+            getLspCodeActions: function(row, column) {
+                var result = lspClient && lspClient.getCodeActions ?
+                    lspClient.getCodeActions({ row: row, column: column }) : [];
+                publishLspState();
+                return result;
+            },
             goToDefinition: function(row, column) {
                 return requestDefinitionNavigation({ row: row, column: column });
+            },
+            quickFix: function(row, column) {
+                return requestCurrentDocumentCodeAction({ row: row, column: column });
             },
             getLspDiagnostics: function() {
                 return lspClient && lspClient.getDiagnostics ? lspClient.getDiagnostics() : [];

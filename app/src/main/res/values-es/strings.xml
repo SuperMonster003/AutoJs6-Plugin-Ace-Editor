@@ -8,6 +8,7 @@
     <string name="text_delete_line">Borrar línea</string>
     <string name="text_go_to_definition">Ir a la definición</string>
     <string name="text_more">Más</string>
+    <string name="text_quick_fix">Corrección rápida</string>
     <string name="text_select_all">Seleccionar todo</string>
     <string name="text_sort_by_name_asc">Nombre (A-Z)</string>
     <string name="text_sort_by_name_desc">Nombre (Z-A)</string>

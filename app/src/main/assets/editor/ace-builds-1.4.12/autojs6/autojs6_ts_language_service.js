@@ -29,6 +29,12 @@
         // Virtual editor URIs intentionally retain the execution profile's /sources rootDir.
         6059: true
     };
+    var CODE_ACTION_KIND_AUTO_IMPORT = "autoImport";
+    var CODE_ACTION_KIND_SPELLING = "spellingCorrection";
+    var MAX_CODE_ACTIONS = 16;
+    var MAX_CODE_ACTION_TITLE_LENGTH = 512;
+    var MAX_CODE_ACTION_EDITS = 32;
+    var MAX_CODE_ACTION_REPLACEMENT_LENGTH = 131072;
     var SAFE_DECLARATION_ASSET_NAME = /^[A-Za-z0-9_.-]+\.d\.ts$/;
 
     function noop() {
@@ -1053,6 +1059,173 @@
             }
         }
 
+        function codeActionFormatOptions(text) {
+            return {
+                convertTabsToSpaces: true,
+                indentSize: 4,
+                indentStyle: ts.IndentStyle && ts.IndentStyle.Smart,
+                insertSpaceAfterCommaDelimiter: true,
+                insertSpaceAfterSemicolonInForStatements: true,
+                insertSpaceBeforeAndAfterBinaryOperators: true,
+                newLineCharacter: String(text || "").indexOf("\r\n") >= 0 ? "\r\n" : "\n",
+                placeOpenBraceOnNewLineForControlBlocks: false,
+                placeOpenBraceOnNewLineForFunctions: false,
+                semicolons: ts.SemicolonPreference && ts.SemicolonPreference.Insert,
+                tabSize: 4
+            };
+        }
+
+        function codeActionPreferences(text) {
+            var singleQuotes = (String(text || "").match(/(?:from\s+|require\s*\()'[^'\r\n]+'/g) || []).length;
+            var doubleQuotes = (String(text || "").match(/(?:from\s+|require\s*\()"[^"\r\n]+"/g) || []).length;
+            return {
+                allowTextChangesInNewFiles: false,
+                importModuleSpecifierEnding: executionProfile === PROFILE_NODE ? "js" : "auto",
+                importModuleSpecifierPreference: "shortest",
+                includePackageJsonAutoImports: "off",
+                preferTypeOnlyAutoImports: false,
+                quotePreference: singleQuotes > doubleQuotes ? "single" : "double"
+            };
+        }
+
+        function finiteInteger(value) {
+            value = Number(value);
+            return isFinite(value) && Math.floor(value) === value;
+        }
+
+        function normalizeCodeFix(action, diagnosticCode) {
+            if (!action || (action.fixName !== "import" && action.fixName !== "spelling")) {
+                return null;
+            }
+            if (action.commands && action.commands.length) {
+                return null;
+            }
+            var title = String(action.description || "");
+            if (!title || title.length > MAX_CODE_ACTION_TITLE_LENGTH || /[\u0000-\u001f\u007f]/.test(title)) {
+                return null;
+            }
+            if (!Array.isArray(action.changes) || action.changes.length !== 1) {
+                return null;
+            }
+            var fileChange = action.changes[0];
+            if (!fileChange || fileChange.isNewFile === true ||
+                normalizeFileName(fileChange.fileName) !== currentFile ||
+                !Array.isArray(fileChange.textChanges) ||
+                !fileChange.textChanges.length ||
+                fileChange.textChanges.length > MAX_CODE_ACTION_EDITS) {
+                return null;
+            }
+            var replacementLength = 0;
+            var edits = fileChange.textChanges.map(function(change) {
+                var span = change && change.span || {};
+                var start = Number(span.start);
+                var length = Number(span.length);
+                var newText = change && typeof change.newText === "string" ? change.newText : null;
+                if (!finiteInteger(start) || !finiteInteger(length) || start < 0 || length < 0 ||
+                    start + length > currentText.length || newText === null) {
+                    return null;
+                }
+                replacementLength += newText.length;
+                return {
+                    startOffset: start,
+                    endOffset: start + length,
+                    newText: newText
+                };
+            });
+            if (replacementLength > MAX_CODE_ACTION_REPLACEMENT_LENGTH || edits.some(function(edit) {
+                return !edit;
+            })) {
+                return null;
+            }
+            edits.sort(function(left, right) {
+                return left.startOffset - right.startOffset || left.endOffset - right.endOffset;
+            });
+            for (var index = 0; index < edits.length; index++) {
+                var edit = edits[index];
+                if (edit.startOffset === edit.endOffset && !edit.newText) {
+                    return null;
+                }
+                if (index > 0 && (
+                    edit.startOffset <= edits[index - 1].startOffset ||
+                    edit.startOffset < edits[index - 1].endOffset
+                )) {
+                    return null;
+                }
+            }
+            return {
+                kind: action.fixName === "import" ?
+                    CODE_ACTION_KIND_AUTO_IMPORT : CODE_ACTION_KIND_SPELLING,
+                title: title,
+                diagnosticCode: diagnosticCode,
+                edits: edits
+            };
+        }
+
+        function diagnosticsAtOffset(offset) {
+            var diagnostics = []
+                .concat(service.getSyntacticDiagnostics(currentFile) || [])
+                .concat(service.getSemanticDiagnostics(currentFile) || []);
+            return diagnostics.filter(function(diagnostic) {
+                var code = Number(diagnostic && diagnostic.code);
+                var start = Math.max(0, Number(diagnostic && diagnostic.start) || 0);
+                var length = Math.max(0, Number(diagnostic && diagnostic.length) || 0);
+                var end = start + length;
+                return !EDITOR_SYNTHETIC_DIAGNOSTIC_CODES[code] &&
+                    (projectSnapshotReady || !SINGLE_FILE_UNRELIABLE_DIAGNOSTIC_CODES[code]) &&
+                    start <= offset && offset <= end;
+            });
+        }
+
+        function getCodeActions(session, pos, documentText) {
+            try {
+                if (!syncSession(session, documentText) ||
+                    typeof service.getCodeFixesAtPosition !== "function") {
+                    return [];
+                }
+                var offset = positionToIndex(session, pos);
+                var formatOptions = codeActionFormatOptions(currentText);
+                var preferences = codeActionPreferences(currentText);
+                var seen = Object.create(null);
+                var actions = [];
+                diagnosticsAtOffset(offset).some(function(diagnostic) {
+                    var code = Number(diagnostic.code);
+                    var start = Math.max(0, Number(diagnostic.start) || 0);
+                    var end = Math.min(
+                        currentText.length,
+                        start + Math.max(0, Number(diagnostic.length) || 0)
+                    );
+                    var fixes = service.getCodeFixesAtPosition(
+                        currentFile,
+                        start,
+                        end,
+                        [code],
+                        formatOptions,
+                        preferences
+                    ) || [];
+                    fixes.forEach(function(fix) {
+                        if (actions.length >= MAX_CODE_ACTIONS) {
+                            return;
+                        }
+                        var action = normalizeCodeFix(fix, code);
+                        if (!action) {
+                            return;
+                        }
+                        var identity = action.kind + "\n" + action.title + "\n" +
+                            JSON.stringify(action.edits);
+                        if (!seen[identity]) {
+                            seen[identity] = true;
+                            actions.push(action);
+                        }
+                    });
+                    return actions.length >= MAX_CODE_ACTIONS;
+                });
+                return actions;
+            } catch (error) {
+                notify(config, "ACE TS code actions failed: " + error, error);
+                return [];
+            }
+        }
+
         function getDiagnostics(session, documentText) {
             try {
                 if (!syncSession(session, documentText)) {
@@ -1175,6 +1348,7 @@
             getHover: getHover,
             getSignatureHelp: getSignatureHelp,
             getDefinition: getDefinition,
+            getCodeActions: getCodeActions,
             getDiagnostics: getDiagnostics,
             getState: getState,
             dispose: dispose,

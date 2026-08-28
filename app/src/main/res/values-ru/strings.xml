@@ -8,6 +8,7 @@
     <string name="text_delete_line">Удалить строку</string>
     <string name="text_go_to_definition">Перейти к определению</string>
     <string name="text_more">Ещё</string>
+    <string name="text_quick_fix">Быстрое исправление</string>
     <string name="text_select_all">Выбрать все</string>
     <string name="text_sort_by_name_asc">Имя (A-Z)</string>
     <string name="text_sort_by_name_desc">Имя (Z-A)</string>

@@ -8,6 +8,7 @@
     <string name="text_delete_line">行を削除</string>
     <string name="text_go_to_definition">定義へ移動</string>
     <string name="text_more">その他</string>
+    <string name="text_quick_fix">クイック修正</string>
     <string name="text_select_all">すべて選択</string>
     <string name="text_sort_by_name_asc">名前 (A-Z)</string>
     <string name="text_sort_by_name_desc">名前 (Z-A)</string>

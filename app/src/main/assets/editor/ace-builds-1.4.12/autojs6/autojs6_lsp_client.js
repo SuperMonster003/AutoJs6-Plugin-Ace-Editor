@@ -1793,6 +1793,38 @@
             }
         }
 
+        function getCodeActions(pos) {
+            try {
+                var text = textFromSession(session);
+                if (isJsonDocumentUri(state.documentUri)) {
+                    updateSemanticState(session, text.length);
+                    return [];
+                }
+                if (updateSemanticState(session, text.length)) {
+                    var service = getTsService();
+                    if (service && typeof service.getCodeActions === "function") {
+                        var startedAt = Date.now();
+                        var actions = service.getCodeActions(
+                            session,
+                            normalizePosition(pos),
+                            text
+                        ) || [];
+                        recordSemanticOperation(startedAt, "codeActions");
+                        if (actions.length && !semanticCircuitOpen) {
+                            applyTsProviderState();
+                            return actions;
+                        }
+                    } else if (state.enabled && tsLoadState !== "loading") {
+                        warmUp();
+                    }
+                }
+                return [];
+            } catch (error) {
+                notify(config, "ACE LSP code actions failed: " + error, error);
+                return [];
+            }
+        }
+
         function destroy() {
             if (destroyed) {
                 return;
@@ -1820,6 +1852,7 @@
             getHover: getHover,
             getSignatureHelp: getSignatureHelp,
             getDefinition: getDefinition,
+            getCodeActions: getCodeActions,
             getDiagnostics: getDiagnostics,
             validateNow: validateNow,
             destroy: destroy,

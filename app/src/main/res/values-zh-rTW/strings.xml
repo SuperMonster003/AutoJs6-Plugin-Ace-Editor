@@ -8,6 +8,7 @@
     <string name="text_delete_line">刪除行</string>
     <string name="text_go_to_definition">前往定義</string>
     <string name="text_more">更多</string>
+    <string name="text_quick_fix">快速修正</string>
     <string name="text_select_all">全選</string>
     <string name="text_sort_by_name_asc">名稱 (A-Z)</string>
     <string name="text_sort_by_name_desc">名稱 (Z-A)</string>

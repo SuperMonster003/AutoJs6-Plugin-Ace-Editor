@@ -161,6 +161,18 @@ function sessionFor(text) {
     };
 }
 
+function applyCurrentDocumentCodeAction(text, action) {
+    let result = String(text || "");
+    const edits = [...(action?.edits || [])].sort(
+        (left, right) => right.startOffset - left.startOffset,
+    );
+    for (const edit of edits) {
+        result = result.slice(0, edit.startOffset) +
+            edit.newText + result.slice(edit.endOffset);
+    }
+    return result;
+}
+
 function typeScriptLibraryTextByUri(paths) {
     const libraryDirectory = dirname(paths.runtime);
     const libraryTextByUri = {};
@@ -386,6 +398,36 @@ function verifyDependencyTypeLayer(paths) {
             { row: 5, column: "value.for".length },
             source,
         );
+        const codeActionSource = [
+            "const autoImported: 42 = sharedAnswer;",
+            "const correctlySpelled = 42 as const;",
+            "const typo: 42 = correctlySpeld;",
+        ].join("\n");
+        const codeActionSession = sessionFor(codeActionSource);
+        const autoImportActions = service.getCodeActions(
+            codeActionSession,
+            { row: 0, column: "const autoImported: 42 = shared".length },
+            codeActionSource,
+        );
+        const spellingActions = service.getCodeActions(
+            codeActionSession,
+            { row: 2, column: "const typo: 42 = correctlySp".length },
+            codeActionSource,
+        );
+        const autoImportAction = autoImportActions.find(
+            (action) => action.kind === "autoImport",
+        );
+        const spellingAction = spellingActions.find(
+            (action) => action.kind === "spellingCorrection",
+        );
+        const autoImportResult = applyCurrentDocumentCodeAction(
+            codeActionSource,
+            autoImportAction,
+        );
+        const spellingResult = applyCurrentDocumentCodeAction(
+            codeActionSource,
+            spellingAction,
+        );
         const state = service.getState();
         service.dispose();
 
@@ -447,6 +489,36 @@ function verifyDependencyTypeLayer(paths) {
                 JSON.stringify(dependencyDefinition),
         );
         assert(
+            autoImportAction && autoImportAction.diagnosticCode === 2304 &&
+                autoImportAction.edits.length > 0 &&
+                /import\s*\{\s*sharedAnswer\s*\}\s*from\s*["']\.\/shared(?:\.mjs)?["']/.test(
+                    autoImportResult,
+                ),
+            `${profile} did not produce a bounded current-document auto-import: ` +
+                JSON.stringify(autoImportActions),
+        );
+        assert(
+            spellingAction && spellingAction.edits.length === 1 &&
+                spellingResult.includes("const typo: 42 = correctlySpelled;"),
+            `${profile} did not produce the TypeScript spelling correction subset: ` +
+                JSON.stringify(spellingActions),
+        );
+        assert(
+            [...autoImportActions, ...spellingActions].every(
+                (action) =>
+                    ["autoImport", "spellingCorrection"].includes(action.kind) &&
+                    action.edits.every(
+                        (edit) =>
+                            Number.isInteger(edit.startOffset) &&
+                            Number.isInteger(edit.endOffset) &&
+                            edit.startOffset >= 0 &&
+                            edit.endOffset >= edit.startOffset &&
+                            edit.endOffset <= codeActionSource.length,
+                    ),
+            ),
+            `${profile} code actions escaped the active document boundary`,
+        );
+        assert(
             JSON.stringify(state.dependencyTypeNames) === JSON.stringify(["ambient"]) &&
                 state.dependencyResolverPolicyRevision === 4 &&
                 state.projectTypeFileCount === projectTypeFileUris.length &&
@@ -464,6 +536,8 @@ function verifyDependencyTypeLayer(paths) {
             hover: hover?.value || hover?.caption || "",
             projectDefinition: projectDefinition?.uri || "",
             dependencyDefinition: dependencyDefinition?.uri || "",
+            autoImportTitle: autoImportAction?.title || "",
+            spellingTitle: spellingAction?.title || "",
             loadedProjectSourceFileCount: state.loadedProjectSourceFileCount,
             loadedProjectTypeFileCount: state.loadedProjectTypeFileCount,
         };

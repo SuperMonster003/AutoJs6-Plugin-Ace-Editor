@@ -337,6 +337,7 @@ class AceLspServerManager(
             "diagnostics",
             "signatureHelp",
             "definition",
+            "codeActions",
         )
 
         private fun isValidDefinitionRange(

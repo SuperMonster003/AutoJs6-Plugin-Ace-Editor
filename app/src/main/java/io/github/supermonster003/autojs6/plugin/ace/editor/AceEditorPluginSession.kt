@@ -10,11 +10,15 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.AceEditorFontPre
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.defaultHostPreferences
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceDiagnosticsSnapshot
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceFailure
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptCodeAction
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptDefinitionTarget
 import org.autojs.plugin.editor.api.EditorPluginBooleanCallback
 import org.autojs.plugin.editor.api.EditorPluginBreakpoint
 import org.autojs.plugin.editor.api.EditorPluginCallback
 import org.autojs.plugin.editor.api.EditorPluginCursor
+import org.autojs.plugin.editor.api.EditorPluginCurrentDocumentCodeAction
+import org.autojs.plugin.editor.api.EditorPluginCurrentDocumentCodeActionContract
+import org.autojs.plugin.editor.api.EditorPluginCurrentDocumentCodeActionKind
 import org.autojs.plugin.editor.api.EditorPluginDiagnostics
 import org.autojs.plugin.editor.api.EditorPluginDefinitionTarget
 import org.autojs.plugin.editor.api.EditorPluginDefinitionTargetKind
@@ -32,6 +36,7 @@ import org.autojs.plugin.editor.api.EditorPluginSessionConfig
 import org.autojs.plugin.editor.api.EditorPluginSnapshot
 import org.autojs.plugin.editor.api.EditorPluginState
 import org.autojs.plugin.editor.api.EditorPluginTextCallback
+import org.autojs.plugin.editor.api.EditorPluginTextEdit
 import org.autojs.plugin.editor.api.EditorPluginTheme
 import java.io.File
 import java.util.regex.Matcher
@@ -491,13 +496,18 @@ class AceEditorPluginSession internal constructor(
         )
 
         override fun onSelectionAction(action: AceCodeEditor.SelectionAction) {
-            if (action == AceCodeEditor.SelectionAction.GoToDefinition) return
+            if (action == AceCodeEditor.SelectionAction.GoToDefinition ||
+                action == AceCodeEditor.SelectionAction.QuickFix
+            ) {
+                return
+            }
             callback.onSelectionAction(
                 when (action) {
                     AceCodeEditor.SelectionAction.Copy -> EditorPluginSelectionAction.COPY
                     AceCodeEditor.SelectionAction.Paste -> EditorPluginSelectionAction.PASTE
                     AceCodeEditor.SelectionAction.SelectAll -> EditorPluginSelectionAction.SELECT_ALL
                     AceCodeEditor.SelectionAction.GoToDefinition -> error("Handled above")
+                    AceCodeEditor.SelectionAction.QuickFix -> error("Handled above")
                     AceCodeEditor.SelectionAction.DeleteLine -> EditorPluginSelectionAction.DELETE_LINE
                     AceCodeEditor.SelectionAction.CopyLine -> EditorPluginSelectionAction.COPY_LINE
                 },
@@ -525,6 +535,39 @@ class AceEditorPluginSession internal constructor(
                 dependencyInventoryFingerprint = target.dependencyInventoryFingerprint,
             ),
         )
+
+        override fun onCurrentDocumentCodeActionRequested(
+            action: AceTypeScriptCodeAction.Prepared,
+            onComplete: (Boolean) -> Unit,
+        ) {
+            val request = EditorPluginCurrentDocumentCodeAction(
+                kind = when (action.kind) {
+                    AceTypeScriptCodeAction.Kind.AUTO_IMPORT ->
+                        EditorPluginCurrentDocumentCodeActionKind.AUTO_IMPORT
+                    AceTypeScriptCodeAction.Kind.SPELLING_CORRECTION ->
+                        EditorPluginCurrentDocumentCodeActionKind.SPELLING_CORRECTION
+                },
+                title = action.title,
+                diagnosticCode = action.diagnosticCode,
+                baseContentSha256 = action.baseContentSha256,
+                resultContentSha256 = action.resultContentSha256,
+                edits = action.edits.map { edit ->
+                    EditorPluginTextEdit(
+                        startOffset = edit.startOffset,
+                        endOffset = edit.endOffset,
+                        newText = edit.newText,
+                    )
+                },
+            )
+            if (!EditorPluginCurrentDocumentCodeActionContract.isSupported(request)) {
+                onComplete(false)
+                return
+            }
+            callback.onCurrentDocumentCodeActionRequested(
+                request,
+                EditorPluginBooleanCallback(onComplete),
+            )
+        }
 
         override fun onEvent(name: String, payloadJson: String?) = callback.onEvent(
             name,

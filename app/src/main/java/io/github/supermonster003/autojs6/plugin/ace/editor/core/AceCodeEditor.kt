@@ -3,6 +3,7 @@
 package io.github.supermonster003.autojs6.plugin.ace.editor.core
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -51,6 +52,7 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceHealth
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceJsErrorClassifier
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceRuntimeHealthMonitor
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServerManager
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptCodeAction
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptDefinitionTarget
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptExecutionProfiles
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectSourceLayer
@@ -234,6 +236,7 @@ class AceCodeEditor @JvmOverloads constructor(
     private var lastActionModeAtUptimeMillis = 0L
     private var actionModeActive = false
     private var selectionActionMode: AceSelectionToolbar? = null
+    private var codeActionDialog: AlertDialog? = null
     private val selectionActionModeRect = Rect()
     private var pendingSelectionActionModeRequest: SelectionActionModeRequest? = null
     private var lastSelectionActionModeRequest: SelectionActionModeRequest? = null
@@ -1041,6 +1044,7 @@ class AceCodeEditor @JvmOverloads constructor(
         fontCatalogChangeSubscription?.cancel()
         fontCatalogChangeSubscription = null
         eventHistory.record("destroy", "AceCodeEditor.destroy")
+        dismissCodeActionDialog()
         finishSelectionActionMode()
         lspServerManager.detach()
         healthMonitor.markDestroyed()
@@ -1145,6 +1149,7 @@ class AceCodeEditor @JvmOverloads constructor(
             recordBridgeEvent("notifyTextChanged")
             healthMonitor.markChangeEvent()
             val state = updateState(stateJson)
+            dismissCodeActionDialog()
             listener?.onTextChanged(state.text, state)
         }
     }
@@ -1192,6 +1197,144 @@ class AceCodeEditor @JvmOverloads constructor(
                 "kind=${target.kind},path=${target.relativePath}",
             )
             listener?.onDefinitionNavigationRequested(target)
+        }
+    }
+
+    internal fun handleCurrentDocumentCodeActions(payloadJson: String?) {
+        postToMain {
+            if (destroyed || readOnly) return@postToMain
+            val raw = payloadJson?.takeIf { value ->
+                value.isNotBlank() && value.length <= AceTypeScriptCodeAction.MAX_PAYLOAD_CHARS
+            }
+            val payload = raw?.let { value -> runCatching { JSONObject(value) }.getOrNull() }
+            val baseText = textMirror.text
+            val baseRevision = textMirror.revision
+            if (payload == null || strictJsonInt(payload, "baseLength") != baseText.length) {
+                eventHistory.record("code_actions_rejected", "reason=base-mismatch")
+                return@postToMain
+            }
+            val values = payload.optJSONArray("actions")
+            if (values == null || values.length() !in 1..AceTypeScriptCodeAction.MAX_ACTION_COUNT) {
+                eventHistory.record("code_actions_rejected", "reason=action-count")
+                return@postToMain
+            }
+            val pending = buildList {
+                repeat(values.length()) { index ->
+                    parseCodeAction(values.optJSONObject(index))
+                        ?.prepare(baseText)
+                        ?.let { prepared ->
+                            add(
+                                PendingCodeAction(
+                                    prepared = prepared,
+                                    baseText = baseText,
+                                    baseRevision = baseRevision,
+                                ),
+                            )
+                        }
+                }
+            }
+            if (pending.isEmpty()) {
+                eventHistory.record("code_actions_rejected", "reason=no-supported-action")
+                return@postToMain
+            }
+            eventHistory.record("code_actions_ready", "count=${pending.size}")
+            if (pending.size == 1) {
+                requestCodeActionAuthorization(pending.single())
+            } else {
+                showCodeActionDialog(pending)
+            }
+        }
+    }
+
+    private fun parseCodeAction(value: JSONObject?): AceTypeScriptCodeAction? {
+        value ?: return null
+        val kind = AceTypeScriptCodeAction.kindFromWire(value.optString("kind")) ?: return null
+        val title = value.opt("title") as? String ?: return null
+        val diagnosticCode = strictJsonInt(value, "diagnosticCode") ?: return null
+        val editsJson = value.optJSONArray("edits") ?: return null
+        if (editsJson.length() !in 1..AceTypeScriptCodeAction.MAX_EDIT_COUNT) return null
+        val edits = buildList {
+            repeat(editsJson.length()) { index ->
+                val edit = editsJson.optJSONObject(index) ?: return null
+                val startOffset = strictJsonInt(edit, "startOffset") ?: return null
+                val endOffset = strictJsonInt(edit, "endOffset") ?: return null
+                val newText = edit.opt("newText") as? String ?: return null
+                add(AceTypeScriptCodeAction.TextEdit(startOffset, endOffset, newText))
+            }
+        }
+        return AceTypeScriptCodeAction(kind, title, diagnosticCode, edits)
+    }
+
+    private fun strictJsonInt(value: JSONObject, name: String): Int? {
+        val number = value.opt(name) as? Number ?: return null
+        val doubleValue = number.toDouble()
+        if (!doubleValue.isFinite() || doubleValue % 1.0 != 0.0) return null
+        val longValue = number.toLong()
+        return longValue.takeIf { it in Int.MIN_VALUE..Int.MAX_VALUE }?.toInt()
+    }
+
+    private fun showCodeActionDialog(actions: List<PendingCodeAction>) {
+        dismissCodeActionDialog()
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(pluginContext.getString(R.string.text_quick_fix))
+            .setItems(actions.map { action -> action.prepared.title }.toTypedArray()) { _, index ->
+                codeActionDialog = null
+                actions.getOrNull(index)?.let(::requestCodeActionAuthorization)
+            }
+            .create()
+        dialog.setOnDismissListener {
+            if (codeActionDialog === dialog) {
+                codeActionDialog = null
+            }
+        }
+        codeActionDialog = dialog
+        runCatching { dialog.show() }
+            .onFailure {
+                codeActionDialog = null
+                eventHistory.record("code_actions_rejected", "reason=dialog-unavailable")
+            }
+    }
+
+    private fun dismissCodeActionDialog() {
+        val dialog = codeActionDialog ?: return
+        codeActionDialog = null
+        runCatching { dialog.dismiss() }
+    }
+
+    private fun requestCodeActionAuthorization(action: PendingCodeAction) {
+        if (!canMutateText("codeAction") ||
+            textMirror.revision != action.baseRevision ||
+            textMirror.text != action.baseText
+        ) {
+            eventHistory.record("code_action_rejected", "reason=stale-before-authorization")
+            return
+        }
+        val target = listener
+        if (target == null) {
+            eventHistory.record("code_action_rejected", "reason=no-host-listener")
+            return
+        }
+        target.onCurrentDocumentCodeActionRequested(action.prepared) { approved ->
+            postToMain {
+                if (!approved || destroyed || readOnly ||
+                    textMirror.revision != action.baseRevision ||
+                    textMirror.text != action.baseText
+                ) {
+                    eventHistory.record(
+                        "code_action_rejected",
+                        "reason=${if (approved) "stale-after-authorization" else "host-denied"}",
+                    )
+                    return@postToMain
+                }
+                val token = "typescript-code-action-${SystemClock.uptimeMillis()}"
+                replaceAllTextUndoably(action.prepared.resultText, token) { succeeded ->
+                    eventHistory.record(
+                        if (succeeded) "code_action_applied" else "code_action_apply_failed",
+                        "kind=${action.prepared.kind},diagnostic=${action.prepared.diagnosticCode}",
+                    )
+                    if (succeeded) requestEditorFocus()
+                }
+            }
         }
     }
 
@@ -1666,6 +1809,7 @@ class AceCodeEditor @JvmOverloads constructor(
                 paste = context.getString(android.R.string.paste),
                 selectAll = pluginContext.getString(R.string.text_select_all),
                 goToDefinition = pluginContext.getString(R.string.text_go_to_definition),
+                quickFix = pluginContext.getString(R.string.text_quick_fix),
                 deleteLine = pluginContext.getString(R.string.text_delete_line),
                 copyLine = pluginContext.getString(R.string.text_copy_line),
                 more = pluginContext.getString(R.string.text_more),
@@ -1696,6 +1840,7 @@ class AceCodeEditor @JvmOverloads constructor(
         canPaste = !readOnly && clipboardText().isNotEmpty(),
         canSelectAll = textSnapshot.isNotEmpty(),
         canGoToDefinition = selectedTextSnapshot.isNotEmpty() && lspServerManager.snapshot().enabled,
+        canQuickFix = !readOnly && selectedTextSnapshot.isNotEmpty() && lspServerManager.snapshot().enabled,
         showDeleteLine = !readOnly,
         canDeleteLine = !readOnly && textSnapshot.isNotEmpty(),
         canCopyLine = cursorLineText.isNotEmpty(),
@@ -1724,6 +1869,13 @@ class AceCodeEditor @JvmOverloads constructor(
             SelectionAction.GoToDefinition -> {
                 invokeAce(
                     "goToDefinition",
+                    "${selectionSnapshot.startLine}, ${selectionSnapshot.startColumn}",
+                )
+                finishSelectionActionModeForMenuItem(toolbar)
+            }
+            SelectionAction.QuickFix -> {
+                invokeAce(
+                    "quickFix",
                     "${selectionSnapshot.startLine}, ${selectionSnapshot.startColumn}",
                 )
                 finishSelectionActionModeForMenuItem(toolbar)
@@ -2996,6 +3148,10 @@ class AceCodeEditor @JvmOverloads constructor(
         fun onHistoryOperation(token: String, undo: Boolean) = Unit
         fun onSelectionAction(action: SelectionAction) = Unit
         fun onDefinitionNavigationRequested(target: AceTypeScriptDefinitionTarget) = Unit
+        fun onCurrentDocumentCodeActionRequested(
+            action: AceTypeScriptCodeAction.Prepared,
+            onComplete: (Boolean) -> Unit,
+        ) = onComplete(false)
         fun onEvent(name: String, payloadJson: String?) = Unit
         fun onError(message: String) = Unit
         fun onFailure(failure: AceFailure) = Unit
@@ -3006,6 +3162,7 @@ class AceCodeEditor @JvmOverloads constructor(
         Paste,
         SelectAll,
         GoToDefinition,
+        QuickFix,
         DeleteLine,
         CopyLine,
     }
@@ -3013,6 +3170,12 @@ class AceCodeEditor @JvmOverloads constructor(
     private data class PendingScript(
         val script: String,
         val callback: ValueCallback<String>?,
+    )
+
+    private data class PendingCodeAction(
+        val prepared: AceTypeScriptCodeAction.Prepared,
+        val baseText: String,
+        val baseRevision: Long,
     )
 
     private data class SelectionActionModeRequest(

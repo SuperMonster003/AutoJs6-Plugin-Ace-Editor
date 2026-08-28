@@ -98,7 +98,7 @@ class AceLspServerManagerTest {
         assertTrue(
             optionsJson.contains(
                 "\"features\":[\"completion\", \"hover\", \"diagnostics\", " +
-                    "\"signatureHelp\", \"definition\"]",
+                    "\"signatureHelp\", \"definition\", \"codeActions\"]",
             ),
         )
         assertTrue(optionsJson.contains("\"maxDocumentLength\":${AceLspServerManager.MAX_DOCUMENT_LENGTH}"))

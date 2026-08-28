@@ -8,6 +8,7 @@
     <string name="text_delete_line">删除行</string>
     <string name="text_go_to_definition">转到定义</string>
     <string name="text_more">更多</string>
+    <string name="text_quick_fix">快速修复</string>
     <string name="text_select_all">全选</string>
     <string name="text_sort_by_name_asc">名称 (A-Z)</string>
     <string name="text_sort_by_name_desc">名称 (Z-A)</string>

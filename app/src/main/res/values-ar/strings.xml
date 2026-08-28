@@ -8,6 +8,7 @@
     <string name="text_delete_line">حذف السطر</string>
     <string name="text_go_to_definition">الانتقال إلى التعريف</string>
     <string name="text_more">المزيد</string>
+    <string name="text_quick_fix">إصلاح سريع</string>
     <string name="text_select_all">تحديد الكل</string>
     <string name="text_sort_by_name_asc">الاسم (A-Z)</string>
     <string name="text_sort_by_name_desc">الاسم (Z-A)</string>
