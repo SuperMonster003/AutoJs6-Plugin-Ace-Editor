@@ -77,6 +77,69 @@ class AceCodeEditorSmokeTest {
     }
 
     @Test
+    fun hostReplacementSucceedsWhileUserInputIsReadOnly() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
+        val ready = CountDownLatch(1)
+        val replacementCompleted = CountDownLatch(1)
+        val replacementSucceeded = AtomicBoolean(false)
+        val session = AtomicReference<org.autojs.plugin.editor.api.EditorPluginSession>()
+        val scenario = ActivityScenario.launch(AceEditorTestActivity::class.java)
+
+        scenario.onActivity { activity ->
+            session.set(
+                AceEditorPluginEntrypoint().createSession(
+                    hostContext = activity,
+                    pluginContext = context,
+                    config = EditorPluginSessionConfig(
+                        hostPackageName = context.packageName,
+                        hostVersionName = "instrumentation",
+                        hostVersionCode = 5276L,
+                        storageDirectoryPath =
+                            File(context.cacheDir, "ace-editor-read-only-replacement-fonts").absolutePath,
+                    ),
+                    callback = object : EditorPluginCallback {
+                        override fun onReady(state: EditorPluginState) {
+                            ready.countDown()
+                        }
+                    },
+                ),
+            )
+            activity.setContentView(session.get().view)
+        }
+
+        try {
+            assertTrue("ACE replacement session should become ready", ready.await(10, TimeUnit.SECONDS))
+            scenario.onActivity {
+                session.get().setInitialText("const answer = 42")
+                session.get().setReadOnly(true)
+                session.get().replaceAllTextUndoably(
+                    "const projectAnswer = 42",
+                    "host-project-rename",
+                    EditorPluginBooleanCallback { succeeded ->
+                        replacementSucceeded.set(succeeded)
+                        replacementCompleted.countDown()
+                    },
+                )
+            }
+            assertTrue(
+                "Host-authorized replacement should complete while user input is frozen",
+                replacementCompleted.await(10, TimeUnit.SECONDS),
+            )
+            assertTrue(replacementSucceeded.get())
+            scenario.onActivity {
+                assertTrue(session.get().isReadOnly)
+                assertEquals("const projectAnswer = 42", session.get().textSnapshot)
+            }
+        } finally {
+            scenario.onActivity {
+                session.getAndSet(null)?.destroy()
+            }
+            scenario.close()
+        }
+    }
+
+    @Test
     fun sessionDiagnosticsExposeExecutionAlignedTypeScriptProfiles() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext

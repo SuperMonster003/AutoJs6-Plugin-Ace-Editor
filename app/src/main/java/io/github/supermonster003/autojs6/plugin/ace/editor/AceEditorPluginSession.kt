@@ -166,10 +166,8 @@ class AceEditorPluginSession internal constructor(
         token: String,
         onComplete: EditorPluginBooleanCallback?,
     ) {
-        if (!canMutateText()) {
-            onComplete?.onComplete(false)
-            return
-        }
+        // This is a trusted host operation. The host deliberately keeps the editor read-only
+        // while finalizing atomic file transactions so user input cannot race the buffer update.
         editor.replaceAllTextUndoably(text, token, onComplete?.let { result -> result::onComplete })
     }
 
