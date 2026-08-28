@@ -8,6 +8,7 @@
 
 ###### 2026/08/29
 
+* `Feature` Added project-wide TypeScript symbol rename through F2 and the mobile `Rename` action: Ace derives bounded cross-file edits from the exact project snapshot, requests AutoJs6 contract-5 authorization, and leaves preview, conflict checks, atomic publication, rollback, and all disk writes entirely to the host
 * `Feature` Added TypeScript quick fixes for auto-import and spelling corrections through Ctrl/Command+. and the mobile `Quick fix` action: Ace limits fixes to ordered edits in the active buffer, asks AutoJs6 6.8.0 (5276) for contract-4 authorization, and applies an approved result as one undoable change
 * `Feature` TypeScript cross-file intelligence now covers completion, hover, signature help, and definition navigation across project sources and frozen dependency declarations; F12, Ctrl/Command-click, and the mobile `Go to definition` action emit contract-3 targets that AutoJs6 6.8.0 (5276) independently validates before opening and positioning
 * `Feature` Added host-backed TypeScript project diagnostics: Ace now validates and loads the complete bounded source snapshot, resolves imports across project files, and highlights missing modules consistently with pre-run compilation; requires AutoJs6 6.8.0 (5276) or later

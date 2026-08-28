@@ -8,6 +8,7 @@
     "v1.1.14": {
       "released_date": "2026/08/29",
       "feature": [
+        "Ajout du renommage des symboles TypeScript dans tout le projet via F2 et l'action mobile `Renommer`: Ace dérive des modifications bornées entre fichiers depuis l'instantané exact, demande l'autorisation contract 5 à AutoJs6 et confie entièrement à l'hôte l'aperçu, les conflits, la publication atomique, l'annulation et toutes les écritures disque",
         "Ajout de correctifs rapides TypeScript pour l'import automatique et l'orthographe via Ctrl/Command+. et l'action mobile `Correction rapide`: Ace limite les correctifs aux modifications ordonnées du tampon actif, demande l'autorisation du contrat 4 à AutoJs6 6.8.0 (5276), puis applique le résultat approuvé comme une seule modification annulable",
         "L'intelligence TypeScript inter-fichiers couvre désormais la complétion, le hover, l'aide aux signatures et la navigation vers les définitions dans les sources du projet et les déclarations de dépendances gelées; F12, Ctrl/Command-click et l'action mobile `Aller à la définition` émettent des cibles de contrat 3 qu'AutoJs6 6.8.0 (5276) valide indépendamment avant ouverture et positionnement",
         "Ajout des diagnostics de projet TypeScript fournis par l'hôte : Ace valide et charge désormais le snapshot source complet et borné, résout les imports entre fichiers du projet et signale les modules absents comme la compilation avant exécution ; nécessite AutoJs6 6.8.0 (5276) ou ultérieur",

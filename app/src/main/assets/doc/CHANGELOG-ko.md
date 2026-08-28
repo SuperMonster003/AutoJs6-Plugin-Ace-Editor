@@ -8,6 +8,7 @@
 
 ###### 2026/08/29
 
+* `기능` F2와 모바일 `이름 바꾸기`로 프로젝트 전체 TypeScript 심볼 이름 바꾸기를 추가했습니다: Ace는 정확한 프로젝트 스냅샷에서 제한된 여러 파일 편집을 생성해 AutoJs6 contract 5 승인을 요청하며, 미리보기, 충돌 검사, 원자적 게시, 롤백과 모든 디스크 쓰기는 전적으로 Host가 담당합니다
 * `기능` Ctrl/Command+. 및 모바일 `빠른 수정` 작업으로 TypeScript auto-import와 spelling correction을 추가했습니다: Ace는 active buffer의 정렬된 edit로 수정 범위를 제한하고 AutoJs6 6.8.0 (5276)에 contract 4 승인을 요청한 뒤 승인된 결과를 한 번에 undo할 수 있는 변경으로 적용합니다
 * `기능` TypeScript 교차 파일 intelligence가 이제 프로젝트 소스와 frozen dependency declaration의 completion, hover, signature help 및 정의 이동을 지원합니다; F12, Ctrl/Command-click 및 모바일 `정의로 이동` 작업은 AutoJs6 6.8.0 (5276)이 열기와 위치 지정 전에 독립적으로 검증하는 contract 3 대상을 전송합니다
 * `기능` 호스트 기반 TypeScript 프로젝트 진단을 추가했습니다. Ace가 이제 완전하고 제한된 소스 snapshot을 검증해 불러오고 프로젝트 파일 간 import를 해석하며, 실행 전 컴파일과 동일하게 누락된 모듈을 강조 표시합니다. AutoJs6 6.8.0 (5276) 이상이 필요합니다

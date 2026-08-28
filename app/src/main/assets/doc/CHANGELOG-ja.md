@@ -8,6 +8,7 @@
 
 ###### 2026/08/29
 
+* `機能` F2 とモバイルの `名前を変更` からプロジェクト全体の TypeScript シンボル名変更を追加: Ace は正確なプロジェクトスナップショットから有界な複数ファイル編集を生成して AutoJs6 contract 5 の承認を要求し, プレビュー, 競合検査, アトミック公開, ロールバック, すべてのディスク書き込みは Host が全面的に担当します
 * `機能` Ctrl/Command+. とモバイルの `クイック修正` から TypeScript auto-import と spelling correction を追加: Ace は active buffer の整列済み edit だけに制限し, AutoJs6 6.8.0 (5276) に contract 4 認可を要求して, 承認済み結果を 1 回の undo 可能な変更として適用します
 * `機能` TypeScript の跨ファイル intelligence が project source と frozen dependency declaration の completion, hover, signature help, definition navigation を網羅しました; F12, Ctrl/Command-click, モバイルの `定義へ移動` は contract 3 target を送信し, AutoJs6 6.8.0 (5276) が開く前に独立検証して位置決めします
 * `機能` ホスト提供の TypeScript プロジェクト診断を追加: Ace は完全かつ上限付きのソース snapshot を検証して読み込み, プロジェクト内ファイル間の import を解決し, 実行前コンパイルと同じ基準で欠落モジュールを強調表示します. AutoJs6 6.8.0 (5276) 以降が必要です
