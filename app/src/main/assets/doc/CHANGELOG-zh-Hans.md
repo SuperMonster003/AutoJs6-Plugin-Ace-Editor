@@ -6,8 +6,11 @@
 
 # v1.1.14
 
-###### 2026/08/27
+###### 2026/08/28
 
+* `新增` TypeScript 项目类型层现会在继续编辑前检测原生 addon 信号和安装生命周期 hook, 发布与宿主及编译器一致的稳定依赖边界错误和纯 JavaScript/WASM 替代指引
+* `新增` Ace 依赖类型权威已同步 resolver policy revision 3, 并包含 lodash 4.17.21 与 `@types/lodash` 4.17.25 覆盖, 确保运行时包未内置声明时 Rhino 与 Node 的诊断仍保持一致
+* `新增` 新增与 TypeScript 编译器共用的冻结项目依赖类型层: Ace 现可解析 package `types`/`typings`, TypeScript 6 `typesVersions`, 嵌套声明与已安装 `@types`, 并在 Rhino 和 Node profile 中提供一致的 dayjs 补全, hover 与 strict 诊断
 * `新增` 内置 AutoJs6 `4.2.0` R8 声明与生成的 LSP 分组: `ScriptRuntime.loadJarWithR8` 的 6 个重载支持经校验的 mapping/seeds/usage/retrace metadata 导出, `retraceR8Stack` 通过协议 1.1 执行溯源绑定的堆栈还原, 提供者选择失败时禁止回退
 
 # v1.1.13

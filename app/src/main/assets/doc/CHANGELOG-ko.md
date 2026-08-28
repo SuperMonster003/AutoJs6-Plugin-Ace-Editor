@@ -6,8 +6,11 @@
 
 # v1.1.14
 
-###### 2026/08/27
+###### 2026/08/28
 
+* `기능` TypeScript project type layer는 편집을 계속하기 전에 native addon 신호와 설치 lifecycle hook을 감지하고, host 및 compiler와 동일한 안정적 dependency-boundary 오류와 pure JavaScript/WASM 안내를 게시합니다
+* `기능` Ace 의존성 타입 권한을 resolver policy revision 3과 동기화하고 lodash 4.17.21 및 `@types/lodash` 4.17.25 검증을 추가하여 런타임 패키지에 선언이 번들되지 않은 경우에도 Rhino와 Node 진단이 일치하도록 했습니다
+* `기능` TypeScript compiler와 공유하는 frozen project dependency type layer를 추가함: Ace가 package `types`/`typings`, TypeScript 6 `typesVersions`, nested declaration 및 installed `@types`를 해석하며 Rhino/Node profile에서 dayjs completion, hover, strict diagnostic이 일치함
 * `기능` AutoJs6 `4.2.0` R8 선언과 생성된 LSP 그룹을 내장: `ScriptRuntime.loadJarWithR8`의 6개 오버로드는 검증된 mapping/seeds/usage/retrace metadata 내보내기를 추가하고, `retraceR8Stack`은 프로토콜 1.1로 출처에 결합된 스택 복원을 수행하며 Provider 선택 실패 시 fallback하지 않음
 
 # v1.1.13

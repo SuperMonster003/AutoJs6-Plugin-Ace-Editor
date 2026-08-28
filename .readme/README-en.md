@@ -105,8 +105,11 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 # v1.1.14
 
-###### 2026/08/27
+###### 2026/08/28
 
+* `Feature` TypeScript project type layers now detect native addon signals and install lifecycle hooks before editing continues, publishing the same stable dependency-boundary error and pure JavaScript/WASM guidance as the host and compiler
+* `Feature` Aligned Ace dependency type authority with resolver policy revision 3 and added lodash 4.17.21 plus `@types/lodash` 4.17.25 coverage, preserving matching Rhino and Node diagnostics when runtime packages do not bundle declarations
+* `Feature` Added a frozen project dependency type layer shared with the TypeScript compiler: Ace now resolves package `types`/`typings`, TypeScript 6 `typesVersions`, nested declarations, and installed `@types`, with matching dayjs completion, hover, and strict diagnostics in Rhino and Node profiles
 * `Feature` Bundle the AutoJs6 `4.2.0` R8 declarations and generated LSP groups: six `ScriptRuntime.loadJarWithR8` overloads add verified mapping/seeds/usage/retrace-metadata export, while `retraceR8Stack` performs protocol 1.1 provenance-bound stack retrace with fail-closed provider selection
 
 # v1.1.13

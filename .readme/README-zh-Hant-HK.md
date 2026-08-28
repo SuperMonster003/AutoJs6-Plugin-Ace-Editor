@@ -105,8 +105,11 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 
 # v1.1.14
 
-###### 2026/08/27
+###### 2026/08/28
 
+* `新增` TypeScript 專案類型層現會在繼續編輯前偵測原生 addon 訊號及安裝生命週期 hook, 發佈與宿主及編譯器一致的穩定依賴邊界錯誤和純 JavaScript/WASM 替代指引
+* `新增` Ace 依賴類型權威已同步 resolver policy revision 3, 並包含 lodash 4.17.21 與 `@types/lodash` 4.17.25 覆蓋, 確保執行階段套件未內置宣告時 Rhino 與 Node 的診斷仍保持一致
+* `新增` 新增與 TypeScript 編譯器共用的凍結專案依賴類型層: Ace 現可解析 package `types`/`typings`, TypeScript 6 `typesVersions`, 巢狀聲明及已安裝 `@types`, 並在 Rhino 和 Node profile 提供一致的 dayjs 補全, hover 與 strict 診斷
 * `新增` 內置 AutoJs6 `4.2.0` R8 聲明與生成的 LSP 分組: `ScriptRuntime.loadJarWithR8` 的 6 個多載支援經驗證的 mapping/seeds/usage/retrace metadata 匯出, `retraceR8Stack` 透過協議 1.1 執行來源綁定的堆疊還原, 外掛選擇失敗時禁止回退
 
 # v1.1.13

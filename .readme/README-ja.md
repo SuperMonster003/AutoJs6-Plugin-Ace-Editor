@@ -105,8 +105,11 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 
 # v1.1.14
 
-###### 2026/08/27
+###### 2026/08/28
 
+* `機能` TypeScript project type layer は編集を続ける前に native addon signal と install lifecycle hook を検出し, host と compiler と同じ安定した dependency-boundary error と pure JavaScript/WASM の案内を公開します
+* `機能` Ace の依存型 authority を resolver policy revision 3 に同期し, lodash 4.17.21 と `@types/lodash` 4.17.25 の検証を追加して, runtime パッケージに宣言が同梱されない場合も Rhino と Node の診断一致を維持しました
+* `機能` TypeScript compiler と共有する frozen project dependency type layer を追加: Ace は package `types`/`typings`, TypeScript 6 `typesVersions`, nested declaration, installed `@types` を解決し, Rhino/Node profile で dayjs completion, hover, strict diagnostic が一致
 * `機能` AutoJs6 `4.2.0` の R8 宣言と生成済み LSP グループを同梱: `ScriptRuntime.loadJarWithR8` の 6 つのオーバーロードは検証済み mapping/seeds/usage/retrace metadata のエクスポートを追加し, `retraceR8Stack` はプロトコル 1.1 で来歴に結び付けたスタック復元を実行. Provider 選択失敗時はフォールバックしない
 
 # v1.1.13

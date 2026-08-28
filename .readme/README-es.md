@@ -105,8 +105,11 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 # v1.1.14
 
-###### 2026/08/27
+###### 2026/08/28
 
+* `Función` Las capas de tipos de proyectos TypeScript ahora detectan señales de addons nativos y hooks del ciclo de instalación antes de continuar la edición, publicando el mismo error estable de límite de dependencias y la misma orientación hacia JavaScript puro/WASM que el host y el compilador
+* `Función` Se alineó la autoridad de tipos de dependencias de Ace con la revisión 3 de la política del resolver y se añadió cobertura para lodash 4.17.21 junto con `@types/lodash` 4.17.25, manteniendo diagnósticos coincidentes entre Rhino y Node cuando los paquetes de ejecución no incluyen declaraciones
+* `Función` Añadida una capa congelada de tipos de dependencias compartida con el compilador TypeScript: Ace resuelve ahora `types`/`typings`, `typesVersions` de TypeScript 6, declaraciones anidadas y `@types` instalados, con completado de dayjs, hover y diagnosticos strict iguales para Rhino y Node
 * `Función` Incluye las declaraciones R8 de AutoJs6 `4.2.0` y los grupos LSP generados: seis sobrecargas de `ScriptRuntime.loadJarWithR8` añaden la exportación verificada de mapping/seeds/usage/retrace metadata, mientras `retraceR8Stack` restaura la pila vinculada a la procedencia mediante el protocolo 1.1 con selección de proveedor sin fallback
 
 # v1.1.13

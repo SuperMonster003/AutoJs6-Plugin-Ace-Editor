@@ -105,8 +105,11 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 
 # v1.1.14
 
-###### 2026/08/27
+###### 2026/08/28
 
+* `Функция` Слои типов проектов TypeScript теперь обнаруживают признаки нативных дополнений и hooks жизненного цикла установки до продолжения редактирования, публикуя ту же стабильную ошибку границы зависимостей и рекомендации pure JavaScript/WASM, что хост и compiler
+* `Функция` Полномочия типов зависимостей Ace синхронизированы с политикой resolver revision 3; добавлена проверка lodash 4.17.21 вместе с `@types/lodash` 4.17.25, сохраняющая одинаковые диагностики Rhino и Node для runtime-пакетов без встроенных деклараций
+* `Функция` Добавлен frozen project dependency type layer, общий с compiler TypeScript: Ace теперь разрешает package `types`/`typings`, TypeScript 6 `typesVersions`, вложенные declarations и установленные `@types`, обеспечивая одинаковые completion dayjs, hover и strict diagnostics для Rhino и Node
 * `Функция` Встроены R8-декларации AutoJs6 `4.2.0` и сгенерированные группы LSP: шесть перегрузок `ScriptRuntime.loadJarWithR8` добавляют проверенный экспорт mapping/seeds/usage/retrace metadata, а `retraceR8Stack` восстанавливает стек с привязкой к происхождению по протоколу 1.1 и без fallback при ошибке выбора Provider
 
 # v1.1.13
