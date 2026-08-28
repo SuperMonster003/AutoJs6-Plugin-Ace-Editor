@@ -105,8 +105,9 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 
 # v1.1.14
 
-###### 2026/08/28
+###### 2026/08/29
 
+* `新增` 新增 TypeScript 自動匯入與拼字快速修正, 可透過 Ctrl/Command+. 或行動裝置 `快速修正` 觸發: Ace 僅接受目前緩衝區內的有序編輯, 請求 AutoJs6 6.8.0 (5276) 進行 contract 4 授權, 並將核准結果作為一次可復原修改套用
 * `新增` TypeScript 跨檔案智慧現已涵蓋專案原始碼及凍結相依性宣告中的補全, hover, 簽章說明及定義跳轉; F12, Ctrl/Command+點擊和行動裝置 `移至定義` 會傳送 contract 3 目標, 由 AutoJs6 6.8.0 (5276) 在開啟及定位前獨立複驗
 * `新增` 新增由主機提供的 TypeScript 專案診斷: Ace 現會驗證並載入完整的有界原始碼快照, 解析專案檔案間的 import, 並依執行前編譯的相同規則標示缺少的模組; 需要 AutoJs6 6.8.0 (5276) 或更新版本
 * `新增` TypeScript 專案型別層現在會在繼續編輯前偵測原生 addon 訊號與安裝生命週期 hook, 發布與主機及編譯器一致的穩定相依性邊界錯誤和純 JavaScript/WASM 替代指引
