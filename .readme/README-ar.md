@@ -107,6 +107,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 
 ###### 2026/08/28
 
+* `ميزة` أضيفت تشخيصات مشاريع TypeScript المدعومة من المضيف: يتحقق Ace الآن من لقطة المصدر المحدودة والكاملة ويحملها، ويحل الاستيرادات بين ملفات المشروع، ويبرز الوحدات المفقودة بما يطابق فحص ما قبل التشغيل؛ يتطلب AutoJs6 6.8.0 (5276) أو أحدث
 * `ميزة` تكتشف طبقات أنواع مشاريع TypeScript الآن إشارات الإضافات الأصلية وخطافات دورة حياة التثبيت قبل متابعة التحرير, وتنشر نفس خطأ حدود التبعيات المستقر وإرشادات JavaScript الخالصة/WASM التي ينشرها المضيف والcompiler
 * `ميزة` وُحّدت مرجعية أنواع التبعيات في Ace مع سياسة resolver بالمراجعة 3، وأضيفت تغطية lodash 4.17.21 مع `@types/lodash` 4.17.25 للحفاظ على تشخيصات متطابقة بين Rhino وNode عندما لا تتضمن حزم وقت التشغيل تصريحات مدمجة
 * `ميزة` تمت اضافة frozen project dependency type layer مشتركة مع TypeScript compiler: يحل Ace الان package `types`/`typings` وTypeScript 6 `typesVersions` وnested declarations و`@types` المثبتة مع تطابق dayjs completion وhover وstrict diagnostics في Rhino وNode

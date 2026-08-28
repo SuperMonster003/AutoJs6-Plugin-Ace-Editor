@@ -107,6 +107,7 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ###### 2026/08/28
 
+* `Fonctionnalité` Ajout des diagnostics de projet TypeScript fournis par l'hôte : Ace valide et charge désormais le snapshot source complet et borné, résout les imports entre fichiers du projet et signale les modules absents comme la compilation avant exécution ; nécessite AutoJs6 6.8.0 (5276) ou ultérieur
 * `Fonctionnalité` Les couches de types des projets TypeScript détectent désormais les signaux d'extensions natives et les hooks du cycle d'installation avant la poursuite de l'édition, et publient la même erreur stable de limite de dépendances ainsi que les mêmes conseils JavaScript pur/WASM que l'hôte et le compilateur
 * `Fonctionnalité` Alignement de l'autorité des types de dépendances d'Ace sur la révision 3 de la politique du resolver et ajout d'une couverture de lodash 4.17.21 avec `@types/lodash` 4.17.25, afin de conserver des diagnostics identiques entre Rhino et Node lorsque les paquets d'exécution n'intègrent pas de déclarations
 * `Fonctionnalité` Ajout d'une couche gelee de types de dependances partagee avec le compilateur TypeScript: Ace resout maintenant `types`/`typings`, `typesVersions` de TypeScript 6, declarations imbriquees et `@types` installes, avec completion dayjs, hover et diagnostics stricts identiques pour Rhino et Node

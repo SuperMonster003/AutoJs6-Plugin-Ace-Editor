@@ -107,6 +107,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ###### 2026/08/28
 
+* `Feature` Added host-backed TypeScript project diagnostics: Ace now validates and loads the complete bounded source snapshot, resolves imports across project files, and highlights missing modules consistently with pre-run compilation; requires AutoJs6 6.8.0 (5276) or later
 * `Feature` TypeScript project type layers now detect native addon signals and install lifecycle hooks before editing continues, publishing the same stable dependency-boundary error and pure JavaScript/WASM guidance as the host and compiler
 * `Feature` Aligned Ace dependency type authority with resolver policy revision 3 and added lodash 4.17.21 plus `@types/lodash` 4.17.25 coverage, preserving matching Rhino and Node diagnostics when runtime packages do not bundle declarations
 * `Feature` Added a frozen project dependency type layer shared with the TypeScript compiler: Ace now resolves package `types`/`typings`, TypeScript 6 `typesVersions`, nested declarations, and installed `@types`, with matching dayjs completion, hover, and strict diagnostics in Rhino and Node profiles

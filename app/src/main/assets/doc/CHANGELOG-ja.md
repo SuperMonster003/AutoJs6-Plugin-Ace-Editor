@@ -8,6 +8,7 @@
 
 ###### 2026/08/28
 
+* `機能` ホスト提供の TypeScript プロジェクト診断を追加: Ace は完全かつ上限付きのソース snapshot を検証して読み込み, プロジェクト内ファイル間の import を解決し, 実行前コンパイルと同じ基準で欠落モジュールを強調表示します. AutoJs6 6.8.0 (5276) 以降が必要です
 * `機能` TypeScript project type layer は編集を続ける前に native addon signal と install lifecycle hook を検出し, host と compiler と同じ安定した dependency-boundary error と pure JavaScript/WASM の案内を公開します
 * `機能` Ace の依存型 authority を resolver policy revision 3 に同期し, lodash 4.17.21 と `@types/lodash` 4.17.25 の検証を追加して, runtime パッケージに宣言が同梱されない場合も Rhino と Node の診断一致を維持しました
 * `機能` TypeScript compiler と共有する frozen project dependency type layer を追加: Ace は package `types`/`typings`, TypeScript 6 `typesVersions`, nested declaration, installed `@types` を解決し, Rhino/Node profile で dayjs completion, hover, strict diagnostic が一致
