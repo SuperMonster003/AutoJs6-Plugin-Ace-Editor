@@ -4,7 +4,10 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.supermonster003.autojs6.plugin.ace.editor.AceEditorPluginEntrypoint
+import org.autojs.plugin.editor.api.EditorPluginBooleanCallback
 import org.autojs.plugin.editor.api.EditorPluginCallback
+import org.autojs.plugin.editor.api.EditorPluginCurrentDocumentCodeAction
+import org.autojs.plugin.editor.api.EditorPluginCurrentDocumentCodeActionKind
 import org.autojs.plugin.editor.api.EditorPluginProjectSnapshot
 import org.autojs.plugin.editor.api.EditorPluginProjectSnapshotContract
 import org.autojs.plugin.editor.api.EditorPluginProjectSnapshotProvider
@@ -285,17 +288,34 @@ class AceCodeEditorSmokeTest {
             mkdirs()
         }
         File(project, "tsconfig.json").writeText("{}")
-        val sourceText =
-            "import { shared } from './shared'; import { absent } from './absent'; " +
-                "const answer: 42 = shared; void absent; void answer;"
+        val sourceText = listOf(
+            "import { shared } from './shared';",
+            "import { absent } from './absent';",
+            "const answer: 42 = shared;",
+            "const imported: 7 = projectMagicAnswer;",
+            "void absent; void answer; void imported;",
+        ).joinToString("\n")
         val document = File(project, "main.ts").apply { writeText(sourceText) }
         val shared = File(project, "shared.ts").apply {
-            writeText("export const shared = 42 as const;")
+            writeText(
+                "export const shared = 42 as const;\n" +
+                    "export const projectMagicAnswer = 7 as const;",
+            )
         }
         val snapshot = projectSnapshot(project, document, listOf(document, shared), "rhino")
         val ready = CountDownLatch(1)
+        val codeActionRequested = CountDownLatch(1)
+        val codeAction = AtomicReference<EditorPluginCurrentDocumentCodeAction>()
         val session = AtomicReference<org.autojs.plugin.editor.api.EditorPluginSession>()
         val scenario = ActivityScenario.launch(AceEditorTestActivity::class.java)
+
+        fun currentTextSnapshot(): String {
+            val text = AtomicReference<String>()
+            scenario.onActivity {
+                text.set(session.get().textSnapshot)
+            }
+            return text.get()
+        }
 
         scenario.onActivity { activity ->
             session.set(
@@ -314,6 +334,15 @@ class AceCodeEditorSmokeTest {
                     callback = object : EditorPluginCallback {
                         override fun onReady(state: EditorPluginState) {
                             ready.countDown()
+                        }
+
+                        override fun onCurrentDocumentCodeActionRequested(
+                            action: EditorPluginCurrentDocumentCodeAction,
+                            onComplete: EditorPluginBooleanCallback,
+                        ) {
+                            codeAction.set(action)
+                            codeActionRequested.countDown()
+                            onComplete.onComplete(true)
                         }
                     },
                 ),
@@ -375,6 +404,65 @@ class AceCodeEditorSmokeTest {
                     List(codes.length()) { index -> codes.getString(index) }
                 }.contains("2307"),
             )
+
+            val quickFixResult = AtomicReference<String>()
+            val quickFixEvaluated = CountDownLatch(1)
+            scenario.onActivity {
+                (session.get().view as AceCodeEditor).webView.evaluateJavascript(
+                    "Boolean(window.AutoJsAce && window.AutoJsAce.quickFix && " +
+                        "window.AutoJsAce.quickFix(3, 29))",
+                ) { raw ->
+                    quickFixResult.set(raw)
+                    quickFixEvaluated.countDown()
+                }
+            }
+            assertTrue("ACE quick-fix callback timed out", quickFixEvaluated.await(5, TimeUnit.SECONDS))
+            assertEquals("true", quickFixResult.get())
+            assertTrue(
+                "ACE did not publish the current-document code action",
+                codeActionRequested.await(10, TimeUnit.SECONDS),
+            )
+            assertEquals(EditorPluginCurrentDocumentCodeActionKind.AUTO_IMPORT, codeAction.get().kind)
+            assertEquals(2304, codeAction.get().diagnosticCode)
+
+            val applyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+            while (
+                System.nanoTime() < applyDeadline &&
+                !currentTextSnapshot().lineSequence().first().contains("projectMagicAnswer")
+            ) {
+                Thread.sleep(50)
+            }
+            assertTrue(
+                "ACE did not apply the approved auto-import as an undoable text change",
+                currentTextSnapshot().lineSequence().first().contains("projectMagicAnswer"),
+            )
+
+            var remainingCodes = emptyList<String>()
+            val validationDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(20)
+            while (System.nanoTime() < validationDeadline) {
+                val result = AtomicReference<String>()
+                val evaluated = CountDownLatch(1)
+                scenario.onActivity {
+                    (session.get().view as AceCodeEditor).webView.evaluateJavascript(
+                        "JSON.stringify(window.AutoJsAce && window.AutoJsAce.validateLsp " +
+                            "? window.AutoJsAce.validateLsp() : [])",
+                    ) { raw ->
+                        result.set(raw)
+                        evaluated.countDown()
+                    }
+                }
+                assertTrue("ACE post-fix validation timed out", evaluated.await(5, TimeUnit.SECONDS))
+                val decoded = runCatching {
+                    JSONTokener(result.get().orEmpty()).nextValue() as? String
+                }.getOrNull().orEmpty()
+                val diagnostics = runCatching { JSONArray(decoded) }.getOrElse { JSONArray() }
+                remainingCodes = List(diagnostics.length()) { index ->
+                    diagnostics.getJSONObject(index).optString("code")
+                }.sorted()
+                if (remainingCodes == listOf("2307")) break
+                Thread.sleep(100)
+            }
+            assertEquals(listOf("2307"), remainingCodes)
         } finally {
             scenario.onActivity {
                 session.getAndSet(null)?.destroy()
