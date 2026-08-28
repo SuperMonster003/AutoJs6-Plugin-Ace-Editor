@@ -1,13 +1,23 @@
 package io.github.supermonster003.autojs6.plugin.ace.editor.core
 
 import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.supermonster003.autojs6.plugin.ace.editor.AceEditorPluginEntrypoint
+import io.github.supermonster003.autojs6.plugin.ace.editor.R
 import org.autojs.plugin.editor.api.EditorPluginBooleanCallback
 import org.autojs.plugin.editor.api.EditorPluginCallback
 import org.autojs.plugin.editor.api.EditorPluginCurrentDocumentCodeAction
 import org.autojs.plugin.editor.api.EditorPluginCurrentDocumentCodeActionKind
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameCallback
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameContract
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameRequest
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameResult
 import org.autojs.plugin.editor.api.EditorPluginProjectSnapshot
 import org.autojs.plugin.editor.api.EditorPluginProjectSnapshotContract
 import org.autojs.plugin.editor.api.EditorPluginProjectSnapshotProvider
@@ -463,6 +473,170 @@ class AceCodeEditorSmokeTest {
                 Thread.sleep(100)
             }
             assertEquals(listOf("2307"), remainingCodes)
+        } finally {
+            scenario.onActivity {
+                session.getAndSet(null)?.destroy()
+            }
+            scenario.close()
+            project.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun projectRenamePublishesExactThreeFileTransactionWithoutWriting() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
+        val project = File(context.cacheDir, "ace-project-rename-smoke").apply {
+            deleteRecursively()
+            mkdirs()
+        }
+        File(project, "tsconfig.json").writeText("{}")
+        val mainText = listOf(
+            "import { answer } from './shared';",
+            "export const mainValue = answer('main');",
+        ).joinToString("\n")
+        val sharedText = listOf(
+            "export function answer(value: string): number {",
+            "    return value.length;",
+            "}",
+        ).joinToString("\n")
+        val consumerText = listOf(
+            "import { answer } from './shared';",
+            "export const consumed = answer('consumer');",
+        ).joinToString("\n")
+        val document = File(project, "main.ts").apply { writeText(mainText) }
+        val shared = File(project, "shared.ts").apply { writeText(sharedText) }
+        val consumer = File(project, "consumer.ts").apply { writeText(consumerText) }
+        val snapshot = projectSnapshot(
+            project,
+            document,
+            listOf(document, shared, consumer),
+            "rhino",
+        )
+        val ready = CountDownLatch(1)
+        val projectRenameRequested = CountDownLatch(1)
+        val projectRename = AtomicReference<EditorPluginProjectRenameRequest>()
+        val session = AtomicReference<org.autojs.plugin.editor.api.EditorPluginSession>()
+        val scenario = ActivityScenario.launch(AceEditorTestActivity::class.java)
+
+        scenario.onActivity { activity ->
+            session.set(
+                AceEditorPluginEntrypoint().createSession(
+                    hostContext = activity,
+                    pluginContext = context,
+                    config = EditorPluginSessionConfig(
+                        hostPackageName = context.packageName,
+                        hostVersionName = "instrumentation",
+                        hostVersionCode = 5276L,
+                        storageDirectoryPath =
+                            File(context.cacheDir, "ace-editor-project-rename-fonts").absolutePath,
+                        documentPath = document.absolutePath,
+                        projectSnapshotProvider = EditorPluginProjectSnapshotProvider { snapshot },
+                    ),
+                    callback = object : EditorPluginCallback {
+                        override fun onReady(state: EditorPluginState) {
+                            ready.countDown()
+                        }
+
+                        override fun onProjectRenameRequested(
+                            request: EditorPluginProjectRenameRequest,
+                            onComplete: EditorPluginProjectRenameCallback,
+                        ) {
+                            projectRename.set(request)
+                            onComplete.onComplete(EditorPluginProjectRenameResult.APPLIED)
+                            projectRenameRequested.countDown()
+                        }
+                    },
+                ),
+            )
+            activity.setContentView(session.get().view)
+        }
+
+        try {
+            assertTrue("ACE rename session should become ready", ready.await(10, TimeUnit.SECONDS))
+            scenario.onActivity {
+                session.get().setInitialText(mainText)
+            }
+
+            val renameColumn = mainText.lineSequence().elementAt(1).indexOf("answer") + 2
+            assertTrue(renameColumn > 1)
+            var renameInvoked = false
+            val invokeDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(20)
+            while (!renameInvoked && System.nanoTime() < invokeDeadline) {
+                val evaluated = CountDownLatch(1)
+                val result = AtomicReference<String>()
+                scenario.onActivity {
+                    (session.get().view as AceCodeEditor).webView.evaluateJavascript(
+                        "Boolean(window.AutoJsAce && window.AutoJsAce.renameSymbol && " +
+                            "window.AutoJsAce.renameSymbol(1, $renameColumn))",
+                    ) { raw ->
+                        result.set(raw)
+                        evaluated.countDown()
+                    }
+                }
+                assertTrue("ACE rename evaluation timed out", evaluated.await(5, TimeUnit.SECONDS))
+                renameInvoked = result.get() == "true"
+                if (!renameInvoked) Thread.sleep(100)
+            }
+            assertTrue("ACE did not produce a project rename candidate", renameInvoked)
+
+            onView(withHint(R.string.text_typescript_project_rename_new_name))
+                .perform(replaceText("projectAnswer"))
+            onView(withText(android.R.string.ok)).perform(click())
+            assertTrue(
+                "ACE did not publish the project rename request",
+                projectRenameRequested.await(10, TimeUnit.SECONDS),
+            )
+            instrumentation.waitForIdleSync()
+
+            val rename = projectRename.get()
+            assertTrue(EditorPluginProjectRenameContract.isSupported(rename))
+            assertEquals(snapshot.projectRootPath, rename.projectRootPath)
+            assertEquals(
+                snapshot.sourceInventoryFingerprint,
+                rename.projectSourceInventoryFingerprint,
+            )
+            assertEquals("main.ts", rename.documentRelativePath)
+            assertEquals("answer", rename.symbolName)
+            assertEquals("projectAnswer", rename.newName)
+            assertEquals(
+                listOf("consumer.ts", "main.ts", "shared.ts"),
+                rename.files.map { file -> file.relativePath },
+            )
+            assertEquals(5, rename.files.sumOf { file -> file.edits.size })
+            assertTrue(rename.files.flatMap { file -> file.edits }.all { edit ->
+                edit.newText == "projectAnswer"
+            })
+            val sourceTextByPath = mapOf(
+                "consumer.ts" to consumerText,
+                "main.ts" to mainText,
+                "shared.ts" to sharedText,
+            )
+            rename.files.forEach { file ->
+                val baseText = requireNotNull(sourceTextByPath[file.relativePath])
+                assertEquals(
+                    sha256(baseText.toByteArray(StandardCharsets.UTF_8)),
+                    file.baseContentSha256,
+                )
+                val resultText = StringBuilder(baseText).apply {
+                    file.edits.asReversed().forEach { edit ->
+                        replace(edit.startOffset, edit.endOffset, edit.newText)
+                    }
+                }.toString()
+                assertEquals(
+                    sha256(resultText.toByteArray(StandardCharsets.UTF_8)),
+                    file.resultContentSha256,
+                )
+            }
+
+            val activeText = AtomicReference<String>()
+            scenario.onActivity {
+                activeText.set(session.get().textSnapshot)
+            }
+            assertEquals("Plugin must not apply a second active-buffer edit", mainText, activeText.get())
+            assertEquals(mainText, document.readText())
+            assertEquals(sharedText, shared.readText())
+            assertEquals(consumerText, consumer.readText())
         } finally {
             scenario.onActivity {
                 session.getAndSet(null)?.destroy()

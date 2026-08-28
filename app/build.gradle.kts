@@ -246,6 +246,7 @@ dependencies {
     implementation(libs.webkit)
 
     testImplementation(libs.junit)
+    androidTestImplementation(libs.test.espresso.core)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(files("$rootDir/libs/editor-api.aar"))
