@@ -8,6 +8,7 @@
 
 ###### 2026/08/28
 
+* `機能` TypeScript の跨ファイル intelligence が project source と frozen dependency declaration の completion, hover, signature help, definition navigation を網羅しました; F12, Ctrl/Command-click, モバイルの `定義へ移動` は contract 3 target を送信し, AutoJs6 6.8.0 (5276) が開く前に独立検証して位置決めします
 * `機能` ホスト提供の TypeScript プロジェクト診断を追加: Ace は完全かつ上限付きのソース snapshot を検証して読み込み, プロジェクト内ファイル間の import を解決し, 実行前コンパイルと同じ基準で欠落モジュールを強調表示します. AutoJs6 6.8.0 (5276) 以降が必要です
 * `機能` TypeScript project type layer は編集を続ける前に native addon signal と install lifecycle hook を検出し, host と compiler と同じ安定した dependency-boundary error と pure JavaScript/WASM の案内を公開します
 * `機能` Ace の依存型 authority を resolver policy revision 3 に同期し, lodash 4.17.21 と `@types/lodash` 4.17.25 の検証を追加して, runtime パッケージに宣言が同梱されない場合も Rhino と Node の診断一致を維持しました

@@ -107,6 +107,7 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ###### 2026/08/28
 
+* `Función` La inteligencia TypeScript entre archivos cubre ahora completado, hover, ayuda de firmas y navegación a definiciones en fuentes del proyecto y declaraciones de dependencias congeladas; F12, Ctrl/Command-click y la acción móvil `Ir a la definición` emiten destinos de contrato 3 que AutoJs6 6.8.0 (5276) valida de forma independiente antes de abrir y posicionar
 * `Función` Se añadieron diagnósticos de proyectos TypeScript respaldados por el host: Ace valida y carga ahora la instantánea de fuentes completa y acotada, resuelve importaciones entre archivos del proyecto y resalta módulos ausentes de forma coherente con la compilación previa a la ejecución; requiere AutoJs6 6.8.0 (5276) o posterior
 * `Función` Las capas de tipos de proyectos TypeScript ahora detectan señales de addons nativos y hooks del ciclo de instalación antes de continuar la edición, publicando el mismo error estable de límite de dependencias y la misma orientación hacia JavaScript puro/WASM que el host y el compilador
 * `Función` Se alineó la autoridad de tipos de dependencias de Ace con la revisión 3 de la política del resolver y se añadió cobertura para lodash 4.17.21 junto con `@types/lodash` 4.17.25, manteniendo diagnósticos coincidentes entre Rhino y Node cuando los paquetes de ejecución no incluyen declaraciones

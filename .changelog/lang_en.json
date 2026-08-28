@@ -8,6 +8,7 @@
     "v1.1.14": {
       "released_date": "2026/08/28",
       "feature": [
+        "TypeScript cross-file intelligence now covers completion, hover, signature help, and definition navigation across project sources and frozen dependency declarations; F12, Ctrl/Command-click, and the mobile `Go to definition` action emit contract-3 targets that AutoJs6 6.8.0 (5276) independently validates before opening and positioning",
         "Added host-backed TypeScript project diagnostics: Ace now validates and loads the complete bounded source snapshot, resolves imports across project files, and highlights missing modules consistently with pre-run compilation; requires AutoJs6 6.8.0 (5276) or later",
         "TypeScript project type layers now detect native addon signals and install lifecycle hooks before editing continues, publishing the same stable dependency-boundary error and pure JavaScript/WASM guidance as the host and compiler",
         "Aligned Ace dependency type authority with resolver policy revision 3 and added lodash 4.17.21 plus `@types/lodash` 4.17.25 coverage, preserving matching Rhino and Node diagnostics when runtime packages do not bundle declarations",

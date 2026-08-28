@@ -8,6 +8,7 @@
 
 ###### 2026/08/28
 
+* `기능` TypeScript 교차 파일 intelligence가 이제 프로젝트 소스와 frozen dependency declaration의 completion, hover, signature help 및 정의 이동을 지원합니다; F12, Ctrl/Command-click 및 모바일 `정의로 이동` 작업은 AutoJs6 6.8.0 (5276)이 열기와 위치 지정 전에 독립적으로 검증하는 contract 3 대상을 전송합니다
 * `기능` 호스트 기반 TypeScript 프로젝트 진단을 추가했습니다. Ace가 이제 완전하고 제한된 소스 snapshot을 검증해 불러오고 프로젝트 파일 간 import를 해석하며, 실행 전 컴파일과 동일하게 누락된 모듈을 강조 표시합니다. AutoJs6 6.8.0 (5276) 이상이 필요합니다
 * `기능` TypeScript project type layer는 편집을 계속하기 전에 native addon 신호와 설치 lifecycle hook을 감지하고, host 및 compiler와 동일한 안정적 dependency-boundary 오류와 pure JavaScript/WASM 안내를 게시합니다
 * `기능` Ace 의존성 타입 권한을 resolver policy revision 3과 동기화하고 lodash 4.17.21 및 `@types/lodash` 4.17.25 검증을 추가하여 런타임 패키지에 선언이 번들되지 않은 경우에도 Rhino와 Node 진단이 일치하도록 했습니다

@@ -8,6 +8,7 @@
     "v1.1.14": {
       "released_date": "2026/08/28",
       "feature": [
+        "TypeScript 跨檔案智能現已覆蓋專案原始碼及凍結依賴聲明中的補全, hover, 簽名說明及定義跳轉; F12, Ctrl/Command+點擊和流動裝置 `前往定義` 會傳送 contract 3 目標, 由 AutoJs6 6.8.0 (5276) 在開啟及定位前獨立複驗",
         "新增由宿主提供的 TypeScript 專案診斷: Ace 現會驗證並載入完整的有界原始碼快照, 解析專案檔案間的 import, 並按執行前編譯的相同規則標示缺少的模組; 需要 AutoJs6 6.8.0 (5276) 或更高版本",
         "TypeScript 專案類型層現會在繼續編輯前偵測原生 addon 訊號及安裝生命週期 hook, 發佈與宿主及編譯器一致的穩定依賴邊界錯誤和純 JavaScript/WASM 替代指引",
         "Ace 依賴類型權威已同步 resolver policy revision 3, 並包含 lodash 4.17.21 與 `@types/lodash` 4.17.25 覆蓋, 確保執行階段套件未內置宣告時 Rhino 與 Node 的診斷仍保持一致",

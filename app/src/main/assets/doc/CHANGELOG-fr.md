@@ -8,6 +8,7 @@
 
 ###### 2026/08/28
 
+* `Fonctionnalité` L'intelligence TypeScript inter-fichiers couvre désormais la complétion, le hover, l'aide aux signatures et la navigation vers les définitions dans les sources du projet et les déclarations de dépendances gelées; F12, Ctrl/Command-click et l'action mobile `Aller à la définition` émettent des cibles de contrat 3 qu'AutoJs6 6.8.0 (5276) valide indépendamment avant ouverture et positionnement
 * `Fonctionnalité` Ajout des diagnostics de projet TypeScript fournis par l'hôte : Ace valide et charge désormais le snapshot source complet et borné, résout les imports entre fichiers du projet et signale les modules absents comme la compilation avant exécution ; nécessite AutoJs6 6.8.0 (5276) ou ultérieur
 * `Fonctionnalité` Les couches de types des projets TypeScript détectent désormais les signaux d'extensions natives et les hooks du cycle d'installation avant la poursuite de l'édition, et publient la même erreur stable de limite de dépendances ainsi que les mêmes conseils JavaScript pur/WASM que l'hôte et le compilateur
 * `Fonctionnalité` Alignement de l'autorité des types de dépendances d'Ace sur la révision 3 de la politique du resolver et ajout d'une couverture de lodash 4.17.21 avec `@types/lodash` 4.17.25, afin de conserver des diagnostics identiques entre Rhino et Node lorsque les paquets d'exécution n'intègrent pas de déclarations
