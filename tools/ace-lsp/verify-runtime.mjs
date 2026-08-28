@@ -281,25 +281,47 @@ function verifyDependencyTypeLayer(paths) {
         "file:///autojs6/types/generated/lib.autojs6.core.d.ts",
         "file:///autojs6/types/lib.autojs6.extra.d.ts",
     ];
-    const source = [
-        'import dayjs from "dayjs";',
-        'import lodash from "lodash";',
-        "const value = dayjs();",
-        "value.",
-        "const wrong: number = value.format();",
-        "const ambient: 42 = ambientAnswer;",
-        "const chunks: number[][] = lodash.chunk([1, 2, 3], 2);",
-    ].join("\n");
-
     function verifyProfile(profile, suffix) {
         const errors = [];
+        const documentUri = `file:///autojs6/editor/src/main.${suffix}`;
+        const sharedSuffix = profile === "node" ? "mts" : "ts";
+        const sharedUri = `file:///autojs6/editor/src/shared.${sharedSuffix}`;
+        const sharedSpecifier = profile === "node" ? "./shared.mjs" : "./shared";
+        const missingSpecifier = profile === "node" ? "./missing.mjs" : "./missing";
+        const source = [
+            'import dayjs from "dayjs";',
+            'import lodash from "lodash";',
+            `import { sharedAnswer } from "${sharedSpecifier}";`,
+            `import { missingAnswer } from "${missingSpecifier}";`,
+            "const value = dayjs();",
+            "value.format();",
+            "const wrong: number = value.format();",
+            "const ambient: 42 = ambientAnswer;",
+            "const chunks: number[][] = lodash.chunk([1, 2, 3], 2);",
+            "const shared: 42 = sharedAnswer;",
+            "void missingAnswer;",
+        ].join("\n");
+        const projectSourceTextByUri = {
+            [documentUri]: source,
+            [sharedUri]: "export const sharedAnswer = 42 as const;",
+        };
+        const projectSourceFileUris = Object.keys(projectSourceTextByUri).sort();
         const service = context.AutoJsAceTsLanguageService.create({
-            documentUri: `file:///autojs6/editor/src/main.${suffix}`,
+            documentUri,
             rootUri: "file:///autojs6/editor",
             executionProfile: profile,
             typescriptVersion: "6.0.3",
             libraryTextByUri,
             libraryUris,
+            projectSourceTextByUri,
+            projectSourceFileUris,
+            projectSourceInventoryFingerprint:
+                "1111111111111111111111111111111111111111111111111111111111111111",
+            projectSourceFileCount: projectSourceFileUris.length,
+            projectSourceByteLength: Object.values(projectSourceTextByUri)
+                .reduce((total, text) => total + Buffer.byteLength(text, "utf8"), 0),
+            projectSnapshotSchemaRevision: 1,
+            projectSnapshotReady: true,
             projectTypeTextByUri,
             projectTypeFileUris,
             dependencyTypeNames: ["ambient"],
@@ -320,14 +342,14 @@ function verifyDependencyTypeLayer(paths) {
         let completions = [];
         service.getCompletions(
             session,
-            { row: 3, column: "value.".length },
+            { row: 5, column: "value.".length },
             "",
             (_error, items) => { completions = items || []; },
             source,
         );
         const hover = service.getHover(
             session,
-            { row: 2, column: "const value".length },
+            { row: 4, column: "const value".length },
             source,
         );
         const state = service.getState();
@@ -340,9 +362,13 @@ function verifyDependencyTypeLayer(paths) {
             `${profile} did not preserve the compiler TS2322 diagnostic: ${JSON.stringify(diagnostics)}`,
         );
         assert(
+            diagnostics.filter((diagnostic) => String(diagnostic.raw) === "2307").length === 1,
+            `${profile} did not publish exactly one unresolved-import TS2307: ${JSON.stringify(diagnostics)}`,
+        );
+        assert(
             !diagnostics.some((diagnostic) =>
-                ["2307", "2339", "2688", "7016"].includes(String(diagnostic.raw))),
-            `${profile} failed package, typesVersions, installed @types, or lodash module ` +
+                ["2339", "2688", "7016"].includes(String(diagnostic.raw))),
+            `${profile} failed project source, package, typesVersions, installed @types, or lodash module ` +
                 `fallback resolution: ${JSON.stringify(diagnostics)}`,
         );
         assert(
@@ -358,8 +384,12 @@ function verifyDependencyTypeLayer(paths) {
         assert(
             JSON.stringify(state.dependencyTypeNames) === JSON.stringify(["ambient"]) &&
                 state.dependencyResolverPolicyRevision === 4 &&
-                state.projectTypeFileCount === projectTypeFileUris.length,
-            `${profile} did not retain the frozen dependency type authority`,
+                state.projectTypeFileCount === projectTypeFileUris.length &&
+                state.projectSourceFileCount === projectSourceFileUris.length &&
+                state.loadedProjectSourceFileCount === projectSourceFileUris.length &&
+                state.projectSnapshotReady === true &&
+                state.projectSnapshotSchemaRevision === 1,
+            `${profile} did not retain the frozen project source and dependency authorities`,
         );
         return {
             diagnosticCodes: diagnostics.map((diagnostic) => Number(diagnostic.raw)).sort(),
@@ -367,6 +397,7 @@ function verifyDependencyTypeLayer(paths) {
                 .filter((name) => name === "format" || name === "unix")
                 .sort(),
             hover: hover?.value || hover?.caption || "",
+            loadedProjectSourceFileCount: state.loadedProjectSourceFileCount,
             loadedProjectTypeFileCount: state.loadedProjectTypeFileCount,
         };
     }
@@ -375,7 +406,33 @@ function verifyDependencyTypeLayer(paths) {
     const node = verifyProfile("node", "mts");
     assert(
         JSON.stringify(rhino.diagnosticCodes) === JSON.stringify(node.diagnosticCodes),
-        "Rhino and Node editor profiles disagree on dependency diagnostics",
+        "Rhino and Node editor profiles disagree on project diagnostics",
+    );
+    assert(
+        JSON.stringify(rhino.diagnosticCodes) === JSON.stringify([2307, 2322]),
+        `Project diagnostic golden changed: ${JSON.stringify(rhino.diagnosticCodes)}`,
+    );
+    const singleDocumentSource = 'import { absent } from "./absent"; void absent;';
+    const singleDocumentService = context.AutoJsAceTsLanguageService.create({
+        documentUri: "file:///autojs6/editor/src/single.ts",
+        rootUri: "file:///autojs6/editor",
+        executionProfile: "rhino",
+        typescriptVersion: "6.0.3",
+        libraryTextByUri,
+        libraryUris,
+        projectTypeTextByUri,
+        projectTypeFileUris,
+    });
+    const singleDocumentDiagnostics = singleDocumentService.getDiagnostics(
+        sessionFor(singleDocumentSource),
+        singleDocumentSource,
+    ) || [];
+    const singleDocumentState = singleDocumentService.getState();
+    singleDocumentService.dispose();
+    assert(
+        !singleDocumentDiagnostics.some((diagnostic) => String(diagnostic.raw) === "2307") &&
+            singleDocumentState.projectSnapshotReady === false,
+        "Single-document fallback exposed an unreliable unresolved-import diagnostic",
     );
     const boundaryCode = "ERR_AUTOJS6_TYPESCRIPT_NATIVE_DEPENDENCY_UNSUPPORTED";
     const boundaryDetail = `${boundaryCode}: bcrypt contains native-binary; use pure JavaScript or WASM.`;
@@ -418,9 +475,16 @@ function verifyDependencyTypeLayer(paths) {
             clientSource.includes("dependencyBoundaryDetail: state.dependencyBoundaryDetail"),
         "LSP client does not forward the dependency boundary into the language service",
     );
+    assert(
+        clientSource.includes("projectSourceFileUris: copyArray(state.projectSourceFileUris)") &&
+            clientSource.includes("projectSnapshotReady: state.projectSnapshotReady"),
+        "LSP client does not forward the validated project snapshot into the language service",
+    );
     return {
         rhino,
         node,
+        singleDocumentFallbackDiagnosticCodes: singleDocumentDiagnostics
+            .map((diagnostic) => String(diagnostic.raw)).sort(),
         boundary: {
             code: boundaryDiagnostics[0].raw,
             text: boundaryDiagnostics[0].text,

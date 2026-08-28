@@ -145,6 +145,16 @@
             typescriptProfileRevision: options && options.typescriptProfileRevision != null ?
                 Number(options.typescriptProfileRevision) : null,
             libraryUris: copyArray(options && options.libraryUris),
+            projectSourceFileUris: copyArray(options && options.projectSourceFileUris),
+            projectSourceInventoryFingerprint:
+                options && options.projectSourceInventoryFingerprint || "",
+            projectSourceFileCount:
+                Math.max(0, Number(options && options.projectSourceFileCount) || 0),
+            projectSourceByteLength:
+                Math.max(0, Number(options && options.projectSourceByteLength) || 0),
+            projectSnapshotSchemaRevision:
+                Math.max(0, Number(options && options.projectSnapshotSchemaRevision) || 0),
+            projectSnapshotReady: options && options.projectSnapshotReady === true,
             projectTypeFileUris: copyArray(options && options.projectTypeFileUris),
             dependencyTypeNames: copyArray(options && options.dependencyTypeNames),
             dependencyLayerFingerprint: options && options.dependencyLayerFingerprint || "",
@@ -1120,6 +1130,12 @@
                     typescriptVersion: state.typescriptVersion,
                     executionProfile: state.typescriptProfile,
                     libraryUris: copyArray(state.libraryUris),
+                    projectSourceFileUris: copyArray(state.projectSourceFileUris),
+                    projectSourceInventoryFingerprint: state.projectSourceInventoryFingerprint,
+                    projectSourceFileCount: state.projectSourceFileCount,
+                    projectSourceByteLength: state.projectSourceByteLength,
+                    projectSnapshotSchemaRevision: state.projectSnapshotSchemaRevision,
+                    projectSnapshotReady: state.projectSnapshotReady,
                     projectTypeFileUris: copyArray(state.projectTypeFileUris),
                     dependencyTypeNames: copyArray(state.dependencyTypeNames),
                     dependencyLayerFingerprint: state.dependencyLayerFingerprint,
@@ -1484,6 +1500,10 @@
             var serviceConfigurationChanged =
                 !arraysEqual(previousOptions && previousOptions.libraryUris, options.libraryUris) ||
                 !arraysEqual(
+                    previousOptions && previousOptions.projectSourceFileUris,
+                    options.projectSourceFileUris
+                ) ||
+                !arraysEqual(
                     previousOptions && previousOptions.projectTypeFileUris,
                     options.projectTypeFileUris
                 ) ||
@@ -1494,6 +1514,12 @@
                 !!(previousOptions && previousOptions.checkJs) !== !!options.checkJs ||
                 String(previousOptions && previousOptions.rootUri || "") !==
                     String(options && options.rootUri || "") ||
+                String(previousOptions && previousOptions.projectSourceInventoryFingerprint || "") !==
+                    String(options && options.projectSourceInventoryFingerprint || "") ||
+                Number(previousOptions && previousOptions.projectSnapshotSchemaRevision || 0) !==
+                    Number(options && options.projectSnapshotSchemaRevision || 0) ||
+                !!(previousOptions && previousOptions.projectSnapshotReady) !==
+                    !!(options && options.projectSnapshotReady) ||
                 String(previousOptions && previousOptions.dependencyLayerFingerprint || "") !==
                     String(options && options.dependencyLayerFingerprint || "") ||
                 String(previousOptions && previousOptions.dependencyBoundaryCode || "") !==
@@ -1556,6 +1582,12 @@
                 typescriptProfile: state.typescriptProfile,
                 typescriptProfileRevision: state.typescriptProfileRevision,
                 libraryUris: copyArray(state.libraryUris),
+                projectSourceFileUris: copyArray(state.projectSourceFileUris),
+                projectSourceInventoryFingerprint: state.projectSourceInventoryFingerprint,
+                projectSourceFileCount: state.projectSourceFileCount,
+                projectSourceByteLength: state.projectSourceByteLength,
+                projectSnapshotSchemaRevision: state.projectSnapshotSchemaRevision,
+                projectSnapshotReady: state.projectSnapshotReady,
                 projectTypeFileUris: copyArray(state.projectTypeFileUris),
                 dependencyTypeNames: copyArray(state.dependencyTypeNames),
                 dependencyLayerFingerprint: state.dependencyLayerFingerprint,
@@ -1599,6 +1631,9 @@
                     (isJsonDocumentUri(state.documentUri) || state.localServiceReady ||
                         getJshint() !== null || lastAnnotations.length > 0),
                 diagnosticsCount: lastAnnotations.length,
+                diagnosticCodes: lastAnnotations.map(function(annotation) {
+                    return String(annotation && annotation.raw || "");
+                }),
                 features: copyArray(state.features)
             };
         }

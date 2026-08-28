@@ -57,6 +57,10 @@ class AceLspServerManagerTest {
             AceLspServerManager.DEFAULT_LIBRARY_URIS,
         )
         assertEquals(AceLspServerManager.DEFAULT_LIBRARY_URIS, snapshot.libraryUris)
+        assertFalse(snapshot.projectSnapshotReady)
+        assertTrue(snapshot.projectSourceFileUris.isEmpty())
+        assertEquals(0, snapshot.projectSourceFileCount)
+        assertEquals(0L, snapshot.projectSourceByteLength)
 
         assertTrue(optionsJson.contains("\"enabled\":true"))
         assertTrue(optionsJson.contains("\"manager\":\"${AceLspServerManager.MANAGER_NAME}\""))
@@ -74,6 +78,12 @@ class AceLspServerManagerTest {
         assertTrue(optionsJson.contains("\"typescriptProfileRevision\":null"))
         assertTrue(optionsJson.contains("\"declarationGroups\":[]"))
         assertTrue(optionsJson.contains("\"effectiveDeclarationGroups\":[]"))
+        assertTrue(optionsJson.contains("\"projectSourceFileUris\":[]"))
+        assertTrue(optionsJson.contains("\"projectSourceInventoryFingerprint\":null"))
+        assertTrue(optionsJson.contains("\"projectSourceFileCount\":0"))
+        assertTrue(optionsJson.contains("\"projectSourceByteLength\":0"))
+        assertTrue(optionsJson.contains("\"projectSnapshotSchemaRevision\":null"))
+        assertTrue(optionsJson.contains("\"projectSnapshotReady\":false"))
         AceLspServerManager.DEFAULT_LIBRARY_URIS.forEach { uri ->
             assertTrue(optionsJson.contains("\"$uri\""))
         }

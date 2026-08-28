@@ -75,14 +75,14 @@ class AceTypeScriptProjectTypeLayerTest {
         assertTrue(options.contains("\"dependencyResolverPolicyRevision\":4"))
         assertTrue(options.contains(requireNotNull(layer.dependencyLayerFingerprint)))
         assertNotNull(
-            manager.readProjectTypeFile(
+            manager.readProjectFile(
                 "file:///autojs6/editor/node_modules/dayjs/index.d.ts",
             ),
         )
 
         manager.setDocumentPath(File(fixture.root, "src/other.ts").path)
         assertFalse(manager.applyProjectTypeLayer(fixture.document.path, layer))
-        assertEquals(null, manager.readProjectTypeFile("file:///autojs6/editor/node_modules/dayjs/index.d.ts"))
+        assertEquals(null, manager.readProjectFile("file:///autojs6/editor/node_modules/dayjs/index.d.ts"))
     }
 
     @Test

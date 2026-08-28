@@ -48,6 +48,7 @@ class AceEditorPluginSession internal constructor(
         pluginContext = pluginContext,
         fontStorageDirectory = File(config.storageDirectoryPath),
         hostVersionCode = config.hostVersionCode,
+        projectSnapshotProvider = config.projectSnapshotProvider,
     )
     private var readOnly = false
     private var redoUndoEnabled = true

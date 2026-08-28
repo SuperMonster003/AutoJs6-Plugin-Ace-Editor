@@ -52,8 +52,10 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceJsErro
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceRuntimeHealthMonitor
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServerManager
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptExecutionProfiles
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectSourceLayer
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectTypeLayer
 import io.github.supermonster003.autojs6.plugin.ace.editor.R
+import org.autojs.plugin.editor.api.EditorPluginProjectSnapshotProvider
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
@@ -71,14 +73,15 @@ class AceCodeEditor @JvmOverloads constructor(
     internal val pluginContext: Context,
     fontStorageDirectory: File,
     hostVersionCode: Long,
+    private val projectSnapshotProvider: EditorPluginProjectSnapshotProvider? = null,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : FrameLayout(hostContext, attrs, defStyleAttr) {
 
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val projectTypeLayerRequestRevision = AtomicLong()
-    private val projectTypeLayerExecutor = Executors.newSingleThreadExecutor { runnable ->
-        Thread(runnable, "ace-typescript-project-types").apply { isDaemon = true }
+    private val projectContextRequestRevision = AtomicLong()
+    private val projectContextExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "ace-typescript-project-context").apply { isDaemon = true }
     }
     private val hostPreferences = hostContext.defaultHostPreferences()
     private val fontManager = AceEditorFontManager(
@@ -406,27 +409,43 @@ class AceCodeEditor @JvmOverloads constructor(
     fun isUserTouching(): Boolean = userTouching
 
     fun setDocumentPath(path: String?) {
-        val requestRevision = projectTypeLayerRequestRevision.incrementAndGet()
+        val requestRevision = projectContextRequestRevision.incrementAndGet()
         lspServerManager.setDocumentPath(path)
         refreshLsp()
         val documentPath = path?.takeIf(String::isNotBlank) ?: return
         val profile = AceTypeScriptExecutionProfiles.resolve(documentPath) ?: return
-        projectTypeLayerExecutor.execute {
+        projectContextExecutor.execute {
+            val sourceLayer = runCatching {
+                projectSnapshotProvider
+                    ?.capture(documentPath)
+                    ?.let { snapshot ->
+                        AceTypeScriptProjectSourceLayer.from(documentPath, snapshot)
+                    }
+            }.getOrNull()
             val typeLayer = runCatching {
                 AceTypeScriptProjectTypeLayer.capture(documentPath, profile)
-            }.getOrNull() ?: return@execute
+            }.getOrNull()
             mainHandler.post {
                 if (
                     !destroyed &&
-                    projectTypeLayerRequestRevision.get() == requestRevision &&
-                    lspServerManager.applyProjectTypeLayer(documentPath, typeLayer)
+                    projectContextRequestRevision.get() == requestRevision &&
+                    lspServerManager.applyProjectLayers(documentPath, sourceLayer, typeLayer)
                 ) {
-                    eventHistory.record(
-                        "lsp_dependency_types",
-                        "files=${typeLayer.dependencyFileCount}," +
-                            "bytes=${typeLayer.dependencyByteLength}," +
-                            "fingerprint=${typeLayer.dependencyLayerFingerprint.orEmpty()}",
-                    )
+                    sourceLayer?.let { layer ->
+                        eventHistory.record(
+                            "lsp_project_sources",
+                            "files=${layer.sourceFileCount},bytes=${layer.sourceByteLength}," +
+                                "fingerprint=${layer.sourceInventoryFingerprint}",
+                        )
+                    }
+                    typeLayer?.let { layer ->
+                        eventHistory.record(
+                            "lsp_dependency_types",
+                            "files=${layer.dependencyFileCount}," +
+                                "bytes=${layer.dependencyByteLength}," +
+                                "fingerprint=${layer.dependencyLayerFingerprint.orEmpty()}",
+                        )
+                    }
                     refreshLsp()
                 }
             }
@@ -1016,8 +1035,8 @@ class AceCodeEditor @JvmOverloads constructor(
 
     fun destroy() {
         destroyed = true
-        projectTypeLayerRequestRevision.incrementAndGet()
-        projectTypeLayerExecutor.shutdownNow()
+        projectContextRequestRevision.incrementAndGet()
+        projectContextExecutor.shutdownNow()
         fontCatalogChangeSubscription?.cancel()
         fontCatalogChangeSubscription = null
         eventHistory.record("destroy", "AceCodeEditor.destroy")
@@ -1318,6 +1337,15 @@ class AceCodeEditor @JvmOverloads constructor(
             put("typescriptVersion", state.optString("typescriptVersion", ""))
             put("typescriptProfile", state.optString("typescriptProfile", ""))
             put("typescriptProfileRevision", state.optInt("typescriptProfileRevision", 0))
+            put("projectSnapshotReady", state.optBoolean("projectSnapshotReady", false))
+            put("projectSnapshotSchemaRevision", state.optInt("projectSnapshotSchemaRevision", 0))
+            put("projectSourceFileCount", state.optInt("projectSourceFileCount", 0))
+            put("projectSourceByteLength", state.optLong("projectSourceByteLength", 0L))
+            put(
+                "projectSourceInventoryFingerprint",
+                state.optString("projectSourceInventoryFingerprint", ""),
+            )
+            put("diagnosticCodes", state.optJSONArray("diagnosticCodes") ?: JSONArray())
             put("semanticServiceSuppressed", state.optBoolean("semanticServiceSuppressed", false))
             put("semanticServiceReason", state.optString("semanticServiceReason", ""))
             put("documentLength", state.optLong("documentLength", 0L))
@@ -1330,6 +1358,12 @@ class AceCodeEditor @JvmOverloads constructor(
             put("tsVersion", service?.optString("version", "") ?: "")
             put("tsExpectedVersion", service?.optString("expectedVersion", "") ?: "")
             put("tsExecutionProfile", service?.optString("executionProfile", "") ?: "")
+            put("tsProjectSnapshotReady", service?.optBoolean("projectSnapshotReady", false) ?: false)
+            put("tsProjectSourceFileCount", service?.optInt("projectSourceFileCount", 0) ?: 0)
+            put(
+                "tsLoadedProjectSourceFileCount",
+                service?.optInt("loadedProjectSourceFileCount", 0) ?: 0,
+            )
             put(
                 "tsExecutionProfileRevision",
                 service?.optInt("executionProfileRevision", 0) ?: 0,
@@ -1402,8 +1436,8 @@ class AceCodeEditor @JvmOverloads constructor(
         return lspServerManager.bridgeOptionsJson()
     }
 
-    internal fun bridgeProjectTypeText(uri: String): String? {
-        return lspServerManager.readProjectTypeFile(uri)
+    internal fun bridgeProjectFileText(uri: String): String? {
+        return lspServerManager.readProjectFile(uri)
     }
 
     internal fun bridgePinchToZoomStrategy(): String {

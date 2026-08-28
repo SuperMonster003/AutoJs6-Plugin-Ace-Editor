@@ -28,6 +28,9 @@ class AceLspServerManager(
     @Volatile
     private var projectTypeLayer: AceTypeScriptProjectTypeLayer? = null
 
+    @Volatile
+    private var projectSourceLayer: AceTypeScriptProjectSourceLayer? = null
+
     @Synchronized
     fun setDocumentPath(path: String?) {
         val normalized = path?.takeIf { it.isNotBlank() } ?: SYNTHETIC_DOCUMENT_URI
@@ -35,6 +38,7 @@ class AceLspServerManager(
             return
         }
         documentPath = normalized
+        projectSourceLayer = null
         projectTypeLayer = null
         sessionRevision += 1
     }
@@ -43,16 +47,39 @@ class AceLspServerManager(
     internal fun applyProjectTypeLayer(
         path: String?,
         layer: AceTypeScriptProjectTypeLayer?,
+    ): Boolean = applyProjectLayers(path, null, layer)
+
+    @Synchronized
+    internal fun applyProjectLayers(
+        path: String?,
+        sourceLayer: AceTypeScriptProjectSourceLayer?,
+        typeLayer: AceTypeScriptProjectTypeLayer?,
     ): Boolean {
         val normalized = path?.takeIf { it.isNotBlank() } ?: SYNTHETIC_DOCUMENT_URI
         if (documentPath != normalized) return false
-        projectTypeLayer = layer
+        val expectedProfile = AceTypeScriptExecutionProfiles.resolve(documentPath)?.id
+        val invalidSourceProfile =
+            sourceLayer != null && sourceLayer.targetProfile != expectedProfile
+        val incompatibleDocumentUris =
+            sourceLayer != null && typeLayer != null &&
+                sourceLayer.documentUri != typeLayer.documentUri
+        if (
+            invalidSourceProfile || incompatibleDocumentUris
+        ) {
+            projectSourceLayer = null
+            projectTypeLayer = null
+            sessionRevision += 1
+            return true
+        }
+        projectSourceLayer = sourceLayer
+        projectTypeLayer = typeLayer
         sessionRevision += 1
         return true
     }
 
     @Synchronized
-    fun readProjectTypeFile(uri: String): String? = projectTypeLayer?.read(uri)
+    fun readProjectFile(uri: String): String? =
+        projectSourceLayer?.read(uri) ?: projectTypeLayer?.read(uri)
 
     @Synchronized
     fun attach() {
@@ -75,6 +102,7 @@ class AceLspServerManager(
         val declarationGroups = AceEditorLspPreferences.normalizeDeclarationGroups(declarationGroupsProvider())
         val effectiveDeclarationGroups = AceEditorLspPreferences.resolveDeclarationGroups(declarationGroups)
         val typescriptProfile = AceTypeScriptExecutionProfiles.resolve(documentPath)
+        val sourceLayer = projectSourceLayer
         val typeLayer = projectTypeLayer
         val libraryUris = libraryUrisFor(
             effectiveDeclarationGroups,
@@ -111,13 +139,19 @@ class AceLspServerManager(
             transport = TRANSPORT_IN_PROCESS,
             serverUri = null,
             rootUri = SYNTHETIC_ROOT_URI,
-            documentUri = typeLayer?.documentUri ?: documentUriForPath(documentPath),
+            documentUri = sourceLayer?.documentUri ?: typeLayer?.documentUri ?: documentUriForPath(documentPath),
             typescriptVersion = AceTypeScriptExecutionProfiles.TYPESCRIPT_VERSION,
             typescriptProfile = typescriptProfile?.id,
             typescriptProfileRevision = typescriptProfile?.revision,
             declarationGroups = declarationGroups,
             effectiveDeclarationGroups = effectiveDeclarationGroups,
             libraryUris = libraryUris,
+            projectSourceFileUris = sourceLayer?.fileUris.orEmpty(),
+            projectSourceInventoryFingerprint = sourceLayer?.sourceInventoryFingerprint,
+            projectSourceFileCount = sourceLayer?.sourceFileCount ?: 0,
+            projectSourceByteLength = sourceLayer?.sourceByteLength ?: 0L,
+            projectSnapshotSchemaRevision = sourceLayer?.schemaRevision,
+            projectSnapshotReady = sourceLayer != null,
             projectTypeFileUris = typeLayer?.fileUris.orEmpty(),
             dependencyTypeNames = typeLayer?.typeDirectiveNames.orEmpty(),
             dependencyLayerFingerprint = typeLayer?.dependencyLayerFingerprint,
@@ -167,6 +201,15 @@ class AceLspServerManager(
             append(snapshot.effectiveDeclarationGroups.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
             append(",\"libraryUris\":")
             append(snapshot.libraryUris.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
+            append(",\"projectSourceFileUris\":")
+            append(snapshot.projectSourceFileUris.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
+            append(",\"projectSourceInventoryFingerprint\":")
+                .appendJsonString(snapshot.projectSourceInventoryFingerprint)
+            append(",\"projectSourceFileCount\":").append(snapshot.projectSourceFileCount)
+            append(",\"projectSourceByteLength\":").append(snapshot.projectSourceByteLength)
+            append(",\"projectSnapshotSchemaRevision\":")
+                .append(snapshot.projectSnapshotSchemaRevision ?: "null")
+            append(",\"projectSnapshotReady\":").append(snapshot.projectSnapshotReady)
             append(",\"projectTypeFileUris\":")
             append(snapshot.projectTypeFileUris.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
             append(",\"dependencyTypeNames\":")
@@ -334,6 +377,12 @@ data class AceLspServerSnapshot(
     val declarationGroups: List<String> = emptyList(),
     val effectiveDeclarationGroups: List<String> = emptyList(),
     val libraryUris: List<String> = emptyList(),
+    val projectSourceFileUris: List<String> = emptyList(),
+    val projectSourceInventoryFingerprint: String? = null,
+    val projectSourceFileCount: Int = 0,
+    val projectSourceByteLength: Long = 0L,
+    val projectSnapshotSchemaRevision: Int? = null,
+    val projectSnapshotReady: Boolean = false,
     val projectTypeFileUris: List<String> = emptyList(),
     val dependencyTypeNames: List<String> = emptyList(),
     val dependencyLayerFingerprint: String? = null,

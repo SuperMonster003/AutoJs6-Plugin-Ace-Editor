@@ -25,6 +25,10 @@
         2792: true,
         7016: true
     };
+    var EDITOR_SYNTHETIC_DIAGNOSTIC_CODES = {
+        // Virtual editor URIs intentionally retain the execution profile's /sources rootDir.
+        6059: true
+    };
     var SAFE_DECLARATION_ASSET_NAME = /^[A-Za-z0-9_.-]+\.d\.ts$/;
 
     function noop() {
@@ -409,9 +413,15 @@
         var libraryUris = [];
         var rootLibraryUris = [];
         var libraryAssetUrls = Object.create(null);
+        var projectSourceUris = [];
+        var projectSourceUriSet = Object.create(null);
         var projectTypeUris = [];
         var projectTypeUriSet = Object.create(null);
         var projectDirectories = Object.create(null);
+        var projectSnapshotSchemaRevision =
+            Math.max(0, Number(config.projectSnapshotSchemaRevision) || 0);
+        var projectSnapshotReady = config.projectSnapshotReady === true &&
+            projectSnapshotSchemaRevision === 1;
         var dependencyTypeNames = copyArray(config.dependencyTypeNames)
             .map(function(name) { return String(name || ""); })
             .filter(function(name, index, names) {
@@ -530,9 +540,22 @@
             }
         }
 
-        function configureProjectTypeFiles() {
+        function configureProjectFiles() {
             projectDirectories[projectRootUri] = projectDirectories[projectRootUri] || Object.create(null);
             rememberProjectPath(currentFile);
+            copyArray(config.projectSourceFileUris).forEach(function(uri) {
+                var normalized = normalizeFileName(uri);
+                if (normalized.indexOf(projectRootUri + "/") !== 0 ||
+                    hasOwn(projectSourceUriSet, normalized)) {
+                    return;
+                }
+                projectSourceUriSet[normalized] = true;
+                projectSourceUris.push(normalized);
+                rememberProjectPath(normalized);
+            });
+            projectSourceUris.sort();
+            projectSnapshotReady = projectSnapshotReady &&
+                projectSourceUris.length > 0 && hasOwn(projectSourceUriSet, currentFile);
             copyArray(config.projectTypeFileUris).forEach(function(uri) {
                 var normalized = normalizeFileName(uri);
                 if (normalized.indexOf(projectRootUri + "/") !== 0 ||
@@ -544,6 +567,24 @@
                 rememberProjectPath(normalized);
             });
             projectTypeUris.sort();
+        }
+
+        function ensureProjectSourceFile(fileName) {
+            fileName = normalizeFileName(fileName);
+            if (hasOwn(files, fileName)) {
+                return true;
+            }
+            if (!hasOwn(projectSourceUriSet, fileName)) {
+                return false;
+            }
+            var projectSourceTextByUri = config.projectSourceTextByUri || {};
+            var text = hasOwn(projectSourceTextByUri, fileName) ?
+                projectSourceTextByUri[fileName] : loadText(fileName);
+            if (text === null || text === undefined) {
+                return false;
+            }
+            addFile(fileName, text);
+            return true;
         }
 
         function ensureProjectTypeFile(fileName) {
@@ -654,9 +695,18 @@
             }
             try {
                 configureRootLibraries();
-                configureProjectTypeFiles();
+                configureProjectFiles();
                 rootLibraryUris.forEach(ensureConfiguredLibrary);
+                projectSourceUris.forEach(function(fileName) {
+                    if (fileName !== currentFile) {
+                        ensureProjectSourceFile(fileName);
+                    }
+                });
                 addFile(currentFile, "");
+                projectSnapshotReady = projectSnapshotReady &&
+                    projectSourceUris.every(function(fileName) {
+                        return hasOwn(files, fileName);
+                    });
                 if (!hasOwn(files, TS_LIB_ROOT + defaultLib)) {
                     reason = "TypeScript default lib missing: " + defaultLib;
                     return false;
@@ -672,9 +722,12 @@
                 service = ts.createLanguageService({
                     getCompilationSettings: compilerOptions,
                     getScriptFileNames: function() {
-                        return [currentFile].concat(rootLibraryUris).filter(function(fileName) {
-                            return hasOwn(files, fileName);
-                        });
+                        return [currentFile]
+                            .concat(projectSourceUris.filter(function(fileName) {
+                                return fileName !== currentFile;
+                            }))
+                            .concat(rootLibraryUris)
+                            .filter(function(fileName) { return hasOwn(files, fileName); });
                     },
                     getScriptVersion: function(fileName) {
                         return versions[normalizeFileName(fileName)] || "0";
@@ -682,6 +735,7 @@
                     getScriptSnapshot: function(fileName) {
                         fileName = normalizeFileName(fileName);
                         ensureConfiguredLibrary(fileName);
+                        ensureProjectSourceFile(fileName);
                         ensureProjectTypeFile(fileName);
                         return hasOwn(files, fileName) ? ts.ScriptSnapshot.fromString(files[fileName]) : undefined;
                     },
@@ -697,12 +751,14 @@
                     readFile: function(fileName) {
                         fileName = normalizeFileName(fileName);
                         ensureConfiguredLibrary(fileName);
+                        ensureProjectSourceFile(fileName);
                         ensureProjectTypeFile(fileName);
                         return hasOwn(files, fileName) ? files[fileName] : undefined;
                     },
                     fileExists: function(fileName) {
                         fileName = normalizeFileName(fileName);
-                        return hasOwn(files, fileName) || hasOwn(projectTypeUriSet, fileName) ||
+                        return hasOwn(files, fileName) || hasOwn(projectSourceUriSet, fileName) ||
+                            hasOwn(projectTypeUriSet, fileName) ||
                             ensureConfiguredLibrary(fileName);
                     },
                     directoryExists: function(directoryName) {
@@ -948,8 +1004,9 @@
                 var diagnostics = []
                     .concat(service.getSyntacticDiagnostics(currentFile) || [])
                     .concat((service.getSemanticDiagnostics(currentFile) || []).filter(function(diagnostic) {
-                        return projectTypeUris.length > 0 ||
-                            !SINGLE_FILE_UNRELIABLE_DIAGNOSTIC_CODES[Number(diagnostic && diagnostic.code)];
+                        var code = Number(diagnostic && diagnostic.code);
+                        return !EDITOR_SYNTHETIC_DIAGNOSTIC_CODES[code] &&
+                            (projectSnapshotReady || !SINGLE_FILE_UNRELIABLE_DIAGNOSTIC_CODES[code]);
                     }));
                 var boundarySlots = dependencyBoundaryCode ? 1 : 0;
                 var annotations = diagnostics.slice(
@@ -991,6 +1048,16 @@
                 defaultLib: defaultLib,
                 libraryCount: libraryUris.length,
                 projectRootUri: projectRootUri,
+                projectSourceFileCount: projectSourceUris.length,
+                loadedProjectSourceFileCount: projectSourceUris.filter(function(uri) {
+                    return hasOwn(files, uri);
+                }).length,
+                projectSourceInventoryFingerprint:
+                    String(config.projectSourceInventoryFingerprint || ""),
+                projectSourceByteLength:
+                    Math.max(0, Number(config.projectSourceByteLength) || 0),
+                projectSnapshotSchemaRevision: projectSnapshotSchemaRevision,
+                projectSnapshotReady: projectSnapshotReady,
                 projectTypeFileCount: projectTypeUris.length,
                 loadedProjectTypeFileCount: projectTypeUris.filter(function(uri) {
                     return hasOwn(files, uri);
@@ -1030,12 +1097,15 @@
             libraryUris = [];
             rootLibraryUris = [];
             libraryAssetUrls = Object.create(null);
+            projectSourceUris = [];
+            projectSourceUriSet = Object.create(null);
             projectTypeUris = [];
             projectTypeUriSet = Object.create(null);
             projectDirectories = Object.create(null);
             dependencyTypeNames = [];
             dependencyBoundaryCode = "";
             dependencyBoundaryDetail = "";
+            projectSnapshotReady = false;
             currentText = "";
             reason = "typescript language service disposed";
         }

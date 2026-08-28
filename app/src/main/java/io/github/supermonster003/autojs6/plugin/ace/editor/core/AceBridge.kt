@@ -177,11 +177,11 @@ class AceBridge(
     @JavascriptInterface
     fun read(uri: String?): String {
         val requestedUri = uri.orEmpty()
-        editor.bridgeProjectTypeText(requestedUri)?.let { text ->
+        editor.bridgeProjectFileText(requestedUri)?.let { text ->
             return JSONObject()
                 .put("ok", true)
                 .put("uri", requestedUri)
-                .put("projectType", true)
+                .put("projectFile", true)
                 .put("text", text)
                 .toString()
         }
