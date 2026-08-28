@@ -996,6 +996,63 @@
             }
         }
 
+        function getDefinition(session, pos, documentText) {
+            try {
+                if (!syncSession(session, documentText)) {
+                    return null;
+                }
+                var offset = positionToIndex(session, pos);
+                var result = typeof service.getDefinitionAndBoundSpan === "function" ?
+                    service.getDefinitionAndBoundSpan(currentFile, offset) : null;
+                var definitions = result && result.definitions;
+                if ((!definitions || !definitions.length) &&
+                    typeof service.getDefinitionAtPosition === "function") {
+                    definitions = service.getDefinitionAtPosition(currentFile, offset);
+                }
+                if (!definitions || !definitions.length) {
+                    return null;
+                }
+                for (var index = 0; index < definitions.length; index += 1) {
+                    var definition = definitions[index];
+                    var targetFile = normalizeFileName(definition && definition.fileName);
+                    var isProjectSource = hasOwn(projectSourceUriSet, targetFile);
+                    var isDependencyType = hasOwn(projectTypeUriSet, targetFile);
+                    if ((!isProjectSource && !isDependencyType) || !hasOwn(files, targetFile)) {
+                        continue;
+                    }
+                    var targetText = files[targetFile];
+                    var textSpan = definition && definition.textSpan || {};
+                    var startOffset = Math.max(
+                        0,
+                        Math.min(Number(textSpan.start) || 0, targetText.length)
+                    );
+                    var endOffset = Math.max(
+                        startOffset,
+                        Math.min(
+                            startOffset + Math.max(0, Number(textSpan.length) || 0),
+                            targetText.length
+                        )
+                    );
+                    var start = positionFromIndex(targetText, startOffset);
+                    var end = positionFromIndex(targetText, endOffset);
+                    return {
+                        uri: targetFile,
+                        line: start.row,
+                        column: start.column,
+                        endLine: end.row,
+                        endColumn: end.column,
+                        name: String(definition.name || ""),
+                        kind: String(definition.kind || ""),
+                        authority: isProjectSource ? "projectSource" : "dependencyDeclaration"
+                    };
+                }
+                return null;
+            } catch (error) {
+                notify(config, "ACE TS definition failed: " + error, error);
+                return null;
+            }
+        }
+
         function getDiagnostics(session, documentText) {
             try {
                 if (!syncSession(session, documentText)) {
@@ -1117,6 +1174,7 @@
             getCompletions: getCompletions,
             getHover: getHover,
             getSignatureHelp: getSignatureHelp,
+            getDefinition: getDefinition,
             getDiagnostics: getDiagnostics,
             getState: getState,
             dispose: dispose,

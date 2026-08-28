@@ -13,6 +13,11 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun notifyDefinitionNavigationRequested(payloadJson: String?) {
+        editor.handleDefinitionNavigationRequested(payloadJson)
+    }
+
+    @JavascriptInterface
     fun notifyReady(stateJson: String?) {
         editor.handleReady(stateJson)
     }

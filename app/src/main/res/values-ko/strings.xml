@@ -6,6 +6,7 @@
     <string name="plugin_instruction">플러그인을 설치한 다음 AutoJs6에서 스크립트 편집기로 Ace를 선택하세요.</string>
     <string name="text_copy_line">줄 복사</string>
     <string name="text_delete_line">줄 삭제</string>
+    <string name="text_go_to_definition">정의로 이동</string>
     <string name="text_more">더보기</string>
     <string name="text_select_all">전체 선택</string>
     <string name="text_sort_by_name_asc">이름 (A-Z)</string>

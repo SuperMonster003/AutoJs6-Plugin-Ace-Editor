@@ -821,6 +821,22 @@
         return publishLspState(lspClient && lspClient.getState ? lspClient.getState() : null);
     }
 
+    function requestDefinitionNavigation(pos) {
+        if (!lspClient || typeof lspClient.getDefinition !== "function") {
+            return false;
+        }
+        var target = lspClient.getDefinition(pos || editor.getCursorPosition());
+        publishLspState();
+        if (!target || typeof target.uri !== "string" || !target.uri ||
+            target.uri.length > 4096 ||
+            !isFinite(Number(target.line)) || !isFinite(Number(target.column)) ||
+            !isFinite(Number(target.endLine)) || !isFinite(Number(target.endColumn))) {
+            return false;
+        }
+        callBridge("notifyDefinitionNavigationRequested", [JSON.stringify(target)]);
+        return true;
+    }
+
     function destroyLspClient() {
         if (memberCompletionRestartTimer !== null) {
             clearTimeout(memberCompletionRestartTimer);
@@ -4766,6 +4782,16 @@
             wrap: wordWrapEnabled,
             fontFamily: initialFontFamily
         });
+        if (editor.commands && typeof editor.commands.addCommand === "function") {
+            editor.commands.addCommand({
+                name: "autojs6GoToDefinition",
+                bindKey: { win: "F12", mac: "F12" },
+                readOnly: true,
+                exec: function() {
+                    requestDefinitionNavigation(editor.getCursorPosition());
+                }
+            });
+        }
         installMemberCompletionDotTrigger();
         installTouchCursorSelectionGuard();
         session.setUseWrapMode(wordWrapEnabled);
@@ -4841,6 +4867,13 @@
         });
 
         editor.on("click", function(event) {
+            var domEvent = event.domEvent || {};
+            if ((domEvent.ctrlKey || domEvent.metaKey) &&
+                (typeof domEvent.button !== "number" || domEvent.button === 0) &&
+                requestDefinitionNavigation(event.getDocumentPosition())) {
+                event.stop();
+                return;
+            }
             var target = event.domEvent && event.domEvent.target;
             if (!isFoldPlaceholderTarget(target)) {
                 return;
@@ -4927,6 +4960,15 @@
                 var result = lspClient ? lspClient.getHover({ row: row, column: column }) : null;
                 publishLspState();
                 return result;
+            },
+            getLspDefinition: function(row, column) {
+                var result = lspClient && lspClient.getDefinition ?
+                    lspClient.getDefinition({ row: row, column: column }) : null;
+                publishLspState();
+                return result;
+            },
+            goToDefinition: function(row, column) {
+                return requestDefinitionNavigation({ row: row, column: column });
             },
             getLspDiagnostics: function() {
                 return lspClient && lspClient.getDiagnostics ? lspClient.getDiagnostics() : [];

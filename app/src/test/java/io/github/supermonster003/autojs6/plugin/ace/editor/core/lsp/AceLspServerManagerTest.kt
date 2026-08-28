@@ -95,7 +95,12 @@ class AceLspServerManagerTest {
         assertTrue(optionsJson.contains("\"hoverProvider\":\"${AceLspServerManager.HOVER_PROVIDER_LOCAL_INDEX}\""))
         assertTrue(optionsJson.contains("\"diagnosticProvider\":\"${AceLspServerManager.DIAGNOSTIC_PROVIDER_ACE_JSHINT}\""))
         assertTrue(optionsJson.contains("\"signatureProvider\":\"${AceLspServerManager.SIGNATURE_PROVIDER_STATIC_LOCAL}\""))
-        assertTrue(optionsJson.contains("\"features\":[\"completion\", \"hover\", \"diagnostics\", \"signatureHelp\"]"))
+        assertTrue(
+            optionsJson.contains(
+                "\"features\":[\"completion\", \"hover\", \"diagnostics\", " +
+                    "\"signatureHelp\", \"definition\"]",
+            ),
+        )
         assertTrue(optionsJson.contains("\"maxDocumentLength\":${AceLspServerManager.MAX_DOCUMENT_LENGTH}"))
     }
 

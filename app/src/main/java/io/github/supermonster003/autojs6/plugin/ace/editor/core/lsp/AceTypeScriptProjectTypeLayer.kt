@@ -23,9 +23,12 @@ internal data class AceTypeScriptProjectTypeLayer(
     val dependencyBoundaryCode: String?,
     val dependencyBoundaryDetail: String?,
     private val textByUri: Map<String, String>,
+    private val definitionFileByUri: Map<String, AceTypeScriptDefinitionFile>,
 ) {
 
     fun read(uri: String): String? = textByUri[uri]
+
+    fun definitionFile(uri: String): AceTypeScriptDefinitionFile? = definitionFileByUri[uri]
 
     companion object {
         fun capture(
@@ -52,10 +55,19 @@ internal data class AceTypeScriptProjectTypeLayer(
             }
             val dependencyFiles = dependencyCapture.files
             val textByUri = LinkedHashMap<String, String>(dependencyFiles.size + 1)
+            val definitionFileByUri = LinkedHashMap<String, AceTypeScriptDefinitionFile>()
             dependencyFiles.forEach { file ->
                 if (!file.archivePath.startsWith(DEPENDENCY_ARCHIVE_PREFIX)) return@forEach
                 val relativePath = file.archivePath.removePrefix(DEPENDENCY_ARCHIVE_PREFIX)
-                textByUri[virtualUri("$NODE_MODULES_DIRECTORY/$relativePath")] = file.text
+                val projectRelativePath = "$NODE_MODULES_DIRECTORY/$relativePath"
+                val uri = virtualUri(projectRelativePath)
+                textByUri[uri] = file.text
+                if (isDeclarationPath(projectRelativePath)) {
+                    definitionFileByUri[uri] = AceTypeScriptDefinitionFile(
+                        relativePath = projectRelativePath,
+                        contentSha256 = file.sha256,
+                    )
+                }
             }
             val rootPackage = File(projectRoot, PACKAGE_METADATA_NAME)
             if (rootPackage.isFile) {
@@ -118,6 +130,7 @@ internal data class AceTypeScriptProjectTypeLayer(
                 dependencyBoundaryCode = dependencyCapture.boundary?.code,
                 dependencyBoundaryDetail = dependencyCapture.boundary?.detail(),
                 textByUri = immutableTextByUri,
+                definitionFileByUri = Collections.unmodifiableMap(definitionFileByUri),
             )
         }
 
@@ -344,6 +357,13 @@ internal data class AceTypeScriptProjectTypeLayer(
             val name = foldedSegments.last()
             return EXCLUDED_SUFFIXES.none(name::endsWith) &&
                 ALLOWED_SUFFIXES.any(name::endsWith)
+        }
+
+        private fun isDeclarationPath(path: String): Boolean {
+            val folded = path.lowercase(Locale.ROOT)
+            return folded.endsWith(".d.ts") ||
+                folded.endsWith(".d.mts") ||
+                folded.endsWith(".d.cts")
         }
 
         private fun findProjectRoot(

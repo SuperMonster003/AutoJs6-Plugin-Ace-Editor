@@ -6,6 +6,7 @@
     <string name="plugin_instruction">Установите плагин, затем выберите Ace в качестве редактора скриптов в AutoJs6.</string>
     <string name="text_copy_line">Копировать строку</string>
     <string name="text_delete_line">Удалить строку</string>
+    <string name="text_go_to_definition">Перейти к определению</string>
     <string name="text_more">Ещё</string>
     <string name="text_select_all">Выбрать все</string>
     <string name="text_sort_by_name_asc">Имя (A-Z)</string>

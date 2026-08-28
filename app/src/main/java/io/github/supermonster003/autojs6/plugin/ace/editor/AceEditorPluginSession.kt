@@ -10,11 +10,14 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.AceEditorFontPre
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.defaultHostPreferences
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceDiagnosticsSnapshot
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceFailure
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptDefinitionTarget
 import org.autojs.plugin.editor.api.EditorPluginBooleanCallback
 import org.autojs.plugin.editor.api.EditorPluginBreakpoint
 import org.autojs.plugin.editor.api.EditorPluginCallback
 import org.autojs.plugin.editor.api.EditorPluginCursor
 import org.autojs.plugin.editor.api.EditorPluginDiagnostics
+import org.autojs.plugin.editor.api.EditorPluginDefinitionTarget
+import org.autojs.plugin.editor.api.EditorPluginDefinitionTargetKind
 import org.autojs.plugin.editor.api.EditorPluginFailure
 import org.autojs.plugin.editor.api.EditorPluginFailureType
 import org.autojs.plugin.editor.api.EditorPluginHealthState
@@ -487,14 +490,40 @@ class AceEditorPluginSession internal constructor(
             if (undo) EditorPluginHistoryDirection.UNDO else EditorPluginHistoryDirection.REDO,
         )
 
-        override fun onSelectionAction(action: AceCodeEditor.SelectionAction) = callback.onSelectionAction(
-            when (action) {
-                AceCodeEditor.SelectionAction.Copy -> EditorPluginSelectionAction.COPY
-                AceCodeEditor.SelectionAction.Paste -> EditorPluginSelectionAction.PASTE
-                AceCodeEditor.SelectionAction.SelectAll -> EditorPluginSelectionAction.SELECT_ALL
-                AceCodeEditor.SelectionAction.DeleteLine -> EditorPluginSelectionAction.DELETE_LINE
-                AceCodeEditor.SelectionAction.CopyLine -> EditorPluginSelectionAction.COPY_LINE
-            },
+        override fun onSelectionAction(action: AceCodeEditor.SelectionAction) {
+            if (action == AceCodeEditor.SelectionAction.GoToDefinition) return
+            callback.onSelectionAction(
+                when (action) {
+                    AceCodeEditor.SelectionAction.Copy -> EditorPluginSelectionAction.COPY
+                    AceCodeEditor.SelectionAction.Paste -> EditorPluginSelectionAction.PASTE
+                    AceCodeEditor.SelectionAction.SelectAll -> EditorPluginSelectionAction.SELECT_ALL
+                    AceCodeEditor.SelectionAction.GoToDefinition -> error("Handled above")
+                    AceCodeEditor.SelectionAction.DeleteLine -> EditorPluginSelectionAction.DELETE_LINE
+                    AceCodeEditor.SelectionAction.CopyLine -> EditorPluginSelectionAction.COPY_LINE
+                },
+            )
+        }
+
+        override fun onDefinitionNavigationRequested(
+            target: AceTypeScriptDefinitionTarget,
+        ) = callback.onDefinitionNavigationRequested(
+            EditorPluginDefinitionTarget(
+                kind = when (target.kind) {
+                    AceTypeScriptDefinitionTarget.Kind.PROJECT_SOURCE ->
+                        EditorPluginDefinitionTargetKind.PROJECT_SOURCE
+                    AceTypeScriptDefinitionTarget.Kind.DEPENDENCY_DECLARATION ->
+                        EditorPluginDefinitionTargetKind.DEPENDENCY_DECLARATION
+                },
+                projectRootPath = target.projectRootPath,
+                relativePath = target.relativePath,
+                line = target.line,
+                column = target.column,
+                endLine = target.endLine,
+                endColumn = target.endColumn,
+                contentSha256 = target.contentSha256,
+                projectSourceInventoryFingerprint = target.projectSourceInventoryFingerprint,
+                dependencyInventoryFingerprint = target.dependencyInventoryFingerprint,
+            ),
         )
 
         override fun onEvent(name: String, payloadJson: String?) = callback.onEvent(

@@ -41,6 +41,7 @@ internal class AceSelectionToolbar(
         val copy: CharSequence,
         val paste: CharSequence,
         val selectAll: CharSequence,
+        val goToDefinition: CharSequence,
         val deleteLine: CharSequence,
         val copyLine: CharSequence,
         val more: CharSequence,
@@ -50,6 +51,7 @@ internal class AceSelectionToolbar(
         val canCopy: Boolean,
         val canPaste: Boolean,
         val canSelectAll: Boolean,
+        val canGoToDefinition: Boolean,
         val showDeleteLine: Boolean,
         val canDeleteLine: Boolean,
         val canCopyLine: Boolean,
@@ -68,6 +70,11 @@ internal class AceSelectionToolbar(
         Item(labels.selectAll, AceCodeEditor.SelectionAction.SelectAll, State::canSelectAll),
     )
     private val allItems = mainItems + listOf(
+        Item(
+            labels.goToDefinition,
+            AceCodeEditor.SelectionAction.GoToDefinition,
+            State::canGoToDefinition,
+        ),
         Item(labels.deleteLine, AceCodeEditor.SelectionAction.DeleteLine, State::canDeleteLine),
         Item(labels.copyLine, AceCodeEditor.SelectionAction.CopyLine, State::canCopyLine),
     )

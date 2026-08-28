@@ -6,6 +6,7 @@
     <string name="plugin_instruction">プラグインをインストールし, AutoJs6 でスクリプトエディターとして Ace を選択します.</string>
     <string name="text_copy_line">行をコピー</string>
     <string name="text_delete_line">行を削除</string>
+    <string name="text_go_to_definition">定義へ移動</string>
     <string name="text_more">その他</string>
     <string name="text_select_all">すべて選択</string>
     <string name="text_sort_by_name_asc">名前 (A-Z)</string>

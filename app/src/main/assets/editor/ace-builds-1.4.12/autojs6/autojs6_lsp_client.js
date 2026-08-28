@@ -1765,6 +1765,34 @@
             }
         }
 
+        function getDefinition(pos) {
+            try {
+                var text = textFromSession(session);
+                if (isJsonDocumentUri(state.documentUri)) {
+                    updateSemanticState(session, text.length);
+                    return null;
+                }
+                if (updateSemanticState(session, text.length)) {
+                    var service = getTsService();
+                    if (service && typeof service.getDefinition === "function") {
+                        var startedAt = Date.now();
+                        var target = service.getDefinition(session, normalizePosition(pos), text);
+                        recordSemanticOperation(startedAt, "definition");
+                        if (target && !semanticCircuitOpen) {
+                            applyTsProviderState();
+                            return target;
+                        }
+                    } else if (state.enabled && tsLoadState !== "loading") {
+                        warmUp();
+                    }
+                }
+                return null;
+            } catch (error) {
+                notify(config, "ACE LSP definition failed: " + error, error);
+                return null;
+            }
+        }
+
         function destroy() {
             if (destroyed) {
                 return;
@@ -1791,6 +1819,7 @@
             getCompletions: getCompletions,
             getHover: getHover,
             getSignatureHelp: getSignatureHelp,
+            getDefinition: getDefinition,
             getDiagnostics: getDiagnostics,
             validateNow: validateNow,
             destroy: destroy,

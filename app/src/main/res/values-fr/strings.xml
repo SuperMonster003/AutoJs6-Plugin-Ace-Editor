@@ -6,6 +6,7 @@
     <string name="plugin_instruction">Installez le plugin, puis sélectionnez Ace comme éditeur de scripts dans AutoJs6.</string>
     <string name="text_copy_line">Copier la ligne</string>
     <string name="text_delete_line">Supprimer la ligne</string>
+    <string name="text_go_to_definition">Atteindre la définition</string>
     <string name="text_more">Plus</string>
     <string name="text_select_all">Tout sélectionner</string>
     <string name="text_sort_by_name_asc">Nom (A-Z)</string>

@@ -6,6 +6,7 @@
     <string name="plugin_instruction">ثبت المكون الإضافي, ثم اختر Ace كمحرر البرامج النصية في AutoJs6.</string>
     <string name="text_copy_line">نسخ السطر</string>
     <string name="text_delete_line">حذف السطر</string>
+    <string name="text_go_to_definition">الانتقال إلى التعريف</string>
     <string name="text_more">المزيد</string>
     <string name="text_select_all">تحديد الكل</string>
     <string name="text_sort_by_name_asc">الاسم (A-Z)</string>

@@ -291,19 +291,25 @@ function verifyDependencyTypeLayer(paths) {
         const source = [
             'import dayjs from "dayjs";',
             'import lodash from "lodash";',
-            `import { sharedAnswer } from "${sharedSpecifier}";`,
+            `import * as sharedModule from "${sharedSpecifier}";`,
             `import { missingAnswer } from "${missingSpecifier}";`,
             "const value = dayjs();",
             "value.format();",
+            "const projectValue = sharedModule.projectHelper(\"42\", 10);",
             "const wrong: number = value.format();",
             "const ambient: 42 = ambientAnswer;",
             "const chunks: number[][] = lodash.chunk([1, 2, 3], 2);",
-            "const shared: 42 = sharedAnswer;",
+            "const shared: 42 = sharedModule.sharedAnswer;",
             "void missingAnswer;",
         ].join("\n");
         const projectSourceTextByUri = {
             [documentUri]: source,
-            [sharedUri]: "export const sharedAnswer = 42 as const;",
+            [sharedUri]: [
+                "export const sharedAnswer = 42 as const;",
+                "export function projectHelper(value: string, radix?: number): number {",
+                "  return Number.parseInt(value, radix);",
+                "}",
+            ].join("\n"),
         };
         const projectSourceFileUris = Object.keys(projectSourceTextByUri).sort();
         const service = context.AutoJsAceTsLanguageService.create({
@@ -352,6 +358,34 @@ function verifyDependencyTypeLayer(paths) {
             { row: 4, column: "const value".length },
             source,
         );
+        let projectCompletions = [];
+        service.getCompletions(
+            session,
+            { row: 6, column: "const projectValue = sharedModule.".length },
+            "",
+            (_error, items) => { projectCompletions = items || []; },
+            source,
+        );
+        const projectHover = service.getHover(
+            session,
+            { row: 6, column: "const projectValue = sharedModule.pro".length },
+            source,
+        );
+        const projectSignature = service.getSignatureHelp(
+            session,
+            { row: 6, column: "const projectValue = sharedModule.projectHelper(\"42\"".length },
+            source,
+        );
+        const projectDefinition = service.getDefinition(
+            session,
+            { row: 6, column: "const projectValue = sharedModule.pro".length },
+            source,
+        );
+        const dependencyDefinition = service.getDefinition(
+            session,
+            { row: 5, column: "value.for".length },
+            source,
+        );
         const state = service.getState();
         service.dispose();
 
@@ -382,6 +416,37 @@ function verifyDependencyTypeLayer(paths) {
             `${profile} hover did not infer dayjs() as Dayjs: ${JSON.stringify(hover)}`,
         );
         assert(
+            projectCompletions.some((item) => item.caption === "projectHelper") &&
+                projectCompletions.some((item) => item.caption === "sharedAnswer"),
+            `${profile} completion did not include symbols from the project source layer`,
+        );
+        assert(
+            String(projectHover?.docText || "").includes("projectHelper") &&
+                String(projectHover?.docText || "").includes("number"),
+            `${profile} hover did not resolve a cross-file project symbol: ${JSON.stringify(projectHover)}`,
+        );
+        assert(
+            String(projectSignature?.signature || "").includes("projectHelper") &&
+                projectSignature.parameters.length === 2,
+            `${profile} signature help did not resolve a cross-file project function: ` +
+                JSON.stringify(projectSignature),
+        );
+        assert(
+            projectDefinition?.uri === sharedUri &&
+                projectDefinition.authority === "projectSource" &&
+                projectDefinition.line === 1 &&
+                projectDefinition.column === "export function ".length,
+            `${profile} definition did not resolve the project source target: ` +
+                JSON.stringify(projectDefinition),
+        );
+        assert(
+            dependencyDefinition?.uri ===
+                "file:///autojs6/editor/node_modules/dayjs/ts6/legacy/index.d.ts" &&
+                dependencyDefinition.authority === "dependencyDeclaration",
+            `${profile} definition did not resolve the dependency declaration target: ` +
+                JSON.stringify(dependencyDefinition),
+        );
+        assert(
             JSON.stringify(state.dependencyTypeNames) === JSON.stringify(["ambient"]) &&
                 state.dependencyResolverPolicyRevision === 4 &&
                 state.projectTypeFileCount === projectTypeFileUris.length &&
@@ -397,6 +462,8 @@ function verifyDependencyTypeLayer(paths) {
                 .filter((name) => name === "format" || name === "unix")
                 .sort(),
             hover: hover?.value || hover?.caption || "",
+            projectDefinition: projectDefinition?.uri || "",
+            dependencyDefinition: dependencyDefinition?.uri || "",
             loadedProjectSourceFileCount: state.loadedProjectSourceFileCount,
             loadedProjectTypeFileCount: state.loadedProjectTypeFileCount,
         };

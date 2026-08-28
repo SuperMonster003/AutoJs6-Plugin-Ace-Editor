@@ -51,6 +51,33 @@ class AceTypeScriptProjectSourceLayerTest {
             "export const sharedAnswer = 42 as const;",
             manager.readProjectFile("file:///autojs6/editor/src/shared.ts"),
         )
+        val definition = requireNotNull(
+            manager.resolveDefinitionTarget(
+                uri = "file:///autojs6/editor/src/shared.ts",
+                line = 0,
+                column = 13,
+                endLine = 0,
+                endColumn = 25,
+            ),
+        )
+        assertEquals(AceTypeScriptDefinitionTarget.Kind.PROJECT_SOURCE, definition.kind)
+        assertEquals(fixture.root.path, definition.projectRootPath)
+        assertEquals("src/shared.ts", definition.relativePath)
+        assertEquals(contractSnapshot.sourceFiles.last().sha256, definition.contentSha256)
+        assertEquals(
+            contractSnapshot.sourceInventoryFingerprint,
+            definition.projectSourceInventoryFingerprint,
+        )
+        assertNull(definition.dependencyInventoryFingerprint)
+        assertNull(
+            manager.resolveDefinitionTarget(
+                uri = "file:///autojs6/editor/src/unknown.ts",
+                line = 0,
+                column = 0,
+                endLine = 0,
+                endColumn = 1,
+            ),
+        )
         assertTrue(manager.bridgeOptionsJson().contains("\"projectSnapshotReady\":true"))
         assertTrue(
             manager.bridgeOptionsJson().contains(

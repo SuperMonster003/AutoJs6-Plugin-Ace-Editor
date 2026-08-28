@@ -20,9 +20,12 @@ internal data class AceTypeScriptProjectSourceLayer(
     val sourceByteLength: Long,
     val schemaRevision: Int,
     private val textByUri: Map<String, String>,
+    private val definitionFileByUri: Map<String, AceTypeScriptDefinitionFile>,
 ) {
 
     fun read(uri: String): String? = textByUri[uri]
+
+    fun definitionFile(uri: String): AceTypeScriptDefinitionFile? = definitionFileByUri[uri]
 
     companion object {
         fun from(
@@ -36,6 +39,9 @@ internal data class AceTypeScriptProjectSourceLayer(
             if (requestedDocument.path != snapshot.documentPath) return null
 
             val textByUri = LinkedHashMap<String, String>(snapshot.sourceFiles.size)
+            val definitionFileByUri = LinkedHashMap<String, AceTypeScriptDefinitionFile>(
+                snapshot.sourceFiles.size,
+            )
             val digest = MessageDigest.getInstance("SHA-256")
             digest.update(INVENTORY_DOMAIN.toByteArray(StandardCharsets.US_ASCII))
             digest.update('\n'.code.toByte())
@@ -47,6 +53,14 @@ internal data class AceTypeScriptProjectSourceLayer(
                 if (actualSha256 != source.sha256) return null
                 val uri = virtualUri(source.relativePath)
                 if (textByUri.put(uri, source.text) != null) return null
+                if (
+                    definitionFileByUri.put(
+                        uri,
+                        AceTypeScriptDefinitionFile(source.relativePath, source.sha256),
+                    ) != null
+                ) {
+                    return null
+                }
                 digest.update(source.relativePath.toByteArray(StandardCharsets.UTF_8))
                 digest.update(0)
                 digest.update(
@@ -69,6 +83,7 @@ internal data class AceTypeScriptProjectSourceLayer(
                 sourceByteLength = snapshot.sourceByteLength,
                 schemaRevision = snapshot.schemaRevision,
                 textByUri = Collections.unmodifiableMap(textByUri),
+                definitionFileByUri = Collections.unmodifiableMap(definitionFileByUri),
             )
         }
 

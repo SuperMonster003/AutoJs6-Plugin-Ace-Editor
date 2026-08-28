@@ -51,6 +51,7 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceHealth
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceJsErrorClassifier
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceRuntimeHealthMonitor
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServerManager
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptDefinitionTarget
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptExecutionProfiles
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectSourceLayer
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectTypeLayer
@@ -1165,6 +1166,35 @@ class AceCodeEditor @JvmOverloads constructor(
         }
     }
 
+    internal fun handleDefinitionNavigationRequested(payloadJson: String?) {
+        postToMain {
+            if (destroyed) return@postToMain
+            val raw = payloadJson?.takeIf { value ->
+                value.isNotBlank() && value.length <= MAX_DEFINITION_PAYLOAD_CHARS
+            }
+            val payload = raw?.let { value -> runCatching { JSONObject(value) }.getOrNull() }
+            val uri = payload?.optString("uri").orEmpty()
+            val target = payload?.let { value ->
+                lspServerManager.resolveDefinitionTarget(
+                    uri = uri,
+                    line = value.optInt("line", -1),
+                    column = value.optInt("column", -1),
+                    endLine = value.optInt("endLine", -1),
+                    endColumn = value.optInt("endColumn", -1),
+                )
+            }
+            if (target == null) {
+                eventHistory.record("definition_rejected", "uri=${uri.take(256)}")
+                return@postToMain
+            }
+            eventHistory.record(
+                "definition_requested",
+                "kind=${target.kind},path=${target.relativePath}",
+            )
+            listener?.onDefinitionNavigationRequested(target)
+        }
+    }
+
     internal fun handleBreakpointChanged(line: Int, enabled: Boolean, stateJson: String?) {
         postToMain {
             if (destroyed) return@postToMain
@@ -1635,6 +1665,7 @@ class AceCodeEditor @JvmOverloads constructor(
                 copy = context.getString(android.R.string.copy),
                 paste = context.getString(android.R.string.paste),
                 selectAll = pluginContext.getString(R.string.text_select_all),
+                goToDefinition = pluginContext.getString(R.string.text_go_to_definition),
                 deleteLine = pluginContext.getString(R.string.text_delete_line),
                 copyLine = pluginContext.getString(R.string.text_copy_line),
                 more = pluginContext.getString(R.string.text_more),
@@ -1664,6 +1695,7 @@ class AceCodeEditor @JvmOverloads constructor(
         canCopy = selectedTextSnapshot.isNotEmpty(),
         canPaste = !readOnly && clipboardText().isNotEmpty(),
         canSelectAll = textSnapshot.isNotEmpty(),
+        canGoToDefinition = selectedTextSnapshot.isNotEmpty() && lspServerManager.snapshot().enabled,
         showDeleteLine = !readOnly,
         canDeleteLine = !readOnly && textSnapshot.isNotEmpty(),
         canCopyLine = cursorLineText.isNotEmpty(),
@@ -1688,6 +1720,13 @@ class AceCodeEditor @JvmOverloads constructor(
                 selectRange(0, textSnapshot.length)
                 listener?.onSelectionAction(action)
                 toolbar.invalidate()
+            }
+            SelectionAction.GoToDefinition -> {
+                invokeAce(
+                    "goToDefinition",
+                    "${selectionSnapshot.startLine}, ${selectionSnapshot.startColumn}",
+                )
+                finishSelectionActionModeForMenuItem(toolbar)
             }
             SelectionAction.DeleteLine -> {
                 deleteLine()
@@ -2956,6 +2995,7 @@ class AceCodeEditor @JvmOverloads constructor(
         fun onBreakpointChanged(line: Int, enabled: Boolean, state: AceEditorState) = Unit
         fun onHistoryOperation(token: String, undo: Boolean) = Unit
         fun onSelectionAction(action: SelectionAction) = Unit
+        fun onDefinitionNavigationRequested(target: AceTypeScriptDefinitionTarget) = Unit
         fun onEvent(name: String, payloadJson: String?) = Unit
         fun onError(message: String) = Unit
         fun onFailure(failure: AceFailure) = Unit
@@ -2965,6 +3005,7 @@ class AceCodeEditor @JvmOverloads constructor(
         Copy,
         Paste,
         SelectAll,
+        GoToDefinition,
         DeleteLine,
         CopyLine,
     }
@@ -2995,6 +3036,7 @@ class AceCodeEditor @JvmOverloads constructor(
         private const val DEFAULT_DARK_THEME = "ace/theme/tomorrow_night"
         private const val DEFAULT_LIGHT_THEME = "ace/theme/textmate"
         private const val FONT_ERROR_DIAGNOSTIC_LIMIT = 1_024
+        private const val MAX_DEFINITION_PAYLOAD_CHARS = 8_192
         private const val TEXT_MIRROR_CALIBRATION_DELAY_MS = 500L
         private const val IME_REQUEST_COALESCE_MS = 150L
         private const val IME_TRANSITION_HEARTBEAT_SUSPEND_MS = 800L

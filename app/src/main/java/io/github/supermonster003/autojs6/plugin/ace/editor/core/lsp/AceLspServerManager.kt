@@ -63,8 +63,11 @@ class AceLspServerManager(
         val incompatibleDocumentUris =
             sourceLayer != null && typeLayer != null &&
                 sourceLayer.documentUri != typeLayer.documentUri
+        val incompatibleProjectRoots =
+            sourceLayer != null && typeLayer != null &&
+                sourceLayer.projectRootPath != typeLayer.projectRootPath
         if (
-            invalidSourceProfile || incompatibleDocumentUris
+            invalidSourceProfile || incompatibleDocumentUris || incompatibleProjectRoots
         ) {
             projectSourceLayer = null
             projectTypeLayer = null
@@ -80,6 +83,49 @@ class AceLspServerManager(
     @Synchronized
     fun readProjectFile(uri: String): String? =
         projectSourceLayer?.read(uri) ?: projectTypeLayer?.read(uri)
+
+    @Synchronized
+    internal fun resolveDefinitionTarget(
+        uri: String,
+        line: Int,
+        column: Int,
+        endLine: Int,
+        endColumn: Int,
+    ): AceTypeScriptDefinitionTarget? {
+        if (!isValidDefinitionRange(line, column, endLine, endColumn)) return null
+        projectSourceLayer?.let { layer ->
+            layer.definitionFile(uri)?.let { file ->
+                return AceTypeScriptDefinitionTarget(
+                    kind = AceTypeScriptDefinitionTarget.Kind.PROJECT_SOURCE,
+                    projectRootPath = layer.projectRootPath,
+                    relativePath = file.relativePath,
+                    line = line,
+                    column = column,
+                    endLine = endLine,
+                    endColumn = endColumn,
+                    contentSha256 = file.contentSha256,
+                    projectSourceInventoryFingerprint = layer.sourceInventoryFingerprint,
+                )
+            }
+        }
+        projectTypeLayer?.let { layer ->
+            val inventoryFingerprint = layer.dependencyInventoryFingerprint ?: return@let
+            layer.definitionFile(uri)?.let { file ->
+                return AceTypeScriptDefinitionTarget(
+                    kind = AceTypeScriptDefinitionTarget.Kind.DEPENDENCY_DECLARATION,
+                    projectRootPath = layer.projectRootPath,
+                    relativePath = file.relativePath,
+                    line = line,
+                    column = column,
+                    endLine = endLine,
+                    endColumn = endColumn,
+                    contentSha256 = file.contentSha256,
+                    dependencyInventoryFingerprint = inventoryFingerprint,
+                )
+            }
+        }
+        return null
+    }
 
     @Synchronized
     fun attach() {
@@ -285,7 +331,31 @@ class AceLspServerManager(
             CORE_LIBRARY_URI,
             COMPATIBILITY_LIBRARY_URI,
         )
-        val DEFAULT_FEATURES = listOf("completion", "hover", "diagnostics", "signatureHelp")
+        val DEFAULT_FEATURES = listOf(
+            "completion",
+            "hover",
+            "diagnostics",
+            "signatureHelp",
+            "definition",
+        )
+
+        private fun isValidDefinitionRange(
+            line: Int,
+            column: Int,
+            endLine: Int,
+            endColumn: Int,
+        ): Boolean {
+            if (line !in 0..MAX_DEFINITION_LINE || endLine !in 0..MAX_DEFINITION_LINE) {
+                return false
+            }
+            if (column !in 0..MAX_DEFINITION_COLUMN || endColumn !in 0..MAX_DEFINITION_COLUMN) {
+                return false
+            }
+            return endLine > line || endLine == line && endColumn >= column
+        }
+
+        private const val MAX_DEFINITION_LINE = 10_000_000
+        private const val MAX_DEFINITION_COLUMN = 1_000_000
 
         private val DECLARATION_GROUP_LIBRARY_URIS = mapOf(
             AceEditorLspPreferences.DECLARATION_GROUP_ANDROID to ANDROID_LIBRARY_URI,

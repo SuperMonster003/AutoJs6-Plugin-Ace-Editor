@@ -5,6 +5,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -79,10 +80,41 @@ class AceTypeScriptProjectTypeLayerTest {
                 "file:///autojs6/editor/node_modules/dayjs/index.d.ts",
             ),
         )
+        val definition = requireNotNull(
+            manager.resolveDefinitionTarget(
+                uri = "file:///autojs6/editor/node_modules/dayjs/index.d.ts",
+                line = 0,
+                column = 17,
+                endLine = 0,
+                endColumn = 22,
+            ),
+        )
+        assertEquals(AceTypeScriptDefinitionTarget.Kind.DEPENDENCY_DECLARATION, definition.kind)
+        assertEquals("node_modules/dayjs/index.d.ts", definition.relativePath)
+        assertEquals(layer.dependencyInventoryFingerprint, definition.dependencyInventoryFingerprint)
+        assertNull(definition.projectSourceInventoryFingerprint)
+        assertNull(
+            manager.resolveDefinitionTarget(
+                uri = "file:///autojs6/editor/node_modules/dayjs/package.json",
+                line = 0,
+                column = 0,
+                endLine = 0,
+                endColumn = 1,
+            ),
+        )
+        assertNull(
+            manager.resolveDefinitionTarget(
+                uri = "file:///autojs6/editor/node_modules/dayjs/index.d.ts",
+                line = 1,
+                column = 0,
+                endLine = 0,
+                endColumn = 0,
+            ),
+        )
 
         manager.setDocumentPath(File(fixture.root, "src/other.ts").path)
         assertFalse(manager.applyProjectTypeLayer(fixture.document.path, layer))
-        assertEquals(null, manager.readProjectFile("file:///autojs6/editor/node_modules/dayjs/index.d.ts"))
+        assertNull(manager.readProjectFile("file:///autojs6/editor/node_modules/dayjs/index.d.ts"))
     }
 
     @Test

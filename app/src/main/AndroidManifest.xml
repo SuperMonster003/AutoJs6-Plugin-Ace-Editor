@@ -16,7 +16,7 @@
             android:value=".WakeActivity" />
         <meta-data
             android:name="org.autojs.plugin.editor.CONTRACT_VERSION"
-            android:value="2" />
+            android:value="3" />
         <meta-data
             android:name="org.autojs.plugin.editor.ENTRYPOINT"
             android:value="io.github.supermonster003.autojs6.plugin.ace.editor.AceEditorPluginEntrypoint" />
