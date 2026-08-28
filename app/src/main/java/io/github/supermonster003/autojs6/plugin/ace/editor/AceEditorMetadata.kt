@@ -5,7 +5,7 @@ internal object AceEditorMetadata {
     const val PLUGIN_ID = "ace-editor"
     const val ENGINE = "editor"
     const val VARIANT = "ace"
-    const val CONTRACT_VERSION = 4
+    const val CONTRACT_VERSION = 5
     const val REQUIRED_HOST_VERSION_CODE = 5276
     const val CAPABILITY_CONTRACT_VERSION = "contractVersion"
 
@@ -16,6 +16,7 @@ internal object AceEditorMetadata {
         "definitionNavigation",
         "fonts",
         "projectDiagnostics",
+        "projectRename",
         "semanticCompletion",
         "settings",
         "textMirror",
