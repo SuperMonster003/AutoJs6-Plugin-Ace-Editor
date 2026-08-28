@@ -35,6 +35,10 @@
     var MAX_CODE_ACTION_TITLE_LENGTH = 512;
     var MAX_CODE_ACTION_EDITS = 32;
     var MAX_CODE_ACTION_REPLACEMENT_LENGTH = 131072;
+    var MAX_RENAME_FILES = 128;
+    var MAX_RENAME_EDITS_PER_FILE = 512;
+    var MAX_RENAME_TOTAL_EDITS = 4096;
+    var IDENTIFIER = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
     var SAFE_DECLARATION_ASSET_NAME = /^[A-Za-z0-9_.-]+\.d\.ts$/;
 
     function noop() {
@@ -1059,6 +1063,107 @@
             }
         }
 
+        function getRename(session, pos, documentText) {
+            try {
+                if (!projectSnapshotReady || !syncSession(session, documentText) ||
+                    typeof service.getRenameInfo !== "function" ||
+                    typeof service.findRenameLocations !== "function" ||
+                    !projectSourceUris.every(function(uri) { return hasOwn(files, uri); })) {
+                    return null;
+                }
+                var offset = positionToIndex(session, pos);
+                var renameInfo = service.getRenameInfo(currentFile, offset, {
+                    allowRenameOfImportPath: false
+                });
+                var triggerSpan = renameInfo && renameInfo.triggerSpan || {};
+                var triggerStart = Number(triggerSpan.start);
+                var triggerLength = Number(triggerSpan.length);
+                if (!renameInfo || renameInfo.canRename !== true ||
+                    !finiteInteger(triggerStart) || !finiteInteger(triggerLength) ||
+                    triggerStart < 0 || triggerLength < 1 ||
+                    triggerStart + triggerLength > currentText.length) {
+                    return null;
+                }
+                var symbolName = currentText.substring(
+                    triggerStart,
+                    triggerStart + triggerLength
+                );
+                if (!IDENTIFIER.test(symbolName) ||
+                    String(renameInfo.displayName || symbolName) !== symbolName) {
+                    return null;
+                }
+                var locations = service.findRenameLocations(
+                    currentFile,
+                    offset,
+                    false,
+                    false,
+                    false
+                ) || [];
+                if (!locations.length) {
+                    return null;
+                }
+                var editsByUri = Object.create(null);
+                var totalEdits = 0;
+                for (var index = 0; index < locations.length; index += 1) {
+                    var location = locations[index];
+                    var targetFile = normalizeFileName(location && location.fileName);
+                    var span = location && location.textSpan || {};
+                    var start = Number(span.start);
+                    var length = Number(span.length);
+                    var targetText = files[targetFile];
+                    if (!hasOwn(projectSourceUriSet, targetFile) ||
+                        typeof targetText !== "string" ||
+                        String(location && location.prefixText || "") ||
+                        String(location && location.suffixText || "") ||
+                        !finiteInteger(start) || !finiteInteger(length) ||
+                        start < 0 || length !== symbolName.length ||
+                        start + length > targetText.length ||
+                        targetText.substring(start, start + length) !== symbolName) {
+                        return null;
+                    }
+                    var edits = editsByUri[targetFile] || (editsByUri[targetFile] = []);
+                    edits.push({
+                        startOffset: start,
+                        endOffset: start + length
+                    });
+                    totalEdits += 1;
+                    if (edits.length > MAX_RENAME_EDITS_PER_FILE ||
+                        totalEdits > MAX_RENAME_TOTAL_EDITS) {
+                        return null;
+                    }
+                }
+                var targetUris = Object.keys(editsByUri).sort();
+                if (targetUris.length < 2 || targetUris.length > MAX_RENAME_FILES ||
+                    targetUris.indexOf(currentFile) < 0) {
+                    return null;
+                }
+                var renameFiles = [];
+                for (var fileIndex = 0; fileIndex < targetUris.length; fileIndex += 1) {
+                    var uri = targetUris[fileIndex];
+                    var fileEdits = editsByUri[uri].sort(function(left, right) {
+                        return left.startOffset - right.startOffset ||
+                            left.endOffset - right.endOffset;
+                    });
+                    for (var editIndex = 1; editIndex < fileEdits.length; editIndex += 1) {
+                        if (fileEdits[editIndex].startOffset <=
+                            fileEdits[editIndex - 1].startOffset ||
+                            fileEdits[editIndex].startOffset <
+                            fileEdits[editIndex - 1].endOffset) {
+                            return null;
+                        }
+                    }
+                    renameFiles.push({ uri: uri, edits: fileEdits });
+                }
+                return {
+                    symbolName: symbolName,
+                    files: renameFiles
+                };
+            } catch (error) {
+                notify(config, "ACE TS project rename failed: " + error, error);
+                return null;
+            }
+        }
+
         function codeActionFormatOptions(text) {
             return {
                 convertTabsToSpaces: true,
@@ -1348,6 +1453,7 @@
             getHover: getHover,
             getSignatureHelp: getSignatureHelp,
             getDefinition: getDefinition,
+            getRename: getRename,
             getCodeActions: getCodeActions,
             getDiagnostics: getDiagnostics,
             getState: getState,

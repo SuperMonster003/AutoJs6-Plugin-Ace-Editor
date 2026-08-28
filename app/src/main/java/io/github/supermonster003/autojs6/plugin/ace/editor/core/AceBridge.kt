@@ -23,6 +23,11 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun notifyProjectRenameRequested(payloadJson: String?) {
+        editor.handleProjectRenameRequested(payloadJson)
+    }
+
+    @JavascriptInterface
     fun notifyReady(stateJson: String?) {
         editor.handleReady(stateJson)
     }

@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Ace 편집기</string>
     <string name="entry_ace_editor_font_system_monospace">Android 시스템 고정폭 글꼴</string>
+    <string name="error_typescript_project_rename_invalid_name">유효하면서 기존과 다른 TypeScript 식별자를 입력하세요.</string>
+    <string name="error_typescript_project_rename_save_first">프로젝트 기호의 이름을 바꾸기 전에 현재 문서를 저장하세요.</string>
+    <string name="error_typescript_project_rename_stale">프로젝트 또는 현재 문서가 변경되었습니다. 이름 바꾸기를 다시 실행하세요.</string>
     <string name="plugin_description">AutoJs6용 내장 Ace 코드 편집기</string>
     <string name="plugin_instruction">플러그인을 설치한 다음 AutoJs6에서 스크립트 편집기로 Ace를 선택하세요.</string>
     <string name="text_copy_line">줄 복사</string>
@@ -14,4 +17,6 @@
     <string name="text_sort_by_name_desc">이름 (Z-A)</string>
     <string name="text_sort_by_size_asc">크기 (작은 순)</string>
     <string name="text_sort_by_size_desc">크기 (큰 순)</string>
+    <string name="text_typescript_project_rename">프로젝트 기호 이름 바꾸기</string>
+    <string name="text_typescript_project_rename_new_name">새 기호 이름</string>
 </resources>

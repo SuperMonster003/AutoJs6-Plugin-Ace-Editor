@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Editor Ace</string>
     <string name="entry_ace_editor_font_system_monospace">Fuente monoespaciada del sistema Android</string>
+    <string name="error_typescript_project_rename_invalid_name">Introduzca un identificador de TypeScript válido y diferente.</string>
+    <string name="error_typescript_project_rename_save_first">Guarde el documento activo antes de cambiar el nombre de un símbolo del proyecto.</string>
+    <string name="error_typescript_project_rename_stale">El proyecto o el documento activo cambió. Vuelva a ejecutar el cambio de nombre.</string>
     <string name="plugin_description">Editor de código Ace integrado para AutoJs6</string>
     <string name="plugin_instruction">Instala el complemento y selecciona Ace como editor de scripts en AutoJs6.</string>
     <string name="text_copy_line">Copiar línea</string>
@@ -14,4 +17,6 @@
     <string name="text_sort_by_name_desc">Nombre (Z-A)</string>
     <string name="text_sort_by_size_asc">Tamaño (más pequeño primero)</string>
     <string name="text_sort_by_size_desc">Tamaño (más grande primero)</string>
+    <string name="text_typescript_project_rename">Cambiar nombre de símbolo del proyecto</string>
+    <string name="text_typescript_project_rename_new_name">Nuevo nombre del símbolo</string>
 </resources>

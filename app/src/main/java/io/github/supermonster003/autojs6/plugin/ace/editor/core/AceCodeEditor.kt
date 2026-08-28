@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.ActionMode
 import android.view.HapticFeedbackConstants
@@ -41,7 +42,9 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.webkit.WebViewAssetLoader
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceDiagnostics
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceDiagnosticsSnapshot
@@ -55,9 +58,14 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServer
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptCodeAction
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptDefinitionTarget
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptExecutionProfiles
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectRenameBoundCandidate
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectRenameCandidate
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectRenamePrepared
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectSourceLayer
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectTypeLayer
 import io.github.supermonster003.autojs6.plugin.ace.editor.R
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameContract
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameResult
 import org.autojs.plugin.editor.api.EditorPluginProjectSnapshotProvider
 import org.json.JSONArray
 import org.json.JSONObject
@@ -237,6 +245,8 @@ class AceCodeEditor @JvmOverloads constructor(
     private var actionModeActive = false
     private var selectionActionMode: AceSelectionToolbar? = null
     private var codeActionDialog: AlertDialog? = null
+    private var projectRenameDialog: AlertDialog? = null
+    private var projectRenameRequestInFlight = false
     private val selectionActionModeRect = Rect()
     private var pendingSelectionActionModeRequest: SelectionActionModeRequest? = null
     private var lastSelectionActionModeRequest: SelectionActionModeRequest? = null
@@ -413,6 +423,7 @@ class AceCodeEditor @JvmOverloads constructor(
     fun isUserTouching(): Boolean = userTouching
 
     fun setDocumentPath(path: String?) {
+        dismissProjectRenameDialog()
         val requestRevision = projectContextRequestRevision.incrementAndGet()
         lspServerManager.setDocumentPath(path)
         refreshLsp()
@@ -463,6 +474,7 @@ class AceCodeEditor @JvmOverloads constructor(
     }
 
     fun setText(text: String?) {
+        dismissProjectRenameDialog()
         resetTextMirror(text.orEmpty())
         dirty = false
         invokeAce(
@@ -472,6 +484,7 @@ class AceCodeEditor @JvmOverloads constructor(
     }
 
     fun setTextDirty(text: String?) {
+        dismissProjectRenameDialog()
         resetTextMirror(text.orEmpty())
         dirty = true
         invokeAce(
@@ -712,6 +725,7 @@ class AceCodeEditor @JvmOverloads constructor(
         this.readOnly = readOnly
         selectionActionMode?.invalidate()
         if (readOnly) {
+            dismissProjectRenameDialog()
             hideSoftInput()
         }
         invokeAce("setReadOnly", readOnly.toString())
@@ -1045,6 +1059,7 @@ class AceCodeEditor @JvmOverloads constructor(
         fontCatalogChangeSubscription = null
         eventHistory.record("destroy", "AceCodeEditor.destroy")
         dismissCodeActionDialog()
+        dismissProjectRenameDialog()
         finishSelectionActionMode()
         lspServerManager.detach()
         healthMonitor.markDestroyed()
@@ -1150,6 +1165,7 @@ class AceCodeEditor @JvmOverloads constructor(
             healthMonitor.markChangeEvent()
             val state = updateState(stateJson)
             dismissCodeActionDialog()
+            dismissProjectRenameDialog()
             listener?.onTextChanged(state.text, state)
         }
     }
@@ -1333,6 +1349,181 @@ class AceCodeEditor @JvmOverloads constructor(
                         "kind=${action.prepared.kind},diagnostic=${action.prepared.diagnosticCode}",
                     )
                     if (succeeded) requestEditorFocus()
+                }
+            }
+        }
+    }
+
+    internal fun handleProjectRenameRequested(payloadJson: String?) {
+        postToMain {
+            if (destroyed || readOnly || projectRenameRequestInFlight) return@postToMain
+            if (dirty) {
+                Toast.makeText(
+                    context,
+                    pluginContext.getString(R.string.error_typescript_project_rename_save_first),
+                    Toast.LENGTH_SHORT,
+                ).show()
+                eventHistory.record("project_rename_rejected", "reason=unsaved-document")
+                return@postToMain
+            }
+            val raw = payloadJson?.takeIf { value ->
+                value.isNotBlank() &&
+                    value.length <= AceTypeScriptProjectRenameCandidate.MAX_PAYLOAD_CHARS
+            }
+            val payload = raw?.let { value -> runCatching { JSONObject(value) }.getOrNull() }
+            val baseText = textMirror.text
+            val baseRevision = textMirror.revision
+            if (payload == null || strictJsonInt(payload, "baseLength") != baseText.length) {
+                eventHistory.record("project_rename_rejected", "reason=base-mismatch")
+                return@postToMain
+            }
+            val candidate = parseProjectRenameCandidate(payload)
+            val bound = candidate?.let { value ->
+                lspServerManager.bindProjectRename(value, baseText)
+            }
+            if (bound == null) {
+                eventHistory.record("project_rename_rejected", "reason=invalid-candidate")
+                return@postToMain
+            }
+            eventHistory.record(
+                "project_rename_ready",
+                "symbol=${bound.symbolName},files=${candidate.files.size}",
+            )
+            showProjectRenameDialog(
+                PendingProjectRename(
+                    candidate = bound,
+                    baseText = baseText,
+                    baseRevision = baseRevision,
+                ),
+            )
+        }
+    }
+
+    private fun parseProjectRenameCandidate(
+        payload: JSONObject,
+    ): AceTypeScriptProjectRenameCandidate? {
+        val symbolName = payload.opt("symbolName") as? String ?: return null
+        val filesJson = payload.optJSONArray("files") ?: return null
+        if (
+            filesJson.length() !in
+            2..EditorPluginProjectRenameContract.MAX_FILE_COUNT
+        ) {
+            return null
+        }
+        val files = buildList {
+            repeat(filesJson.length()) { fileIndex ->
+                val file = filesJson.optJSONObject(fileIndex) ?: return null
+                val uri = file.opt("uri") as? String ?: return null
+                val editsJson = file.optJSONArray("edits") ?: return null
+                if (
+                    editsJson.length() !in
+                    1..EditorPluginProjectRenameContract.MAX_EDIT_COUNT_PER_FILE
+                ) {
+                    return null
+                }
+                val edits = buildList {
+                    repeat(editsJson.length()) { editIndex ->
+                        val edit = editsJson.optJSONObject(editIndex) ?: return null
+                        val startOffset = strictJsonInt(edit, "startOffset") ?: return null
+                        val endOffset = strictJsonInt(edit, "endOffset") ?: return null
+                        add(
+                            AceTypeScriptProjectRenameCandidate.TextRange(
+                                startOffset,
+                                endOffset,
+                            ),
+                        )
+                    }
+                }
+                add(AceTypeScriptProjectRenameCandidate.FileLocations(uri, edits))
+            }
+        }
+        return AceTypeScriptProjectRenameCandidate(symbolName, files)
+    }
+
+    private fun showProjectRenameDialog(rename: PendingProjectRename) {
+        dismissProjectRenameDialog()
+        val input = EditText(context).apply {
+            inputType = InputType.TYPE_CLASS_TEXT or
+                InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            isSingleLine = true
+            hint = pluginContext.getString(R.string.text_typescript_project_rename_new_name)
+            setText(rename.candidate.symbolName)
+            selectAll()
+        }
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(pluginContext.getString(R.string.text_typescript_project_rename))
+            .setView(input)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(android.R.string.ok, null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
+                if (
+                    destroyed || readOnly || projectRenameRequestInFlight ||
+                    textMirror.revision != rename.baseRevision ||
+                    textMirror.text != rename.baseText ||
+                    !lspServerManager.isProjectRenameContextCurrent(rename.candidate)
+                ) {
+                    input.error = pluginContext.getString(
+                        R.string.error_typescript_project_rename_stale,
+                    )
+                    return@setOnClickListener
+                }
+                val prepared = rename.candidate.prepare(input.text?.toString().orEmpty())
+                if (prepared == null) {
+                    input.error = pluginContext.getString(
+                        R.string.error_typescript_project_rename_invalid_name,
+                    )
+                    return@setOnClickListener
+                }
+                projectRenameDialog = null
+                dialog.dismiss()
+                requestProjectRenameAuthorization(prepared)
+            }
+        }
+        dialog.setOnDismissListener {
+            if (projectRenameDialog === dialog) {
+                projectRenameDialog = null
+            }
+        }
+        projectRenameDialog = dialog
+        runCatching { dialog.show() }
+            .onFailure {
+                projectRenameDialog = null
+                eventHistory.record("project_rename_rejected", "reason=dialog-unavailable")
+            }
+    }
+
+    private fun dismissProjectRenameDialog() {
+        val dialog = projectRenameDialog ?: return
+        projectRenameDialog = null
+        runCatching { dialog.dismiss() }
+    }
+
+    private fun requestProjectRenameAuthorization(
+        rename: AceTypeScriptProjectRenamePrepared,
+    ) {
+        val target = listener
+        if (target == null || destroyed || readOnly || projectRenameRequestInFlight) {
+            eventHistory.record("project_rename_rejected", "reason=no-host-listener")
+            return
+        }
+        projectRenameRequestInFlight = true
+        target.onProjectRenameRequested(rename) { result ->
+            postToMain {
+                projectRenameRequestInFlight = false
+                if (destroyed) return@postToMain
+                eventHistory.record(
+                    if (result == EditorPluginProjectRenameResult.APPLIED) {
+                        "project_rename_applied"
+                    } else {
+                        "project_rename_rejected"
+                    },
+                    "result=$result",
+                )
+                if (result == EditorPluginProjectRenameResult.APPLIED) {
+                    requestEditorFocus()
                 }
             }
         }
@@ -1809,6 +2000,7 @@ class AceCodeEditor @JvmOverloads constructor(
                 paste = context.getString(android.R.string.paste),
                 selectAll = pluginContext.getString(R.string.text_select_all),
                 goToDefinition = pluginContext.getString(R.string.text_go_to_definition),
+                rename = pluginContext.getString(R.string.text_typescript_project_rename),
                 quickFix = pluginContext.getString(R.string.text_quick_fix),
                 deleteLine = pluginContext.getString(R.string.text_delete_line),
                 copyLine = pluginContext.getString(R.string.text_copy_line),
@@ -1835,16 +2027,21 @@ class AceCodeEditor @JvmOverloads constructor(
         mode.update(selectionActionModeRect)
     }
 
-    private fun selectionActionToolbarState() = AceSelectionToolbar.State(
-        canCopy = selectedTextSnapshot.isNotEmpty(),
-        canPaste = !readOnly && clipboardText().isNotEmpty(),
-        canSelectAll = textSnapshot.isNotEmpty(),
-        canGoToDefinition = selectedTextSnapshot.isNotEmpty() && lspServerManager.snapshot().enabled,
-        canQuickFix = !readOnly && selectedTextSnapshot.isNotEmpty() && lspServerManager.snapshot().enabled,
-        showDeleteLine = !readOnly,
-        canDeleteLine = !readOnly && textSnapshot.isNotEmpty(),
-        canCopyLine = cursorLineText.isNotEmpty(),
-    )
+    private fun selectionActionToolbarState(): AceSelectionToolbar.State {
+        val lsp = lspServerManager.snapshot()
+        return AceSelectionToolbar.State(
+            canCopy = selectedTextSnapshot.isNotEmpty(),
+            canPaste = !readOnly && clipboardText().isNotEmpty(),
+            canSelectAll = textSnapshot.isNotEmpty(),
+            canGoToDefinition = selectedTextSnapshot.isNotEmpty() && lsp.enabled,
+            canRename = !readOnly && selectedTextSnapshot.isNotEmpty() &&
+                lsp.enabled && lsp.projectSnapshotReady,
+            canQuickFix = !readOnly && selectedTextSnapshot.isNotEmpty() && lsp.enabled,
+            showDeleteLine = !readOnly,
+            canDeleteLine = !readOnly && textSnapshot.isNotEmpty(),
+            canCopyLine = cursorLineText.isNotEmpty(),
+        )
+    }
 
     private fun performSelectionAction(
         toolbar: AceSelectionToolbar,
@@ -1876,6 +2073,13 @@ class AceCodeEditor @JvmOverloads constructor(
             SelectionAction.QuickFix -> {
                 invokeAce(
                     "quickFix",
+                    "${selectionSnapshot.startLine}, ${selectionSnapshot.startColumn}",
+                )
+                finishSelectionActionModeForMenuItem(toolbar)
+            }
+            SelectionAction.Rename -> {
+                invokeAce(
+                    "renameSymbol",
                     "${selectionSnapshot.startLine}, ${selectionSnapshot.startColumn}",
                 )
                 finishSelectionActionModeForMenuItem(toolbar)
@@ -3152,6 +3356,10 @@ class AceCodeEditor @JvmOverloads constructor(
             action: AceTypeScriptCodeAction.Prepared,
             onComplete: (Boolean) -> Unit,
         ) = onComplete(false)
+        fun onProjectRenameRequested(
+            rename: AceTypeScriptProjectRenamePrepared,
+            onComplete: (EditorPluginProjectRenameResult) -> Unit,
+        ) = onComplete(EditorPluginProjectRenameResult.REJECTED)
         fun onEvent(name: String, payloadJson: String?) = Unit
         fun onError(message: String) = Unit
         fun onFailure(failure: AceFailure) = Unit
@@ -3162,6 +3370,7 @@ class AceCodeEditor @JvmOverloads constructor(
         Paste,
         SelectAll,
         GoToDefinition,
+        Rename,
         QuickFix,
         DeleteLine,
         CopyLine,
@@ -3174,6 +3383,12 @@ class AceCodeEditor @JvmOverloads constructor(
 
     private data class PendingCodeAction(
         val prepared: AceTypeScriptCodeAction.Prepared,
+        val baseText: String,
+        val baseRevision: Long,
+    )
+
+    private data class PendingProjectRename(
+        val candidate: AceTypeScriptProjectRenameBoundCandidate,
         val baseText: String,
         val baseRevision: Long,
     )

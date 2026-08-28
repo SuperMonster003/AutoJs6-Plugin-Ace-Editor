@@ -128,6 +128,25 @@ class AceLspServerManager(
     }
 
     @Synchronized
+    internal fun bindProjectRename(
+        candidate: AceTypeScriptProjectRenameCandidate,
+        currentDocumentText: String,
+    ): AceTypeScriptProjectRenameBoundCandidate? = projectSourceLayer?.let { layer ->
+        candidate.bind(layer, currentDocumentText, sessionRevision)
+    }
+
+    @Synchronized
+    internal fun isProjectRenameContextCurrent(
+        candidate: AceTypeScriptProjectRenameBoundCandidate,
+    ): Boolean {
+        val layer = projectSourceLayer ?: return false
+        return candidate.sessionRevision == sessionRevision &&
+            candidate.projectRootPath == layer.projectRootPath &&
+            candidate.documentUri == layer.documentUri &&
+            candidate.projectSourceInventoryFingerprint == layer.sourceInventoryFingerprint
+    }
+
+    @Synchronized
     fun attach() {
         if (!attached) {
             attached = true
@@ -338,6 +357,7 @@ class AceLspServerManager(
             "signatureHelp",
             "definition",
             "codeActions",
+            "rename",
         )
 
         private fun isValidDefinitionRange(

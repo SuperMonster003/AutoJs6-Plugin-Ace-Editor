@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Ace エディター</string>
     <string name="entry_ace_editor_font_system_monospace">Android システム等幅フォント</string>
+    <string name="error_typescript_project_rename_invalid_name">別の有効な TypeScript 識別子を入力してください.</string>
+    <string name="error_typescript_project_rename_save_first">プロジェクトシンボルの名前を変更する前に現在のドキュメントを保存してください.</string>
+    <string name="error_typescript_project_rename_stale">プロジェクトまたは現在のドキュメントが変更されました. 名前変更をもう一度実行してください.</string>
     <string name="plugin_description">AutoJs6 用の組み込み Ace コードエディター</string>
     <string name="plugin_instruction">プラグインをインストールし, AutoJs6 でスクリプトエディターとして Ace を選択します.</string>
     <string name="text_copy_line">行をコピー</string>
@@ -14,4 +17,6 @@
     <string name="text_sort_by_name_desc">名前 (Z-A)</string>
     <string name="text_sort_by_size_asc">サイズ (小さい順)</string>
     <string name="text_sort_by_size_desc">サイズ (大きい順)</string>
+    <string name="text_typescript_project_rename">プロジェクトシンボルの名前を変更</string>
+    <string name="text_typescript_project_rename_new_name">新しいシンボル名</string>
 </resources>

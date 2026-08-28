@@ -1793,6 +1793,38 @@
             }
         }
 
+        function getRename(pos) {
+            try {
+                var text = textFromSession(session);
+                if (isJsonDocumentUri(state.documentUri)) {
+                    updateSemanticState(session, text.length);
+                    return null;
+                }
+                if (updateSemanticState(session, text.length)) {
+                    var service = getTsService();
+                    if (service && typeof service.getRename === "function") {
+                        var startedAt = Date.now();
+                        var candidate = service.getRename(
+                            session,
+                            normalizePosition(pos),
+                            text
+                        );
+                        recordSemanticOperation(startedAt, "rename");
+                        if (candidate && !semanticCircuitOpen) {
+                            applyTsProviderState();
+                            return candidate;
+                        }
+                    } else if (state.enabled && tsLoadState !== "loading") {
+                        warmUp();
+                    }
+                }
+                return null;
+            } catch (error) {
+                notify(config, "ACE LSP project rename failed: " + error, error);
+                return null;
+            }
+        }
+
         function getCodeActions(pos) {
             try {
                 var text = textFromSession(session);
@@ -1852,6 +1884,7 @@
             getHover: getHover,
             getSignatureHelp: getSignatureHelp,
             getDefinition: getDefinition,
+            getRename: getRename,
             getCodeActions: getCodeActions,
             getDiagnostics: getDiagnostics,
             validateNow: validateNow,

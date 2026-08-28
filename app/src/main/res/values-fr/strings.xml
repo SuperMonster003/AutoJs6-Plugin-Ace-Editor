@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Éditeur Ace</string>
     <string name="entry_ace_editor_font_system_monospace">Police à chasse fixe du système Android</string>
+    <string name="error_typescript_project_rename_invalid_name">Saisissez un identifiant TypeScript valide et différent.</string>
+    <string name="error_typescript_project_rename_save_first">Enregistrez le document actif avant de renommer un symbole du projet.</string>
+    <string name="error_typescript_project_rename_stale">Le projet ou le document actif a changé. Relancez le renommage.</string>
     <string name="plugin_description">Éditeur de code Ace intégré pour AutoJs6</string>
     <string name="plugin_instruction">Installez le plugin, puis sélectionnez Ace comme éditeur de scripts dans AutoJs6.</string>
     <string name="text_copy_line">Copier la ligne</string>
@@ -14,4 +17,6 @@
     <string name="text_sort_by_name_desc">Nom (Z-A)</string>
     <string name="text_sort_by_size_asc">Taille (plus petite d\'abord)</string>
     <string name="text_sort_by_size_desc">Taille (plus grande d\'abord)</string>
+    <string name="text_typescript_project_rename">Renommer le symbole du projet</string>
+    <string name="text_typescript_project_rename_new_name">Nouveau nom du symbole</string>
 </resources>

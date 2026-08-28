@@ -543,8 +543,105 @@ function verifyDependencyTypeLayer(paths) {
         };
     }
 
+    function verifyProjectRename(profile, suffix) {
+        const documentUri = `file:///autojs6/editor/rename/main.${suffix}`;
+        const sharedUri = `file:///autojs6/editor/rename/shared.${suffix}`;
+        const consumerUri = `file:///autojs6/editor/rename/consumer.${suffix}`;
+        const sharedSpecifier = profile === "node" ? "./shared.mjs" : "./shared";
+        const sources = {
+            [documentUri]: [
+                `import { answer } from "${sharedSpecifier}";`,
+                'export const mainValue = answer("main");',
+            ].join("\n"),
+            [sharedUri]: [
+                "export function answer(value: string): number {",
+                "  return value.length;",
+                "}",
+            ].join("\n"),
+            [consumerUri]: [
+                `import { answer } from "${sharedSpecifier}";`,
+                'export const consumed = answer("consumer");',
+            ].join("\n"),
+        };
+        const sourceUris = Object.keys(sources).sort();
+        function createService(currentUri, sourceMap) {
+            return context.AutoJsAceTsLanguageService.create({
+                documentUri: currentUri,
+                rootUri: "file:///autojs6/editor",
+                executionProfile: profile,
+                typescriptVersion: "6.0.3",
+                libraryTextByUri,
+                libraryUris,
+                projectSourceTextByUri: sourceMap,
+                projectSourceFileUris: sourceUris,
+                projectSourceInventoryFingerprint:
+                    "2222222222222222222222222222222222222222222222222222222222222222",
+                projectSourceFileCount: sourceUris.length,
+                projectSourceByteLength: Object.values(sourceMap)
+                    .reduce((total, text) => total + Buffer.byteLength(text, "utf8"), 0),
+                projectSnapshotSchemaRevision: 1,
+                projectSnapshotReady: true,
+            });
+        }
+
+        const service = createService(documentUri, sources);
+        const mainSource = sources[documentUri];
+        const invocationColumn = mainSource.split("\n")[1].indexOf("answer") + 2;
+        const candidate = service.getRename(
+            sessionFor(mainSource),
+            { row: 1, column: invocationColumn },
+            mainSource,
+        );
+        service.dispose();
+        assert(
+            candidate?.symbolName === "answer" && candidate.files.length === 3 &&
+                candidate.files.reduce((total, file) => total + file.edits.length, 0) === 5,
+            `${profile} did not return the exact three-file rename set: ${JSON.stringify(candidate)}`,
+        );
+
+        const newName = "projectAnswer";
+        const renamedSources = { ...sources };
+        candidate.files.forEach((file) => {
+            let text = renamedSources[file.uri];
+            assert(typeof text === "string", `${profile} rename escaped project sources`);
+            [...file.edits].reverse().forEach((edit) => {
+                assert(
+                    text.substring(edit.startOffset, edit.endOffset) === candidate.symbolName,
+                    `${profile} rename span did not select the old symbol`,
+                );
+                text = text.substring(0, edit.startOffset) + newName +
+                    text.substring(edit.endOffset);
+            });
+            renamedSources[file.uri] = text;
+        });
+        const renamedDiagnostics = sourceUris.flatMap((uri) => {
+            const renamedService = createService(uri, renamedSources);
+            const diagnostics = renamedService.getDiagnostics(
+                sessionFor(renamedSources[uri]),
+                renamedSources[uri],
+            ) || [];
+            renamedService.dispose();
+            return diagnostics.map((diagnostic) => ({ uri, diagnostic }));
+        });
+        assert(
+            renamedDiagnostics.length === 0,
+            `${profile} three-file rename did not compile cleanly: ` +
+                JSON.stringify(renamedDiagnostics),
+        );
+        return {
+            fileCount: candidate.files.length,
+            editCount: candidate.files.reduce((total, file) => total + file.edits.length, 0),
+            renamedDiagnosticCount: renamedDiagnostics.length,
+            newName,
+        };
+    }
+
     const rhino = verifyProfile("rhino", "ts");
     const node = verifyProfile("node", "mts");
+    const projectRename = {
+        rhino: verifyProjectRename("rhino", "ts"),
+        node: verifyProjectRename("node", "mts"),
+    };
     assert(
         JSON.stringify(rhino.diagnosticCodes) === JSON.stringify(node.diagnosticCodes),
         "Rhino and Node editor profiles disagree on project diagnostics",
@@ -624,6 +721,7 @@ function verifyDependencyTypeLayer(paths) {
     return {
         rhino,
         node,
+        projectRename,
         singleDocumentFallbackDiagnosticCodes: singleDocumentDiagnostics
             .map((diagnostic) => String(diagnostic.raw)).sort(),
         boundary: {

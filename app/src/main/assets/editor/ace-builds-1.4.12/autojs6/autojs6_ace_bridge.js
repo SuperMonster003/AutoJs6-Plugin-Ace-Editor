@@ -859,6 +859,31 @@
         return true;
     }
 
+    function requestProjectRename(pos) {
+        if (!editor || (typeof editor.getReadOnly === "function" && editor.getReadOnly()) ||
+            !lspClient || typeof lspClient.getRename !== "function") {
+            return false;
+        }
+        var candidate = lspClient.getRename(pos || editor.getCursorPosition());
+        publishLspState();
+        if (!candidate || typeof candidate.symbolName !== "string" ||
+            !Array.isArray(candidate.files) || candidate.files.length < 2 ||
+            candidate.files.length > 128) {
+            return false;
+        }
+        var payload = JSON.stringify({
+            baseLength: session && typeof session.getValue === "function" ?
+                String(session.getValue() || "").length : -1,
+            symbolName: candidate.symbolName,
+            files: candidate.files
+        });
+        if (!payload || payload.length > 1000000) {
+            return false;
+        }
+        callBridge("notifyProjectRenameRequested", [payload]);
+        return true;
+    }
+
     function destroyLspClient() {
         if (memberCompletionRestartTimer !== null) {
             clearTimeout(memberCompletionRestartTimer);
@@ -4821,6 +4846,14 @@
                     requestCurrentDocumentCodeAction(editor.getCursorPosition());
                 }
             });
+            editor.commands.addCommand({
+                name: "autojs6ProjectRename",
+                bindKey: { win: "F2", mac: "F2" },
+                readOnly: false,
+                exec: function() {
+                    requestProjectRename(editor.getCursorPosition());
+                }
+            });
         }
         installMemberCompletionDotTrigger();
         installTouchCursorSelectionGuard();
@@ -4997,6 +5030,12 @@
                 publishLspState();
                 return result;
             },
+            getLspRename: function(row, column) {
+                var result = lspClient && lspClient.getRename ?
+                    lspClient.getRename({ row: row, column: column }) : null;
+                publishLspState();
+                return result;
+            },
             getLspCodeActions: function(row, column) {
                 var result = lspClient && lspClient.getCodeActions ?
                     lspClient.getCodeActions({ row: row, column: column }) : [];
@@ -5008,6 +5047,9 @@
             },
             quickFix: function(row, column) {
                 return requestCurrentDocumentCodeAction({ row: row, column: column });
+            },
+            renameSymbol: function(row, column) {
+                return requestProjectRename({ row: row, column: column });
             },
             getLspDiagnostics: function() {
                 return lspClient && lspClient.getDiagnostics ? lspClient.getDiagnostics() : [];

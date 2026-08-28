@@ -27,6 +27,16 @@ internal data class AceTypeScriptProjectSourceLayer(
 
     fun definitionFile(uri: String): AceTypeScriptDefinitionFile? = definitionFileByUri[uri]
 
+    fun projectRenameSource(uri: String): AceTypeScriptProjectRenameSource? {
+        val definition = definitionFileByUri[uri] ?: return null
+        val text = textByUri[uri] ?: return null
+        return AceTypeScriptProjectRenameSource(
+            relativePath = definition.relativePath,
+            contentSha256 = definition.contentSha256,
+            text = text,
+        )
+    }
+
     companion object {
         fun from(
             requestedDocumentPath: String,

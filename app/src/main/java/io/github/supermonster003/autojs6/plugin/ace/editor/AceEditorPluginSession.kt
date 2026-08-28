@@ -12,6 +12,7 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceD
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceFailure
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptCodeAction
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptDefinitionTarget
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectRenamePrepared
 import org.autojs.plugin.editor.api.EditorPluginBooleanCallback
 import org.autojs.plugin.editor.api.EditorPluginBreakpoint
 import org.autojs.plugin.editor.api.EditorPluginCallback
@@ -26,6 +27,9 @@ import org.autojs.plugin.editor.api.EditorPluginFailure
 import org.autojs.plugin.editor.api.EditorPluginFailureType
 import org.autojs.plugin.editor.api.EditorPluginHealthState
 import org.autojs.plugin.editor.api.EditorPluginHistoryDirection
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameCallback
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameContract
+import org.autojs.plugin.editor.api.EditorPluginProjectRenameResult
 import org.autojs.plugin.editor.api.EditorPluginSearchOptions
 import org.autojs.plugin.editor.api.EditorPluginSearchResult
 import org.autojs.plugin.editor.api.EditorPluginSearchSyntaxException
@@ -497,6 +501,7 @@ class AceEditorPluginSession internal constructor(
 
         override fun onSelectionAction(action: AceCodeEditor.SelectionAction) {
             if (action == AceCodeEditor.SelectionAction.GoToDefinition ||
+                action == AceCodeEditor.SelectionAction.Rename ||
                 action == AceCodeEditor.SelectionAction.QuickFix
             ) {
                 return
@@ -507,6 +512,7 @@ class AceEditorPluginSession internal constructor(
                     AceCodeEditor.SelectionAction.Paste -> EditorPluginSelectionAction.PASTE
                     AceCodeEditor.SelectionAction.SelectAll -> EditorPluginSelectionAction.SELECT_ALL
                     AceCodeEditor.SelectionAction.GoToDefinition -> error("Handled above")
+                    AceCodeEditor.SelectionAction.Rename -> error("Handled above")
                     AceCodeEditor.SelectionAction.QuickFix -> error("Handled above")
                     AceCodeEditor.SelectionAction.DeleteLine -> EditorPluginSelectionAction.DELETE_LINE
                     AceCodeEditor.SelectionAction.CopyLine -> EditorPluginSelectionAction.COPY_LINE
@@ -566,6 +572,20 @@ class AceEditorPluginSession internal constructor(
             callback.onCurrentDocumentCodeActionRequested(
                 request,
                 EditorPluginBooleanCallback(onComplete),
+            )
+        }
+
+        override fun onProjectRenameRequested(
+            rename: AceTypeScriptProjectRenamePrepared,
+            onComplete: (EditorPluginProjectRenameResult) -> Unit,
+        ) {
+            if (!EditorPluginProjectRenameContract.isSupported(rename.request)) {
+                onComplete(EditorPluginProjectRenameResult.REJECTED)
+                return
+            }
+            callback.onProjectRenameRequested(
+                rename.request,
+                EditorPluginProjectRenameCallback(onComplete),
             )
         }
 
