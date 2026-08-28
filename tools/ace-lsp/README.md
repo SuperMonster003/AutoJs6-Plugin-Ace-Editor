@@ -61,15 +61,30 @@ Rhino diagnostics also use the execution factories `__autojs6Tsx` and
 ES2022 configuration because they do not pass through the TypeScript execution
 compiler.
 
-The Ace service remains a single-document hinting layer: controlled project
-`tsconfig.json` overrides and cross-file compilation diagnostics are still
-authoritative only in the pre-execution compiler. If TypeScript cannot load,
-has the wrong bundled version, or exceeds the editor's semantic limit, Ace
-falls back to static/JSHint assistance; script execution does not depend on the
-editor service.
+For a local Rhino or Node TypeScript project, Android freezes the project's
+compilation-relevant `node_modules` text with the compiler dependency layer's
+same boundary, exclusions, quotas, inventory hash, and layer hash. The bridge
+publishes immutable `file:///autojs6/editor/node_modules/...` URIs and installed
+`@types` directive names. The language service therefore resolves package
+`types`/`typings`, TypeScript 6 `typesVersions`, nested declaration imports, and
+ambient `@types` from the same exact dependency snapshot used at compilation.
+Resolver policy revision 3 also resolves a runtime-only JavaScript root through an installed
+DefinitelyTyped package without overriding bundled declarations; the dual-profile verifier locks
+this behavior with `lodash@4.17.21` and `@types/lodash@4.17.25`. Revision 3 is fingerprinted as
+`6241375f2ea49ac2c2d2b3b79b28b7c1ee4adde75c989defc61e252c89ced2bd`.
+
+The Ace service still treats project source as a single-document hinting layer:
+dependency declarations are project-aware, but controlled `tsconfig.json`
+overrides and cross-source diagnostics remain authoritative only in the
+pre-execution compiler until Roadmap T4. Once a dependency type layer is
+present, missing-module and missing-declaration diagnostics are no longer
+suppressed. If TypeScript cannot load, has the wrong bundled version, or
+exceeds the editor's semantic limit, Ace falls back to static/JSHint
+assistance; script execution does not depend on the editor service.
 
 Run the all-group TypeScript completion/semantic checks and old-WebView
-fallback verification, including the exact Rhino/Node profile option gate,
+fallback verification, including the exact Rhino/Node profile option gate and
+the dual-profile dayjs `typesVersions`, ambient `@types`, and lodash DefinitelyTyped fixtures,
 with:
 
 ```powershell

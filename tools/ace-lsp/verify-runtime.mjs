@@ -227,6 +227,207 @@ function verifyBrowserLanguageService(paths, expectedVersion) {
     };
 }
 
+function verifyDependencyTypeLayer(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const libraryTextByUri = typeScriptLibraryTextByUri(paths);
+    libraryTextByUri["file:///autojs6/types/generated/lib.autojs6.core.d.ts"] =
+        readFileSync(paths.core, "utf8");
+    libraryTextByUri["file:///autojs6/types/lib.autojs6.extra.d.ts"] =
+        readFileSync(paths.compatibility, "utf8");
+    const projectTypeTextByUri = {
+        "file:///autojs6/editor/node_modules/dayjs/package.json": JSON.stringify({
+            name: "dayjs",
+            main: "dayjs.min.js",
+            types: "legacy/index.d.ts",
+            typesVersions: {
+                ">=6.0": {
+                    "*": ["ts6/*"],
+                },
+            },
+        }),
+        "file:///autojs6/editor/node_modules/dayjs/dayjs.min.js":
+            "module.exports = function dayjs() {};",
+        "file:///autojs6/editor/node_modules/dayjs/legacy/index.d.ts": [
+            "interface LegacyDayjs { legacyOnly(): never; }",
+            "declare function dayjs(): LegacyDayjs;",
+            "export = dayjs;",
+        ].join("\n"),
+        "file:///autojs6/editor/node_modules/dayjs/ts6/legacy/index.d.ts": [
+            "interface Dayjs { format(template?: string): string; unix(): number; }",
+            "declare function dayjs(): Dayjs;",
+            "export = dayjs;",
+        ].join("\n"),
+        "file:///autojs6/editor/node_modules/@types/ambient/package.json":
+            JSON.stringify({ name: "@types/ambient", types: "index.d.ts" }),
+        "file:///autojs6/editor/node_modules/@types/ambient/index.d.ts":
+            "declare const ambientAnswer: 42;",
+        "file:///autojs6/editor/node_modules/lodash/package.json":
+            JSON.stringify({ name: "lodash", version: "4.17.21", main: "lodash.js" }),
+        "file:///autojs6/editor/node_modules/lodash/lodash.js":
+            "module.exports = {};",
+        "file:///autojs6/editor/node_modules/@types/lodash/package.json":
+            JSON.stringify({ name: "@types/lodash", version: "4.17.25", types: "index.d.ts" }),
+        "file:///autojs6/editor/node_modules/@types/lodash/index.d.ts": [
+            "declare const lodash: lodash.LoDashStatic;",
+            "declare namespace lodash {",
+            "  interface LoDashStatic { chunk<T>(array: ArrayLike<T> | null | undefined, size?: number): T[][]; }",
+            "}",
+            "export = lodash;",
+        ].join("\n"),
+    };
+    const projectTypeFileUris = Object.keys(projectTypeTextByUri).sort();
+    const libraryUris = [
+        "file:///autojs6/typescript/lib.es2018.d.ts",
+        "file:///autojs6/types/generated/lib.autojs6.core.d.ts",
+        "file:///autojs6/types/lib.autojs6.extra.d.ts",
+    ];
+    const source = [
+        'import dayjs from "dayjs";',
+        'import lodash from "lodash";',
+        "const value = dayjs();",
+        "value.",
+        "const wrong: number = value.format();",
+        "const ambient: 42 = ambientAnswer;",
+        "const chunks: number[][] = lodash.chunk([1, 2, 3], 2);",
+    ].join("\n");
+
+    function verifyProfile(profile, suffix) {
+        const errors = [];
+        const service = context.AutoJsAceTsLanguageService.create({
+            documentUri: `file:///autojs6/editor/src/main.${suffix}`,
+            rootUri: "file:///autojs6/editor",
+            executionProfile: profile,
+            typescriptVersion: "6.0.3",
+            libraryTextByUri,
+            libraryUris,
+            projectTypeTextByUri,
+            projectTypeFileUris,
+            dependencyTypeNames: ["ambient"],
+            dependencyLayerFingerprint:
+                "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+            dependencyInventoryFingerprint:
+                "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+            dependencyFileCount: projectTypeFileUris.length,
+            dependencyByteLength: Object.values(projectTypeTextByUri)
+                .reduce((total, text) => total + Buffer.byteLength(text, "utf8"), 0),
+            dependencyResolverPolicyRevision: 4,
+            dependencyResolverPolicyFingerprint:
+                "d8207539237d2a08a6b97b530c5e6215f4b73311fdd6954ce9f8004717ebd635",
+            notifyError: (message) => errors.push(String(message)),
+        });
+        const session = sessionFor(source);
+        const diagnostics = service.getDiagnostics(session, source) || [];
+        let completions = [];
+        service.getCompletions(
+            session,
+            { row: 3, column: "value.".length },
+            "",
+            (_error, items) => { completions = items || []; },
+            source,
+        );
+        const hover = service.getHover(
+            session,
+            { row: 2, column: "const value".length },
+            source,
+        );
+        const state = service.getState();
+        service.dispose();
+
+        assert(errors.length === 0, `${profile} dependency types reported: ${errors.join("; ")}`);
+        assert(state.ready, `${profile} dependency type service was not ready: ${state.reason}`);
+        assert(
+            diagnostics.filter((diagnostic) => String(diagnostic.raw) === "2322").length === 1,
+            `${profile} did not preserve the compiler TS2322 diagnostic: ${JSON.stringify(diagnostics)}`,
+        );
+        assert(
+            !diagnostics.some((diagnostic) =>
+                ["2307", "2339", "2688", "7016"].includes(String(diagnostic.raw))),
+            `${profile} failed package, typesVersions, installed @types, or lodash module ` +
+                `fallback resolution: ${JSON.stringify(diagnostics)}`,
+        );
+        assert(
+            completions.some((item) => item.caption === "format") &&
+                completions.some((item) => item.caption === "unix") &&
+                !completions.some((item) => item.caption === "legacyOnly"),
+            `${profile} completion did not use the TypeScript 6 typesVersions branch`,
+        );
+        assert(
+            String(hover?.docText || "").includes("Dayjs"),
+            `${profile} hover did not infer dayjs() as Dayjs: ${JSON.stringify(hover)}`,
+        );
+        assert(
+            JSON.stringify(state.dependencyTypeNames) === JSON.stringify(["ambient"]) &&
+                state.dependencyResolverPolicyRevision === 4 &&
+                state.projectTypeFileCount === projectTypeFileUris.length,
+            `${profile} did not retain the frozen dependency type authority`,
+        );
+        return {
+            diagnosticCodes: diagnostics.map((diagnostic) => Number(diagnostic.raw)).sort(),
+            completionNames: completions.map((item) => item.caption)
+                .filter((name) => name === "format" || name === "unix")
+                .sort(),
+            hover: hover?.value || hover?.caption || "",
+            loadedProjectTypeFileCount: state.loadedProjectTypeFileCount,
+        };
+    }
+
+    const rhino = verifyProfile("rhino", "ts");
+    const node = verifyProfile("node", "mts");
+    assert(
+        JSON.stringify(rhino.diagnosticCodes) === JSON.stringify(node.diagnosticCodes),
+        "Rhino and Node editor profiles disagree on dependency diagnostics",
+    );
+    const boundaryCode = "ERR_AUTOJS6_TYPESCRIPT_NATIVE_DEPENDENCY_UNSUPPORTED";
+    const boundaryDetail = `${boundaryCode}: bcrypt contains native-binary; use pure JavaScript or WASM.`;
+    const boundaryService = context.AutoJsAceTsLanguageService.create({
+        documentUri: "file:///autojs6/editor/src/native-boundary.ts",
+        rootUri: "file:///autojs6/editor",
+        executionProfile: "rhino",
+        typescriptVersion: "6.0.3",
+        libraryTextByUri,
+        libraryUris,
+        projectTypeTextByUri,
+        projectTypeFileUris,
+        dependencyTypeNames: ["ambient"],
+        dependencyBoundaryCode: boundaryCode,
+        dependencyBoundaryDetail: boundaryDetail,
+        dependencyResolverPolicyRevision: 4,
+        dependencyResolverPolicyFingerprint:
+            "d8207539237d2a08a6b97b530c5e6215f4b73311fdd6954ce9f8004717ebd635",
+    });
+    const boundarySource = "export const ready: boolean = true;";
+    const boundaryDiagnostics =
+        boundaryService.getDiagnostics(sessionFor(boundarySource), boundarySource) || [];
+    const boundaryState = boundaryService.getState();
+    boundaryService.dispose();
+    assert(
+        boundaryDiagnostics[0]?.raw === boundaryCode &&
+            boundaryDiagnostics[0]?.type === "error" &&
+            boundaryDiagnostics[0]?.text === boundaryDetail,
+        `Native dependency boundary was not the leading editor diagnostic: ` +
+            JSON.stringify(boundaryDiagnostics),
+    );
+    assert(
+        boundaryState.dependencyBoundaryCode === boundaryCode &&
+            boundaryState.dependencyBoundaryDetail === boundaryDetail,
+        "Native dependency boundary was not retained in language-service state",
+    );
+    const clientSource = readFileSync(paths.client, "utf8");
+    assert(
+        clientSource.includes("dependencyBoundaryCode: state.dependencyBoundaryCode") &&
+            clientSource.includes("dependencyBoundaryDetail: state.dependencyBoundaryDetail"),
+        "LSP client does not forward the dependency boundary into the language service",
+    );
+    return {
+        rhino,
+        node,
+        boundary: {
+            code: boundaryDiagnostics[0].raw,
+            text: boundaryDiagnostics[0].text,
+        },
+    };
+}
+
 function verifyExecutionProfileConsistency(paths, ts) {
     const context = createBrowserTypeScriptContext(paths);
     const libraryTextByUri = typeScriptLibraryTextByUri(paths);
@@ -270,7 +471,11 @@ function verifyExecutionProfileConsistency(paths, ts) {
     const nodeOptions = node.compilerOptions || {};
     const commonExpected = {
         allowJs: false,
+        allowSyntheticDefaultImports: true,
+        alwaysStrict: true,
         checkJs: false,
+        esModuleInterop: true,
+        forceConsistentCasingInFileNames: true,
         ignoreDeprecations: "6.0",
         incremental: false,
         inlineSourceMap: false,
@@ -930,6 +1135,7 @@ function main() {
 
     const semantics = verifyCompatibilitySemantics(paths, ts);
     const browserService = verifyBrowserLanguageService(paths, ts.version);
+    const dependencyTypes = verifyDependencyTypeLayer(paths);
     const executionProfiles = verifyExecutionProfileConsistency(paths, ts);
     const optionalGroups = verifyOptionalGroupCompletions(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
@@ -939,6 +1145,7 @@ function main() {
             typescriptVersion: ts.version,
             semantics,
             browserService,
+            dependencyTypes,
             executionProfiles,
             optionalGroups,
             completionRefresh,

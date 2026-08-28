@@ -51,12 +51,16 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceHealth
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceJsErrorClassifier
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceRuntimeHealthMonitor
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServerManager
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptExecutionProfiles
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptProjectTypeLayer
 import io.github.supermonster003.autojs6.plugin.ace.editor.R
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.util.ArrayDeque
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -72,6 +76,10 @@ class AceCodeEditor @JvmOverloads constructor(
 ) : FrameLayout(hostContext, attrs, defStyleAttr) {
 
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val projectTypeLayerRequestRevision = AtomicLong()
+    private val projectTypeLayerExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "ace-typescript-project-types").apply { isDaemon = true }
+    }
     private val hostPreferences = hostContext.defaultHostPreferences()
     private val fontManager = AceEditorFontManager(
         pluginContext = pluginContext,
@@ -398,8 +406,31 @@ class AceCodeEditor @JvmOverloads constructor(
     fun isUserTouching(): Boolean = userTouching
 
     fun setDocumentPath(path: String?) {
+        val requestRevision = projectTypeLayerRequestRevision.incrementAndGet()
         lspServerManager.setDocumentPath(path)
         refreshLsp()
+        val documentPath = path?.takeIf(String::isNotBlank) ?: return
+        val profile = AceTypeScriptExecutionProfiles.resolve(documentPath) ?: return
+        projectTypeLayerExecutor.execute {
+            val typeLayer = runCatching {
+                AceTypeScriptProjectTypeLayer.capture(documentPath, profile)
+            }.getOrNull() ?: return@execute
+            mainHandler.post {
+                if (
+                    !destroyed &&
+                    projectTypeLayerRequestRevision.get() == requestRevision &&
+                    lspServerManager.applyProjectTypeLayer(documentPath, typeLayer)
+                ) {
+                    eventHistory.record(
+                        "lsp_dependency_types",
+                        "files=${typeLayer.dependencyFileCount}," +
+                            "bytes=${typeLayer.dependencyByteLength}," +
+                            "fingerprint=${typeLayer.dependencyLayerFingerprint.orEmpty()}",
+                    )
+                    refreshLsp()
+                }
+            }
+        }
     }
 
     fun refreshLsp() {
@@ -985,6 +1016,8 @@ class AceCodeEditor @JvmOverloads constructor(
 
     fun destroy() {
         destroyed = true
+        projectTypeLayerRequestRevision.incrementAndGet()
+        projectTypeLayerExecutor.shutdownNow()
         fontCatalogChangeSubscription?.cancel()
         fontCatalogChangeSubscription = null
         eventHistory.record("destroy", "AceCodeEditor.destroy")
@@ -1367,6 +1400,10 @@ class AceCodeEditor @JvmOverloads constructor(
 
     internal fun bridgeLspOptions(): String {
         return lspServerManager.bridgeOptionsJson()
+    }
+
+    internal fun bridgeProjectTypeText(uri: String): String? {
+        return lspServerManager.readProjectTypeFile(uri)
     }
 
     internal fun bridgePinchToZoomStrategy(): String {

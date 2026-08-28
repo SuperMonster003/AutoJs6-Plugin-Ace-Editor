@@ -46,6 +46,10 @@
 
     function normalizeFileName(fileName) {
         fileName = String(fileName || "").replace(/\\/g, "/");
+        if (/^file:\/+autojs6\/editor(?:\/|$)/.test(fileName)) {
+            return "file:///autojs6/editor" +
+                fileName.substring(fileName.indexOf("autojs6/editor") + "autojs6/editor".length);
+        }
         if (fileName.indexOf("file:///autojs6/typescript/") === 0 ||
             fileName.indexOf("file:///autojs6/types/") === 0) {
             return fileName;
@@ -405,6 +409,18 @@
         var libraryUris = [];
         var rootLibraryUris = [];
         var libraryAssetUrls = Object.create(null);
+        var projectTypeUris = [];
+        var projectTypeUriSet = Object.create(null);
+        var projectDirectories = Object.create(null);
+        var dependencyTypeNames = copyArray(config.dependencyTypeNames)
+            .map(function(name) { return String(name || ""); })
+            .filter(function(name, index, names) {
+                return /^[A-Za-z0-9_.-]+$/.test(name) && names.indexOf(name) === index;
+            })
+            .sort();
+        var dependencyBoundaryCode = String(config.dependencyBoundaryCode || "");
+        var dependencyBoundaryDetail = String(config.dependencyBoundaryDetail || "");
+        var projectRootUri = normalizeFileName(config.rootUri || CURRENT_DIR);
         var disposed = false;
         var diagnosticsLimit = Math.max(1, Number(config.diagnosticsLimit) || 100);
         var completionLimit = Math.max(1, Number(config.completionLimit) || 300);
@@ -413,7 +429,11 @@
             if (executionProfile === PROFILE_RHINO) {
                 return {
                     allowJs: false,
+                    allowSyntheticDefaultImports: true,
+                    alwaysStrict: true,
                     checkJs: false,
+                    esModuleInterop: true,
+                    forceConsistentCasingInFileNames: true,
                     ignoreDeprecations: "6.0",
                     incremental: false,
                     inlineSourceMap: false,
@@ -433,13 +453,17 @@
                     sourceMap: true,
                     strict: true,
                     target: ts.ScriptTarget.ES2018,
-                    types: []
+                    types: dependencyTypeNames.slice(0)
                 };
             }
             if (executionProfile === PROFILE_NODE) {
                 return {
                     allowJs: false,
+                    allowSyntheticDefaultImports: true,
+                    alwaysStrict: true,
                     checkJs: false,
+                    esModuleInterop: true,
+                    forceConsistentCasingInFileNames: true,
                     ignoreDeprecations: "6.0",
                     incremental: false,
                     inlineSourceMap: false,
@@ -456,7 +480,7 @@
                     sourceMap: true,
                     strict: true,
                     target: ts.ScriptTarget.ES2018,
-                    types: []
+                    types: dependencyTypeNames.slice(0)
                 };
             }
             return {
@@ -471,7 +495,8 @@
                 lib: [EDITOR_DEFAULT_LIB],
                 strict: false,
                 skipLibCheck: true,
-                skipDefaultLibCheck: true
+                skipDefaultLibCheck: true,
+                types: dependencyTypeNames.slice(0)
             };
         }
 
@@ -485,6 +510,58 @@
         function bump(fileName) {
             fileName = normalizeFileName(fileName);
             versions[fileName] = String((Number(versions[fileName]) || 0) + 1);
+        }
+
+        function rememberProjectPath(fileName) {
+            fileName = normalizeFileName(fileName);
+            var directory = fileName.substring(0, fileName.lastIndexOf("/")) || projectRootUri;
+            while (directory && directory.indexOf(projectRootUri) === 0) {
+                projectDirectories[directory] = projectDirectories[directory] || Object.create(null);
+                if (directory === projectRootUri) {
+                    break;
+                }
+                var parent = directory.substring(0, directory.lastIndexOf("/")) || projectRootUri;
+                projectDirectories[parent] = projectDirectories[parent] || Object.create(null);
+                projectDirectories[parent][directory.substring(parent.length + 1)] = true;
+                if (parent === directory) {
+                    break;
+                }
+                directory = parent;
+            }
+        }
+
+        function configureProjectTypeFiles() {
+            projectDirectories[projectRootUri] = projectDirectories[projectRootUri] || Object.create(null);
+            rememberProjectPath(currentFile);
+            copyArray(config.projectTypeFileUris).forEach(function(uri) {
+                var normalized = normalizeFileName(uri);
+                if (normalized.indexOf(projectRootUri + "/") !== 0 ||
+                    normalized === currentFile || hasOwn(projectTypeUriSet, normalized)) {
+                    return;
+                }
+                projectTypeUriSet[normalized] = true;
+                projectTypeUris.push(normalized);
+                rememberProjectPath(normalized);
+            });
+            projectTypeUris.sort();
+        }
+
+        function ensureProjectTypeFile(fileName) {
+            fileName = normalizeFileName(fileName);
+            if (hasOwn(files, fileName)) {
+                return true;
+            }
+            if (!hasOwn(projectTypeUriSet, fileName)) {
+                return false;
+            }
+            var projectTypeTextByUri = config.projectTypeTextByUri || {};
+            var text = hasOwn(projectTypeTextByUri, fileName) ?
+                projectTypeTextByUri[fileName] : loadText(fileName);
+            if (text === null || text === undefined) {
+                return false;
+            }
+            addFile(fileName, text);
+            return true;
         }
 
         function readConfiguredText(uri, assetUrl) {
@@ -577,6 +654,7 @@
             }
             try {
                 configureRootLibraries();
+                configureProjectTypeFiles();
                 rootLibraryUris.forEach(ensureConfiguredLibrary);
                 addFile(currentFile, "");
                 if (!hasOwn(files, TS_LIB_ROOT + defaultLib)) {
@@ -604,13 +682,14 @@
                     getScriptSnapshot: function(fileName) {
                         fileName = normalizeFileName(fileName);
                         ensureConfiguredLibrary(fileName);
+                        ensureProjectTypeFile(fileName);
                         return hasOwn(files, fileName) ? ts.ScriptSnapshot.fromString(files[fileName]) : undefined;
                     },
                     getScriptKind: function(fileName) {
                         return scriptKindForFileName(ts, normalizeFileName(fileName));
                     },
                     getCurrentDirectory: function() {
-                        return CURRENT_DIR;
+                        return projectRootUri;
                     },
                     getDefaultLibFileName: function() {
                         return TS_LIB_ROOT + defaultLib;
@@ -618,17 +697,23 @@
                     readFile: function(fileName) {
                         fileName = normalizeFileName(fileName);
                         ensureConfiguredLibrary(fileName);
+                        ensureProjectTypeFile(fileName);
                         return hasOwn(files, fileName) ? files[fileName] : undefined;
                     },
                     fileExists: function(fileName) {
                         fileName = normalizeFileName(fileName);
-                        return hasOwn(files, fileName) || ensureConfiguredLibrary(fileName);
+                        return hasOwn(files, fileName) || hasOwn(projectTypeUriSet, fileName) ||
+                            ensureConfiguredLibrary(fileName);
                     },
-                    directoryExists: function() {
-                        return true;
+                    directoryExists: function(directoryName) {
+                        directoryName = normalizeFileName(directoryName);
+                        return hasOwn(projectDirectories, directoryName) ||
+                            directoryName.indexOf("file:///autojs6/typescript") === 0 ||
+                            directoryName.indexOf("file:///autojs6/types") === 0;
                     },
-                    getDirectories: function() {
-                        return [];
+                    getDirectories: function(directoryName) {
+                        var children = projectDirectories[normalizeFileName(directoryName)];
+                        return children ? Object.keys(children).sort() : [];
                     },
                     useCaseSensitiveFileNames: function() {
                         return true;
@@ -863,11 +948,27 @@
                 var diagnostics = []
                     .concat(service.getSyntacticDiagnostics(currentFile) || [])
                     .concat((service.getSemanticDiagnostics(currentFile) || []).filter(function(diagnostic) {
-                        return !SINGLE_FILE_UNRELIABLE_DIAGNOSTIC_CODES[Number(diagnostic && diagnostic.code)];
+                        return projectTypeUris.length > 0 ||
+                            !SINGLE_FILE_UNRELIABLE_DIAGNOSTIC_CODES[Number(diagnostic && diagnostic.code)];
                     }));
-                return diagnostics.slice(0, diagnosticsLimit).map(function(diagnostic) {
+                var boundarySlots = dependencyBoundaryCode ? 1 : 0;
+                var annotations = diagnostics.slice(
+                    0,
+                    Math.max(0, diagnosticsLimit - boundarySlots)
+                ).map(function(diagnostic) {
                     return annotationFromDiagnostic(ts, currentText, diagnostic);
                 });
+                if (dependencyBoundaryCode) {
+                    annotations.unshift({
+                        row: 0,
+                        column: 0,
+                        text: dependencyBoundaryDetail || dependencyBoundaryCode,
+                        type: "error",
+                        raw: dependencyBoundaryCode,
+                        source: TS_DIAGNOSTIC_SOURCE
+                    });
+                }
+                return annotations.slice(0, diagnosticsLimit);
             } catch (error) {
                 notify(config, "ACE TS diagnostics failed: " + error, error);
                 return null;
@@ -889,6 +990,22 @@
                 compilerOptions: compilerOptions(),
                 defaultLib: defaultLib,
                 libraryCount: libraryUris.length,
+                projectRootUri: projectRootUri,
+                projectTypeFileCount: projectTypeUris.length,
+                loadedProjectTypeFileCount: projectTypeUris.filter(function(uri) {
+                    return hasOwn(files, uri);
+                }).length,
+                dependencyTypeNames: dependencyTypeNames.slice(0),
+                dependencyLayerFingerprint: String(config.dependencyLayerFingerprint || ""),
+                dependencyInventoryFingerprint: String(config.dependencyInventoryFingerprint || ""),
+                dependencyFileCount: Math.max(0, Number(config.dependencyFileCount) || 0),
+                dependencyByteLength: Math.max(0, Number(config.dependencyByteLength) || 0),
+                dependencyBoundaryCode: dependencyBoundaryCode,
+                dependencyBoundaryDetail: dependencyBoundaryDetail,
+                dependencyResolverPolicyRevision:
+                    Math.max(0, Number(config.dependencyResolverPolicyRevision) || 0),
+                dependencyResolverPolicyFingerprint:
+                    String(config.dependencyResolverPolicyFingerprint || ""),
                 currentFile: currentFile,
                 diagnosticSource: TS_DIAGNOSTIC_SOURCE
             };
@@ -913,6 +1030,12 @@
             libraryUris = [];
             rootLibraryUris = [];
             libraryAssetUrls = Object.create(null);
+            projectTypeUris = [];
+            projectTypeUriSet = Object.create(null);
+            projectDirectories = Object.create(null);
+            dependencyTypeNames = [];
+            dependencyBoundaryCode = "";
+            dependencyBoundaryDetail = "";
             currentText = "";
             reason = "typescript language service disposed";
         }

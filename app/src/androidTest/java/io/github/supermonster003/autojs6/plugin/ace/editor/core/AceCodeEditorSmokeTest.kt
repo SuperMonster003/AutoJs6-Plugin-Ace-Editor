@@ -7,6 +7,7 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.AceEditorPluginEntryp
 import org.autojs.plugin.editor.api.EditorPluginCallback
 import org.autojs.plugin.editor.api.EditorPluginSessionConfig
 import org.autojs.plugin.editor.api.EditorPluginState
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
@@ -89,6 +90,89 @@ class AceCodeEditorSmokeTest {
                     session.destroy()
                 }
             }
+        }
+    }
+
+    @Test
+    fun projectDependencyTypesAreFrozenAndPublishedToTheAndroidBridge() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
+        val project = File(context.cacheDir, "ace-dependency-types-smoke").apply {
+            deleteRecursively()
+            mkdirs()
+        }
+        val document = File(project, "main.ts").apply {
+            writeText("import dayjs from 'dayjs'; dayjs().format('YYYY')")
+        }
+        File(project, "project.json").writeText("""{"type":"node"}""")
+        File(project, "package.json").writeText("""{"name":"ace-smoke","type":"module"}""")
+        File(project, "node_modules/dayjs").apply { mkdirs() }
+        File(project, "node_modules/dayjs/package.json").writeText(
+            """{"name":"dayjs","types":"index.d.ts"}""",
+        )
+        File(project, "node_modules/dayjs/index.d.ts").writeText(
+            "export interface Dayjs { format(template?: string): string }\n" +
+                "declare function dayjs(): Dayjs\nexport default dayjs\n",
+        )
+        File(project, "node_modules/@types/ambient").apply { mkdirs() }
+        File(project, "node_modules/@types/ambient/index.d.ts").writeText(
+            "declare const aceAmbientValue: string\n",
+        )
+
+        val session = AtomicReference<org.autojs.plugin.editor.api.EditorPluginSession>()
+        instrumentation.runOnMainSync {
+            session.set(
+                AceEditorPluginEntrypoint().createSession(
+                    hostContext = context,
+                    pluginContext = context,
+                    config = EditorPluginSessionConfig(
+                        hostPackageName = context.packageName,
+                        hostVersionName = "instrumentation",
+                        hostVersionCode = 5234L,
+                        storageDirectoryPath =
+                            File(context.cacheDir, "ace-editor-dependency-types-smoke-fonts").absolutePath,
+                        documentPath = document.absolutePath,
+                    ),
+                    callback = object : EditorPluginCallback {},
+                ),
+            )
+        }
+
+        try {
+            var options = JSONObject()
+            val deadlineNanos = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+            while (System.nanoTime() < deadlineNanos) {
+                instrumentation.runOnMainSync {
+                    val editor = session.get().view as AceCodeEditor
+                    options = JSONObject(editor.bridgeLspOptions())
+                }
+                if (options.optInt("dependencyFileCount") >= 3) break
+                Thread.sleep(50)
+            }
+
+            assertEquals(4, options.getInt("dependencyResolverPolicyRevision"))
+            assertEquals(
+                "d8207539237d2a08a6b97b530c5e6215f4b73311fdd6954ce9f8004717ebd635",
+                options.getString("dependencyResolverPolicyFingerprint"),
+            )
+            assertTrue(options.getString("dependencyLayerFingerprint").matches(Regex("[0-9a-f]{64}")))
+            assertTrue(options.getString("dependencyInventoryFingerprint").matches(Regex("[0-9a-f]{64}")))
+            assertEquals(listOf("ambient"), options.getJSONArray("dependencyTypeNames").let { names ->
+                List(names.length()) { index -> names.getString(index) }
+            })
+            val dayjsUri = options.getJSONArray("projectTypeFileUris").let { uris ->
+                List(uris.length()) { index -> uris.getString(index) }
+            }.single { uri -> uri.endsWith("/node_modules/dayjs/index.d.ts") }
+            val declaration = AtomicReference<String?>()
+            instrumentation.runOnMainSync {
+                declaration.set((session.get().view as AceCodeEditor).bridgeProjectTypeText(dayjsUri))
+            }
+            assertTrue(declaration.get().orEmpty().contains("interface Dayjs"))
+        } finally {
+            instrumentation.runOnMainSync {
+                session.getAndSet(null)?.destroy()
+            }
+            project.deleteRecursively()
         }
     }
 

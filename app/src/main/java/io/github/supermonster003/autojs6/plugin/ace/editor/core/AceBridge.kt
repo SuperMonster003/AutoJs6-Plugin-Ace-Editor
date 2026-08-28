@@ -176,6 +176,15 @@ class AceBridge(
 
     @JavascriptInterface
     fun read(uri: String?): String {
+        val requestedUri = uri.orEmpty()
+        editor.bridgeProjectTypeText(requestedUri)?.let { text ->
+            return JSONObject()
+                .put("ok", true)
+                .put("uri", requestedUri)
+                .put("projectType", true)
+                .put("text", text)
+                .toString()
+        }
         val normalized = normalizeEditorAssetUri(uri)
         if (normalized == null || !isAllowedReadAsset(normalized)) {
             return JSONObject()

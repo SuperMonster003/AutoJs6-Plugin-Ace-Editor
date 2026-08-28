@@ -145,6 +145,20 @@
             typescriptProfileRevision: options && options.typescriptProfileRevision != null ?
                 Number(options.typescriptProfileRevision) : null,
             libraryUris: copyArray(options && options.libraryUris),
+            projectTypeFileUris: copyArray(options && options.projectTypeFileUris),
+            dependencyTypeNames: copyArray(options && options.dependencyTypeNames),
+            dependencyLayerFingerprint: options && options.dependencyLayerFingerprint || "",
+            dependencyInventoryFingerprint: options && options.dependencyInventoryFingerprint || "",
+            dependencyFileCount: Math.max(0, Number(options && options.dependencyFileCount) || 0),
+            dependencyByteLength: Math.max(0, Number(options && options.dependencyByteLength) || 0),
+            dependencyPathByteLength:
+                Math.max(0, Number(options && options.dependencyPathByteLength) || 0),
+            dependencyBoundaryCode: options && options.dependencyBoundaryCode || "",
+            dependencyBoundaryDetail: options && options.dependencyBoundaryDetail || "",
+            dependencyResolverPolicyRevision:
+                Math.max(0, Number(options && options.dependencyResolverPolicyRevision) || 0),
+            dependencyResolverPolicyFingerprint:
+                options && options.dependencyResolverPolicyFingerprint || "",
             declarationGroups: copyArray(options && options.declarationGroups),
             effectiveDeclarationGroups: copyArray(options && options.effectiveDeclarationGroups),
             fallback: options && options.fallback || FALLBACK_STATIC_COMPLETION,
@@ -1102,9 +1116,21 @@
                     checkJs: options && options.checkJs === true,
                     completionLimit: MAX_COMPLETION_ITEMS,
                     documentUri: state.documentUri,
+                    rootUri: state.rootUri,
                     typescriptVersion: state.typescriptVersion,
                     executionProfile: state.typescriptProfile,
-                    libraryUris: copyArray(state.libraryUris)
+                    libraryUris: copyArray(state.libraryUris),
+                    projectTypeFileUris: copyArray(state.projectTypeFileUris),
+                    dependencyTypeNames: copyArray(state.dependencyTypeNames),
+                    dependencyLayerFingerprint: state.dependencyLayerFingerprint,
+                    dependencyInventoryFingerprint: state.dependencyInventoryFingerprint,
+                    dependencyFileCount: state.dependencyFileCount,
+                    dependencyByteLength: state.dependencyByteLength,
+                    dependencyPathByteLength: state.dependencyPathByteLength,
+                    dependencyBoundaryCode: state.dependencyBoundaryCode,
+                    dependencyBoundaryDetail: state.dependencyBoundaryDetail,
+                    dependencyResolverPolicyRevision: state.dependencyResolverPolicyRevision,
+                    dependencyResolverPolicyFingerprint: state.dependencyResolverPolicyFingerprint
                 });
                 semanticColdStartPending = true;
             }
@@ -1457,7 +1483,25 @@
             state = stateFromOptions(options);
             var serviceConfigurationChanged =
                 !arraysEqual(previousOptions && previousOptions.libraryUris, options.libraryUris) ||
+                !arraysEqual(
+                    previousOptions && previousOptions.projectTypeFileUris,
+                    options.projectTypeFileUris
+                ) ||
+                !arraysEqual(
+                    previousOptions && previousOptions.dependencyTypeNames,
+                    options.dependencyTypeNames
+                ) ||
                 !!(previousOptions && previousOptions.checkJs) !== !!options.checkJs ||
+                String(previousOptions && previousOptions.rootUri || "") !==
+                    String(options && options.rootUri || "") ||
+                String(previousOptions && previousOptions.dependencyLayerFingerprint || "") !==
+                    String(options && options.dependencyLayerFingerprint || "") ||
+                String(previousOptions && previousOptions.dependencyBoundaryCode || "") !==
+                    String(options && options.dependencyBoundaryCode || "") ||
+                String(previousOptions && previousOptions.dependencyBoundaryDetail || "") !==
+                    String(options && options.dependencyBoundaryDetail || "") ||
+                String(previousOptions && previousOptions.dependencyResolverPolicyFingerprint || "") !==
+                    String(options && options.dependencyResolverPolicyFingerprint || "") ||
                 String(previousOptions && previousOptions.typescriptVersion || "") !==
                     String(options && options.typescriptVersion || "") ||
                 String(previousOptions && previousOptions.typescriptProfile || "") !==
@@ -1512,6 +1556,17 @@
                 typescriptProfile: state.typescriptProfile,
                 typescriptProfileRevision: state.typescriptProfileRevision,
                 libraryUris: copyArray(state.libraryUris),
+                projectTypeFileUris: copyArray(state.projectTypeFileUris),
+                dependencyTypeNames: copyArray(state.dependencyTypeNames),
+                dependencyLayerFingerprint: state.dependencyLayerFingerprint,
+                dependencyInventoryFingerprint: state.dependencyInventoryFingerprint,
+                dependencyFileCount: state.dependencyFileCount,
+                dependencyByteLength: state.dependencyByteLength,
+                dependencyPathByteLength: state.dependencyPathByteLength,
+                dependencyBoundaryCode: state.dependencyBoundaryCode,
+                dependencyBoundaryDetail: state.dependencyBoundaryDetail,
+                dependencyResolverPolicyRevision: state.dependencyResolverPolicyRevision,
+                dependencyResolverPolicyFingerprint: state.dependencyResolverPolicyFingerprint,
                 declarationGroups: copyArray(state.declarationGroups),
                 effectiveDeclarationGroups: copyArray(state.effectiveDeclarationGroups),
                 fallback: state.fallback,
