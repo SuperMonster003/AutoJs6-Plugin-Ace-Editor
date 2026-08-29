@@ -19,6 +19,7 @@
     var SIGNATURE_PROVIDER_TYPESCRIPT = "typescript-language-service";
     var DIAGNOSTIC_SOURCE = "autojs6-lsp";
     var VALIDATION_DELAY_MS = 450;
+    var PROJECT_SNAPSHOT_VALIDATION_DELAY_MS = 50;
     var COMPLETION_REFRESH_DELAY_MS = 100;
     var DEFAULT_MAX_DOCUMENT_LENGTH = 512 * 1024;
     var MAX_COMPLETION_ITEMS = 300;
@@ -1104,6 +1105,19 @@
         var documentLengthKnown = false;
         var semanticCircuitOpen = false;
         var consecutiveSlowSemanticOperations = 0;
+        var diagnosticGeneration = 0;
+        var diagnosticPublishCount = 0;
+        var lastDiagnosticReason = "";
+        var lastDiagnosticScheduledAt = 0;
+        var lastDiagnosticStartedAt = 0;
+        var lastDiagnosticPublishedAt = 0;
+        var lastDiagnosticLatencyMs = 0;
+        var lastDiagnosticDurationMs = 0;
+        var lastPublishedDiagnosticGeneration = 0;
+        var tsServiceInstanceRevision = 0;
+        var tsServiceDisposeCount = 0;
+        var projectSnapshotIncrementalRefreshCount = 0;
+        var projectSnapshotChangedFileCount = 0;
 
         function getStaticCompleter() {
             if (typeof config.getStaticCompleter === "function") {
@@ -1148,6 +1162,7 @@
                     dependencyResolverPolicyRevision: state.dependencyResolverPolicyRevision,
                     dependencyResolverPolicyFingerprint: state.dependencyResolverPolicyFingerprint
                 });
+                tsServiceInstanceRevision++;
                 semanticColdStartPending = true;
             }
             return tsService;
@@ -1159,6 +1174,7 @@
             if (service && typeof service.dispose === "function") {
                 try {
                     service.dispose();
+                    tsServiceDisposeCount++;
                 } catch (error) {
                     notify(config, "ACE TS language service disposal failed: " + error, error);
                 }
@@ -1342,7 +1358,7 @@
                 var ready = applyTsProviderState();
                 recordSemanticOperation(startedAt, "initialize", false);
                 if (ready && !semanticCircuitOpen) {
-                    scheduleDiagnostics();
+                    scheduleDiagnostics("warmup");
                 } else if (!semanticCircuitOpen) {
                     scheduleTsServiceRetry(revision);
                 }
@@ -1351,10 +1367,41 @@
             return true;
         }
 
-        function setSessionAnnotations(annotations) {
+        function diagnosticRunIsCurrent(run) {
+            return !!run && !destroyed && run.generation === diagnosticGeneration &&
+                run.configurationRevision === configurationRevision;
+        }
+
+        function notifyDiagnosticsPublished() {
+            if (typeof config.onDiagnosticsPublished !== "function") {
+                return;
+            }
+            try {
+                config.onDiagnosticsPublished(getState());
+            } catch (error) {
+                notify(config, "ACE diagnostic state publication failed: " + error, error);
+            }
+        }
+
+        function setSessionAnnotations(annotations, run, startedAt) {
+            if (run && !diagnosticRunIsCurrent(run)) {
+                return lastAnnotations;
+            }
             lastAnnotations = copyArray(annotations);
             if (session && typeof session.setAnnotations === "function") {
                 session.setAnnotations(lastAnnotations);
+            }
+            if (run) {
+                var publishedAt = Date.now();
+                diagnosticPublishCount++;
+                lastPublishedDiagnosticGeneration = run.generation;
+                lastDiagnosticReason = run.reason;
+                lastDiagnosticScheduledAt = run.scheduledAt;
+                lastDiagnosticStartedAt = startedAt || publishedAt;
+                lastDiagnosticPublishedAt = publishedAt;
+                lastDiagnosticLatencyMs = Math.max(0, publishedAt - run.scheduledAt);
+                lastDiagnosticDurationMs = Math.max(0, publishedAt - lastDiagnosticStartedAt);
+                notifyDiagnosticsPublished();
             }
             return lastAnnotations;
         }
@@ -1369,7 +1416,25 @@
             return lastAnnotations.map(annotationToDiagnostic);
         }
 
-        function validateNow() {
+        function createDiagnosticRun(reason) {
+            diagnosticGeneration++;
+            var scheduledAt = Date.now();
+            lastDiagnosticReason = String(reason || "manual");
+            lastDiagnosticScheduledAt = scheduledAt;
+            return {
+                generation: diagnosticGeneration,
+                configurationRevision: configurationRevision,
+                reason: lastDiagnosticReason,
+                scheduledAt: scheduledAt
+            };
+        }
+
+        function validateDiagnosticRun(run) {
+            if (!diagnosticRunIsCurrent(run)) {
+                return getDiagnostics();
+            }
+            var diagnosticStartedAt = Date.now();
+            lastDiagnosticStartedAt = diagnosticStartedAt;
             if (destroyed || !state.enabled) {
                 clearDiagnostics();
                 return [];
@@ -1380,7 +1445,7 @@
                 return [];
             }
             if (isJsonDocumentUri(state.documentUri)) {
-                setSessionAnnotations(jsonSyntaxDiagnostics(text));
+                setSessionAnnotations(jsonSyntaxDiagnostics(text), run, diagnosticStartedAt);
                 return getDiagnostics();
             }
             var startedAt = Date.now();
@@ -1390,7 +1455,7 @@
                 recordSemanticOperation(startedAt, "diagnostics");
                 if (tsAnnotations && !semanticCircuitOpen) {
                     applyTsProviderState();
-                    setSessionAnnotations(tsAnnotations);
+                    setSessionAnnotations(tsAnnotations, run, diagnosticStartedAt);
                     return getDiagnostics();
                 }
             }
@@ -1403,26 +1468,47 @@
                 });
                 annotations = localSyntaxDiagnostics(text);
             }
-            setSessionAnnotations(annotations);
+            setSessionAnnotations(annotations, run, diagnosticStartedAt);
             return getDiagnostics();
         }
 
-        function scheduleDiagnostics() {
+        function validateNow(reason) {
+            if (validationTimer !== null) {
+                timerClear(validationTimer);
+                validationTimer = null;
+            }
+            return validateDiagnosticRun(createDiagnosticRun(reason || "manual"));
+        }
+
+        function scheduleDiagnostics(reason, delayMs) {
             if (validationTimer !== null) {
                 timerClear(validationTimer);
                 validationTimer = null;
             }
             if (destroyed || !state.enabled || !updateSemanticState(session)) {
+                diagnosticGeneration++;
                 clearDiagnostics();
                 return;
             }
-            validationTimer = timerSet(function() {
-                validationTimer = null;
+            var run = createDiagnosticRun(reason || "idle-change");
+            var delay = typeof delayMs === "number" ? Math.max(0, delayMs) :
+                (run.reason === "project-snapshot" ?
+                    PROJECT_SNAPSHOT_VALIDATION_DELAY_MS : VALIDATION_DELAY_MS);
+            var scheduledTimer = timerSet(function() {
+                if (validationTimer === scheduledTimer) {
+                    validationTimer = null;
+                }
+                if (!diagnosticRunIsCurrent(run)) {
+                    return;
+                }
                 if (!tsService && tsLoadState !== "loading") {
                     warmUp();
                 }
-                validateNow();
-            }, VALIDATION_DELAY_MS);
+                if (diagnosticRunIsCurrent(run)) {
+                    validateDiagnosticRun(run);
+                }
+            }, delay);
+            validationTimer = scheduledTimer;
         }
 
         function changedTextLength(delta) {
@@ -1460,17 +1546,17 @@
             if (documentLengthKnown) {
                 updateSemanticState(session, state.documentLength);
             }
-            scheduleDiagnostics();
+            scheduleDiagnostics("idle-change");
         }
 
-        function attachDiagnostics() {
+        function attachDiagnostics(reason, delayMs) {
             if (attached || !session || typeof session.on !== "function") {
-                scheduleDiagnostics();
+                scheduleDiagnostics(reason || "attach", delayMs);
                 return;
             }
             session.on("change", onSessionChange);
             attached = true;
-            scheduleDiagnostics();
+            scheduleDiagnostics(reason || "attach", delayMs);
         }
 
         function detachDiagnostics() {
@@ -1478,26 +1564,35 @@
                 timerClear(validationTimer);
                 validationTimer = null;
             }
+            diagnosticGeneration++;
             if (attached && session && typeof session.off === "function") {
                 session.off("change", onSessionChange);
             }
             attached = false;
         }
 
-        function refresh() {
+        function refresh(reason) {
             if (destroyed) {
                 return getState();
             }
             var shouldWarmUp = hasRefreshed;
             var previousOptions = options;
+            var previousState = state;
+            var refreshReason = String(reason || (hasRefreshed ? "configuration-refresh" : "attach"));
             configurationRevision++;
             cancelTsRetry();
-            semanticCircuitOpen = false;
-            consecutiveSlowSemanticOperations = 0;
             var rawOptions = typeof config.getOptions === "function" ? config.getOptions() : "{}";
             options = parseOptions(rawOptions, config);
             state = stateFromOptions(options);
+            state.lastSemanticOperation = previousState.lastSemanticOperation;
+            state.lastSemanticDurationMs = previousState.lastSemanticDurationMs;
+            var projectSnapshotContentChanged =
+                String(previousOptions && previousOptions.projectSourceInventoryFingerprint || "") !==
+                    String(options && options.projectSourceInventoryFingerprint || "") ||
+                Number(previousOptions && previousOptions.projectSourceByteLength || 0) !==
+                    Number(options && options.projectSourceByteLength || 0);
             var serviceConfigurationChanged =
+                !!(previousOptions && previousOptions.enabled) !== !!options.enabled ||
                 !arraysEqual(previousOptions && previousOptions.libraryUris, options.libraryUris) ||
                 !arraysEqual(
                     previousOptions && previousOptions.projectSourceFileUris,
@@ -1514,14 +1609,24 @@
                 !!(previousOptions && previousOptions.checkJs) !== !!options.checkJs ||
                 String(previousOptions && previousOptions.rootUri || "") !==
                     String(options && options.rootUri || "") ||
-                String(previousOptions && previousOptions.projectSourceInventoryFingerprint || "") !==
-                    String(options && options.projectSourceInventoryFingerprint || "") ||
+                String(previousOptions && previousOptions.documentUri || "") !==
+                    String(options && options.documentUri || "") ||
+                Number(previousOptions && previousOptions.projectSourceFileCount || 0) !==
+                    Number(options && options.projectSourceFileCount || 0) ||
                 Number(previousOptions && previousOptions.projectSnapshotSchemaRevision || 0) !==
                     Number(options && options.projectSnapshotSchemaRevision || 0) ||
                 !!(previousOptions && previousOptions.projectSnapshotReady) !==
                     !!(options && options.projectSnapshotReady) ||
                 String(previousOptions && previousOptions.dependencyLayerFingerprint || "") !==
                     String(options && options.dependencyLayerFingerprint || "") ||
+                String(previousOptions && previousOptions.dependencyInventoryFingerprint || "") !==
+                    String(options && options.dependencyInventoryFingerprint || "") ||
+                Number(previousOptions && previousOptions.dependencyFileCount || 0) !==
+                    Number(options && options.dependencyFileCount || 0) ||
+                Number(previousOptions && previousOptions.dependencyByteLength || 0) !==
+                    Number(options && options.dependencyByteLength || 0) ||
+                Number(previousOptions && previousOptions.dependencyPathByteLength || 0) !==
+                    Number(options && options.dependencyPathByteLength || 0) ||
                 String(previousOptions && previousOptions.dependencyBoundaryCode || "") !==
                     String(options && options.dependencyBoundaryCode || "") ||
                 String(previousOptions && previousOptions.dependencyBoundaryDetail || "") !==
@@ -1535,8 +1640,31 @@
                 Number(previousOptions && previousOptions.typescriptProfileRevision || 0) !==
                     Number(options && options.typescriptProfileRevision || 0);
             if (serviceConfigurationChanged) {
+                semanticCircuitOpen = false;
+                consecutiveSlowSemanticOperations = 0;
                 disposeTsService();
                 tsServiceInitAttempts = 0;
+            } else if (projectSnapshotContentChanged && tsService) {
+                var snapshotStartedAt = Date.now();
+                var snapshotResult = typeof tsService.updateProjectSnapshot === "function" ?
+                    tsService.updateProjectSnapshot({
+                        projectSourceFileUris: copyArray(state.projectSourceFileUris),
+                        projectSourceInventoryFingerprint:
+                            state.projectSourceInventoryFingerprint,
+                        projectSourceFileCount: state.projectSourceFileCount,
+                        projectSourceByteLength: state.projectSourceByteLength,
+                        projectSnapshotSchemaRevision: state.projectSnapshotSchemaRevision,
+                        projectSnapshotReady: state.projectSnapshotReady
+                    }) : null;
+                recordSemanticOperation(snapshotStartedAt, "project-snapshot-refresh");
+                if (snapshotResult && snapshotResult.updated === true && !semanticCircuitOpen) {
+                    projectSnapshotIncrementalRefreshCount++;
+                    projectSnapshotChangedFileCount +=
+                        Math.max(0, Number(snapshotResult.changedFileCount) || 0);
+                } else {
+                    disposeTsService();
+                    tsServiceInitAttempts = 0;
+                }
             }
             documentLengthKnown = false;
             updateSemanticState(session);
@@ -1545,7 +1673,11 @@
                     tsService.setDocumentUri(state.documentUri);
                 }
                 applyTsProviderState();
-                attachDiagnostics();
+                attachDiagnostics(
+                    refreshReason,
+                    refreshReason === "project-snapshot" ?
+                        PROJECT_SNAPSHOT_VALIDATION_DELAY_MS : undefined
+                );
                 if (shouldWarmUp && !state.semanticServiceSuppressed && !tsServiceReady()) {
                     var revision = configurationRevision;
                     tsRetryTimer = timerSet(function() {
@@ -1588,6 +1720,9 @@
                 projectSourceByteLength: state.projectSourceByteLength,
                 projectSnapshotSchemaRevision: state.projectSnapshotSchemaRevision,
                 projectSnapshotReady: state.projectSnapshotReady,
+                projectSnapshotIncrementalRefreshCount:
+                    projectSnapshotIncrementalRefreshCount,
+                projectSnapshotChangedFileCount: projectSnapshotChangedFileCount,
                 projectTypeFileUris: copyArray(state.projectTypeFileUris),
                 dependencyTypeNames: copyArray(state.dependencyTypeNames),
                 dependencyLayerFingerprint: state.dependencyLayerFingerprint,
@@ -1624,6 +1759,19 @@
                 semanticServiceReason: state.semanticServiceReason,
                 lastSemanticOperation: state.lastSemanticOperation,
                 lastSemanticDurationMs: state.lastSemanticDurationMs,
+                diagnosticGeneration: diagnosticGeneration,
+                diagnosticPublishCount: diagnosticPublishCount,
+                lastPublishedDiagnosticGeneration: lastPublishedDiagnosticGeneration,
+                lastDiagnosticReason: lastDiagnosticReason,
+                lastDiagnosticScheduledAt: lastDiagnosticScheduledAt,
+                lastDiagnosticStartedAt: lastDiagnosticStartedAt,
+                lastDiagnosticPublishedAt: lastDiagnosticPublishedAt,
+                lastDiagnosticLatencyMs: lastDiagnosticLatencyMs,
+                lastDiagnosticDurationMs: lastDiagnosticDurationMs,
+                diagnosticDebounceDelayMs: VALIDATION_DELAY_MS,
+                projectSnapshotDiagnosticDelayMs: PROJECT_SNAPSHOT_VALIDATION_DELAY_MS,
+                tsServiceInstanceRevision: tsServiceInstanceRevision,
+                tsServiceDisposeCount: tsServiceDisposeCount,
                 serviceStatus: !state.enabled ? "disabled" :
                     state.semanticServiceSuppressed ? "degraded" :
                     state.localServiceReady ? "ready" : "configured",

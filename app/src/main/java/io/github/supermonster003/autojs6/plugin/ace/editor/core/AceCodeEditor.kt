@@ -94,6 +94,8 @@ class AceCodeEditor @JvmOverloads constructor(
     private val projectContextExecutor = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "ace-typescript-project-context").apply { isDaemon = true }
     }
+    private var projectContextDocumentPath = AceLspServerManager.SYNTHETIC_DOCUMENT_URI
+    private var pendingProjectContextCapture: Runnable? = null
     private val hostPreferences = hostContext.defaultHostPreferences()
     private val fontManager = AceEditorFontManager(
         pluginContext = pluginContext,
@@ -424,52 +426,79 @@ class AceCodeEditor @JvmOverloads constructor(
 
     fun setDocumentPath(path: String?) {
         dismissProjectRenameDialog()
+        val documentPathKey = path?.takeIf(String::isNotBlank)
+            ?: AceLspServerManager.SYNTHETIC_DOCUMENT_URI
+        val documentPathChanged = projectContextDocumentPath != documentPathKey
+        projectContextDocumentPath = documentPathKey
+        pendingProjectContextCapture?.let(mainHandler::removeCallbacks)
+        pendingProjectContextCapture = null
         val requestRevision = projectContextRequestRevision.incrementAndGet()
         lspServerManager.setDocumentPath(path)
-        refreshLsp()
+        if (documentPathChanged) {
+            refreshLsp("document-path")
+        }
         val documentPath = path?.takeIf(String::isNotBlank) ?: return
         val profile = AceTypeScriptExecutionProfiles.resolve(documentPath) ?: return
-        projectContextExecutor.execute {
-            val sourceLayer = runCatching {
-                projectSnapshotProvider
-                    ?.capture(documentPath)
-                    ?.let { snapshot ->
-                        AceTypeScriptProjectSourceLayer.from(documentPath, snapshot)
+        val captureProjectContext = Runnable {
+            pendingProjectContextCapture = null
+            if (destroyed || projectContextRequestRevision.get() != requestRevision) {
+                return@Runnable
+            }
+            projectContextExecutor.execute {
+                val sourceLayer = runCatching {
+                    projectSnapshotProvider
+                        ?.capture(documentPath)
+                        ?.let { snapshot ->
+                            AceTypeScriptProjectSourceLayer.from(documentPath, snapshot)
+                        }
+                }.getOrNull()
+                val typeLayer = runCatching {
+                    AceTypeScriptProjectTypeLayer.capture(documentPath, profile)
+                }.getOrNull()
+                mainHandler.post {
+                    if (
+                        !destroyed &&
+                        projectContextRequestRevision.get() == requestRevision &&
+                        lspServerManager.applyProjectLayers(documentPath, sourceLayer, typeLayer)
+                    ) {
+                        sourceLayer?.let { layer ->
+                            eventHistory.record(
+                                "lsp_project_sources",
+                                "files=${layer.sourceFileCount},bytes=${layer.sourceByteLength}," +
+                                    "fingerprint=${layer.sourceInventoryFingerprint}",
+                            )
+                        }
+                        typeLayer?.let { layer ->
+                            eventHistory.record(
+                                "lsp_dependency_types",
+                                "files=${layer.dependencyFileCount}," +
+                                    "bytes=${layer.dependencyByteLength}," +
+                                    "fingerprint=${layer.dependencyLayerFingerprint.orEmpty()}",
+                            )
+                        }
+                        refreshLsp("project-snapshot")
                     }
-            }.getOrNull()
-            val typeLayer = runCatching {
-                AceTypeScriptProjectTypeLayer.capture(documentPath, profile)
-            }.getOrNull()
-            mainHandler.post {
-                if (
-                    !destroyed &&
-                    projectContextRequestRevision.get() == requestRevision &&
-                    lspServerManager.applyProjectLayers(documentPath, sourceLayer, typeLayer)
-                ) {
-                    sourceLayer?.let { layer ->
-                        eventHistory.record(
-                            "lsp_project_sources",
-                            "files=${layer.sourceFileCount},bytes=${layer.sourceByteLength}," +
-                                "fingerprint=${layer.sourceInventoryFingerprint}",
-                        )
-                    }
-                    typeLayer?.let { layer ->
-                        eventHistory.record(
-                            "lsp_dependency_types",
-                            "files=${layer.dependencyFileCount}," +
-                                "bytes=${layer.dependencyByteLength}," +
-                                "fingerprint=${layer.dependencyLayerFingerprint.orEmpty()}",
-                        )
-                    }
-                    refreshLsp()
                 }
             }
+        }
+        pendingProjectContextCapture = captureProjectContext
+        if (documentPathChanged) {
+            captureProjectContext.run()
+        } else {
+            mainHandler.postDelayed(
+                captureProjectContext,
+                PROJECT_CONTEXT_REFRESH_DEBOUNCE_MS,
+            )
         }
     }
 
     fun refreshLsp() {
+        refreshLsp(null)
+    }
+
+    private fun refreshLsp(reason: String?) {
         if (isReady) {
-            invokeAce("refreshLsp")
+            invokeAce("refreshLsp", reason?.let(::quote).orEmpty())
         }
     }
 
@@ -1054,6 +1083,8 @@ class AceCodeEditor @JvmOverloads constructor(
     fun destroy() {
         destroyed = true
         projectContextRequestRevision.incrementAndGet()
+        pendingProjectContextCapture?.let(mainHandler::removeCallbacks)
+        pendingProjectContextCapture = null
         projectContextExecutor.shutdownNow()
         fontCatalogChangeSubscription?.cancel()
         fontCatalogChangeSubscription = null
@@ -1706,6 +1737,14 @@ class AceCodeEditor @JvmOverloads constructor(
             put("projectSourceFileCount", state.optInt("projectSourceFileCount", 0))
             put("projectSourceByteLength", state.optLong("projectSourceByteLength", 0L))
             put(
+                "projectSnapshotIncrementalRefreshCount",
+                state.optLong("projectSnapshotIncrementalRefreshCount", 0L),
+            )
+            put(
+                "projectSnapshotChangedFileCount",
+                state.optLong("projectSnapshotChangedFileCount", 0L),
+            )
+            put(
                 "projectSourceInventoryFingerprint",
                 state.optString("projectSourceInventoryFingerprint", ""),
             )
@@ -1716,6 +1755,25 @@ class AceCodeEditor @JvmOverloads constructor(
             put("maxDocumentLength", state.optLong("maxDocumentLength", 0L))
             put("lastSemanticOperation", state.optString("lastSemanticOperation", ""))
             put("lastSemanticDurationMs", state.optLong("lastSemanticDurationMs", 0L))
+            put("diagnosticGeneration", state.optLong("diagnosticGeneration", 0L))
+            put("diagnosticPublishCount", state.optLong("diagnosticPublishCount", 0L))
+            put(
+                "lastPublishedDiagnosticGeneration",
+                state.optLong("lastPublishedDiagnosticGeneration", 0L),
+            )
+            put("lastDiagnosticReason", state.optString("lastDiagnosticReason", ""))
+            put("lastDiagnosticScheduledAt", state.optLong("lastDiagnosticScheduledAt", 0L))
+            put("lastDiagnosticStartedAt", state.optLong("lastDiagnosticStartedAt", 0L))
+            put("lastDiagnosticPublishedAt", state.optLong("lastDiagnosticPublishedAt", 0L))
+            put("lastDiagnosticLatencyMs", state.optLong("lastDiagnosticLatencyMs", 0L))
+            put("lastDiagnosticDurationMs", state.optLong("lastDiagnosticDurationMs", 0L))
+            put("diagnosticDebounceDelayMs", state.optLong("diagnosticDebounceDelayMs", 0L))
+            put(
+                "projectSnapshotDiagnosticDelayMs",
+                state.optLong("projectSnapshotDiagnosticDelayMs", 0L),
+            )
+            put("tsServiceInstanceRevision", state.optLong("tsServiceInstanceRevision", 0L))
+            put("tsServiceDisposeCount", state.optLong("tsServiceDisposeCount", 0L))
             put("tsLoaderState", loader?.optString("state", "unknown") ?: "unknown")
             put("tsLoaderAttempts", loader?.optInt("attempts", 0) ?: 0)
             put("tsReady", service?.optBoolean("ready", false) ?: false)
@@ -1727,6 +1785,14 @@ class AceCodeEditor @JvmOverloads constructor(
             put(
                 "tsLoadedProjectSourceFileCount",
                 service?.optInt("loadedProjectSourceFileCount", 0) ?: 0,
+            )
+            put(
+                "tsProjectSnapshotUpdateCount",
+                service?.optLong("projectSnapshotUpdateCount", 0L) ?: 0L,
+            )
+            put(
+                "tsProjectSnapshotChangedFileCount",
+                service?.optLong("projectSnapshotChangedFileCount", 0L) ?: 0L,
             )
             put(
                 "tsExecutionProfileRevision",
@@ -3416,6 +3482,7 @@ class AceCodeEditor @JvmOverloads constructor(
         private const val FONT_ERROR_DIAGNOSTIC_LIMIT = 1_024
         private const val MAX_DEFINITION_PAYLOAD_CHARS = 8_192
         private const val TEXT_MIRROR_CALIBRATION_DELAY_MS = 500L
+        private const val PROJECT_CONTEXT_REFRESH_DEBOUNCE_MS = 75L
         private const val IME_REQUEST_COALESCE_MS = 150L
         private const val IME_TRANSITION_HEARTBEAT_SUSPEND_MS = 800L
         private const val IME_TEXT_INPUT_SELECTION_SUPPRESS_MS = 120L

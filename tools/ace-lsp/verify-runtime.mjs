@@ -848,6 +848,129 @@ function verifyExecutionProfileConsistency(paths, ts) {
     };
 }
 
+function verifyIncrementalProjectDiagnostics(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const libraryTextByUri = typeScriptLibraryTextByUri(paths);
+    libraryTextByUri["file:///autojs6/types/generated/lib.autojs6.core.d.ts"] =
+        readFileSync(paths.core, "utf8");
+    libraryTextByUri["file:///autojs6/types/lib.autojs6.extra.d.ts"] =
+        readFileSync(paths.compatibility, "utf8");
+
+    const rootUri = "file:///autojs6/editor/save-diagnostics";
+    const documentUri = `${rootUri}/main.ts`;
+    const sourceTextByUri = {
+        [documentUri]: [
+            'import { sharedValue } from "./file01";',
+            "export const checked: number = sharedValue;",
+        ].join("\n"),
+    };
+    for (let index = 1; index < 20; index += 1) {
+        const suffix = String(index).padStart(2, "0");
+        sourceTextByUri[`${rootUri}/file${suffix}.ts`] = index === 1 ?
+            "export const sharedValue = 42;" :
+            `export const value${suffix} = ${index};`;
+    }
+    const projectSourceFileUris = Object.keys(sourceTextByUri).sort();
+    const sourceByteLength = (sources) => Object.values(sources)
+        .reduce((total, text) => total + Buffer.byteLength(text, "utf8"), 0);
+    const service = context.AutoJsAceTsLanguageService.create({
+        documentUri,
+        rootUri,
+        executionProfile: "rhino",
+        typescriptVersion: "6.0.3",
+        libraryTextByUri,
+        projectSourceTextByUri: sourceTextByUri,
+        projectSourceFileUris,
+        projectSourceInventoryFingerprint: "1".repeat(64),
+        projectSourceFileCount: projectSourceFileUris.length,
+        projectSourceByteLength: sourceByteLength(sourceTextByUri),
+        projectSnapshotSchemaRevision: 1,
+        projectSnapshotReady: true,
+    });
+    const documentText = sourceTextByUri[documentUri];
+    const initialDiagnostics = service.getDiagnostics(
+        sessionFor(documentText),
+        documentText,
+    ) || [];
+    const initialState = service.getState();
+
+    const refreshedTextByUri = {
+        ...sourceTextByUri,
+        [`${rootUri}/file01.ts`]: 'export const sharedValue = "saved";',
+        // The active editor buffer remains authoritative even if the disk snapshot contains
+        // a different current-file value while a capture is in flight.
+        [documentUri]: "export const diskOnly = true;",
+    };
+    const refreshStartedAt = performance.now();
+    const refreshResult = service.updateProjectSnapshot({
+        projectSourceTextByUri: refreshedTextByUri,
+        projectSourceFileUris,
+        projectSourceInventoryFingerprint: "2".repeat(64),
+        projectSourceFileCount: projectSourceFileUris.length,
+        projectSourceByteLength: sourceByteLength(refreshedTextByUri),
+        projectSnapshotSchemaRevision: 1,
+        projectSnapshotReady: true,
+    });
+    const refreshedDiagnostics = service.getDiagnostics(
+        sessionFor(documentText),
+        documentText,
+    ) || [];
+    const refreshDurationMs = performance.now() - refreshStartedAt;
+    const refreshedState = service.getState();
+
+    const incompleteTextByUri = { ...refreshedTextByUri };
+    delete incompleteTextByUri[`${rootUri}/file19.ts`];
+    const rejectedResult = service.updateProjectSnapshot({
+        projectSourceTextByUri: incompleteTextByUri,
+        projectSourceFileUris,
+        projectSourceInventoryFingerprint: "3".repeat(64),
+        projectSourceFileCount: projectSourceFileUris.length,
+        projectSourceByteLength: sourceByteLength(incompleteTextByUri),
+        projectSnapshotSchemaRevision: 1,
+        projectSnapshotReady: true,
+    });
+    const stateAfterRejectedRefresh = service.getState();
+    service.dispose();
+
+    assert(projectSourceFileUris.length === 20, "Incremental diagnostic fixture is not 20 files");
+    assert(
+        initialState.ready && initialDiagnostics.length === 0,
+        `Initial 20-file project was not clean: ${JSON.stringify(initialDiagnostics)}`,
+    );
+    assert(
+        refreshResult?.updated === true && refreshResult.changedFileCount === 1,
+        `Resident project refresh did not update exactly one sibling: ${JSON.stringify(refreshResult)}`,
+    );
+    assert(
+        refreshedDiagnostics.some((diagnostic) => String(diagnostic.raw) === "2322"),
+        `Saved sibling change did not refresh TS2322: ${JSON.stringify(refreshedDiagnostics)}`,
+    );
+    assert(
+        refreshedState.projectSourceInventoryFingerprint === "2".repeat(64) &&
+            refreshedState.projectSnapshotUpdateCount === 1 &&
+            refreshedState.projectSnapshotChangedFileCount === 1 &&
+            refreshedState.loadedProjectSourceFileCount === 20,
+        `Resident project metadata was not advanced: ${JSON.stringify(refreshedState)}`,
+    );
+    assert(
+        rejectedResult?.updated === false &&
+            stateAfterRejectedRefresh.projectSourceInventoryFingerprint === "2".repeat(64) &&
+            stateAfterRejectedRefresh.projectSnapshotUpdateCount === 1,
+        "A partial project snapshot escaped the transactional refresh boundary",
+    );
+    assert(
+        refreshDurationMs < 1000,
+        `Desktop 20-file incremental diagnostics exceeded 1 s: ${refreshDurationMs.toFixed(1)} ms`,
+    );
+    return {
+        projectSourceFileCount: projectSourceFileUris.length,
+        changedFileCount: refreshResult.changedFileCount,
+        diagnosticCodes: refreshedDiagnostics.map((diagnostic) => Number(diagnostic.raw)).sort(),
+        refreshDurationMs: Number(refreshDurationMs.toFixed(1)),
+        rejectedPartialRefresh: rejectedResult.updated === false,
+    };
+}
+
 function completionItems(service, text, prefix) {
     let completionError = null;
     let completions = null;
@@ -1022,6 +1145,177 @@ function createFakeTimer() {
             }
             return ids.length;
         },
+    };
+}
+
+function verifyDiagnosticScheduler(paths) {
+    const timer = createFakeTimer();
+    let text = "export const checked: number = 42;";
+    let changeListener = null;
+    let diagnosticsCallCount = 0;
+    let serviceCreateCount = 0;
+    let serviceDisposeCount = 0;
+    let snapshotUpdateCount = 0;
+    let annotationPublishCount = 0;
+    const publishedStates = [];
+    const options = {
+        documentUri: "file:///autojs6/editor/save-diagnostics/main.ts",
+        enabled: true,
+        rootUri: "file:///autojs6/editor/save-diagnostics",
+        typescriptVersion: "6.0.3",
+        typescriptProfile: "rhino",
+        typescriptProfileRevision: 2,
+        projectSourceFileUris: [
+            "file:///autojs6/editor/save-diagnostics/main.ts",
+            "file:///autojs6/editor/save-diagnostics/shared.ts",
+        ],
+        projectSourceInventoryFingerprint: "a".repeat(64),
+        projectSourceFileCount: 2,
+        projectSourceByteLength: 64,
+        projectSnapshotSchemaRevision: 1,
+        projectSnapshotReady: true,
+    };
+    const session = {
+        getLength: () => 1,
+        getLine: () => text,
+        getValue: () => text,
+        getDocument: () => ({ getNewLineCharacter: () => "\n" }),
+        on(name, callback) {
+            if (name === "change") changeListener = callback;
+        },
+        off(name, callback) {
+            if (name === "change" && changeListener === callback) changeListener = null;
+        },
+        setAnnotations() {
+            annotationPublishCount++;
+        },
+    };
+    const fakeService = {
+        dispose() {
+            serviceDisposeCount++;
+        },
+        getDiagnostics() {
+            diagnosticsCallCount++;
+            return [{
+                row: 0,
+                column: 0,
+                text: "scheduled diagnostic",
+                type: "error",
+                raw: "2322",
+                source: "autojs6-ts",
+            }];
+        },
+        getState() {
+            return {
+                ready: true,
+                projectSnapshotReady: true,
+                projectSourceFileCount: 2,
+                loadedProjectSourceFileCount: 2,
+                projectSnapshotUpdateCount: snapshotUpdateCount,
+            };
+        },
+        setDocumentUri() {
+            return false;
+        },
+        updateProjectSnapshot() {
+            snapshotUpdateCount++;
+            return { updated: true, changedFileCount: 1 };
+        },
+    };
+    const context = {
+        clearTimeout: (id) => timer.clearTimeout(id),
+        console,
+        Date,
+        Function,
+        isFinite,
+        JSON,
+        Math,
+        performance,
+        setTimeout: (callback, delayMs) => timer.setTimeout(callback, delayMs),
+        AutoJsAceTsLanguageService: {
+            create() {
+                serviceCreateCount++;
+                return fakeService;
+            },
+        },
+    };
+    context.window = context;
+    vm.createContext(context);
+    vm.runInContext(readFileSync(paths.client, "utf8"), context, {
+        filename: basename(paths.client),
+    });
+    const client = context.AutoJsAceLspClient.createClient({
+        getOptions: () => JSON.stringify(options),
+        onDiagnosticsPublished: (state) => publishedStates.push(state),
+        session,
+    });
+    client.warmUp();
+    timer.runPending();
+    const diagnosticsAfterWarmUp = diagnosticsCallCount;
+
+    let firstRapidTimerId = null;
+    for (let index = 0; index < 5; index += 1) {
+        text += " ";
+        changeListener?.({ action: "insert", lines: [" "] });
+        if (index === 0) firstRapidTimerId = timer.latestId();
+        assert(timer.pendingCount() === 1, "Rapid edits retained multiple diagnostic timers");
+    }
+    assert(
+        timer.delayFor(timer.latestId()) === 450,
+        "Idle diagnostic debounce delay is not 450 ms",
+    );
+    timer.run(firstRapidTimerId, true);
+    assert(
+        diagnosticsCallCount === diagnosticsAfterWarmUp && timer.pendingCount() === 1,
+        "A cancelled diagnostic generation published stale annotations",
+    );
+    timer.runPending();
+    const idleState = client.getState();
+    assert(
+        diagnosticsCallCount === diagnosticsAfterWarmUp + 1 &&
+            idleState.lastDiagnosticReason === "idle-change" &&
+            idleState.diagnosticPublishCount >= 2 &&
+            idleState.lastPublishedDiagnosticGeneration === idleState.diagnosticGeneration,
+        `Latest idle diagnostic generation was not published: ${JSON.stringify(idleState)}`,
+    );
+
+    options.projectSourceInventoryFingerprint = "b".repeat(64);
+    options.projectSourceByteLength += 1;
+    const stateAfterRefresh = client.refresh("project-snapshot");
+    const snapshotTimerId = timer.latestId();
+    assert(
+        serviceCreateCount === 1 && serviceDisposeCount === 0 && snapshotUpdateCount === 1 &&
+            stateAfterRefresh.projectSnapshotIncrementalRefreshCount === 1,
+        `Project save rebuilt the resident service: ${JSON.stringify(stateAfterRefresh)}`,
+    );
+    assert(
+        timer.pendingCount() === 1 && timer.delayFor(snapshotTimerId) === 50,
+        "Project snapshot diagnostics did not use the 50 ms save budget",
+    );
+    timer.runPending();
+    const snapshotState = client.getState();
+    assert(
+        snapshotState.lastDiagnosticReason === "project-snapshot" &&
+            snapshotState.tsServiceInstanceRevision === 1 &&
+            snapshotState.tsServiceDisposeCount === 0 &&
+            snapshotState.projectSnapshotChangedFileCount === 1 &&
+            snapshotState.diagnosticsCount === 1 &&
+            annotationPublishCount === diagnosticsCallCount &&
+            publishedStates.length === diagnosticsCallCount,
+        `Saved project diagnostics lost resident-service telemetry: ${JSON.stringify(snapshotState)}`,
+    );
+    client.destroy();
+    return {
+        idleDebounceDelayMs: idleState.diagnosticDebounceDelayMs,
+        projectSnapshotDelayMs: snapshotState.projectSnapshotDiagnosticDelayMs,
+        rapidEditCount: 5,
+        staleGenerationChecks: 1,
+        serviceCreateCount,
+        saveServiceDisposeCount: snapshotState.tsServiceDisposeCount,
+        destroyServiceDisposeCount: serviceDisposeCount,
+        projectSnapshotIncrementalRefreshCount:
+            snapshotState.projectSnapshotIncrementalRefreshCount,
+        diagnosticPublishCount: snapshotState.diagnosticPublishCount,
     };
 }
 
@@ -1439,8 +1733,10 @@ function main() {
     const semantics = verifyCompatibilitySemantics(paths, ts);
     const browserService = verifyBrowserLanguageService(paths, ts.version);
     const dependencyTypes = verifyDependencyTypeLayer(paths);
+    const incrementalProjectDiagnostics = verifyIncrementalProjectDiagnostics(paths);
     const executionProfiles = verifyExecutionProfileConsistency(paths, ts);
     const optionalGroups = verifyOptionalGroupCompletions(paths);
+    const diagnosticScheduler = verifyDiagnosticScheduler(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const oldWebView = verifyOldWebViewFallback(paths);
     process.stdout.write(
@@ -1449,8 +1745,10 @@ function main() {
             semantics,
             browserService,
             dependencyTypes,
+            incrementalProjectDiagnostics,
             executionProfiles,
             optionalGroups,
+            diagnosticScheduler,
             completionRefresh,
             oldWebView,
         }, null, 2)}\n`,

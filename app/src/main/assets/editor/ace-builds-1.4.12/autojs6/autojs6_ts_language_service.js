@@ -430,8 +430,16 @@
         var projectDirectories = Object.create(null);
         var projectSnapshotSchemaRevision =
             Math.max(0, Number(config.projectSnapshotSchemaRevision) || 0);
+        var projectSourceInventoryFingerprint =
+            String(config.projectSourceInventoryFingerprint || "");
+        var projectSourceFileCount =
+            Math.max(0, Number(config.projectSourceFileCount) || 0);
+        var projectSourceByteLength =
+            Math.max(0, Number(config.projectSourceByteLength) || 0);
         var projectSnapshotReady = config.projectSnapshotReady === true &&
             projectSnapshotSchemaRevision === 1;
+        var projectSnapshotUpdateCount = 0;
+        var projectSnapshotChangedFileCount = 0;
         var dependencyTypeNames = copyArray(config.dependencyTypeNames)
             .map(function(name) { return String(name || ""); })
             .filter(function(name, index, names) {
@@ -833,6 +841,87 @@
                 bump(currentFile);
             }
             return true;
+        }
+
+        function updateProjectSnapshot(snapshot) {
+            snapshot = snapshot || {};
+            if (disposed || !initialize()) {
+                return {
+                    updated: false,
+                    reason: disposed ?
+                        "typescript language service disposed" :
+                        (reason || "typescript language service unavailable")
+                };
+            }
+            var nextSchemaRevision =
+                Math.max(0, Number(snapshot.projectSnapshotSchemaRevision) || 0);
+            var nextUris = copyArray(snapshot.projectSourceFileUris)
+                .map(normalizeFileName)
+                .filter(function(uri, index, uris) {
+                    return uri.indexOf(projectRootUri + "/") === 0 &&
+                        uris.indexOf(uri) === index;
+                })
+                .sort();
+            var nextFileCount =
+                Math.max(0, Number(snapshot.projectSourceFileCount) || 0);
+            if (snapshot.projectSnapshotReady !== true || nextSchemaRevision !== 1 ||
+                nextFileCount !== projectSourceUris.length ||
+                nextUris.length !== projectSourceUris.length ||
+                nextUris.some(function(uri, index) {
+                    return uri !== projectSourceUris[index];
+                }) || nextUris.indexOf(currentFile) < 0) {
+                return {
+                    updated: false,
+                    reason: "project snapshot topology changed"
+                };
+            }
+
+            // Read every sibling before publishing any update. A failed bridge read therefore
+            // leaves the resident Language Service and all script versions untouched.
+            var configuredTextByUri = snapshot.projectSourceTextByUri || {};
+            var nextTextByUri = Object.create(null);
+            for (var index = 0; index < nextUris.length; index++) {
+                var uri = nextUris[index];
+                if (uri === currentFile) {
+                    continue;
+                }
+                var text = hasOwn(configuredTextByUri, uri) ?
+                    configuredTextByUri[uri] : loadText(uri);
+                if (text === null || text === undefined) {
+                    return {
+                        updated: false,
+                        reason: "project snapshot source unavailable: " + uri
+                    };
+                }
+                nextTextByUri[uri] = String(text);
+            }
+
+            var changedFileCount = 0;
+            nextUris.forEach(function(uri) {
+                if (uri === currentFile) {
+                    return;
+                }
+                var nextText = nextTextByUri[uri];
+                if (!hasOwn(files, uri) || files[uri] !== nextText) {
+                    files[uri] = nextText;
+                    bump(uri);
+                    changedFileCount++;
+                }
+            });
+            projectSourceInventoryFingerprint =
+                String(snapshot.projectSourceInventoryFingerprint || "");
+            projectSourceFileCount = nextFileCount;
+            projectSourceByteLength =
+                Math.max(0, Number(snapshot.projectSourceByteLength) || 0);
+            projectSnapshotSchemaRevision = nextSchemaRevision;
+            projectSnapshotReady = true;
+            projectSnapshotUpdateCount++;
+            projectSnapshotChangedFileCount += changedFileCount;
+            return {
+                updated: true,
+                changedFileCount: changedFileCount,
+                updateCount: projectSnapshotUpdateCount
+            };
         }
 
         function syncSession(session, documentText) {
@@ -1383,16 +1472,16 @@
                 defaultLib: defaultLib,
                 libraryCount: libraryUris.length,
                 projectRootUri: projectRootUri,
-                projectSourceFileCount: projectSourceUris.length,
+                projectSourceFileCount: projectSourceFileCount || projectSourceUris.length,
                 loadedProjectSourceFileCount: projectSourceUris.filter(function(uri) {
                     return hasOwn(files, uri);
                 }).length,
-                projectSourceInventoryFingerprint:
-                    String(config.projectSourceInventoryFingerprint || ""),
-                projectSourceByteLength:
-                    Math.max(0, Number(config.projectSourceByteLength) || 0),
+                projectSourceInventoryFingerprint: projectSourceInventoryFingerprint,
+                projectSourceByteLength: projectSourceByteLength,
                 projectSnapshotSchemaRevision: projectSnapshotSchemaRevision,
                 projectSnapshotReady: projectSnapshotReady,
+                projectSnapshotUpdateCount: projectSnapshotUpdateCount,
+                projectSnapshotChangedFileCount: projectSnapshotChangedFileCount,
                 projectTypeFileCount: projectTypeUris.length,
                 loadedProjectTypeFileCount: projectTypeUris.filter(function(uri) {
                     return hasOwn(files, uri);
@@ -1441,6 +1530,9 @@
             dependencyBoundaryCode = "";
             dependencyBoundaryDetail = "";
             projectSnapshotReady = false;
+            projectSourceInventoryFingerprint = "";
+            projectSourceFileCount = 0;
+            projectSourceByteLength = 0;
             currentText = "";
             reason = "typescript language service disposed";
         }
@@ -1449,6 +1541,7 @@
             initialize: initialize,
             setDocumentUri: setDocumentUri,
             updateDocument: updateDocument,
+            updateProjectSnapshot: updateProjectSnapshot,
             getCompletions: getCompletions,
             getHover: getHover,
             getSignatureHelp: getSignatureHelp,

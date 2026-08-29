@@ -810,11 +810,13 @@
         return state || null;
     }
 
-    function refreshLspAndPublish() {
+    function refreshLspAndPublish(reason) {
         if (lspCompletionRefreshController) {
             lspCompletionRefreshController.cancel();
         }
-        return publishLspState(lspClient && lspClient.refresh ? lspClient.refresh() : null);
+        return publishLspState(
+            lspClient && lspClient.refresh ? lspClient.refresh(reason || "") : null
+        );
     }
 
     function getLspStateAndPublish() {
@@ -5017,7 +5019,7 @@
             read: function(uri) { return callBridge("read", [uri || ""]); },
             write: function(uri, text) { return callBridge("write", [uri || "", text || ""]); },
             getLspOptions: function() { return callBridge("getLspOptions") || "{}"; },
-            refreshLsp: function() { return refreshLspAndPublish(); },
+            refreshLsp: function(reason) { return refreshLspAndPublish(reason); },
             getLspState: function() { return getLspStateAndPublish(); },
             getLspHover: function(row, column) {
                 var result = lspClient ? lspClient.getHover({ row: row, column: column }) : null;
@@ -5113,7 +5115,10 @@
                                 global.AutoJsAceCompleter.getActiveCompleter &&
                                 global.AutoJsAceCompleter.getActiveCompleter());
                     },
-                    notifyError: notifyLspError
+                    notifyError: notifyLspError,
+                    onDiagnosticsPublished: function(state) {
+                        publishLspState(state);
+                    }
                 });
                 installLspCompletionCompleter();
                 publishLspState();
