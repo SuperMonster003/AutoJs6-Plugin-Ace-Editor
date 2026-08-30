@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `기능` AutoJs6 `4.6.0` 리소스 안전 PNG 양자화 선언과 다시 생성한 main-app LSP 그룹을 포함: 구성 가능한 `maxPixels` 및 `maxMemoryBytes` 예산 초과는 형식화된 세부 정보와 함께 실패하고, 결과는 `peakWorkingMemoryBytes`를 노출하며, 취소 API는 명시적 요청과 스크립트 종료를 처리
+
 # v1.1.17
 
 ###### 2026/08/31
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 ###### 2026/08/30
 
 * `기능` AutoJs6 `4.4.0` PNG 양자화 결과 선언과 다시 생성한 main-app LSP 그룹을 포함: `images.quantize`는 인코딩 바이트, 크기, 실제 품질 및 양자화 오차를 반환하고, 명시한 품질 하한을 충족할 수 없으면 형식화된 `QualityTooLowException`을 공개
-
-# v1.1.15
-
-###### 2026/08/30
-
-* `기능` AutoJs6 `4.3.0` PNG 양자화 옵션 선언과 다시 생성한 main-app/resource LSP 그룹을 포함: `Images.PngQuantizationOptions`는 팔레트 크기, 속도, 품질 범위, 디더링 및 posterize를 다루며 숫자 `quality` 호환성을 유지
 
 ##### 더 많은 릴리스 기록
 

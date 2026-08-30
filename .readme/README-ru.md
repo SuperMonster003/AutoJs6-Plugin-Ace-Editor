@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `Функция` Добавлены декларации ресурсобезопасного PNG-квантования AutoJs6 `4.6.0` и заново созданная группа LSP main-app: превышение настраиваемых бюджетов `maxPixels` и `maxMemoryBytes` завершается типизированной ошибкой с деталями, результаты публикуют `peakWorkingMemoryBytes`, а API отмены охватывают явные запросы и завершение скрипта
+
 # v1.1.17
 
 ###### 2026/08/31
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 ###### 2026/08/30
 
 * `Функция` Добавлены декларации результата PNG-квантования AutoJs6 `4.4.0` и заново созданная группа LSP main-app: `images.quantize` возвращает кодированные байты, размер, достигнутое качество и ошибку квантования; недостижимая явно заданная нижняя граница качества предоставляет типизированное `QualityTooLowException`
-
-# v1.1.15
-
-###### 2026/08/30
-
-* `Функция` Добавлены декларации параметров PNG-квантования AutoJs6 `4.3.0` и заново созданные группы LSP main-app/resources: `Images.PngQuantizationOptions` охватывает размер палитры, скорость, границы качества, дизеринг и posterize, сохраняя совместимость числового `quality`
 
 ##### Подробнее об истории выпусков
 

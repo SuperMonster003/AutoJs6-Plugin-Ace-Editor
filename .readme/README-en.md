@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `Feature` Bundle the AutoJs6 `4.6.0` resource-safe PNG quantization declarations and regenerated main-app LSP group: configurable `maxPixels` and `maxMemoryBytes` budgets fail with typed details, results expose `peakWorkingMemoryBytes`, and cancellation APIs cover explicit requests and script shutdown
+
 # v1.1.17
 
 ###### 2026/08/31
@@ -114,12 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/30
 
 * `Feature` Bundle the AutoJs6 `4.4.0` PNG quantization result declarations and regenerated main-app LSP group: `images.quantize` returns encoded bytes, size, achieved quality, and quantization error; an unmet explicit quality floor exposes the typed `QualityTooLowException`
-
-# v1.1.15
-
-###### 2026/08/30
-
-* `Feature` Bundle the AutoJs6 `4.3.0` PNG quantization option declarations and regenerated main-app/resource LSP groups: `Images.PngQuantizationOptions` covers palette size, speed, quality bounds, dithering, and posterize while numeric `quality` remains compatible
 
 ##### Complete release history
 

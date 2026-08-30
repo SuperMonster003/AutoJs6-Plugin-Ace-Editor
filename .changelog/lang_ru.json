@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.1.18": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "Добавлены декларации ресурсобезопасного PNG-квантования AutoJs6 `4.6.0` и заново созданная группа LSP main-app: превышение настраиваемых бюджетов `maxPixels` и `maxMemoryBytes` завершается типизированной ошибкой с деталями, результаты публикуют `peakWorkingMemoryBytes`, а API отмены охватывают явные запросы и завершение скрипта"
+      ]
+    },
     "v1.1.17": {
       "released_date": "2026/08/31",
       "feature": [

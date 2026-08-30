@@ -90,7 +90,7 @@ La tâche valide les références des déclarations et la syntaxe TypeScript 6, 
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -103,6 +103,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `Fonctionnalité` Integre les declarations de quantification PNG a ressources controlees d'AutoJs6 `4.6.0` et le groupe LSP main-app regenere: les budgets configurables `maxPixels` et `maxMemoryBytes` echouent avec des details types, les resultats exposent `peakWorkingMemoryBytes` et les API d'annulation couvrent les demandes explicites et l'arret du script
+
 # v1.1.17
 
 ###### 2026/08/31
@@ -114,12 +120,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/30
 
 * `Fonctionnalité` Integre les declarations de resultat de quantification PNG d'AutoJs6 `4.4.0` et le groupe LSP main-app regenere: `images.quantize` renvoie les octets encodes, la taille, la qualite obtenue et l'erreur de quantification; une borne minimale explicite impossible a satisfaire expose `QualityTooLowException` typee
-
-# v1.1.15
-
-###### 2026/08/30
-
-* `Fonctionnalité` Integre les declarations d'options de quantification PNG d'AutoJs6 `4.3.0` et les groupes LSP main-app/resources regeneres: `Images.PngQuantizationOptions` couvre la taille de palette, la vitesse, les bornes de qualite, le tramage et posterize, tout en conservant la compatibilite de `quality` numerique
 
 ##### Pour plus d'historique des versions
 

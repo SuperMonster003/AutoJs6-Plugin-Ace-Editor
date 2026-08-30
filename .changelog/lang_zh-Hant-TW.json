@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.1.18": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "內建 AutoJs6 `4.6.0` 資源安全的 PNG 量化宣告及重新產生的主應用程式 LSP 分組: 可設定的 `maxPixels` 與 `maxMemoryBytes` 預算超限時回傳帶詳細資料的型別化錯誤, 結果公開 `peakWorkingMemoryBytes`, 取消 API 涵蓋明確要求與指令碼結束"
+      ]
+    },
     "v1.1.17": {
       "released_date": "2026/08/31",
       "feature": [

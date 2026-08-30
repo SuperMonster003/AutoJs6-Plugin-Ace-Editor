@@ -90,7 +90,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `新增` 內置 AutoJs6 `4.6.0` 資源安全的 PNG 量化聲明及重新生成的主應用 LSP 分組: 可配置的 `maxPixels` 與 `maxMemoryBytes` 預算超限時傳回帶詳情的類型化錯誤, 結果公開 `peakWorkingMemoryBytes`, 取消 API 覆蓋明確請求與腳本結束
+
 # v1.1.17
 
 ###### 2026/08/31
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 ###### 2026/08/30
 
 * `新增` 內置 AutoJs6 `4.4.0` PNG 量化結果聲明及重新生成的主應用 LSP 分組: `images.quantize` 傳回編碼位元組, 大小, 實際品質與量化誤差; 明確品質下限無法滿足時公開類型化 `QualityTooLowException`
-
-# v1.1.15
-
-###### 2026/08/30
-
-* `新增` 內置 AutoJs6 `4.3.0` PNG 量化選項聲明及重新生成的主應用/資源 LSP 分組: `Images.PngQuantizationOptions` 涵蓋調色板大小, 速度, 品質範圍, 抖動與 posterize, 並保留數字 `quality` 相容性
 
 ##### 更多發行歷史可參閱
 

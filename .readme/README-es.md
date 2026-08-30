@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -103,6 +103,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `Función` Incluye las declaraciones de cuantizacion PNG segura en recursos de AutoJs6 `4.6.0` y el grupo LSP main-app regenerado: los presupuestos configurables `maxPixels` y `maxMemoryBytes` fallan con detalles tipados, los resultados exponen `peakWorkingMemoryBytes` y las API de cancelacion cubren solicitudes explicitas y el cierre del script
+
 # v1.1.17
 
 ###### 2026/08/31
@@ -114,12 +120,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/30
 
 * `Función` Incluye las declaraciones de resultado de cuantizacion PNG de AutoJs6 `4.4.0` y el grupo LSP main-app regenerado: `images.quantize` devuelve bytes codificados, tamano, calidad alcanzada y error de cuantizacion; un limite minimo explicito no alcanzable expone `QualityTooLowException` tipada
-
-# v1.1.15
-
-###### 2026/08/30
-
-* `Función` Incluye las declaraciones de opciones de cuantizacion PNG de AutoJs6 `4.3.0` y los grupos LSP main-app/resources regenerados: `Images.PngQuantizationOptions` cubre tamano de paleta, velocidad, limites de calidad, tramado y posterize, manteniendo compatible el `quality` numerico
 
 ##### Para ver más historial de versiones
 

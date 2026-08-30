@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `ميزة` تضمين تعريفات تكميم PNG الآمن للموارد في AutoJs6 `4.6.0` ومجموعة LSP المعاد توليدها لـ main-app: تؤدي ميزانيتا `maxPixels` و`maxMemoryBytes` القابلتان للضبط إلى فشل بتفاصيل نوعية عند تجاوزهما, وتعرض النتائج `peakWorkingMemoryBytes`, وتغطي واجهات الإلغاء الطلبات الصريحة وإيقاف البرنامج النصي
+
 # v1.1.17
 
 ###### 2026/08/31
@@ -114,12 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-u
 ###### 2026/08/30
 
 * `ميزة` تضمين تعريفات نتائج تكميم PNG في AutoJs6 `4.4.0` ومجموعة LSP المعاد توليدها لـ main-app: تعيد `images.quantize` البايتات المشفرة والحجم والجودة المحققة وخطأ التكميم; ويكشف تعذر تحقيق حد جودة صريح `QualityTooLowException` ذا نوع محدد
-
-# v1.1.15
-
-###### 2026/08/30
-
-* `ميزة` تضمين تعريفات خيارات تكميم PNG في AutoJs6 `4.3.0` ومجموعات LSP المعاد توليدها لـ main-app/resources: يغطي `Images.PngQuantizationOptions` حجم لوحة الألوان والسرعة وحدود الجودة والتشويش وposterize مع الحفاظ على توافق `quality` الرقمي
 
 ##### لمزيد من سجل الإصدارات
 

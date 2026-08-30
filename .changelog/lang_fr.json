@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.18": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "Integre les declarations de quantification PNG a ressources controlees d'AutoJs6 `4.6.0` et le groupe LSP main-app regenere: les budgets configurables `maxPixels` et `maxMemoryBytes` echouent avec des details types, les resultats exposent `peakWorkingMemoryBytes` et les API d'annulation couvrent les demandes explicites et l'arret du script"
+      ]
+    },
     "v1.1.17": {
       "released_date": "2026/08/31",
       "feature": [

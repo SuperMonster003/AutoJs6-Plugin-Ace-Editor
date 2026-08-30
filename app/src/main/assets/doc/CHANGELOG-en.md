@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `Feature` Bundle the AutoJs6 `4.6.0` resource-safe PNG quantization declarations and regenerated main-app LSP group: configurable `maxPixels` and `maxMemoryBytes` budgets fail with typed details, results expose `peakWorkingMemoryBytes`, and cancellation APIs cover explicit requests and script shutdown
+
 # v1.1.17
 
 ###### 2026/08/31

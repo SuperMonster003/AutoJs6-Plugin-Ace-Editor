@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.1.18": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "AutoJs6 `4.6.0` のリソース安全な PNG 量子化宣言と再生成した main-app LSP グループを同梱: 設定可能な `maxPixels` と `maxMemoryBytes` の予算超過は型付き詳細で失敗し, 結果は `peakWorkingMemoryBytes` を公開し, キャンセル API は明示要求とスクリプト終了に対応"
+      ]
+    },
     "v1.1.17": {
       "released_date": "2026/08/31",
       "feature": [

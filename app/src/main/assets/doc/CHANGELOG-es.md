@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.18
+
+###### 2026/08/31
+
+* `Función` Incluye las declaraciones de cuantizacion PNG segura en recursos de AutoJs6 `4.6.0` y el grupo LSP main-app regenerado: los presupuestos configurables `maxPixels` y `maxMemoryBytes` fallan con detalles tipados, los resultados exponen `peakWorkingMemoryBytes` y las API de cancelacion cubren solicitudes explicitas y el cierre del script
+
 # v1.1.17
 
 ###### 2026/08/31

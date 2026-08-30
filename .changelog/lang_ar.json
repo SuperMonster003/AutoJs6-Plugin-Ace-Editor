@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.18": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "تضمين تعريفات تكميم PNG الآمن للموارد في AutoJs6 `4.6.0` ومجموعة LSP المعاد توليدها لـ main-app: تؤدي ميزانيتا `maxPixels` و`maxMemoryBytes` القابلتان للضبط إلى فشل بتفاصيل نوعية عند تجاوزهما, وتعرض النتائج `peakWorkingMemoryBytes`, وتغطي واجهات الإلغاء الطلبات الصريحة وإيقاف البرنامج النصي"
+      ]
+    },
     "v1.1.17": {
       "released_date": "2026/08/31",
       "feature": [
