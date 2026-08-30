@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.15
+
+###### 2026/08/30
+
+* `機能` AutoJs6 `4.3.0` の PNG 量子化オプション宣言と再生成した main-app/resource LSP グループを同梱: `Images.PngQuantizationOptions` はパレット数, 速度, 品質範囲, ディザリング, posterize を網羅し, 数値 `quality` の互換性を維持
+
 # v1.1.14
 
 ###### 2026/08/29

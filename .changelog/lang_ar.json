@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.15": {
+      "released_date": "2026/08/30",
+      "feature": [
+        "تضمين تعريفات خيارات تكميم PNG في AutoJs6 `4.3.0` ومجموعات LSP المعاد توليدها لـ main-app/resources: يغطي `Images.PngQuantizationOptions` حجم لوحة الألوان والسرعة وحدود الجودة والتشويش وposterize مع الحفاظ على توافق `quality` الرقمي"
+      ]
+    },
     "v1.1.14": {
       "released_date": "2026/08/29",
       "feature": [

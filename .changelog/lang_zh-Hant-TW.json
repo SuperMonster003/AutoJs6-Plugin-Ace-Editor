@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.1.15": {
+      "released_date": "2026/08/30",
+      "feature": [
+        "內建 AutoJs6 `4.3.0` PNG 量化選項宣告及重新產生的主應用程式/資源 LSP 分組: `Images.PngQuantizationOptions` 涵蓋調色盤大小, 速度, 品質範圍, 抖動與 posterize, 並保留數字 `quality` 相容性"
+      ]
+    },
     "v1.1.14": {
       "released_date": "2026/08/29",
       "feature": [

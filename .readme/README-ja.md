@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 ### リリース履歴
 
 ******
+
+# v1.1.15
+
+###### 2026/08/30
+
+* `機能` AutoJs6 `4.3.0` の PNG 量子化オプション宣言と再生成した main-app/resource LSP グループを同梱: `Images.PngQuantizationOptions` はパレット数, 速度, 品質範囲, ディザリング, posterize を網羅し, 数値 `quality` の互換性を維持
 
 # v1.1.14
 
@@ -121,12 +127,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 ###### 2026/08/26
 
 * `機能` AutoJs6 `4.1.0` の最終的なプラグイン専用 AI 宣言を同梱: セレクター省略時は公式 3-Stone AI の既定ターゲットを使用し, すべての要求はプラグインの `target` ルーティングと標準 `timeout` のみを受け付け, ホスト側の直接接続, 認証情報, 移行用イベント型を削除
-
-# v1.1.12
-
-###### 2026/08/26
-
-* `機能` AutoJs6 の統一 AI ターゲット宣言を内蔵: `ai.catalog`, `target` による厳密なルーティング, ローカルおよびオンラインターゲット, 完全なレスポンス/セッションメタデータ, reasoning 出力, フォールバックしない安定エラーを網羅し, 未公開の旧 AI カタログ API と互換エイリアスをすべて削除
 
 ##### その他のリリース履歴
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.15
+
+###### 2026/08/30
+
+* `기능` AutoJs6 `4.3.0` PNG 양자화 옵션 선언과 다시 생성한 main-app/resource LSP 그룹을 포함: `Images.PngQuantizationOptions`는 팔레트 크기, 속도, 품질 범위, 디더링 및 posterize를 다루며 숫자 `quality` 호환성을 유지
+
 # v1.1.14
 
 ###### 2026/08/29

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.15
+
+###### 2026/08/30
+
+* `Función` Incluye las declaraciones de opciones de cuantizacion PNG de AutoJs6 `4.3.0` y los grupos LSP main-app/resources regenerados: `Images.PngQuantizationOptions` cubre tamano de paleta, velocidad, limites de calidad, tramado y posterize, manteniendo compatible el `quality` numerico
+
 # v1.1.14
 
 ###### 2026/08/29

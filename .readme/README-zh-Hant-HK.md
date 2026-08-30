@@ -90,7 +90,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 ### 發行歷史
 
 ******
+
+# v1.1.15
+
+###### 2026/08/30
+
+* `新增` 內置 AutoJs6 `4.3.0` PNG 量化選項聲明及重新生成的主應用/資源 LSP 分組: `Images.PngQuantizationOptions` 涵蓋調色板大小, 速度, 品質範圍, 抖動與 posterize, 並保留數字 `quality` 相容性
 
 # v1.1.14
 
@@ -121,12 +127,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 ###### 2026/08/26
 
 * `新增` 內置 AutoJs6 `4.1.0` 最終只經外掛的 AI 宣告: 省略選擇器時使用官方 3-Stone AI 預設目標, 所有請求只接受外掛 `target` 路由和標準 `timeout`, 並移除宿主端直連設定, 憑證和過渡事件類型
-
-# v1.1.12
-
-###### 2026/08/26
-
-* `新增` 內置 AutoJs6 統一 AI 目標聲明: `ai.catalog`, `target` 精確路由, 本機與網上目標, 完整回應及會話元數據, reasoning 輸出和穩定的禁止回退錯誤; 同時移除所有未發佈的舊 AI 目錄 API 與兼容別名
 
 ##### 更多發行歷史可參閱
 

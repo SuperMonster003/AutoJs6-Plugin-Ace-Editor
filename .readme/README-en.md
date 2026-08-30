@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -102,6 +102,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.1.15
+
+###### 2026/08/30
+
+* `Feature` Bundle the AutoJs6 `4.3.0` PNG quantization option declarations and regenerated main-app/resource LSP groups: `Images.PngQuantizationOptions` covers palette size, speed, quality bounds, dithering, and posterize while numeric `quality` remains compatible
 
 # v1.1.14
 
@@ -121,12 +127,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/26
 
 * `Feature` Bundle the final plugin-only AutoJs6 `4.1.0` AI declarations: omitted selectors use the official 3-Stone AI default target, every request accepts only plugin `target` routing and canonical `timeout`, and host-side direct-connection, credential, and transitional event types are removed
-
-# v1.1.12
-
-###### 2026/08/26
-
-* `Feature` Bundle the unified AutoJs6 AI target declarations: `ai.catalog`, exact `target` routing, local and online targets, complete response and session metadata, reasoning output, and stable no-fallback failures; remove all unpublished legacy AI catalog APIs and aliases
 
 ##### Complete release history
 

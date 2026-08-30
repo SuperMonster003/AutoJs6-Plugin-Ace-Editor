@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.15
+
+###### 2026/08/30
+
+* `Feature` Bundle the AutoJs6 `4.3.0` PNG quantization option declarations and regenerated main-app/resource LSP groups: `Images.PngQuantizationOptions` covers palette size, speed, quality bounds, dithering, and posterize while numeric `quality` remains compatible
+
 # v1.1.14
 
 ###### 2026/08/29

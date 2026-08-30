@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 ### 릴리스 기록
 
 ******
+
+# v1.1.15
+
+###### 2026/08/30
+
+* `기능` AutoJs6 `4.3.0` PNG 양자화 옵션 선언과 다시 생성한 main-app/resource LSP 그룹을 포함: `Images.PngQuantizationOptions`는 팔레트 크기, 속도, 품질 범위, 디더링 및 posterize를 다루며 숫자 `quality` 호환성을 유지
 
 # v1.1.14
 
@@ -121,12 +127,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-u
 ###### 2026/08/26
 
 * `기능` 최종 플러그인 전용 AutoJs6 `4.1.0` AI 선언을 번들: 선택자를 생략하면 공식 3-Stone AI 기본 대상을 사용하고, 모든 요청은 플러그인 `target` 라우팅과 표준 `timeout`만 허용하며, 호스트 측 직접 연결, 자격 증명 및 전환 이벤트 타입을 제거
-
-# v1.1.12
-
-###### 2026/08/26
-
-* `기능` AutoJs6 통합 AI 대상 선언을 내장: `ai.catalog`, `target` 정확 라우팅, 로컬 및 온라인 대상, 완전한 응답·세션 메타데이터, reasoning 출력과 폴백 없는 안정 오류를 포함하며 공개되지 않은 이전 AI 카탈로그 API 및 호환 별칭을 모두 제거
 
 ##### 더 많은 릴리스 기록
 

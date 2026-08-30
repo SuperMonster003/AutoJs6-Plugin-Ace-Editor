@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.1.15": {
+      "released_date": "2026/08/30",
+      "feature": [
+        "Добавлены декларации параметров PNG-квантования AutoJs6 `4.3.0` и заново созданные группы LSP main-app/resources: `Images.PngQuantizationOptions` охватывает размер палитры, скорость, границы качества, дизеринг и posterize, сохраняя совместимость числового `quality`"
+      ]
+    },
     "v1.1.14": {
       "released_date": "2026/08/29",
       "feature": [

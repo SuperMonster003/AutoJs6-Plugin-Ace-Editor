@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.1.15": {
+      "released_date": "2026/08/30",
+      "feature": [
+        "AutoJs6 `4.3.0` PNG 양자화 옵션 선언과 다시 생성한 main-app/resource LSP 그룹을 포함: `Images.PngQuantizationOptions`는 팔레트 크기, 속도, 품질 범위, 디더링 및 posterize를 다루며 숫자 `quality` 호환성을 유지"
+      ]
+    },
     "v1.1.14": {
       "released_date": "2026/08/29",
       "feature": [

@@ -90,7 +90,7 @@ La tâche valide les références des déclarations et la syntaxe TypeScript 6, 
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.14-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -102,6 +102,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.1.15
+
+###### 2026/08/30
+
+* `Fonctionnalité` Integre les declarations d'options de quantification PNG d'AutoJs6 `4.3.0` et les groupes LSP main-app/resources regeneres: `Images.PngQuantizationOptions` couvre la taille de palette, la vitesse, les bornes de qualite, le tramage et posterize, tout en conservant la compatibilite de `quality` numerique
 
 # v1.1.14
 
@@ -121,12 +127,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/26
 
 * `Fonctionnalité` Intègre les déclarations AI finales d'AutoJs6 `4.1.0`, exclusivement via plugin: un sélecteur omis utilise la cible par défaut du plugin officiel 3-Stone AI, chaque requête n'accepte que le routage `target` du plugin et le `timeout` canonique, et les types de connexion directe, d'identifiant secret et d'événement transitoire côté hôte sont supprimés
-
-# v1.1.12
-
-###### 2026/08/26
-
-* `Fonctionnalité` Intègre les déclarations unifiées des cibles IA d’AutoJs6 : `ai.catalog`, routage exact par `target`, cibles locales et en ligne, métadonnées complètes des réponses et sessions, sortie de raisonnement et erreurs stables sans repli ; supprime toutes les anciennes API et tous les alias non publiés du catalogue IA
 
 ##### Pour plus d'historique des versions
 
