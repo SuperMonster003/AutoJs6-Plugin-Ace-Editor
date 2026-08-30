@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.17": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "تضمين تعريفات تكميم PNG الصحيحة لونيا في AutoJs6 `4.5.0` ومجموعة LSP المعاد توليدها لـ main-app: تكتب `images.quantizeToFile` مباشرة إلى ملف وتعيد الحجم ومقاييس الجودة, بينما يتحكم `preserveAlpha` في الإخراج الشفاف أو المعتم"
+      ]
+    },
     "v1.1.16": {
       "released_date": "2026/08/30",
       "feature": [

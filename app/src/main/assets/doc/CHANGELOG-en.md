@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `Feature` Bundle the AutoJs6 `4.5.0` color-correct PNG quantization declarations and regenerated main-app LSP group: `images.quantizeToFile` streams directly to a file with size and quality metrics, while `preserveAlpha` controls transparent or opaque output
+
 # v1.1.16
 
 ###### 2026/08/30

@@ -90,7 +90,7 @@ The task validates declaration references and TypeScript 6 syntax, then generate
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -103,6 +103,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `Feature` Bundle the AutoJs6 `4.5.0` color-correct PNG quantization declarations and regenerated main-app LSP group: `images.quantizeToFile` streams directly to a file with size and quality metrics, while `preserveAlpha` controls transparent or opaque output
+
 # v1.1.16
 
 ###### 2026/08/30
@@ -114,19 +120,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/30
 
 * `Feature` Bundle the AutoJs6 `4.3.0` PNG quantization option declarations and regenerated main-app/resource LSP groups: `Images.PngQuantizationOptions` covers palette size, speed, quality bounds, dithering, and posterize while numeric `quality` remains compatible
-
-# v1.1.14
-
-###### 2026/08/29
-
-* `Feature` Added project-wide TypeScript symbol rename through F2 and the mobile `Rename` action: Ace derives bounded cross-file edits from the exact project snapshot, requests AutoJs6 contract-5 authorization, and leaves preview, conflict checks, atomic publication, rollback, and all disk writes entirely to the host
-* `Feature` Added TypeScript quick fixes for auto-import and spelling corrections through Ctrl/Command+. and the mobile `Quick fix` action: Ace limits fixes to ordered edits in the active buffer, asks AutoJs6 6.8.0 (5276) for contract-4 authorization, and applies an approved result as one undoable change
-* `Feature` TypeScript cross-file intelligence now covers completion, hover, signature help, and definition navigation across project sources and frozen dependency declarations; F12, Ctrl/Command-click, and the mobile `Go to definition` action emit contract-3 targets that AutoJs6 6.8.0 (5276) independently validates before opening and positioning
-* `Feature` Added host-backed TypeScript project diagnostics: Ace now validates and loads the complete bounded source snapshot, resolves imports across project files, and highlights missing modules consistently with pre-run compilation; requires AutoJs6 6.8.0 (5276) or later
-* `Feature` TypeScript project type layers now detect native addon signals and install lifecycle hooks before editing continues, publishing the same stable dependency-boundary error and pure JavaScript/WASM guidance as the host and compiler
-* `Feature` Aligned Ace dependency type authority with resolver policy revision 3 and added lodash 4.17.21 plus `@types/lodash` 4.17.25 coverage, preserving matching Rhino and Node diagnostics when runtime packages do not bundle declarations
-* `Feature` Added a frozen project dependency type layer shared with the TypeScript compiler: Ace now resolves package `types`/`typings`, TypeScript 6 `typesVersions`, nested declarations, and installed `@types`, with matching dayjs completion, hover, and strict diagnostics in Rhino and Node profiles
-* `Feature` Bundle the AutoJs6 `4.2.0` R8 declarations and generated LSP groups: six `ScriptRuntime.loadJarWithR8` overloads add verified mapping/seeds/usage/retrace-metadata export, while `retraceR8Stack` performs protocol 1.1 provenance-bound stack retrace with fail-closed provider selection
 
 ##### Complete release history
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.1.17": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "內置 AutoJs6 `4.5.0` 色彩正確的 PNG 量化聲明及重新生成的主應用 LSP 分組: `images.quantizeToFile` 直接寫入檔案並傳回大小與品質指標, `preserveAlpha` 控制透明或不透明輸出"
+      ]
+    },
     "v1.1.16": {
       "released_date": "2026/08/30",
       "feature": [

@@ -90,7 +90,7 @@ La tâche valide les références des déclarations et la syntaxe TypeScript 6, 
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -103,6 +103,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `Fonctionnalité` Integre les declarations de quantification PNG aux couleurs correctes d'AutoJs6 `4.5.0` et le groupe LSP main-app regenere: `images.quantizeToFile` ecrit directement dans un fichier et renvoie la taille et les mesures de qualite, tandis que `preserveAlpha` controle la sortie transparente ou opaque
+
 # v1.1.16
 
 ###### 2026/08/30
@@ -114,19 +120,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/30
 
 * `Fonctionnalité` Integre les declarations d'options de quantification PNG d'AutoJs6 `4.3.0` et les groupes LSP main-app/resources regeneres: `Images.PngQuantizationOptions` couvre la taille de palette, la vitesse, les bornes de qualite, le tramage et posterize, tout en conservant la compatibilite de `quality` numerique
-
-# v1.1.14
-
-###### 2026/08/29
-
-* `Fonctionnalité` Ajout du renommage des symboles TypeScript dans tout le projet via F2 et l'action mobile `Renommer`: Ace dérive des modifications bornées entre fichiers depuis l'instantané exact, demande l'autorisation contract 5 à AutoJs6 et confie entièrement à l'hôte l'aperçu, les conflits, la publication atomique, l'annulation et toutes les écritures disque
-* `Fonctionnalité` Ajout de correctifs rapides TypeScript pour l'import automatique et l'orthographe via Ctrl/Command+. et l'action mobile `Correction rapide`: Ace limite les correctifs aux modifications ordonnées du tampon actif, demande l'autorisation du contrat 4 à AutoJs6 6.8.0 (5276), puis applique le résultat approuvé comme une seule modification annulable
-* `Fonctionnalité` L'intelligence TypeScript inter-fichiers couvre désormais la complétion, le hover, l'aide aux signatures et la navigation vers les définitions dans les sources du projet et les déclarations de dépendances gelées; F12, Ctrl/Command-click et l'action mobile `Aller à la définition` émettent des cibles de contrat 3 qu'AutoJs6 6.8.0 (5276) valide indépendamment avant ouverture et positionnement
-* `Fonctionnalité` Ajout des diagnostics de projet TypeScript fournis par l'hôte : Ace valide et charge désormais le snapshot source complet et borné, résout les imports entre fichiers du projet et signale les modules absents comme la compilation avant exécution ; nécessite AutoJs6 6.8.0 (5276) ou ultérieur
-* `Fonctionnalité` Les couches de types des projets TypeScript détectent désormais les signaux d'extensions natives et les hooks du cycle d'installation avant la poursuite de l'édition, et publient la même erreur stable de limite de dépendances ainsi que les mêmes conseils JavaScript pur/WASM que l'hôte et le compilateur
-* `Fonctionnalité` Alignement de l'autorité des types de dépendances d'Ace sur la révision 3 de la politique du resolver et ajout d'une couverture de lodash 4.17.21 avec `@types/lodash` 4.17.25, afin de conserver des diagnostics identiques entre Rhino et Node lorsque les paquets d'exécution n'intègrent pas de déclarations
-* `Fonctionnalité` Ajout d'une couche gelee de types de dependances partagee avec le compilateur TypeScript: Ace resout maintenant `types`/`typings`, `typesVersions` de TypeScript 6, declarations imbriquees et `@types` installes, avec completion dayjs, hover et diagnostics stricts identiques pour Rhino et Node
-* `Fonctionnalité` Intègre les déclarations R8 AutoJs6 `4.2.0` et les groupes LSP générés: six surcharges de `ScriptRuntime.loadJarWithR8` ajoutent l'export vérifié de mapping/seeds/usage/retrace metadata, tandis que `retraceR8Stack` restaure la pile liée à la provenance via le protocole 1.1 avec une sélection de fournisseur sans repli
 
 ##### Pour plus d'historique des versions
 

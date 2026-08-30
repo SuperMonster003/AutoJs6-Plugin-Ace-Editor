@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `Función` Incluye las declaraciones de cuantizacion PNG con color correcto de AutoJs6 `4.5.0` y el grupo LSP main-app regenerado: `images.quantizeToFile` escribe directamente en un archivo y devuelve tamano y metricas de calidad, mientras `preserveAlpha` controla la salida transparente u opaca
+
 # v1.1.16
 
 ###### 2026/08/30

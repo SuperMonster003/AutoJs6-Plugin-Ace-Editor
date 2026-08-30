@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.1.17": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "AutoJs6 `4.5.0` の色を正しく扱う PNG 量子化宣言と再生成した main-app LSP グループを同梱: `images.quantizeToFile` はファイルへ直接書き込みサイズと品質指標を返し, `preserveAlpha` は透明または不透明な出力を制御"
+      ]
+    },
     "v1.1.16": {
       "released_date": "2026/08/30",
       "feature": [

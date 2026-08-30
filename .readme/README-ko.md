@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `기능` AutoJs6 `4.5.0` 색상 정확도 PNG 양자화 선언과 다시 생성한 main-app LSP 그룹을 포함: `images.quantizeToFile`은 파일에 직접 쓰고 크기와 품질 지표를 반환하며, `preserveAlpha`는 투명 또는 불투명 출력을 제어
+
 # v1.1.16
 
 ###### 2026/08/30
@@ -114,19 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 ###### 2026/08/30
 
 * `기능` AutoJs6 `4.3.0` PNG 양자화 옵션 선언과 다시 생성한 main-app/resource LSP 그룹을 포함: `Images.PngQuantizationOptions`는 팔레트 크기, 속도, 품질 범위, 디더링 및 posterize를 다루며 숫자 `quality` 호환성을 유지
-
-# v1.1.14
-
-###### 2026/08/29
-
-* `기능` F2와 모바일 `이름 바꾸기`로 프로젝트 전체 TypeScript 심볼 이름 바꾸기를 추가했습니다: Ace는 정확한 프로젝트 스냅샷에서 제한된 여러 파일 편집을 생성해 AutoJs6 contract 5 승인을 요청하며, 미리보기, 충돌 검사, 원자적 게시, 롤백과 모든 디스크 쓰기는 전적으로 Host가 담당합니다
-* `기능` Ctrl/Command+. 및 모바일 `빠른 수정` 작업으로 TypeScript auto-import와 spelling correction을 추가했습니다: Ace는 active buffer의 정렬된 edit로 수정 범위를 제한하고 AutoJs6 6.8.0 (5276)에 contract 4 승인을 요청한 뒤 승인된 결과를 한 번에 undo할 수 있는 변경으로 적용합니다
-* `기능` TypeScript 교차 파일 intelligence가 이제 프로젝트 소스와 frozen dependency declaration의 completion, hover, signature help 및 정의 이동을 지원합니다; F12, Ctrl/Command-click 및 모바일 `정의로 이동` 작업은 AutoJs6 6.8.0 (5276)이 열기와 위치 지정 전에 독립적으로 검증하는 contract 3 대상을 전송합니다
-* `기능` 호스트 기반 TypeScript 프로젝트 진단을 추가했습니다. Ace가 이제 완전하고 제한된 소스 snapshot을 검증해 불러오고 프로젝트 파일 간 import를 해석하며, 실행 전 컴파일과 동일하게 누락된 모듈을 강조 표시합니다. AutoJs6 6.8.0 (5276) 이상이 필요합니다
-* `기능` TypeScript project type layer는 편집을 계속하기 전에 native addon 신호와 설치 lifecycle hook을 감지하고, host 및 compiler와 동일한 안정적 dependency-boundary 오류와 pure JavaScript/WASM 안내를 게시합니다
-* `기능` Ace 의존성 타입 권한을 resolver policy revision 3과 동기화하고 lodash 4.17.21 및 `@types/lodash` 4.17.25 검증을 추가하여 런타임 패키지에 선언이 번들되지 않은 경우에도 Rhino와 Node 진단이 일치하도록 했습니다
-* `기능` TypeScript compiler와 공유하는 frozen project dependency type layer를 추가함: Ace가 package `types`/`typings`, TypeScript 6 `typesVersions`, nested declaration 및 installed `@types`를 해석하며 Rhino/Node profile에서 dayjs completion, hover, strict diagnostic이 일치함
-* `기능` AutoJs6 `4.2.0` R8 선언과 생성된 LSP 그룹을 내장: `ScriptRuntime.loadJarWithR8`의 6개 오버로드는 검증된 mapping/seeds/usage/retrace metadata 내보내기를 추가하고, `retraceR8Stack`은 프로토콜 1.1로 출처에 결합된 스택 복원을 수행하며 Provider 선택 실패 시 fallback하지 않음
 
 ##### 더 많은 릴리스 기록
 

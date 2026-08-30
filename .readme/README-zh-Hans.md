@@ -90,7 +90,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `新增` 内置 AutoJs6 `4.5.0` 色彩正确的 PNG 量化声明及重新生成的主应用 LSP 分组: `images.quantizeToFile` 直接写入文件并返回大小与质量指标, `preserveAlpha` 控制透明或不透明输出
+
 # v1.1.16
 
 ###### 2026/08/30
@@ -114,19 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 ###### 2026/08/30
 
 * `新增` 内置 AutoJs6 `4.3.0` PNG 量化选项声明及重新生成的主应用/资源 LSP 分组: `Images.PngQuantizationOptions` 覆盖调色板大小, 速度, 质量区间, 抖动与 posterize, 并保留数字 `quality` 兼容性
-
-# v1.1.14
-
-###### 2026/08/29
-
-* `新增` 新增通过 F2 与移动端 `重命名` 触发的项目范围 TypeScript 符号重命名: Ace 从精确项目快照生成有界跨文件编辑并请求 AutoJs6 contract 5 授权, 预览, 冲突检查, 原子发布, 回滚及全部磁盘写入均完全由宿主负责
-* `新增` 新增 TypeScript 自动导入与拼写快速修复, 可通过 Ctrl/Command+. 或移动端 `快速修复` 触发: Ace 仅接受当前缓冲区内的有序编辑, 请求 AutoJs6 6.8.0 (5276) 进行 contract 4 授权, 并将批准结果作为一次可撤销修改应用
-* `新增` TypeScript 跨文件智能现已覆盖项目源码和冻结依赖声明中的补全, hover, 签名帮助及定义跳转; F12, Ctrl/Command+点击和移动端 `转到定义` 会发送 contract 3 目标, 由 AutoJs6 6.8.0 (5276) 在打开和定位前独立复验
-* `新增` 新增宿主提供的 TypeScript 项目诊断: Ace 现会校验并加载完整的有界源码快照, 解析项目文件间的 import, 并按运行前编译的相同规则标出缺失模块; 需要 AutoJs6 6.8.0 (5276) 或更高版本
-* `新增` TypeScript 项目类型层现会在继续编辑前检测原生 addon 信号和安装生命周期 hook, 发布与宿主及编译器一致的稳定依赖边界错误和纯 JavaScript/WASM 替代指引
-* `新增` Ace 依赖类型权威已同步 resolver policy revision 3, 并包含 lodash 4.17.21 与 `@types/lodash` 4.17.25 覆盖, 确保运行时包未内置声明时 Rhino 与 Node 的诊断仍保持一致
-* `新增` 新增与 TypeScript 编译器共用的冻结项目依赖类型层: Ace 现可解析 package `types`/`typings`, TypeScript 6 `typesVersions`, 嵌套声明与已安装 `@types`, 并在 Rhino 和 Node profile 中提供一致的 dayjs 补全, hover 与 strict 诊断
-* `新增` 内置 AutoJs6 `4.2.0` R8 声明与生成的 LSP 分组: `ScriptRuntime.loadJarWithR8` 的 6 个重载支持经校验的 mapping/seeds/usage/retrace metadata 导出, `retraceR8Stack` 通过协议 1.1 执行溯源绑定的堆栈还原, 提供者选择失败时禁止回退
 
 ##### 更多发行历史可参阅
 

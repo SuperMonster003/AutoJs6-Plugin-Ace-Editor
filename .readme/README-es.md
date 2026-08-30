@@ -90,7 +90,7 @@ La tarea valida las referencias de las declaraciones y la sintaxis de TypeScript
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -103,6 +103,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `Función` Incluye las declaraciones de cuantizacion PNG con color correcto de AutoJs6 `4.5.0` y el grupo LSP main-app regenerado: `images.quantizeToFile` escribe directamente en un archivo y devuelve tamano y metricas de calidad, mientras `preserveAlpha` controla la salida transparente u opaca
+
 # v1.1.16
 
 ###### 2026/08/30
@@ -114,19 +120,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/30
 
 * `Función` Incluye las declaraciones de opciones de cuantizacion PNG de AutoJs6 `4.3.0` y los grupos LSP main-app/resources regenerados: `Images.PngQuantizationOptions` cubre tamano de paleta, velocidad, limites de calidad, tramado y posterize, manteniendo compatible el `quality` numerico
-
-# v1.1.14
-
-###### 2026/08/29
-
-* `Función` Se añadió el cambio de nombre de símbolos TypeScript en todo el proyecto mediante F2 y la acción móvil `Renombrar`: Ace obtiene ediciones acotadas entre archivos desde la instantánea exacta, solicita autorización contract 5 a AutoJs6 y deja por completo al host la vista previa, los conflictos, la publicación atómica, la reversión y todas las escrituras en disco
-* `Función` Se añadieron correcciones rápidas de TypeScript para importación automática y ortografía mediante Ctrl/Command+. y la acción móvil `Corrección rápida`: Ace limita las correcciones a ediciones ordenadas del búfer activo, solicita autorización de contrato 4 a AutoJs6 6.8.0 (5276) y aplica el resultado aprobado como un único cambio que se puede deshacer
-* `Función` La inteligencia TypeScript entre archivos cubre ahora completado, hover, ayuda de firmas y navegación a definiciones en fuentes del proyecto y declaraciones de dependencias congeladas; F12, Ctrl/Command-click y la acción móvil `Ir a la definición` emiten destinos de contrato 3 que AutoJs6 6.8.0 (5276) valida de forma independiente antes de abrir y posicionar
-* `Función` Se añadieron diagnósticos de proyectos TypeScript respaldados por el host: Ace valida y carga ahora la instantánea de fuentes completa y acotada, resuelve importaciones entre archivos del proyecto y resalta módulos ausentes de forma coherente con la compilación previa a la ejecución; requiere AutoJs6 6.8.0 (5276) o posterior
-* `Función` Las capas de tipos de proyectos TypeScript ahora detectan señales de addons nativos y hooks del ciclo de instalación antes de continuar la edición, publicando el mismo error estable de límite de dependencias y la misma orientación hacia JavaScript puro/WASM que el host y el compilador
-* `Función` Se alineó la autoridad de tipos de dependencias de Ace con la revisión 3 de la política del resolver y se añadió cobertura para lodash 4.17.21 junto con `@types/lodash` 4.17.25, manteniendo diagnósticos coincidentes entre Rhino y Node cuando los paquetes de ejecución no incluyen declaraciones
-* `Función` Añadida una capa congelada de tipos de dependencias compartida con el compilador TypeScript: Ace resuelve ahora `types`/`typings`, `typesVersions` de TypeScript 6, declaraciones anidadas y `@types` instalados, con completado de dayjs, hover y diagnosticos strict iguales para Rhino y Node
-* `Función` Incluye las declaraciones R8 de AutoJs6 `4.2.0` y los grupos LSP generados: seis sobrecargas de `ScriptRuntime.loadJarWithR8` añaden la exportación verificada de mapping/seeds/usage/retrace metadata, mientras `retraceR8Stack` restaura la pila vinculada a la procedencia mediante el protocolo 1.1 con selección de proveedor sin fallback
 
 ##### Para ver más historial de versiones
 

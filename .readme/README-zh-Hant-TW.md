@@ -90,7 +90,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `新增` 內建 AutoJs6 `4.5.0` 色彩正確的 PNG 量化宣告及重新產生的主應用程式 LSP 分組: `images.quantizeToFile` 直接寫入檔案並回傳大小與品質指標, `preserveAlpha` 控制透明或不透明輸出
+
 # v1.1.16
 
 ###### 2026/08/30
@@ -114,19 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 ###### 2026/08/30
 
 * `新增` 內建 AutoJs6 `4.3.0` PNG 量化選項宣告及重新產生的主應用程式/資源 LSP 分組: `Images.PngQuantizationOptions` 涵蓋調色盤大小, 速度, 品質範圍, 抖動與 posterize, 並保留數字 `quality` 相容性
-
-# v1.1.14
-
-###### 2026/08/29
-
-* `新增` 新增透過 F2 與行動版 `重新命名` 觸發的專案範圍 TypeScript 符號重新命名: Ace 從精確專案快照產生有界跨檔案編輯並請求 AutoJs6 contract 5 授權, 預覽, 衝突檢查, 原子發佈, 回復及全部磁碟寫入均完全由 Host 負責
-* `新增` 新增 TypeScript 自動匯入與拼字快速修正, 可透過 Ctrl/Command+. 或行動裝置 `快速修正` 觸發: Ace 僅接受目前緩衝區內的有序編輯, 請求 AutoJs6 6.8.0 (5276) 進行 contract 4 授權, 並將核准結果作為一次可復原修改套用
-* `新增` TypeScript 跨檔案智慧現已涵蓋專案原始碼及凍結相依性宣告中的補全, hover, 簽章說明及定義跳轉; F12, Ctrl/Command+點擊和行動裝置 `移至定義` 會傳送 contract 3 目標, 由 AutoJs6 6.8.0 (5276) 在開啟及定位前獨立複驗
-* `新增` 新增由主機提供的 TypeScript 專案診斷: Ace 現會驗證並載入完整的有界原始碼快照, 解析專案檔案間的 import, 並依執行前編譯的相同規則標示缺少的模組; 需要 AutoJs6 6.8.0 (5276) 或更新版本
-* `新增` TypeScript 專案型別層現在會在繼續編輯前偵測原生 addon 訊號與安裝生命週期 hook, 發布與主機及編譯器一致的穩定相依性邊界錯誤和純 JavaScript/WASM 替代指引
-* `新增` Ace 依賴型別權威已同步 resolver policy revision 3, 並包含 lodash 4.17.21 與 `@types/lodash` 4.17.25 覆蓋, 確保執行階段套件未內建宣告時 Rhino 與 Node 的診斷仍保持一致
-* `新增` 新增與 TypeScript 編譯器共用的凍結專案相依型別層: Ace 現可解析 package `types`/`typings`, TypeScript 6 `typesVersions`, 巢狀宣告及已安裝 `@types`, 並在 Rhino 和 Node profile 提供一致的 dayjs 補全, hover 與 strict 診斷
-* `新增` 內建 AutoJs6 `4.2.0` R8 宣告與產生的 LSP 群組: `ScriptRuntime.loadJarWithR8` 的 6 個多載支援經驗證的 mapping/seeds/usage/retrace metadata 匯出, `retraceR8Stack` 透過通訊協定 1.1 執行溯源綁定的堆疊還原, 外掛選擇失敗時禁止回退
 
 ##### 更多發行歷史可參閱
 

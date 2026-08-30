@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `Fonctionnalité` Integre les declarations de quantification PNG aux couleurs correctes d'AutoJs6 `4.5.0` et le groupe LSP main-app regenere: `images.quantizeToFile` ecrit directement dans un fichier et renvoie la taille et les mesures de qualite, tandis que `preserveAlpha` controle la sortie transparente ou opaque
+
 # v1.1.16
 
 ###### 2026/08/30

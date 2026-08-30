@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.17": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "Bundle the AutoJs6 `4.5.0` color-correct PNG quantization declarations and regenerated main-app LSP group: `images.quantizeToFile` streams directly to a file with size and quality metrics, while `preserveAlpha` controls transparent or opaque output"
+      ]
+    },
     "v1.1.16": {
       "released_date": "2026/08/30",
       "feature": [

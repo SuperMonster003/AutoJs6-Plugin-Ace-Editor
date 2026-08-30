@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.1.17": {
+      "released_date": "2026/08/31",
+      "feature": [
+        "Добавлены декларации PNG-квантования с корректной цветопередачей AutoJs6 `4.5.0` и заново созданная группа LSP main-app: `images.quantizeToFile` напрямую записывает файл и возвращает размер и метрики качества, а `preserveAlpha` управляет прозрачным или непрозрачным выводом"
+      ]
+    },
     "v1.1.16": {
       "released_date": "2026/08/30",
       "feature": [

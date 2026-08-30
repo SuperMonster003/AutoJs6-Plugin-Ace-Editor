@@ -90,7 +90,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.17-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -103,6 +103,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 
 ******
 
+# v1.1.17
+
+###### 2026/08/31
+
+* `機能` AutoJs6 `4.5.0` の色を正しく扱う PNG 量子化宣言と再生成した main-app LSP グループを同梱: `images.quantizeToFile` はファイルへ直接書き込みサイズと品質指標を返し, `preserveAlpha` は透明または不透明な出力を制御
+
 # v1.1.16
 
 ###### 2026/08/30
@@ -114,19 +120,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-u
 ###### 2026/08/30
 
 * `機能` AutoJs6 `4.3.0` の PNG 量子化オプション宣言と再生成した main-app/resource LSP グループを同梱: `Images.PngQuantizationOptions` はパレット数, 速度, 品質範囲, ディザリング, posterize を網羅し, 数値 `quality` の互換性を維持
-
-# v1.1.14
-
-###### 2026/08/29
-
-* `機能` F2 とモバイルの `名前を変更` からプロジェクト全体の TypeScript シンボル名変更を追加: Ace は正確なプロジェクトスナップショットから有界な複数ファイル編集を生成して AutoJs6 contract 5 の承認を要求し, プレビュー, 競合検査, アトミック公開, ロールバック, すべてのディスク書き込みは Host が全面的に担当します
-* `機能` Ctrl/Command+. とモバイルの `クイック修正` から TypeScript auto-import と spelling correction を追加: Ace は active buffer の整列済み edit だけに制限し, AutoJs6 6.8.0 (5276) に contract 4 認可を要求して, 承認済み結果を 1 回の undo 可能な変更として適用します
-* `機能` TypeScript の跨ファイル intelligence が project source と frozen dependency declaration の completion, hover, signature help, definition navigation を網羅しました; F12, Ctrl/Command-click, モバイルの `定義へ移動` は contract 3 target を送信し, AutoJs6 6.8.0 (5276) が開く前に独立検証して位置決めします
-* `機能` ホスト提供の TypeScript プロジェクト診断を追加: Ace は完全かつ上限付きのソース snapshot を検証して読み込み, プロジェクト内ファイル間の import を解決し, 実行前コンパイルと同じ基準で欠落モジュールを強調表示します. AutoJs6 6.8.0 (5276) 以降が必要です
-* `機能` TypeScript project type layer は編集を続ける前に native addon signal と install lifecycle hook を検出し, host と compiler と同じ安定した dependency-boundary error と pure JavaScript/WASM の案内を公開します
-* `機能` Ace の依存型 authority を resolver policy revision 3 に同期し, lodash 4.17.21 と `@types/lodash` 4.17.25 の検証を追加して, runtime パッケージに宣言が同梱されない場合も Rhino と Node の診断一致を維持しました
-* `機能` TypeScript compiler と共有する frozen project dependency type layer を追加: Ace は package `types`/`typings`, TypeScript 6 `typesVersions`, nested declaration, installed `@types` を解決し, Rhino/Node profile で dayjs completion, hover, strict diagnostic が一致
-* `機能` AutoJs6 `4.2.0` の R8 宣言と生成済み LSP グループを同梱: `ScriptRuntime.loadJarWithR8` の 6 つのオーバーロードは検証済み mapping/seeds/usage/retrace metadata のエクスポートを追加し, `retraceR8Stack` はプロトコル 1.1 で来歴に結び付けたスタック復元を実行. Provider 選択失敗時はフォールバックしない
 
 ##### その他のリリース履歴
 
