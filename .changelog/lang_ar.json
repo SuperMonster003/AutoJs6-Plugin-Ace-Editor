@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.16": {
+      "released_date": "2026/08/30",
+      "feature": [
+        "تضمين تعريفات نتائج تكميم PNG في AutoJs6 `4.4.0` ومجموعة LSP المعاد توليدها لـ main-app: تعيد `images.quantize` البايتات المشفرة والحجم والجودة المحققة وخطأ التكميم; ويكشف تعذر تحقيق حد جودة صريح `QualityTooLowException` ذا نوع محدد"
+      ]
+    },
     "v1.1.15": {
       "released_date": "2026/08/30",
       "feature": [

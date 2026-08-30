@@ -90,7 +90,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 ### 릴리스 기록
 
 ******
+
+# v1.1.16
+
+###### 2026/08/30
+
+* `기능` AutoJs6 `4.4.0` PNG 양자화 결과 선언과 다시 생성한 main-app LSP 그룹을 포함: `images.quantize`는 인코딩 바이트, 크기, 실제 품질 및 양자화 오차를 반환하고, 명시한 품질 하한을 충족할 수 없으면 형식화된 `QualityTooLowException`을 공개
 
 # v1.1.15
 
@@ -121,12 +127,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 * `기능` Ace 의존성 타입 권한을 resolver policy revision 3과 동기화하고 lodash 4.17.21 및 `@types/lodash` 4.17.25 검증을 추가하여 런타임 패키지에 선언이 번들되지 않은 경우에도 Rhino와 Node 진단이 일치하도록 했습니다
 * `기능` TypeScript compiler와 공유하는 frozen project dependency type layer를 추가함: Ace가 package `types`/`typings`, TypeScript 6 `typesVersions`, nested declaration 및 installed `@types`를 해석하며 Rhino/Node profile에서 dayjs completion, hover, strict diagnostic이 일치함
 * `기능` AutoJs6 `4.2.0` R8 선언과 생성된 LSP 그룹을 내장: `ScriptRuntime.loadJarWithR8`의 6개 오버로드는 검증된 mapping/seeds/usage/retrace metadata 내보내기를 추가하고, `retraceR8Stack`은 프로토콜 1.1로 출처에 결합된 스택 복원을 수행하며 Provider 선택 실패 시 fallback하지 않음
-
-# v1.1.13
-
-###### 2026/08/26
-
-* `기능` 최종 플러그인 전용 AutoJs6 `4.1.0` AI 선언을 번들: 선택자를 생략하면 공식 3-Stone AI 기본 대상을 사용하고, 모든 요청은 플러그인 `target` 라우팅과 표준 `timeout`만 허용하며, 호스트 측 직접 연결, 자격 증명 및 전환 이벤트 타입을 제거
 
 ##### 더 많은 릴리스 기록
 

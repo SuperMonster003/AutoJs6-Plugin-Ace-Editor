@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.16
+
+###### 2026/08/30
+
+* `Función` Incluye las declaraciones de resultado de cuantizacion PNG de AutoJs6 `4.4.0` y el grupo LSP main-app regenerado: `images.quantize` devuelve bytes codificados, tamano, calidad alcanzada y error de cuantizacion; un limite minimo explicito no alcanzable expone `QualityTooLowException` tipada
+
 # v1.1.15
 
 ###### 2026/08/30

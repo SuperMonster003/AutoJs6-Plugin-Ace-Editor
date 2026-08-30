@@ -90,7 +90,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 ### سجل الإصدارات
 
 ******
+
+# v1.1.16
+
+###### 2026/08/30
+
+* `ميزة` تضمين تعريفات نتائج تكميم PNG في AutoJs6 `4.4.0` ومجموعة LSP المعاد توليدها لـ main-app: تعيد `images.quantize` البايتات المشفرة والحجم والجودة المحققة وخطأ التكميم; ويكشف تعذر تحقيق حد جودة صريح `QualityTooLowException` ذا نوع محدد
 
 # v1.1.15
 
@@ -121,12 +127,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 * `ميزة` وُحّدت مرجعية أنواع التبعيات في Ace مع سياسة resolver بالمراجعة 3، وأضيفت تغطية lodash 4.17.21 مع `@types/lodash` 4.17.25 للحفاظ على تشخيصات متطابقة بين Rhino وNode عندما لا تتضمن حزم وقت التشغيل تصريحات مدمجة
 * `ميزة` تمت اضافة frozen project dependency type layer مشتركة مع TypeScript compiler: يحل Ace الان package `types`/`typings` وTypeScript 6 `typesVersions` وnested declarations و`@types` المثبتة مع تطابق dayjs completion وhover وstrict diagnostics في Rhino وNode
 * `ميزة` تضمين تعريفات R8 الخاصة بـ AutoJs6 `4.2.0` ومجموعات LSP المولدة: تضيف التحميلات الستة لـ `ScriptRuntime.loadJarWithR8` تصدير mapping/seeds/usage/retrace metadata بعد التحقق, بينما ينفذ `retraceR8Stack` استعادة المكدس المرتبطة بالمصدر عبر البروتوكول 1.1 مع فشل مغلق عند تعذر اختيار Provider
-
-# v1.1.13
-
-###### 2026/08/26
-
-* `ميزة` تضمين تعريفات AI النهائية الخاصة بالإضافة فقط في AutoJs6 `4.1.0`: عند حذف المحدد يستخدم الهدف الافتراضي لإضافة 3-Stone AI الرسمية, ولا تقبل الطلبات سوى توجيه `target` عبر الإضافة و`timeout` القياسي, مع إزالة أنواع الاتصال المباشر وبيانات الاعتماد والأحداث الانتقالية من المضيف
 
 ##### لمزيد من سجل الإصدارات
 

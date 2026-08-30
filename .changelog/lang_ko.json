@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.1.16": {
+      "released_date": "2026/08/30",
+      "feature": [
+        "AutoJs6 `4.4.0` PNG 양자화 결과 선언과 다시 생성한 main-app LSP 그룹을 포함: `images.quantize`는 인코딩 바이트, 크기, 실제 품질 및 양자화 오차를 반환하고, 명시한 품질 하한을 충족할 수 없으면 형식화된 `QualityTooLowException`을 공개"
+      ]
+    },
     "v1.1.15": {
       "released_date": "2026/08/30",
       "feature": [

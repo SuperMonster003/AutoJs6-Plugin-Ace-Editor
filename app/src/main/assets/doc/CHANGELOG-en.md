@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.16
+
+###### 2026/08/30
+
+* `Feature` Bundle the AutoJs6 `4.4.0` PNG quantization result declarations and regenerated main-app LSP group: `images.quantize` returns encoded bytes, size, achieved quality, and quantization error; an unmet explicit quality floor exposes the typed `QualityTooLowException`
+
 # v1.1.15
 
 ###### 2026/08/30

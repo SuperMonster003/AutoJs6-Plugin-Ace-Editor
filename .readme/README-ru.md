@@ -90,7 +90,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 ### История выпусков
 
 ******
+
+# v1.1.16
+
+###### 2026/08/30
+
+* `Функция` Добавлены декларации результата PNG-квантования AutoJs6 `4.4.0` и заново созданная группа LSP main-app: `images.quantize` возвращает кодированные байты, размер, достигнутое качество и ошибку квантования; недостижимая явно заданная нижняя граница качества предоставляет типизированное `QualityTooLowException`
 
 # v1.1.15
 
@@ -121,12 +127,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 * `Функция` Полномочия типов зависимостей Ace синхронизированы с политикой resolver revision 3; добавлена проверка lodash 4.17.21 вместе с `@types/lodash` 4.17.25, сохраняющая одинаковые диагностики Rhino и Node для runtime-пакетов без встроенных деклараций
 * `Функция` Добавлен frozen project dependency type layer, общий с compiler TypeScript: Ace теперь разрешает package `types`/`typings`, TypeScript 6 `typesVersions`, вложенные declarations и установленные `@types`, обеспечивая одинаковые completion dayjs, hover и strict diagnostics для Rhino и Node
 * `Функция` Встроены R8-декларации AutoJs6 `4.2.0` и сгенерированные группы LSP: шесть перегрузок `ScriptRuntime.loadJarWithR8` добавляют проверенный экспорт mapping/seeds/usage/retrace metadata, а `retraceR8Stack` восстанавливает стек с привязкой к происхождению по протоколу 1.1 и без fallback при ошибке выбора Provider
-
-# v1.1.13
-
-###### 2026/08/26
-
-* `Функция` Встроены финальные AI-декларации AutoJs6 `4.1.0`, работающие только через плагин: при отсутствии селектора используется цель по умолчанию официального 3-Stone AI, все запросы принимают только маршрутизацию `target` плагина и канонический `timeout`, а типы прямого подключения, учетных данных и переходных событий на стороне хоста удалены
 
 ##### Подробнее об истории выпусков
 

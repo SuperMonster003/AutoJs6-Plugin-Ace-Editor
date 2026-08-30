@@ -90,7 +90,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.16-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -102,6 +102,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 ### 發行歷史
 
 ******
+
+# v1.1.16
+
+###### 2026/08/30
+
+* `新增` 內建 AutoJs6 `4.4.0` PNG 量化結果宣告及重新產生的主應用程式 LSP 分組: `images.quantize` 回傳編碼位元組, 大小, 實際品質與量化誤差; 明確品質下限無法滿足時公開型別化 `QualityTooLowException`
 
 # v1.1.15
 
@@ -121,12 +127,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.15-u
 * `新增` Ace 依賴型別權威已同步 resolver policy revision 3, 並包含 lodash 4.17.21 與 `@types/lodash` 4.17.25 覆蓋, 確保執行階段套件未內建宣告時 Rhino 與 Node 的診斷仍保持一致
 * `新增` 新增與 TypeScript 編譯器共用的凍結專案相依型別層: Ace 現可解析 package `types`/`typings`, TypeScript 6 `typesVersions`, 巢狀宣告及已安裝 `@types`, 並在 Rhino 和 Node profile 提供一致的 dayjs 補全, hover 與 strict 診斷
 * `新增` 內建 AutoJs6 `4.2.0` R8 宣告與產生的 LSP 群組: `ScriptRuntime.loadJarWithR8` 的 6 個多載支援經驗證的 mapping/seeds/usage/retrace metadata 匯出, `retraceR8Stack` 透過通訊協定 1.1 執行溯源綁定的堆疊還原, 外掛選擇失敗時禁止回退
-
-# v1.1.13
-
-###### 2026/08/26
-
-* `新增` 內建 AutoJs6 `4.1.0` 最終僅經外掛的 AI 宣告: 省略選擇器時使用官方 3-Stone AI 預設目標, 所有請求只接受外掛 `target` 路由和標準 `timeout`, 並移除主機端直連設定, 認證和過渡事件型別
 
 ##### 更多發行歷史可參閱
 

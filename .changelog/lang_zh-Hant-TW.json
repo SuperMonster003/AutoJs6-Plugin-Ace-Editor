@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.1.16": {
+      "released_date": "2026/08/30",
+      "feature": [
+        "內建 AutoJs6 `4.4.0` PNG 量化結果宣告及重新產生的主應用程式 LSP 分組: `images.quantize` 回傳編碼位元組, 大小, 實際品質與量化誤差; 明確品質下限無法滿足時公開型別化 `QualityTooLowException`"
+      ]
+    },
     "v1.1.15": {
       "released_date": "2026/08/30",
       "feature": [
