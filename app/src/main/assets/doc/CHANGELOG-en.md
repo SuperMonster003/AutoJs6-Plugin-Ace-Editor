@@ -9,6 +9,11 @@
 ###### 2026/08/31
 
 * `Feature` Bundle the AutoJs6 `4.6.0` resource-safe PNG quantization declarations and regenerated main-app LSP group: configurable `maxPixels` and `maxMemoryBytes` budgets fail with typed details, results expose `peakWorkingMemoryBytes`, and cancellation APIs cover explicit requests and script shutdown
+* `Feature` Add offline P1 language support for Python, Lua, Java, and Kotlin: file extensions route to dedicated Ace modes with syntax highlighting, language keywords, snippets, and document-word completion; Lua also enables worker-based syntax diagnostics, and all four languages stay isolated from AutoJs6/TypeScript candidates
+* `Feature` Add offline P2 completion for Python, Lua, Java, and Kotlin: lazily loaded version-pinned standard-library indexes combine with current-document import, function, class, method, parameter, and variable extraction while preserving strict cross-language isolation and existing JavaScript/TypeScript behavior
+* `Feature` Add a pluggable eight-capability semantic Provider, a general JSON-RPC/LSP core, and WebWorker/on-device stdio transports; TypeScript migrates with zero regression, provider failures fall back to P2, and semantic switches for the four new languages default to off
+* `Feature` Bundle fully offline Python 3.12 semantics with a pinned Pyright 1.1.413 Worker and a 271-file typeshed subset: type-aware completion, hover, signature help, diagnostics, and definition now default on, while incompatible old WebViews and runtime failures fall back silently to P2
+* `Feature` Bundle fully offline Lua semantics with a pinned on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64, while missing or damaged native assets, unsupported ABIs, and process crashes fall back silently to P2 with bounded restart recovery
 
 # v1.1.17
 

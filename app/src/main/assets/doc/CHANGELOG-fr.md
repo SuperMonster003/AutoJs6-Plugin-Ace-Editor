@@ -9,6 +9,11 @@
 ###### 2026/08/31
 
 * `Fonctionnalité` Integre les declarations de quantification PNG a ressources controlees d'AutoJs6 `4.6.0` et le groupe LSP main-app regenere: les budgets configurables `maxPixels` et `maxMemoryBytes` echouent avec des details types, les resultats exposent `peakWorkingMemoryBytes` et les API d'annulation couvrent les demandes explicites et l'arret du script
+* `Fonctionnalité` Ajoute la prise en charge hors ligne P1 de Python, Lua, Java et Kotlin: les extensions routent vers des modes Ace dédiés avec coloration syntaxique, mots-clés, extraits et complétion des mots du document; Lua active aussi les diagnostics syntaxiques par worker et les quatre langages restent isolés des candidats AutoJs6/TypeScript
+* `Fonctionnalité` Ajoute la complétion hors ligne P2 pour Python, Lua, Java et Kotlin: des index de bibliothèques standard versionnés et chargés à la demande se combinent à l'extraction des imports, fonctions, classes, méthodes, paramètres et variables du document courant, tout en préservant l'isolation entre langages et le comportement JavaScript/TypeScript existant
+* `Fonctionnalité` Ajoute un Provider sémantique enfichable à huit capacités, un coeur JSON-RPC/LSP général et des transports WebWorker/stdio sur l'appareil; TypeScript migre sans régression, les pannes reviennent à P2 et les interrupteurs sémantiques des quatre nouveaux langages sont désactivés par défaut
+* `Fonctionnalité` Intègre la sémantique Python 3.12 entièrement hors ligne avec un Worker Pyright 1.1.413 épinglé et un sous-ensemble typeshed de 271 fichiers : complétion typée, survol, aide à la signature, diagnostics et définition sont activés par défaut, tandis que les anciens WebView incompatibles et les pannes du runtime reviennent silencieusement à P2
+* `Fonctionnalité` Intègre la sémantique Lua entièrement hors ligne avec un processus compagnon LuaLS 3.18.2 épinglé sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ressources natives absentes ou endommagées, les ABI non pris en charge et les pannes du processus reviennent silencieusement à P2 avec reprise par temporisation bornée
 
 # v1.1.17
 

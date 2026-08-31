@@ -9,6 +9,11 @@
 ###### 2026/08/31
 
 * `新增` 内置 AutoJs6 `4.6.0` 资源安全的 PNG 量化声明及重新生成的主应用 LSP 分组: 可配置的 `maxPixels` 与 `maxMemoryBytes` 预算超限时返回带详情的类型化错误, 结果公开 `peakWorkingMemoryBytes`, 取消 API 覆盖显式请求与脚本退出
+* `新增` Python, Lua, Java 与 Kotlin 离线 P1 语言支持: 按扩展名路由 Ace mode, 提供语法高亮, 本语言关键字, snippets 与文档单词补全; Lua 额外启用 worker 语法诊断, 四门语言均与 AutoJs6/TypeScript 候选严格隔离
+* `新增` Python, Lua, Java 与 Kotlin 离线 P2 补全: 按需加载固定版本的标准库索引, 并提取当前文档的 import, 函数, 类, 方法, 参数和变量; 严格保持跨语言隔离及现有 JavaScript/TypeScript 行为
+* `新增` 新增可插拔八能力语义 Provider, 通用 JSON-RPC/LSP 核心及 WebWorker/设备内 stdio 双传输; TypeScript 已零回归迁移, provider 故障时自动降级至 P2, 四门新语言语义开关默认关闭
+* `新增` 通过固定版本的 Pyright 1.1.413 Worker 和 271 个 typeshed 文件内置完全离线的 Python 3.12 语义: 类型补全, hover, 签名帮助, 诊断和定义跳转现默认开启, 不兼容的老 WebView 与运行故障会静默降级至 P2
+* `新增` 通过固定版本的 LuaLS 3.18.2 设备内伴生进程内置完全离线的 Lua 语义: 补全, hover, 签名帮助, 诊断和定义跳转在 arm64-v8a, armeabi-v7a 与 x86_64 默认开启; 原生资产缺失或损坏, 不支持的 ABI 与进程崩溃会静默降级至 P2, 并以有界退避恢复
 
 # v1.1.17
 

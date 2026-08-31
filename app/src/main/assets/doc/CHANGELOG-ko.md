@@ -9,6 +9,11 @@
 ###### 2026/08/31
 
 * `기능` AutoJs6 `4.6.0` 리소스 안전 PNG 양자화 선언과 다시 생성한 main-app LSP 그룹을 포함: 구성 가능한 `maxPixels` 및 `maxMemoryBytes` 예산 초과는 형식화된 세부 정보와 함께 실패하고, 결과는 `peakWorkingMemoryBytes`를 노출하며, 취소 API는 명시적 요청과 스크립트 종료를 처리
+* `기능` Python, Lua, Java 및 Kotlin 오프라인 P1 언어 지원 추가: 확장자별 Ace mode에서 구문 강조, 언어 키워드, 스니펫 및 문서 단어 완성을 제공; Lua는 worker 구문 진단도 활성화하며 네 언어 모두 AutoJs6/TypeScript 후보와 격리
+* `기능` Python, Lua, Java 및 Kotlin 오프라인 P2 자동 완성 추가: 고정 버전 표준 라이브러리 인덱스를 필요할 때 로드하고 현재 문서의 import, 함수, 클래스, 메서드, 매개변수 및 변수를 추출하며 언어 간 격리와 기존 JavaScript/TypeScript 동작을 유지
+* `기능` 8개 기능의 교체 가능한 의미 Provider, 범용 JSON-RPC/LSP 코어 및 WebWorker/기기 내 stdio 전송 추가; TypeScript는 회귀 없이 이전되고 provider 장애 시 P2로 대체되며 네 언어의 의미 스위치는 기본적으로 꺼짐
+* `기능` 고정된 Pyright 1.1.413 Worker와 271개 typeshed 파일 하위 집합으로 완전 오프라인 Python 3.12 의미 기능 내장; 타입 기반 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화하고 호환되지 않는 구형 WebView 또는 runtime 실패 시 조용히 P2로 전환
+* `기능` 고정된 기기 내 LuaLS 3.18.2 동반 프로세스로 완전 오프라인 Lua 의미 기능 내장; arm64-v8a, armeabi-v7a 및 x86_64에서 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화하고 네이티브 자산 누락이나 손상, 지원되지 않는 ABI 및 프로세스 충돌 시 조용히 P2로 전환한 뒤 제한된 백오프로 복구
 
 # v1.1.17
 

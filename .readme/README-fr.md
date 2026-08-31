@@ -49,9 +49,33 @@ Le plugin AutoJs6 Ace Editor sépare du fichier APK hôte le runtime Ace WebView
 - Utilise le contrat Editor API 1 et nécessite AutoJs6 `6.8.0 Alpha7` build `5235` ou version ultérieure, ainsi qu'Android API 24 ou version ultérieure.
 - Prend en charge l'édition de texte, l'annulation et le rétablissement, la recherche et le remplacement, la recherche par expression régulière et par mot entier, la navigation du curseur et de la sélection, les opérations sur les lignes, les points d'arrêt, l'activation et la désactivation des commentaires et le formatage du code.
 - Inclut des services de langage JavaScript/TypeScript et des déclarations de types AutoJs6 avec complétion, informations au survol, diagnostics et aide à la signature, tandis que le service JSON fournit uniquement des diagnostics syntaxiques.
+- Ajoute l'analyse sémantique Python 3.12 via un WebWorker Pyright 1.1.413 chargé à la demande : complétion typée, survol, aide à la signature, diagnostics et définition ; les anciens WebView incompatibles conservent silencieusement P2.
+- Ajoute la sémantique Lua entièrement hors ligne via un processus compagnon LuaLS 3.18.2 sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ABI non pris en charge et les pannes du runtime conservent silencieusement P2.
 - Prend en charge la préservation des fins de ligne CRLF, la synchronisation incrémentielle du texte, le chargement par blocs des textes volumineux, un mode allégé pour les lignes très longues, l'adaptation IME, la surveillance de l'état du runtime et les notifications invitant à revenir à l'éditeur natif de l'hôte.
 - Propose des thèmes et des paramètres d'affichage, ainsi qu'une gestion des polices avec vérification du catalogue signé, validation SHA-256/WOFF2, téléchargement, mise en cache, installation et suppression.
 - Les métadonnées du plugin, le README et le CHANGELOG sont localisés en espagnol, français, russe, arabe, japonais, coréen, anglais, chinois simplifié, chinois traditionnel de Hong Kong et chinois traditionnel de Taïwan.
+
+******
+
+### Prise en charge des langages
+
+******
+
+Le tableau ci-dessous décrit les capacités linguistiques actuellement intégrées. La prise en charge sémantique comprend la complétion typée, les diagnostics de type, le hover et les aides de signature:
+
+| Langage | Coloration syntaxique | Complétion des mots-clés | Extraits | Complétion locale | Prise en charge sémantique |
+|---|---:|---:|---:|---:|---:|
+| JavaScript | Oui | Oui | Oui | Oui | Oui |
+| JSX | Oui | Non | Non | Oui | Oui |
+| TypeScript | Oui | Oui | Oui | Oui | Oui |
+| TSX | Partielle | Oui | Oui | Oui | Oui |
+| JSON | Oui | Non | Non | Non | Diagnostics syntaxiques uniquement |
+| Python | Oui | Oui | Oui | Oui | Oui |
+| Lua | Oui | Oui | Oui | Oui | Oui |
+| Java | Oui | Oui | Oui | Oui | Non |
+| Kotlin | Oui | Oui | Oui | Oui | Non |
+
+TSX utilise le mode TypeScript dans Ace 1.4.12, donc la coloration des balises JSX est partielle. Python utilise par défaut un Worker Pyright 1.1.413 entièrement hors ligne avec les stubs de la bibliothèque standard Python 3.12 et revient silencieusement à P2 si un ancien WebView est incompatible ou si le runtime échoue. Lua utilise par défaut un processus compagnon LuaLS 3.18.2 hors ligne sur arm64-v8a, armeabi-v7a et x86_64, et revient silencieusement à P2 si le runtime natif est indisponible ou échoue. Java et Kotlin conservent leur complétion P2 isolée, chargée à la demande depuis la bibliothèque standard et le document courant, sans inférence du type des variables. TypeScript conserve sa sémantique existante et les interrupteurs de Java et Kotlin restent désactivés jusqu'à leurs jalons ultérieurs.
 
 ******
 
@@ -81,6 +105,44 @@ Après la mise à jour ou l'ajout de `autojs6/types/**/*.d.ts`, vous pouvez exé
 
 La tâche valide les références des déclarations et la syntaxe TypeScript 6, puis génère les ressources LSP `core`, `android`, `libraries`, `resources` et `main-app` ainsi que leur manifest. `assemble` et `mergeAssets` en dépendent déjà, les compilations normales ne nécessitent donc aucune étape supplémentaire; les scripts externes peuvent également l'appeler directement. Les fichiers générés sont écrits uniquement dans `app/build/generated/aceLspAssets` et ne remplacent ni ne suppriment les déclarations source complètes sous `src/main/assets`. Si Node ne figure pas dans `PATH`, indiquez `-Pautojs6.nodeExecutable=<chemin-node>`.
 
+Après une modification des sources d'index statiques Python, Lua, Java ou Kotlin dans `tools/ace-lsp/generate-language-indices.mjs`, régénérez les ressources versionnées avec cette tâche:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LanguageIndices
+```
+
+Le générateur fixe la version de référence de chaque langage et produit des ressources déterministes séparées sous `autojs6/indices`; l'éditeur ne charge le langage actif qu'à sa première utilisation. `verifyAutoJs6LanguageIndices` détecte les fichiers obsolètes et fait partie de la chaîne de vérification normale.
+
+Après modification de la source épinglée du Worker Pyright, régénérez explicitement les ressources sémantiques Python versionnées avec cette tâche:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6PythonWorker
+```
+
+Vérifiez la version du Worker, les empreintes typeshed et des licences, le budget de taille, la sémantique, le repli et le cycle de vie avec:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6PythonWorker
+```
+
+L'assemblage APK normal empaquette le Worker versionné et vérifié sans le télécharger ni le régénérer. Les ressources sémantiques occupent 4.822 MiB, sous le seuil optionnel de 8 MiB ; les anciens WebView incapables d'analyser sa syntaxe ES2022 poursuivent avec P2 sans boîte de dialogue d'erreur.
+
+Après modification de la source LuaLS épinglée ou du verrou de compilation, reconstruisez explicitement le runtime Android versionné avec:
+
+```powershell
+.\tools\ace-lsp\build-luals-android.ps1 `
+  -NdkRoot <android-sdk>\ndk\29.0.14206865 `
+  -OutputRoot build\luals-android\dist
+```
+
+Vérifiez la version LuaLS, les empreintes du runtime et des ELF, l'inventaire des licences, la sémantique, le repli selon l'ABI et le cycle de vie avec:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6LuaLanguageServer
+```
+
+L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifiée sans la télécharger ni la reconstruire. Sa charge de 7.900 MiB reste sous le seuil de 8 MiB par langage et prend en charge arm64-v8a, armeabi-v7a et x86_64 ; les ABI non pris en charge poursuivent avec P2 sans boîte de dialogue d'erreur.
+
 ******
 
 ### Installation
@@ -108,6 +170,11 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/31
 
 * `Fonctionnalité` Integre les declarations de quantification PNG a ressources controlees d'AutoJs6 `4.6.0` et le groupe LSP main-app regenere: les budgets configurables `maxPixels` et `maxMemoryBytes` echouent avec des details types, les resultats exposent `peakWorkingMemoryBytes` et les API d'annulation couvrent les demandes explicites et l'arret du script
+* `Fonctionnalité` Ajoute la prise en charge hors ligne P1 de Python, Lua, Java et Kotlin: les extensions routent vers des modes Ace dédiés avec coloration syntaxique, mots-clés, extraits et complétion des mots du document; Lua active aussi les diagnostics syntaxiques par worker et les quatre langages restent isolés des candidats AutoJs6/TypeScript
+* `Fonctionnalité` Ajoute la complétion hors ligne P2 pour Python, Lua, Java et Kotlin: des index de bibliothèques standard versionnés et chargés à la demande se combinent à l'extraction des imports, fonctions, classes, méthodes, paramètres et variables du document courant, tout en préservant l'isolation entre langages et le comportement JavaScript/TypeScript existant
+* `Fonctionnalité` Ajoute un Provider sémantique enfichable à huit capacités, un coeur JSON-RPC/LSP général et des transports WebWorker/stdio sur l'appareil; TypeScript migre sans régression, les pannes reviennent à P2 et les interrupteurs sémantiques des quatre nouveaux langages sont désactivés par défaut
+* `Fonctionnalité` Intègre la sémantique Python 3.12 entièrement hors ligne avec un Worker Pyright 1.1.413 épinglé et un sous-ensemble typeshed de 271 fichiers : complétion typée, survol, aide à la signature, diagnostics et définition sont activés par défaut, tandis que les anciens WebView incompatibles et les pannes du runtime reviennent silencieusement à P2
+* `Fonctionnalité` Intègre la sémantique Lua entièrement hors ligne avec un processus compagnon LuaLS 3.18.2 épinglé sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ressources natives absentes ou endommagées, les ABI non pris en charge et les pannes du processus reviennent silencieusement à P2 avec reprise par temporisation bornée
 
 # v1.1.17
 

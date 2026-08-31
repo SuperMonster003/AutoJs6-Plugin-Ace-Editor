@@ -9,6 +9,11 @@
 ###### 2026/08/31
 
 * `Función` Incluye las declaraciones de cuantizacion PNG segura en recursos de AutoJs6 `4.6.0` y el grupo LSP main-app regenerado: los presupuestos configurables `maxPixels` y `maxMemoryBytes` fallan con detalles tipados, los resultados exponen `peakWorkingMemoryBytes` y las API de cancelacion cubren solicitudes explicitas y el cierre del script
+* `Función` Añade compatibilidad P1 sin conexión para Python, Lua, Java y Kotlin: las extensiones se enrutan a modos Ace dedicados con resaltado, palabras clave, fragmentos y completado de palabras del documento; Lua también activa diagnósticos de sintaxis mediante worker y los cuatro lenguajes quedan aislados de candidatos AutoJs6/TypeScript
+* `Función` Añade autocompletado P2 sin conexión para Python, Lua, Java y Kotlin: índices versionados de bibliotecas estándar cargados bajo demanda se combinan con la extracción de imports, funciones, clases, métodos, parámetros y variables del documento actual, manteniendo el aislamiento entre lenguajes y el comportamiento JavaScript/TypeScript existente
+* `Función` Añade un Provider semántico conectable de ocho capacidades, un núcleo JSON-RPC/LSP general y transportes WebWorker/stdio en el dispositivo; TypeScript migra sin regresiones, los fallos vuelven a P2 y los interruptores semánticos de los cuatro nuevos lenguajes están apagados por defecto
+* `Función` Integra semántica de Python 3.12 totalmente sin conexión con un Worker Pyright 1.1.413 fijado y un subconjunto de 271 archivos de typeshed: autocompletado con tipos, información al pasar el cursor, ayuda de firmas, diagnósticos y definiciones se activan por defecto, mientras que WebView antiguos incompatibles y fallos del runtime vuelven silenciosamente a P2
+* `Función` Integra semántica de Lua totalmente sin conexión con un proceso complementario LuaLS 3.18.2 fijado en el dispositivo: autocompletado, hover, ayuda de firmas, diagnósticos y definiciones se activan por defecto en arm64-v8a, armeabi-v7a y x86_64; recursos nativos ausentes o dañados, ABI no compatibles y fallos del proceso vuelven silenciosamente a P2 con recuperación por reintentos acotados
 
 # v1.1.17
 

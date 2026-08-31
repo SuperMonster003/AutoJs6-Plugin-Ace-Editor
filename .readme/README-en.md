@@ -49,9 +49,33 @@ The AutoJs6 Ace Editor Plugin separates the Ace WebView runtime, JavaScript brid
 - Uses Editor API contract 1 and requires AutoJs6 `6.8.0 Alpha7` build `5235` or later and Android API 24 or later.
 - Supports text editing, undo/redo, search and replace, regex and whole-word search, cursor and selection navigation, line operations, breakpoints, comment toggling, and code formatting.
 - Includes JavaScript/TypeScript language services and AutoJs6 type declarations with completion, hover, diagnostics, and signature help; JSON files receive syntax diagnostics.
+- Adds bundled Python 3.12 semantic analysis through a lazy Pyright 1.1.413 WebWorker: type-aware completion, hover, signature help, diagnostics, and definition; unsupported older WebViews silently retain P2.
+- Adds fully offline Lua semantics through an on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64; unsupported ABIs and runtime failures silently retain P2.
 - Supports CRLF preservation, incremental text synchronization, chunked loading for large text, a lightweight mode for very long lines, IME adaptation, runtime health monitoring, and host native editor fallback notifications.
 - Provides themes and display settings plus font management with signed catalog verification, SHA-256/WOFF2 validation, download, caching, installation, and removal.
 - Localizes plugin metadata, README, and changelog content for Spanish, French, Russian, Arabic, Japanese, Korean, English, Simplified Chinese, Hong Kong Traditional Chinese, and Taiwan Traditional Chinese.
+
+******
+
+### Programming Language Support
+
+******
+
+The table below describes the currently bundled language capabilities. Semantic support includes type-aware completion, type diagnostics, hover, and signature help:
+
+| Language | Syntax highlighting | Keyword completion | Snippets | Local completion | Semantic support |
+|---|---:|---:|---:|---:|---:|
+| JavaScript | Yes | Yes | Yes | Yes | Yes |
+| JSX | Yes | No | No | Yes | Yes |
+| TypeScript | Yes | Yes | Yes | Yes | Yes |
+| TSX | Partial | Yes | Yes | Yes | Yes |
+| JSON | Yes | No | No | No | Syntax diagnostics only |
+| Python | Yes | Yes | Yes | Yes | Yes |
+| Lua | Yes | Yes | Yes | Yes | Yes |
+| Java | Yes | Yes | Yes | Yes | No |
+| Kotlin | Yes | Yes | Yes | Yes | No |
+
+TSX uses the TypeScript mode in Ace 1.4.12, so JSX tag highlighting is partial. Python defaults to an offline Pyright 1.1.413 Worker with Python 3.12 standard-library stubs and falls back silently to P2 on an incompatible old WebView or runtime failure. Lua defaults to an offline LuaLS 3.18.2 companion process on arm64-v8a, armeabi-v7a, and x86_64 and falls back silently to P2 when its native runtime is unavailable or fails. Java and Kotlin retain isolated, lazily loaded P2 standard-library and current-document completion without variable-type inference. TypeScript retains its existing semantic behavior, while semantic switches for Java and Kotlin remain off until their later milestones.
 
 ******
 
@@ -81,6 +105,44 @@ After updating or adding `autojs6/types/**/*.d.ts`, run this task directly:
 
 The task validates declaration references and TypeScript 6 syntax, then generates the `core`, `android`, `libraries`, `resources`, and `main-app` LSP assets and their manifest. `assemble` and `mergeAssets` already depend on it, so normal builds require no extra step; external scripts can also invoke it directly. Generated files are written only to `app/build/generated/aceLspAssets` and never overwrite or delete the complete source declarations under `src/main/assets`. If Node is not in `PATH`, pass `-Pautojs6.nodeExecutable=<node-path>`.
 
+After changing the curated Python, Lua, Java, or Kotlin static-index source in `tools/ace-lsp/generate-language-indices.mjs`, regenerate the committed assets with this task:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LanguageIndices
+```
+
+The generator pins each language baseline and emits deterministic per-language assets under `autojs6/indices`; the editor loads only the active language on first use. `verifyAutoJs6LanguageIndices` detects stale generated files and is part of the normal verification chain.
+
+After changing the pinned Pyright Worker source, regenerate the committed Python semantic assets explicitly with this task:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6PythonWorker
+```
+
+Verify the committed Worker version, typeshed and license hashes, size budget, semantic behavior, fallback, and lifecycle with:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6PythonWorker
+```
+
+Normal APK assembly packages the committed, verified Worker and does not download or regenerate it. The semantic asset set is 4.822 MiB, below the 8 MiB optional-delivery threshold; old WebViews that cannot parse its ES2022 syntax continue with P2 without an error dialog.
+
+After changing the pinned LuaLS source or build lock, rebuild the committed Android runtime explicitly with:
+
+```powershell
+.\tools\ace-lsp\build-luals-android.ps1 `
+  -NdkRoot <android-sdk>\ndk\29.0.14206865 `
+  -OutputRoot build\luals-android\dist
+```
+
+Verify the committed LuaLS version, runtime and ELF hashes, license inventory, semantic behavior, ABI fallback, and lifecycle with:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6LuaLanguageServer
+```
+
+Normal APK assembly packages the committed, verified LuaLS distribution and does not download or rebuild it. Its 7.900 MiB payload is below the 8 MiB per-language delivery threshold and supports arm64-v8a, armeabi-v7a, and x86_64; unsupported ABIs continue with P2 without an error dialog.
+
 ******
 
 ### Installation
@@ -108,6 +170,11 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/31
 
 * `Feature` Bundle the AutoJs6 `4.6.0` resource-safe PNG quantization declarations and regenerated main-app LSP group: configurable `maxPixels` and `maxMemoryBytes` budgets fail with typed details, results expose `peakWorkingMemoryBytes`, and cancellation APIs cover explicit requests and script shutdown
+* `Feature` Add offline P1 language support for Python, Lua, Java, and Kotlin: file extensions route to dedicated Ace modes with syntax highlighting, language keywords, snippets, and document-word completion; Lua also enables worker-based syntax diagnostics, and all four languages stay isolated from AutoJs6/TypeScript candidates
+* `Feature` Add offline P2 completion for Python, Lua, Java, and Kotlin: lazily loaded version-pinned standard-library indexes combine with current-document import, function, class, method, parameter, and variable extraction while preserving strict cross-language isolation and existing JavaScript/TypeScript behavior
+* `Feature` Add a pluggable eight-capability semantic Provider, a general JSON-RPC/LSP core, and WebWorker/on-device stdio transports; TypeScript migrates with zero regression, provider failures fall back to P2, and semantic switches for the four new languages default to off
+* `Feature` Bundle fully offline Python 3.12 semantics with a pinned Pyright 1.1.413 Worker and a 271-file typeshed subset: type-aware completion, hover, signature help, diagnostics, and definition now default on, while incompatible old WebViews and runtime failures fall back silently to P2
+* `Feature` Bundle fully offline Lua semantics with a pinned on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64, while missing or damaged native assets, unsupported ABIs, and process crashes fall back silently to P2 with bounded restart recovery
 
 # v1.1.17
 

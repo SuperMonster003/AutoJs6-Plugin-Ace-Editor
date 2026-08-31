@@ -49,9 +49,33 @@ AutoJs6 Ace Editor Plugin 將 Ace WebView 執行階段, JavaScript bridge, 輸�
 - 使用 Editor API 合約 1, 需要 AutoJs6 `6.8.0 Alpha7` build `5235` 或更新版本和 Android API 24 或更新版本.
 - 支援文字編輯, 復原/重做, 尋找與取代, 規則運算式與全字詞搜尋, 游標/選取範圍導覽, 行操作, 中斷點, 註解切換和程式碼格式化.
 - 內建 JavaScript/TypeScript 語言服務和 AutoJs6 型別宣告, 提供 completion, hover, diagnostics 和 signature help; JSON 僅提供語法診斷.
+- 透過依需求建立的 Pyright 1.1.413 WebWorker 內建 Python 3.12 語意分析: 型別補全, hover, signature help, 診斷和定義跳轉; 不相容的舊 WebView 會靜默保留 P2.
+- 透過裝置內 LuaLS 3.18.2 伴生程序內建完全離線的 Lua 語意: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 不支援的 ABI 與執行失敗會靜默保留 P2.
 - 支援保留 CRLF, 增量文字同步, 大型文字分塊載入, 超長行輕量模式, IME 調整, 執行狀況監控和切回宿主原生編輯器的通知.
 - 支援主題與顯示設定, 以及具備簽章目錄驗證, SHA-256/WOFF2 驗證, 下載, 快取, 安裝和移除功能的字型管理.
 - 外掛資訊, README 與 CHANGELOG 支援西班牙文/法文/俄文/阿拉伯文/日文/韓文/英文/簡體中文/香港繁體/台灣繁體.
+
+******
+
+### 程式語言支援
+
+******
+
+下表說明目前內建的語言能力. 語意支援包括型別補全, 型別診斷, hover 與簽章提示:
+
+| 語言 | 語法醒目提示 | 關鍵字補全 | Snippets | 本機補全 | 語意支援 |
+|---|---:|---:|---:|---:|---:|
+| JavaScript | 支援 | 支援 | 支援 | 支援 | 支援 |
+| JSX | 支援 | 無 | 無 | 支援 | 支援 |
+| TypeScript | 支援 | 支援 | 支援 | 支援 | 支援 |
+| TSX | 部分 | 支援 | 支援 | 支援 | 支援 |
+| JSON | 支援 | 無 | 無 | 無 | 僅語法診斷 |
+| Python | 支援 | 支援 | 支援 | 支援 | 支援 |
+| Lua | 支援 | 支援 | 支援 | 支援 | 支援 |
+| Java | 支援 | 支援 | 支援 | 支援 | 無 |
+| Kotlin | 支援 | 支援 | 支援 | 支援 | 無 |
+
+Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 標籤醒目提示僅部分可用. Python 預設使用完全離線的 Pyright 1.1.413 Worker 和 Python 3.12 標準函式庫存根; 舊 WebView 不相容或執行失敗時會靜默降級至 P2. Lua 在 arm64-v8a, armeabi-v7a 與 x86_64 預設使用完全離線的 LuaLS 3.18.2 伴生程序; 原生執行階段不可用或失敗時會靜默降級至 P2. Java 與 Kotlin 繼續使用互相隔離且依需求載入的標準函式庫索引和目前文件 P2 補全, 不進行變數型別推導. TypeScript 維持現有語意行為, Java 與 Kotlin 的語意開關在各自後續里程碑完成前預設關閉.
 
 ******
 
@@ -81,6 +105,44 @@ Release 建置:
 
 此工作會驗證宣告參照和 TypeScript 6 語法, 產生 `core`, `android`, `libraries`, `resources`, `main-app` 五組 LSP 資產及 manifest. `assemble` 和 `mergeAssets` 已自動相依於此工作, 因此一般建置無需額外執行; 外部指令碼也可直接呼叫. 產生結果只會寫入 `app/build/generated/aceLspAssets`, 不會覆寫或刪除 `src/main/assets` 下的完整原始宣告. 若 Node 不在 `PATH`, 可傳入 `-Pautojs6.nodeExecutable=<node路徑>`.
 
+修改 `tools/ace-lsp/generate-language-indices.mjs` 中維護的 Python, Lua, Java 或 Kotlin 靜態索引來源後, 可透過此工作重新產生提交入庫的資產:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LanguageIndices
+```
+
+產生器固定各語言基準版本, 並在 `autojs6/indices` 下輸出可重現的獨立語言資產; 編輯器只在首次使用時載入目前語言. `verifyAutoJs6LanguageIndices` 會偵測過期產物, 且已接入一般驗證鏈.
+
+修改固定版本的 Pyright Worker 原始碼後, 可透過此工作明確重新產生提交入庫的 Python 語意資產:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6PythonWorker
+```
+
+透過以下工作驗證提交入庫的 Worker 版本, typeshed 與授權雜湊, 體積預算, 語意行為, 降級和生命週期:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6PythonWorker
+```
+
+一般 APK 建置只會封裝已提交並驗證的 Worker, 不會下載或重新產生. 語意資產合計 4.822 MiB, 低於 8 MiB 可選交付門檻; 無法解析其 ES2022 語法的舊 WebView 會繼續使用 P2, 且不顯示錯誤對話框.
+
+修改固定版本的 LuaLS 原始碼或建置鎖後, 可透過以下命令明確重新建置提交入庫的 Android 執行階段:
+
+```powershell
+.\tools\ace-lsp\build-luals-android.ps1 `
+  -NdkRoot <android-sdk>\ndk\29.0.14206865 `
+  -OutputRoot build\luals-android\dist
+```
+
+透過以下工作驗證提交入庫的 LuaLS 版本, 執行階段與 ELF 雜湊, 授權清單, 語意行為, ABI 降級和生命週期:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6LuaLanguageServer
+```
+
+一般 APK 建置只會封裝已提交並驗證的 LuaLS 發行內容, 不會下載或重新建置. 其 7.900 MiB 負載低於 8 MiB 單語言交付門檻, 支援 arm64-v8a, armeabi-v7a 與 x86_64; 不支援的 ABI 會繼續使用 P2, 且不顯示錯誤對話框.
+
 ******
 
 ### 安裝
@@ -108,6 +170,11 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 ###### 2026/08/31
 
 * `新增` 內建 AutoJs6 `4.6.0` 資源安全的 PNG 量化宣告及重新產生的主應用程式 LSP 分組: 可設定的 `maxPixels` 與 `maxMemoryBytes` 預算超限時回傳帶詳細資料的型別化錯誤, 結果公開 `peakWorkingMemoryBytes`, 取消 API 涵蓋明確要求與指令碼結束
+* `新增` Python, Lua, Java 與 Kotlin 離線 P1 語言支援: 依副檔名路由 Ace mode, 提供語法醒目提示, 本語言關鍵字, snippets 與文件單字補全; Lua 額外啟用 worker 語法診斷, 四種語言都與 AutoJs6/TypeScript 候選嚴格隔離
+* `新增` Python, Lua, Java 與 Kotlin 離線 P2 補全: 依需求載入固定版本的標準函式庫索引, 並擷取目前文件的 import, 函式, 類別, 方法, 參數和變數; 嚴格維持跨語言隔離及現有 JavaScript/TypeScript 行為
+* `新增` 新增可插拔八能力語意 Provider, 通用 JSON-RPC/LSP 核心及 WebWorker/裝置內 stdio 雙傳輸; TypeScript 已零回歸遷移, provider 故障時自動降級至 P2, 四門新語言語意開關預設關閉
+* `新增` 透過固定版本的 Pyright 1.1.413 Worker 和 271 個 typeshed 檔案內建完全離線的 Python 3.12 語意: 型別補全, hover, signature help, 診斷和定義跳轉現預設開啟, 不相容的舊 WebView 與執行失敗會靜默降級至 P2
+* `新增` 透過固定版本的 LuaLS 3.18.2 裝置內伴生程序內建完全離線的 Lua 語意: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 原生資產缺少或損壞, 不支援的 ABI 與程序崩潰會靜默降級至 P2, 並以有限退避恢復
 
 # v1.1.17
 

@@ -40,6 +40,28 @@
 
 ******
 
+### {{ h3_programming_language_support }}
+
+******
+
+{{ p_programming_language_support_intro }}:
+
+| {{ text_programming_language }} | {{ text_syntax_highlighting }} | {{ text_keyword_completion }} | {{ text_snippets }} | {{ text_local_completion }} | {{ text_semantic_support }} |
+|---|---:|---:|---:|---:|---:|
+| JavaScript | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
+| JSX | {{ text_support_yes }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_yes }} | {{ text_support_yes }} |
+| TypeScript | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
+| TSX | {{ text_support_partial }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
+| JSON | {{ text_support_yes }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_syntax_only }} |
+| Python | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
+| Lua | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
+| Java | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_no }} |
+| Kotlin | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_no }} |
+
+{{ p_programming_language_support_note }}.
+
+******
+
 ### {{ h3_build }}
 
 ******
@@ -65,6 +87,44 @@
 ```
 
 {{ p_lsp_declarations_generation }}.
+
+{{ p_language_indices_update }}:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6LanguageIndices
+```
+
+{{ p_language_indices_generation }}.
+
+{{ p_python_semantic_worker_update }}:
+
+```powershell
+.\gradlew.bat :app:generateAutoJs6PythonWorker
+```
+
+{{ p_python_semantic_worker_verify }}:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6PythonWorker
+```
+
+{{ p_python_semantic_worker_generation }}.
+
+{{ p_lua_semantic_server_update }}:
+
+```powershell
+.\tools\ace-lsp\build-luals-android.ps1 `
+  -NdkRoot <android-sdk>\ndk\29.0.14206865 `
+  -OutputRoot build\luals-android\dist
+```
+
+{{ p_lua_semantic_server_verify }}:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6LuaLanguageServer
+```
+
+{{ p_lua_semantic_server_generation }}.
 
 ******
 
