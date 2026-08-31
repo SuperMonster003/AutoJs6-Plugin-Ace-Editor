@@ -72,10 +72,12 @@ AutoJs6 Ace Editor 플러그인은 Ace WebView 런타임, JavaScript 브리지, 
 | JSON | 지원 | 없음 | 없음 | 없음 | 구문 진단만 |
 | Python | 지원 | 지원 | 지원 | 지원 | 지원 |
 | Lua | 지원 | 지원 | 지원 | 지원 | 지원 |
-| Java | 지원 | 지원 | 지원 | 지원 | 없음 |
-| Kotlin | 지원 | 지원 | 지원 | 지원 | 없음 |
+| Java | 지원 | 지원 | 지원 | 지원 | 단일 파일 진단 |
+| Kotlin | 지원 | 지원 | 지원 | P2+ | 없음 |
 
-Ace 1.4.12의 TSX는 TypeScript mode를 사용하므로 JSX 태그 강조는 부분 지원입니다. Python은 Python 3.12 표준 라이브러리 stub을 포함한 완전 오프라인 Pyright 1.1.413 Worker를 기본으로 사용하며 구형 WebView 비호환 또는 runtime 실패 시 조용히 P2로 전환합니다. Lua는 arm64-v8a, armeabi-v7a 및 x86_64에서 완전 오프라인 LuaLS 3.18.2 동반 프로세스를 기본으로 사용하며 네이티브 runtime을 사용할 수 없거나 실패하면 조용히 P2로 전환합니다. Java 및 Kotlin은 언어별로 격리되고 지연 로드되는 표준 라이브러리와 현재 문서 P2 자동 완성을 유지하며 변수 타입 추론은 수행하지 않습니다. TypeScript의 기존 의미 동작은 유지되며 Java 및 Kotlin의 의미 스위치는 이후 마일스톤까지 기본적으로 꺼져 있습니다.
+Ace 1.4.12의 TSX는 TypeScript mode를 사용하므로 JSX 태그 강조는 부분 지원입니다. Python은 Python 3.12 표준 라이브러리 stub을 포함한 완전 오프라인 Pyright 1.1.413 Worker를 기본으로 사용하며 구형 WebView 비호환 또는 runtime 실패 시 조용히 P2로 전환합니다. Lua는 arm64-v8a, armeabi-v7a 및 x86_64에서 완전 오프라인 LuaLS 3.18.2 동반 프로세스를 기본으로 사용하며 네이티브 runtime을 사용할 수 없거나 실패하면 조용히 P2로 전환합니다. Java는 격리된 표준 라이브러리와 현재 문서 P2 자동 완성에 ECJ 단일 파일 진단을 결합합니다. Kotlin은 의미 Provider 없이 P2+ 자동 완성을 제공합니다.
+
+AutoJs6 코드 편집기 설정은 동일한 9-mode matrix를 표시합니다. 전역 LSP switch가 모든 의미 서비스를 제어하고 TypeScript/JavaScript, Python, Lua 및 Java에는 언어별 switch가 있습니다; Kotlin은 표시되지만 사용할 수 없습니다. 파일 형식 목록이 먼저 평가됩니다: 인식된 suffix를 제거하면 해당 의미 기능이 꺼지고 custom suffix를 추가하면 파일이 LSP path에 들어갈 뿐 다른 언어로 재분류되거나 의미 Provider가 생성되지 않습니다.
 
 ******
 
@@ -175,6 +177,9 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 * `기능` 8개 기능의 교체 가능한 의미 Provider, 범용 JSON-RPC/LSP 코어 및 WebWorker/기기 내 stdio 전송 추가; TypeScript는 회귀 없이 이전되고 provider 장애 시 P2로 대체되며 네 언어의 의미 스위치는 기본적으로 꺼짐
 * `기능` 고정된 Pyright 1.1.413 Worker와 271개 typeshed 파일 하위 집합으로 완전 오프라인 Python 3.12 의미 기능 내장; 타입 기반 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화하고 호환되지 않는 구형 WebView 또는 runtime 실패 시 조용히 P2로 전환
 * `기능` 고정된 기기 내 LuaLS 3.18.2 동반 프로세스로 완전 오프라인 Lua 의미 기능 내장; arm64-v8a, armeabi-v7a 및 x86_64에서 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화하고 네이티브 자산 누락이나 손상, 지원되지 않는 ABI 및 프로세스 충돌 시 조용히 P2로 전환한 뒤 제한된 백오프로 복구
+* `기능` 고정된 ECJ 3.26.0과 축소된 Android API 36 stubs로 완전 오프라인 Java 단일 파일 진단 내장; 구문 오류와 확인되지 않은 기호를 기본적으로 정확한 범위에 표시하며, JDT Code Assist가 ART에서 사용할 수 없는 Eclipse Workspace/OSGi 환경을 요구하므로 자동 완성은 P2를 유지
+* `기능` Kotlin 2.2.21 인스턴스 API, 현재 파일의 보수적 형식 추론, safe-call 및 재사용한 Java/Android 인덱스로 오프라인 Kotlin P2+ 자동 완성 추가; 기기 내 compiler는 크기, ART 실행, 메모리 및 최소 SDK 검증에 실패해 Kotlin compiler와 의미 runtime을 포함하지 않음
+* `기능` AutoJs6 코드 편집기 설정에 동일한 9-mode 언어 지원 matrix와 TypeScript/JavaScript, Python, Lua 및 Java의 언어별 의미 switch를 표시; Kotlin은 P2+ 전용 사용 불가 상태로 계속 보이며 파일 형식 사용자 지정이 언어 재분류가 아닌 allowlist임을 명시
 
 # v1.1.17
 

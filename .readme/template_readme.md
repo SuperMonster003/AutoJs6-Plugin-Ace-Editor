@@ -55,10 +55,12 @@
 | JSON | {{ text_support_yes }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_syntax_only }} |
 | Python | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
 | Lua | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
-| Java | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_no }} |
-| Kotlin | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_no }} |
+| Java | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_single_file_diagnostics }} |
+| Kotlin | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_p2_plus }} | {{ text_support_no }} |
 
 {{ p_programming_language_support_note }}.
+
+{{ p_language_settings }}.
 
 ******
 

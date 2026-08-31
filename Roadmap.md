@@ -315,13 +315,22 @@ Java/Android 互操作；API 28/31/35 真机均通过 WebView 冒烟。完整证
       三类路径；运行时门控和 Node/真实 WebView 用例均验证静默回到 P2 且无 UI 错误。
       —— M5 增加不支持 x86 ABI、缺失/损坏原生库、伴生进程崩溃三类路径；完整哈希门控、
       静态 P2 回退、退避重启与释放均有 Node/JVM/真实设备证据。
-- [ ] **X-4** 设置 UI: 语言支持矩阵展示; 每语言语义开关 (M3-7); 文件类型自定义与语义白名单的关系说明。
+- [x] **X-4** 设置 UI: 语言支持矩阵展示; 每语言语义开关 (M3-7); 文件类型自定义与语义白名单的关系说明。
+      —— AutoJs6 代码编辑器设置现直接展示 9-mode 产品能力矩阵; TypeScript/JavaScript、Python、
+      Lua 与 Java 提供独立语义开关, Kotlin 以 P2+ / 无 Provider 状态保持可见。全局 LSP、
+      文件类型白名单、语言识别、Provider 可用性与逐语言开关按固定顺序门控; 自定义后缀只允许
+      文件进入 LSP 路径, 不会重分类语言。宿主与插件单测、runtime verifier、10 种本地化资源及
+      Android 9/12/13/15 真机验收均完成, 详见 `tools/ace-lsp/X4_SETTINGS_ACCEPTANCE.md`。
 - [x] **X-5** 文档: README 支持矩阵随里程碑更新; `tools/` 各生成/构建脚本 README; CHANGELOG 条目。
       —— M2 进度: 10 种本地化 README/CHANGELOG、生成命令、支持边界与验收记录已同步；后续里程碑继续维护。
       —— M4 进度: 10 种本地化支持矩阵、Pyright 构建/校验命令、默认启用与老 WebView 降级、
       CHANGELOG 和独立验收文档已同步。
       —— M5 进度: 10 种本地化支持矩阵、LuaLS 构建/校验命令、ABI/降级边界、许可证、
       CHANGELOG 和独立验收文档已同步。
+      —— M6/M7 进度: README 矩阵已区分 Java 单文件诊断与 Kotlin P2+，ECJ/JDT/kotlinc
+      验证门、拒绝结论、构建脚本、产物哈希与重启条件均写入独立验收文档和基线。
+      —— X-4 收尾: 10 种本地化 README/CHANGELOG 已同步设置矩阵、逐语言开关、Kotlin
+      不可用边界，以及文件类型白名单不会触发语言重分类的说明。
 - [x] **X-6** 测试约定: 每里程碑 DoD 必含"新增单测 + verify 任务扩展 + 既有回归全绿", 不满足不勾选。
       —— M0 已按此约定落地；M4 新增 Worker verifier、JVM/Android 用例与七环境完整回归，
       本条继续作为后续里程碑合入门。

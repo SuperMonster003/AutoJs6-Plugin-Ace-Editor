@@ -14,9 +14,9 @@
 * `Feature` Add a pluggable eight-capability semantic Provider, a general JSON-RPC/LSP core, and WebWorker/on-device stdio transports; TypeScript migrates with zero regression, provider failures fall back to P2, and semantic switches for the four new languages default to off
 * `Feature` Bundle fully offline Python 3.12 semantics with a pinned Pyright 1.1.413 Worker and a 271-file typeshed subset: type-aware completion, hover, signature help, diagnostics, and definition now default on, while incompatible old WebViews and runtime failures fall back silently to P2
 * `Feature` Bundle fully offline Lua semantics with a pinned on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64, while missing or damaged native assets, unsupported ABIs, and process crashes fall back silently to P2 with bounded restart recovery
-
 * `Feature` Bundle fully offline Java single-file diagnostics with pinned ECJ 3.26.0 and trimmed Android API 36 stubs: syntax errors and unresolved symbols now receive exact-range annotations by default, while completion stays on P2 because JDT Code Assist requires an Eclipse Workspace/OSGi runtime unavailable on ART
 * `Feature` Add offline Kotlin P2+ completion with Kotlin 2.2.21 instance APIs, conservative current-file type hints, safe-call support, and reused Java/Android indexes; the on-device compiler gate failed on size, ART execution, memory, and min-SDK compatibility, so no Kotlin compiler or semantic runtime is bundled
+* `Feature` Expose the same nine-mode language support matrix in AutoJs6 code editor settings with per-language semantic switches for TypeScript/JavaScript, Python, Lua, and Java; Kotlin remains visibly unavailable at P2+, and file-type customization is documented as an allowlist rather than language reclassification
 
 # v1.1.17
 

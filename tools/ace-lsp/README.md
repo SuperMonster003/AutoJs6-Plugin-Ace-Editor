@@ -298,6 +298,37 @@ See `M7_KOTLIN_ACCEPTANCE.md` for the research sources, exact dependency/DEX
 hashes, ART measurements, P2+ behavior matrix, device results, limitations, and
 future restart criteria.
 
+## X-4 language settings contract
+
+AutoJs6 Code editor settings expose the product's nine-mode support matrix from
+the same ordered contract used by the plugin verifier. The matrix distinguishes
+syntax, keywords, snippets, local completion, and semantic support, including
+Java single-file diagnostics and Kotlin P2+ without a semantic provider.
+
+Semantic routing uses the following gates in order:
+
+1. the global LSP switch must be on;
+2. the document suffix must be present in the file-type allowlist;
+3. the suffix must map to a recognized semantic language family;
+4. a product provider must exist for that language;
+5. the per-language semantic switch must be on.
+
+TypeScript/JavaScript, Python, Lua, and Java have interactive switches. Kotlin
+is deliberately shown as unavailable instead of being hidden. Adding a custom
+suffix only admits the file through gate 2; it neither reclassifies the file nor
+creates a provider. Removing a recognized suffix blocks its semantic route even
+when the corresponding language switch remains enabled.
+
+The general runtime verifier locks the matrix order, preference keys, provider
+availability, Kotlin rejection, and allowlist-before-routing behavior:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6LspRuntime
+```
+
+See `X4_SETTINGS_ACCEPTANCE.md` for the host/plugin persistence boundary,
+localized UI evidence, automated checks, and Android 9/12/13/15 device results.
+
 ## TypeScript execution-profile diagnostics
 
 The bundled language service is pinned to TypeScript `6.0.3`, the same version

@@ -450,3 +450,31 @@ Kotlin focused verifier、通用 LSP verifier、Python/Lua/Java 门与 JVM 单�
 `fab8987e6313dff9458d3648240b92abac7b6e84f3615410022df62491ba0fab`。release 相对 M6 基线
 增加 14,268 字节（13.93 KiB），且不包含 compiler graph、D8 或注入 ZIP。完整判定见
 `M7_KOTLIN_ACCEPTANCE.md`。
+
+## X-4 设置契约、文档与产物
+
+X-4 没有新增 Worker、编译器、原生可执行文件、标准库索引或其他语言 runtime asset；
+`autojs6/` 生产语言资产清单与 M7 完全一致。新增体积来自宿主设置 UI、插件/宿主偏好模型、
+verifier 规则，以及 10 种本地化 README/CHANGELOG。
+
+插件最终产物：
+
+| 产物 | 字节 | MiB | SHA-256 |
+|---|---:|---:|---|
+| debug APK | 24,640,090 | 23.499 | `69dc69bfaf853b2fe6da101fcdc0365125ff9f64713f9e583cbebc24f8ef56e7` |
+| androidTest APK | 27,968,852 | 26.673 | `b80cbeb86022083b044d9298de7504faffd125b4fca11039db2d35f4101e61bc` |
+| R8 release APK | 17,745,780 | 16.924 | `85559871642d08178fef8f4baeb3624837a5e1424a2aee6e4879ecedbe97b265` |
+
+debug 相对 M7 的 24,444,180 字节增加 195,910 字节（0.187 MiB）；release 相对 M7
+增加 3,028 字节。androidTest 产物字节与哈希均未变化。由于没有新增
+语义组件，M4/M5/M6 各语言 8 MiB 交付门和 M2 3 MiB 静态索引门不增加占用。
+
+宿主最终 debug APK 为 54,533,659 字节（52.007 MiB），SHA-256
+`4106744824c29236c3ccb4e72ecf51dd71fd9f6375731706f4731aeaf3aea4fc`；对应 androidTest APK
+为 2,184,084 字节（2.083 MiB），SHA-256
+`41b333c69fa76fcebb9eb9ec0d8d75fed8190295fcd06ef28ad07fec2b582e30`。
+
+完整插件 `:app:check` 与 debug/androidTest/release 构建通过。设置设备用例在 API 31/33/35
+分别为 1/1；API 28 的厂商 ART/JDWP 在 TestRunner 前 native abort，随后使用相同应用代码从
+正常 UI 入口核验矩阵、Kotlin P2+、4/4 开关和白名单说明通过。完整证据与门控定义见
+`X4_SETTINGS_ACCEPTANCE.md`。

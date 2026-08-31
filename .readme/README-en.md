@@ -72,10 +72,12 @@ The table below describes the currently bundled language capabilities. Semantic 
 | JSON | Yes | No | No | No | Syntax diagnostics only |
 | Python | Yes | Yes | Yes | Yes | Yes |
 | Lua | Yes | Yes | Yes | Yes | Yes |
-| Java | Yes | Yes | Yes | Yes | No |
-| Kotlin | Yes | Yes | Yes | Yes | No |
+| Java | Yes | Yes | Yes | Yes | Single-file diagnostics |
+| Kotlin | Yes | Yes | Yes | P2+ | No |
 
-TSX uses the TypeScript mode in Ace 1.4.12, so JSX tag highlighting is partial. Python defaults to an offline Pyright 1.1.413 Worker with Python 3.12 standard-library stubs and falls back silently to P2 on an incompatible old WebView or runtime failure. Lua defaults to an offline LuaLS 3.18.2 companion process on arm64-v8a, armeabi-v7a, and x86_64 and falls back silently to P2 when its native runtime is unavailable or fails. Java and Kotlin retain isolated, lazily loaded P2 standard-library and current-document completion without variable-type inference. TypeScript retains its existing semantic behavior, while semantic switches for Java and Kotlin remain off until their later milestones.
+TSX uses the TypeScript mode in Ace 1.4.12, so JSX tag highlighting is partial. Python defaults to an offline Pyright 1.1.413 Worker with Python 3.12 standard-library stubs and falls back silently to P2 on an incompatible old WebView or runtime failure. Lua defaults to an offline LuaLS 3.18.2 companion process on arm64-v8a, armeabi-v7a, and x86_64 and falls back silently to P2 when its native runtime is unavailable or fails. Java combines isolated P2 standard-library and current-document completion with ECJ single-file diagnostics. Kotlin provides P2+ completion without a semantic provider.
+
+AutoJs6 Code editor settings expose this same nine-mode matrix. The global LSP switch gates every semantic service, with per-language switches for TypeScript/JavaScript, Python, Lua, and Java; Kotlin remains visible but unavailable. The file-type list is evaluated first: removing a recognized suffix disables semantics for it, while adding a custom suffix only admits the file to the LSP path and does not classify it as another language or create a semantic provider.
 
 ******
 
@@ -175,6 +177,9 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Feature` Add a pluggable eight-capability semantic Provider, a general JSON-RPC/LSP core, and WebWorker/on-device stdio transports; TypeScript migrates with zero regression, provider failures fall back to P2, and semantic switches for the four new languages default to off
 * `Feature` Bundle fully offline Python 3.12 semantics with a pinned Pyright 1.1.413 Worker and a 271-file typeshed subset: type-aware completion, hover, signature help, diagnostics, and definition now default on, while incompatible old WebViews and runtime failures fall back silently to P2
 * `Feature` Bundle fully offline Lua semantics with a pinned on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64, while missing or damaged native assets, unsupported ABIs, and process crashes fall back silently to P2 with bounded restart recovery
+* `Feature` Bundle fully offline Java single-file diagnostics with pinned ECJ 3.26.0 and trimmed Android API 36 stubs: syntax errors and unresolved symbols now receive exact-range annotations by default, while completion stays on P2 because JDT Code Assist requires an Eclipse Workspace/OSGi runtime unavailable on ART
+* `Feature` Add offline Kotlin P2+ completion with Kotlin 2.2.21 instance APIs, conservative current-file type hints, safe-call support, and reused Java/Android indexes; the on-device compiler gate failed on size, ART execution, memory, and min-SDK compatibility, so no Kotlin compiler or semantic runtime is bundled
+* `Feature` Expose the same nine-mode language support matrix in AutoJs6 code editor settings with per-language semantic switches for TypeScript/JavaScript, Python, Lua, and Java; Kotlin remains visibly unavailable at P2+, and file-type customization is documented as an allowlist rather than language reclassification
 
 # v1.1.17
 

@@ -72,10 +72,12 @@ Le tableau ci-dessous décrit les capacités linguistiques actuellement intégr�
 | JSON | Oui | Non | Non | Non | Diagnostics syntaxiques uniquement |
 | Python | Oui | Oui | Oui | Oui | Oui |
 | Lua | Oui | Oui | Oui | Oui | Oui |
-| Java | Oui | Oui | Oui | Oui | Non |
-| Kotlin | Oui | Oui | Oui | Oui | Non |
+| Java | Oui | Oui | Oui | Oui | Diagnostics de fichier unique |
+| Kotlin | Oui | Oui | Oui | P2+ | Non |
 
-TSX utilise le mode TypeScript dans Ace 1.4.12, donc la coloration des balises JSX est partielle. Python utilise par défaut un Worker Pyright 1.1.413 entièrement hors ligne avec les stubs de la bibliothèque standard Python 3.12 et revient silencieusement à P2 si un ancien WebView est incompatible ou si le runtime échoue. Lua utilise par défaut un processus compagnon LuaLS 3.18.2 hors ligne sur arm64-v8a, armeabi-v7a et x86_64, et revient silencieusement à P2 si le runtime natif est indisponible ou échoue. Java et Kotlin conservent leur complétion P2 isolée, chargée à la demande depuis la bibliothèque standard et le document courant, sans inférence du type des variables. TypeScript conserve sa sémantique existante et les interrupteurs de Java et Kotlin restent désactivés jusqu'à leurs jalons ultérieurs.
+TSX utilise le mode TypeScript dans Ace 1.4.12, donc la coloration des balises JSX est partielle. Python utilise par défaut un Worker Pyright 1.1.413 entièrement hors ligne avec les stubs de la bibliothèque standard Python 3.12 et revient silencieusement à P2 si un ancien WebView est incompatible ou si le runtime échoue. Lua utilise par défaut un processus compagnon LuaLS 3.18.2 hors ligne sur arm64-v8a, armeabi-v7a et x86_64, et revient silencieusement à P2 si le runtime natif est indisponible ou échoue. Java associe la complétion P2 isolée de la bibliothèque standard et du document courant aux diagnostics ECJ de fichier unique. Kotlin fournit une complétion P2+ sans fournisseur sémantique.
+
+Les paramètres de l'éditeur de code AutoJs6 affichent cette même matrice de neuf modes. Le commutateur LSP global contrôle tous les services sémantiques, avec des commutateurs par langage pour TypeScript/JavaScript, Python, Lua et Java; Kotlin reste visible mais indisponible. La liste des types de fichiers est évaluée en premier: retirer un suffixe reconnu désactive sa sémantique, tandis qu'ajouter un suffixe personnalisé autorise seulement le fichier dans le chemin LSP sans le reclasser ni créer de fournisseur sémantique.
 
 ******
 
@@ -175,6 +177,9 @@ Les installations de production doivent utiliser une signature approuvée par Au
 * `Fonctionnalité` Ajoute un Provider sémantique enfichable à huit capacités, un coeur JSON-RPC/LSP général et des transports WebWorker/stdio sur l'appareil; TypeScript migre sans régression, les pannes reviennent à P2 et les interrupteurs sémantiques des quatre nouveaux langages sont désactivés par défaut
 * `Fonctionnalité` Intègre la sémantique Python 3.12 entièrement hors ligne avec un Worker Pyright 1.1.413 épinglé et un sous-ensemble typeshed de 271 fichiers : complétion typée, survol, aide à la signature, diagnostics et définition sont activés par défaut, tandis que les anciens WebView incompatibles et les pannes du runtime reviennent silencieusement à P2
 * `Fonctionnalité` Intègre la sémantique Lua entièrement hors ligne avec un processus compagnon LuaLS 3.18.2 épinglé sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ressources natives absentes ou endommagées, les ABI non pris en charge et les pannes du processus reviennent silencieusement à P2 avec reprise par temporisation bornée
+* `Fonctionnalité` Intègre des diagnostics Java mono-fichier entièrement hors connexion avec ECJ 3.26.0 épinglé et des stubs Android API 36 élagués : les erreurs de syntaxe et symboles non résolus reçoivent par défaut des plages exactes ; la complétion reste en P2 car JDT Code Assist exige un environnement Eclipse Workspace/OSGi indisponible sur ART
+* `Fonctionnalité` Ajoute la complétion Kotlin P2+ hors connexion avec les API d'instance Kotlin 2.2.21, des inférences prudentes dans le fichier courant, les safe-calls et des index Java/Android réutilisés ; la validation du compilateur embarqué a échoué sur la taille, ART, la mémoire et le SDK minimal, donc aucun compilateur ni runtime sémantique Kotlin n'est inclus
+* `Fonctionnalité` Affiche la même matrice de neuf modes dans les paramètres de l'éditeur de code AutoJs6 avec des commutateurs sémantiques pour TypeScript/JavaScript, Python, Lua et Java; Kotlin reste visible mais indisponible en P2+, et la personnalisation des types de fichiers est expliquée comme une liste d'autorisation plutôt qu'une reclassification du langage
 
 # v1.1.17
 

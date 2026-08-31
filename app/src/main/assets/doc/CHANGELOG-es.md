@@ -14,9 +14,9 @@
 * `Función` Añade un Provider semántico conectable de ocho capacidades, un núcleo JSON-RPC/LSP general y transportes WebWorker/stdio en el dispositivo; TypeScript migra sin regresiones, los fallos vuelven a P2 y los interruptores semánticos de los cuatro nuevos lenguajes están apagados por defecto
 * `Función` Integra semántica de Python 3.12 totalmente sin conexión con un Worker Pyright 1.1.413 fijado y un subconjunto de 271 archivos de typeshed: autocompletado con tipos, información al pasar el cursor, ayuda de firmas, diagnósticos y definiciones se activan por defecto, mientras que WebView antiguos incompatibles y fallos del runtime vuelven silenciosamente a P2
 * `Función` Integra semántica de Lua totalmente sin conexión con un proceso complementario LuaLS 3.18.2 fijado en el dispositivo: autocompletado, hover, ayuda de firmas, diagnósticos y definiciones se activan por defecto en arm64-v8a, armeabi-v7a y x86_64; recursos nativos ausentes o dañados, ABI no compatibles y fallos del proceso vuelven silenciosamente a P2 con recuperación por reintentos acotados
-
 * `Función` Integra diagnósticos Java de un solo archivo totalmente sin conexión con ECJ 3.26.0 fijado y stubs recortados de Android API 36: los errores de sintaxis y símbolos no resueltos reciben rangos exactos por defecto; el autocompletado permanece en P2 porque JDT Code Assist requiere un entorno Eclipse Workspace/OSGi no disponible en ART
 * `Función` Añade autocompletado Kotlin P2+ sin conexión con API de instancia de Kotlin 2.2.21, inferencias conservadoras del archivo actual, safe-call e índices Java/Android reutilizados; la puerta del compilador en el dispositivo falló por tamaño, ejecución ART, memoria y compatibilidad con el SDK mínimo, por lo que no se incluye compilador ni runtime semántico de Kotlin
+* `Función` Muestra la misma matriz de nueve modos en los ajustes del editor de código de AutoJs6 con interruptores semánticos para TypeScript/JavaScript, Python, Lua y Java; Kotlin permanece visible pero no disponible en P2+, y la personalización de tipos de archivo se explica como una lista de permitidos en vez de una reclasificación del lenguaje
 
 # v1.1.17
 

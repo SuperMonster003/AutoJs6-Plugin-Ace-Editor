@@ -72,10 +72,12 @@ AutoJs6 Ace Editor Plugin 將 Ace WebView 執行階段, JavaScript bridge, 輸�
 | JSON | 支援 | 無 | 無 | 無 | 僅語法診斷 |
 | Python | 支援 | 支援 | 支援 | 支援 | 支援 |
 | Lua | 支援 | 支援 | 支援 | 支援 | 支援 |
-| Java | 支援 | 支援 | 支援 | 支援 | 無 |
-| Kotlin | 支援 | 支援 | 支援 | 支援 | 無 |
+| Java | 支援 | 支援 | 支援 | 支援 | 單一檔案診斷 |
+| Kotlin | 支援 | 支援 | 支援 | P2+ | 無 |
 
-Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 標籤醒目提示僅部分可用. Python 預設使用完全離線的 Pyright 1.1.413 Worker 和 Python 3.12 標準函式庫存根; 舊 WebView 不相容或執行失敗時會靜默降級至 P2. Lua 在 arm64-v8a, armeabi-v7a 與 x86_64 預設使用完全離線的 LuaLS 3.18.2 伴生程序; 原生執行階段不可用或失敗時會靜默降級至 P2. Java 與 Kotlin 繼續使用互相隔離且依需求載入的標準函式庫索引和目前文件 P2 補全, 不進行變數型別推導. TypeScript 維持現有語意行為, Java 與 Kotlin 的語意開關在各自後續里程碑完成前預設關閉.
+Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 標籤醒目提示僅部分可用. Python 預設使用完全離線的 Pyright 1.1.413 Worker 和 Python 3.12 標準函式庫存根; 舊 WebView 不相容或執行失敗時會靜默降級至 P2. Lua 在 arm64-v8a, armeabi-v7a 與 x86_64 預設使用完全離線的 LuaLS 3.18.2 伴生程序; 原生執行階段不可用或失敗時會靜默降級至 P2. Java 結合互相隔離的標準函式庫與目前檔案 P2 補全及 ECJ 單一檔案診斷. Kotlin 提供 P2+ 補全, 但沒有語意 Provider.
+
+AutoJs6 的程式碼編輯器設定會顯示同一份 9-mode 矩陣. 全域 LSP 開關控制所有語意服務, TypeScript/JavaScript, Python, Lua 與 Java 另有逐語言開關; Kotlin 保持可見但無法啟用. 檔案類型清單會最先作為允許清單判斷: 移除已辨識副檔名會停用該語言的語意, 加入自訂副檔名只允許檔案進入 LSP 路徑, 不會把它重新辨識為其他語言或建立語意 Provider.
 
 ******
 
@@ -175,6 +177,9 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 * `新增` 新增可插拔八能力語意 Provider, 通用 JSON-RPC/LSP 核心及 WebWorker/裝置內 stdio 雙傳輸; TypeScript 已零回歸遷移, provider 故障時自動降級至 P2, 四門新語言語意開關預設關閉
 * `新增` 透過固定版本的 Pyright 1.1.413 Worker 和 271 個 typeshed 檔案內建完全離線的 Python 3.12 語意: 型別補全, hover, signature help, 診斷和定義跳轉現預設開啟, 不相容的舊 WebView 與執行失敗會靜默降級至 P2
 * `新增` 透過固定版本的 LuaLS 3.18.2 裝置內伴生程序內建完全離線的 Lua 語意: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 原生資產缺少或損壞, 不支援的 ABI 與程序崩潰會靜默降級至 P2, 並以有限退避恢復
+* `新增` 透過固定版本的 ECJ 3.26.0 與裁剪的 Android API 36 stubs 內建完全離線的 Java 單檔診斷: 語法錯誤與未解析符號現預設獲得精確範圍標註; JDT Code Assist 依賴 ART 上不可用的 Eclipse Workspace/OSGi 執行環境, 因此補全繼續使用 P2
+* `新增` Kotlin P2+ 離線補全: 擴充 Kotlin 2.2.21 執行個體 API, 依目前檔案提供保守型別提示, 支援 safe-call 並重用 Java/Android 索引; 裝置內 compiler 因體積, ART 執行, 記憶體與最低 SDK 驗證未通過, 因此不內建 Kotlin compiler 或語意執行環境
+* `新增` 在 AutoJs6 程式碼編輯器設定中顯示同一份 9-mode 語言支援矩陣, 並為 TypeScript/JavaScript, Python, Lua 與 Java 提供逐語言語意開關; Kotlin 以 P2+ 無法使用狀態保持可見, 檔案類型自訂明確作為允許清單而非語言重新分類
 
 # v1.1.17
 

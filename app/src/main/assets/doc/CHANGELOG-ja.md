@@ -14,9 +14,9 @@
 * `機能` 8 能力の差し替え可能なセマンティック Provider, 汎用 JSON-RPC/LSP コア, WebWorker/端末内 stdio トランスポートを追加; TypeScript は回帰なく移行し, provider 障害時は P2 にフォールバックし, 4 言語のセマンティック切り替えは既定で無効
 * `機能` 固定した Pyright 1.1.413 Worker と 271 ファイルの typeshed サブセットで完全オフラインの Python 3.12 セマンティック機能を内蔵; 型補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, 非対応の古い WebView や runtime 障害時は通知なしで P2 にフォールバック
 * `機能` 固定した端末内 LuaLS 3.18.2 コンパニオンプロセスで完全オフラインの Lua セマンティック機能を内蔵; arm64-v8a, armeabi-v7a, x86_64 では補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, ネイティブアセットの欠落や破損, 非対応 ABI, プロセス障害時は通知なしで P2 に戻り有限バックオフで復旧
-
 * `機能` 固定した ECJ 3.26.0 と削減済み Android API 36 stubs により完全オフラインの Java 単一ファイル診断を内蔵; 構文エラーと未解決シンボルを既定で正確な範囲に表示し, JDT Code Assist が ART では利用できない Eclipse Workspace/OSGi 環境を必要とするため補完は P2 を維持
 * `機能` Kotlin 2.2.21 のインスタンス API, 現在のファイルの保守的な型推定, safe-call, 再利用した Java/Android 索引によるオフライン Kotlin P2+ 補完を追加; 端末内 compiler はサイズ, ART 実行, メモリ, 最低 SDK の検証に失敗したため Kotlin compiler とセマンティック runtime は同梱しない
+* `機能` AutoJs6 のコードエディタ設定に同じ 9-mode 言語サポート matrix を表示し, TypeScript/JavaScript, Python, Lua, Java の言語別セマンティック switch を追加; Kotlin は P2+ の利用不可状態で表示を保ち, ファイル種類のカスタマイズは言語再分類ではなく allowlist であることを明記
 
 # v1.1.17
 

@@ -72,10 +72,12 @@ AutoJs6 Ace Editor Plugin は, Ace WebView ランタイム, JavaScript ブリッ
 | JSON | 対応 | なし | なし | なし | 構文診断のみ |
 | Python | 対応 | 対応 | 対応 | 対応 | 対応 |
 | Lua | 対応 | 対応 | 対応 | 対応 | 対応 |
-| Java | 対応 | 対応 | 対応 | 対応 | なし |
-| Kotlin | 対応 | 対応 | 対応 | 対応 | なし |
+| Java | 対応 | 対応 | 対応 | 対応 | 単一ファイル診断 |
+| Kotlin | 対応 | 対応 | 対応 | P2+ | なし |
 
-Ace 1.4.12 の TSX は TypeScript mode を使うため JSX タグのハイライトは一部対応です. Python は Python 3.12 標準ライブラリ stub を含む完全オフラインの Pyright 1.1.413 Worker を既定で使い, 古い WebView の非互換や runtime 障害時は通知なしで P2 に戻ります. Lua は arm64-v8a, armeabi-v7a, x86_64 で完全オフラインの LuaLS 3.18.2 コンパニオンプロセスを既定で使い, ネイティブ runtime が利用不能または障害時は通知なしで P2 に戻ります. Java と Kotlin は言語ごとに分離された標準ライブラリと現在の文書による遅延読込 P2 補完を維持し, 変数の型推論は行いません. TypeScript の既存セマンティック動作は維持され, Java と Kotlin のセマンティック切り替えは後続マイルストーンまで既定で無効です.
+Ace 1.4.12 の TSX は TypeScript mode を使うため JSX タグのハイライトは一部対応です. Python は Python 3.12 標準ライブラリ stub を含む完全オフラインの Pyright 1.1.413 Worker を既定で使い, 古い WebView の非互換や runtime 障害時は通知なしで P2 に戻ります. Lua は arm64-v8a, armeabi-v7a, x86_64 で完全オフラインの LuaLS 3.18.2 コンパニオンプロセスを既定で使い, ネイティブ runtime が利用不能または障害時は通知なしで P2 に戻ります. Java は分離された標準ライブラリと現在文書の P2 補完に ECJ 単一ファイル診断を組み合わせます. Kotlin はセマンティック Provider なしで P2+ 補完を提供します.
+
+AutoJs6 のコードエディタ設定は同じ 9-mode matrix を表示します. グローバル LSP switch がすべてのセマンティックサービスを制御し, TypeScript/JavaScript, Python, Lua, Java には言語別 switch があります; Kotlin は表示されますが利用できません. ファイル種類リストが最初に判定されます: 認識済み suffix を外すとそのセマンティック機能は無効になり, custom suffix の追加はファイルを LSP path に通すだけで別言語への再分類や Provider 作成は行いません.
 
 ******
 
@@ -175,6 +177,9 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 * `機能` 8 能力の差し替え可能なセマンティック Provider, 汎用 JSON-RPC/LSP コア, WebWorker/端末内 stdio トランスポートを追加; TypeScript は回帰なく移行し, provider 障害時は P2 にフォールバックし, 4 言語のセマンティック切り替えは既定で無効
 * `機能` 固定した Pyright 1.1.413 Worker と 271 ファイルの typeshed サブセットで完全オフラインの Python 3.12 セマンティック機能を内蔵; 型補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, 非対応の古い WebView や runtime 障害時は通知なしで P2 にフォールバック
 * `機能` 固定した端末内 LuaLS 3.18.2 コンパニオンプロセスで完全オフラインの Lua セマンティック機能を内蔵; arm64-v8a, armeabi-v7a, x86_64 では補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, ネイティブアセットの欠落や破損, 非対応 ABI, プロセス障害時は通知なしで P2 に戻り有限バックオフで復旧
+* `機能` 固定した ECJ 3.26.0 と削減済み Android API 36 stubs により完全オフラインの Java 単一ファイル診断を内蔵; 構文エラーと未解決シンボルを既定で正確な範囲に表示し, JDT Code Assist が ART では利用できない Eclipse Workspace/OSGi 環境を必要とするため補完は P2 を維持
+* `機能` Kotlin 2.2.21 のインスタンス API, 現在のファイルの保守的な型推定, safe-call, 再利用した Java/Android 索引によるオフライン Kotlin P2+ 補完を追加; 端末内 compiler はサイズ, ART 実行, メモリ, 最低 SDK の検証に失敗したため Kotlin compiler とセマンティック runtime は同梱しない
+* `機能` AutoJs6 のコードエディタ設定に同じ 9-mode 言語サポート matrix を表示し, TypeScript/JavaScript, Python, Lua, Java の言語別セマンティック switch を追加; Kotlin は P2+ の利用不可状態で表示を保ち, ファイル種類のカスタマイズは言語再分類ではなく allowlist であることを明記
 
 # v1.1.17
 
