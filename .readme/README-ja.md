@@ -154,7 +154,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -166,6 +166,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 ### リリース履歴
 
 ******
+
+# v1.1.19
+
+###### 2026/09/01
+
+* `修正` ホストテーマと初期ドキュメントが反映される前に Ace WebView が純白ページを短時間表示し, ダークエディタテーマで目立つ点滅が発生する問題; 初回表示は固定遅延ではなく, テーマ適用済み, ドキュメント送信済み, 安定描画の明示的なシグナルを待機
+* `改善` 約 1.3 MiB の完全な AutoJs6 補完インデックスを初回表示の同期経路から外し, 最初のコード画面が表示された後のアイドル時間に読み込んでブートストラップインデックスをシームレスに置換; Android 9-15 の 5 環境すべてで 400 グローバル項目と 80 モジュールを復元
 
 # v1.1.18
 
@@ -186,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 ###### 2026/08/31
 
 * `機能` AutoJs6 `4.5.0` の色を正しく扱う PNG 量子化宣言と再生成した main-app LSP グループを同梱: `images.quantizeToFile` はファイルへ直接書き込みサイズと品質指標を返し, `preserveAlpha` は透明または不透明な出力を制御
-
-# v1.1.16
-
-###### 2026/08/30
-
-* `機能` AutoJs6 `4.4.0` の PNG 量子化結果宣言と再生成した main-app LSP グループを同梱: `images.quantize` はエンコード済みバイト列, サイズ, 実際の品質, 量子化誤差を返し, 明示した品質下限を満たせない場合は型付き `QualityTooLowException` を公開
 
 ##### その他のリリース履歴
 

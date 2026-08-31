@@ -29,21 +29,21 @@ body,
 }
 
 html {
-    background: var(--autojs6-theme-background);
+    background: transparent;
 }
 
 body {
-    background: var(--autojs6-theme-background);
+    background: transparent;
 }
 
 #editor {
-    background: var(--autojs6-theme-background);
+    background: transparent;
     visibility: hidden;
 }
 
-html.ace-theme-dark,
-body.ace-theme-dark,
-body.ace-theme-dark #editor {
+html.autojs6-theme-applied,
+body.autojs6-theme-applied,
+body.autojs6-theme-applied #editor {
     background: var(--autojs6-theme-background);
 }
 

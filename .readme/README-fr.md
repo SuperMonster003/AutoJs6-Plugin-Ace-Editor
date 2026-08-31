@@ -154,7 +154,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -166,6 +166,13 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.1.19
+
+###### 2026/09/01
+
+* `Correctif` La WebView Ace pouvait afficher brièvement une page entièrement blanche avant l'application du thème hôte et du document initial, provoquant un flash marqué avec les thèmes sombres; la première présentation attend désormais des signaux explicites de thème appliqué, document soumis et rendu stable au lieu d'un délai fixe
+* `Amélioration` Déplace l'index de complétion AutoJs6 complet d'environ 1.3 MiB hors du chemin synchrone de première présentation, le charge pendant une période d'inactivité après la première image de code visible et remplace sans interruption l'index initial; les cinq environnements Android 9-15 ont restauré 400 éléments globaux et 80 modules
 
 # v1.1.18
 
@@ -186,12 +193,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/08/31
 
 * `Fonctionnalité` Integre les declarations de quantification PNG aux couleurs correctes d'AutoJs6 `4.5.0` et le groupe LSP main-app regenere: `images.quantizeToFile` ecrit directement dans un fichier et renvoie la taille et les mesures de qualite, tandis que `preserveAlpha` controle la sortie transparente ou opaque
-
-# v1.1.16
-
-###### 2026/08/30
-
-* `Fonctionnalité` Integre les declarations de resultat de quantification PNG d'AutoJs6 `4.4.0` et le groupe LSP main-app regenere: `images.quantize` renvoie les octets encodes, la taille, la qualite obtenue et l'erreur de quantification; une borne minimale explicite impossible a satisfaire expose `QualityTooLowException` typee
 
 ##### Pour plus d'historique des versions
 

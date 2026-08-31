@@ -1347,6 +1347,20 @@
         return source;
     };
 
+    StaticIndexCompleter.prototype.replaceJavaScriptIndex = function(indices) {
+        if (!indices) {
+            return null;
+        }
+        var source = normalizeIndices(indices, {
+            language: "javascript",
+            includeEcmascriptBuiltins: true,
+            includeAutoJs6RuntimeGlobals: true
+        });
+        this.sources.javascript = source;
+        this.sources.typescript = source;
+        return source;
+    };
+
     StaticIndexCompleter.prototype._finishLanguageLoad = function(language, error, indices) {
         if (!error && indices) {
             this.registerLanguageIndex(language, indices);
@@ -1542,10 +1556,15 @@
         return activeCompleter ? activeCompleter.registerLanguageIndex(language, indices) : indices;
     }
 
+    function replaceJavaScriptIndex(indices) {
+        return activeCompleter ? activeCompleter.replaceJavaScriptIndex(indices) : indices;
+    }
+
     global.AutoJsAceCompleter = {
         StaticIndexCompleter: StaticIndexCompleter,
         createCompleter: createCompleter,
         registerLanguageIndex: registerLanguageIndex,
+        replaceJavaScriptIndex: replaceJavaScriptIndex,
         languageIdForSession: languageIdForSession,
 
         install: function(ace) {

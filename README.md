@@ -154,7 +154,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -166,6 +166,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 ### 发行历史
 
 ******
+
+# v1.1.19
+
+###### 2026/09/01
+
+* `修复` Ace WebView 在宿主主题与首份文档生效前可能短暂暴露纯白背景, 尤其会在深色编辑器主题下产生明显闪烁; 首屏现由主题已应用, 文档已提交及稳定绘制信号共同放行, 不依赖固定延迟
+* `优化` 将约 1.3 MiB 的完整 AutoJs6 补全索引移出首屏同步路径, 在首个可见代码帧后的空闲时段加载并无缝替换基础索引; 五个 Android 9-15 环境均恢复 400 个全局项与 80 个模块
 
 # v1.1.18
 
@@ -186,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 ###### 2026/08/31
 
 * `新增` 内置 AutoJs6 `4.5.0` 色彩正确的 PNG 量化声明及重新生成的主应用 LSP 分组: `images.quantizeToFile` 直接写入文件并返回大小与质量指标, `preserveAlpha` 控制透明或不透明输出
-
-# v1.1.16
-
-###### 2026/08/30
-
-* `新增` 内置 AutoJs6 `4.4.0` PNG 量化结果声明及重新生成的主应用 LSP 分组: `images.quantize` 返回编码字节, 大小, 实际质量与量化误差; 显式质量下限无法满足时公开类型化 `QualityTooLowException`
 
 ##### 更多发行历史可参阅
 

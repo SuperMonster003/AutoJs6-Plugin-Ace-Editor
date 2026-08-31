@@ -12,6 +12,15 @@
     var lastPublishedLspStateJson = "";
     var lspWarmUpHandle = null;
     var lspWarmUpUsesIdleCallback = false;
+    var deferredStaticIndexHandle = null;
+    var deferredStaticIndexUsesIdleCallback = false;
+    var deferredStaticIndexState = {
+        status: "idle",
+        durationMs: 0,
+        globalCount: 0,
+        moduleCount: 0,
+        error: ""
+    };
     var tooltipController = null;
     var signatureHelpController = null;
     var dirty = false;
@@ -57,6 +66,8 @@
     var firstPaintRequestStartedAt = 0;
     var firstPaintStableFrames = 0;
     var firstPaintLastSignature = "";
+    var firstPaintBlocked = false;
+    var firstPaintBlockReason = "";
     var lastSelectionBrowseScrollAt = 0;
     var lastSelectionChangedAt = 0;
     var lastSelectionActionModeStartedAt = 0;
@@ -463,6 +474,12 @@
             "--autojs6-theme-shadow",
             isDark ? "rgba(0, 0, 0, 0.42)" : "rgba(15, 23, 42, 0.2)"
         );
+        if (document.documentElement.classList) {
+            document.documentElement.classList.add("autojs6-theme-applied");
+        }
+        if (document.body && document.body.classList) {
+            document.body.classList.add("autojs6-theme-applied");
+        }
     }
 
     function refreshAutocompletePopupTheme(theme) {
@@ -909,7 +926,86 @@
         firstPaintNotified = true;
         document.body.classList.add("ace-ready");
         callBridge("notifyEvent", ["firstPaint", lightweightStateJson()]);
-        warmUpLspAfterFirstPaint();
+        schedulePostFirstPaintWork();
+    }
+
+    function schedulePostFirstPaintWork() {
+        afterTwoFrames(function() {
+            loadDeferredStaticIndexAfterFirstPaint();
+            warmUpLspAfterFirstPaint();
+        });
+    }
+
+    function deferredStaticIndexNow() {
+        return global.performance && typeof global.performance.now === "function" ?
+            global.performance.now() : Date.now();
+    }
+
+    function publishDeferredStaticIndexEvent(name) {
+        callBridge("notifyEvent", [name, JSON.stringify(deferredStaticIndexState)]);
+    }
+
+    function installDeferredStaticIndex(startedAt) {
+        if (!global.AutoJsAceIndices || !global.AutoJsAceCompleter ||
+            typeof global.AutoJsAceCompleter.replaceJavaScriptIndex !== "function") {
+            throw new Error("Deferred AutoJs6 completion index is unavailable");
+        }
+        var source = global.AutoJsAceCompleter.replaceJavaScriptIndex(global.AutoJsAceIndices);
+        if (!source) {
+            throw new Error("Deferred AutoJs6 completion index could not be installed");
+        }
+        deferredStaticIndexState.status = "ready";
+        deferredStaticIndexState.durationMs = Math.max(0, deferredStaticIndexNow() - startedAt);
+        deferredStaticIndexState.globalCount = (source.globals || []).length;
+        deferredStaticIndexState.moduleCount = Object.keys(source.modules || {}).length;
+        deferredStaticIndexState.error = "";
+        publishDeferredStaticIndexEvent("deferredStaticIndexReady");
+    }
+
+    function loadDeferredStaticIndex() {
+        deferredStaticIndexHandle = null;
+        deferredStaticIndexUsesIdleCallback = false;
+        if (deferredStaticIndexState.status !== "scheduled") {
+            return;
+        }
+        deferredStaticIndexState.status = "loading";
+        var startedAt = deferredStaticIndexNow();
+        var script = document.createElement("script");
+        script.src = "./autojs6/autojs6_indices.js";
+        script.async = true;
+        script.onload = function() {
+            try {
+                installDeferredStaticIndex(startedAt);
+            } catch (error) {
+                deferredStaticIndexState.status = "failed";
+                deferredStaticIndexState.durationMs = Math.max(0, deferredStaticIndexNow() - startedAt);
+                deferredStaticIndexState.error = String(error && (error.message || error) || error);
+                publishDeferredStaticIndexEvent("deferredStaticIndexError");
+                notifyRecoverableError("deferredStaticIndexInstall", error);
+            }
+        };
+        script.onerror = function() {
+            var error = new Error("Deferred AutoJs6 completion index failed to load");
+            deferredStaticIndexState.status = "failed";
+            deferredStaticIndexState.durationMs = Math.max(0, deferredStaticIndexNow() - startedAt);
+            deferredStaticIndexState.error = error.message;
+            publishDeferredStaticIndexEvent("deferredStaticIndexError");
+            notifyRecoverableError("deferredStaticIndexLoad", error);
+        };
+        document.head.appendChild(script);
+    }
+
+    function loadDeferredStaticIndexAfterFirstPaint() {
+        if (deferredStaticIndexState.status !== "idle") {
+            return;
+        }
+        deferredStaticIndexState.status = "scheduled";
+        if (typeof global.requestIdleCallback === "function") {
+            deferredStaticIndexUsesIdleCallback = true;
+            deferredStaticIndexHandle = global.requestIdleCallback(loadDeferredStaticIndex, { timeout: 1200 });
+        } else {
+            deferredStaticIndexHandle = setTimeout(loadDeferredStaticIndex, 0);
+        }
     }
 
     function warmUpLspAfterFirstPaint() {
@@ -1141,7 +1237,11 @@
     }
 
     function isFirstPaintThemeReady(container, gutter) {
-        if (!document || !document.body || !document.body.classList || !document.body.classList.contains("ace-theme-dark")) {
+        if (!document || !document.body || !document.body.classList ||
+            !document.body.classList.contains("autojs6-theme-applied")) {
+            return false;
+        }
+        if (!document.body.classList.contains("ace-theme-dark")) {
             return true;
         }
         var editorStyle = computedStyleOf(container);
@@ -1202,7 +1302,7 @@
     }
 
     function requestFirstPaintCheck(reason) {
-        if (firstPaintNotified) {
+        if (firstPaintNotified || firstPaintBlocked) {
             return;
         }
         var snapshot = firstPaintReadinessSnapshot();
@@ -1238,6 +1338,9 @@
     }
 
     function requestFirstPaint(reason) {
+        if (firstPaintNotified || firstPaintBlocked) {
+            return false;
+        }
         scheduleResize(reason || "first_paint");
         firstPaintRequestStartedAt = Date.now();
         firstPaintStableFrames = 0;
@@ -1245,6 +1348,18 @@
         afterTwoFrames(function() {
             requestFirstPaintCheck(reason || "first_paint");
         });
+        return true;
+    }
+
+    function setFirstPaintBlocked(blocked, reason) {
+        firstPaintBlocked = blocked === true || String(blocked).toLowerCase() === "true";
+        firstPaintBlockReason = firstPaintBlocked ? String(reason || "presentation_blocked") : "";
+        if (firstPaintBlocked) {
+            firstPaintRequestStartedAt = 0;
+            firstPaintStableFrames = 0;
+            firstPaintLastSignature = "";
+        }
+        return firstPaintBlocked;
     }
 
     function clampRow(row) {
@@ -5197,6 +5312,9 @@
             setGutterWidthMode: setGutterWidthMode,
             scheduleResize: scheduleResize,
             requestFirstPaint: requestFirstPaint,
+            setFirstPaintBlocked: setFirstPaintBlocked,
+            getFirstPaintBlockReason: function() { return firstPaintBlockReason; },
+            getDeferredStaticIndexState: function() { return deferredStaticIndexState; },
             restoreScroll: restoreScroll,
             setBreakpoint: function(row, enabled) { return setBreakpoint(row, enabled, true); },
             toggleBreakpoint: toggleBreakpoint,

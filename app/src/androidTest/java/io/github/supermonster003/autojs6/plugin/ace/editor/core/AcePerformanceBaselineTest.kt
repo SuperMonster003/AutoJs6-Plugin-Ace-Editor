@@ -1,6 +1,8 @@
 package io.github.supermonster003.autojs6.plugin.ace.editor.core
 
+import android.graphics.Color
 import android.os.Build
+import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.ViewTreeObserver
@@ -18,6 +20,7 @@ import org.autojs.plugin.editor.api.EditorPluginCallback
 import org.autojs.plugin.editor.api.EditorPluginSession
 import org.autojs.plugin.editor.api.EditorPluginSessionConfig
 import org.autojs.plugin.editor.api.EditorPluginState
+import org.autojs.plugin.editor.api.EditorPluginTheme
 import org.json.JSONObject
 import org.json.JSONTokener
 import org.junit.Assert.assertEquals
@@ -36,8 +39,14 @@ class AcePerformanceBaselineTest {
         val sessionCreateStartedAt = AtomicLong()
         val firstDrawAt = AtomicLong()
         val readyAt = AtomicLong()
+        val firstPaintAt = AtomicLong()
+        val deferredStaticIndexReadyAt = AtomicLong()
         val firstDraw = CountDownLatch(1)
         val ready = CountDownLatch(1)
+        val firstPaint = CountDownLatch(1)
+        val deferredStaticIndexReady = CountDownLatch(1)
+        val firstPaintState = AtomicReference<JSONObject>()
+        val deferredStaticIndexState = AtomicReference<JSONObject>()
         val session = AtomicReference<EditorPluginSession>()
         val scenario = ActivityScenario.launch(AceEditorTestActivity::class.java)
         try {
@@ -59,8 +68,44 @@ class AcePerformanceBaselineTest {
                             readyAt.compareAndSet(0L, SystemClock.elapsedRealtimeNanos())
                             ready.countDown()
                         }
+
+                        override fun onEvent(name: String, payload: Bundle?) {
+                            when (name) {
+                                "firstPaint" -> {
+                                    firstPaintAt.compareAndSet(0L, SystemClock.elapsedRealtimeNanos())
+                                    payload?.getString("json")?.let { json ->
+                                        firstPaintState.set(JSONObject(json))
+                                    }
+                                    firstPaint.countDown()
+                                }
+                                "deferredStaticIndexReady" -> {
+                                    deferredStaticIndexReadyAt.compareAndSet(
+                                        0L,
+                                        SystemClock.elapsedRealtimeNanos(),
+                                    )
+                                    payload?.getString("json")?.let { json ->
+                                        deferredStaticIndexState.set(JSONObject(json))
+                                    }
+                                    deferredStaticIndexReady.countDown()
+                                }
+                            }
+                        }
                     },
                 )
+                createdSession.setTheme(
+                    EditorPluginTheme(
+                        id = "ace/theme/tomorrow_night",
+                        aceTheme = "ace/theme/tomorrow_night",
+                        isDark = true,
+                        backgroundColor = Color.rgb(29, 31, 33),
+                        foregroundColor = Color.rgb(197, 200, 198),
+                    ),
+                )
+                createdSession.setLoadingText(true)
+                createdSession.setInitialText(
+                    "files.exists('/sdcard/Scripts')\nfiles.listDir('/sdcard/Scripts')",
+                )
+                createdSession.setLoadingText(false)
                 session.set(createdSession)
                 val editorView = createdSession.view
                 val drawListener = object : ViewTreeObserver.OnDrawListener {
@@ -83,6 +128,13 @@ class AcePerformanceBaselineTest {
 
             assertTrue("ACE editor view did not draw", firstDraw.await(15, TimeUnit.SECONDS))
             assertTrue("ACE editor did not become ready", ready.await(15, TimeUnit.SECONDS))
+            assertTrue("ACE editor did not publish its first paint", firstPaint.await(15, TimeUnit.SECONDS))
+            assertTrue(
+                "ACE deferred static index did not become ready",
+                deferredStaticIndexReady.await(15, TimeUnit.SECONDS),
+            )
+            assertEquals(2, firstPaintState.get().getInt("lineCount"))
+            assertEquals("ready", deferredStaticIndexState.get().getString("status"))
             assertEquals(
                 "ace/mode/javascript",
                 awaitMode(scenario, session, "ace/mode/javascript"),
@@ -138,8 +190,15 @@ class AcePerformanceBaselineTest {
                 )
                 put("activityLaunchToFirstDrawMs", millis(firstDrawAt.get() - activityLaunchStartedAt))
                 put("activityLaunchToReadyMs", millis(readyAt.get() - activityLaunchStartedAt))
+                put("activityLaunchToFirstPaintMs", millis(firstPaintAt.get() - activityLaunchStartedAt))
                 put("sessionCreateToFirstDrawMs", millis(firstDrawAt.get() - createStartedAt))
                 put("sessionCreateToReadyMs", millis(readyAt.get() - createStartedAt))
+                put("sessionCreateToFirstPaintMs", millis(firstPaintAt.get() - createStartedAt))
+                put(
+                    "firstPaintToDeferredStaticIndexReadyMs",
+                    millis(deferredStaticIndexReadyAt.get() - firstPaintAt.get()),
+                )
+                put("deferredStaticIndex", deferredStaticIndexState.get())
                 put("staticCompletionFirstPacketMs", completion.getDouble("durationMs"))
                 put("staticCompletionCount", completion.getInt("completionCount"))
             }

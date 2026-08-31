@@ -154,7 +154,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -166,6 +166,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.1.19
+
+###### 2026/09/01
+
+* `Fix` Ace WebView could briefly expose a pure-white page before the host theme and initial document took effect, producing a conspicuous flash with dark editor themes; first presentation now waits for explicit theme-applied, document-committed, and stable-paint signals instead of a fixed delay
+* `Improvement` Move the approximately 1.3 MiB full AutoJs6 completion index out of the synchronous first-presentation path, loading it during idle time after the first visible code frame and seamlessly replacing the bootstrap index; all five Android 9-15 environments restored 400 globals and 80 modules
 
 # v1.1.18
 
@@ -186,12 +193,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/08/31
 
 * `Feature` Bundle the AutoJs6 `4.5.0` color-correct PNG quantization declarations and regenerated main-app LSP group: `images.quantizeToFile` streams directly to a file with size and quality metrics, while `preserveAlpha` controls transparent or opaque output
-
-# v1.1.16
-
-###### 2026/08/30
-
-* `Feature` Bundle the AutoJs6 `4.4.0` PNG quantization result declarations and regenerated main-app LSP group: `images.quantize` returns encoded bytes, size, achieved quality, and quantization error; an unmet explicit quality floor exposes the typed `QualityTooLowException`
 
 ##### Complete release history
 

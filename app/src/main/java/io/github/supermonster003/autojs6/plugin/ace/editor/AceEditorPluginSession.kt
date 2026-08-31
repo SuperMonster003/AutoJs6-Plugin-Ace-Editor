@@ -400,7 +400,7 @@ class AceEditorPluginSession internal constructor(
     override fun setProgress(progress: Boolean, interactive: Boolean) = Unit
 
     override fun beginLargeTextLoading() {
-        loadingText = true
+        updateLoadingText(true)
         redoUndoEnabled = false
         text = ""
     }
@@ -408,18 +408,23 @@ class AceEditorPluginSession internal constructor(
     override fun appendTextChunk(chunk: CharSequence) = editor.appendTextChunk(chunk.toString())
 
     override fun endLargeTextLoading(markClean: Boolean) {
-        loadingText = false
         redoUndoEnabled = true
         if (markClean) editor.markClean()
+        updateLoadingText(false)
     }
 
     override fun cancelLargeTextLoading() {
-        loadingText = false
+        updateLoadingText(false)
         redoUndoEnabled = true
     }
 
     override fun setLoadingText(loading: Boolean) {
+        updateLoadingText(loading)
+    }
+
+    private fun updateLoadingText(loading: Boolean) {
         loadingText = loading
+        editor.setHostDocumentLoading(loading)
     }
 
     override fun createStateSnapshot(): EditorPluginSnapshot = EditorPluginSnapshot(
@@ -848,6 +853,17 @@ private fun AceDiagnosticsSnapshot.toBundle(): Bundle = Bundle().apply {
     putString("jsRevision", jsRevision)
     putLongOrNull("lastReadyAtUptimeMillis", lastReadyAtUptimeMillis)
     putLongOrNull("lastFirstPaintAtUptimeMillis", lastFirstPaintAtUptimeMillis)
+    putLongOrNull("lastThemeAppliedAtUptimeMillis", lastThemeAppliedAtUptimeMillis)
+    putLongOrNull("lastPageLoadStartedAtUptimeMillis", lastPageLoadStartedAtUptimeMillis)
+    putLongOrNull(
+        "lastHostDocumentLoadingStartedAtUptimeMillis",
+        lastHostDocumentLoadingStartedAtUptimeMillis,
+    )
+    putLongOrNull("lastHostDocumentReadyAtUptimeMillis", lastHostDocumentReadyAtUptimeMillis)
+    putLongOrNull(
+        "lastDeferredStaticIndexReadyAtUptimeMillis",
+        lastDeferredStaticIndexReadyAtUptimeMillis,
+    )
     putLongOrNull("lastStateAtUptimeMillis", lastStateAtUptimeMillis)
     putLongOrNull("lastHeartbeatAtUptimeMillis", lastHeartbeatAtUptimeMillis)
     putLongOrNull("lastHeartbeatSuspendedAtUptimeMillis", lastHeartbeatSuspendedAtUptimeMillis)

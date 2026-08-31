@@ -4,6 +4,13 @@
 
 ******
 
+# v1.1.19
+
+###### 2026/09/01
+
+* `Fix` Ace WebView could briefly expose a pure-white page before the host theme and initial document took effect, producing a conspicuous flash with dark editor themes; first presentation now waits for explicit theme-applied, document-committed, and stable-paint signals instead of a fixed delay
+* `Improvement` Move the approximately 1.3 MiB full AutoJs6 completion index out of the synchronous first-presentation path, loading it during idle time after the first visible code frame and seamlessly replacing the bootstrap index; all five Android 9-15 environments restored 400 globals and 80 modules
+
 # v1.1.18
 
 ###### 2026/08/31

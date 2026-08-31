@@ -154,7 +154,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -166,6 +166,13 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.1.19
+
+###### 2026/09/01
+
+* `Corrección` La WebView de Ace podía mostrar brevemente una página totalmente blanca antes de aplicar el tema del host y el documento inicial, lo que producía un destello evidente con temas oscuros; la primera presentación ahora espera señales explícitas de tema aplicado, documento enviado y renderizado estable en lugar de un retraso fijo
+* `Mejora` Mueve el índice completo de autocompletado de AutoJs6 de aproximadamente 1.3 MiB fuera de la ruta síncrona de la primera presentación, lo carga durante el tiempo de inactividad posterior al primer fotograma de código visible y sustituye sin interrupciones el índice inicial; los cinco entornos Android 9-15 restauraron 400 elementos globales y 80 módulos
 
 # v1.1.18
 
@@ -186,12 +193,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/08/31
 
 * `Función` Incluye las declaraciones de cuantizacion PNG con color correcto de AutoJs6 `4.5.0` y el grupo LSP main-app regenerado: `images.quantizeToFile` escribe directamente en un archivo y devuelve tamano y metricas de calidad, mientras `preserveAlpha` controla la salida transparente u opaca
-
-# v1.1.16
-
-###### 2026/08/30
-
-* `Función` Incluye las declaraciones de resultado de cuantizacion PNG de AutoJs6 `4.4.0` y el grupo LSP main-app regenerado: `images.quantize` devuelve bytes codificados, tamano, calidad alcanzada y error de cuantizacion; un limite minimo explicito no alcanzable expone `QualityTooLowException` tipada
 
 ##### Para ver más historial de versiones
 

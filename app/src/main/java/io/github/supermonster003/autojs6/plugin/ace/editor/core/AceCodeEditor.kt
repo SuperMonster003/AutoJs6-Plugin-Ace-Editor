@@ -285,10 +285,16 @@ class AceCodeEditor @JvmOverloads constructor(
     private var loaded = false
     private var destroyed = false
     private var readOnly = false
+    private var hostDocumentLoading = false
     private var userTouching = false
     private var firstPaintReceived = false
     private var pendingResizeReason: String? = null
+    private var lastThemeAppliedAtUptimeMillis = 0L
+    private var lastPageLoadStartedAtUptimeMillis = 0L
+    private var lastHostDocumentLoadingStartedAtUptimeMillis = 0L
+    private var lastHostDocumentReadyAtUptimeMillis = 0L
     private var lastFirstPaintAtUptimeMillis = 0L
+    private var lastDeferredStaticIndexReadyAtUptimeMillis = 0L
     private var lastResizeAtUptimeMillis = 0L
     private var lastAceResizeScheduledReason: String? = null
     private var lastAceResizeScheduledAtUptimeMillis = 0L
@@ -421,6 +427,13 @@ class AceCodeEditor @JvmOverloads constructor(
             maxBridgeEventWindowCount = maxBridgeEventWindowCount,
             maxBridgeEventWindowStartedAtUptimeMillis = maxBridgeEventWindowStartedAtUptimeMillis.takeIf { it > 0L },
             runtimeEventHistory = eventHistory.snapshot(),
+            lastThemeAppliedAtUptimeMillis = lastThemeAppliedAtUptimeMillis.takeIf { it > 0L },
+            lastPageLoadStartedAtUptimeMillis = lastPageLoadStartedAtUptimeMillis.takeIf { it > 0L },
+            lastHostDocumentLoadingStartedAtUptimeMillis =
+                lastHostDocumentLoadingStartedAtUptimeMillis.takeIf { it > 0L },
+            lastHostDocumentReadyAtUptimeMillis = lastHostDocumentReadyAtUptimeMillis.takeIf { it > 0L },
+            lastDeferredStaticIndexReadyAtUptimeMillis =
+                lastDeferredStaticIndexReadyAtUptimeMillis.takeIf { it > 0L },
         )
     }
 
@@ -463,7 +476,8 @@ class AceCodeEditor @JvmOverloads constructor(
         }
         loaded = true
         showLoadingOverlay()
-        eventHistory.record("page_load_start", EDITOR_URL)
+        lastPageLoadStartedAtUptimeMillis = SystemClock.uptimeMillis()
+        eventHistory.record("page_load_start", EDITOR_URL, lastPageLoadStartedAtUptimeMillis)
         healthMonitor.markLoadingPage()
         if (AceEditorTestHooks.shouldForceRendererGoneFallback()) {
             reportFatalFailure(
@@ -579,6 +593,24 @@ class AceCodeEditor @JvmOverloads constructor(
     fun markClean() {
         dirty = false
         invokeAce("markClean")
+    }
+
+    fun setHostDocumentLoading(loading: Boolean) {
+        if (destroyed || hostDocumentLoading == loading) {
+            return
+        }
+        hostDocumentLoading = loading
+        val now = SystemClock.uptimeMillis()
+        if (loading) {
+            lastHostDocumentLoadingStartedAtUptimeMillis = now
+        } else {
+            lastHostDocumentReadyAtUptimeMillis = now
+        }
+        eventHistory.record("host_document_loading", "loading=$loading", now)
+        invokeAce("setFirstPaintBlocked", "$loading, ${quote(if (loading) "document_loading" else "document_ready")}")
+        if (!loading) {
+            requestFirstPaintWhenPresentationReady("document_ready")
+        }
     }
 
     fun markDirty() {
@@ -825,6 +857,12 @@ class AceCodeEditor @JvmOverloads constructor(
         editorThemeIsDark = isDark
         editorThemeBackgroundColor = backgroundColor
         editorThemeForegroundColor = resolvedForegroundColor
+        lastThemeAppliedAtUptimeMillis = SystemClock.uptimeMillis()
+        eventHistory.record(
+            "theme_applied",
+            "theme=$theme,dark=$isDark,background=$backgroundColor,foreground=$resolvedForegroundColor",
+            lastThemeAppliedAtUptimeMillis,
+        )
         applyEditorBackground()
         selectionActionMode?.updatePalette(backgroundColor, resolvedForegroundColor)
         invokeAce(
@@ -1203,6 +1241,9 @@ class AceCodeEditor @JvmOverloads constructor(
                     -> reportClassifiedJsFailure(name, payloadJson)
                 "fontLoadError" -> handleFontLoadError(payloadJson)
                 "firstPaint" -> handleFirstPaint()
+                "deferredStaticIndexReady" -> {
+                    lastDeferredStaticIndexReadyAtUptimeMillis = SystemClock.uptimeMillis()
+                }
                 "resizeDone" -> handleResizeDone(payloadJson)
                 "changeDelta" -> handleChangeDelta(payloadJson)
                 "historyOperation" -> handleHistoryOperation(payloadJson)
@@ -1229,7 +1270,7 @@ class AceCodeEditor @JvmOverloads constructor(
             listener?.onReady(state)
             flushPendingScripts()
             scheduleAceResize("bridge_ready", 0L)
-            requestFirstPaintWhenStable()
+            requestFirstPaintWhenPresentationReady("bridge_ready")
             healthMonitor.startHeartbeat { evaluateHeartbeat() }
             eventHistory.record("heartbeat_start")
         }
@@ -2560,8 +2601,14 @@ class AceCodeEditor @JvmOverloads constructor(
         mainHandler.postDelayed(scheduledResizeRunnable, delayMillis.coerceAtLeast(0L))
     }
 
-    private fun requestFirstPaintWhenStable() {
-        invokeAce("requestFirstPaint", quote("native_ready"))
+    private fun requestFirstPaintWhenPresentationReady(reason: String) {
+        if (!isReady || firstPaintReceived || hostDocumentLoading) {
+            if (hostDocumentLoading) {
+                eventHistory.record("first_paint_waiting", "reason=document_loading")
+            }
+            return
+        }
+        invokeAce("requestFirstPaint", quote(reason))
     }
 
     private fun runScheduledResize() {
