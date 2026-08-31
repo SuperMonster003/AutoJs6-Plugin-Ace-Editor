@@ -363,6 +363,43 @@ class AceLanguageRoutingSmokeTest {
                 "Kotlin current-document function was not extracted",
                 awaitStaticCompletionContains(harness, prefix = "compute", expected = "computeTotal"),
             )
+            setEditorText(
+                harness,
+                """
+                import android.content.Intent
+                val items = listOf("one", "two")
+                val mutableItems = mutableListOf(1, 2)
+                val intent = Intent("sample.action")
+                items.
+                """.trimIndent(),
+            )
+            assertTrue(
+                "Kotlin P2+ inferred List did not expose joinToString",
+                awaitStaticCompletionContains(harness, prefix = "", expected = "joinToString"),
+            )
+            setEditorText(
+                harness,
+                """
+                val typedItems: List<String>? = listOf("one")
+                typedItems?.
+                """.trimIndent(),
+            )
+            assertTrue(
+                "Kotlin P2+ nullable type safe-call did not expose firstOrNull",
+                awaitStaticCompletionContains(harness, prefix = "", expected = "firstOrNull"),
+            )
+            setEditorText(
+                harness,
+                """
+                import android.content.Intent
+                val intent = Intent("sample.action")
+                intent.
+                """.trimIndent(),
+            )
+            assertTrue(
+                "Kotlin P2+ Android interop did not expose putExtra",
+                awaitStaticCompletionContains(harness, prefix = "", expected = "putExtra"),
+            )
             assertFalse(
                 "Kotlin received Python getcwd",
                 staticCompletionCaptions(harness, prefix = "getcwd").contains("getcwd"),

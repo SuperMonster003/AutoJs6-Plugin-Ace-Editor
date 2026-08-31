@@ -2015,11 +2015,19 @@ function verifyM2StaticIndices(paths) {
     );
 
     const kotlinBase = [
+        "import android.content.Intent",
+        "import java.io.File",
+        "",
         "class Demo",
         "fun computeTotal(count: Int): Int {",
         "    val subtotal = count",
         "    return subtotal",
         "}",
+        "val items = listOf(\"one\", \"two\")",
+        "val mutableItems = mutableListOf(1, 2)",
+        "val typedItems: List<String>? = items",
+        "val intent = Intent(\"sample.action\")",
+        "val file = File(\".\")",
     ].join("\n");
     expectNames("ace/mode/kotlin", `${kotlinBase}\nlist`, "list", ["listOf"], "Kotlin top-level completion");
     expectNames("ace/mode/kotlin", `${kotlinBase}\nprint`, "print", ["println"], "Kotlin println completion");
@@ -2034,6 +2042,48 @@ function verifyM2StaticIndices(paths) {
     expectNames("ace/mode/kotlin", `${kotlinBase}\ncompute`, "compute", ["computeTotal"], "Kotlin function extraction");
     expectNames("ace/mode/kotlin", `${kotlinBase}\nsub`, "sub", ["subtotal"], "Kotlin variable extraction");
     expectNames("ace/mode/kotlin", `${kotlinBase}\ncou`, "cou", ["count"], "Kotlin parameter extraction");
+    expectNames(
+        "ace/mode/kotlin",
+        `${kotlinBase}\nitems.`,
+        "",
+        ["size", "filter", "joinToString"],
+        "Kotlin inferred List member completion",
+    );
+    expectNames(
+        "ace/mode/kotlin",
+        `${kotlinBase}\nmutableItems.`,
+        "",
+        ["add", "removeAt", "sortBy"],
+        "Kotlin inferred MutableList member completion",
+    );
+    expectNames(
+        "ace/mode/kotlin",
+        `${kotlinBase}\ntypedItems?.`,
+        "",
+        ["firstOrNull", "sortedBy", "toMutableList"],
+        "Kotlin explicit nullable type and safe-call completion",
+    );
+    expectNames(
+        "ace/mode/kotlin",
+        `${kotlinBase}\nintent.`,
+        "",
+        ["putExtra", "addFlags", "setAction"],
+        "Kotlin Android Intent interop completion",
+    );
+    expectNames(
+        "ace/mode/kotlin",
+        `${kotlinBase}\nfile.`,
+        "",
+        ["exists", "listFiles", "toPath"],
+        "Kotlin Java File interop completion",
+    );
+    expectNames(
+        "ace/mode/kotlin",
+        `${kotlinBase}\nLog.`,
+        "",
+        ["d", "e", "isLoggable"],
+        "Kotlin reused Android Log static completion",
+    );
     assert(
         !names(complete("ace/mode/kotlin", `${kotlinBase}\ngetcwd`, "getcwd")).has("getcwd"),
         "Kotlin received a Python standard-library symbol",

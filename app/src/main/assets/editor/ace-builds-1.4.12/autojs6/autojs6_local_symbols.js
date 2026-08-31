@@ -83,6 +83,117 @@
         }
     }
 
+    var KOTLIN_TYPE_TARGETS = {
+        "String": "kotlin.String",
+        "CharSequence": "kotlin.String",
+        "Array": "kotlin.Array",
+        "BooleanArray": "kotlin.Array",
+        "ByteArray": "kotlin.Array",
+        "CharArray": "kotlin.Array",
+        "DoubleArray": "kotlin.Array",
+        "FloatArray": "kotlin.Array",
+        "IntArray": "kotlin.Array",
+        "LongArray": "kotlin.Array",
+        "ShortArray": "kotlin.Array",
+        "List": "kotlin.collections.List",
+        "MutableList": "kotlin.collections.MutableList",
+        "Map": "kotlin.collections.Map",
+        "MutableMap": "kotlin.collections.MutableMap",
+        "Set": "kotlin.collections.Set",
+        "MutableSet": "kotlin.collections.MutableSet",
+        "Sequence": "kotlin.sequences.Sequence",
+        "IntRange": "kotlin.ranges.IntRange",
+        "IntProgression": "kotlin.ranges.IntRange",
+        "Int": "kotlin.Int",
+        "Long": "kotlin.Long",
+        "Double": "kotlin.Double",
+        "Float": "kotlin.Double",
+        "Boolean": "kotlin.Boolean",
+        "StringBuilder": "kotlin.text.StringBuilder",
+        "Regex": "kotlin.text.Regex#instance",
+        "Uri": "android.net.Uri#instance"
+    };
+
+    function kotlinTypeTarget(typeText) {
+        typeText = String(typeText || "")
+            .replace(/^\s*(?:in|out)\s+/, "")
+            .replace(/\s*\?\s*$/, "")
+            .trim();
+        if (!typeText || /\([^)]*\)\s*->/.test(typeText)) {
+            return "";
+        }
+        var genericAt = typeText.indexOf("<");
+        if (genericAt >= 0) {
+            typeText = typeText.substring(0, genericAt).trim();
+        }
+        typeText = typeText.replace(/\s+/g, "");
+        var simpleName = typeText.split(".").pop();
+        return KOTLIN_TYPE_TARGETS[typeText] || KOTLIN_TYPE_TARGETS[simpleName] || typeText;
+    }
+
+    function kotlinParameterType(parameter) {
+        parameter = String(parameter || "")
+            .replace(/=[\s\S]*$/, "")
+            .replace(/^\s*(?:(?:vararg|crossinline|noinline|out|in|val|var)\s+)+/, "")
+            .trim();
+        var match = /^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*([\s\S]+)$/.exec(parameter);
+        return match ? {
+            name: match[1],
+            target: kotlinTypeTarget(match[2])
+        } : null;
+    }
+
+    function kotlinInitializerTarget(expression, rawLine, name) {
+        expression = String(expression || "").trim();
+        var castMatch = /\bas\??\s+([A-Za-z_][A-Za-z0-9_.]*(?:\s*<[^>]+>)?\??)/.exec(expression);
+        if (castMatch) {
+            return kotlinTypeTarget(castMatch[1]);
+        }
+        var callMatch = /^(?:[A-Za-z_][A-Za-z0-9_]*\.)*([A-Za-z_][A-Za-z0-9_]*)\s*(?:<[^>]*>)?\s*\(/.exec(expression);
+        var calls = {
+            "arrayOf": "kotlin.Array", "emptyArray": "kotlin.Array", "booleanArrayOf": "kotlin.Array",
+            "byteArrayOf": "kotlin.Array", "charArrayOf": "kotlin.Array", "doubleArrayOf": "kotlin.Array",
+            "floatArrayOf": "kotlin.Array", "intArrayOf": "kotlin.Array", "longArrayOf": "kotlin.Array", "shortArrayOf": "kotlin.Array",
+            "listOf": "kotlin.collections.List", "emptyList": "kotlin.collections.List", "buildList": "kotlin.collections.List",
+            "mutableListOf": "kotlin.collections.MutableList", "arrayListOf": "kotlin.collections.MutableList",
+            "mapOf": "kotlin.collections.Map", "emptyMap": "kotlin.collections.Map", "buildMap": "kotlin.collections.Map",
+            "mutableMapOf": "kotlin.collections.MutableMap", "hashMapOf": "kotlin.collections.MutableMap",
+            "setOf": "kotlin.collections.Set", "emptySet": "kotlin.collections.Set", "buildSet": "kotlin.collections.Set",
+            "mutableSetOf": "kotlin.collections.MutableSet", "hashSetOf": "kotlin.collections.MutableSet",
+            "sequenceOf": "kotlin.sequences.Sequence", "emptySequence": "kotlin.sequences.Sequence",
+            "generateSequence": "kotlin.sequences.Sequence", "sequence": "kotlin.sequences.Sequence",
+            "Regex": "kotlin.text.Regex#instance", "StringBuilder": "kotlin.text.StringBuilder"
+        };
+        if (callMatch && calls[callMatch[1]]) {
+            return calls[callMatch[1]];
+        }
+        if (/^(?:android\.net\.)?Uri\.parse\s*\(/.test(expression)) {
+            return "android.net.Uri#instance";
+        }
+        if (callMatch && /^[A-Z]/.test(callMatch[1])) {
+            return kotlinTypeTarget(callMatch[1]);
+        }
+        if (/^[+-]?\d+\s*\.\.\s*[+-]?\d+/.test(expression)) {
+            return "kotlin.ranges.IntRange";
+        }
+        if (/^[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?[fF]?\b/.test(expression)) {
+            return "kotlin.Double";
+        }
+        if (/^[+-]?\d+[lL]?\b/.test(expression)) {
+            return /[lL]\b/.test(expression) ? "kotlin.Long" : "kotlin.Int";
+        }
+        if (/^(?:true|false)\b/.test(expression)) {
+            return "kotlin.Boolean";
+        }
+        var rawPattern = RegExp("\\b(?:val|var)\\s+" + name + "(?:\\s*:[^=]+)?\\s*=\\s*([\\s\\S]+)$");
+        var rawMatch = rawPattern.exec(String(rawLine || ""));
+        var rawExpression = rawMatch ? rawMatch[1].trim() : "";
+        if (/^(?:\"\"\"|\")/.test(rawExpression)) {
+            return "kotlin.String";
+        }
+        return "";
+    }
+
     function splitTopLevel(value, separator) {
         value = String(value || "");
         separator = separator || ",";
@@ -154,6 +265,12 @@
             var name = identifierFromParameter(parameter, language);
             if (name && name !== "this" && name !== "super") {
                 addSymbol(result, symbol(name, "parameter", "", "Parameter in the current document."));
+                if (language === "kotlin") {
+                    var typedParameter = kotlinParameterType(parameter);
+                    if (typedParameter && typedParameter.name === name && typedParameter.target) {
+                        addAlias(result, name, typedParameter.target);
+                    }
+                }
             }
         });
     }
@@ -440,11 +557,17 @@
         var result = createResult();
         parseDottedImports(result, text, "Kotlin");
         var code = maskNonCode(text, "kotlin");
-        code.split(/\r?\n/).forEach(function(line) {
+        var rawLines = String(text || "").split(/\r?\n/);
+        code.split(/\r?\n/).forEach(function(line, lineIndex) {
+            var rawLine = rawLines[lineIndex] || "";
             var match;
             var typePattern = /\b(?:class|interface|object|enum\s+class|data\s+class|sealed\s+class|typealias)\s+([A-Za-z_][A-Za-z0-9_]*)/g;
             while ((match = typePattern.exec(line)) !== null) {
                 addSymbol(result, symbol(match[1], "class", "class " + match[1], "Type defined in the current Kotlin document."));
+            }
+            var primaryConstructorPattern = /\b(?:class|enum\s+class|data\s+class|sealed\s+class)\s+[A-Za-z_][A-Za-z0-9_]*(?:\s*<[^>]+>)?\s*\(([^)]*)\)/g;
+            while ((match = primaryConstructorPattern.exec(line)) !== null) {
+                addParameters(result, match[1], "kotlin");
             }
             var functionPattern = /\bfun\s+(?:<[^>]+>\s*)?(?:[A-Za-z_][A-Za-z0-9_?.<>]*\.)?([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)/g;
             while ((match = functionPattern.exec(line)) !== null) {
@@ -455,13 +578,30 @@
             while ((match = variablePattern.exec(line)) !== null) {
                 addSymbol(result, symbol(match[1], "variable"));
             }
+            var typedVariablePattern = /\b(?:val|var)\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*([^=;]+)/g;
+            while ((match = typedVariablePattern.exec(line)) !== null) {
+                var explicitTarget = kotlinTypeTarget(match[2]);
+                if (explicitTarget) {
+                    addAlias(result, match[1], explicitTarget);
+                }
+            }
+            var initializedVariablePattern = /\b(?:val|var)\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s*:\s*[^=;]+)?\s*=\s*([^;]+)/g;
+            while ((match = initializedVariablePattern.exec(line)) !== null) {
+                if (!Object.prototype.hasOwnProperty.call(result.aliases, match[1])) {
+                    var inferredTarget = kotlinInitializerTarget(match[2], rawLine, match[1]);
+                    if (inferredTarget) {
+                        addAlias(result, match[1], inferredTarget);
+                    }
+                }
+            }
             var loopPattern = /\bfor\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s+in\b/g;
             while ((match = loopPattern.exec(line)) !== null) {
                 addSymbol(result, symbol(match[1], "variable"));
             }
-            var catchPattern = /\bcatch\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*:/g;
+            var catchPattern = /\bcatch\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*:\s*([A-Za-z_][A-Za-z0-9_.?]*)/g;
             while ((match = catchPattern.exec(line)) !== null) {
                 addSymbol(result, symbol(match[1], "parameter"));
+                addAlias(result, match[1], kotlinTypeTarget(match[2]));
             }
         });
         return result;

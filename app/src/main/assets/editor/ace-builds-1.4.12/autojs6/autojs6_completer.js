@@ -580,15 +580,25 @@
 
     function findMemberContext(session, pos) {
         var line = session.getLine(pos.row).substring(0, pos.column);
-        var match = /((?:[A-Za-z_$][A-Za-z0-9_$]*\.)*[A-Za-z_$][A-Za-z0-9_$]*)\.([A-Za-z_$][A-Za-z0-9_$]*)?$/.exec(line);
+        var match = /((?:[A-Za-z_$][A-Za-z0-9_$]*(?:\.|\?\.))*[A-Za-z_$][A-Za-z0-9_$]*)(?:\.|\?\.)([A-Za-z_$][A-Za-z0-9_$]*)?$/.exec(line);
         if (match) {
+            var normalizedModuleName = match[1].replace(/\?\./g, ".");
             return {
-                moduleName: match[1],
+                moduleName: normalizedModuleName,
                 captionModuleName: match[1],
                 memberPrefix: match[2] || ""
             };
         }
-        return literalMemberContextFromLine(line);
+        var literalContext = literalMemberContextFromLine(line);
+        if (literalContext && languageIdForSession(session) === "kotlin") {
+            var kotlinLiteralModules = {
+                "String.prototype": "kotlin.String",
+                "Number.prototype": "kotlin.Int",
+                "Boolean.prototype": "kotlin.Boolean"
+            };
+            literalContext.moduleName = kotlinLiteralModules[literalContext.moduleName] || literalContext.moduleName;
+        }
+        return literalContext;
     }
 
     function identifierAt(line, column) {
@@ -676,8 +686,9 @@
         }
 
         var beforeToken = line.substring(0, token.startColumn);
-        var memberMatch = /((?:[A-Za-z_$][A-Za-z0-9_$]*\.)*[A-Za-z_$][A-Za-z0-9_$]*)\s*\.\s*$/.exec(beforeToken);
-        var members = memberMatch && membersForContext(source, memberMatch[1], extraAliases, language);
+        var memberMatch = /((?:[A-Za-z_$][A-Za-z0-9_$]*(?:\s*(?:\.|\?\.)\s*))*[A-Za-z_$][A-Za-z0-9_$]*)\s*(?:\.|\?\.)\s*$/.exec(beforeToken);
+        var memberModuleName = memberMatch && memberMatch[1].replace(/\s+/g, "").replace(/\?\./g, ".");
+        var members = memberMatch && membersForContext(source, memberModuleName, extraAliases, language);
         if (members) {
             var member = findByName(members, token.name);
             return toHover(member, memberMatch[1] + "." + token.name, memberMatch[1], row, token);

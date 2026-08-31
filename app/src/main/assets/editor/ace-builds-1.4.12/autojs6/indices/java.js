@@ -8,11 +8,11 @@
   "source": {
     "name": "OpenJDK and Android SDK API subset",
     "languageVersion": "Java 17; Android API 35",
-    "revision": "autojs6-java17-android35-subset-1",
+    "revision": "autojs6-java17-android35-subset-2",
     "url": "https://docs.oracle.com/en/java/javase/17/docs/api/",
     "androidUrl": "https://developer.android.com/reference/packages",
     "license": "API names/signatures only; OpenJDK GPL-2.0-with-classpath-exception and Android SDK terms",
-    "scope": "java.lang/java.util/java.nio.file plus selected android.* utility classes; no variable type inference"
+    "scope": "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs; no variable type inference"
   },
   "globals": [
     {
@@ -1350,6 +1350,744 @@
         "signature": "Uri.withAppendedPath(baseUri: Uri, pathSegment: String): Uri",
         "doc": "Java 17/Android API 35 symbol Uri.withAppendedPath."
       }
+    ],
+    "android.content.Context": [
+      {
+        "name": "applicationContext",
+        "type": "property",
+        "signature": "android.content.Context.applicationContext: Context",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.applicationContext."
+      },
+      {
+        "name": "cacheDir",
+        "type": "property",
+        "signature": "android.content.Context.cacheDir: File",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.cacheDir."
+      },
+      {
+        "name": "filesDir",
+        "type": "property",
+        "signature": "android.content.Context.filesDir: File",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.filesDir."
+      },
+      {
+        "name": "getColor",
+        "type": "function",
+        "signature": "android.content.Context.getColor(id: int): int",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.getColor."
+      },
+      {
+        "name": "getDrawable",
+        "type": "function",
+        "signature": "android.content.Context.getDrawable(id: int): Drawable",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.getDrawable."
+      },
+      {
+        "name": "getString",
+        "type": "function",
+        "signature": "android.content.Context.getString(id: int): String",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.getString."
+      },
+      {
+        "name": "getSystemService",
+        "type": "function",
+        "signature": "android.content.Context.getSystemService(name: String): Object",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.getSystemService."
+      },
+      {
+        "name": "openFileInput",
+        "type": "function",
+        "signature": "android.content.Context.openFileInput(name: String): FileInputStream",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.openFileInput."
+      },
+      {
+        "name": "openFileOutput",
+        "type": "function",
+        "signature": "android.content.Context.openFileOutput(name: String, mode: int): FileOutputStream",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.openFileOutput."
+      },
+      {
+        "name": "packageName",
+        "type": "property",
+        "signature": "android.content.Context.packageName: String",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.packageName."
+      },
+      {
+        "name": "sendBroadcast",
+        "type": "function",
+        "signature": "android.content.Context.sendBroadcast(intent: Intent): void",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.sendBroadcast."
+      },
+      {
+        "name": "startActivity",
+        "type": "function",
+        "signature": "android.content.Context.startActivity(intent: Intent): void",
+        "doc": "Java 17/Android API 35 symbol android.content.Context.startActivity."
+      }
+    ],
+    "android.content.Intent": [
+      {
+        "name": "action",
+        "type": "property",
+        "signature": "android.content.Intent.action: String",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.action."
+      },
+      {
+        "name": "addCategory",
+        "type": "function",
+        "signature": "android.content.Intent.addCategory(category: String): Intent",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.addCategory."
+      },
+      {
+        "name": "addFlags",
+        "type": "function",
+        "signature": "android.content.Intent.addFlags(flags: int): Intent",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.addFlags."
+      },
+      {
+        "name": "data",
+        "type": "property",
+        "signature": "android.content.Intent.data: Uri",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.data."
+      },
+      {
+        "name": "extras",
+        "type": "property",
+        "signature": "android.content.Intent.extras: Bundle",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.extras."
+      },
+      {
+        "name": "flags",
+        "type": "property",
+        "signature": "android.content.Intent.flags: int",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.flags."
+      },
+      {
+        "name": "getBooleanExtra",
+        "type": "function",
+        "signature": "android.content.Intent.getBooleanExtra(name: String, defaultValue: boolean): boolean",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.getBooleanExtra."
+      },
+      {
+        "name": "getIntExtra",
+        "type": "function",
+        "signature": "android.content.Intent.getIntExtra(name: String, defaultValue: int): int",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.getIntExtra."
+      },
+      {
+        "name": "getStringExtra",
+        "type": "function",
+        "signature": "android.content.Intent.getStringExtra(name: String): String",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.getStringExtra."
+      },
+      {
+        "name": "hasExtra",
+        "type": "function",
+        "signature": "android.content.Intent.hasExtra(name: String): boolean",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.hasExtra."
+      },
+      {
+        "name": "putExtra",
+        "type": "function",
+        "signature": "android.content.Intent.putExtra(name: String, value: Object): Intent",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.putExtra."
+      },
+      {
+        "name": "removeExtra",
+        "type": "function",
+        "signature": "android.content.Intent.removeExtra(name: String): void",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.removeExtra."
+      },
+      {
+        "name": "setAction",
+        "type": "function",
+        "signature": "android.content.Intent.setAction(action: String): Intent",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.setAction."
+      },
+      {
+        "name": "setClassName",
+        "type": "function",
+        "signature": "android.content.Intent.setClassName(packageName: String, className: String): Intent",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.setClassName."
+      },
+      {
+        "name": "setData",
+        "type": "function",
+        "signature": "android.content.Intent.setData(data: Uri): Intent",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.setData."
+      },
+      {
+        "name": "setType",
+        "type": "function",
+        "signature": "android.content.Intent.setType(type: String): Intent",
+        "doc": "Java 17/Android API 35 symbol android.content.Intent.setType."
+      }
+    ],
+    "android.net.Uri#instance": [
+      {
+        "name": "authority",
+        "type": "property",
+        "signature": "android.net.Uri#instance.authority: String",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.authority."
+      },
+      {
+        "name": "buildUpon",
+        "type": "function",
+        "signature": "android.net.Uri#instance.buildUpon(): Builder",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.buildUpon."
+      },
+      {
+        "name": "getQueryParameter",
+        "type": "function",
+        "signature": "android.net.Uri#instance.getQueryParameter(key: String): String",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.getQueryParameter."
+      },
+      {
+        "name": "host",
+        "type": "property",
+        "signature": "android.net.Uri#instance.host: String",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.host."
+      },
+      {
+        "name": "lastPathSegment",
+        "type": "property",
+        "signature": "android.net.Uri#instance.lastPathSegment: String",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.lastPathSegment."
+      },
+      {
+        "name": "normalizeScheme",
+        "type": "function",
+        "signature": "android.net.Uri#instance.normalizeScheme(): Uri",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.normalizeScheme."
+      },
+      {
+        "name": "path",
+        "type": "property",
+        "signature": "android.net.Uri#instance.path: String",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.path."
+      },
+      {
+        "name": "scheme",
+        "type": "property",
+        "signature": "android.net.Uri#instance.scheme: String",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.scheme."
+      },
+      {
+        "name": "toString",
+        "type": "function",
+        "signature": "android.net.Uri#instance.toString(): String",
+        "doc": "Java 17/Android API 35 symbol android.net.Uri#instance.toString."
+      }
+    ],
+    "android.os.Bundle": [
+      {
+        "name": "clear",
+        "type": "function",
+        "signature": "android.os.Bundle.clear(): void",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.clear."
+      },
+      {
+        "name": "containsKey",
+        "type": "function",
+        "signature": "android.os.Bundle.containsKey(key: String): boolean",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.containsKey."
+      },
+      {
+        "name": "get",
+        "type": "function",
+        "signature": "android.os.Bundle.get(key: String): Object",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.get."
+      },
+      {
+        "name": "getBoolean",
+        "type": "function",
+        "signature": "android.os.Bundle.getBoolean(key: String, defaultValue: boolean = false): boolean",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.getBoolean."
+      },
+      {
+        "name": "getInt",
+        "type": "function",
+        "signature": "android.os.Bundle.getInt(key: String, defaultValue: int = 0): int",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.getInt."
+      },
+      {
+        "name": "getLong",
+        "type": "function",
+        "signature": "android.os.Bundle.getLong(key: String, defaultValue: long = 0): long",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.getLong."
+      },
+      {
+        "name": "getString",
+        "type": "function",
+        "signature": "android.os.Bundle.getString(key: String): String",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.getString."
+      },
+      {
+        "name": "isEmpty",
+        "type": "function",
+        "signature": "android.os.Bundle.isEmpty(): boolean",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.isEmpty."
+      },
+      {
+        "name": "keySet",
+        "type": "function",
+        "signature": "android.os.Bundle.keySet(): Set",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.keySet."
+      },
+      {
+        "name": "putBoolean",
+        "type": "function",
+        "signature": "android.os.Bundle.putBoolean(key: String, value: boolean): void",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.putBoolean."
+      },
+      {
+        "name": "putBundle",
+        "type": "function",
+        "signature": "android.os.Bundle.putBundle(key: String, value: Bundle): void",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.putBundle."
+      },
+      {
+        "name": "putInt",
+        "type": "function",
+        "signature": "android.os.Bundle.putInt(key: String, value: int): void",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.putInt."
+      },
+      {
+        "name": "putLong",
+        "type": "function",
+        "signature": "android.os.Bundle.putLong(key: String, value: long): void",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.putLong."
+      },
+      {
+        "name": "putString",
+        "type": "function",
+        "signature": "android.os.Bundle.putString(key: String, value: String): void",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.putString."
+      },
+      {
+        "name": "remove",
+        "type": "function",
+        "signature": "android.os.Bundle.remove(key: String): void",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.remove."
+      },
+      {
+        "name": "size",
+        "type": "function",
+        "signature": "android.os.Bundle.size(): int",
+        "doc": "Java 17/Android API 35 symbol android.os.Bundle.size."
+      }
+    ],
+    "android.view.View": [
+      {
+        "name": "alpha",
+        "type": "property",
+        "signature": "android.view.View.alpha: float",
+        "doc": "Java 17/Android API 35 symbol android.view.View.alpha."
+      },
+      {
+        "name": "contentDescription",
+        "type": "property",
+        "signature": "android.view.View.contentDescription: CharSequence",
+        "doc": "Java 17/Android API 35 symbol android.view.View.contentDescription."
+      },
+      {
+        "name": "findViewById",
+        "type": "function",
+        "signature": "android.view.View.findViewById(id: int): View",
+        "doc": "Java 17/Android API 35 symbol android.view.View.findViewById."
+      },
+      {
+        "name": "id",
+        "type": "property",
+        "signature": "android.view.View.id: int",
+        "doc": "Java 17/Android API 35 symbol android.view.View.id."
+      },
+      {
+        "name": "isEnabled",
+        "type": "property",
+        "signature": "android.view.View.isEnabled: boolean",
+        "doc": "Java 17/Android API 35 symbol android.view.View.isEnabled."
+      },
+      {
+        "name": "isSelected",
+        "type": "property",
+        "signature": "android.view.View.isSelected: boolean",
+        "doc": "Java 17/Android API 35 symbol android.view.View.isSelected."
+      },
+      {
+        "name": "performClick",
+        "type": "function",
+        "signature": "android.view.View.performClick(): boolean",
+        "doc": "Java 17/Android API 35 symbol android.view.View.performClick."
+      },
+      {
+        "name": "post",
+        "type": "function",
+        "signature": "android.view.View.post(action: Runnable): boolean",
+        "doc": "Java 17/Android API 35 symbol android.view.View.post."
+      },
+      {
+        "name": "postDelayed",
+        "type": "function",
+        "signature": "android.view.View.postDelayed(action: Runnable, delayMillis: long): boolean",
+        "doc": "Java 17/Android API 35 symbol android.view.View.postDelayed."
+      },
+      {
+        "name": "requestFocus",
+        "type": "function",
+        "signature": "android.view.View.requestFocus(): boolean",
+        "doc": "Java 17/Android API 35 symbol android.view.View.requestFocus."
+      },
+      {
+        "name": "setOnClickListener",
+        "type": "function",
+        "signature": "android.view.View.setOnClickListener(listener: OnClickListener): void",
+        "doc": "Java 17/Android API 35 symbol android.view.View.setOnClickListener."
+      },
+      {
+        "name": "setOnLongClickListener",
+        "type": "function",
+        "signature": "android.view.View.setOnLongClickListener(listener: OnLongClickListener): void",
+        "doc": "Java 17/Android API 35 symbol android.view.View.setOnLongClickListener."
+      },
+      {
+        "name": "visibility",
+        "type": "property",
+        "signature": "android.view.View.visibility: int",
+        "doc": "Java 17/Android API 35 symbol android.view.View.visibility."
+      }
+    ],
+    "java.io.File": [
+      {
+        "name": "absolutePath",
+        "type": "property",
+        "signature": "java.io.File.absolutePath: String",
+        "doc": "Java 17/Android API 35 symbol java.io.File.absolutePath."
+      },
+      {
+        "name": "delete",
+        "type": "function",
+        "signature": "java.io.File.delete(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.io.File.delete."
+      },
+      {
+        "name": "exists",
+        "type": "function",
+        "signature": "java.io.File.exists(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.io.File.exists."
+      },
+      {
+        "name": "isDirectory",
+        "type": "function",
+        "signature": "java.io.File.isDirectory(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.io.File.isDirectory."
+      },
+      {
+        "name": "isFile",
+        "type": "function",
+        "signature": "java.io.File.isFile(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.io.File.isFile."
+      },
+      {
+        "name": "length",
+        "type": "function",
+        "signature": "java.io.File.length(): long",
+        "doc": "Java 17/Android API 35 symbol java.io.File.length."
+      },
+      {
+        "name": "listFiles",
+        "type": "function",
+        "signature": "java.io.File.listFiles(): File[]",
+        "doc": "Java 17/Android API 35 symbol java.io.File.listFiles."
+      },
+      {
+        "name": "mkdir",
+        "type": "function",
+        "signature": "java.io.File.mkdir(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.io.File.mkdir."
+      },
+      {
+        "name": "mkdirs",
+        "type": "function",
+        "signature": "java.io.File.mkdirs(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.io.File.mkdirs."
+      },
+      {
+        "name": "name",
+        "type": "property",
+        "signature": "java.io.File.name: String",
+        "doc": "Java 17/Android API 35 symbol java.io.File.name."
+      },
+      {
+        "name": "parent",
+        "type": "property",
+        "signature": "java.io.File.parent: String",
+        "doc": "Java 17/Android API 35 symbol java.io.File.parent."
+      },
+      {
+        "name": "renameTo",
+        "type": "function",
+        "signature": "java.io.File.renameTo(destination: File): boolean",
+        "doc": "Java 17/Android API 35 symbol java.io.File.renameTo."
+      },
+      {
+        "name": "toPath",
+        "type": "function",
+        "signature": "java.io.File.toPath(): Path",
+        "doc": "Java 17/Android API 35 symbol java.io.File.toPath."
+      }
+    ],
+    "java.nio.file.Path": [
+      {
+        "name": "fileName",
+        "type": "property",
+        "signature": "java.nio.file.Path.fileName: Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.fileName."
+      },
+      {
+        "name": "isAbsolute",
+        "type": "function",
+        "signature": "java.nio.file.Path.isAbsolute(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.isAbsolute."
+      },
+      {
+        "name": "normalize",
+        "type": "function",
+        "signature": "java.nio.file.Path.normalize(): Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.normalize."
+      },
+      {
+        "name": "parent",
+        "type": "property",
+        "signature": "java.nio.file.Path.parent: Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.parent."
+      },
+      {
+        "name": "relativize",
+        "type": "function",
+        "signature": "java.nio.file.Path.relativize(other: Path): Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.relativize."
+      },
+      {
+        "name": "resolve",
+        "type": "function",
+        "signature": "java.nio.file.Path.resolve(other: Path): Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.resolve."
+      },
+      {
+        "name": "resolveSibling",
+        "type": "function",
+        "signature": "java.nio.file.Path.resolveSibling(other: Path): Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.resolveSibling."
+      },
+      {
+        "name": "root",
+        "type": "property",
+        "signature": "java.nio.file.Path.root: Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.root."
+      },
+      {
+        "name": "toAbsolutePath",
+        "type": "function",
+        "signature": "java.nio.file.Path.toAbsolutePath(): Path",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.toAbsolutePath."
+      },
+      {
+        "name": "toFile",
+        "type": "function",
+        "signature": "java.nio.file.Path.toFile(): File",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.toFile."
+      },
+      {
+        "name": "toUri",
+        "type": "function",
+        "signature": "java.nio.file.Path.toUri(): URI",
+        "doc": "Java 17/Android API 35 symbol java.nio.file.Path.toUri."
+      }
+    ],
+    "java.util.ArrayList": [
+      {
+        "name": "add",
+        "type": "function",
+        "signature": "java.util.ArrayList.add(element: Object): boolean",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.add."
+      },
+      {
+        "name": "add",
+        "type": "function",
+        "signature": "java.util.ArrayList.add(index: int, element: Object): void",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.add."
+      },
+      {
+        "name": "addAll",
+        "type": "function",
+        "signature": "java.util.ArrayList.addAll(elements: Collection): boolean",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.addAll."
+      },
+      {
+        "name": "clear",
+        "type": "function",
+        "signature": "java.util.ArrayList.clear(): void",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.clear."
+      },
+      {
+        "name": "contains",
+        "type": "function",
+        "signature": "java.util.ArrayList.contains(element: Object): boolean",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.contains."
+      },
+      {
+        "name": "get",
+        "type": "function",
+        "signature": "java.util.ArrayList.get(index: int): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.get."
+      },
+      {
+        "name": "indexOf",
+        "type": "function",
+        "signature": "java.util.ArrayList.indexOf(element: Object): int",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.indexOf."
+      },
+      {
+        "name": "isEmpty",
+        "type": "function",
+        "signature": "java.util.ArrayList.isEmpty(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.isEmpty."
+      },
+      {
+        "name": "iterator",
+        "type": "function",
+        "signature": "java.util.ArrayList.iterator(): Iterator",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.iterator."
+      },
+      {
+        "name": "remove",
+        "type": "function",
+        "signature": "java.util.ArrayList.remove(index: int): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.remove."
+      },
+      {
+        "name": "set",
+        "type": "function",
+        "signature": "java.util.ArrayList.set(index: int, element: Object): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.set."
+      },
+      {
+        "name": "size",
+        "type": "function",
+        "signature": "java.util.ArrayList.size(): int",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.size."
+      },
+      {
+        "name": "sort",
+        "type": "function",
+        "signature": "java.util.ArrayList.sort(comparator: Comparator): void",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.sort."
+      },
+      {
+        "name": "subList",
+        "type": "function",
+        "signature": "java.util.ArrayList.subList(fromIndex: int, toIndex: int): List",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.subList."
+      },
+      {
+        "name": "toArray",
+        "type": "function",
+        "signature": "java.util.ArrayList.toArray(): Object[]",
+        "doc": "Java 17/Android API 35 symbol java.util.ArrayList.toArray."
+      }
+    ],
+    "java.util.HashMap": [
+      {
+        "name": "clear",
+        "type": "function",
+        "signature": "java.util.HashMap.clear(): void",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.clear."
+      },
+      {
+        "name": "containsKey",
+        "type": "function",
+        "signature": "java.util.HashMap.containsKey(key: Object): boolean",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.containsKey."
+      },
+      {
+        "name": "containsValue",
+        "type": "function",
+        "signature": "java.util.HashMap.containsValue(value: Object): boolean",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.containsValue."
+      },
+      {
+        "name": "entrySet",
+        "type": "function",
+        "signature": "java.util.HashMap.entrySet(): Set",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.entrySet."
+      },
+      {
+        "name": "get",
+        "type": "function",
+        "signature": "java.util.HashMap.get(key: Object): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.get."
+      },
+      {
+        "name": "getOrDefault",
+        "type": "function",
+        "signature": "java.util.HashMap.getOrDefault(key: Object, defaultValue: Object): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.getOrDefault."
+      },
+      {
+        "name": "isEmpty",
+        "type": "function",
+        "signature": "java.util.HashMap.isEmpty(): boolean",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.isEmpty."
+      },
+      {
+        "name": "keySet",
+        "type": "function",
+        "signature": "java.util.HashMap.keySet(): Set",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.keySet."
+      },
+      {
+        "name": "put",
+        "type": "function",
+        "signature": "java.util.HashMap.put(key: Object, value: Object): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.put."
+      },
+      {
+        "name": "putAll",
+        "type": "function",
+        "signature": "java.util.HashMap.putAll(map: Map): void",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.putAll."
+      },
+      {
+        "name": "putIfAbsent",
+        "type": "function",
+        "signature": "java.util.HashMap.putIfAbsent(key: Object, value: Object): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.putIfAbsent."
+      },
+      {
+        "name": "remove",
+        "type": "function",
+        "signature": "java.util.HashMap.remove(key: Object): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.remove."
+      },
+      {
+        "name": "replace",
+        "type": "function",
+        "signature": "java.util.HashMap.replace(key: Object, value: Object): Object",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.replace."
+      },
+      {
+        "name": "size",
+        "type": "function",
+        "signature": "java.util.HashMap.size(): int",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.size."
+      },
+      {
+        "name": "values",
+        "type": "function",
+        "signature": "java.util.HashMap.values(): Collection",
+        "doc": "Java 17/Android API 35 symbol java.util.HashMap.values."
+      }
     ]
   },
   "aliases": {
@@ -1357,6 +2095,12 @@
     "android.net.Uri": "Uri",
     "android.text.TextUtils": "TextUtils",
     "android.util.Log": "Log",
+    "ArrayList": "java.util.ArrayList",
+    "Bundle": "android.os.Bundle",
+    "Context": "android.content.Context",
+    "File": "java.io.File",
+    "HashMap": "java.util.HashMap",
+    "Intent": "android.content.Intent",
     "java.lang.Boolean": "Boolean",
     "java.lang.Character": "Character",
     "java.lang.Double": "Double",
@@ -1374,7 +2118,9 @@
     "java.util.Map": "Map",
     "java.util.Objects": "Objects",
     "java.util.Optional": "Optional",
-    "java.util.Set": "Set"
+    "java.util.Set": "Set",
+    "Path": "java.nio.file.Path",
+    "View": "android.view.View"
   }
 };
 })(window);

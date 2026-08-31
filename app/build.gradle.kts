@@ -64,6 +64,32 @@ val verifyAutoJs6LanguageIndices = tasks.register<Exec>("verifyAutoJs6LanguageIn
         "--check",
     )
 }
+val verifyAutoJs6KotlinP2Plus = tasks.register<Exec>("verifyAutoJs6KotlinP2Plus") {
+    group = "verification"
+    description = "Verifies Kotlin P2+ type heuristics, safe calls, instance APIs, and Java/Android index reuse."
+    dependsOn(verifyAutoJs6LanguageIndices)
+    val verifier = rootProject.layout.projectDirectory.file(
+        "tools/ace-lsp/verify-kotlin-p2plus.mjs",
+    )
+    val completer = autoJs6EditorAssetsDirectory.file("autojs6_completer.js")
+    val localSymbols = autoJs6EditorAssetsDirectory.file("autojs6_local_symbols.js")
+    val kotlinIndex = autoJs6LanguageIndicesDirectory.file("kotlin.js")
+    val javaIndex = autoJs6LanguageIndicesDirectory.file("java.js")
+    inputs.files(verifier, completer, localSymbols, kotlinIndex, javaIndex)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(
+        verifier.asFile.absolutePath,
+        "--completer",
+        completer.asFile.absolutePath,
+        "--local-symbols",
+        localSymbols.asFile.absolutePath,
+        "--kotlin-index",
+        kotlinIndex.asFile.absolutePath,
+        "--java-index",
+        javaIndex.asFile.absolutePath,
+    )
+}
 val autoJs6PythonWorkerBuilder = rootProject.layout.projectDirectory.file(
     "tools/ace-lsp/build-python-worker.mjs",
 )
@@ -344,6 +370,7 @@ tasks.named("check") {
         verifyAutoJs6PythonWorker,
         verifyAutoJs6LuaLanguageServer,
         verifyAutoJs6JavaSemanticRuntime,
+        verifyAutoJs6KotlinP2Plus,
     )
 }
 

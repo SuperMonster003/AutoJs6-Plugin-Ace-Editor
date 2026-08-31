@@ -465,6 +465,59 @@ function javaIndex() {
         "parseColor(colorString: String): int", "red(color: int): int", "rgb(red: int, green: int, blue: int): int",
     ]);
     add("Uri", ["decode(value: String): String", "encode(value: String): String", "fromFile(file: File): Uri", "parse(uriString: String): Uri", "withAppendedPath(baseUri: Uri, pathSegment: String): Uri"]);
+    add("java.io.File", [
+        "absolutePath: String|property", "name: String|property", "parent: String|property", "delete(): boolean", "exists(): boolean",
+        "isDirectory(): boolean", "isFile(): boolean", "length(): long", "listFiles(): File[]", "mkdir(): boolean", "mkdirs(): boolean",
+        "renameTo(destination: File): boolean", "toPath(): Path",
+    ]);
+    add("java.nio.file.Path", [
+        "fileName: Path|property", "parent: Path|property", "root: Path|property", "isAbsolute(): boolean", "normalize(): Path",
+        "relativize(other: Path): Path", "resolve(other: Path): Path", "resolveSibling(other: Path): Path", "toAbsolutePath(): Path",
+        "toFile(): File", "toUri(): URI",
+    ]);
+    add("java.util.ArrayList", [
+        "add(element: Object): boolean", "add(index: int, element: Object): void", "addAll(elements: Collection): boolean", "clear(): void",
+        "contains(element: Object): boolean", "get(index: int): Object", "indexOf(element: Object): int", "isEmpty(): boolean",
+        "iterator(): Iterator", "remove(index: int): Object", "set(index: int, element: Object): Object", "size(): int",
+        "sort(comparator: Comparator): void", "subList(fromIndex: int, toIndex: int): List", "toArray(): Object[]",
+    ]);
+    add("java.util.HashMap", [
+        "clear(): void", "containsKey(key: Object): boolean", "containsValue(value: Object): boolean", "entrySet(): Set",
+        "get(key: Object): Object", "getOrDefault(key: Object, defaultValue: Object): Object", "isEmpty(): boolean", "keySet(): Set",
+        "put(key: Object, value: Object): Object", "putAll(map: Map): void", "putIfAbsent(key: Object, value: Object): Object",
+        "remove(key: Object): Object", "replace(key: Object, value: Object): Object", "size(): int", "values(): Collection",
+    ]);
+    add("android.content.Context", [
+        "cacheDir: File|property", "filesDir: File|property", "packageName: String|property", "applicationContext: Context|property",
+        "getColor(id: int): int", "getDrawable(id: int): Drawable", "getString(id: int): String", "getSystemService(name: String): Object",
+        "openFileInput(name: String): FileInputStream", "openFileOutput(name: String, mode: int): FileOutputStream",
+        "startActivity(intent: Intent): void", "sendBroadcast(intent: Intent): void",
+    ]);
+    add("android.content.Intent", [
+        "action: String|property", "data: Uri|property", "extras: Bundle|property", "flags: int|property", "addCategory(category: String): Intent",
+        "addFlags(flags: int): Intent", "getBooleanExtra(name: String, defaultValue: boolean): boolean", "getIntExtra(name: String, defaultValue: int): int",
+        "getStringExtra(name: String): String", "hasExtra(name: String): boolean", "putExtra(name: String, value: Object): Intent",
+        "removeExtra(name: String): void", "setAction(action: String): Intent", "setClassName(packageName: String, className: String): Intent",
+        "setData(data: Uri): Intent", "setType(type: String): Intent",
+    ]);
+    add("android.os.Bundle", [
+        "clear(): void", "containsKey(key: String): boolean", "get(key: String): Object", "getBoolean(key: String, defaultValue: boolean = false): boolean",
+        "getInt(key: String, defaultValue: int = 0): int", "getLong(key: String, defaultValue: long = 0): long", "getString(key: String): String",
+        "isEmpty(): boolean", "keySet(): Set", "putBoolean(key: String, value: boolean): void", "putBundle(key: String, value: Bundle): void",
+        "putInt(key: String, value: int): void", "putLong(key: String, value: long): void", "putString(key: String, value: String): void",
+        "remove(key: String): void", "size(): int",
+    ]);
+    add("android.view.View", [
+        "alpha: float|property", "contentDescription: CharSequence|property", "id: int|property", "isEnabled: boolean|property",
+        "isSelected: boolean|property", "visibility: int|property", "findViewById(id: int): View", "performClick(): boolean",
+        "post(action: Runnable): boolean", "postDelayed(action: Runnable, delayMillis: long): boolean", "requestFocus(): boolean",
+        "setOnClickListener(listener: OnClickListener): void", "setOnLongClickListener(listener: OnLongClickListener): void",
+    ]);
+    add("android.net.Uri#instance", [
+        "authority: String|property", "host: String|property", "lastPathSegment: String|property", "path: String|property",
+        "scheme: String|property", "buildUpon(): Builder", "getQueryParameter(key: String): String", "normalizeScheme(): Uri",
+        "toString(): String",
+    ]);
 
     const classes = [
         "Object", "String", "StringBuilder", "Math", "System", "Integer", "Long", "Double", "Boolean", "Character", "Thread",
@@ -481,20 +534,22 @@ function javaIndex() {
         "java.util.Optional": "Optional", "java.util.List": "List", "java.util.Map": "Map", "java.util.Set": "Set",
         "java.nio.file.Files": "Files", "java.nio.file.Paths": "Paths", "android.util.Log": "Log", "android.text.TextUtils": "TextUtils",
         "android.graphics.Color": "Color", "android.net.Uri": "Uri",
+        "ArrayList": "java.util.ArrayList", "HashMap": "java.util.HashMap", "File": "java.io.File", "Path": "java.nio.file.Path",
+        "Context": "android.content.Context", "Intent": "android.content.Intent", "Bundle": "android.os.Bundle", "View": "android.view.View",
     };
     Object.assign(aliases, qualified);
     return makeIndex("java", {
         name: "OpenJDK and Android SDK API subset",
         languageVersion: "Java 17; Android API 35",
-        revision: "autojs6-java17-android35-subset-1",
+        revision: "autojs6-java17-android35-subset-2",
         url: "https://docs.oracle.com/en/java/javase/17/docs/api/",
         androidUrl: "https://developer.android.com/reference/packages",
         license: "API names/signatures only; OpenJDK GPL-2.0-with-classpath-exception and Android SDK terms",
-        scope: "java.lang/java.util/java.nio.file plus selected android.* utility classes; no variable type inference",
+        scope: "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs; no variable type inference",
     }, globals, modules, aliases);
 }
 
-function kotlinIndex() {
+function kotlinIndex(java) {
     const label = "Kotlin 2.2.21";
     const modules = {};
     const add = (name, specs) => { modules[name] = entries(name, specs, label); };
@@ -526,6 +581,97 @@ function kotlinIndex() {
         "escape(literal: String): String", "escapeReplacement(literal: String): String", "fromLiteral(literal: String): Regex",
     ]);
     add("Result", ["failure(exception: Throwable): Result", "success(value: Object): Result"]);
+    add("kotlin.String", [
+        "length: Int|property", "capitalize(): String", "contains(other: CharSequence, ignoreCase: Boolean = false): Boolean",
+        "endsWith(suffix: String, ignoreCase: Boolean = false): Boolean", "isBlank(): Boolean", "isEmpty(): Boolean",
+        "lowercase(): String", "removePrefix(prefix: CharSequence): String", "removeSuffix(suffix: CharSequence): String",
+        "replace(oldValue: String, newValue: String, ignoreCase: Boolean = false): String", "split(*delimiters: String): List",
+        "startsWith(prefix: String, ignoreCase: Boolean = false): Boolean", "substring(startIndex: Int, endIndex: Int = length): String",
+        "toBooleanStrictOrNull(): Boolean", "toDoubleOrNull(): Double", "toIntOrNull(radix: Int = 10): Int", "toLongOrNull(radix: Int = 10): Long",
+        "trim(): String", "trimIndent(): String", "uppercase(): String",
+    ]);
+    add("kotlin.text.StringBuilder", [
+        "length: Int|property", "append(value: Object): StringBuilder", "appendLine(value: Object = ''): StringBuilder",
+        "clear(): StringBuilder", "deleteAt(index: Int): StringBuilder", "insert(index: Int, value: Object): StringBuilder",
+        "isEmpty(): Boolean", "reverse(): StringBuilder", "set(index: Int, value: Char): Unit", "toString(): String",
+    ]);
+    add("kotlin.text.Regex#instance", [
+        "matches(input: CharSequence): Boolean", "containsMatchIn(input: CharSequence): Boolean", "find(input: CharSequence, startIndex: Int = 0): MatchResult",
+        "findAll(input: CharSequence, startIndex: Int = 0): Sequence", "matchEntire(input: CharSequence): MatchResult",
+        "replace(input: CharSequence, replacement: String): String", "replaceFirst(input: CharSequence, replacement: String): String",
+        "split(input: CharSequence, limit: Int = 0): List", "toPattern(): Pattern",
+    ]);
+    add("kotlin.Array", [
+        "indices: IntRange|property", "lastIndex: Int|property", "size: Int|property", "all(predicate: function): Boolean",
+        "any(predicate: function): Boolean", "contains(element: Object): Boolean", "filter(predicate: function): List", "find(predicate: function): Object",
+        "first(): Object", "forEach(action: function): Unit", "get(index: Int): Object", "isEmpty(): Boolean", "joinToString(separator: CharSequence = ', '): String",
+        "last(): Object", "map(transform: function): List", "set(index: Int, value: Object): Unit", "sorted(): List", "toList(): List",
+    ]);
+    add("kotlin.collections.List", [
+        "indices: IntRange|property", "lastIndex: Int|property", "size: Int|property", "all(predicate: function): Boolean",
+        "any(predicate: function): Boolean", "associate(transform: function): Map", "contains(element: Object): Boolean", "distinct(): List",
+        "filter(predicate: function): List", "find(predicate: function): Object", "first(): Object", "firstOrNull(): Object",
+        "flatMap(transform: function): List", "forEach(action: function): Unit", "get(index: Int): Object", "groupBy(keySelector: function): Map",
+        "indexOf(element: Object): Int", "isEmpty(): Boolean", "joinToString(separator: CharSequence = ', '): String", "last(): Object",
+        "lastOrNull(): Object", "map(transform: function): List", "sorted(): List", "sortedBy(selector: function): List",
+        "take(count: Int): List", "toMutableList(): MutableList", "zip(other: Iterable): List",
+    ]);
+    add("kotlin.collections.MutableList", [
+        "indices: IntRange|property", "lastIndex: Int|property", "size: Int|property", "add(element: Object): Boolean",
+        "add(index: Int, element: Object): Unit", "addAll(elements: Collection): Boolean", "clear(): Unit", "contains(element: Object): Boolean",
+        "filter(predicate: function): List", "first(): Object", "forEach(action: function): Unit", "get(index: Int): Object",
+        "isEmpty(): Boolean", "joinToString(separator: CharSequence = ', '): String", "map(transform: function): List",
+        "remove(element: Object): Boolean", "removeAt(index: Int): Object", "set(index: Int, element: Object): Object",
+        "sort(): Unit", "sortBy(selector: function): Unit", "toList(): List",
+    ]);
+    add("kotlin.collections.Map", [
+        "entries: Set|property", "keys: Set|property", "size: Int|property", "values: Collection|property", "all(predicate: function): Boolean",
+        "any(predicate: function): Boolean", "containsKey(key: Object): Boolean", "containsValue(value: Object): Boolean", "filter(predicate: function): Map",
+        "forEach(action: function): Unit", "get(key: Object): Object", "getOrDefault(key: Object, defaultValue: Object): Object",
+        "isEmpty(): Boolean", "map(transform: function): List", "mapKeys(transform: function): Map", "mapValues(transform: function): Map",
+        "toList(): List", "toMutableMap(): MutableMap",
+    ]);
+    add("kotlin.collections.MutableMap", [
+        "entries: MutableSet|property", "keys: MutableSet|property", "size: Int|property", "values: MutableCollection|property",
+        "clear(): Unit", "containsKey(key: Object): Boolean", "filter(predicate: function): Map", "forEach(action: function): Unit",
+        "get(key: Object): Object", "getOrDefault(key: Object, defaultValue: Object): Object", "isEmpty(): Boolean",
+        "put(key: Object, value: Object): Object", "putAll(from: Map): Unit", "remove(key: Object): Object", "toMap(): Map",
+    ]);
+    add("kotlin.collections.Set", [
+        "size: Int|property", "all(predicate: function): Boolean", "any(predicate: function): Boolean", "contains(element: Object): Boolean",
+        "filter(predicate: function): List", "forEach(action: function): Unit", "intersect(other: Iterable): Set", "isEmpty(): Boolean",
+        "map(transform: function): List", "minus(element: Object): Set", "plus(element: Object): Set", "toList(): List", "toMutableSet(): MutableSet",
+        "union(other: Iterable): Set",
+    ]);
+    add("kotlin.collections.MutableSet", [
+        "size: Int|property", "add(element: Object): Boolean", "addAll(elements: Collection): Boolean", "clear(): Unit",
+        "contains(element: Object): Boolean", "filter(predicate: function): List", "forEach(action: function): Unit", "isEmpty(): Boolean",
+        "remove(element: Object): Boolean", "removeAll(elements: Collection): Boolean", "retainAll(elements: Collection): Boolean", "toSet(): Set",
+    ]);
+    add("kotlin.sequences.Sequence", [
+        "all(predicate: function): Boolean", "any(predicate: function): Boolean", "associate(transform: function): Map",
+        "distinct(): Sequence", "filter(predicate: function): Sequence", "find(predicate: function): Object", "first(): Object",
+        "flatMap(transform: function): Sequence", "forEach(action: function): Unit", "map(transform: function): Sequence",
+        "take(count: Int): Sequence", "toList(): List", "toSet(): Set",
+    ]);
+    add("kotlin.ranges.IntRange", [
+        "endInclusive: Int|property", "first: Int|property", "last: Int|property", "step: Int|property", "contains(value: Int): Boolean",
+        "isEmpty(): Boolean", "reversed(): IntProgression", "step(step: Int): IntProgression",
+    ]);
+    add("kotlin.Int", [
+        "absoluteValue: Int|property", "coerceAtLeast(minimumValue: Int): Int", "coerceAtMost(maximumValue: Int): Int",
+        "coerceIn(minimumValue: Int, maximumValue: Int): Int", "downTo(to: Int): IntProgression", "toDouble(): Double",
+        "toLong(): Long", "toString(radix: Int = 10): String", "until(to: Int): IntRange",
+    ]);
+    add("kotlin.Long", [
+        "absoluteValue: Long|property", "coerceAtLeast(minimumValue: Long): Long", "coerceAtMost(maximumValue: Long): Long",
+        "toDouble(): Double", "toInt(): Int", "toString(radix: Int = 10): String",
+    ]);
+    add("kotlin.Double", [
+        "absoluteValue: Double|property", "isFinite(): Boolean", "isInfinite(): Boolean", "isNaN(): Boolean", "roundToInt(): Int",
+        "roundToLong(): Long", "toInt(): Int", "toLong(): Long", "toString(): String",
+    ]);
+    add("kotlin.Boolean", ["and(other: Boolean): Boolean", "not(): Boolean", "or(other: Boolean): Boolean", "toString(): String", "xor(other: Boolean): Boolean"]);
     const globals = entries("", [
         "TODO(reason: String = ''): Nothing", "arrayOf(*elements: Object): Array", "arrayListOf(*elements: Object): ArrayList",
         "booleanArrayOf(*elements: Boolean): BooleanArray", "buildList(builderAction: function): List", "buildMap(builderAction: function): Map",
@@ -546,17 +692,49 @@ function kotlinIndex() {
         "CharSequence", "Number", "Byte", "Short", "Int", "Long", "Float", "Double", "Boolean", "Char", "Array", "Pair", "Triple",
         "Result", "Lazy", "Regex", "List", "MutableList", "Map", "MutableMap", "Set", "MutableSet", "Sequence", "Iterable", "Iterator",
     ].forEach((name) => globals.push(classItem(name, label)));
-    return makeIndex("kotlin", {
-        name: "Kotlin standard library API subset",
-        languageVersion: "Kotlin 2.2.21",
-        revision: "autojs6-kotlin-2.2.21-subset-1",
-        url: "https://kotlinlang.org/api/core/kotlin-stdlib/",
-        license: "Apache-2.0; API names/signatures only",
-        scope: "kotlin.*, collections, text, io, ranges, and sequences top-level APIs; no variable type inference",
-    }, globals, modules, {
+    const interopModules = [
+        "Math", "System", "Collections", "Arrays", "Objects", "Files", "Paths", "Log", "TextUtils", "Color", "Uri",
+        "java.io.File", "java.nio.file.Path", "java.util.ArrayList", "java.util.HashMap", "android.content.Context",
+        "android.content.Intent", "android.os.Bundle", "android.view.View", "android.net.Uri#instance",
+    ];
+    interopModules.forEach((moduleName) => {
+        if (java.modules[moduleName]) {
+            modules[moduleName] = java.modules[moduleName].map((item) => ({ ...item }));
+        }
+    });
+    const interopGlobals = new Set([
+        "Math", "System", "Collections", "Arrays", "Objects", "Files", "Paths", "Log", "TextUtils", "Color", "Uri",
+        "File", "Path", "ArrayList", "HashMap", "Context", "Intent", "Bundle", "View",
+    ]);
+    java.globals.filter((item) => interopGlobals.has(item.name)).forEach((item) => globals.push({ ...item }));
+    const aliases = {
+        ...java.aliases,
+        "String": "kotlin.String",
+        "Array": "kotlin.Array",
+        "List": "kotlin.collections.List",
+        "MutableList": "kotlin.collections.MutableList",
+        "Map": "kotlin.collections.Map",
+        "MutableMap": "kotlin.collections.MutableMap",
+        "Set": "kotlin.collections.Set",
+        "MutableSet": "kotlin.collections.MutableSet",
+        "Sequence": "kotlin.sequences.Sequence",
+        "IntRange": "kotlin.ranges.IntRange",
+        "Int": "kotlin.Int",
+        "Long": "kotlin.Long",
+        "Double": "kotlin.Double",
+        "Boolean": "kotlin.Boolean",
+        "StringBuilder": "kotlin.text.StringBuilder",
         "kotlin.Result": "Result",
         "kotlin.text.Regex": "Regex",
-    });
+    };
+    return makeIndex("kotlin", {
+        name: "Kotlin standard library and Java/Android interop API subset",
+        languageVersion: "Kotlin 2.2.21",
+        revision: "autojs6-kotlin-2.2.21-p2plus-2",
+        url: "https://kotlinlang.org/api/core/kotlin-stdlib/",
+        license: "Apache-2.0; API names/signatures only",
+        scope: "Kotlin top-level and instance APIs plus selected Java/Android interop; paired with conservative single-file type heuristics",
+    }, globals, modules, aliases);
 }
 
 function render(index) {
@@ -574,11 +752,12 @@ function render(index) {
 
 function main() {
     const args = parseArguments(process.argv.slice(2));
+    const java = javaIndex();
     const indices = {
         python: pythonIndex(),
         lua: luaIndex(),
-        java: javaIndex(),
-        kotlin: kotlinIndex(),
+        java,
+        kotlin: kotlinIndex(java),
     };
     if (!args.check) {
         mkdirSync(args.outDir, { recursive: true });
