@@ -84,12 +84,12 @@ object AceEditorLspPreferences {
         SEMANTIC_LANGUAGE_KOTLIN,
     )
 
-    /** M4/M5 enable their bundled Python and Lua providers; later providers remain opt-in. */
+    /** M4-M6 enable their bundled Python, Lua, and Java diagnostic providers. */
     val DEFAULT_SEMANTIC_LANGUAGES = linkedMapOf(
         SEMANTIC_LANGUAGE_TYPESCRIPT to true,
         SEMANTIC_LANGUAGE_PYTHON to true,
         SEMANTIC_LANGUAGE_LUA to true,
-        SEMANTIC_LANGUAGE_JAVA to false,
+        SEMANTIC_LANGUAGE_JAVA to true,
         SEMANTIC_LANGUAGE_KOTLIN to false,
     )
 

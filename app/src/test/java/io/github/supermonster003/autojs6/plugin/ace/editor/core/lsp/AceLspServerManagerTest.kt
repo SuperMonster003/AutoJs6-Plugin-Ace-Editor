@@ -233,6 +233,50 @@ class AceLspServerManagerTest {
     }
 
     @Test
+    fun javaUsesBundledEcjDiagnosticsOverTheAndroidBridge() {
+        val manager = AceLspServerManager(
+            enabledProvider = { true },
+            javaDiagnosticsAvailableProvider = { true },
+        )
+
+        manager.setDocumentPath("/storage/emulated/0/Scripts/Main.java")
+        val snapshot = manager.snapshot()
+        val options = manager.bridgeOptionsJson()
+
+        assertTrue(snapshot.enabled)
+        assertEquals(AceEditorLspPreferences.SEMANTIC_LANGUAGE_JAVA, snapshot.semanticLanguage)
+        assertEquals(AceLspServerManager.JAVA_ECJ_PROVIDER_ID, snapshot.semanticProviderId)
+        assertEquals(
+            AceLspServerManager.JAVA_SEMANTIC_PROVIDER_CAPABILITIES,
+            snapshot.semanticCapabilities,
+        )
+        assertEquals(AceLspServerManager.TRANSPORT_ANDROID_BRIDGE, snapshot.transport)
+        assertEquals(AceLspServerManager.REASON_BUNDLED_JAVA_ECJ, snapshot.reason)
+        assertEquals(AceLspServerManager.COMPLETION_PROVIDER_LOCAL_INDEX, snapshot.completionProvider)
+        assertTrue(options.contains("\"java\":true"))
+        assertTrue(options.contains("\"semanticProviderId\":\"java-ecj\""))
+        assertTrue(options.contains("\"transport\":\"android-bridge\""))
+    }
+
+    @Test
+    fun unavailableJavaRuntimeRetainsP2CompletionAndReportsItsGate() {
+        val manager = AceLspServerManager(
+            enabledProvider = { true },
+            javaDiagnosticsAvailableProvider = { false },
+        )
+
+        manager.setDocumentPath("Main.java")
+        val snapshot = manager.snapshot()
+
+        assertEquals(AceLspServerManager.JAVA_ECJ_PROVIDER_ID, snapshot.semanticProviderId)
+        assertEquals(AceLspServerManager.TRANSPORT_ANDROID_BRIDGE, snapshot.transport)
+        assertEquals(AceLspServerManager.REASON_JAVA_ECJ_UNAVAILABLE, snapshot.reason)
+        assertEquals(AceLspServerManager.COMPLETION_PROVIDER_LOCAL_INDEX, snapshot.completionProvider)
+        assertEquals(AceLspServerManager.HOVER_PROVIDER_LOCAL_INDEX, snapshot.hoverProvider)
+        assertEquals(AceLspServerManager.SIGNATURE_PROVIDER_STATIC_LOCAL, snapshot.signatureProvider)
+    }
+
+    @Test
     fun luaUsesBundledStdioServerAndPhysicalWorkspaceWhenItsAbiIsAvailable() {
         val projectRoot = Files.createTempDirectory("autojs6-lua-manager").toFile()
         try {

@@ -82,7 +82,7 @@ class AceEditorLspPreferencesTest {
     }
 
     @Test
-    fun semanticLanguageSwitchesEnableBundledTypeScriptPythonAndLuaProviders() {
+    fun semanticLanguageSwitchesEnableBundledTypeScriptPythonLuaAndJavaProviders() {
         assertTrue(
             AceEditorLspPreferences.defaultSemanticEnabled(
                 AceEditorLspPreferences.SEMANTIC_LANGUAGE_TYPESCRIPT,
@@ -98,12 +98,16 @@ class AceEditorLspPreferencesTest {
                 AceEditorLspPreferences.SEMANTIC_LANGUAGE_LUA,
             ),
         )
-        listOf(
-            AceEditorLspPreferences.SEMANTIC_LANGUAGE_JAVA,
-            AceEditorLspPreferences.SEMANTIC_LANGUAGE_KOTLIN,
-        ).forEach { language ->
-            assertFalse(AceEditorLspPreferences.defaultSemanticEnabled(language))
-        }
+        assertTrue(
+            AceEditorLspPreferences.defaultSemanticEnabled(
+                AceEditorLspPreferences.SEMANTIC_LANGUAGE_JAVA,
+            ),
+        )
+        assertFalse(
+            AceEditorLspPreferences.defaultSemanticEnabled(
+                AceEditorLspPreferences.SEMANTIC_LANGUAGE_KOTLIN,
+            ),
+        )
         assertEquals(3, AceEditorLspPreferences.FILE_TYPES_REVISION)
     }
 

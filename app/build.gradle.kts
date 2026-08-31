@@ -29,6 +29,7 @@ val autoJs6LanguageIndicesDirectory = autoJs6EditorAssetsDirectory.dir("indices"
 val autoJs6PythonWorkerDirectory = autoJs6EditorAssetsDirectory.dir("python")
 val autoJs6LuaRuntimeDirectory = layout.projectDirectory.dir("src/main/assets/luals")
 val autoJs6LuaJniDirectory = layout.projectDirectory.dir("src/main/jniLibs")
+val autoJs6JavaRuntimeDirectory = layout.projectDirectory.dir("src/main/assets/java/ecj")
 val aceDistributionAssetsDirectory = layout.projectDirectory.dir(
     "src/main/assets/editor/ace-builds-1.4.12/src-min-noconflict",
 )
@@ -166,6 +167,48 @@ val verifyAutoJs6LuaLanguageServer = tasks.register<Exec>("verifyAutoJs6LuaLangu
         editorHtml.asFile.absolutePath,
     )
 }
+val verifyAutoJs6JavaSemanticRuntime = tasks.register<Exec>("verifyAutoJs6JavaSemanticRuntime") {
+    group = "verification"
+    description =
+        "Verifies the pinned ECJ classpath, 8 MiB budget, Android bridge wiring, throttling, and lifecycle."
+    val verifier = rootProject.layout.projectDirectory.file(
+        "tools/ace-lsp/verify-ecj-runtime.mjs",
+    )
+    val classpathBuilder = rootProject.layout.projectDirectory.file(
+        "tools/ace-lsp/build-ecj-classpath.ps1",
+    )
+    inputs.files(
+        verifier,
+        classpathBuilder,
+        autoJs6JavaRuntimeDirectory.file("android-36-stubs.jar"),
+        autoJs6JavaRuntimeDirectory.file("manifest.json"),
+        autoJs6JavaRuntimeDirectory.file("THIRD_PARTY_LICENSES.txt"),
+        autoJs6EditorAssetsDirectory.file("autojs6_java_provider.js"),
+        autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js"),
+        layout.projectDirectory.file("src/main/assets/editor/ace-builds-1.4.12/autojs6_editor.html"),
+        layout.projectDirectory.file(
+            "src/main/java/io/github/supermonster003/autojs6/plugin/ace/editor/core/AceBridge.kt",
+        ),
+        layout.projectDirectory.file(
+            "src/main/java/io/github/supermonster003/autojs6/plugin/ace/editor/core/AceCodeEditor.kt",
+        ),
+        layout.projectDirectory.file(
+            "src/main/java/io/github/supermonster003/autojs6/plugin/ace/editor/core/lsp/AceJavaSemanticRuntime.kt",
+        ),
+        layout.projectDirectory.file(
+            "src/main/java/io/github/supermonster003/autojs6/plugin/ace/editor/core/lsp/AceJavaClasspathRuntime.kt",
+        ),
+        layout.projectDirectory.file("src/main/java/javax/lang/model/SourceVersion.java"),
+        layout.projectDirectory.file("proguard-rules.pro"),
+    )
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(
+        verifier.asFile.absolutePath,
+        "--repo-root",
+        rootProject.layout.projectDirectory.asFile.absolutePath,
+    )
+}
 val generateAutoJs6LspDeclarations = tasks.register<GenerateAutoJs6LspDeclarationsTask>(
     "generateAutoJs6LspDeclarations",
 ) {
@@ -300,6 +343,7 @@ tasks.named("check") {
         verifyAutoJs6LspRuntime,
         verifyAutoJs6PythonWorker,
         verifyAutoJs6LuaLanguageServer,
+        verifyAutoJs6JavaSemanticRuntime,
     )
 }
 

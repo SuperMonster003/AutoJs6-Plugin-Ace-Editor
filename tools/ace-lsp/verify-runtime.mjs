@@ -2206,7 +2206,8 @@ function verifyClientLanguageIsolation(paths) {
         assert(!warmUpStarted, `${language.name} attempted to warm the TypeScript service`);
         const expectedReason = language.extension === "py" ?
             "python-worker-runtime-unavailable" : language.extension === "lua" ?
-                "luals-native-runtime-unavailable" : "unsupported-document-type";
+                "luals-native-runtime-unavailable" : language.extension === "java" ?
+                    "java-ecj-runtime-unavailable" : "unsupported-document-type";
         assert(
             state.semanticServiceReason === expectedReason,
             `${language.name} isolation reason was lost: ${state.semanticServiceReason}`,

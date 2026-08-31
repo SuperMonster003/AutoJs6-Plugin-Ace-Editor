@@ -46,6 +46,7 @@ class AceEditorAssetsTest {
                     "$ASSET_ROOT/autojs6/autojs6_lsp_transports.js",
                     "$ASSET_ROOT/autojs6/autojs6_python_provider.js",
                     "$ASSET_ROOT/autojs6/autojs6_lua_provider.js",
+                    "$ASSET_ROOT/autojs6/autojs6_java_provider.js",
                     "$ASSET_ROOT/autojs6/python/autojs6-python-worker.js",
                     "$ASSET_ROOT/autojs6/python/manifest.json",
                     "$ASSET_ROOT/autojs6/python/THIRD_PARTY_LICENSES.txt",
@@ -56,6 +57,9 @@ class AceEditorAssetsTest {
                     "luals/runtime/script/jsonrpc.lua",
                     "luals/runtime/locale/en-us/meta.lua",
                     "luals/runtime/meta/template/basic.lua",
+                    "java/ecj/android-36-stubs.jar",
+                    "java/ecj/manifest.json",
+                    "java/ecj/THIRD_PARTY_LICENSES.txt",
                     "$ASSET_ROOT/autojs6/autojs6_lsp_client.js",
                     "$ASSET_ROOT/autojs6/autojs6_ts_language_service.js",
                     "$ASSET_ROOT/autojs6/typescript/typescript.js",
@@ -73,7 +77,9 @@ class AceEditorAssetsTest {
         )
         assertTrue(
             requiredPaths.all { path ->
-                path.startsWith("$ASSET_ROOT/") || path.startsWith("luals/")
+                path.startsWith("$ASSET_ROOT/") ||
+                    path.startsWith("luals/") ||
+                    path.startsWith("java/ecj/")
             },
         )
     }

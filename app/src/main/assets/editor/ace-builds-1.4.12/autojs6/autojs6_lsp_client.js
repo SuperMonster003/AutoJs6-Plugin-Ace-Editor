@@ -21,6 +21,7 @@
     var DIAGNOSTIC_PROVIDER_TYPESCRIPT = "typescript-language-service";
     var DIAGNOSTIC_PROVIDER_PYTHON = "python-pyright-worker";
     var DIAGNOSTIC_PROVIDER_LUA = "lua-language-server";
+    var DIAGNOSTIC_PROVIDER_JAVA = "java-ecj";
     var SIGNATURE_PROVIDER_STATIC_LOCAL = "static-local";
     var SIGNATURE_PROVIDER_TYPESCRIPT = "typescript-language-service";
     var SIGNATURE_PROVIDER_PYTHON = "python-pyright-worker";
@@ -624,6 +625,10 @@
         return /\.lua(?:[?#].*)?$/i.test(String(uri || ""));
     }
 
+    function isJavaDocumentUri(uri) {
+        return /\.java(?:[?#].*)?$/i.test(String(uri || ""));
+    }
+
     function sessionModeId(activeSession) {
         try {
             var mode = activeSession && typeof activeSession.getMode === "function" ?
@@ -1174,10 +1179,13 @@
         var tsService = null;
         var pythonService = null;
         var luaService = null;
+        var javaService = null;
         var pythonProviderFailed = false;
         var pythonProviderUnavailableReason = "";
         var luaProviderFailed = false;
         var luaProviderUnavailableReason = "";
+        var javaProviderFailed = false;
+        var javaProviderUnavailableReason = "";
         var semanticHealthState = null;
         var semanticProviderFailed = false;
         var semanticRuntime = global.AutoJsAceSemanticProvider || null;
@@ -1219,6 +1227,8 @@
         var pythonServiceDisposeCount = 0;
         var luaServiceInstanceRevision = 0;
         var luaServiceDisposeCount = 0;
+        var javaServiceInstanceRevision = 0;
+        var javaServiceDisposeCount = 0;
         var projectSnapshotIncrementalRefreshCount = 0;
         var projectSnapshotChangedFileCount = 0;
 
@@ -1247,11 +1257,16 @@
             return isLuaDocumentUri(state.documentUri);
         }
 
+        function isJavaDocument() {
+            return isJavaDocumentUri(state.documentUri);
+        }
+
         function isSupportedConfiguredDocument() {
             return isJsonDocumentUri(state.documentUri) ||
                 isJavaScriptFamilyDocumentUri(state.documentUri) ||
                 isPythonDocumentUri(state.documentUri) ||
-                isLuaDocumentUri(state.documentUri);
+                isLuaDocumentUri(state.documentUri) ||
+                isJavaDocumentUri(state.documentUri);
         }
 
         function getTsService() {
@@ -1449,6 +1464,72 @@
             return luaService;
         }
 
+        function getJavaService() {
+            if (destroyed || !state.enabled || javaProviderFailed ||
+                !isJavaDocumentUri(state.documentUri) ||
+                state.semanticLanguages.java === false) {
+                return null;
+            }
+            if (!javaService) {
+                var runtime = global.AutoJsAceJavaProvider;
+                if (!runtime || typeof runtime.create !== "function" ||
+                    typeof runtime.isSupported !== "function" ||
+                    !runtime.isSupported() || !semanticHost) {
+                    javaProviderFailed = true;
+                    javaProviderUnavailableReason = "java-ecj-runtime-unavailable";
+                    return null;
+                }
+                javaService = runtime.create({
+                    documentUri: state.documentUri,
+                    documentText: textFromSession(session),
+                    eager: true,
+                    onDiagnostics: function(annotations, providerState) {
+                        if (destroyed || !state.enabled || !isJavaDocument() ||
+                            state.semanticServiceSuppressed) {
+                            return;
+                        }
+                        if (providerState) {
+                            state.lastSemanticOperation = "java-diagnostics";
+                            state.lastSemanticDurationMs = Math.max(
+                                0,
+                                Number(providerState.lastRequestDurationMs) || 0
+                            );
+                        }
+                        var run = createDiagnosticRun("java-publish");
+                        setSessionAnnotations(annotations, run, Date.now());
+                        applyJavaProviderState();
+                    },
+                    onUnavailable: function(reason) {
+                        if (destroyed || !isJavaDocument()) {
+                            return;
+                        }
+                        javaProviderFailed = true;
+                        javaProviderUnavailableReason = String(
+                            reason || "java-ecj-unavailable"
+                        );
+                        if (semanticHost && semanticHost.getProvider() === javaService) {
+                            semanticHost.clearProvider(false);
+                        }
+                        updateSemanticState(session);
+                    },
+                    onStateChanged: function(providerState) {
+                        if (providerState && providerState.ready && isJavaDocument()) {
+                            applyJavaProviderState();
+                        }
+                    }
+                });
+                if (!javaService) {
+                    javaProviderFailed = true;
+                    javaProviderUnavailableReason = "java-ecj-create-failed";
+                    return null;
+                }
+                semanticHost.setProvider(javaService, false);
+                javaServiceInstanceRevision++;
+                semanticColdStartPending = true;
+            }
+            return javaService;
+        }
+
         function disposeTsService() {
             var service = tsService;
             tsService = null;
@@ -1500,10 +1581,28 @@
             semanticColdStartPending = false;
         }
 
+        function disposeJavaService() {
+            var service = javaService;
+            javaService = null;
+            if (semanticHost && semanticHost.getProvider() === service) {
+                semanticHost.clearProvider(false);
+            }
+            if (service && typeof service.dispose === "function") {
+                try {
+                    service.dispose();
+                    javaServiceDisposeCount++;
+                } catch (ignore) {
+                    // Native runtime teardown is owned by AceCodeEditor.
+                }
+            }
+            semanticColdStartPending = false;
+        }
+
         function disposeSemanticServices() {
             disposeTsService();
             disposePythonService();
             disposeLuaService();
+            disposeJavaService();
         }
 
         function cancelTsRetry() {
@@ -1565,13 +1664,17 @@
                     isPythonDocumentUri(state.documentUri) &&
                         state.semanticLanguages.python === false ||
                     isLuaDocumentUri(state.documentUri) &&
-                        state.semanticLanguages.lua === false);
+                        state.semanticLanguages.lua === false ||
+                    isJavaDocumentUri(state.documentUri) &&
+                        state.semanticLanguages.java === false);
             var activeProviderFailed = isPythonDocumentUri(state.documentUri) ?
                 pythonProviderFailed : isLuaDocumentUri(state.documentUri) ?
-                    luaProviderFailed : semanticProviderFailed;
+                    luaProviderFailed : isJavaDocumentUri(state.documentUri) ?
+                        javaProviderFailed : semanticProviderFailed;
             var activeProviderReason = isPythonDocumentUri(state.documentUri) ?
                 pythonProviderUnavailableReason : isLuaDocumentUri(state.documentUri) ?
-                    luaProviderUnavailableReason : "provider-failure";
+                    luaProviderUnavailableReason : isJavaDocumentUri(state.documentUri) ?
+                        javaProviderUnavailableReason : "provider-failure";
             state.documentLength = length;
             state.semanticServiceSuppressed = !!(
                 unsafeLine || tooLarge || semanticCircuitOpen || activeProviderFailed ||
@@ -1629,6 +1732,18 @@
             return luaService.getState();
         }
 
+        function getJavaServiceState() {
+            if (!javaService || typeof javaService.getState !== "function") {
+                return {
+                    ready: false,
+                    reason: state.semanticServiceReason ||
+                        javaProviderUnavailableReason ||
+                        "ECJ diagnostic runtime unavailable"
+                };
+            }
+            return javaService.getState();
+        }
+
         function tsServiceReady() {
             var tsState = getTsServiceState();
             return !!(tsState && tsState.ready);
@@ -1672,6 +1787,20 @@
             state.signatureProvider = SIGNATURE_PROVIDER_LUA;
             state.localServiceReady = true;
             state.serverReady = true;
+            return true;
+        }
+
+        function applyJavaProviderState() {
+            var providerState = getJavaServiceState();
+            if (!state.enabled || state.semanticServiceSuppressed ||
+                !isJavaDocument() || !providerState.ready) {
+                return false;
+            }
+            state.completionProvider = COMPLETION_PROVIDER_LOCAL_INDEX;
+            state.hoverProvider = HOVER_PROVIDER_LOCAL_INDEX;
+            state.diagnosticProvider = DIAGNOSTIC_PROVIDER_JAVA;
+            state.signatureProvider = SIGNATURE_PROVIDER_STATIC_LOCAL;
+            state.localServiceReady = true;
             return true;
         }
 
@@ -1818,6 +1947,29 @@
                 });
                 return true;
             }
+            if (isJavaDocumentUri(state.documentUri)) {
+                var java = getJavaService();
+                if (!java || typeof java.start !== "function") {
+                    updateSemanticState(session);
+                    callback(false, getState());
+                    return false;
+                }
+                var javaStartedAt = Date.now();
+                java.start(function(ok) {
+                    if (destroyed || !state.enabled ||
+                        !isJavaDocumentUri(state.documentUri)) {
+                        callback(false, getState());
+                        return;
+                    }
+                    recordSemanticOperation(javaStartedAt, "java-initialize", false);
+                    var ready = !!ok && applyJavaProviderState();
+                    if (ready && !semanticCircuitOpen) {
+                        scheduleDiagnostics("java-warmup", 0);
+                    }
+                    callback(ready && !semanticCircuitOpen, getState());
+                });
+                return true;
+            }
             if (!isJavaScriptFamilyDocumentUri(state.documentUri)) {
                 callback(false, getState());
                 return false;
@@ -1958,6 +2110,21 @@
                 clearDiagnostics();
                 return [];
             }
+            if (isJavaDocumentUri(state.documentUri)) {
+                if (!updateSemanticState(session, text.length)) {
+                    clearDiagnostics();
+                    return [];
+                }
+                var java = getJavaService();
+                if (java && typeof java.getDiagnostics === "function") {
+                    var javaAnnotations = java.getDiagnostics(session, text) || [];
+                    applyJavaProviderState();
+                    setSessionAnnotations(javaAnnotations, run, diagnosticStartedAt);
+                    return getDiagnostics();
+                }
+                clearDiagnostics();
+                return [];
+            }
             if (!isJavaScriptFamilyDocument(session) ||
                 !updateSemanticState(session, text.length)) {
                 clearDiagnostics();
@@ -2023,7 +2190,8 @@
                 }
                 if (isPythonDocumentUri(state.documentUri) ?
                     !pythonService : isLuaDocumentUri(state.documentUri) ?
-                        !luaService : !tsService && tsLoadState !== "loading") {
+                        !luaService : isJavaDocumentUri(state.documentUri) ?
+                            !javaService : !tsService && tsLoadState !== "loading") {
                     warmUp();
                 }
                 if (diagnosticRunIsCurrent(run)) {
@@ -2174,6 +2342,8 @@
                 pythonProviderUnavailableReason = "";
                 luaProviderFailed = false;
                 luaProviderUnavailableReason = "";
+                javaProviderFailed = false;
+                javaProviderUnavailableReason = "";
                 tsServiceInitAttempts = 0;
             } else if (projectSnapshotContentChanged && tsService) {
                 var snapshotStartedAt = Date.now();
@@ -2227,9 +2397,19 @@
                         disposeLuaService();
                     }
                 }
+                if (javaService && typeof javaService.setDocumentUri === "function") {
+                    try {
+                        javaService.setDocumentUri(state.documentUri, textFromSession(session));
+                    } catch (ignore) {
+                        javaProviderFailed = true;
+                        javaProviderUnavailableReason = "java-document-switch-failed";
+                        disposeJavaService();
+                    }
+                }
                 applyTsProviderState();
                 applyPythonProviderState();
                 applyLuaProviderState();
+                applyJavaProviderState();
                 attachDiagnostics(
                     refreshReason,
                     refreshReason === "project-snapshot" ?
@@ -2240,7 +2420,9 @@
                         isPythonDocumentUri(state.documentUri) &&
                             !getPythonServiceState().ready ||
                         isLuaDocumentUri(state.documentUri) &&
-                            !getLuaServiceState().ready)) {
+                            !getLuaServiceState().ready ||
+                        isJavaDocumentUri(state.documentUri) &&
+                            !getJavaServiceState().ready)) {
                     var revision = configurationRevision;
                     tsRetryTimer = timerSet(function() {
                         tsRetryTimer = null;
@@ -2332,6 +2514,7 @@
                 tsService: getTsServiceState(),
                 pythonService: getPythonServiceState(),
                 luaService: getLuaServiceState(),
+                javaService: getJavaServiceState(),
                 maxDocumentLength: state.maxDocumentLength,
                 documentLength: state.documentLength,
                 semanticServiceSuppressed: state.semanticServiceSuppressed,
@@ -2355,6 +2538,8 @@
                 pythonServiceDisposeCount: pythonServiceDisposeCount,
                 luaServiceInstanceRevision: luaServiceInstanceRevision,
                 luaServiceDisposeCount: luaServiceDisposeCount,
+                javaServiceInstanceRevision: javaServiceInstanceRevision,
+                javaServiceDisposeCount: javaServiceDisposeCount,
                 serviceStatus: !state.enabled ? "disabled" :
                     state.semanticServiceSuppressed ? "degraded" :
                     state.localServiceReady ? "ready" : "configured",

@@ -143,6 +143,26 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun isJavaDiagnosticsSupported(): Boolean {
+        return editor.bridgeJavaDiagnosticsSupported()
+    }
+
+    @JavascriptInterface
+    fun requestJavaDiagnostics(requestJson: String?): String {
+        return editor.bridgeRequestJavaDiagnostics(requestJson.orEmpty())
+    }
+
+    @JavascriptInterface
+    fun cancelJavaDiagnostics(requestId: String?): String {
+        return editor.bridgeCancelJavaDiagnostics(requestId.orEmpty())
+    }
+
+    @JavascriptInterface
+    fun getJavaDiagnosticsState(): String {
+        return editor.bridgeJavaDiagnosticsState()
+    }
+
+    @JavascriptInterface
     fun startLspProcess(providerId: String?): String {
         return editor.bridgeStartLspProcess(providerId.orEmpty())
     }

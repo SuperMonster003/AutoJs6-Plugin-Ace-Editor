@@ -55,6 +55,7 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceFailur
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceHealthState
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceJsErrorClassifier
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceRuntimeHealthMonitor
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceJavaSemanticRuntime
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLuaLanguageServerRuntime
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServerManager
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceStdioLspProcessRegistry
@@ -126,6 +127,10 @@ class AceCodeEditor @JvmOverloads constructor(
         resources.displayMetrics.density * SINGLE_TOUCH_SCROLL_CANCEL_SLOP_DP,
     ).coerceAtLeast(1f)
     private val eventHistory = AceRuntimeEventHistory()
+    private val javaSemanticRuntime = AceJavaSemanticRuntime(
+        context = pluginContext,
+        listener = AceJavaSemanticRuntime.Listener(::dispatchJavaDiagnostics),
+    )
     private val lspServerManager = AceLspServerManager(
         enabledProvider = { AceEditorLspPreferences.isEnabled(hostPreferences) },
         documentAllowedProvider = { AceEditorLspPreferences.isDocumentAllowed(hostPreferences, it) },
@@ -134,6 +139,7 @@ class AceCodeEditor @JvmOverloads constructor(
         luaServerAvailableProvider = {
             AceLuaLanguageServerRuntime.isSupported(pluginContext)
         },
+        javaDiagnosticsAvailableProvider = javaSemanticRuntime::isSupported,
     )
     private val stdioLspProcessRegistry = AceStdioLspProcessRegistry(
         dynamicSpecs = mapOf(
@@ -1142,6 +1148,7 @@ class AceCodeEditor @JvmOverloads constructor(
         finishSelectionActionMode()
         lspServerManager.detach()
         stdioLspProcessRegistry.close()
+        javaSemanticRuntime.close()
         healthMonitor.markDestroyed()
         mainHandler.removeCallbacks(mirrorCalibrationRunnable)
         mainHandler.removeCallbacks(scheduledResizeRunnable)
@@ -1920,6 +1927,25 @@ class AceCodeEditor @JvmOverloads constructor(
         return lspServerManager.bridgeOptionsJson()
     }
 
+    internal fun bridgeJavaDiagnosticsSupported(): Boolean = javaSemanticRuntime.isSupported()
+
+    internal fun bridgeRequestJavaDiagnostics(requestJson: String): String {
+        val result = javaSemanticRuntime.requestDiagnostics(requestJson)
+        val response = runCatching { JSONObject(result) }.getOrNull()
+        eventHistory.record(
+            "java_diagnostics_request",
+            "ok=${response?.optBoolean("ok", false) == true}," +
+                "requestId=${response?.optString("requestId").orEmpty().take(128)}," +
+                "code=${response?.optString("code").orEmpty()}",
+        )
+        return result
+    }
+
+    internal fun bridgeCancelJavaDiagnostics(requestId: String): String =
+        javaSemanticRuntime.cancelDiagnostics(requestId)
+
+    internal fun bridgeJavaDiagnosticsState(): String = javaSemanticRuntime.stateJson()
+
     internal fun bridgeStartLspProcess(providerId: String): String {
         return stdioLspResultJson(stdioLspProcessRegistry.start(providerId))
     }
@@ -1975,6 +2001,22 @@ class AceCodeEditor @JvmOverloads constructor(
             "window.AutoJsAceLspTransports && " +
                 "window.AutoJsAceLspTransports.receiveStdioError(" +
                 "${quote(sessionId)}, ${quote(detail)});",
+        )
+    }
+
+    private fun dispatchJavaDiagnostics(responseJson: String) {
+        val response = runCatching { JSONObject(responseJson) }.getOrNull()
+        eventHistory.record(
+            "java_diagnostics_response",
+            "ok=${response?.optBoolean("ok", false) == true}," +
+                "requestId=${response?.optString("requestId").orEmpty().take(128)}," +
+                "count=${response?.optInt("diagnosticCount", 0) ?: 0}," +
+                "durationMs=${response?.optDouble("durationMs", 0.0) ?: 0.0}," +
+                "code=${response?.optString("code").orEmpty()}",
+        )
+        evaluate(
+            "window.AutoJsAceJavaProvider && " +
+                "window.AutoJsAceJavaProvider.receiveDiagnostics(${quote(responseJson)});",
         )
     }
 

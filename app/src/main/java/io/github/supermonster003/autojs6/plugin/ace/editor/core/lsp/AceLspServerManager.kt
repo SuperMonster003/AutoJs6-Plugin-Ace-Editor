@@ -18,6 +18,7 @@ class AceLspServerManager(
         AceEditorLspPreferences.DEFAULT_SEMANTIC_LANGUAGES
     },
     private val luaServerAvailableProvider: () -> Boolean = { false },
+    private val javaDiagnosticsAvailableProvider: () -> Boolean = { false },
 ) {
 
     // Historical name retained for API stability. This class publishes configuration/snapshots;
@@ -191,12 +192,16 @@ class AceLspServerManager(
             semanticLanguage == AceEditorLspPreferences.SEMANTIC_LANGUAGE_LUA &&
                 semanticLanguages[AceEditorLspPreferences.SEMANTIC_LANGUAGE_LUA] == true ->
                 LUA_LANGUAGE_SERVER_PROVIDER_ID
+            semanticLanguage == AceEditorLspPreferences.SEMANTIC_LANGUAGE_JAVA &&
+                semanticLanguages[AceEditorLspPreferences.SEMANTIC_LANGUAGE_JAVA] == true ->
+                JAVA_ECJ_PROVIDER_ID
             else -> null
         }
         val semanticCapabilities = when (semanticProviderId) {
             TYPESCRIPT_IN_PROCESS_PROVIDER_ID -> SEMANTIC_PROVIDER_CAPABILITIES
             PYTHON_WORKER_PROVIDER_ID -> PYTHON_SEMANTIC_PROVIDER_CAPABILITIES
             LUA_LANGUAGE_SERVER_PROVIDER_ID -> LUA_SEMANTIC_PROVIDER_CAPABILITIES
+            JAVA_ECJ_PROVIDER_ID -> JAVA_SEMANTIC_PROVIDER_CAPABILITIES
             else -> emptyList()
         }
         val typescriptProfile = AceTypeScriptExecutionProfiles.resolve(documentPath)
@@ -213,6 +218,8 @@ class AceLspServerManager(
         }
         val luaServerAvailable = semanticProviderId == LUA_LANGUAGE_SERVER_PROVIDER_ID &&
             luaServerAvailableProvider()
+        val javaDiagnosticsAvailable = semanticProviderId == JAVA_ECJ_PROVIDER_ID &&
+            javaDiagnosticsAvailableProvider()
         if (!enabled) {
             return AceLspServerSnapshot(
                 enabled = false,
@@ -251,6 +258,7 @@ class AceLspServerManager(
             transport = when (semanticProviderId) {
                 PYTHON_WORKER_PROVIDER_ID -> TRANSPORT_WEB_WORKER
                 LUA_LANGUAGE_SERVER_PROVIDER_ID -> TRANSPORT_STDIO
+                JAVA_ECJ_PROVIDER_ID -> TRANSPORT_ANDROID_BRIDGE
                 else -> TRANSPORT_IN_PROCESS
             },
             serverUri = null,
@@ -294,6 +302,11 @@ class AceLspServerManager(
                     REASON_BUNDLED_LUA_LANGUAGE_SERVER
                 } else {
                     REASON_LUA_LANGUAGE_SERVER_UNAVAILABLE
+                }
+                JAVA_ECJ_PROVIDER_ID -> if (javaDiagnosticsAvailable) {
+                    REASON_BUNDLED_JAVA_ECJ
+                } else {
+                    REASON_JAVA_ECJ_UNAVAILABLE
                 }
                 else -> REASON_SEMANTIC_PROVIDER_DISABLED
             },
@@ -397,16 +410,20 @@ class AceLspServerManager(
         const val TRANSPORT_IN_PROCESS = "in-process"
         const val TRANSPORT_WEB_WORKER = "web-worker"
         const val TRANSPORT_STDIO = "stdio"
+        const val TRANSPORT_ANDROID_BRIDGE = "android-bridge"
         const val FALLBACK_STATIC_COMPLETION = "static-completion"
         const val REASON_DISABLED_FILE_TYPE = "file-type-disabled"
         const val REASON_LOCAL_LANGUAGE_SERVICE = "bundled-typescript-language-service"
         const val REASON_BUNDLED_PYTHON_WORKER = "bundled-pyright-worker"
         const val REASON_BUNDLED_LUA_LANGUAGE_SERVER = "bundled-luals"
         const val REASON_LUA_LANGUAGE_SERVER_UNAVAILABLE = "bundled-luals-unavailable-for-abi"
+        const val REASON_BUNDLED_JAVA_ECJ = "bundled-java-ecj"
+        const val REASON_JAVA_ECJ_UNAVAILABLE = "bundled-java-ecj-unavailable"
         const val REASON_SEMANTIC_PROVIDER_DISABLED = "semantic-provider-disabled-for-language"
         const val TYPESCRIPT_IN_PROCESS_PROVIDER_ID = "typescript-in-process"
         const val PYTHON_WORKER_PROVIDER_ID = "python-pyright-worker"
         const val LUA_LANGUAGE_SERVER_PROVIDER_ID = AceLuaLanguageServerRuntime.PROVIDER_ID
+        const val JAVA_ECJ_PROVIDER_ID = AceJavaClasspathRuntime.PROVIDER_ID
         const val COMPLETION_PROVIDER_LOCAL_INDEX = "local-index"
         const val HOVER_PROVIDER_LOCAL_INDEX = "local-index"
         const val COMPLETION_PROVIDER_TYPESCRIPT = "typescript-language-service"
@@ -416,6 +433,7 @@ class AceLspServerManager(
         const val DIAGNOSTIC_PROVIDER_ACE_JSHINT = "ace-jshint"
         const val DIAGNOSTIC_PROVIDER_TYPESCRIPT = "typescript-language-service"
         const val DIAGNOSTIC_PROVIDER_LUA_LANGUAGE_SERVER = "lua-language-server"
+        const val DIAGNOSTIC_PROVIDER_JAVA_ECJ = "java-ecj"
         const val SIGNATURE_PROVIDER_STATIC_LOCAL = "static-local"
         const val SIGNATURE_PROVIDER_TYPESCRIPT = "typescript-language-service"
         const val SIGNATURE_PROVIDER_LUA_LANGUAGE_SERVER = "lua-language-server"
@@ -472,6 +490,10 @@ class AceLspServerManager(
             "signatureHelp",
             "diagnostics",
             "definition",
+            "dispose",
+        )
+        val JAVA_SEMANTIC_PROVIDER_CAPABILITIES = listOf(
+            "diagnostics",
             "dispose",
         )
 
