@@ -135,7 +135,12 @@ class AceHistoryOperationBridgeTest {
     @Test
     fun `pathological long lines use lightweight safe mode`() {
         assertTrue(bridgeSource.contains("function applyDocumentLongLineSafetyMode(enabled)"))
-        assertTrue(bridgeSource.contains("session.setMode(enabled ? \"ace/mode/text\" : \"ace/mode/javascript\")"))
+        assertTrue(bridgeSource.contains("applyDocumentAceMode()"))
+        assertTrue(
+            bridgeSource.contains(
+                "var targetMode = documentLongLineSafetyMode ? \"ace/mode/text\" : documentAceMode",
+            ),
+        )
         assertTrue(bridgeSource.contains("session.\$autojs6LongLineSafetyMode = enabled"))
         assertTrue(bridgeSource.contains("function applyDocumentAccessibilityLightweightMode(enabled)"))
         assertTrue(bridgeSource.contains("textLayerElement.setAttribute(\"aria-hidden\", \"true\")"))

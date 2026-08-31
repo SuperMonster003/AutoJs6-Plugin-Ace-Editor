@@ -138,6 +138,7 @@
         var hoverTimer = null;
         var attached = false;
         var visible = false;
+        var hoverRequestSerial = 0;
         var markdownLoaded = false;
         var markdownRenderer = null;
 
@@ -170,6 +171,7 @@
         }
 
         function hide() {
+            hoverRequestSerial++;
             if (hoverTimer !== null) {
                 clearTimeout(hoverTimer);
                 hoverTimer = null;
@@ -232,17 +234,45 @@
             return true;
         }
 
-        function getHover(pos) {
+        function getHover(pos, callback) {
             if (typeof config.getHover !== "function") {
                 return null;
             }
-            return config.getHover(normalizePosition(pos));
+            return config.getHover(normalizePosition(pos), callback);
         }
 
         function showAtPosition(pos) {
             try {
                 pos = normalizePosition(pos);
-                return showHover(getHover(pos), screenPointFor(pos));
+                var requestSerial = ++hoverRequestSerial;
+                var point = screenPointFor(pos);
+                var callbackInvoked = false;
+                function finish(error, hover) {
+                    callbackInvoked = true;
+                    if (arguments.length === 1) {
+                        hover = error;
+                        error = null;
+                    }
+                    if (requestSerial !== hoverRequestSerial || !attached) {
+                        return false;
+                    }
+                    if (error) {
+                        hide();
+                        return false;
+                    }
+                    return showHover(hover, point);
+                }
+                var returned = getHover(pos, finish);
+                if (returned && typeof returned.then === "function") {
+                    returned.then(function(hover) {
+                        finish(null, hover);
+                    }, function(error) {
+                        finish(error, null);
+                    });
+                } else if (!callbackInvoked && typeof returned !== "undefined") {
+                    finish(null, returned);
+                }
+                return callbackInvoked && visible;
             } catch (error) {
                 notify(config, "ACE tooltip hover failed: " + error, error);
                 hide();

@@ -143,6 +143,26 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun startLspProcess(providerId: String?): String {
+        return editor.bridgeStartLspProcess(providerId.orEmpty())
+    }
+
+    @JavascriptInterface
+    fun sendLspProcessMessage(sessionId: String?, messageJson: String?): String {
+        return editor.bridgeSendLspProcessMessage(sessionId.orEmpty(), messageJson.orEmpty())
+    }
+
+    @JavascriptInterface
+    fun markLspProcessReady(sessionId: String?): String {
+        return editor.bridgeMarkLspProcessReady(sessionId.orEmpty())
+    }
+
+    @JavascriptInterface
+    fun stopLspProcess(sessionId: String?): String {
+        return editor.bridgeStopLspProcess(sessionId.orEmpty())
+    }
+
+    @JavascriptInterface
     fun getPinchToZoomStrategy(): String {
         return editor.bridgePinchToZoomStrategy()
     }

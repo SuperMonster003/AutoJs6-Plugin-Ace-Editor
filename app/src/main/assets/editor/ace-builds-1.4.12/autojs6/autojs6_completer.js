@@ -4,6 +4,29 @@
     var IDENTIFIER_REGEX = /[a-zA-Z_0-9$]/;
     var IDENTIFIER_CHAIN_REGEX = /[A-Za-z0-9_$.]/;
     var CALL_SNIPPET_VALUE_REGEX = /^[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)?$/;
+    var STATIC_INDEX_LANGUAGES = {
+        python: true,
+        lua: true,
+        java: true,
+        kotlin: true
+    };
+    var LANGUAGE_INDEX_PATHS = {
+        python: "./autojs6/indices/python.js",
+        lua: "./autojs6/indices/lua.js",
+        java: "./autojs6/indices/java.js",
+        kotlin: "./autojs6/indices/kotlin.js"
+    };
+    var MODE_LANGUAGES = {
+        "ace/mode/javascript": "javascript",
+        "ace/mode/jsx": "javascript",
+        "ace/mode/typescript": "typescript",
+        "ace/mode/python": "python",
+        "ace/mode/lua": "lua",
+        "ace/mode/java": "java",
+        "ace/mode/kotlin": "kotlin",
+        "ace/mode/json": "json",
+        "ace/mode/text": "text"
+    };
 
     function nameOf(item) {
         return item && (item.name || item.key || item.value);
@@ -281,16 +304,28 @@
             signature: property.signature,
             caption: property.caption,
             qualifiedCaption: property.qualifiedCaption,
-            meta: property.meta
+            meta: property.meta,
+            source: property.source
         };
     }
 
-    function normalizeIndices(indices) {
+    function copyOwnProperties(target, source) {
+        Object.keys(source || {}).forEach(function(key) {
+            target[key] = source[key];
+        });
+        return target;
+    }
+
+    function normalizeIndices(indices, options) {
+        options = options || {};
         var normalized = {
             globals: [],
             modules: Object.create(null),
             aliases: Object.create(null),
-            snippets: indices && indices.snippets || []
+            snippets: indices && indices.snippets || [],
+            language: options.language || indices && indices.language || "",
+            schemaVersion: indices && indices.schemaVersion || 1,
+            source: indices && indices.source || null
         };
 
         if (Array.isArray(indices)) {
@@ -311,11 +346,12 @@
                     }
                 });
             });
-            return finalizeSource(normalized);
+            return finalizeSource(normalized, options);
         }
 
         indices = indices || {};
-        normalized.globals = indices.globals || [];
+        normalized.globals = (indices.globals || []).map(normalizeProperty);
+        copyOwnProperties(normalized.aliases, indices.aliases || {});
         if (Array.isArray(indices.modules)) {
             indices.modules.forEach(function(moduleJson) {
                 normalized.modules[moduleJson.name] = (moduleJson.properties || []).map(normalizeProperty);
@@ -324,11 +360,11 @@
             var modules = indices.modules || {};
             Object.keys(modules).forEach(function(moduleName) {
                 if (Array.isArray(modules[moduleName])) {
-                    normalized.modules[moduleName] = modules[moduleName];
+                    normalized.modules[moduleName] = modules[moduleName].map(normalizeProperty);
                 }
             });
         }
-        return finalizeSource(normalized);
+        return finalizeSource(normalized, options);
     }
 
     function appendUniqueByName(items, additions, normalizer) {
@@ -452,28 +488,44 @@
         return source;
     }
 
-    function finalizeSource(source) {
-        appendEcmascriptBuiltins(source);
-        appendAutoJs6RuntimeGlobals(source);
+    function finalizeSource(source, options) {
+        options = options || {};
+        if (options.includeEcmascriptBuiltins) {
+            appendEcmascriptBuiltins(source);
+        }
+        if (options.includeAutoJs6RuntimeGlobals) {
+            appendAutoJs6RuntimeGlobals(source);
+        }
         buildModuleAliases(source);
         return source;
     }
 
-    function resolveModuleName(source, moduleName) {
+    function resolveModuleName(source, moduleName, extraAliases) {
         if (!source || !moduleName) {
             return moduleName;
         }
-        if (source.modules && Object.prototype.hasOwnProperty.call(source.modules, moduleName)) {
-            return moduleName;
+        var current = String(moduleName);
+        var visited = Object.create(null);
+        for (var i = 0; i < 8 && current && !visited[current]; i++) {
+            visited[current] = true;
+            if (source.modules && Object.prototype.hasOwnProperty.call(source.modules, current)) {
+                return current;
+            }
+            if (extraAliases && Object.prototype.hasOwnProperty.call(extraAliases, current)) {
+                current = extraAliases[current];
+                continue;
+            }
+            if (source.aliases && Object.prototype.hasOwnProperty.call(source.aliases, current)) {
+                current = source.aliases[current];
+                continue;
+            }
+            break;
         }
-        if (source.aliases && Object.prototype.hasOwnProperty.call(source.aliases, moduleName)) {
-            return source.aliases[moduleName];
-        }
-        return moduleName;
+        return current || moduleName;
     }
 
-    function membersForModule(source, moduleName) {
-        moduleName = resolveModuleName(source, moduleName);
+    function membersForModule(source, moduleName, extraAliases) {
+        moduleName = resolveModuleName(source, moduleName, extraAliases);
         if (!source || !source.modules || !Object.prototype.hasOwnProperty.call(source.modules, moduleName)) {
             return null;
         }
@@ -574,16 +626,19 @@
         return null;
     }
 
-    function membersForContext(source, moduleName) {
-        var members = membersForModule(source, moduleName);
+    function membersForContext(source, moduleName, extraAliases, language) {
+        var members = membersForModule(source, moduleName, extraAliases);
         if (members) {
             return members;
         }
+        if (language !== "javascript" && language !== "typescript") {
+            return null;
+        }
         if (moduleName && moduleName.indexOf(".") < 0) {
-            return membersForModule(source, "Object.prototype");
+            return membersForModule(source, "Object.prototype", extraAliases);
         }
         if (/\.prototype$/.test(moduleName || "")) {
-            return membersForModule(source, "Object.prototype");
+            return membersForModule(source, "Object.prototype", extraAliases);
         }
         return null;
     }
@@ -609,7 +664,7 @@
         };
     }
 
-    function findHover(source, session, pos) {
+    function findHover(source, session, pos, extraAliases, language) {
         if (!session || !session.getLine || !pos) {
             return null;
         }
@@ -622,7 +677,7 @@
 
         var beforeToken = line.substring(0, token.startColumn);
         var memberMatch = /((?:[A-Za-z_$][A-Za-z0-9_$]*\.)*[A-Za-z_$][A-Za-z0-9_$]*)\s*\.\s*$/.exec(beforeToken);
-        var members = memberMatch && membersForContext(source, memberMatch[1]);
+        var members = memberMatch && membersForContext(source, memberMatch[1], extraAliases, language);
         if (members) {
             var member = findByName(members, token.name);
             return toHover(member, memberMatch[1] + "." + token.name, memberMatch[1], row, token);
@@ -1020,7 +1075,7 @@
         };
     }
 
-    function findSignatureItem(source, callee) {
+    function findSignatureItem(source, callee, extraAliases, language) {
         callee = String(callee || "").replace(/^\.+|\.+$/g, "");
         if (!callee) {
             return null;
@@ -1029,7 +1084,7 @@
         if (dot > 0) {
             var moduleName = callee.substring(0, dot);
             var memberName = callee.substring(dot + 1);
-            var members = membersForContext(source, moduleName);
+            var members = membersForContext(source, moduleName, extraAliases, language);
             var member = members && findByName(members, memberName);
             if (member) {
                 return {
@@ -1045,7 +1100,7 @@
         } : null;
     }
 
-    function findSignatureHelp(source, session, pos) {
+    function findSignatureHelp(source, session, pos, extraAliases, language) {
         if (!session) {
             return null;
         }
@@ -1058,7 +1113,7 @@
             return null;
         }
         var callee = readCalleeBefore(text, openIndex);
-        var resolved = findSignatureItem(source, callee);
+        var resolved = findSignatureItem(source, callee, extraAliases, language);
         if (!resolved || !resolved.item || !resolved.item.signature) {
             return null;
         }
@@ -1078,75 +1133,409 @@
         };
     }
 
-    function createCompleter(indices) {
-        var source = normalizeIndices(indices);
-        return {
-            retrievePrecedingIdentifier: retrievePrecedingIdentifier,
+    function languageIdForSession(session) {
+        var routing = global.AutoJsAceLanguageRouting;
+        if (routing && typeof routing.languageIdForSession === "function") {
+            return routing.languageIdForSession(session);
+        }
+        // Preserve the historical standalone-test behavior: a session without
+        // an ACE mode is treated as JavaScript. Once ACE exposes a mode, routing
+        // is deny-by-default for unknown modes.
+        if (!session || typeof session.getMode !== "function") {
+            return "javascript";
+        }
+        try {
+            var mode = session.getMode();
+            return MODE_LANGUAGES[String(mode && mode.$id || "")] || "text";
+        } catch (ignore) {
+            return "text";
+        }
+    }
 
-            getCompletions: function(editor, session, pos, prefix, callback) {
-                var memberContext = findMemberContext(session, pos);
-                var members = memberContext && membersForContext(source, memberContext.moduleName);
-                if (members) {
-                    callback(null, dedupe(collect(
-                        members,
-                        memberContext.memberPrefix,
-                        1000,
-                        function(item, name) {
-                            return toCompletion(item, 1000, {
-                                caption: name,
-                                value: name,
-                                meta: memberContext.moduleName,
-                                memberContext: memberContext.moduleName
-                            });
-                        }
-                    )));
-                    return;
+    function isJavaScriptFamilyLanguage(language) {
+        return language === "javascript" || language === "typescript";
+    }
+
+    function supportsStaticIndexLanguage(language) {
+        return isJavaScriptFamilyLanguage(language) || !!STATIC_INDEX_LANGUAGES[language];
+    }
+
+    function languageIndexRegistry() {
+        if (!global.AutoJsAceLanguageIndices) {
+            global.AutoJsAceLanguageIndices = Object.create(null);
+        }
+        return global.AutoJsAceLanguageIndices;
+    }
+
+    function defaultLoadLanguageIndex(language, path, callback) {
+        var registry = languageIndexRegistry();
+        if (registry[language]) {
+            callback(null, registry[language]);
+            return;
+        }
+
+        // Android WebView can spend tens of milliseconds scheduling a dynamically
+        // appended script even when the target is a tiny file:// Android asset.
+        // Read and evaluate that local asset synchronously first so the first
+        // completion remains inside the M2 50 ms budget. The script-element path
+        // below stays as a compatibility fallback for browsers that disallow
+        // synchronous local XHR or eval.
+        if (typeof global.XMLHttpRequest === "function" && typeof global.eval === "function") {
+            try {
+                var request = new global.XMLHttpRequest();
+                request.open("GET", path, false);
+                request.send(null);
+                if ((request.status === 0 || request.status >= 200 && request.status < 300) && request.responseText) {
+                    global.eval(request.responseText + "\n//# sourceURL=" + path);
+                    if (registry[language]) {
+                        callback(null, registry[language]);
+                        return;
+                    }
                 }
-
-                if (!prefix) {
-                    callback(null, []);
-                    return;
-                }
-
-                callback(null, dedupe(
-                    collect(source.snippets, prefix, 950)
-                        .concat(collect(source.globals, prefix, 900))
-                ));
-            },
-
-            getDocTooltip: function(item) {
-                if (!item || !item.docText) {
-                    return null;
-                }
-                return { docText: item.docText };
-            },
-
-            getHover: function(session, pos) {
-                return findHover(source, session, pos);
-            },
-
-            getSignatureHelp: function(session, pos) {
-                return findSignatureHelp(source, session, pos);
-            },
-
-            insertMatch: function(editor, completion) {
-                return replaceCompletionRange(editor, completion);
-            },
-
-            getSource: function() {
-                return source;
-            },
-
-            getGlobalNames: function() {
-                return globalNames(source);
+            } catch (ignoredLocalAssetError) {
+                // Fall through to ordinary script loading.
             }
+        }
+
+        if (!global.document || typeof global.document.createElement !== "function") {
+            callback(new Error("Document script loading is unavailable for " + language));
+            return;
+        }
+        var script = global.document.createElement("script");
+        var parent = global.document.head ||
+            global.document.getElementsByTagName && global.document.getElementsByTagName("head")[0] ||
+            global.document.documentElement;
+        if (!parent || typeof parent.appendChild !== "function") {
+            callback(new Error("Document head is unavailable for " + language));
+            return;
+        }
+        script.async = true;
+        script.src = path;
+        script.setAttribute && script.setAttribute("data-autojs6-language-index", language);
+        script.onload = function() {
+            if (!registry[language]) {
+                callback(new Error("Language index did not register: " + language));
+                return;
+            }
+            callback(null, registry[language]);
         };
+        script.onerror = function() {
+            callback(new Error("Failed to load language index: " + language));
+        };
+        parent.appendChild(script);
+    }
+
+    function emptyLocalContext() {
+        return {
+            globals: [],
+            aliases: Object.create(null)
+        };
+    }
+
+    function localContextForSession(session, language) {
+        if (!STATIC_INDEX_LANGUAGES[language] || !global.AutoJsAceLocalSymbols ||
+            typeof global.AutoJsAceLocalSymbols.extract !== "function") {
+            return emptyLocalContext();
+        }
+        var text = textFromSession(session);
+        var cache = null;
+        try {
+            cache = session && session.$autojs6LocalSymbolCache;
+        } catch (ignore) {
+            cache = null;
+        }
+        if (cache && cache.language === language && cache.text === text && cache.context) {
+            return cache.context;
+        }
+        var context = global.AutoJsAceLocalSymbols.extract(language, text) || emptyLocalContext();
+        try {
+            if (session) {
+                session.$autojs6LocalSymbolCache = {
+                    language: language,
+                    text: text,
+                    context: context
+                };
+            }
+        } catch (ignoreWrite) {
+            // Some test doubles and hardened WebViews expose a non-extensible session.
+        }
+        return context;
+    }
+
+    function mergeAliases(sourceAliases, localAliases) {
+        var aliases = Object.create(null);
+        copyOwnProperties(aliases, sourceAliases || {});
+        copyOwnProperties(aliases, localAliases || {});
+        return aliases;
+    }
+
+    function sourceWithLocalContext(source, localContext) {
+        if (!localContext || (!(localContext.globals || []).length &&
+            !Object.keys(localContext.aliases || {}).length)) {
+            return source;
+        }
+        return {
+            globals: (localContext.globals || []).concat(source.globals || []),
+            modules: source.modules,
+            aliases: mergeAliases(source.aliases, localContext.aliases),
+            snippets: source.snippets || [],
+            language: source.language,
+            schemaVersion: source.schemaVersion,
+            source: source.source
+        };
+    }
+
+    function StaticIndexCompleter(indices, options) {
+        options = options || {};
+        var javascriptSource = normalizeIndices(indices, {
+            language: "javascript",
+            includeEcmascriptBuiltins: true,
+            includeAutoJs6RuntimeGlobals: true
+        });
+        this.sources = Object.create(null);
+        this.sources.javascript = javascriptSource;
+        this.sources.typescript = javascriptSource;
+        this.loadStates = Object.create(null);
+        this.loadLanguageIndex = options.loadLanguageIndex || defaultLoadLanguageIndex;
+        this.languageIndexPaths = Object.create(null);
+        copyOwnProperties(this.languageIndexPaths, LANGUAGE_INDEX_PATHS);
+        copyOwnProperties(this.languageIndexPaths, options.languageIndexPaths || {});
+        this.onIndexError = typeof options.onIndexError === "function" ? options.onIndexError : null;
+        this.retrievePrecedingIdentifier = retrievePrecedingIdentifier;
+    }
+
+    StaticIndexCompleter.prototype._stateForLanguage = function(language) {
+        if (!this.loadStates[language]) {
+            this.loadStates[language] = {
+                status: "idle",
+                callbacks: [],
+                startedAt: 0,
+                durationMs: 0,
+                error: ""
+            };
+        }
+        return this.loadStates[language];
+    };
+
+    StaticIndexCompleter.prototype.registerLanguageIndex = function(language, indices) {
+        language = String(language || "").toLowerCase();
+        if (!STATIC_INDEX_LANGUAGES[language] || !indices) {
+            return null;
+        }
+        var source = normalizeIndices(indices, { language: language });
+        this.sources[language] = source;
+        languageIndexRegistry()[language] = indices;
+        var state = this._stateForLanguage(language);
+        state.status = "ready";
+        state.durationMs = state.startedAt ? Math.max(0, Date.now() - state.startedAt) : 0;
+        state.error = "";
+        var callbacks = state.callbacks.splice(0);
+        callbacks.forEach(function(callback) {
+            callback(null, source);
+        });
+        return source;
+    };
+
+    StaticIndexCompleter.prototype._finishLanguageLoad = function(language, error, indices) {
+        if (!error && indices) {
+            this.registerLanguageIndex(language, indices);
+            return;
+        }
+        var state = this._stateForLanguage(language);
+        state.status = "failed";
+        state.durationMs = state.startedAt ? Math.max(0, Date.now() - state.startedAt) : 0;
+        state.error = String(error && (error.message || error) || "Language index unavailable");
+        var callbacks = state.callbacks.splice(0);
+        callbacks.forEach(function(callback) {
+            callback(error || new Error(state.error), null);
+        });
+        if (this.onIndexError) {
+            this.onIndexError(language, error || new Error(state.error));
+        }
+    };
+
+    StaticIndexCompleter.prototype._ensureSource = function(language, callback) {
+        if (this.sources[language]) {
+            callback(null, this.sources[language]);
+            return;
+        }
+        if (!STATIC_INDEX_LANGUAGES[language]) {
+            callback(null, null);
+            return;
+        }
+        var registry = languageIndexRegistry();
+        if (registry[language]) {
+            callback(null, this.registerLanguageIndex(language, registry[language]));
+            return;
+        }
+        var state = this._stateForLanguage(language);
+        state.callbacks.push(callback);
+        if (state.status === "loading") {
+            return;
+        }
+        state.status = "loading";
+        state.startedAt = Date.now();
+        state.error = "";
+        var self = this;
+        try {
+            this.loadLanguageIndex(
+                language,
+                this.languageIndexPaths[language],
+                function(error, indices) {
+                    self._finishLanguageLoad(language, error, indices);
+                }
+            );
+        } catch (error) {
+            self._finishLanguageLoad(language, error, null);
+        }
+    };
+
+    StaticIndexCompleter.prototype._loadedSourceForSession = function(session) {
+        var language = languageIdForSession(session);
+        return {
+            language: language,
+            source: this.sources[language] || null
+        };
+    };
+
+    StaticIndexCompleter.prototype.getCompletions = function(editor, session, pos, prefix, callback) {
+        callback = typeof callback === "function" ? callback : function() {};
+        var language = languageIdForSession(session);
+        if (!supportsStaticIndexLanguage(language)) {
+            callback(null, []);
+            return;
+        }
+        var self = this;
+        this._ensureSource(language, function(error, source) {
+            if (error || !source) {
+                callback(null, []);
+                return;
+            }
+            var localContext = localContextForSession(session, language);
+            var querySource = sourceWithLocalContext(source, localContext);
+            var memberContext = session && typeof session.getLine === "function" ?
+                findMemberContext(session, normalizePosition(pos)) : null;
+            var members = memberContext && membersForContext(
+                querySource,
+                memberContext.moduleName,
+                querySource.aliases,
+                language
+            );
+            if (members) {
+                callback(null, dedupe(collect(
+                    members,
+                    memberContext.memberPrefix,
+                    1000,
+                    function(item, name) {
+                        return toCompletion(item, 1000, {
+                            caption: name,
+                            value: name,
+                            meta: memberContext.captionModuleName || memberContext.moduleName,
+                            memberContext: memberContext.moduleName
+                        });
+                    }
+                )));
+                return;
+            }
+            if (memberContext && !isJavaScriptFamilyLanguage(language)) {
+                callback(null, []);
+                return;
+            }
+            if (!prefix) {
+                callback(null, []);
+                return;
+            }
+            callback(null, dedupe(
+                collect(localContext.globals, prefix, 1100)
+                    .concat(collect(source.snippets, prefix, 950))
+                    .concat(collect(source.globals, prefix, 900))
+            ));
+        });
+    };
+
+    StaticIndexCompleter.prototype.getDocTooltip = function(item) {
+        if (!item || !item.docText) {
+            return null;
+        }
+        return { docText: item.docText };
+    };
+
+    StaticIndexCompleter.prototype.getHover = function(session, pos) {
+        var loaded = this._loadedSourceForSession(session);
+        if (!loaded.source || !supportsStaticIndexLanguage(loaded.language)) {
+            return null;
+        }
+        var localContext = localContextForSession(session, loaded.language);
+        var source = sourceWithLocalContext(loaded.source, localContext);
+        return findHover(source, session, pos, source.aliases, loaded.language);
+    };
+
+    StaticIndexCompleter.prototype.getSignatureHelp = function(session, pos) {
+        var loaded = this._loadedSourceForSession(session);
+        if (!loaded.source || !supportsStaticIndexLanguage(loaded.language)) {
+            return null;
+        }
+        var localContext = localContextForSession(session, loaded.language);
+        var source = sourceWithLocalContext(loaded.source, localContext);
+        return findSignatureHelp(source, session, pos, source.aliases, loaded.language);
+    };
+
+    StaticIndexCompleter.prototype.insertMatch = function(editor, completion) {
+        return replaceCompletionRange(editor, completion);
+    };
+
+    StaticIndexCompleter.prototype.getSource = function() {
+        return this.sources.javascript;
+    };
+
+    StaticIndexCompleter.prototype.getSourceForLanguage = function(language) {
+        language = String(language || "").toLowerCase();
+        return this.sources[language] || null;
+    };
+
+    StaticIndexCompleter.prototype.getGlobalNames = function() {
+        return globalNames(this.sources.javascript);
+    };
+
+    StaticIndexCompleter.prototype.preloadLanguage = function(language, callback) {
+        this._ensureSource(String(language || "").toLowerCase(), callback || function() {});
+    };
+
+    StaticIndexCompleter.prototype.getIndexState = function() {
+        var states = {};
+        Object.keys(STATIC_INDEX_LANGUAGES).forEach(function(language) {
+            var state = this._stateForLanguage(language);
+            states[language] = {
+                status: this.sources[language] ? "ready" : state.status,
+                durationMs: state.durationMs,
+                error: state.error,
+                globalCount: this.sources[language] ? this.sources[language].globals.length : 0,
+                moduleCount: this.sources[language] ? Object.keys(this.sources[language].modules).length : 0
+            };
+        }, this);
+        return states;
+    };
+
+    function createCompleter(indices, options) {
+        return new StaticIndexCompleter(indices, options);
     }
 
     var activeCompleter = null;
 
+    function registerLanguageIndex(language, indices) {
+        language = String(language || "").toLowerCase();
+        if (!STATIC_INDEX_LANGUAGES[language] || !indices) {
+            return null;
+        }
+        languageIndexRegistry()[language] = indices;
+        return activeCompleter ? activeCompleter.registerLanguageIndex(language, indices) : indices;
+    }
+
     global.AutoJsAceCompleter = {
+        StaticIndexCompleter: StaticIndexCompleter,
         createCompleter: createCompleter,
+        registerLanguageIndex: registerLanguageIndex,
+        languageIdForSession: languageIdForSession,
 
         install: function(ace) {
             var languageTools = ace.require("ace/ext/language_tools");

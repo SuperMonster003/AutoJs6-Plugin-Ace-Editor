@@ -290,6 +290,7 @@
         var attached = false;
         var visible = false;
         var lastSignature = null;
+        var requestSerial = 0;
 
         function notify(message, error) {
             if (typeof config.notifyError === "function") {
@@ -450,9 +451,9 @@
             return html;
         }
 
-        function resolveSignatureHelp(pos) {
+        function resolveSignatureHelp(pos, callback) {
             if (typeof config.getSignatureHelp === "function") {
-                return config.getSignatureHelp(pos);
+                return config.getSignatureHelp(pos, callback);
             }
             return findSignatureHelp(session, pos);
         }
@@ -460,20 +461,42 @@
         function showAtPosition(pos) {
             try {
                 pos = normalizePosition(pos || (editor && editor.getCursorPosition && editor.getCursorPosition()));
-                var help = resolveSignatureHelp(pos);
-                if (!help) {
-                    hide();
-                    return false;
+                var activeRequest = ++requestSerial;
+                var callbackInvoked = false;
+                function finish(error, help) {
+                    callbackInvoked = true;
+                    if (arguments.length === 1) {
+                        help = error;
+                        error = null;
+                    }
+                    if (activeRequest !== requestSerial || !attached) {
+                        return false;
+                    }
+                    if (error || !help) {
+                        hide();
+                        return false;
+                    }
+                    ensureElement();
+                    captionElement.textContent = help.caption;
+                    signatureElement.innerHTML = renderSignature(help);
+                    summaryElement.textContent = help.docText || "";
+                    element.style.display = "block";
+                    visible = true;
+                    lastSignature = help;
+                    positionElement(pos);
+                    return true;
                 }
-                ensureElement();
-                captionElement.textContent = help.caption;
-                signatureElement.innerHTML = renderSignature(help);
-                summaryElement.textContent = help.docText || "";
-                element.style.display = "block";
-                visible = true;
-                lastSignature = help;
-                positionElement(pos);
-                return true;
+                var returned = resolveSignatureHelp(pos, finish);
+                if (returned && typeof returned.then === "function") {
+                    returned.then(function(help) {
+                        finish(null, help);
+                    }, function(error) {
+                        finish(error, null);
+                    });
+                } else if (!callbackInvoked && typeof returned !== "undefined") {
+                    finish(null, returned);
+                }
+                return callbackInvoked && visible;
             } catch (error) {
                 notify("ACE signature help failed: " + error, error);
                 hide();
@@ -529,6 +552,7 @@
         }
 
         function hide() {
+            requestSerial++;
             if (timer !== null) {
                 clearTimeout(timer);
                 timer = null;

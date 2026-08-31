@@ -46,6 +46,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.webkit.WebViewAssetLoader
+import io.github.supermonster003.autojs6.plugin.ace.editor.BuildConfig
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceDiagnostics
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceDiagnosticsSnapshot
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.diagnostics.AceRuntimeEventHistory
@@ -54,7 +55,10 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceFailur
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceHealthState
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceJsErrorClassifier
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceRuntimeHealthMonitor
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLuaLanguageServerRuntime
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServerManager
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceStdioLspProcessRegistry
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceStdioLspProcessTransport
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptCodeAction
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptDefinitionTarget
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptExecutionProfiles
@@ -126,6 +130,49 @@ class AceCodeEditor @JvmOverloads constructor(
         enabledProvider = { AceEditorLspPreferences.isEnabled(hostPreferences) },
         documentAllowedProvider = { AceEditorLspPreferences.isDocumentAllowed(hostPreferences, it) },
         declarationGroupsProvider = { AceEditorLspPreferences.getDeclarationGroups(hostPreferences) },
+        semanticLanguagesProvider = { AceEditorLspPreferences.getSemanticLanguages(hostPreferences) },
+        luaServerAvailableProvider = {
+            AceLuaLanguageServerRuntime.isSupported(pluginContext)
+        },
+    )
+    private val stdioLspProcessRegistry = AceStdioLspProcessRegistry(
+        dynamicSpecs = mapOf(
+            AceLuaLanguageServerRuntime.PROVIDER_ID to {
+                AceLuaLanguageServerRuntime.serverSpec(pluginContext)
+            },
+        ),
+        listener = object : AceStdioLspProcessRegistry.Listener {
+            override fun onMessage(sessionId: String, messageJson: String) {
+                dispatchStdioLspMessage(sessionId, messageJson)
+            }
+
+            override fun onStateChanged(
+                sessionId: String,
+                state: AceStdioLspProcessTransport.State,
+                detail: String,
+            ) {
+                eventHistory.record(
+                    "lsp_stdio_state",
+                    "session=$sessionId,state=${state.wireValue},detail=${detail.take(256)}",
+                )
+                dispatchStdioLspState(sessionId, state.wireValue, detail)
+            }
+
+            override fun onError(sessionId: String, message: String, error: Throwable?) {
+                eventHistory.record(
+                    "lsp_stdio_error",
+                    "session=$sessionId,message=${message.take(512)}",
+                )
+                dispatchStdioLspError(sessionId, message)
+                handleEvent(
+                    "lspError",
+                    JSONObject()
+                        .put("message", message)
+                        .put("stack", error?.stackTraceToString().orEmpty().take(2_000))
+                        .toString(),
+                )
+            }
+        },
     )
     @Volatile
     private var lspRuntimeState: String? = null
@@ -434,6 +481,7 @@ class AceCodeEditor @JvmOverloads constructor(
         pendingProjectContextCapture = null
         val requestRevision = projectContextRequestRevision.incrementAndGet()
         lspServerManager.setDocumentPath(path)
+        invokeAce("setDocumentPath", quote(documentPathKey))
         if (documentPathChanged) {
             refreshLsp("document-path")
         }
@@ -1093,6 +1141,7 @@ class AceCodeEditor @JvmOverloads constructor(
         dismissProjectRenameDialog()
         finishSelectionActionMode()
         lspServerManager.detach()
+        stdioLspProcessRegistry.close()
         healthMonitor.markDestroyed()
         mainHandler.removeCallbacks(mirrorCalibrationRunnable)
         mainHandler.removeCallbacks(scheduledResizeRunnable)
@@ -1729,6 +1778,11 @@ class AceCodeEditor @JvmOverloads constructor(
             put("hoverProvider", state.optString("hoverProvider", "unknown"))
             put("diagnosticProvider", state.optString("diagnosticProvider", "unknown"))
             put("signatureProvider", state.optString("signatureProvider", "unknown"))
+            put("semanticLanguages", state.optJSONObject("semanticLanguages") ?: JSONObject())
+            put("semanticProvider", state.optJSONObject("semanticProvider") ?: JSONObject())
+            put("semanticProviderHealth", state.optJSONObject("semanticProviderHealth") ?: JSONObject())
+            put("semanticCapabilities", state.optJSONArray("semanticCapabilities") ?: JSONArray())
+            put("capabilities", state.optJSONArray("capabilities") ?: JSONArray())
             put("typescriptVersion", state.optString("typescriptVersion", ""))
             put("typescriptProfile", state.optString("typescriptProfile", ""))
             put("typescriptProfileRevision", state.optInt("typescriptProfileRevision", 0))
@@ -1864,6 +1918,64 @@ class AceCodeEditor @JvmOverloads constructor(
 
     internal fun bridgeLspOptions(): String {
         return lspServerManager.bridgeOptionsJson()
+    }
+
+    internal fun bridgeStartLspProcess(providerId: String): String {
+        return stdioLspResultJson(stdioLspProcessRegistry.start(providerId))
+    }
+
+    internal fun bridgeSendLspProcessMessage(sessionId: String, messageJson: String): String {
+        return stdioLspResultJson(stdioLspProcessRegistry.send(sessionId, messageJson))
+    }
+
+    internal fun bridgeMarkLspProcessReady(sessionId: String): String {
+        return stdioLspResultJson(stdioLspProcessRegistry.markReady(sessionId))
+    }
+
+    internal fun bridgeStopLspProcess(sessionId: String): String {
+        return stdioLspResultJson(stdioLspProcessRegistry.stop(sessionId))
+    }
+
+    /** Instrumentation-only crash injection for the bundled LuaLS recovery contract. */
+    internal fun forceLuaLspProcessCrashForTest(): Boolean {
+        if (!BuildConfig.DEBUG) return false
+        return stdioLspProcessRegistry.forceCrashForTest(
+            AceLuaLanguageServerRuntime.PROVIDER_ID,
+        ) > 0
+    }
+
+    private fun stdioLspResultJson(result: AceStdioLspProcessRegistry.Result): String {
+        return JSONObject()
+            .put("ok", result.ok)
+            .apply {
+                result.sessionId?.let { put("sessionId", it) }
+                result.error?.let { put("error", it) }
+            }
+            .toString()
+    }
+
+    private fun dispatchStdioLspMessage(sessionId: String, messageJson: String) {
+        evaluate(
+            "window.AutoJsAceLspTransports && " +
+                "window.AutoJsAceLspTransports.receiveStdioMessage(" +
+                "${quote(sessionId)}, ${quote(messageJson)});",
+        )
+    }
+
+    private fun dispatchStdioLspState(sessionId: String, state: String, detail: String) {
+        evaluate(
+            "window.AutoJsAceLspTransports && " +
+                "window.AutoJsAceLspTransports.receiveStdioState(" +
+                "${quote(sessionId)}, ${quote(state)}, ${quote(detail)});",
+        )
+    }
+
+    private fun dispatchStdioLspError(sessionId: String, detail: String) {
+        evaluate(
+            "window.AutoJsAceLspTransports && " +
+                "window.AutoJsAceLspTransports.receiveStdioError(" +
+                "${quote(sessionId)}, ${quote(detail)});",
+        )
     }
 
     internal fun bridgeProjectFileText(uri: String): String? {

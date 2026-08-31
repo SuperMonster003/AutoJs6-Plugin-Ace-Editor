@@ -147,6 +147,15 @@
         return String(fileName || "").replace(/[?#].*$/, "").toLowerCase();
     }
 
+    function isSupportedScriptFileName(fileName) {
+        var clean = cleanFileNameForKind(fileName);
+        return /\.(?:js|mjs|cjs|jsx|ts|tsx|mts|cts|json)$/.test(clean);
+    }
+
+    function unsupportedDocumentReason(fileName) {
+        return "unsupported document type: " + String(fileName || "");
+    }
+
     function scriptKindForFileName(ts, fileName) {
         var clean = cleanFileNameForKind(fileName);
         if (/\.json$/.test(clean) && ts.ScriptKind && typeof ts.ScriptKind.JSON !== "undefined") {
@@ -162,7 +171,11 @@
             ts.ScriptKind && typeof ts.ScriptKind.TS !== "undefined") {
             return ts.ScriptKind.TS;
         }
-        return ts.ScriptKind && typeof ts.ScriptKind.JS !== "undefined" ? ts.ScriptKind.JS : undefined;
+        if (/\.(?:js|mjs|cjs)$/.test(clean) &&
+            ts.ScriptKind && typeof ts.ScriptKind.JS !== "undefined") {
+            return ts.ScriptKind.JS;
+        }
+        return undefined;
     }
 
     function loadTextFromBridge(url) {
@@ -699,6 +712,13 @@
                 reason = "typescript language service disposed";
                 return false;
             }
+            if (!isSupportedScriptFileName(currentFile)) {
+                reason = unsupportedDocumentReason(currentFile);
+                return false;
+            }
+            if (reason.indexOf("unsupported document type: ") === 0) {
+                reason = "";
+            }
             if (ready || reason) {
                 return ready;
             }
@@ -815,6 +835,24 @@
             }
             var previousFile = currentFile;
             currentFile = nextFile;
+            if (!isSupportedScriptFileName(currentFile)) {
+                ready = false;
+                reason = unsupportedDocumentReason(currentFile);
+                if (service && typeof service.dispose === "function") {
+                    try {
+                        service.dispose();
+                    } catch (error) {
+                        notify(config, "ACE TS language service disposal failed: " + error, error);
+                    }
+                }
+                service = null;
+                delete files[previousFile];
+                delete versions[previousFile];
+                return true;
+            }
+            if (reason.indexOf("unsupported document type: ") === 0) {
+                reason = "";
+            }
             if (ready) {
                 delete files[previousFile];
                 delete versions[previousFile];

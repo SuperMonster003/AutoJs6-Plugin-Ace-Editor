@@ -11,12 +11,20 @@
     var HOVER_PROVIDER_LOCAL_INDEX = "local-index";
     var COMPLETION_PROVIDER_TYPESCRIPT = "typescript-language-service";
     var HOVER_PROVIDER_TYPESCRIPT = "typescript-language-service";
+    var COMPLETION_PROVIDER_PYTHON = "python-pyright-worker";
+    var HOVER_PROVIDER_PYTHON = "python-pyright-worker";
+    var COMPLETION_PROVIDER_LUA = "lua-language-server";
+    var HOVER_PROVIDER_LUA = "lua-language-server";
     var DIAGNOSTIC_PROVIDER_DISABLED = "disabled";
     var DIAGNOSTIC_PROVIDER_ACE_JSHINT = "ace-jshint";
     var DIAGNOSTIC_PROVIDER_LOCAL_SYNTAX = "local-syntax";
     var DIAGNOSTIC_PROVIDER_TYPESCRIPT = "typescript-language-service";
+    var DIAGNOSTIC_PROVIDER_PYTHON = "python-pyright-worker";
+    var DIAGNOSTIC_PROVIDER_LUA = "lua-language-server";
     var SIGNATURE_PROVIDER_STATIC_LOCAL = "static-local";
     var SIGNATURE_PROVIDER_TYPESCRIPT = "typescript-language-service";
+    var SIGNATURE_PROVIDER_PYTHON = "python-pyright-worker";
+    var SIGNATURE_PROVIDER_LUA = "lua-language-server";
     var DIAGNOSTIC_SOURCE = "autojs6-lsp";
     var VALIDATION_DELAY_MS = 450;
     var PROJECT_SNAPSHOT_VALIDATION_DELAY_MS = 50;
@@ -57,6 +65,17 @@
         return Array.isArray(value) ? value.slice(0) : [];
     }
 
+    function copyBooleanMap(value) {
+        var result = {};
+        if (!value || typeof value !== "object") {
+            return result;
+        }
+        Object.keys(value).forEach(function(key) {
+            result[String(key)] = value[key] === true;
+        });
+        return result;
+    }
+
     function arraysEqual(left, right) {
         left = copyArray(left);
         right = copyArray(right);
@@ -65,6 +84,19 @@
         }
         for (var i = 0; i < left.length; i++) {
             if (String(left[i]) !== String(right[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function booleanMapsEqual(left, right) {
+        left = copyBooleanMap(left);
+        right = copyBooleanMap(right);
+        var keys = Object.keys(left).concat(Object.keys(right));
+        for (var index = 0; index < keys.length; index++) {
+            var key = keys[index];
+            if (left[key] !== right[key]) {
                 return false;
             }
         }
@@ -188,6 +220,10 @@
                 (options && options.diagnosticProvider || DIAGNOSTIC_PROVIDER_ACE_JSHINT) :
                 DIAGNOSTIC_PROVIDER_DISABLED,
             signatureProvider: options && options.signatureProvider || SIGNATURE_PROVIDER_STATIC_LOCAL,
+            semanticLanguages: copyBooleanMap(options && options.semanticLanguages),
+            semanticLanguage: options && options.semanticLanguage || "",
+            configuredSemanticProviderId: options && options.semanticProviderId || "",
+            configuredSemanticCapabilities: copyArray(options && options.semanticCapabilities),
             features: copyArray(options && options.features),
             maxDocumentLength: positiveInteger(
                 options && options.maxDocumentLength,
@@ -574,6 +610,42 @@
 
     function isJsonDocumentUri(uri) {
         return /\.json(?:[?#].*)?$/i.test(String(uri || ""));
+    }
+
+    function isJavaScriptFamilyDocumentUri(uri) {
+        return /\.(?:js|mjs|cjs|jsx|ts|tsx|mts|cts)(?:[?#].*)?$/i.test(String(uri || ""));
+    }
+
+    function isPythonDocumentUri(uri) {
+        return /\.py(?:[?#].*)?$/i.test(String(uri || ""));
+    }
+
+    function isLuaDocumentUri(uri) {
+        return /\.lua(?:[?#].*)?$/i.test(String(uri || ""));
+    }
+
+    function sessionModeId(activeSession) {
+        try {
+            var mode = activeSession && typeof activeSession.getMode === "function" ?
+                activeSession.getMode() : null;
+            return String(mode && mode.$id || "");
+        } catch (ignore) {
+            return "";
+        }
+    }
+
+    function isJavaScriptFamilySession(activeSession) {
+        var routing = global.AutoJsAceLanguageRouting;
+        if (routing && typeof routing.isJavaScriptFamilySession === "function") {
+            return routing.isJavaScriptFamilySession(activeSession);
+        }
+        if (!activeSession || typeof activeSession.getMode !== "function") {
+            return true;
+        }
+        var modeId = sessionModeId(activeSession);
+        return modeId === "ace/mode/javascript" ||
+            modeId === "ace/mode/jsx" ||
+            modeId === "ace/mode/typescript";
     }
 
     function jsonSyntaxDiagnostics(text) {
@@ -1100,6 +1172,33 @@
         var tsRetryTimer = null;
         var lastAnnotations = [];
         var tsService = null;
+        var pythonService = null;
+        var luaService = null;
+        var pythonProviderFailed = false;
+        var pythonProviderUnavailableReason = "";
+        var luaProviderFailed = false;
+        var luaProviderUnavailableReason = "";
+        var semanticHealthState = null;
+        var semanticProviderFailed = false;
+        var semanticRuntime = global.AutoJsAceSemanticProvider || null;
+        var semanticHost = semanticRuntime &&
+            typeof semanticRuntime.createProviderHost === "function" ?
+            semanticRuntime.createProviderHost({
+                notifyError: config.notifyError,
+                operationTimeoutMs: positiveInteger(
+                    config.semanticOperationTimeoutMs,
+                    2000
+                ),
+                onHealthChanged: function(health) {
+                    semanticHealthState = health;
+                    if (health && health.status === "degraded") {
+                        semanticProviderFailed = true;
+                    }
+                    if (typeof config.onProviderHealthChanged === "function") {
+                        config.onProviderHealthChanged(health);
+                    }
+                }
+            }) : null;
         var tsServiceInitAttempts = 0;
         var semanticColdStartPending = false;
         var documentLengthKnown = false;
@@ -1116,6 +1215,10 @@
         var lastPublishedDiagnosticGeneration = 0;
         var tsServiceInstanceRevision = 0;
         var tsServiceDisposeCount = 0;
+        var pythonServiceInstanceRevision = 0;
+        var pythonServiceDisposeCount = 0;
+        var luaServiceInstanceRevision = 0;
+        var luaServiceDisposeCount = 0;
         var projectSnapshotIncrementalRefreshCount = 0;
         var projectSnapshotChangedFileCount = 0;
 
@@ -1129,48 +1232,229 @@
             return null;
         }
 
+        function isJavaScriptFamilyDocument(activeSession) {
+            if (state.documentUri && !isJavaScriptFamilyDocumentUri(state.documentUri)) {
+                return false;
+            }
+            return isJavaScriptFamilySession(activeSession || session);
+        }
+
+        function isPythonDocument() {
+            return isPythonDocumentUri(state.documentUri);
+        }
+
+        function isLuaDocument() {
+            return isLuaDocumentUri(state.documentUri);
+        }
+
+        function isSupportedConfiguredDocument() {
+            return isJsonDocumentUri(state.documentUri) ||
+                isJavaScriptFamilyDocumentUri(state.documentUri) ||
+                isPythonDocumentUri(state.documentUri) ||
+                isLuaDocumentUri(state.documentUri);
+        }
+
         function getTsService() {
-            if (destroyed || !state.enabled) {
+            if (destroyed || !state.enabled ||
+                semanticProviderFailed ||
+                !isJavaScriptFamilyDocumentUri(state.documentUri) ||
+                state.semanticLanguages.typescript === false ||
+                state.semanticLanguages.javascript === false) {
                 return null;
             }
             if (!tsService && hasTsLanguageService()) {
                 tsServiceInitAttempts++;
-                tsService = global.AutoJsAceTsLanguageService.create({
-                    notifyError: config.notifyError,
-                    checkJs: options && options.checkJs === true,
-                    completionLimit: MAX_COMPLETION_ITEMS,
-                    documentUri: state.documentUri,
-                    rootUri: state.rootUri,
-                    typescriptVersion: state.typescriptVersion,
-                    executionProfile: state.typescriptProfile,
-                    libraryUris: copyArray(state.libraryUris),
-                    projectSourceFileUris: copyArray(state.projectSourceFileUris),
-                    projectSourceInventoryFingerprint: state.projectSourceInventoryFingerprint,
-                    projectSourceFileCount: state.projectSourceFileCount,
-                    projectSourceByteLength: state.projectSourceByteLength,
-                    projectSnapshotSchemaRevision: state.projectSnapshotSchemaRevision,
-                    projectSnapshotReady: state.projectSnapshotReady,
-                    projectTypeFileUris: copyArray(state.projectTypeFileUris),
-                    dependencyTypeNames: copyArray(state.dependencyTypeNames),
-                    dependencyLayerFingerprint: state.dependencyLayerFingerprint,
-                    dependencyInventoryFingerprint: state.dependencyInventoryFingerprint,
-                    dependencyFileCount: state.dependencyFileCount,
-                    dependencyByteLength: state.dependencyByteLength,
-                    dependencyPathByteLength: state.dependencyPathByteLength,
-                    dependencyBoundaryCode: state.dependencyBoundaryCode,
-                    dependencyBoundaryDetail: state.dependencyBoundaryDetail,
-                    dependencyResolverPolicyRevision: state.dependencyResolverPolicyRevision,
-                    dependencyResolverPolicyFingerprint: state.dependencyResolverPolicyFingerprint
+                if (!semanticRuntime ||
+                    typeof semanticRuntime.createTypeScriptInProcessProvider !== "function" ||
+                    !semanticHost) {
+                    semanticProviderFailed = true;
+                    notify(config, "ACE SemanticProvider runtime is unavailable");
+                    return null;
+                }
+                tsService = semanticRuntime.createTypeScriptInProcessProvider({
+                    createService: function() {
+                        return global.AutoJsAceTsLanguageService.create({
+                            notifyError: config.notifyError,
+                            checkJs: options && options.checkJs === true,
+                            completionLimit: MAX_COMPLETION_ITEMS,
+                            documentUri: state.documentUri,
+                            rootUri: state.rootUri,
+                            typescriptVersion: state.typescriptVersion,
+                            executionProfile: state.typescriptProfile,
+                            libraryUris: copyArray(state.libraryUris),
+                            projectSourceFileUris: copyArray(state.projectSourceFileUris),
+                            projectSourceInventoryFingerprint:
+                                state.projectSourceInventoryFingerprint,
+                            projectSourceFileCount: state.projectSourceFileCount,
+                            projectSourceByteLength: state.projectSourceByteLength,
+                            projectSnapshotSchemaRevision: state.projectSnapshotSchemaRevision,
+                            projectSnapshotReady: state.projectSnapshotReady,
+                            projectTypeFileUris: copyArray(state.projectTypeFileUris),
+                            dependencyTypeNames: copyArray(state.dependencyTypeNames),
+                            dependencyLayerFingerprint: state.dependencyLayerFingerprint,
+                            dependencyInventoryFingerprint:
+                                state.dependencyInventoryFingerprint,
+                            dependencyFileCount: state.dependencyFileCount,
+                            dependencyByteLength: state.dependencyByteLength,
+                            dependencyPathByteLength: state.dependencyPathByteLength,
+                            dependencyBoundaryCode: state.dependencyBoundaryCode,
+                            dependencyBoundaryDetail: state.dependencyBoundaryDetail,
+                            dependencyResolverPolicyRevision:
+                                state.dependencyResolverPolicyRevision,
+                            dependencyResolverPolicyFingerprint:
+                                state.dependencyResolverPolicyFingerprint
+                        });
+                    }
                 });
+                semanticHost.setProvider(tsService, false);
                 tsServiceInstanceRevision++;
                 semanticColdStartPending = true;
             }
             return tsService;
         }
 
+        function getPythonService() {
+            if (destroyed || !state.enabled || pythonProviderFailed ||
+                !isPythonDocumentUri(state.documentUri) ||
+                state.semanticLanguages.python === false) {
+                return null;
+            }
+            if (!pythonService) {
+                var runtime = global.AutoJsAcePythonProvider;
+                if (!runtime || typeof runtime.create !== "function" ||
+                    typeof runtime.isSupported !== "function" ||
+                    !runtime.isSupported() || !semanticHost) {
+                    pythonProviderFailed = true;
+                    pythonProviderUnavailableReason = "python-worker-runtime-unavailable";
+                    return null;
+                }
+                pythonService = runtime.create({
+                    rootUri: state.rootUri,
+                    documentUri: state.documentUri,
+                    documentText: textFromSession(session),
+                    eager: true,
+                    onDiagnostics: function(annotations) {
+                        if (destroyed || !state.enabled || !isPythonDocument() ||
+                            state.semanticServiceSuppressed) {
+                            return;
+                        }
+                        var run = createDiagnosticRun("python-publish");
+                        setSessionAnnotations(annotations, run, Date.now());
+                    },
+                    onUnavailable: function(reason) {
+                        if (destroyed || !isPythonDocument()) {
+                            return;
+                        }
+                        pythonProviderFailed = true;
+                        pythonProviderUnavailableReason = String(
+                            reason || "python-worker-unavailable"
+                        );
+                        if (semanticHost &&
+                            semanticHost.getProvider() === pythonService) {
+                            semanticHost.clearProvider(false);
+                        }
+                        updateSemanticState(session);
+                    },
+                    onStateChanged: function(providerState) {
+                        if (providerState && providerState.ready && isPythonDocument()) {
+                            applyPythonProviderState();
+                        }
+                    }
+                });
+                if (!pythonService) {
+                    pythonProviderFailed = true;
+                    pythonProviderUnavailableReason = "python-worker-create-failed";
+                    return null;
+                }
+                semanticHost.setProvider(pythonService, false);
+                pythonServiceInstanceRevision++;
+                semanticColdStartPending = true;
+            }
+            return pythonService;
+        }
+
+        function getLuaService() {
+            if (destroyed || !state.enabled || luaProviderFailed ||
+                !isLuaDocumentUri(state.documentUri) ||
+                state.semanticLanguages.lua === false || !state.serverAvailable) {
+                if (isLuaDocumentUri(state.documentUri) && !state.serverAvailable) {
+                    luaProviderFailed = true;
+                    luaProviderUnavailableReason = "luals-native-runtime-unavailable";
+                }
+                return null;
+            }
+            if (!luaService) {
+                var runtime = global.AutoJsAceLuaProvider;
+                if (!runtime || typeof runtime.create !== "function" ||
+                    typeof runtime.isSupported !== "function" ||
+                    !runtime.isSupported() || !semanticHost) {
+                    luaProviderFailed = true;
+                    luaProviderUnavailableReason = "luals-provider-runtime-unavailable";
+                    return null;
+                }
+                luaService = runtime.create({
+                    providerId: "lua-luals",
+                    rootUri: state.rootUri,
+                    documentUri: state.documentUri,
+                    documentText: textFromSession(session),
+                    eager: true,
+                    onDiagnostics: function(annotations) {
+                        if (destroyed || !state.enabled || !isLuaDocument() ||
+                            state.semanticServiceSuppressed) {
+                            return;
+                        }
+                        var run = createDiagnosticRun("lua-publish");
+                        setSessionAnnotations(annotations, run, Date.now());
+                    },
+                    onUnavailable: function(reason) {
+                        if (destroyed || !isLuaDocument()) {
+                            return;
+                        }
+                        luaProviderFailed = true;
+                        luaProviderUnavailableReason = String(
+                            reason || "luals-unavailable"
+                        );
+                        if (semanticHost && semanticHost.getProvider() === luaService) {
+                            semanticHost.clearProvider(false);
+                        }
+                        updateSemanticState(session);
+                    },
+                    onRecovered: function() {
+                        if (destroyed || !isLuaDocument() || !luaService || !semanticHost) {
+                            return;
+                        }
+                        luaProviderFailed = false;
+                        luaProviderUnavailableReason = "";
+                        semanticProviderFailed = false;
+                        semanticHost.setProvider(luaService, false);
+                        updateSemanticState(session);
+                        applyLuaProviderState();
+                        scheduleDiagnostics("lua-recovered", 0);
+                    },
+                    onStateChanged: function(providerState) {
+                        if (providerState && providerState.ready && isLuaDocument()) {
+                            applyLuaProviderState();
+                        }
+                    }
+                });
+                if (!luaService) {
+                    luaProviderFailed = true;
+                    luaProviderUnavailableReason = "luals-provider-create-failed";
+                    return null;
+                }
+                semanticHost.setProvider(luaService, false);
+                luaServiceInstanceRevision++;
+                semanticColdStartPending = true;
+            }
+            return luaService;
+        }
+
         function disposeTsService() {
             var service = tsService;
             tsService = null;
+            if (semanticHost && semanticHost.getProvider() === service) {
+                semanticHost.clearProvider(false);
+            }
             if (service && typeof service.dispose === "function") {
                 try {
                     service.dispose();
@@ -1180,6 +1464,46 @@
                 }
             }
             semanticColdStartPending = false;
+        }
+
+        function disposePythonService() {
+            var service = pythonService;
+            pythonService = null;
+            if (semanticHost && semanticHost.getProvider() === service) {
+                semanticHost.clearProvider(false);
+            }
+            if (service && typeof service.dispose === "function") {
+                try {
+                    service.dispose();
+                    pythonServiceDisposeCount++;
+                } catch (error) {
+                    // Python Worker shutdown is best-effort; terminate/dispose owns cleanup.
+                }
+            }
+            semanticColdStartPending = false;
+        }
+
+        function disposeLuaService() {
+            var service = luaService;
+            luaService = null;
+            if (semanticHost && semanticHost.getProvider() === service) {
+                semanticHost.clearProvider(false);
+            }
+            if (service && typeof service.dispose === "function") {
+                try {
+                    service.dispose();
+                    luaServiceDisposeCount++;
+                } catch (error) {
+                    // Native shutdown is best-effort; registry teardown is authoritative.
+                }
+            }
+            semanticColdStartPending = false;
+        }
+
+        function disposeSemanticServices() {
+            disposeTsService();
+            disposePythonService();
+            disposeLuaService();
         }
 
         function cancelTsRetry() {
@@ -1233,13 +1557,37 @@
             }
             var tooLarge = state.enabled && state.maxDocumentLength > 0 && length > state.maxDocumentLength;
             var unsafeLine = !!(target && target.$autojs6LongLineSafetyMode);
+            var unsupportedDocument = state.enabled && !isSupportedConfiguredDocument();
+            var semanticLanguageDisabled = state.enabled &&
+                (isJavaScriptFamilyDocumentUri(state.documentUri) &&
+                    (state.semanticLanguages.typescript === false ||
+                        state.semanticLanguages.javascript === false) ||
+                    isPythonDocumentUri(state.documentUri) &&
+                        state.semanticLanguages.python === false ||
+                    isLuaDocumentUri(state.documentUri) &&
+                        state.semanticLanguages.lua === false);
+            var activeProviderFailed = isPythonDocumentUri(state.documentUri) ?
+                pythonProviderFailed : isLuaDocumentUri(state.documentUri) ?
+                    luaProviderFailed : semanticProviderFailed;
+            var activeProviderReason = isPythonDocumentUri(state.documentUri) ?
+                pythonProviderUnavailableReason : isLuaDocumentUri(state.documentUri) ?
+                    luaProviderUnavailableReason : "provider-failure";
             state.documentLength = length;
-            state.semanticServiceSuppressed = !!(unsafeLine || tooLarge || semanticCircuitOpen);
+            state.semanticServiceSuppressed = !!(
+                unsafeLine || tooLarge || semanticCircuitOpen || activeProviderFailed ||
+                    semanticLanguageDisabled || unsupportedDocument
+            );
             state.semanticServiceReason = unsafeLine ?
                 "line-too-long" :
                 tooLarge ?
                 "document-too-large" :
-                semanticCircuitOpen ? "slow-operation-circuit-open" : "";
+                semanticCircuitOpen ?
+                "slow-operation-circuit-open" :
+                activeProviderFailed ?
+                (activeProviderReason || "provider-failure") :
+                semanticLanguageDisabled ?
+                "semantic-disabled-for-language" :
+                unsupportedDocument ? "unsupported-document-type" : "";
             if (state.semanticServiceSuppressed) {
                 resetProviderState();
                 clearDiagnostics();
@@ -1255,6 +1603,30 @@
                 };
             }
             return tsService.getState();
+        }
+
+        function getPythonServiceState() {
+            if (!pythonService || typeof pythonService.getState !== "function") {
+                return {
+                    ready: false,
+                    reason: state.semanticServiceReason ||
+                        pythonProviderUnavailableReason ||
+                        "python worker unavailable"
+                };
+            }
+            return pythonService.getState();
+        }
+
+        function getLuaServiceState() {
+            if (!luaService || typeof luaService.getState !== "function") {
+                return {
+                    ready: false,
+                    reason: state.semanticServiceReason ||
+                        luaProviderUnavailableReason ||
+                        "Lua language server unavailable"
+                };
+            }
+            return luaService.getState();
         }
 
         function tsServiceReady() {
@@ -1274,16 +1646,73 @@
             return true;
         }
 
+        function applyPythonProviderState() {
+            var providerState = getPythonServiceState();
+            if (!state.enabled || state.semanticServiceSuppressed ||
+                !isPythonDocument() || !providerState.ready) {
+                return false;
+            }
+            state.completionProvider = COMPLETION_PROVIDER_PYTHON;
+            state.hoverProvider = HOVER_PROVIDER_PYTHON;
+            state.diagnosticProvider = DIAGNOSTIC_PROVIDER_PYTHON;
+            state.signatureProvider = SIGNATURE_PROVIDER_PYTHON;
+            state.localServiceReady = true;
+            return true;
+        }
+
+        function applyLuaProviderState() {
+            var providerState = getLuaServiceState();
+            if (!state.enabled || state.semanticServiceSuppressed ||
+                !isLuaDocument() || !providerState.ready) {
+                return false;
+            }
+            state.completionProvider = COMPLETION_PROVIDER_LUA;
+            state.hoverProvider = HOVER_PROVIDER_LUA;
+            state.diagnosticProvider = DIAGNOSTIC_PROVIDER_LUA;
+            state.signatureProvider = SIGNATURE_PROVIDER_LUA;
+            state.localServiceReady = true;
+            state.serverReady = true;
+            return true;
+        }
+
+        function invokeSemantic(capability, args, fallback) {
+            if (!semanticHost) {
+                return typeof fallback === "function" ? fallback("provider-host-absent") : fallback;
+            }
+            return semanticHost.invoke(capability, args, fallback);
+        }
+
+        function semanticCapabilities() {
+            return semanticHost ? semanticHost.getCapabilities() : [];
+        }
+
+        function effectiveCapabilities() {
+            var capabilities = ["completion", "hover", "signatureHelp"];
+            if (state.enabled && isSupportedConfiguredDocument()) {
+                capabilities.push("diagnostics");
+            }
+            semanticCapabilities().forEach(function(capability) {
+                if (capabilities.indexOf(capability) < 0 && capability !== "dispose") {
+                    capabilities.push(capability);
+                }
+            });
+            return capabilities;
+        }
+
+        function supportsCapability(capability) {
+            return effectiveCapabilities().indexOf(String(capability || "")) >= 0;
+        }
+
         function openSemanticCircuit(operation, durationMs) {
             if (semanticCircuitOpen) {
                 return;
             }
             semanticCircuitOpen = true;
             updateSemanticState(session);
-            disposeTsService();
+            disposeSemanticServices();
             notify(
                 config,
-                "ACE TypeScript language service switched to static fallback after slow " +
+                "ACE semantic service switched to static fallback after slow " +
                     operation + " (" + durationMs + " ms)"
             );
         }
@@ -1338,7 +1767,58 @@
 
         function warmUp(callback) {
             callback = typeof callback === "function" ? callback : noop;
-            if (destroyed || !state.enabled || !updateSemanticState(session)) {
+            if (destroyed || !state.enabled ||
+                !updateSemanticState(session)) {
+                callback(false, getState());
+                return false;
+            }
+            if (isPythonDocumentUri(state.documentUri)) {
+                var python = getPythonService();
+                if (!python || typeof python.start !== "function") {
+                    updateSemanticState(session);
+                    callback(false, getState());
+                    return false;
+                }
+                var pythonStartedAt = Date.now();
+                python.start(function(ok) {
+                    if (destroyed || !state.enabled ||
+                        !isPythonDocumentUri(state.documentUri)) {
+                        callback(false, getState());
+                        return;
+                    }
+                    recordSemanticOperation(pythonStartedAt, "python-initialize", false);
+                    var ready = !!ok && applyPythonProviderState();
+                    if (ready && !semanticCircuitOpen) {
+                        scheduleDiagnostics("python-warmup", 0);
+                    }
+                    callback(ready && !semanticCircuitOpen, getState());
+                });
+                return true;
+            }
+            if (isLuaDocumentUri(state.documentUri)) {
+                var lua = getLuaService();
+                if (!lua || typeof lua.start !== "function") {
+                    updateSemanticState(session);
+                    callback(false, getState());
+                    return false;
+                }
+                var luaStartedAt = Date.now();
+                lua.start(function(ok) {
+                    if (destroyed || !state.enabled ||
+                        !isLuaDocumentUri(state.documentUri)) {
+                        callback(false, getState());
+                        return;
+                    }
+                    recordSemanticOperation(luaStartedAt, "lua-initialize", false);
+                    var ready = !!ok && applyLuaProviderState();
+                    if (ready && !semanticCircuitOpen) {
+                        scheduleDiagnostics("lua-warmup", 0);
+                    }
+                    callback(ready && !semanticCircuitOpen, getState());
+                });
+                return true;
+            }
+            if (!isJavaScriptFamilyDocumentUri(state.documentUri)) {
                 callback(false, getState());
                 return false;
             }
@@ -1440,18 +1920,57 @@
                 return [];
             }
             var text = textFromSession(session);
-            if (!updateSemanticState(session, text.length)) {
+            if (isJsonDocumentUri(state.documentUri)) {
+                if (!updateSemanticState(session, text.length)) {
+                    clearDiagnostics();
+                    return [];
+                }
+                setSessionAnnotations(jsonSyntaxDiagnostics(text), run, diagnosticStartedAt);
+                return getDiagnostics();
+            }
+            if (isPythonDocumentUri(state.documentUri)) {
+                if (!updateSemanticState(session, text.length)) {
+                    clearDiagnostics();
+                    return [];
+                }
+                var python = getPythonService();
+                if (python && typeof python.getDiagnostics === "function") {
+                    var pythonAnnotations = python.getDiagnostics(session, text) || [];
+                    applyPythonProviderState();
+                    setSessionAnnotations(pythonAnnotations, run, diagnosticStartedAt);
+                    return getDiagnostics();
+                }
                 clearDiagnostics();
                 return [];
             }
-            if (isJsonDocumentUri(state.documentUri)) {
-                setSessionAnnotations(jsonSyntaxDiagnostics(text), run, diagnosticStartedAt);
-                return getDiagnostics();
+            if (isLuaDocumentUri(state.documentUri)) {
+                if (!updateSemanticState(session, text.length)) {
+                    clearDiagnostics();
+                    return [];
+                }
+                var lua = getLuaService();
+                if (lua && typeof lua.getDiagnostics === "function") {
+                    var luaAnnotations = lua.getDiagnostics(session, text) || [];
+                    applyLuaProviderState();
+                    setSessionAnnotations(luaAnnotations, run, diagnosticStartedAt);
+                    return getDiagnostics();
+                }
+                clearDiagnostics();
+                return [];
+            }
+            if (!isJavaScriptFamilyDocument(session) ||
+                !updateSemanticState(session, text.length)) {
+                clearDiagnostics();
+                return [];
             }
             var startedAt = Date.now();
             var service = getTsService();
             if (service && typeof service.getDiagnostics === "function") {
-                var tsAnnotations = service.getDiagnostics(session, text);
+                var tsAnnotations = invokeSemantic(
+                    "diagnostics",
+                    [session, text],
+                    null
+                );
                 recordSemanticOperation(startedAt, "diagnostics");
                 if (tsAnnotations && !semanticCircuitOpen) {
                     applyTsProviderState();
@@ -1485,7 +2004,8 @@
                 timerClear(validationTimer);
                 validationTimer = null;
             }
-            if (destroyed || !state.enabled || !updateSemanticState(session)) {
+            if (destroyed || !state.enabled || !isSupportedConfiguredDocument() ||
+                !updateSemanticState(session)) {
                 diagnosticGeneration++;
                 clearDiagnostics();
                 return;
@@ -1501,7 +2021,9 @@
                 if (!diagnosticRunIsCurrent(run)) {
                     return;
                 }
-                if (!tsService && tsLoadState !== "loading") {
+                if (isPythonDocumentUri(state.documentUri) ?
+                    !pythonService : isLuaDocumentUri(state.documentUri) ?
+                        !luaService : !tsService && tsLoadState !== "loading") {
                     warmUp();
                 }
                 if (diagnosticRunIsCurrent(run)) {
@@ -1607,6 +2129,10 @@
                     options.dependencyTypeNames
                 ) ||
                 !!(previousOptions && previousOptions.checkJs) !== !!options.checkJs ||
+                !booleanMapsEqual(
+                    previousOptions && previousOptions.semanticLanguages,
+                    options && options.semanticLanguages
+                ) ||
                 String(previousOptions && previousOptions.rootUri || "") !==
                     String(options && options.rootUri || "") ||
                 String(previousOptions && previousOptions.documentUri || "") !==
@@ -1642,7 +2168,12 @@
             if (serviceConfigurationChanged) {
                 semanticCircuitOpen = false;
                 consecutiveSlowSemanticOperations = 0;
-                disposeTsService();
+                disposeSemanticServices();
+                semanticProviderFailed = false;
+                pythonProviderFailed = false;
+                pythonProviderUnavailableReason = "";
+                luaProviderFailed = false;
+                luaProviderUnavailableReason = "";
                 tsServiceInitAttempts = 0;
             } else if (projectSnapshotContentChanged && tsService) {
                 var snapshotStartedAt = Date.now();
@@ -1668,17 +2199,48 @@
             }
             documentLengthKnown = false;
             updateSemanticState(session);
-            if (state.enabled) {
+            if (state.enabled && isSupportedConfiguredDocument()) {
                 if (tsService && typeof tsService.setDocumentUri === "function") {
-                    tsService.setDocumentUri(state.documentUri);
+                    try {
+                        tsService.setDocumentUri(state.documentUri);
+                    } catch (error) {
+                        semanticProviderFailed = true;
+                        notify(config, "ACE semantic provider document switch failed: " + error, error);
+                        disposeTsService();
+                    }
+                }
+                if (pythonService && typeof pythonService.setDocumentUri === "function") {
+                    try {
+                        pythonService.setDocumentUri(state.documentUri, textFromSession(session));
+                    } catch (ignore) {
+                        pythonProviderFailed = true;
+                        pythonProviderUnavailableReason = "python-document-switch-failed";
+                        disposePythonService();
+                    }
+                }
+                if (luaService && typeof luaService.setDocumentUri === "function") {
+                    try {
+                        luaService.setDocumentUri(state.documentUri, textFromSession(session));
+                    } catch (ignore) {
+                        luaProviderFailed = true;
+                        luaProviderUnavailableReason = "luals-document-switch-failed";
+                        disposeLuaService();
+                    }
                 }
                 applyTsProviderState();
+                applyPythonProviderState();
+                applyLuaProviderState();
                 attachDiagnostics(
                     refreshReason,
                     refreshReason === "project-snapshot" ?
                         PROJECT_SNAPSHOT_VALIDATION_DELAY_MS : undefined
                 );
-                if (shouldWarmUp && !state.semanticServiceSuppressed && !tsServiceReady()) {
+                if (shouldWarmUp && !state.semanticServiceSuppressed &&
+                    (isJavaScriptFamilyDocumentUri(state.documentUri) && !tsServiceReady() ||
+                        isPythonDocumentUri(state.documentUri) &&
+                            !getPythonServiceState().ready ||
+                        isLuaDocumentUri(state.documentUri) &&
+                            !getLuaServiceState().ready)) {
                     var revision = configurationRevision;
                     tsRetryTimer = timerSet(function() {
                         tsRetryTimer = null;
@@ -1690,7 +2252,7 @@
             } else {
                 detachDiagnostics();
                 clearDiagnostics();
-                disposeTsService();
+                disposeSemanticServices();
                 tsServiceInitAttempts = 0;
             }
             hasRefreshed = true;
@@ -1701,6 +2263,8 @@
             if (!destroyed && state.enabled) {
                 updateSemanticState(session);
                 applyTsProviderState();
+                applyPythonProviderState();
+                applyLuaProviderState();
             }
             return {
                 enabled: state.enabled,
@@ -1746,6 +2310,19 @@
                 hoverProvider: state.hoverProvider,
                 diagnosticProvider: state.diagnosticProvider,
                 signatureProvider: state.signatureProvider,
+                semanticLanguages: copyBooleanMap(state.semanticLanguages),
+                semanticLanguage: state.semanticLanguage,
+                configuredSemanticProviderId: state.configuredSemanticProviderId,
+                configuredSemanticCapabilities: copyArray(state.configuredSemanticCapabilities),
+                semanticProvider: semanticHost ? semanticHost.getState() : {
+                    providerId: "",
+                    status: "unavailable",
+                    healthy: false,
+                    capabilities: []
+                },
+                semanticProviderHealth: semanticHealthState,
+                semanticCapabilities: semanticCapabilities(),
+                capabilities: effectiveCapabilities(),
                 tsLoader: {
                     state: tsLoadState,
                     attempts: tsLoadAttempts,
@@ -1753,6 +2330,8 @@
                     compatibilityReason: tsRuntimeCompatibilityReason
                 },
                 tsService: getTsServiceState(),
+                pythonService: getPythonServiceState(),
+                luaService: getLuaServiceState(),
                 maxDocumentLength: state.maxDocumentLength,
                 documentLength: state.documentLength,
                 semanticServiceSuppressed: state.semanticServiceSuppressed,
@@ -1772,6 +2351,10 @@
                 projectSnapshotDiagnosticDelayMs: PROJECT_SNAPSHOT_VALIDATION_DELAY_MS,
                 tsServiceInstanceRevision: tsServiceInstanceRevision,
                 tsServiceDisposeCount: tsServiceDisposeCount,
+                pythonServiceInstanceRevision: pythonServiceInstanceRevision,
+                pythonServiceDisposeCount: pythonServiceDisposeCount,
+                luaServiceInstanceRevision: luaServiceInstanceRevision,
+                luaServiceDisposeCount: luaServiceDisposeCount,
                 serviceStatus: !state.enabled ? "disabled" :
                     state.semanticServiceSuppressed ? "degraded" :
                     state.localServiceReady ? "ready" : "configured",
@@ -1801,41 +2384,149 @@
             );
         }
 
+        function getDocumentWordCompletions(activeSession, prefix, callback) {
+            var results = semanticRuntime &&
+                typeof semanticRuntime.documentWordCompletions === "function" ?
+                semanticRuntime.documentWordCompletions(activeSession || session, prefix || "") : [];
+            callback(null, results || []);
+        }
+
+        function completionFallbacks(activeEditor, activeSession, pos, prefix) {
+            return [
+                function(done) {
+                    getStaticCompletions(activeEditor, activeSession, pos, prefix, done);
+                },
+                function(done) {
+                    getDocumentWordCompletions(activeSession, prefix, done);
+                }
+            ];
+        }
+
         function getCompletions(activeEditor, activeSession, pos, prefix, callback) {
             callback = typeof callback === "function" ? callback : noop;
             var targetSession = activeSession || session;
             try {
                 var text = textFromSession(targetSession);
-                var semanticAllowed = updateSemanticState(targetSession, text.length);
                 if (isJsonDocumentUri(state.documentUri)) {
+                    updateSemanticState(targetSession, text.length);
                     callback(null, []);
                     return;
                 }
+                if (isPythonDocumentUri(state.documentUri)) {
+                    var pythonAllowed = updateSemanticState(targetSession, text.length);
+                    var pythonFallbacks = completionFallbacks(
+                        activeEditor,
+                        targetSession,
+                        pos,
+                        prefix
+                    );
+                    if (!pythonAllowed) {
+                        getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
+                        return;
+                    }
+                    var python = getPythonService();
+                    if (python && semanticHost && typeof python.getCompletions === "function") {
+                        var pythonStartedAt = Date.now();
+                        semanticHost.invokeCompletion(
+                            [targetSession, normalizePosition(pos), prefix || "", text],
+                            function(error, results, meta) {
+                                recordSemanticOperation(pythonStartedAt, "python-completion");
+                                if (meta && meta.layer === "semantic" && !semanticCircuitOpen) {
+                                    applyPythonProviderState();
+                                }
+                                callback(error, dedupeCompletions(results || []));
+                            },
+                            pythonFallbacks
+                        );
+                        return;
+                    }
+                    if (!pythonProviderFailed) {
+                        warmUp();
+                    }
+                    if (semanticHost) {
+                        semanticHost.invokeCompletion([], callback, pythonFallbacks);
+                    } else {
+                        getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
+                    }
+                    return;
+                }
+                if (isLuaDocumentUri(state.documentUri)) {
+                    var luaAllowed = updateSemanticState(targetSession, text.length);
+                    var luaFallbacks = completionFallbacks(
+                        activeEditor,
+                        targetSession,
+                        pos,
+                        prefix
+                    );
+                    if (!luaAllowed) {
+                        getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
+                        return;
+                    }
+                    var lua = getLuaService();
+                    if (lua && semanticHost && typeof lua.getCompletions === "function") {
+                        var luaStartedAt = Date.now();
+                        semanticHost.invokeCompletion(
+                            [targetSession, normalizePosition(pos), prefix || "", text],
+                            function(error, results, meta) {
+                                recordSemanticOperation(luaStartedAt, "lua-completion");
+                                if (meta && meta.layer === "semantic" && !semanticCircuitOpen) {
+                                    applyLuaProviderState();
+                                }
+                                callback(error, dedupeCompletions(results || []));
+                            },
+                            luaFallbacks
+                        );
+                        return;
+                    }
+                    if (!luaProviderFailed) {
+                        warmUp();
+                    }
+                    if (semanticHost) {
+                        semanticHost.invokeCompletion([], callback, luaFallbacks);
+                    } else {
+                        getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
+                    }
+                    return;
+                }
+                if (!isJavaScriptFamilyDocument(targetSession)) {
+                    updateSemanticState(targetSession, text.length);
+                    getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
+                    return;
+                }
+                var semanticAllowed = updateSemanticState(targetSession, text.length);
                 if (!semanticAllowed) {
                     getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
                     return;
                 }
                 var service = getTsService();
-                if (service && typeof service.getCompletions === "function") {
-                    var tsCompletions = [];
-                    var tsError = null;
+                var fallbacks = completionFallbacks(
+                    activeEditor,
+                    targetSession,
+                    pos,
+                    prefix
+                );
+                if (service && semanticHost && typeof service.getCompletions === "function") {
                     var startedAt = Date.now();
-                    service.getCompletions(targetSession, normalizePosition(pos), prefix || "", function(error, result) {
-                        tsError = error || null;
-                        tsCompletions = result || [];
-                    }, text);
-                    recordSemanticOperation(startedAt, "completion");
-                    if (tsError) {
-                        notify(config, "ACE TS completion failed: " + tsError, tsError);
-                    } else if (tsCompletions.length > 0 && !semanticCircuitOpen) {
-                        applyTsProviderState();
-                        callback(null, dedupeCompletions(tsCompletions));
-                        return;
-                    }
+                    semanticHost.invokeCompletion(
+                        [targetSession, normalizePosition(pos), prefix || "", text],
+                        function(error, results, meta) {
+                            recordSemanticOperation(startedAt, "completion");
+                            if (meta && meta.layer === "semantic" && !semanticCircuitOpen) {
+                                applyTsProviderState();
+                            }
+                            callback(error, dedupeCompletions(results || []));
+                        },
+                        fallbacks
+                    );
+                    return;
                 } else if (state.enabled && tsLoadState !== "loading") {
                     warmUp();
                 }
-                getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
+                if (semanticHost) {
+                    semanticHost.invokeCompletion([], callback, fallbacks);
+                } else {
+                    getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
+                }
             } catch (error) {
                 notify(config, "ACE LSP completion failed: " + error, error);
                 getStaticCompletions(activeEditor, targetSession, pos, prefix, callback);
@@ -1845,15 +2536,63 @@
         function getHover(pos) {
             try {
                 var text = textFromSession(session);
-                if (isJsonDocumentUri(state.documentUri)) {
+                if (isPythonDocumentUri(state.documentUri)) {
+                    if (updateSemanticState(session, text.length)) {
+                        var python = getPythonService();
+                        if (python && typeof python.getHover === "function") {
+                            var pythonHover = invokeSemantic(
+                                "hover",
+                                [session, normalizePosition(pos), text],
+                                null
+                            );
+                            if (pythonHover) {
+                                applyPythonProviderState();
+                                return pythonHover;
+                            }
+                        }
+                    }
+                    var pythonCompleter = getStaticCompleter();
+                    return pythonCompleter && typeof pythonCompleter.getHover === "function" ?
+                        pythonCompleter.getHover(session, normalizePosition(pos)) : null;
+                }
+                if (isLuaDocumentUri(state.documentUri)) {
+                    if (updateSemanticState(session, text.length)) {
+                        var lua = getLuaService();
+                        if (lua && typeof lua.getHover === "function") {
+                            var luaHover = invokeSemantic(
+                                "hover",
+                                [session, normalizePosition(pos), text],
+                                null
+                            );
+                            if (luaHover) {
+                                applyLuaProviderState();
+                                return luaHover;
+                            }
+                        }
+                    }
+                    var luaCompleter = getStaticCompleter();
+                    return luaCompleter && typeof luaCompleter.getHover === "function" ?
+                        luaCompleter.getHover(session, normalizePosition(pos)) : null;
+                }
+                if (isJsonDocumentUri(state.documentUri) ||
+                    !isJavaScriptFamilyDocument(session)) {
                     updateSemanticState(session, text.length);
-                    return null;
+                    if (isJsonDocumentUri(state.documentUri)) {
+                        return null;
+                    }
+                    var staticCompleter = getStaticCompleter();
+                    return staticCompleter && typeof staticCompleter.getHover === "function" ?
+                        staticCompleter.getHover(session, normalizePosition(pos)) : null;
                 }
                 if (updateSemanticState(session, text.length)) {
                     var service = getTsService();
                     if (service && typeof service.getHover === "function") {
                         var startedAt = Date.now();
-                        var tsHover = service.getHover(session, normalizePosition(pos), text);
+                        var tsHover = invokeSemantic(
+                            "hover",
+                            [session, normalizePosition(pos), text],
+                            null
+                        );
                         recordSemanticOperation(startedAt, "hover");
                         if (tsHover && !semanticCircuitOpen) {
                             applyTsProviderState();
@@ -1874,18 +2613,101 @@
             }
         }
 
+        function getHoverAsync(pos, callback) {
+            callback = typeof callback === "function" ? callback : noop;
+            var pythonDocument = isPythonDocumentUri(state.documentUri);
+            var luaDocument = isLuaDocumentUri(state.documentUri);
+            if (!pythonDocument && !luaDocument) {
+                callback(null, getHover(pos));
+                return null;
+            }
+            var text = textFromSession(session);
+            var normalized = normalizePosition(pos);
+            if (!updateSemanticState(session, text.length)) {
+                callback(null, getHover(normalized));
+                return null;
+            }
+            var service = pythonDocument ? getPythonService() : getLuaService();
+            if (!service || typeof service.getHover !== "function") {
+                callback(null, getHover(normalized));
+                return null;
+            }
+            var startedAt = Date.now();
+            return service.getHover(session, normalized, text, function(error, hover) {
+                recordSemanticOperation(startedAt, pythonDocument ? "python-hover" : "lua-hover");
+                if (!error) {
+                    if (pythonDocument) {
+                        applyPythonProviderState();
+                    } else {
+                        applyLuaProviderState();
+                    }
+                }
+                callback(error || null, hover || getHover(normalized));
+            });
+        }
+
         function getSignatureHelp(pos) {
             try {
                 var text = textFromSession(session);
-                if (isJsonDocumentUri(state.documentUri)) {
+                if (isPythonDocumentUri(state.documentUri)) {
+                    if (updateSemanticState(session, text.length)) {
+                        var python = getPythonService();
+                        if (python && typeof python.getSignatureHelp === "function") {
+                            var pythonHelp = invokeSemantic(
+                                "signatureHelp",
+                                [session, normalizePosition(pos), text],
+                                null
+                            );
+                            if (pythonHelp) {
+                                applyPythonProviderState();
+                                return pythonHelp;
+                            }
+                        }
+                    }
+                    var pythonCompleter = getStaticCompleter();
+                    return pythonCompleter &&
+                        typeof pythonCompleter.getSignatureHelp === "function" ?
+                        pythonCompleter.getSignatureHelp(session, normalizePosition(pos)) : null;
+                }
+                if (isLuaDocumentUri(state.documentUri)) {
+                    if (updateSemanticState(session, text.length)) {
+                        var lua = getLuaService();
+                        if (lua && typeof lua.getSignatureHelp === "function") {
+                            var luaHelp = invokeSemantic(
+                                "signatureHelp",
+                                [session, normalizePosition(pos), text],
+                                null
+                            );
+                            if (luaHelp) {
+                                applyLuaProviderState();
+                                return luaHelp;
+                            }
+                        }
+                    }
+                    var luaCompleter = getStaticCompleter();
+                    return luaCompleter &&
+                        typeof luaCompleter.getSignatureHelp === "function" ?
+                        luaCompleter.getSignatureHelp(session, normalizePosition(pos)) : null;
+                }
+                if (isJsonDocumentUri(state.documentUri) ||
+                    !isJavaScriptFamilyDocument(session)) {
                     updateSemanticState(session, text.length);
-                    return null;
+                    if (isJsonDocumentUri(state.documentUri)) {
+                        return null;
+                    }
+                    var staticCompleter = getStaticCompleter();
+                    return staticCompleter && typeof staticCompleter.getSignatureHelp === "function" ?
+                        staticCompleter.getSignatureHelp(session, normalizePosition(pos)) : null;
                 }
                 if (updateSemanticState(session, text.length)) {
                     var service = getTsService();
                     if (service && typeof service.getSignatureHelp === "function") {
                         var startedAt = Date.now();
-                        var tsHelp = service.getSignatureHelp(session, normalizePosition(pos), text);
+                        var tsHelp = invokeSemantic(
+                            "signatureHelp",
+                            [session, normalizePosition(pos), text],
+                            null
+                        );
                         recordSemanticOperation(startedAt, "signatureHelp");
                         if (tsHelp && !semanticCircuitOpen) {
                             applyTsProviderState();
@@ -1913,10 +2735,81 @@
             }
         }
 
+        function getSignatureHelpAsync(pos, callback) {
+            callback = typeof callback === "function" ? callback : noop;
+            var pythonDocument = isPythonDocumentUri(state.documentUri);
+            var luaDocument = isLuaDocumentUri(state.documentUri);
+            if (!pythonDocument && !luaDocument) {
+                callback(null, getSignatureHelp(pos));
+                return null;
+            }
+            var text = textFromSession(session);
+            var normalized = normalizePosition(pos);
+            if (!updateSemanticState(session, text.length)) {
+                callback(null, getSignatureHelp(normalized));
+                return null;
+            }
+            var service = pythonDocument ? getPythonService() : getLuaService();
+            if (!service || typeof service.getSignatureHelp !== "function") {
+                callback(null, getSignatureHelp(normalized));
+                return null;
+            }
+            var startedAt = Date.now();
+            return service.getSignatureHelp(session, normalized, text, function(error, help) {
+                recordSemanticOperation(
+                    startedAt,
+                    pythonDocument ? "python-signatureHelp" : "lua-signatureHelp"
+                );
+                if (!error) {
+                    if (pythonDocument) {
+                        applyPythonProviderState();
+                    } else {
+                        applyLuaProviderState();
+                    }
+                }
+                callback(error || null, help || getSignatureHelp(normalized));
+            });
+        }
+
         function getDefinition(pos) {
             try {
                 var text = textFromSession(session);
-                if (isJsonDocumentUri(state.documentUri)) {
+                if (isPythonDocumentUri(state.documentUri)) {
+                    if (updateSemanticState(session, text.length)) {
+                        var python = getPythonService();
+                        if (python && typeof python.getDefinition === "function") {
+                            var pythonTarget = invokeSemantic(
+                                "definition",
+                                [session, normalizePosition(pos), text],
+                                null
+                            );
+                            if (pythonTarget) {
+                                applyPythonProviderState();
+                                return pythonTarget;
+                            }
+                        }
+                    }
+                    return null;
+                }
+                if (isLuaDocumentUri(state.documentUri)) {
+                    if (updateSemanticState(session, text.length)) {
+                        var lua = getLuaService();
+                        if (lua && typeof lua.getDefinition === "function") {
+                            var luaTarget = invokeSemantic(
+                                "definition",
+                                [session, normalizePosition(pos), text],
+                                null
+                            );
+                            if (luaTarget) {
+                                applyLuaProviderState();
+                                return luaTarget;
+                            }
+                        }
+                    }
+                    return null;
+                }
+                if (isJsonDocumentUri(state.documentUri) ||
+                    !isJavaScriptFamilyDocument(session)) {
                     updateSemanticState(session, text.length);
                     return null;
                 }
@@ -1924,7 +2817,11 @@
                     var service = getTsService();
                     if (service && typeof service.getDefinition === "function") {
                         var startedAt = Date.now();
-                        var target = service.getDefinition(session, normalizePosition(pos), text);
+                        var target = invokeSemantic(
+                            "definition",
+                            [session, normalizePosition(pos), text],
+                            null
+                        );
                         recordSemanticOperation(startedAt, "definition");
                         if (target && !semanticCircuitOpen) {
                             applyTsProviderState();
@@ -1941,10 +2838,47 @@
             }
         }
 
+        function getDefinitionAsync(pos, callback) {
+            callback = typeof callback === "function" ? callback : noop;
+            var pythonDocument = isPythonDocumentUri(state.documentUri);
+            var luaDocument = isLuaDocumentUri(state.documentUri);
+            if (!pythonDocument && !luaDocument) {
+                callback(null, getDefinition(pos));
+                return null;
+            }
+            var text = textFromSession(session);
+            var normalized = normalizePosition(pos);
+            if (!updateSemanticState(session, text.length)) {
+                callback(null, null);
+                return null;
+            }
+            var service = pythonDocument ? getPythonService() : getLuaService();
+            if (!service || typeof service.getDefinition !== "function") {
+                callback(null, null);
+                return null;
+            }
+            var startedAt = Date.now();
+            return service.getDefinition(session, normalized, text, function(error, target) {
+                recordSemanticOperation(
+                    startedAt,
+                    pythonDocument ? "python-definition" : "lua-definition"
+                );
+                if (!error) {
+                    if (pythonDocument) {
+                        applyPythonProviderState();
+                    } else {
+                        applyLuaProviderState();
+                    }
+                }
+                callback(error || null, target || null);
+            });
+        }
+
         function getRename(pos) {
             try {
                 var text = textFromSession(session);
-                if (isJsonDocumentUri(state.documentUri)) {
+                if (isJsonDocumentUri(state.documentUri) ||
+                    !isJavaScriptFamilyDocument(session)) {
                     updateSemanticState(session, text.length);
                     return null;
                 }
@@ -1952,10 +2886,10 @@
                     var service = getTsService();
                     if (service && typeof service.getRename === "function") {
                         var startedAt = Date.now();
-                        var candidate = service.getRename(
-                            session,
-                            normalizePosition(pos),
-                            text
+                        var candidate = invokeSemantic(
+                            "rename",
+                            [session, normalizePosition(pos), text],
+                            null
                         );
                         recordSemanticOperation(startedAt, "rename");
                         if (candidate && !semanticCircuitOpen) {
@@ -1976,7 +2910,8 @@
         function getCodeActions(pos) {
             try {
                 var text = textFromSession(session);
-                if (isJsonDocumentUri(state.documentUri)) {
+                if (isJsonDocumentUri(state.documentUri) ||
+                    !isJavaScriptFamilyDocument(session)) {
                     updateSemanticState(session, text.length);
                     return [];
                 }
@@ -1984,10 +2919,10 @@
                     var service = getTsService();
                     if (service && typeof service.getCodeActions === "function") {
                         var startedAt = Date.now();
-                        var actions = service.getCodeActions(
-                            session,
-                            normalizePosition(pos),
-                            text
+                        var actions = invokeSemantic(
+                            "codeActions",
+                            [session, normalizePosition(pos), text],
+                            []
                         ) || [];
                         recordSemanticOperation(startedAt, "codeActions");
                         if (actions.length && !semanticCircuitOpen) {
@@ -2014,7 +2949,10 @@
             cancelTsRetry();
             configurationRevision++;
             destroyed = true;
-            disposeTsService();
+            disposeSemanticServices();
+            if (semanticHost) {
+                semanticHost.dispose();
+            }
             state.enabled = false;
             state.state = STATE_DISABLED;
             state.semanticServiceSuppressed = false;
@@ -2028,10 +2966,15 @@
             refresh: refresh,
             warmUp: warmUp,
             getState: getState,
+            getCapabilities: effectiveCapabilities,
+            supportsCapability: supportsCapability,
             getCompletions: getCompletions,
             getHover: getHover,
+            getHoverAsync: getHoverAsync,
             getSignatureHelp: getSignatureHelp,
+            getSignatureHelpAsync: getSignatureHelpAsync,
             getDefinition: getDefinition,
+            getDefinitionAsync: getDefinitionAsync,
             getRename: getRename,
             getCodeActions: getCodeActions,
             getDiagnostics: getDiagnostics,

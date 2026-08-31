@@ -25,7 +25,147 @@ val autoJs6TypeScriptDirectory = layout.projectDirectory.dir(
 val autoJs6EditorAssetsDirectory = layout.projectDirectory.dir(
     "src/main/assets/editor/ace-builds-1.4.12/autojs6",
 )
+val autoJs6LanguageIndicesDirectory = autoJs6EditorAssetsDirectory.dir("indices")
+val autoJs6PythonWorkerDirectory = autoJs6EditorAssetsDirectory.dir("python")
+val autoJs6LuaRuntimeDirectory = layout.projectDirectory.dir("src/main/assets/luals")
+val autoJs6LuaJniDirectory = layout.projectDirectory.dir("src/main/jniLibs")
+val aceDistributionAssetsDirectory = layout.projectDirectory.dir(
+    "src/main/assets/editor/ace-builds-1.4.12/src-min-noconflict",
+)
 val autoJs6NodeExecutable = providers.gradleProperty("autojs6.nodeExecutable").orElse("node")
+val autoJs6LanguageIndexGenerator = rootProject.layout.projectDirectory.file(
+    "tools/ace-lsp/generate-language-indices.mjs",
+)
+val generateAutoJs6LanguageIndices = tasks.register<Exec>("generateAutoJs6LanguageIndices") {
+    group = "build"
+    description = "Regenerates deterministic Python, Lua, Java, and Kotlin static completion indices."
+    inputs.file(autoJs6LanguageIndexGenerator)
+    outputs.dir(autoJs6LanguageIndicesDirectory)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(
+        autoJs6LanguageIndexGenerator.asFile.absolutePath,
+        "--out-dir",
+        autoJs6LanguageIndicesDirectory.asFile.absolutePath,
+    )
+}
+val verifyAutoJs6LanguageIndices = tasks.register<Exec>("verifyAutoJs6LanguageIndices") {
+    group = "verification"
+    description = "Checks that committed multi-language static completion indices are current."
+    inputs.file(autoJs6LanguageIndexGenerator)
+    inputs.dir(autoJs6LanguageIndicesDirectory)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(
+        autoJs6LanguageIndexGenerator.asFile.absolutePath,
+        "--out-dir",
+        autoJs6LanguageIndicesDirectory.asFile.absolutePath,
+        "--check",
+    )
+}
+val autoJs6PythonWorkerBuilder = rootProject.layout.projectDirectory.file(
+    "tools/ace-lsp/build-python-worker.mjs",
+)
+val generateAutoJs6PythonWorker = tasks.register<Exec>("generateAutoJs6PythonWorker") {
+    group = "build"
+    description = "Regenerates the pinned Pyright 1.1.413 Python 3.12 WebWorker bundle."
+    inputs.files(
+        autoJs6PythonWorkerBuilder,
+        rootProject.fileTree("tools/ace-lsp/python-worker"),
+    )
+    outputs.dir(autoJs6PythonWorkerDirectory)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(
+        autoJs6PythonWorkerBuilder.asFile.absolutePath,
+        "--out-dir",
+        autoJs6PythonWorkerDirectory.asFile.absolutePath,
+    )
+    providers.gradleProperty("autojs6.pyrightDir").orNull?.let { pyrightDir ->
+        args("--pyright-dir", pyrightDir)
+    }
+}
+val verifyAutoJs6PythonWorker = tasks.register<Exec>("verifyAutoJs6PythonWorker") {
+    group = "verification"
+    description = "Verifies the pinned Python Worker, semantic feature gate, size, latency, and release lifecycle."
+    val verifier = rootProject.layout.projectDirectory.file(
+        "tools/ace-lsp/verify-python-worker.mjs",
+    )
+    inputs.files(
+        verifier,
+        autoJs6PythonWorkerDirectory.file("autojs6-python-worker.js"),
+        autoJs6PythonWorkerDirectory.file("manifest.json"),
+        autoJs6PythonWorkerDirectory.file("THIRD_PARTY_LICENSES.txt"),
+        autoJs6EditorAssetsDirectory.file("autojs6_python_provider.js"),
+    )
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(
+        verifier.asFile.absolutePath,
+        "--asset-dir",
+        autoJs6PythonWorkerDirectory.asFile.absolutePath,
+    )
+}
+val verifyAutoJs6LuaLanguageServer = tasks.register<Exec>("verifyAutoJs6LuaLanguageServer") {
+    group = "verification"
+    description =
+        "Verifies pinned LuaLS assets, Android ELF ABIs, protocol wiring, fallback, and restart lifecycle."
+    val verifier = rootProject.layout.projectDirectory.file(
+        "tools/ace-lsp/verify-luals-runtime.mjs",
+    )
+    val manifestGenerator = rootProject.layout.projectDirectory.file(
+        "tools/ace-lsp/generate-luals-manifest.mjs",
+    )
+    val buildLock = rootProject.layout.projectDirectory.file(
+        "tools/ace-lsp/luals-build-lock.json",
+    )
+    val luaProvider = autoJs6EditorAssetsDirectory.file("autojs6_lua_provider.js")
+    val lspCore = autoJs6EditorAssetsDirectory.file("autojs6_lsp_core.js")
+    val lspTransports = autoJs6EditorAssetsDirectory.file("autojs6_lsp_transports.js")
+    val client = autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js")
+    val bridge = autoJs6EditorAssetsDirectory.file("autojs6_ace_bridge.js")
+    val editorHtml = layout.projectDirectory.file(
+        "src/main/assets/editor/ace-builds-1.4.12/autojs6_editor.html",
+    )
+    inputs.files(
+        verifier,
+        manifestGenerator,
+        buildLock,
+        luaProvider,
+        lspCore,
+        lspTransports,
+        client,
+        bridge,
+        editorHtml,
+    )
+    inputs.dir(autoJs6LuaRuntimeDirectory)
+    inputs.dir(autoJs6LuaJniDirectory)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(
+        verifier.asFile.absolutePath,
+        "--asset-root",
+        autoJs6LuaRuntimeDirectory.asFile.absolutePath,
+        "--jni-root",
+        autoJs6LuaJniDirectory.asFile.absolutePath,
+        "--lock",
+        buildLock.asFile.absolutePath,
+        "--manifest-generator",
+        manifestGenerator.asFile.absolutePath,
+        "--provider",
+        luaProvider.asFile.absolutePath,
+        "--lsp-core",
+        lspCore.asFile.absolutePath,
+        "--lsp-transports",
+        lspTransports.asFile.absolutePath,
+        "--client",
+        client.asFile.absolutePath,
+        "--bridge",
+        bridge.asFile.absolutePath,
+        "--html",
+        editorHtml.asFile.absolutePath,
+    )
+}
 val generateAutoJs6LspDeclarations = tasks.register<GenerateAutoJs6LspDeclarationsTask>(
     "generateAutoJs6LspDeclarations",
 ) {
@@ -61,12 +201,22 @@ tasks.register("generateAutoJs6EditorAssets") {
 val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     group = "verification"
     description = "Verifies execution-profile diagnostics, declaration groups, and old-WebView fallback."
-    dependsOn(generateAutoJs6LspDeclarations)
+    dependsOn(generateAutoJs6LspDeclarations, verifyAutoJs6LanguageIndices)
 
     val verifier = rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-runtime.mjs")
     val runtime = autoJs6TypeScriptDirectory.file("typescript.js")
     val service = autoJs6EditorAssetsDirectory.file("autojs6_ts_language_service.js")
+    val semanticProvider = autoJs6EditorAssetsDirectory.file("autojs6_semantic_provider.js")
+    val pythonProvider = autoJs6EditorAssetsDirectory.file("autojs6_python_provider.js")
+    val luaProvider = autoJs6EditorAssetsDirectory.file("autojs6_lua_provider.js")
+    val lspCore = autoJs6EditorAssetsDirectory.file("autojs6_lsp_core.js")
+    val lspTransports = autoJs6EditorAssetsDirectory.file("autojs6_lsp_transports.js")
     val client = autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js")
+    val completer = autoJs6EditorAssetsDirectory.file("autojs6_completer.js")
+    val localSymbols = autoJs6EditorAssetsDirectory.file("autojs6_local_symbols.js")
+    val languageSnippets = listOf("python", "lua", "java", "kotlin").map { language ->
+        aceDistributionAssetsDirectory.file("snippets/$language.js")
+    }
     val compatibility = autoJs6LspDeclarationsDirectory.file("lib.autojs6.extra.d.ts")
     fun generatedDeclaration(groupId: String) = generateAutoJs6LspDeclarations.flatMap { task ->
         task.outputDirectory.file(
@@ -82,7 +232,16 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
         verifier,
         runtime,
         service,
+        semanticProvider,
+        pythonProvider,
+        luaProvider,
+        lspCore,
+        lspTransports,
         client,
+        completer,
+        localSymbols,
+        autoJs6LanguageIndicesDirectory,
+        languageSnippets,
         compatibility,
         generatedCore,
         generatedAndroid,
@@ -100,8 +259,26 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
             runtime.asFile.absolutePath,
             "--service",
             service.asFile.absolutePath,
+            "--semantic-provider",
+            semanticProvider.asFile.absolutePath,
+            "--python-provider",
+            pythonProvider.asFile.absolutePath,
+            "--lua-provider",
+            luaProvider.asFile.absolutePath,
+            "--lsp-core",
+            lspCore.asFile.absolutePath,
+            "--lsp-transports",
+            lspTransports.asFile.absolutePath,
             "--client",
             client.asFile.absolutePath,
+            "--completer",
+            completer.asFile.absolutePath,
+            "--local-symbols",
+            localSymbols.asFile.absolutePath,
+            "--language-indices",
+            autoJs6LanguageIndicesDirectory.asFile.absolutePath,
+            "--ace-assets",
+            aceDistributionAssetsDirectory.asFile.absolutePath,
             "--core",
             generatedCore.get().asFile.absolutePath,
             "--android",
@@ -119,7 +296,11 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
 }
 
 tasks.named("check") {
-    dependsOn(verifyAutoJs6LspRuntime)
+    dependsOn(
+        verifyAutoJs6LspRuntime,
+        verifyAutoJs6PythonWorker,
+        verifyAutoJs6LuaLanguageServer,
+    )
 }
 
 android {
@@ -189,6 +370,15 @@ android {
     }
 
     packaging {
+        jniLibs {
+            // LuaLS is launched directly from ApplicationInfo.nativeLibraryDir.
+            // Legacy packaging keeps the selected ABI's ELF extracted and executable. Preserve
+            // the pinned bytes too: the runtime validates this file against the build lock before
+            // executing it, so AGP's normal debug-symbol stripping must not rewrite the ELF.
+            useLegacyPackaging = true
+            keepDebugSymbols += "**/libautojs6_luals.so"
+            keepDebugSymbols += "**/libautojs6_luals_install_compat.so"
+        }
         resources {
             pickFirsts += listOf(
                 "META-INF/DEPENDENCIES",

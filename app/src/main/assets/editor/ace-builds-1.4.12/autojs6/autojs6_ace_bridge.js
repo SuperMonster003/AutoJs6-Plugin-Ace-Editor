@@ -17,6 +17,8 @@
     var dirty = false;
     var suppressChange = false;
     var documentLongLineSafetyMode = false;
+    var documentPath = "file:///autojs6/current.js";
+    var documentAceMode = "ace/mode/javascript";
     var preferredWordWrapEnabled = false;
     var breakpoints = [];
     var lineNumbersEnabled = true;
@@ -150,6 +152,143 @@
         "ace/theme/twilight": true,
         "ace/theme/vibrant_ink": true,
         "ace/theme/visual_studio_dark": true
+    };
+
+    function cleanDocumentFileName(fileName) {
+        return String(fileName || "").replace(/[?#].*$/, "").toLowerCase();
+    }
+
+    function resolveAceMode(fileName) {
+        var clean = cleanDocumentFileName(fileName);
+        if (/\.json$/.test(clean)) {
+            return "ace/mode/json";
+        }
+        if (/\.py$/.test(clean)) {
+            return "ace/mode/python";
+        }
+        if (/\.lua$/.test(clean)) {
+            return "ace/mode/lua";
+        }
+        if (/\.java$/.test(clean)) {
+            return "ace/mode/java";
+        }
+        if (/\.(?:kt|kts)$/.test(clean)) {
+            return "ace/mode/kotlin";
+        }
+        if (/\.tsx$/.test(clean) || /\.(?:ts|mts|cts)$/.test(clean)) {
+            return "ace/mode/typescript";
+        }
+        if (/\.jsx$/.test(clean)) {
+            return "ace/mode/jsx";
+        }
+        if (/\.(?:js|mjs|cjs)$/.test(clean)) {
+            return "ace/mode/javascript";
+        }
+        return "ace/mode/text";
+    }
+
+    function aceModeId(activeSession) {
+        try {
+            var mode = activeSession && typeof activeSession.getMode === "function" ?
+                activeSession.getMode() : null;
+            return String(mode && mode.$id || "");
+        } catch (ignore) {
+            return "";
+        }
+    }
+
+    function isJavaScriptFamilyMode(modeId) {
+        modeId = String(modeId || "");
+        return modeId === "ace/mode/javascript" ||
+            modeId === "ace/mode/jsx" ||
+            modeId === "ace/mode/typescript";
+    }
+
+    function isJavaScriptFamilySession(activeSession) {
+        return isJavaScriptFamilyMode(aceModeId(activeSession));
+    }
+
+    function languageIdForMode(modeId) {
+        modeId = String(modeId || "");
+        if (modeId === "ace/mode/javascript" || modeId === "ace/mode/jsx") {
+            return "javascript";
+        }
+        if (modeId === "ace/mode/typescript") {
+            return "typescript";
+        }
+        if (modeId === "ace/mode/python") {
+            return "python";
+        }
+        if (modeId === "ace/mode/lua") {
+            return "lua";
+        }
+        if (modeId === "ace/mode/java") {
+            return "java";
+        }
+        if (modeId === "ace/mode/kotlin") {
+            return "kotlin";
+        }
+        if (modeId === "ace/mode/json") {
+            return "json";
+        }
+        return "text";
+    }
+
+    function languageIdForSession(activeSession) {
+        return languageIdForMode(aceModeId(activeSession));
+    }
+
+    function supportsStaticIndexMode(modeId) {
+        var language = languageIdForMode(modeId);
+        return language === "javascript" || language === "typescript" ||
+            language === "python" || language === "lua" ||
+            language === "java" || language === "kotlin";
+    }
+
+    function supportsStaticIndexSession(activeSession) {
+        return supportsStaticIndexMode(aceModeId(activeSession));
+    }
+
+    function shouldUseAceWorkerForMode(modeId) {
+        return modeId === "ace/mode/lua";
+    }
+
+    function applyDocumentWorkerPolicy(modeId) {
+        if (!session || typeof session.setUseWorker !== "function") {
+            return false;
+        }
+        var enabled = !documentLongLineSafetyMode && shouldUseAceWorkerForMode(modeId);
+        session.setUseWorker(enabled);
+        return enabled;
+    }
+
+    function applyDocumentAceMode() {
+        documentAceMode = resolveAceMode(documentPath);
+        if (!session || typeof session.setMode !== "function") {
+            return documentAceMode;
+        }
+        var targetMode = documentLongLineSafetyMode ? "ace/mode/text" : documentAceMode;
+        if (aceModeId(session) !== targetMode) {
+            session.setMode(targetMode);
+        }
+        applyDocumentWorkerPolicy(targetMode);
+        return targetMode;
+    }
+
+    function setDocumentPath(path) {
+        documentPath = String(path || "file:///autojs6/current.js");
+        return applyDocumentAceMode();
+    }
+
+    global.AutoJsAceLanguageRouting = {
+        resolveAceMode: resolveAceMode,
+        isJavaScriptFamilyMode: isJavaScriptFamilyMode,
+        isJavaScriptFamilySession: isJavaScriptFamilySession,
+        languageIdForMode: languageIdForMode,
+        languageIdForSession: languageIdForSession,
+        supportsStaticIndexMode: supportsStaticIndexMode,
+        supportsStaticIndexSession: supportsStaticIndexSession,
+        shouldUseAceWorkerForMode: shouldUseAceWorkerForMode
     };
 
     function callBridge(name, args) {
@@ -823,17 +962,52 @@
         return publishLspState(lspClient && lspClient.getState ? lspClient.getState() : null);
     }
 
-    function requestDefinitionNavigation(pos) {
-        if (!lspClient || typeof lspClient.getDefinition !== "function") {
+    function supportsLspCapability(capability) {
+        if (!lspClient) {
             return false;
         }
-        var target = lspClient.getDefinition(pos || editor.getCursorPosition());
+        if (typeof lspClient.supportsCapability === "function") {
+            return lspClient.supportsCapability(String(capability || ""));
+        }
+        var state = typeof lspClient.getState === "function" ? lspClient.getState() : null;
+        return !!(state && Array.isArray(state.capabilities) &&
+            state.capabilities.indexOf(String(capability || "")) >= 0);
+    }
+
+    function requestDefinitionNavigation(pos) {
+        if (!supportsLspCapability("definition") ||
+            typeof lspClient.getDefinition !== "function") {
+            return false;
+        }
+        var position = pos || editor.getCursorPosition();
+        var lspState = typeof lspClient.getState === "function" ? lspClient.getState() : null;
+        if (lspState &&
+            (lspState.semanticLanguage === "python" || lspState.semanticLanguage === "lua") &&
+            typeof lspClient.getDefinitionAsync === "function") {
+            lspClient.getDefinitionAsync(position, function(error, target) {
+                publishLspState();
+                if (!error) {
+                    publishDefinitionNavigationTarget(target);
+                }
+            });
+            return true;
+        }
+        return publishDefinitionNavigationTarget(lspClient.getDefinition(position));
+    }
+
+    function publishDefinitionNavigationTarget(target) {
         publishLspState();
         if (!target || typeof target.uri !== "string" || !target.uri ||
             target.uri.length > 4096 ||
             !isFinite(Number(target.line)) || !isFinite(Number(target.column)) ||
             !isFinite(Number(target.endLine)) || !isFinite(Number(target.endColumn))) {
             return false;
+        }
+        var currentState = lspClient && typeof lspClient.getState === "function" ?
+            lspClient.getState() : null;
+        if (currentState && target.uri === currentState.documentUri) {
+            jumpTo(Number(target.line), Number(target.column));
+            return true;
         }
         callBridge("notifyDefinitionNavigationRequested", [JSON.stringify(target)]);
         return true;
@@ -842,6 +1016,9 @@
     function requestCurrentDocumentCodeAction(pos) {
         if (!editor || (typeof editor.getReadOnly === "function" && editor.getReadOnly()) ||
             !lspClient || typeof lspClient.getCodeActions !== "function") {
+            return false;
+        }
+        if (!supportsLspCapability("codeActions")) {
             return false;
         }
         var actions = lspClient.getCodeActions(pos || editor.getCursorPosition()) || [];
@@ -864,6 +1041,9 @@
     function requestProjectRename(pos) {
         if (!editor || (typeof editor.getReadOnly === "function" && editor.getReadOnly()) ||
             !lspClient || typeof lspClient.getRename !== "function") {
+            return false;
+        }
+        if (!supportsLspCapability("rename")) {
             return false;
         }
         var candidate = lspClient.getRename(pos || editor.getCursorPosition());
@@ -2944,7 +3124,7 @@
         if (!changed) {
             return;
         }
-        session.setMode(enabled ? "ace/mode/text" : "ace/mode/javascript");
+        applyDocumentAceMode();
         session.setUseWrapMode(enabled ? false : preferredWordWrapEnabled);
         editor.setOption("wrap", enabled ? false : preferredWordWrapEnabled);
         editor.setOption("enableBasicAutocompletion", !enabled);
@@ -3522,6 +3702,9 @@
     function removeLanguageToolCompleter(completer) {
         var languageTools = languageToolsModule();
         var completers = languageTools && languageTools.completers;
+        if (!Array.isArray(completers) && editor && Array.isArray(editor.completers)) {
+            completers = editor.completers;
+        }
         if (!completer || !Array.isArray(completers)) {
             return false;
         }
@@ -3601,6 +3784,7 @@
                 });
         }
         lspCompletionCompleter = {
+            autojs6Lsp: true,
             identifierRegexps: staticCompleter && staticCompleter.identifierRegexps,
             retrievePrecedingIdentifier: staticCompleter && staticCompleter.retrievePrecedingIdentifier,
             getCompletions: function(activeEditor, activeSession, pos, prefix, callback) {
@@ -4775,8 +4959,7 @@
         installDiagnosticGutterTooltipSuppression();
         installFoldPlaceholderClickCapture();
         installDynamicWrapGutterWidthPatch();
-        session.setMode("ace/mode/javascript");
-        session.setUseWorker(false);
+        applyDocumentAceMode();
         session.setTabSize(4);
         session.setUseSoftTabs(true);
 
@@ -4951,6 +5134,10 @@
 
         global.AutoJsAce = {
             isReady: function() { return !!editor && !!session; },
+            resolveAceMode: resolveAceMode,
+            setDocumentPath: setDocumentPath,
+            getDocumentPath: function() { return documentPath; },
+            getAceMode: function() { return aceModeId(session); },
             getText: function() { return session.getValue(); },
             setText: setText,
             setTextDirty: setTextDirty,
@@ -5021,6 +5208,11 @@
             getLspOptions: function() { return callBridge("getLspOptions") || "{}"; },
             refreshLsp: function(reason) { return refreshLspAndPublish(reason); },
             getLspState: function() { return getLspStateAndPublish(); },
+            getLspCapabilities: function() {
+                return lspClient && typeof lspClient.getCapabilities === "function" ?
+                    lspClient.getCapabilities() : [];
+            },
+            supportsLspCapability: supportsLspCapability,
             getLspHover: function(row, column) {
                 var result = lspClient ? lspClient.getHover({ row: row, column: column }) : null;
                 publishLspState();
@@ -5135,7 +5327,14 @@
                 tooltipController = global.AutoJsAceTooltip.install({
                     editor: editor,
                     session: session,
-                    getHover: function(pos) {
+                    getHover: function(pos, callback) {
+                        if (lspClient && typeof callback === "function" &&
+                            typeof lspClient.getHoverAsync === "function") {
+                            return lspClient.getHoverAsync(pos, function(error, result) {
+                                publishLspState();
+                                callback(error, result);
+                            });
+                        }
                         var result = lspClient ? lspClient.getHover(pos) : null;
                         publishLspState();
                         return result;
@@ -5154,7 +5353,14 @@
                 signatureHelpController = global.AutoJsAceSignatureHelp.install({
                     editor: editor,
                     session: session,
-                    getSignatureHelp: function(pos) {
+                    getSignatureHelp: function(pos, callback) {
+                        if (lspClient && typeof callback === "function" &&
+                            typeof lspClient.getSignatureHelpAsync === "function") {
+                            return lspClient.getSignatureHelpAsync(pos, function(error, result) {
+                                publishLspState();
+                                callback(error, result);
+                            });
+                        }
                         if (lspClient && lspClient.getSignatureHelp) {
                             var result = lspClient.getSignatureHelp(pos);
                             publishLspState();

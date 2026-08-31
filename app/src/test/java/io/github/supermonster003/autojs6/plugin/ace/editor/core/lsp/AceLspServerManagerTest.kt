@@ -1,6 +1,9 @@
 package io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp
 
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.AceEditorLspPreferences
+import java.io.File
+import java.net.URI
+import java.nio.file.Files
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -46,6 +49,13 @@ class AceLspServerManagerTest {
         assertEquals(AceTypeScriptExecutionProfiles.TYPESCRIPT_VERSION, snapshot.typescriptVersion)
         assertEquals(null, snapshot.typescriptProfile)
         assertEquals(null, snapshot.typescriptProfileRevision)
+        assertEquals(
+            AceEditorLspPreferences.SEMANTIC_LANGUAGE_TYPESCRIPT,
+            snapshot.semanticLanguage,
+        )
+        assertEquals(AceLspServerManager.TYPESCRIPT_IN_PROCESS_PROVIDER_ID, snapshot.semanticProviderId)
+        assertEquals(AceLspServerManager.SEMANTIC_PROVIDER_CAPABILITIES, snapshot.semanticCapabilities)
+        assertEquals(AceEditorLspPreferences.DEFAULT_SEMANTIC_LANGUAGES, snapshot.semanticLanguages)
         assertTrue(snapshot.declarationGroups.isEmpty())
         assertTrue(snapshot.effectiveDeclarationGroups.isEmpty())
         assertEquals(
@@ -76,6 +86,10 @@ class AceLspServerManagerTest {
         )
         assertTrue(optionsJson.contains("\"typescriptProfile\":null"))
         assertTrue(optionsJson.contains("\"typescriptProfileRevision\":null"))
+        assertTrue(optionsJson.contains("\"semanticLanguage\":\"typescript\""))
+        assertTrue(optionsJson.contains("\"semanticProviderId\":\"typescript-in-process\""))
+        assertTrue(optionsJson.contains("\"semanticLanguages\":{\"typescript\":true,\"python\":true"))
+        assertTrue(optionsJson.contains("\"semanticCapabilities\":[\"completion\", \"hover\""))
         assertTrue(optionsJson.contains("\"declarationGroups\":[]"))
         assertTrue(optionsJson.contains("\"effectiveDeclarationGroups\":[]"))
         assertTrue(optionsJson.contains("\"projectSourceFileUris\":[]"))
@@ -170,6 +184,164 @@ class AceLspServerManagerTest {
         assertTrue(snapshot.enabled)
         assertEquals("file:///autojs6/editor/config%20file.json", snapshot.documentUri)
         assertTrue(optionsJson.contains("\"documentUri\":\"file:///autojs6/editor/config%20file.json\""))
+    }
+
+    @Test
+    fun pythonUsesBundledWorkerWhileItsSemanticSwitchIsOn() {
+        val manager = AceLspServerManager(enabledProvider = { true })
+
+        manager.setDocumentPath("/storage/emulated/0/Scripts/main.py")
+        val snapshot = manager.snapshot()
+        val options = manager.bridgeOptionsJson()
+
+        assertTrue(snapshot.enabled)
+        assertEquals(AceEditorLspPreferences.SEMANTIC_LANGUAGE_PYTHON, snapshot.semanticLanguage)
+        assertEquals(AceLspServerManager.PYTHON_WORKER_PROVIDER_ID, snapshot.semanticProviderId)
+        assertEquals(
+            AceLspServerManager.PYTHON_SEMANTIC_PROVIDER_CAPABILITIES,
+            snapshot.semanticCapabilities,
+        )
+        assertEquals(AceLspServerManager.TRANSPORT_WEB_WORKER, snapshot.transport)
+        assertEquals(AceLspServerManager.REASON_BUNDLED_PYTHON_WORKER, snapshot.reason)
+        assertTrue(options.contains("\"python\":true"))
+        assertTrue(options.contains("\"semanticProviderId\":\"python-pyright-worker\""))
+    }
+
+    @Test
+    fun perLanguageSemanticSwitchCanRestorePythonM2Fallback() {
+        val semanticLanguages = AceEditorLspPreferences.DEFAULT_SEMANTIC_LANGUAGES
+            .toMutableMap()
+            .apply {
+                this[AceEditorLspPreferences.SEMANTIC_LANGUAGE_PYTHON] = false
+            }
+        val manager = AceLspServerManager(
+            enabledProvider = { true },
+            semanticLanguagesProvider = { semanticLanguages },
+        )
+
+        manager.setDocumentPath("/storage/emulated/0/Scripts/main.py")
+        val snapshot = manager.snapshot()
+        val options = manager.bridgeOptionsJson()
+
+        assertTrue(snapshot.enabled)
+        assertEquals(null, snapshot.semanticProviderId)
+        assertTrue(snapshot.semanticCapabilities.isEmpty())
+        assertEquals(AceLspServerManager.TRANSPORT_IN_PROCESS, snapshot.transport)
+        assertEquals(AceLspServerManager.REASON_SEMANTIC_PROVIDER_DISABLED, snapshot.reason)
+        assertTrue(options.contains("\"python\":false"))
+        assertTrue(options.contains("\"semanticProviderId\":null"))
+    }
+
+    @Test
+    fun luaUsesBundledStdioServerAndPhysicalWorkspaceWhenItsAbiIsAvailable() {
+        val projectRoot = Files.createTempDirectory("autojs6-lua-manager").toFile()
+        try {
+            val document = File(projectRoot, "main script.lua")
+            val manager = AceLspServerManager(
+                enabledProvider = { true },
+                luaServerAvailableProvider = { true },
+            )
+
+            manager.setDocumentPath(document.absolutePath)
+            val snapshot = manager.snapshot()
+            val options = manager.bridgeOptionsJson()
+
+            assertTrue(snapshot.enabled)
+            assertEquals(AceEditorLspPreferences.SEMANTIC_LANGUAGE_LUA, snapshot.semanticLanguage)
+            assertEquals(AceLspServerManager.LUA_LANGUAGE_SERVER_PROVIDER_ID, snapshot.semanticProviderId)
+            assertEquals(
+                AceLspServerManager.LUA_SEMANTIC_PROVIDER_CAPABILITIES,
+                snapshot.semanticCapabilities,
+            )
+            assertEquals(AceLspServerManager.TRANSPORT_STDIO, snapshot.transport)
+            assertTrue(snapshot.startSupported)
+            assertTrue(snapshot.serverAvailable)
+            assertEquals(AceLspServerManager.REASON_BUNDLED_LUA_LANGUAGE_SERVER, snapshot.reason)
+            assertEquals(projectRoot.canonicalFile, File(URI(snapshot.rootUri)).canonicalFile)
+            assertEquals(document.canonicalFile, File(URI(snapshot.documentUri)).canonicalFile)
+            assertTrue(options.contains("\"lua\":true"))
+            assertTrue(options.contains("\"semanticProviderId\":\"lua-luals\""))
+            assertTrue(options.contains("\"transport\":\"stdio\""))
+            assertTrue(options.contains("\"startSupported\":true"))
+            assertTrue(options.contains("\"serverAvailable\":true"))
+        } finally {
+            projectRoot.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun unavailableLuaAbiRetainsStaticFallbackAndReportsDeterministicReason() {
+        val projectRoot = Files.createTempDirectory("autojs6-lua-unavailable").toFile()
+        try {
+            val manager = AceLspServerManager(
+                enabledProvider = { true },
+                luaServerAvailableProvider = { false },
+            )
+
+            manager.setDocumentPath(File(projectRoot, "main.lua").absolutePath)
+            val snapshot = manager.snapshot()
+
+            assertEquals(AceLspServerManager.LUA_LANGUAGE_SERVER_PROVIDER_ID, snapshot.semanticProviderId)
+            assertEquals(AceLspServerManager.TRANSPORT_STDIO, snapshot.transport)
+            assertTrue(snapshot.startSupported)
+            assertFalse(snapshot.serverAvailable)
+            assertEquals(AceLspServerManager.REASON_LUA_LANGUAGE_SERVER_UNAVAILABLE, snapshot.reason)
+            assertEquals(AceLspServerManager.COMPLETION_PROVIDER_LOCAL_INDEX, snapshot.completionProvider)
+            assertEquals(AceLspServerManager.HOVER_PROVIDER_LOCAL_INDEX, snapshot.hoverProvider)
+            assertEquals(AceLspServerManager.SIGNATURE_PROVIDER_STATIC_LOCAL, snapshot.signatureProvider)
+        } finally {
+            projectRoot.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun perLanguageSemanticSwitchCanRestoreLuaM2Fallback() {
+        val semanticLanguages = AceEditorLspPreferences.DEFAULT_SEMANTIC_LANGUAGES
+            .toMutableMap()
+            .apply {
+                this[AceEditorLspPreferences.SEMANTIC_LANGUAGE_LUA] = false
+            }
+        val projectRoot = Files.createTempDirectory("autojs6-lua-disabled").toFile()
+        try {
+            val manager = AceLspServerManager(
+                enabledProvider = { true },
+                semanticLanguagesProvider = { semanticLanguages },
+                luaServerAvailableProvider = { true },
+            )
+
+            manager.setDocumentPath(File(projectRoot, "main.lua").absolutePath)
+            val snapshot = manager.snapshot()
+
+            assertEquals(null, snapshot.semanticProviderId)
+            assertTrue(snapshot.semanticCapabilities.isEmpty())
+            assertEquals(AceLspServerManager.TRANSPORT_IN_PROCESS, snapshot.transport)
+            assertFalse(snapshot.startSupported)
+            assertFalse(snapshot.serverAvailable)
+            assertEquals(AceLspServerManager.REASON_SEMANTIC_PROVIDER_DISABLED, snapshot.reason)
+            assertTrue(manager.bridgeOptionsJson().contains("\"lua\":false"))
+        } finally {
+            projectRoot.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun perLanguageSemanticSwitchCanDisableTypeScriptWithoutDisablingM2() {
+        val semanticLanguages = AceEditorLspPreferences.DEFAULT_SEMANTIC_LANGUAGES.toMutableMap().apply {
+            this[AceEditorLspPreferences.SEMANTIC_LANGUAGE_TYPESCRIPT] = false
+        }
+        val manager = AceLspServerManager(
+            enabledProvider = { true },
+            semanticLanguagesProvider = { semanticLanguages },
+        )
+
+        manager.setDocumentPath("main.ts")
+        val snapshot = manager.snapshot()
+
+        assertTrue(snapshot.enabled)
+        assertEquals(null, snapshot.semanticProviderId)
+        assertTrue(snapshot.semanticCapabilities.isEmpty())
+        assertEquals(AceLspServerManager.COMPLETION_PROVIDER_LOCAL_INDEX, snapshot.completionProvider)
+        assertTrue(manager.bridgeOptionsJson().contains("\"typescript\":false"))
     }
 
     @Test

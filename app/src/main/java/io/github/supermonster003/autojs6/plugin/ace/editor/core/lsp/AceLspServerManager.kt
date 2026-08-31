@@ -14,7 +14,14 @@ class AceLspServerManager(
     private val declarationGroupsProvider: () -> Collection<String> = {
         AceEditorLspPreferences.DEFAULT_DECLARATION_GROUPS
     },
+    private val semanticLanguagesProvider: () -> Map<String, Boolean> = {
+        AceEditorLspPreferences.DEFAULT_SEMANTIC_LANGUAGES
+    },
+    private val luaServerAvailableProvider: () -> Boolean = { false },
 ) {
+
+    // Historical name retained for API stability. This class publishes configuration/snapshots;
+    // protocol and process lifecycles live in AutoJsAceLspCore/AceStdioLspProcessRegistry.
 
     @Volatile
     private var attached = false
@@ -166,6 +173,32 @@ class AceLspServerManager(
     fun snapshot(): AceLspServerSnapshot {
         val declarationGroups = AceEditorLspPreferences.normalizeDeclarationGroups(declarationGroupsProvider())
         val effectiveDeclarationGroups = AceEditorLspPreferences.resolveDeclarationGroups(declarationGroups)
+        val configuredSemanticLanguages = semanticLanguagesProvider()
+        val semanticLanguages = AceEditorLspPreferences.SUPPORTED_SEMANTIC_LANGUAGES.associateWith { language ->
+            configuredSemanticLanguages[language]
+                ?: AceEditorLspPreferences.defaultSemanticEnabled(language)
+        }
+        val enabled = enabledProvider()
+        val semanticLanguage = AceEditorLspPreferences.semanticLanguageForDocument(documentPath)
+        val semanticProviderId = when {
+            !enabled -> null
+            semanticLanguage == AceEditorLspPreferences.SEMANTIC_LANGUAGE_TYPESCRIPT &&
+                semanticLanguages[AceEditorLspPreferences.SEMANTIC_LANGUAGE_TYPESCRIPT] == true ->
+                TYPESCRIPT_IN_PROCESS_PROVIDER_ID
+            semanticLanguage == AceEditorLspPreferences.SEMANTIC_LANGUAGE_PYTHON &&
+                semanticLanguages[AceEditorLspPreferences.SEMANTIC_LANGUAGE_PYTHON] == true ->
+                PYTHON_WORKER_PROVIDER_ID
+            semanticLanguage == AceEditorLspPreferences.SEMANTIC_LANGUAGE_LUA &&
+                semanticLanguages[AceEditorLspPreferences.SEMANTIC_LANGUAGE_LUA] == true ->
+                LUA_LANGUAGE_SERVER_PROVIDER_ID
+            else -> null
+        }
+        val semanticCapabilities = when (semanticProviderId) {
+            TYPESCRIPT_IN_PROCESS_PROVIDER_ID -> SEMANTIC_PROVIDER_CAPABILITIES
+            PYTHON_WORKER_PROVIDER_ID -> PYTHON_SEMANTIC_PROVIDER_CAPABILITIES
+            LUA_LANGUAGE_SERVER_PROVIDER_ID -> LUA_SEMANTIC_PROVIDER_CAPABILITIES
+            else -> emptyList()
+        }
         val typescriptProfile = AceTypeScriptExecutionProfiles.resolve(documentPath)
         val sourceLayer = projectSourceLayer
         val typeLayer = projectTypeLayer
@@ -173,7 +206,13 @@ class AceLspServerManager(
             effectiveDeclarationGroups,
             typescriptProfile?.defaultLibraryUri ?: TYPESCRIPT_DEFAULT_LIBRARY_URI,
         )
-        val enabled = enabledProvider()
+        val luaWorkspace = if (semanticProviderId == LUA_LANGUAGE_SERVER_PROVIDER_ID) {
+            AceLuaWorkspaceMapping.fromDocumentPath(documentPath)
+        } else {
+            null
+        }
+        val luaServerAvailable = semanticProviderId == LUA_LANGUAGE_SERVER_PROVIDER_ID &&
+            luaServerAvailableProvider()
         if (!enabled) {
             return AceLspServerSnapshot(
                 enabled = false,
@@ -182,6 +221,10 @@ class AceLspServerManager(
                 declarationGroups = declarationGroups,
                 effectiveDeclarationGroups = effectiveDeclarationGroups,
                 libraryUris = libraryUris,
+                semanticLanguages = semanticLanguages,
+                semanticLanguage = semanticLanguage,
+                semanticProviderId = semanticProviderId,
+                semanticCapabilities = semanticCapabilities,
                 sessionRevision = sessionRevision,
             )
         }
@@ -194,6 +237,10 @@ class AceLspServerManager(
                 declarationGroups = declarationGroups,
                 effectiveDeclarationGroups = effectiveDeclarationGroups,
                 libraryUris = libraryUris,
+                semanticLanguages = semanticLanguages,
+                semanticLanguage = semanticLanguage,
+                semanticProviderId = semanticProviderId,
+                semanticCapabilities = semanticCapabilities,
                 sessionRevision = sessionRevision,
             )
         }
@@ -201,13 +248,22 @@ class AceLspServerManager(
             enabled = true,
             attached = attached,
             state = STATE_LOCAL_LANGUAGE_SERVICE,
-            transport = TRANSPORT_IN_PROCESS,
+            transport = when (semanticProviderId) {
+                PYTHON_WORKER_PROVIDER_ID -> TRANSPORT_WEB_WORKER
+                LUA_LANGUAGE_SERVER_PROVIDER_ID -> TRANSPORT_STDIO
+                else -> TRANSPORT_IN_PROCESS
+            },
             serverUri = null,
-            rootUri = SYNTHETIC_ROOT_URI,
-            documentUri = sourceLayer?.documentUri ?: typeLayer?.documentUri ?: documentUriForPath(documentPath),
+            rootUri = luaWorkspace?.rootUri ?: SYNTHETIC_ROOT_URI,
+            documentUri = luaWorkspace?.documentUri ?:
+                sourceLayer?.documentUri ?: typeLayer?.documentUri ?: documentUriForPath(documentPath),
             typescriptVersion = AceTypeScriptExecutionProfiles.TYPESCRIPT_VERSION,
             typescriptProfile = typescriptProfile?.id,
             typescriptProfileRevision = typescriptProfile?.revision,
+            semanticLanguages = semanticLanguages,
+            semanticLanguage = semanticLanguage,
+            semanticProviderId = semanticProviderId,
+            semanticCapabilities = semanticCapabilities,
             declarationGroups = declarationGroups,
             effectiveDeclarationGroups = effectiveDeclarationGroups,
             libraryUris = libraryUris,
@@ -229,9 +285,18 @@ class AceLspServerManager(
             dependencyResolverPolicyRevision = DEPENDENCY_RESOLVER_POLICY_REVISION,
             dependencyResolverPolicyFingerprint = DEPENDENCY_RESOLVER_POLICY_FINGERPRINT,
             fallback = FALLBACK_STATIC_COMPLETION,
-            startSupported = false,
-            serverAvailable = false,
-            reason = REASON_LOCAL_LANGUAGE_SERVICE,
+            startSupported = semanticProviderId == LUA_LANGUAGE_SERVER_PROVIDER_ID,
+            serverAvailable = luaServerAvailable,
+            reason = when (semanticProviderId) {
+                TYPESCRIPT_IN_PROCESS_PROVIDER_ID -> REASON_LOCAL_LANGUAGE_SERVICE
+                PYTHON_WORKER_PROVIDER_ID -> REASON_BUNDLED_PYTHON_WORKER
+                LUA_LANGUAGE_SERVER_PROVIDER_ID -> if (luaServerAvailable) {
+                    REASON_BUNDLED_LUA_LANGUAGE_SERVER
+                } else {
+                    REASON_LUA_LANGUAGE_SERVER_UNAVAILABLE
+                }
+                else -> REASON_SEMANTIC_PROVIDER_DISABLED
+            },
             completionProvider = COMPLETION_PROVIDER_LOCAL_INDEX,
             hoverProvider = HOVER_PROVIDER_LOCAL_INDEX,
             diagnosticProvider = DIAGNOSTIC_PROVIDER_ACE_JSHINT,
@@ -260,6 +325,17 @@ class AceLspServerManager(
             append(",\"typescriptProfile\":").appendJsonString(snapshot.typescriptProfile)
             append(",\"typescriptProfileRevision\":")
             append(snapshot.typescriptProfileRevision ?: "null")
+            append(",\"semanticLanguages\":{")
+            append(
+                AceEditorLspPreferences.SUPPORTED_SEMANTIC_LANGUAGES.joinToString(",") { language ->
+                    "${jsonString(language)}:${snapshot.semanticLanguages[language] == true}"
+                },
+            )
+            append("}")
+            append(",\"semanticLanguage\":").appendJsonString(snapshot.semanticLanguage)
+            append(",\"semanticProviderId\":").appendJsonString(snapshot.semanticProviderId)
+            append(",\"semanticCapabilities\":")
+            append(snapshot.semanticCapabilities.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
             append(",\"declarationGroups\":")
             append(snapshot.declarationGroups.joinToString(prefix = "[", postfix = "]") { jsonString(it) })
             append(",\"effectiveDeclarationGroups\":")
@@ -319,17 +395,30 @@ class AceLspServerManager(
         const val STATE_DISABLED_FILE_TYPE = "disabled-file-type"
         const val STATE_LOCAL_LANGUAGE_SERVICE = "local-language-service"
         const val TRANSPORT_IN_PROCESS = "in-process"
+        const val TRANSPORT_WEB_WORKER = "web-worker"
+        const val TRANSPORT_STDIO = "stdio"
         const val FALLBACK_STATIC_COMPLETION = "static-completion"
         const val REASON_DISABLED_FILE_TYPE = "file-type-disabled"
         const val REASON_LOCAL_LANGUAGE_SERVICE = "bundled-typescript-language-service"
+        const val REASON_BUNDLED_PYTHON_WORKER = "bundled-pyright-worker"
+        const val REASON_BUNDLED_LUA_LANGUAGE_SERVER = "bundled-luals"
+        const val REASON_LUA_LANGUAGE_SERVER_UNAVAILABLE = "bundled-luals-unavailable-for-abi"
+        const val REASON_SEMANTIC_PROVIDER_DISABLED = "semantic-provider-disabled-for-language"
+        const val TYPESCRIPT_IN_PROCESS_PROVIDER_ID = "typescript-in-process"
+        const val PYTHON_WORKER_PROVIDER_ID = "python-pyright-worker"
+        const val LUA_LANGUAGE_SERVER_PROVIDER_ID = AceLuaLanguageServerRuntime.PROVIDER_ID
         const val COMPLETION_PROVIDER_LOCAL_INDEX = "local-index"
         const val HOVER_PROVIDER_LOCAL_INDEX = "local-index"
         const val COMPLETION_PROVIDER_TYPESCRIPT = "typescript-language-service"
         const val HOVER_PROVIDER_TYPESCRIPT = "typescript-language-service"
+        const val COMPLETION_PROVIDER_LUA_LANGUAGE_SERVER = "lua-language-server"
+        const val HOVER_PROVIDER_LUA_LANGUAGE_SERVER = "lua-language-server"
         const val DIAGNOSTIC_PROVIDER_ACE_JSHINT = "ace-jshint"
         const val DIAGNOSTIC_PROVIDER_TYPESCRIPT = "typescript-language-service"
+        const val DIAGNOSTIC_PROVIDER_LUA_LANGUAGE_SERVER = "lua-language-server"
         const val SIGNATURE_PROVIDER_STATIC_LOCAL = "static-local"
         const val SIGNATURE_PROVIDER_TYPESCRIPT = "typescript-language-service"
+        const val SIGNATURE_PROVIDER_LUA_LANGUAGE_SERVER = "lua-language-server"
         const val SYNTHETIC_ROOT_URI = "file:///autojs6/editor"
         const val SYNTHETIC_DOCUMENT_URI = "file:///autojs6/editor/current.js"
         const val MAX_DOCUMENT_LENGTH = 512 * 1024
@@ -358,6 +447,32 @@ class AceLspServerManager(
             "definition",
             "codeActions",
             "rename",
+        )
+        val SEMANTIC_PROVIDER_CAPABILITIES = listOf(
+            "completion",
+            "hover",
+            "signatureHelp",
+            "diagnostics",
+            "definition",
+            "rename",
+            "codeActions",
+            "dispose",
+        )
+        val PYTHON_SEMANTIC_PROVIDER_CAPABILITIES = listOf(
+            "completion",
+            "hover",
+            "signatureHelp",
+            "diagnostics",
+            "definition",
+            "dispose",
+        )
+        val LUA_SEMANTIC_PROVIDER_CAPABILITIES = listOf(
+            "completion",
+            "hover",
+            "signatureHelp",
+            "diagnostics",
+            "definition",
+            "dispose",
         )
 
         private fun isValidDefinitionRange(
@@ -465,6 +580,10 @@ data class AceLspServerSnapshot(
     val typescriptVersion: String? = null,
     val typescriptProfile: String? = null,
     val typescriptProfileRevision: Int? = null,
+    val semanticLanguages: Map<String, Boolean> = emptyMap(),
+    val semanticLanguage: String? = null,
+    val semanticProviderId: String? = null,
+    val semanticCapabilities: List<String> = emptyList(),
     val declarationGroups: List<String> = emptyList(),
     val effectiveDeclarationGroups: List<String> = emptyList(),
     val libraryUris: List<String> = emptyList(),
