@@ -35,6 +35,7 @@ function parseArguments(argv) {
         "--resources",
         "--main-app",
         "--compatibility",
+        "--settings",
     ]);
     for (let index = 0; index < argv.length; index += 2) {
         const name = argv[index];
@@ -57,7 +58,8 @@ function parseArguments(argv) {
                 "--libraries <generated-libraries.d.ts> " +
                 "--resources <generated-resources.d.ts> " +
                 "--main-app <generated-main-app.d.ts> " +
-                "--compatibility <lib.autojs6.extra.d.ts>",
+                "--compatibility <lib.autojs6.extra.d.ts> " +
+                "--settings <AceEditorLspPreferences.kt>",
             );
         }
         values.set(name, resolve(value));
@@ -143,6 +145,67 @@ function verifyCompatibilitySemantics(paths, ts) {
         standardLibraryCount: standardLibs.length,
         baselineDuplicateCount: baselineDuplicates.length,
         compatibilityDuplicateCount: compatibilityDuplicates.length,
+    };
+}
+
+function verifySettingsContract(paths) {
+    const source = readFileSync(paths.settings, "utf8").replace(/\r\n/g, "\n");
+    const requiredMatrixEntries = [
+        'id = "javascript"',
+        'id = "jsx"',
+        'id = "typescript"',
+        'id = "tsx"',
+        'id = "json"',
+        "id = SEMANTIC_LANGUAGE_PYTHON",
+        "id = SEMANTIC_LANGUAGE_LUA",
+        "id = SEMANTIC_LANGUAGE_JAVA",
+        "id = SEMANTIC_LANGUAGE_KOTLIN",
+    ];
+    let previousOffset = -1;
+    for (const entry of requiredMatrixEntries) {
+        const offset = source.indexOf(entry, previousOffset + 1);
+        assert(offset > previousOffset, `Settings matrix entry is missing or out of order: ${entry}`);
+        previousOffset = offset;
+    }
+    const requiredSemanticKeys = [
+        "KEY_ACE_SEMANTIC_TYPESCRIPT_ENABLED",
+        "KEY_ACE_SEMANTIC_PYTHON_ENABLED",
+        "KEY_ACE_SEMANTIC_LUA_ENABLED",
+        "KEY_ACE_SEMANTIC_JAVA_ENABLED",
+        "KEY_ACE_SEMANTIC_KOTLIN_ENABLED",
+    ];
+    for (const key of requiredSemanticKeys) {
+        assert(source.includes(`const val ${key}`), `Settings preference key is missing: ${key}`);
+    }
+    const availableSemanticBlock = source.match(
+        /val AVAILABLE_SEMANTIC_LANGUAGES = listOf\(([\s\S]*?)\n    \)/,
+    )?.[1] || "";
+    assert(
+        availableSemanticBlock.includes("SEMANTIC_LANGUAGE_JAVA") &&
+            !availableSemanticBlock.includes("SEMANTIC_LANGUAGE_KOTLIN"),
+        "Kotlin must remain visible in settings without being advertised as an available semantic provider",
+    );
+    assert(
+        source.includes("if (!isSemanticAvailable(normalized)) return false") &&
+            source.includes("require(!enabled || isSemanticAvailable(normalized))"),
+        "Unavailable semantic providers are not guarded at preference read/write boundaries",
+    );
+    assert(
+        source.includes("if (!isEnabledForDocument(preferences, documentPathOrName)) return false") &&
+            source.includes("val language = semanticLanguageForDocument(documentPathOrName) ?: return false"),
+        "Semantic routing no longer applies the global and file-type allowlists before language recognition",
+    );
+    assert(
+        source.includes('fileName.endsWith(".kt") || fileName.endsWith(".kts")') &&
+            source.includes("semantic = SemanticSupport.NONE") &&
+            source.includes("localCompletion = LocalCompletionSupport.P2_PLUS"),
+        "Kotlin P2+ routing or its no-semantic support boundary changed",
+    );
+    return {
+        languageModeCount: requiredMatrixEntries.length,
+        semanticSwitchCount: requiredSemanticKeys.length,
+        availableSemanticProviderCount: 4,
+        fileTypeAllowlistRunsBeforeSemanticRouting: true,
     };
 }
 
@@ -3268,6 +3331,7 @@ function main() {
     assert(ts?.version === "6.0.3", `Expected TypeScript 6.0.3, got ${ts?.version || "unknown"}`);
 
     const semantics = verifyCompatibilitySemantics(paths, ts);
+    const settingsContract = verifySettingsContract(paths);
     const browserService = verifyBrowserLanguageService(paths, ts.version);
     const dependencyTypes = verifyDependencyTypeLayer(paths);
     const incrementalProjectDiagnostics = verifyIncrementalProjectDiagnostics(paths);
@@ -3287,6 +3351,7 @@ function main() {
         `${JSON.stringify({
             typescriptVersion: ts.version,
             semantics,
+            settingsContract,
             browserService,
             dependencyTypes,
             incrementalProjectDiagnostics,

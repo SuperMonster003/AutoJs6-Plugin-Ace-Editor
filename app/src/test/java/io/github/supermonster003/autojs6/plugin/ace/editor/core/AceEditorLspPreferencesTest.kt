@@ -112,6 +112,34 @@ class AceEditorLspPreferencesTest {
     }
 
     @Test
+    fun languageSupportMatrixMatchesPublishedX4Capabilities() {
+        val matrix = AceEditorLspPreferences.LANGUAGE_SUPPORT_MATRIX
+
+        assertEquals(
+            listOf("javascript", "jsx", "typescript", "tsx", "json", "python", "lua", "java", "kotlin"),
+            matrix.map { it.id },
+        )
+        assertEquals(
+            AceEditorLspPreferences.LocalCompletionSupport.P2_PLUS,
+            matrix.single { it.id == "kotlin" }.localCompletion,
+        )
+        assertEquals(
+            AceEditorLspPreferences.SemanticSupport.SINGLE_FILE_DIAGNOSTICS,
+            matrix.single { it.id == "java" }.semantic,
+        )
+        assertEquals(
+            AceEditorLspPreferences.SemanticSupport.SYNTAX_DIAGNOSTICS_ONLY,
+            matrix.single { it.id == "json" }.semantic,
+        )
+        assertEquals(
+            setOf("typescript", "python", "lua", "java"),
+            AceEditorLspPreferences.AVAILABLE_SEMANTIC_LANGUAGES.toSet(),
+        )
+        assertFalse(AceEditorLspPreferences.isSemanticAvailable("kotlin"))
+        assertFalse(AceEditorLspPreferences.isSemanticAvailable("json"))
+    }
+
+    @Test
     fun semanticLanguageRoutingIsSuffixAwareAndExcludesJson() {
         assertEquals(
             AceEditorLspPreferences.SEMANTIC_LANGUAGE_TYPESCRIPT,

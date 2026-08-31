@@ -283,6 +283,9 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     val client = autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js")
     val completer = autoJs6EditorAssetsDirectory.file("autojs6_completer.js")
     val localSymbols = autoJs6EditorAssetsDirectory.file("autojs6_local_symbols.js")
+    val settings = layout.projectDirectory.file(
+        "src/main/java/io/github/supermonster003/autojs6/plugin/ace/editor/core/AceEditorLspPreferences.kt",
+    )
     val languageSnippets = listOf("python", "lua", "java", "kotlin").map { language ->
         aceDistributionAssetsDirectory.file("snippets/$language.js")
     }
@@ -309,6 +312,7 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
         client,
         completer,
         localSymbols,
+        settings,
         autoJs6LanguageIndicesDirectory,
         languageSnippets,
         compatibility,
@@ -360,6 +364,8 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
             generatedMainApp.get().asFile.absolutePath,
             "--compatibility",
             compatibility.asFile.absolutePath,
+            "--settings",
+            settings.asFile.absolutePath,
         )
     }
 }
