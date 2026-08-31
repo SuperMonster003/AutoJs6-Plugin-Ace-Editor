@@ -51,6 +51,19 @@ retains the applicable MIT notices for LuaLS, Lua, bee.lua, lpeglabel, json.lua,
 adjacent manifest locks every redistributed runtime file and each supported ABI executable by size
 and SHA-256.
 
+## Eclipse Compiler for Java 3.26.0 and Android API 36 stubs
+
+- Project: [Eclipse JDT Core](https://github.com/eclipse-jdt/eclipse.jdt.core)
+- Compiler artifact: `org.eclipse.jdt:ecj:3.26.0`, Eclipse Public License 2.0
+- Stub source: Android SDK `platforms;android-36/android.jar`
+- Use: Offline, single-file Java diagnostics on Android ART
+- Bundled notice inventory: [`app/src/main/assets/java/ecj/THIRD_PARTY_LICENSES.txt`](app/src/main/assets/java/ecj/THIRD_PARTY_LICENSES.txt)
+
+The ECJ artifact retains its upstream `about.html` notice. The generated classpath archive contains
+only class-signature entries from the Android SDK stub jar; it contains no platform implementation
+code, source, resources, or documentation. Its source and output hashes, byte size, and class count
+are locked by the adjacent manifest and `tools/ace-lsp/build-ecj-classpath.ps1`.
+
 ## Iosevka Web Font
 
 - Project: [Iosevka](https://github.com/be5invis/Iosevka)

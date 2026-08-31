@@ -1,0 +1,34 @@
+AutoJs6 Ace Editor Plugin — Java semantic runtime notices
+=========================================================
+
+1. Eclipse Compiler for Java (ECJ) 3.26.0
+------------------------------------------
+Project: Eclipse JDT Core
+Source: https://github.com/eclipse-jdt/eclipse.jdt.core
+Artifact: org.eclipse.jdt:ecj:3.26.0
+License: Eclipse Public License 2.0 (EPL-2.0)
+License text: https://www.eclipse.org/legal/epl-2.0/
+
+The packaged ECJ artifact retains its upstream about.html notice. ECJ is used only for
+single-file, annotation-processing-disabled diagnostics on Android ART.
+
+2. Android API level 36 class signature stubs
+----------------------------------------------
+Artifact source: Android SDK platforms;android-36/android.jar
+Use: Compile-time-only Java and Android API signatures for ECJ name/type resolution
+Generator: tools/ace-lsp/build-ecj-classpath.ps1
+
+The adjacent android-36-stubs.jar contains only sorted .class signature entries copied from the
+Android SDK stub jar. It excludes resources, source code, implementations, and documentation.
+Its exact source hash, output hash, size, and class inventory are recorded in manifest.json.
+
+Android Open Source Project portions are made available under their applicable upstream licenses,
+primarily Apache License 2.0:
+https://source.android.com/docs/setup/about/licenses
+https://www.apache.org/licenses/LICENSE-2.0
+
+OpenJDK-derived Java core-library signatures are subject to their applicable OpenJDK notices,
+including GNU General Public License version 2 with the Classpath Exception where stated:
+https://openjdk.org/legal/gplv2+ce.html
+
+Copyright and license notices remain with their respective upstream authors and projects.

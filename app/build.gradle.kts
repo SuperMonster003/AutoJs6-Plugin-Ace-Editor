@@ -431,6 +431,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-parcelize-runtime:2.2.21")
     implementation(libs.annotation)
     implementation(libs.core.ktx)
+    implementation(libs.ecj)
     implementation(libs.gson)
     implementation(libs.okhttp)
     implementation(libs.webkit)

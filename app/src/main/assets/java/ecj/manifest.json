@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ecjVersion": "3.26.0",
+  "ecjArtifactSha256": "ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5",
+  "ecjArtifactBytes": 3133846,
+  "bundleBudgetBytes": 8388608,
+  "compileSdk": 36,
+  "excludedClassPrefixes": [
+    "android/adservices/",
+    "android/health/",
+    "android/icu/"
+  ],
+  "sourceArtifact": "Android SDK platforms;android-36/android.jar",
+  "sourceSha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+  "classpathFile": "android-36-stubs.jar",
+  "classpathSha256": "01c9cf8ee9de431c52ea71975f53859fe1888af7bd50a62dd49d3458bdfdbc17",
+  "classpathBytes": 5066010,
+  "classFileCount": 5651,
+  "uncompressedClassBytes": 11599893,
+  "generator": "tools/ace-lsp/build-ecj-classpath.ps1"
+}

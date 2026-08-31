@@ -59,6 +59,7 @@ commons-compress = "1.28.0"
 commons-lang3 = "3.18.0"
 constraintlayout = "2.2.1"
 easywindow = "10.3"
+ecj = "3.26.0"
 eventbus = "3.3.1"
 flexbox = "3.0.0"
 flexmark-html2md = "0.64.8"
@@ -135,6 +136,7 @@ constraintlayout = { module = "androidx.constraintlayout:constraintlayout", vers
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
 easywindow = { module = "com.github.getActivity:EasyWindow", version.ref = "easywindow" }
+ecj = { module = "org.eclipse.jdt:ecj", version.ref = "ecj" }
 eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventbus" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 flexmark-html2md = { module = "com.vladsch.flexmark:flexmark-html2md-converter", version.ref = "flexmark-html2md" }
