@@ -15,6 +15,8 @@
 * `機能` 固定した Pyright 1.1.413 Worker と 271 ファイルの typeshed サブセットで完全オフラインの Python 3.12 セマンティック機能を内蔵; 型補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, 非対応の古い WebView や runtime 障害時は通知なしで P2 にフォールバック
 * `機能` 固定した端末内 LuaLS 3.18.2 コンパニオンプロセスで完全オフラインの Lua セマンティック機能を内蔵; arm64-v8a, armeabi-v7a, x86_64 では補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, ネイティブアセットの欠落や破損, 非対応 ABI, プロセス障害時は通知なしで P2 に戻り有限バックオフで復旧
 
+* `機能` 固定した ECJ 3.26.0 と削減済み Android API 36 stubs により完全オフラインの Java 単一ファイル診断を内蔵; 構文エラーと未解決シンボルを既定で正確な範囲に表示し, JDT Code Assist が ART では利用できない Eclipse Workspace/OSGi 環境を必要とするため補完は P2 を維持
+
 # v1.1.17
 
 ###### 2026/08/31

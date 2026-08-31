@@ -1,6 +1,6 @@
 # 多语言智能提示 Roadmap
 
-> 生成日期: 2026-08-31 · 适用范围: AutoJs6 Ace 编辑器插件 · 状态: 进行中（M0/M1/M2/M3/M4/M5 已完成，下一阶段 M6）
+> 生成日期: 2026-08-31 · 适用范围: AutoJs6 Ace 编辑器插件 · 状态: 进行中（M0–M6 已完成，下一阶段 M7）
 >
 > 维护约定: 完成一项勾选一项 (`[ ]` → `[x]`)。验证门 (**G** 前缀) 是"先验证后投入"的检查点:
 > 未通过时执行该项括号内的降级路径, 并在该项下方追加一行结论记录, 同样视为"已完成决策"。
@@ -26,7 +26,7 @@
   (`transport=in-process`, `serverUri=null`)。
 - 资产完整性靠显式清单 `AceEditorAssets.requiredAssetPaths` 校验; 新增资产必须登记。
 - 语言服务文件类型白名单在 `AceEditorLspPreferences.DEFAULT_FILE_TYPES`, 带迁移机制
-  (`FILE_TYPES_REVISION`, 当前 = 2); 扩展默认值必须升 revision。
+  (`FILE_TYPES_REVISION`, 当前 = 3); 扩展默认值必须升 revision。
 - 全链路回归任务: `:app:verifyAutoJs6LspRuntime`; 声明生成: `:app:generateAutoJs6LspDeclarations` (Node, 见 `tools/ace-lsp/`)。
 - 历史提法 "Roadmap T4" (`tools/ace-lsp/README.md:79`, 指 TS 跨源诊断权威化) 与本文档编号体系无关, 未来可挂入 M3 后的 TS provider 演进。
 
@@ -247,17 +247,33 @@ armeabi-v7a 与 x86_64 可重复构建并逐字节锁定；Android 9–16 六个
 
 > 排除远程形态后, 设备内候选为 dex 化 Eclipse 编译器 (ECJ) 与 JDT 补全引擎 (社区已有 Android IDE 先例, 但内存与稳定性风险高), 故拆两道门。
 
-- [ ] **G6-0** (验证门) dex 化 ECJ batch 编译器在 ART 上编译单文件并输出诊断的 spike。
+- [x] **G6-0** (验证门) dex 化 ECJ batch 编译器在 ART 上编译单文件并输出诊断的 spike。
       (降级路径: 不可行 → Java 停留 P2+, 关闭 M6 其余项。)
-- [ ] **M6-1** ECJ 诊断接入: 独立进程或受限线程运行, 内存上限与节流 (停止输入 N ms 后编译);
+      —— 结论: **通过**。固定 ECJ 3.26.0；较新版本分别受 Java 17 与 Java 11 运行时 API
+      限制。API 29/33/36/37 的 ART 均可解析打包类路径并产生缺分号/未定义符号诊断。
+- [x] **M6-1** ECJ 诊断接入: 独立进程或受限线程运行, 内存上限与节流 (停止输入 N ms 后编译);
       诊断映射到编辑器标注。—— 验收: 缺分号 / 未定义符号有正确行列标注。
-- [ ] **M6-2** 类路径打包: `android.jar` 精简 stub + Java 核心 stub 入包 (体积预算, 超限走可选下载, 同 M4-3 机制)。
-- [ ] **G6-3** (验证门) JDT 补全引擎 (codeassist) 在 ART 的可行性与内存表现。
+      —— 结论: 使用单后台线程、450 ms 编辑器 debounce、250 ms 原生最小间隔、524,288 字符
+      文档上限、48 MiB 可用堆预检和 64 MiB 单次增长熔断；诊断直接按 ECJ offset 映射。
+- [x] **M6-2** 类路径打包: `android.jar` 精简 stub + Java 核心 stub 入包 (体积预算, 超限走可选下载, 同 M4-3 机制)。
+      —— 结论: API 36 的 5,651 个类签名打成 5,066,010 字节确定性 JAR；连同 ECJ
+      构件共 8,216,697 字节，占 8 MiB 门限 97.95%，因此完全离线随包交付。
+- [x] **G6-3** (验证门) JDT 补全引擎 (codeassist) 在 ART 的可行性与内存表现。
       (降级路径: 不可行 → Java 保持"仅诊断 + P2+ 增强索引", 记录结论。)
-- [ ] **M6-4** `JavaProvider` 补全接入 (依 G6-3): 局部变量成员补全 (如 `new ArrayList<>()` 后 `values.` 出成员)、
+      —— 结论: **未通过，执行降级路径**。固定依赖图为 18 个构件/14,859,587 字节，
+      D8 产物 11,409,632 字节；API 29/33/36 可加载 `CompletionEngine`，但桌面与 ART 均在
+      `ResourcesPlugin.getWorkspace()` 因没有 Eclipse Workspace/OSGi 服务而停止，零补全候选。
+- [x] **M6-4（按 G6-3 关闭）** `JavaProvider` 补全接入 (依 G6-3): 局部变量成员补全 (如 `new ArrayList<>()` 后 `values.` 出成员)、
       import 建议。—— 验收: 上述场景真机可复现, 低端机降级策略生效。
+      —— 结论: 不引入无法完成初始化的 JDT 运行时；Java 保留 M2 静态索引、当前文档符号与
+      文档词补全，M6 Provider 只声明 diagnostics/dispose 能力。
 
 **范围声明**: 首版仅单文件 + 打包 stub 类路径; Gradle/Maven 项目模型、多模块、注解处理器不在本期 (见 §13)。
+
+—— **完成结论**: M6 按验证门完成。Java 单文件 ECJ 诊断默认开启，资源损坏、文档/内存
+超限或运行异常时静默保留 P2；API 29/33/36/37 的诊断、生命周期和既有路由回归全部通过。
+JDT CodeAssist 因设备内缺少 Eclipse Workspace/OSGi 服务被明确否决，未进入产品 APK。
+完整证据见 `tools/ace-lsp/M6_JAVA_SEMANTIC_ACCEPTANCE.md` 与 `MILESTONE_BASELINES.md`。
 
 ## 11. M7 · Kotlin 语义 (探索性, 建议最后启动)
 
@@ -331,7 +347,8 @@ armeabi-v7a 与 x86_64 可重复构建并逐字节锁定；Android 9–16 六个
 | Pyright | 1.1.413 / commit `789d8275fef25f347ffef7b847305fefd8a3e363` | M4 Python type server Worker | MIT |
 | typeshed 完整存根子集 | commit `289e5d3568961c8bcd33d01eef5b7ec5e1ad33ad`，271 文件 | M4 Python 3.12 语义存根 | Apache-2.0 |
 | LuaLS (lua-language-server) | 固定 release tag (G5-0 时钉住) | M5 | MIT |
-| ECJ (org.eclipse.jdt:ecj) | 固定 Maven 版本 (G6-0 时钉住) | M6 | EPL-2.0 (再分发条款需审查) |
+| ECJ (org.eclipse.jdt:ecj) | 3.26.0 | M6 单文件诊断 | EPL-2.0 |
+| Android API 36 class stubs | SDK `platforms;android-36/android.jar` 的类签名子集 | M6 编译类路径 | AOSP/OpenJDK 对应许可，见随包 notices |
 | Lua 5.4 手册 / JDK 文档 / Kotlin stdlib | 生成脚本内注明 | M2 索引 | 按各自条款仅提取签名事实 |
 
 新增任何三方资源 → 同步更新 `THIRD_PARTY_NOTICES.md`, 属对应条目验收的一部分。

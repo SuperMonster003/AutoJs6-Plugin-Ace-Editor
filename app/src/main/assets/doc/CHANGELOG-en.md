@@ -15,6 +15,8 @@
 * `Feature` Bundle fully offline Python 3.12 semantics with a pinned Pyright 1.1.413 Worker and a 271-file typeshed subset: type-aware completion, hover, signature help, diagnostics, and definition now default on, while incompatible old WebViews and runtime failures fall back silently to P2
 * `Feature` Bundle fully offline Lua semantics with a pinned on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64, while missing or damaged native assets, unsupported ABIs, and process crashes fall back silently to P2 with bounded restart recovery
 
+* `Feature` Bundle fully offline Java single-file diagnostics with pinned ECJ 3.26.0 and trimmed Android API 36 stubs: syntax errors and unresolved symbols now receive exact-range annotations by default, while completion stays on P2 because JDT Code Assist requires an Eclipse Workspace/OSGi runtime unavailable on ART
+
 # v1.1.17
 
 ###### 2026/08/31

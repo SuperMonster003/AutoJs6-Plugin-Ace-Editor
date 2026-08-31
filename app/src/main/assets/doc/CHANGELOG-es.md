@@ -15,6 +15,8 @@
 * `Función` Integra semántica de Python 3.12 totalmente sin conexión con un Worker Pyright 1.1.413 fijado y un subconjunto de 271 archivos de typeshed: autocompletado con tipos, información al pasar el cursor, ayuda de firmas, diagnósticos y definiciones se activan por defecto, mientras que WebView antiguos incompatibles y fallos del runtime vuelven silenciosamente a P2
 * `Función` Integra semántica de Lua totalmente sin conexión con un proceso complementario LuaLS 3.18.2 fijado en el dispositivo: autocompletado, hover, ayuda de firmas, diagnósticos y definiciones se activan por defecto en arm64-v8a, armeabi-v7a y x86_64; recursos nativos ausentes o dañados, ABI no compatibles y fallos del proceso vuelven silenciosamente a P2 con recuperación por reintentos acotados
 
+* `Función` Integra diagnósticos Java de un solo archivo totalmente sin conexión con ECJ 3.26.0 fijado y stubs recortados de Android API 36: los errores de sintaxis y símbolos no resueltos reciben rangos exactos por defecto; el autocompletado permanece en P2 porque JDT Code Assist requiere un entorno Eclipse Workspace/OSGi no disponible en ART
+
 # v1.1.17
 
 ###### 2026/08/31

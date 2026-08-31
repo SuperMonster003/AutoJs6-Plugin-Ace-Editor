@@ -15,6 +15,8 @@
 * `新增` 透過固定版本的 Pyright 1.1.413 Worker 和 271 個 typeshed 檔案內建完全離線的 Python 3.12 語意: 型別補全, hover, signature help, 診斷和定義跳轉現預設開啟, 不相容的舊 WebView 與執行失敗會靜默降級至 P2
 * `新增` 透過固定版本的 LuaLS 3.18.2 裝置內伴生程序內建完全離線的 Lua 語意: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 原生資產缺少或損壞, 不支援的 ABI 與程序崩潰會靜默降級至 P2, 並以有限退避恢復
 
+* `新增` 透過固定版本的 ECJ 3.26.0 與裁剪的 Android API 36 stubs 內建完全離線的 Java 單檔診斷: 語法錯誤與未解析符號現預設獲得精確範圍標註; JDT Code Assist 依賴 ART 上不可用的 Eclipse Workspace/OSGi 執行環境, 因此補全繼續使用 P2
+
 # v1.1.17
 
 ###### 2026/08/31

@@ -340,3 +340,61 @@ JVM 单测、debug APK 与 test APK 构建通过；七环境完整 `AceLanguageR
 `7cff7d61bc9f2a6373be10efb9c416d356bc07974d7e39735c386c283221e220`。这两个精确哈希已在
 Android 9/10/12/13/15/16 七环境重新安装或复核安装状态并完成 42/42 路由回归；其中
 Android 9、Android 16 x86_64 与 Android 10 x86 还再次通过完整 Lua 语义/ABI 回退单项。
+
+## M6 Java 诊断资产增量
+
+M6 固定 ECJ 3.26.0，并从 Android SDK 36 的 `android.jar` 生成只含 class signature 的
+确定性类路径。生成器排序所有条目、固定 ZIP 时间戳并锁定来源/产物哈希；仅排除
+`android/adservices/`、`android/health/` 与 `android/icu/` 三个高体积 API 前缀。
+
+| 组件 | 字节 | SHA-256 / 说明 |
+|---|---:|---|
+| ECJ 3.26.0 Maven 构件 | 3,133,846 | `ac0ba5876eaf7ebb47749a0d1be179c51f194b9dd0b875d1c09e1b530f5a2db5` |
+| `android-36-stubs.jar`（5,651 classes） | 5,066,010 | `01c9cf8ee9de431c52ea71975f53859fe1888af7bd50a62dd49d3458bdfdbc17` |
+| `autojs6_java_provider.js` | 14,360 | `83b4ae512652f657ca5fef77c194a6d0b9baf3f57666adb530b66ca31ad50d14` |
+| Java manifest + notices | 2,481 | verifier 锁定 |
+| **合计** | **8,216,697（7.836 MiB）** | **8 MiB 门限的 97.95%** |
+
+相对 M5 的 18,920,686 字节最终 debug APK，M6 最终 APK 增加 8,312,261 字节
+（7.927 MiB），占 8 MiB 门限 99.09%，余量 76,347 字节。两种口径均通过，因此保持
+完全离线随包交付。
+
+## M6 Java 功能、延迟与生命周期
+
+ECJ 在一个 Android background-priority executor 上串行运行；浏览器 debounce 450 ms，
+原生最小间隔 250 ms，文档上限 524,288 UTF-16 code units，编译前要求至少 48 MiB 可用堆，
+单次 heap 增长超过 64 MiB 后打开熔断。所有响应都以 request serial 与 document URI 做
+latest-only 校验，editor destroy 会取消排队任务并关闭 executor。
+
+| 环境 | 有效源码 | 语法诊断 | 未解析诊断 | G6 PSS 增量 | 编辑器末次 | 生命周期 |
+|---|---:|---:|---:|---:|---:|---|
+| Android 10 / API 29 x86 | 713.25 ms | 84.35 ms | 64.77 ms | -53 KiB | 379.09 ms | 1 创建 / 1 释放 / 0 active |
+| Android 13 / API 33 x86_64 | 873.76 ms | 140.36 ms | 88.65 ms | 11,786 KiB | 473.39 ms | 1 创建 / 1 释放 / 0 active |
+| Android 16 / API 36 x86_64 | 1,769.92 ms | 322.37 ms | 60.55 ms | 13,575 KiB | 125.20 ms | 1 创建 / 1 释放 / 0 active |
+| Android 17 / API 37 x86_64，16 KiB | 1,854.62 ms | 167.22 ms | 162.47 ms | 13,709 KiB | 138.14 ms | 1 创建 / 1 释放 / 0 active |
+
+四环境均把缺分号与未定义符号定位到 Ace 零基 row 3，completion/hover 保持
+`local-index`，无 UI callback error。全部观测中的最慢有效源码冷编译为 3,239.20 ms，
+最大 G6 PSS 增量 15,563 KiB，未触发内存熔断。
+
+## M6 JDT CodeAssist 门禁与回归
+
+G6-3 的 dependency-locked JDT graph 为 18 个构件、14,859,587 字节；D8 min API 28 产物
+为 11,409,632 字节，SHA-256
+`422f0de056676264e2c149be1b20e088462a14a1d3ee846cf7ac45eb361bd6db`。API 29/33/36
+均能加载 `CompletionEngine`，但与桌面控制组一样在 `ResourcesPlugin.getWorkspace()` 因
+缺少 Eclipse Workspace/OSGi service 返回 `IllegalStateException`，尚未产生候选。G6-3
+判定未通过；该 graph/DEX 不进产品 APK，M6-4 关闭，补全保留 M2。
+
+Node Java verifier、通用 LSP verifier、JVM 单测、完整 `:app:check`、debug APK 与 test APK
+构建通过。API 29/33/36/37 的 `AceLanguageRoutingSmokeTest` 各 6/6，合计 24/24；四环境的
+G6-0 + Java WebView 语义单项各 2/2；API 29/33/36 的手动 G6-3 结论测试各 1/1。
+
+最终 debug APK 为 27,232,947 字节（25.971 MiB），SHA-256
+`0c74aeab400499b03b3497798e42b2bf13003507f16f1f84d0065c11eacc6a6e`。对应 androidTest APK
+为 27,968,852 字节（26.673 MiB），SHA-256
+`581c3c082b28d0180cc2b953777cb0b80fbfdcd4ebdbbec14f0d443618a2c579`。R8 release APK 为
+17,728,484 字节（16.907 MiB），SHA-256
+`64d7ce98e0d71ece7a50d3ead1be1eb56da5a24bc73c78798dd744ec4259c7bf`；mapping 保留实际使用的
+`SourceVersion` 与 ECJ 内部 `Compiler`，不可达的 JSR-199/269 工具路径被裁掉。完整决策与
+复跑入口见 `M6_JAVA_SEMANTIC_ACCEPTANCE.md`。

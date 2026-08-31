@@ -72,10 +72,10 @@ AutoJs6 Ace Editor Plugin 将 Ace WebView 运行时, JavaScript bridge, 输入�
 | JSON | 支持 | 无 | 无 | 无 | 仅语法诊断 |
 | Python | 支持 | 支持 | 支持 | 支持 | 支持 |
 | Lua | 支持 | 支持 | 支持 | 支持 | 支持 |
-| Java | 支持 | 支持 | 支持 | 支持 | 无 |
+| Java | 支持 | 支持 | 支持 | 支持 | 单文件诊断 |
 | Kotlin | 支持 | 支持 | 支持 | 支持 | 无 |
 
-Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 标签高亮仅部分可用. Python 默认使用完全离线的 Pyright 1.1.413 Worker 和 Python 3.12 标准库存根; 老 WebView 不兼容或运行失败时会静默降级至 P2. Lua 在 arm64-v8a, armeabi-v7a 与 x86_64 默认使用完全离线的 LuaLS 3.18.2 伴生进程; 原生运行时不可用或故障时会静默降级至 P2. Java 与 Kotlin 继续使用相互隔离且按需加载的标准库索引和当前文档 P2 补全, 不进行变量类型推导. TypeScript 保持现有语义行为, Java 与 Kotlin 的语义开关在各自后续里程碑完成前默认关闭.
+Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 标签高亮仅部分可用. Python 默认使用完全离线的 Pyright 1.1.413 Worker 和 Python 3.12 标准库存根; 老 WebView 不兼容或运行失败时会静默降级至 P2. Lua 在 arm64-v8a, armeabi-v7a 与 x86_64 默认使用完全离线的 LuaLS 3.18.2 伴生进程; 原生运行时不可用或故障时会静默降级至 P2. Java 默认使用 ECJ 3.26.0 和裁剪的 Android API 36 类签名执行完全离线的单文件诊断, 可标注语法错误与未解析符号; 诊断不可用时静默保留 P2. JDT CodeAssist 的 ART 验证门因缺少 Eclipse Workspace/OSGi 服务未通过, 因此 Java 补全仍使用相互隔离且按需加载的标准库索引和当前文档符号, 不进行变量类型推导. Kotlin 继续使用 P2, 其语义开关默认关闭. TypeScript 保持现有语义行为.
 
 ******
 

@@ -98,9 +98,11 @@ The browser runtime now separates semantic capability, protocol, and transport:
 TypeScript 6.0.3 runs through the new provider without changing its public
 behavior. M3 originally left Python, Lua, Java, and Kotlin on M2 by default.
 M4 enabled the bundled Python provider by default, and M5 now enables LuaLS on
-its supported Android ABIs; Java and Kotlin remain on M2 until their
-corresponding runtime milestones. The file-type preference revision is 3, and
-migration changes only untouched historical defaults, never a custom list.
+its supported Android ABIs. M6 enables bounded ECJ diagnostics for Java while
+retaining M2 completion after the JDT Code Assist gate failed; Kotlin remains
+on M2 until its corresponding runtime milestone. The file-type preference
+revision is 3, and migration changes only untouched historical defaults, never
+a custom list.
 
 `:app:verifyAutoJs6LspRuntime` runs the provider failure/timeout suite, the full
 protocol mock suite, and the same initialize/echo/shutdown suite over both
@@ -205,6 +207,54 @@ Those devices report `bundled-luals-unavailable-for-abi` and silently retain the
 M2 Lua index plus the existing Ace syntax worker. See
 `M5_LUA_SEMANTIC_ACCEPTANCE.md` for exact hashes, controlled upstream patches,
 size accounting, capability and failure-path evidence, and Android 9–16 results.
+
+## M6 Java single-file diagnostics
+
+Java diagnostics use the pinned `org.eclipse.jdt:ecj:3.26.0` compiler on one
+background thread. The browser waits 450 ms after edits, while the native side
+enforces a 250 ms minimum compile interval, latest-request publication, a
+524,288 UTF-16-code-unit document ceiling, a 48 MiB available-heap preflight, and a 64 MiB
+single-compile heap-growth circuit breaker. ECJ offsets are mapped directly to
+Ace ranges; compiler transcript text is never parsed.
+
+The offline classpath is a deterministic, class-only subset of Android API 36.
+Regenerate it from an installed `platforms;android-36/android.jar`, or verify
+that the committed asset still matches its locked manifest, with:
+
+```powershell
+.\tools\ace-lsp\build-ecj-classpath.ps1 `
+  -AndroidJar E:\.android\sdk\platforms\android-36\android.jar
+
+.\tools\ace-lsp\build-ecj-classpath.ps1 `
+  -AndroidJar E:\.android\sdk\platforms\android-36\android.jar `
+  -Check
+
+.\gradlew.bat :app:verifyAutoJs6JavaSemanticRuntime
+```
+
+The 5,651-class stub JAR is 5,066,010 bytes. Together with the pinned ECJ
+artifact it accounts for 8,216,697 bytes, 97.95% of the 8 MiB offline-delivery
+budget. The verifier locks hashes, ZIP ordering/timestamps, trim policy,
+required Java/Android classes, bridge wiring, throttling, provider behavior,
+fallback, and disposal.
+
+`jdt-codeassist-spike/` is the reproducible G6-3 rejection fixture. Its Gradle
+lockfile fixes the complete 18-artifact graph. `reportProbe` records the graph
+and size, while `runProbe` demonstrates that the public JDT model reaches
+`ResourcesPlugin.getWorkspace()` before member completion and cannot start
+without a live Eclipse Workspace/OSGi service:
+
+```powershell
+.\gradlew.bat -p tools\ace-lsp\jdt-codeassist-spike reportProbe
+.\gradlew.bat -p tools\ace-lsp\jdt-codeassist-spike runProbe
+```
+
+The same D8 output was loaded on API 29, 33, and 36 and reached the identical
+workspace failure without producing a proposal. It is therefore not packaged.
+Java completion, hover, and signature help intentionally remain on the M2 local
+index/current-document layer. See `M6_JAVA_SEMANTIC_ACCEPTANCE.md` for the ECJ
+version-selection history, ART measurements, JDT rejection evidence, exact
+artifact hashes, and fallback boundaries.
 
 ## TypeScript execution-profile diagnostics
 

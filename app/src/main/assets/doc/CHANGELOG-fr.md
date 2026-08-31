@@ -15,6 +15,8 @@
 * `Fonctionnalité` Intègre la sémantique Python 3.12 entièrement hors ligne avec un Worker Pyright 1.1.413 épinglé et un sous-ensemble typeshed de 271 fichiers : complétion typée, survol, aide à la signature, diagnostics et définition sont activés par défaut, tandis que les anciens WebView incompatibles et les pannes du runtime reviennent silencieusement à P2
 * `Fonctionnalité` Intègre la sémantique Lua entièrement hors ligne avec un processus compagnon LuaLS 3.18.2 épinglé sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ressources natives absentes ou endommagées, les ABI non pris en charge et les pannes du processus reviennent silencieusement à P2 avec reprise par temporisation bornée
 
+* `Fonctionnalité` Intègre des diagnostics Java mono-fichier entièrement hors connexion avec ECJ 3.26.0 épinglé et des stubs Android API 36 élagués : les erreurs de syntaxe et symboles non résolus reçoivent par défaut des plages exactes ; la complétion reste en P2 car JDT Code Assist exige un environnement Eclipse Workspace/OSGi indisponible sur ART
+
 # v1.1.17
 
 ###### 2026/08/31
