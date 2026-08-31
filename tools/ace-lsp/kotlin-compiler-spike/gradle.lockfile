@@ -1,0 +1,12 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+com.android.tools:r8:8.10.21=d8Tool
+org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21=compilerProbe
+org.jetbrains.kotlin:kotlin-daemon-embeddable:2.2.21=compilerProbe
+org.jetbrains.kotlin:kotlin-reflect:1.6.10=compilerProbe
+org.jetbrains.kotlin:kotlin-script-runtime:2.2.21=compilerProbe
+org.jetbrains.kotlin:kotlin-stdlib:2.2.21=compilerProbe
+org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0=compilerProbe
+org.jetbrains:annotations:13.0=compilerProbe
+empty=
