@@ -78,6 +78,11 @@ and the 2 MiB per-language runtime estimate. See
 `M2_COMPLETION_ACCEPTANCE.md` and `MILESTONE_BASELINES.md` for the acceptance
 matrix and measured device results.
 
+M7 extends this same deterministic layer to Kotlin P2+: instance modules,
+conservative single-file type aliases, Kotlin safe-call member lookup, and selected
+Java/Android interop modules generated from the Java index. Run its focused gate
+with `:app:verifyAutoJs6KotlinP2Plus`; it is also part of `:app:check`.
+
 ## M3 semantic-provider and LSP framework
 
 The browser runtime now separates semantic capability, protocol, and transport:
@@ -99,8 +104,9 @@ TypeScript 6.0.3 runs through the new provider without changing its public
 behavior. M3 originally left Python, Lua, Java, and Kotlin on M2 by default.
 M4 enabled the bundled Python provider by default, and M5 now enables LuaLS on
 its supported Android ABIs. M6 enables bounded ECJ diagnostics for Java while
-retaining M2 completion after the JDT Code Assist gate failed; Kotlin remains
-on M2 until its corresponding runtime milestone. The file-type preference
+retaining M2 completion after the JDT Code Assist gate failed. M7's device compiler
+gate failed independently on size, ART execution, memory, and min-SDK compatibility,
+so Kotlin now uses P2+ and still advertises no semantic capability. The file-type preference
 revision is 3, and migration changes only untouched historical defaults, never
 a custom list.
 
@@ -255,6 +261,42 @@ Java completion, hover, and signature help intentionally remain on the M2 local
 index/current-document layer. See `M6_JAVA_SEMANTIC_ACCEPTANCE.md` for the ECJ
 version-selection history, ART measurements, JDT rejection evidence, exact
 artifact hashes, and fallback boundaries.
+
+## M7 Kotlin P2+ and compiler rejection gate
+
+`kotlin-compiler-spike/` locks Kotlin compiler `2.2.21` and R8/D8 `8.10.21` in
+an isolated Gradle project. It reports the seven-artifact compiler graph, runs a
+desktop valid/syntax/unresolved control group, dexes the complete graph at min API
+24, and builds a resource-bearing multidex archive for manual ART injection:
+
+```powershell
+.\gradlew.bat -p tools\ace-lsp\kotlin-compiler-spike `
+  reportProbe runProbe packageArtProbe --write-locks --console=plain
+```
+
+The fixed graph is 63,667,169 bytes and the six DEX files total 61,119,176 bytes.
+API 31 and 35 both fail before the first compiler exit code because the frontend
+reaches a Kotlin-reflection/JVM property-fragment assumption; failed startup adds
+up to 78,343 KiB PSS. D8 also flags compiler paths using MethodHandle operations
+that are unsupported below API 26. The probe archive and dependencies are never
+packaged in the application.
+
+The completed fallback is the deterministic Kotlin revision
+`autojs6-kotlin-2.2.21-p2plus-2`: 95 globals, 44 module contexts, 492 members, and
+122,977 bytes. It recognizes explicit types, common collection/array factories,
+constructors/import aliases, literals, ranges and casts, and resolves `?.` chains.
+Selected Java/Android modules are copied from the generated Java index rather than
+maintained twice.
+
+Run the product gate with:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6KotlinP2Plus
+```
+
+See `M7_KOTLIN_ACCEPTANCE.md` for the research sources, exact dependency/DEX
+hashes, ART measurements, P2+ behavior matrix, device results, limitations, and
+future restart criteria.
 
 ## TypeScript execution-profile diagnostics
 

@@ -16,6 +16,7 @@
 * `新增` 通过固定版本的 LuaLS 3.18.2 设备内伴生进程内置完全离线的 Lua 语义: 补全, hover, 签名帮助, 诊断和定义跳转在 arm64-v8a, armeabi-v7a 与 x86_64 默认开启; 原生资产缺失或损坏, 不支持的 ABI 与进程崩溃会静默降级至 P2, 并以有界退避恢复
 
 * `新增` 通过固定版本的 ECJ 3.26.0 与裁剪的 Android API 36 存根内置完全离线的 Java 单文件诊断: 语法错误与未解析符号现默认获得精确范围标注; JDT Code Assist 依赖 ART 上不可用的 Eclipse Workspace/OSGi 运行时, 因此补全继续使用 P2
+* `新增` Kotlin P2+ 离线补全: 扩充 Kotlin 2.2.21 实例 API, 根据当前文件做保守类型提示, 支持 safe-call 并复用 Java/Android 索引; 设备内 compiler 因体积、ART 运行、内存与最低 SDK 验证未通过, 因此不打包 Kotlin compiler 或语义运行时
 
 # v1.1.17
 

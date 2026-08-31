@@ -73,9 +73,9 @@ AutoJs6 Ace Editor Plugin 将 Ace WebView 运行时, JavaScript bridge, 输入�
 | Python | 支持 | 支持 | 支持 | 支持 | 支持 |
 | Lua | 支持 | 支持 | 支持 | 支持 | 支持 |
 | Java | 支持 | 支持 | 支持 | 支持 | 单文件诊断 |
-| Kotlin | 支持 | 支持 | 支持 | 支持 | 无 |
+| Kotlin | 支持 | 支持 | 支持 | P2+ | 无 |
 
-Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 标签高亮仅部分可用. Python 默认使用完全离线的 Pyright 1.1.413 Worker 和 Python 3.12 标准库存根; 老 WebView 不兼容或运行失败时会静默降级至 P2. Lua 在 arm64-v8a, armeabi-v7a 与 x86_64 默认使用完全离线的 LuaLS 3.18.2 伴生进程; 原生运行时不可用或故障时会静默降级至 P2. Java 默认使用 ECJ 3.26.0 和裁剪的 Android API 36 类签名执行完全离线的单文件诊断, 可标注语法错误与未解析符号; 诊断不可用时静默保留 P2. JDT CodeAssist 的 ART 验证门因缺少 Eclipse Workspace/OSGi 服务未通过, 因此 Java 补全仍使用相互隔离且按需加载的标准库索引和当前文档符号, 不进行变量类型推导. Kotlin 继续使用 P2, 其语义开关默认关闭. TypeScript 保持现有语义行为.
+Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 标签高亮仅部分可用. Python 默认使用完全离线的 Pyright 1.1.413 Worker 和 Python 3.12 标准库存根; 老 WebView 不兼容或运行失败时会静默降级至 P2. Lua 在 arm64-v8a, armeabi-v7a 与 x86_64 默认使用完全离线的 LuaLS 3.18.2 伴生进程; 原生运行时不可用或故障时会静默降级至 P2. Java 默认使用 ECJ 3.26.0 和裁剪的 Android API 36 类签名执行完全离线的单文件诊断, 可标注语法错误与未解析符号; 诊断不可用时静默保留 P2. JDT CodeAssist 的 ART 验证门因缺少 Eclipse Workspace/OSGi 服务未通过, 因此 Java 补全仍使用相互隔离且按需加载的标准库索引和当前文档符号, 不进行变量类型推导. Kotlin 使用 P2+ 静态补全, 可根据当前文件中的显式类型、常用集合/构造器/字面量和 safe-call 提示 stdlib 及精选 Java/Android 实例成员; Kotlin compiler 设备内验证门因 60 MiB 级图、ART 反射失败和内存开销未通过, 因此语义开关继续默认关闭且不打包 compiler. TypeScript 保持现有语义行为.
 
 ******
 
@@ -112,6 +112,12 @@ Release 构建:
 ```
 
 生成器固定各语言基线版本, 并在 `autojs6/indices` 下输出可重复的独立语言资产; 编辑器只在首次使用时加载当前语言. `verifyAutoJs6LanguageIndices` 会检测过期产物, 且已接入正常验证链.
+
+Kotlin P2+ 的类型启发, safe-call, Java/Android 索引复用和预算可单独验证:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6KotlinP2Plus
+```
 
 修改固定版本的 Pyright Worker 源码后, 可通过此任务显式重新生成提交入库的 Python 语义资产:
 
@@ -175,6 +181,8 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.18-u
 * `新增` 新增可插拔八能力语义 Provider, 通用 JSON-RPC/LSP 核心及 WebWorker/设备内 stdio 双传输; TypeScript 已零回归迁移, provider 故障时自动降级至 P2, 四门新语言语义开关默认关闭
 * `新增` 通过固定版本的 Pyright 1.1.413 Worker 和 271 个 typeshed 文件内置完全离线的 Python 3.12 语义: 类型补全, hover, 签名帮助, 诊断和定义跳转现默认开启, 不兼容的老 WebView 与运行故障会静默降级至 P2
 * `新增` 通过固定版本的 LuaLS 3.18.2 设备内伴生进程内置完全离线的 Lua 语义: 补全, hover, 签名帮助, 诊断和定义跳转在 arm64-v8a, armeabi-v7a 与 x86_64 默认开启; 原生资产缺失或损坏, 不支持的 ABI 与进程崩溃会静默降级至 P2, 并以有界退避恢复
+* `新增` 通过固定版本的 ECJ 3.26.0 和裁剪 Android API 36 类签名提供完全离线的 Java 单文件诊断; 语法与未解析符号可定位到编辑器范围, 资源/内存/运行异常时保留 P2, JDT CodeAssist 因缺少 Eclipse Workspace/OSGi 服务未进入产品
+* `新增` Kotlin P2+ 补全: 扩充 Kotlin 2.2.21 常用实例 API, 根据当前文件显式类型、集合工厂、构造器、字面量、range 与 cast 做保守成员提示, 支持 safe-call 并复用精选 Java/Android 索引; 设备内 compiler 验证门未通过, 不打包语义运行时
 
 # v1.1.17
 

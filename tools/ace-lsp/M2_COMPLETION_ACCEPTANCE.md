@@ -4,6 +4,10 @@
 结论：通过  
 范围：Python、Lua、Java、Kotlin 的 P2 静态标准库索引与当前文档符号补全
 
+> 本文件保留 M2 完成时的历史规模与哈希。M7 已把 Java index 扩为可复用的实例互操作源，
+> 并将 Kotlin 升级为带保守类型启发和 safe-call 的 P2+；当前数据见
+> `M7_KOTLIN_ACCEPTANCE.md` 与 `MILESTONE_BASELINES.md` 的 M7 小节。
+
 ## 能力边界
 
 M2 提供的是离线、无常驻分析引擎的轻量补全层：

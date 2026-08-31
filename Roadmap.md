@@ -1,6 +1,6 @@
 # 多语言智能提示 Roadmap
 
-> 生成日期: 2026-08-31 · 适用范围: AutoJs6 Ace 编辑器插件 · 状态: 进行中（M0–M6 已完成，下一阶段 M7）
+> 生成日期: 2026-08-31 · 适用范围: AutoJs6 Ace 编辑器插件 · 状态: M0–M7 已完成（持续维护横切任务 X）
 >
 > 维护约定: 完成一项勾选一项 (`[ ]` → `[x]`)。验证门 (**G** 前缀) 是"先验证后投入"的检查点:
 > 未通过时执行该项括号内的降级路径, 并在该项下方追加一行结论记录, 同样视为"已完成决策"。
@@ -280,20 +280,31 @@ JDT CodeAssist 因设备内缺少 Eclipse Workspace/OSGi 服务被明确否决�
 > 前置声明: 排除远程形态后, 设备内 Kotlin 语义 (dex 化 kotlinc / Analysis API) 属业界难题,
 > 官方 Kotlin LSP 基于 IntelliJ 且需 JVM, 无法直接上设备。本里程碑定位为**探索性**, 允许整体不通过。
 
-- [ ] **G7-0** (验证门) 调研 + spike: kotlinc 前端/Analysis API dex 化的可行性与内存/速度实测
+- [x] **G7-0** (验证门) 调研 + spike: kotlinc 前端/Analysis API dex 化的可行性与内存/速度实测
       (参考社区 Android IDE 先例); 产出明确的可行性结论文档。
       (降级路径: 不可行 → 执行 M7-3, 关闭 M7-1/2。)
-- [ ] **M7-1** (依 G7-0) 诊断优先接入: 语法与基础解析错误标注。
-- [ ] **M7-2** (依 G7-0) 补全接入: 本文件符号 + stdlib 成员的语义补全。
-- [ ] **M7-3** (G7-0 未过时执行) Kotlin P2+ 增强: 扩充 kotlin.*/android 常用 API 索引、单文件符号与简单类型启发、
+- [x] **M7-1** (依 G7-0) 诊断优先接入: 语法与基础解析错误标注。
+      —— 关闭结论: G7-0 未通过，未创建或启用 Kotlin SemanticProvider，不宣称 diagnostics 能力。
+- [x] **M7-2** (依 G7-0) 补全接入: 本文件符号 + stdlib 成员的语义补全。
+      —— 关闭结论: G7-0 未通过，不以静态索引/类型启发伪装 semantic completion。
+- [x] **M7-3** (G7-0 未过时执行) Kotlin P2+ 增强: 扩充 kotlin.*/android 常用 API 索引、单文件符号与简单类型启发、
       复用 Java 索引做互操作提示; 在本文档记录结论与未来重启条件 (如官方轻量 LSP 出现、或远程形态解禁)。
+
+—— **完成结论**: Kotlin compiler 2.2.21 固定图为 63,667,169 字节，R8/D8 8.10.21 min API 24
+产出六 DEX、合计 61,119,176 字节；API 31/35 均在首次合法单文件产生 exit code 前因 Kotlin
+反射运行时假设失败，且失败前 PSS 增量最高 78,343 KiB。G7-0 因体积、ART 功能、内存和
+最低 API 兼容四项独立条件未通过。降级交付的 Kotlin P2+ 为 95 globals / 44 modules /
+492 members / 122,977 字节，支持显式类型、常用初始化器/构造器/字面量、safe-call 和精选
+Java/Android 互操作；API 28/31/35 真机均通过 WebView 冒烟。完整证据与重启条件见
+`tools/ace-lsp/M7_KOTLIN_ACCEPTANCE.md` 与 `MILESTONE_BASELINES.md`。
 
 ## 12. X · 横切任务 (随各里程碑推进)
 
 - [x] **X-1** 体积看板: 每次合入记录 assets 增量; 预算指标 — M1 ≤1MB、M2 ≤3MB、语义组件按语言单列, 超预算必须走可选下载。
       —— M0 已建立并在 M1/M2 追加 `tools/ace-lsp/MILESTONE_BASELINES.md`；M1 为 111.35 KiB，
-      M2 为 188.17 KiB；M4 Python 语义为 4.822 MiB，M5 Lua 语义为 7.900 MiB，均低于
-      单语言 8 MiB 可选交付门并通过。
+      M2 为 188.17 KiB；M4 Python 语义为 4.822 MiB，M5 Lua 语义为 7.900 MiB，M6 Java
+      诊断为 7.836 MiB，均低于单语言 8 MiB 可选交付门；M7 拒绝 60.718 MiB compiler 图，
+      只交付约 0.130 MiB 的 Kotlin P2+ asset 增量。
 - [x] **X-2** 性能基线: 冷启动 / 首帧 / 补全首包延迟的基准脚本, M0 时建立基线, 每里程碑回归对比。
       —— `tools/ace-lsp/measure-editor-performance.ps1` 已支持 M0/M1/M2 同口径记录；M2 三台基线真机
       冷启动无可测回归，七环境最大静态索引首次加载均低于 50 ms；M4 增加宿主 + renderer
@@ -366,6 +377,9 @@ JDT CodeAssist 因设备内缺少 Eclipse Workspace/OSGi 服务被明确否决�
 .\gradlew.bat :app:generateAutoJs6LanguageIndices
 .\gradlew.bat :app:verifyAutoJs6LanguageIndices
 
+# M7 Kotlin P2+ 类型启发 / safe-call / Java-Android 索引复用
+.\gradlew.bat :app:verifyAutoJs6KotlinP2Plus
+
 # M4 Python Worker 显式生成 / 提交资产验证
 .\gradlew.bat :app:generateAutoJs6PythonWorker
 .\gradlew.bat :app:verifyAutoJs6PythonWorker
@@ -395,4 +409,6 @@ JDT CodeAssist 因设备内缺少 Eclipse Workspace/OSGi 服务被明确否决�
 | `tools/ace-lsp/generate-language-indices.mjs` | M2 索引生成与 `--check` 校验入口 |
 | `tools/ace-lsp/build-python-worker.mjs` / `verify-python-worker.mjs` | M4 确定性生成、版本/哈希/能力/降级/释放门 |
 | `tools/ace-lsp/measure-python-semantic.ps1` | M4 P2/Pyright 宿主 + renderer PSS 差分探针 |
+| `tools/ace-lsp/kotlin-compiler-spike/` | M7 G7-0 compiler graph、桌面编译、固定 D8 与 ART 注入探针 |
+| `tools/ace-lsp/verify-kotlin-p2plus.mjs` | M7 P2+ 类型启发、safe-call、索引复用与预算门 |
 | `tools/ace-lsp/` | Node 生成/校验工具链与里程碑验收记录 |

@@ -16,6 +16,7 @@
 * `기능` 고정된 기기 내 LuaLS 3.18.2 동반 프로세스로 완전 오프라인 Lua 의미 기능 내장; arm64-v8a, armeabi-v7a 및 x86_64에서 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화하고 네이티브 자산 누락이나 손상, 지원되지 않는 ABI 및 프로세스 충돌 시 조용히 P2로 전환한 뒤 제한된 백오프로 복구
 
 * `기능` 고정된 ECJ 3.26.0과 축소된 Android API 36 stubs로 완전 오프라인 Java 단일 파일 진단 내장; 구문 오류와 확인되지 않은 기호를 기본적으로 정확한 범위에 표시하며, JDT Code Assist가 ART에서 사용할 수 없는 Eclipse Workspace/OSGi 환경을 요구하므로 자동 완성은 P2를 유지
+* `기능` Kotlin 2.2.21 인스턴스 API, 현재 파일의 보수적 형식 추론, safe-call 및 재사용한 Java/Android 인덱스로 오프라인 Kotlin P2+ 자동 완성 추가; 기기 내 compiler는 크기, ART 실행, 메모리 및 최소 SDK 검증에 실패해 Kotlin compiler와 의미 runtime을 포함하지 않음
 
 # v1.1.17
 

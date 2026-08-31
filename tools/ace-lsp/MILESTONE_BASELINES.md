@@ -398,3 +398,55 @@ G6-0 + Java WebView 语义单项各 2/2；API 29/33/36 的手动 G6-3 结论测�
 `64d7ce98e0d71ece7a50d3ead1be1eb56da5a24bc73c78798dd744ec4259c7bf`；mapping 保留实际使用的
 `SourceVersion` 与 ECJ 内部 `Compiler`，不可达的 JSR-199/269 工具路径被裁掉。完整决策与
 复跑入口见 `M6_JAVA_SEMANTIC_ACCEPTANCE.md`。
+
+## M7 Kotlin compiler 拒绝门
+
+G7-0 独立 Gradle lock 固定 Kotlin compiler 2.2.21 的七构件图与 R8/D8 8.10.21。compiler
+图为 63,667,169 字节（60.718 MiB，8 MiB 门的 758.96%）；桌面合法、语法错误、未解析
+三类控制组分别为 3,403.65、131.14、249.12 ms，合法文件观测堆增量 47,054,464 字节。
+
+R8/D8 以 min API 24 产出六个 DEX，合计 61,119,176 字节（58.288 MiB）：
+
+| DEX | 字节 | SHA-256 |
+|---|---:|---|
+| `classes.dex` | 10,179,992 | `2e9ec1eb5a39ba96fbe2aff796fa3841e827b9ae974ce1a8e0644994b8cdaad5` |
+| `classes2.dex` | 13,314,836 | `ebd524830a635afb04ff1e39242ace8e0b5fba8514bca37ad3f49e65bed3cd0b` |
+| `classes3.dex` | 12,380,180 | `5816d7e2061de18b9acc023323d0d0a26a8e4e4989c40115ab2517215aa5e7e7` |
+| `classes4.dex` | 13,732,068 | `7b7ad2ed8c3909d77e5f2ea9ae673b245abf7ce13628da2bb614dd249cc6476e` |
+| `classes5.dex` | 8,188,456 | `b54499178f75f1af45ac78b0007c050fd31f28c468e9673ab41e5303ed240ea6` |
+| `classes6.dex` | 3,323,644 | `c66db95dc64b94f450fdf263b87a7c98680baa07660d8e1829e9327471345a73` |
+
+资源完整的注入 ZIP 为 22,309,910 字节，SHA-256
+`94d90391f43180b599351200b888c8965595f11691047d62b9374f73e40ab1f0`。API 31 与 API 35
+的 class load 分别为 392.66、329.10 ms，但都在第一个合法文件 exit code 前因 Kotlin
+reflection/property-fragment 假设返回 `IllegalStateException`；失败前 PSS 分别增加 64,110、
+78,343 KiB。D8 另对多条 IntelliJ/Unsafe/MethodHandle 路径报告 API 26 下不支持，低于项目
+min API 24。G7-0 因此未通过，compiler/DEX/ZIP 都不进入产品。
+
+## M7 Kotlin P2+ 资产与运行时
+
+| 资产 | M6 字节 | M7 字节 | 增量 | M7 SHA-256 |
+|---|---:|---:|---:|---|
+| `autojs6_completer.js` | 67,313 | 68,992 | 1,679 | `a6961e74063f40f21f0f8e80ff922a80526d533ec9e6d064e60bdff6a67d73a3` |
+| `autojs6_local_symbols.js` | 20,324 | 27,357 | 7,033 | `3f720f8368e84252727aa110f35f72757bdce7b7735612ef8dd4ea7729d0411d` |
+| `indices/java.js` | 42,344 | 69,586 | 27,242 | `5477e987dff84fa88cd7d75764f7ffb58770a6b94e8f702b2e28a7fd0e36db5c` |
+| `indices/kotlin.js` | 22,722 | 122,977 | 100,255 | `b6a8d5f9ad065861a9f861364692065cedf2d9c1b7a2d9f6604ce4ba009f3d45` |
+| **合计** | **152,703** | **288,912** | **136,209（0.130 MiB）** | — |
+
+Kotlin revision `autojs6-kotlin-2.2.21-p2plus-2` 为 95 globals / 44 modules / 492 members，
+规范化 UTF-16 估算 182,762 字节；Java revision `autojs6-java17-android35-subset-2` 为 42 /
+31 / 293，估算 102,406 字节。最后一次完整 Node check 的 Kotlin VM load 为 4.186 ms，低于
+50 ms 门；focused verifier 覆盖 16 类 inferred alias、safe-call completion/hover 与五个逐成员
+相等的 Java 复用 module。
+
+真实 WebView 的 M7 Kotlin 单项在 Android 9/API 28、Android 12/API 31、Android 15/API 35
+arm64 真机均为 1/1，通过耗时依次为 3.039、1.418、1.866 秒。完整 `:app:check`（lint、
+Kotlin focused verifier、通用 LSP verifier、Python/Lua/Java 门与 JVM 单测）为 success。
+最终 debug APK 为 24,444,180 字节（23.312 MiB），SHA-256
+`a54cb6e6d7d9854fbef6cf8ebb4b7339276809b5877a4927fff5ee4e16b3cdcf`；androidTest APK 为
+27,968,852 字节（26.673 MiB），SHA-256
+`b80cbeb86022083b044d9298de7504faffd125b4fca11039db2d35f4101e61bc`；R8 release APK 为
+17,742,752 字节（16.921 MiB），SHA-256
+`fab8987e6313dff9458d3648240b92abac7b6e84f3615410022df62491ba0fab`。release 相对 M6 基线
+增加 14,268 字节（13.93 KiB），且不包含 compiler graph、D8 或注入 ZIP。完整判定见
+`M7_KOTLIN_ACCEPTANCE.md`。

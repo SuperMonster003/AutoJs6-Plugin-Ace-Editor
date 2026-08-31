@@ -16,6 +16,7 @@
 * `Fonctionnalité` Intègre la sémantique Lua entièrement hors ligne avec un processus compagnon LuaLS 3.18.2 épinglé sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ressources natives absentes ou endommagées, les ABI non pris en charge et les pannes du processus reviennent silencieusement à P2 avec reprise par temporisation bornée
 
 * `Fonctionnalité` Intègre des diagnostics Java mono-fichier entièrement hors connexion avec ECJ 3.26.0 épinglé et des stubs Android API 36 élagués : les erreurs de syntaxe et symboles non résolus reçoivent par défaut des plages exactes ; la complétion reste en P2 car JDT Code Assist exige un environnement Eclipse Workspace/OSGi indisponible sur ART
+* `Fonctionnalité` Ajoute la complétion Kotlin P2+ hors connexion avec les API d'instance Kotlin 2.2.21, des inférences prudentes dans le fichier courant, les safe-calls et des index Java/Android réutilisés ; la validation du compilateur embarqué a échoué sur la taille, ART, la mémoire et le SDK minimal, donc aucun compilateur ni runtime sémantique Kotlin n'est inclus
 
 # v1.1.17
 
