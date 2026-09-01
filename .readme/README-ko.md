@@ -1,9 +1,14 @@
 <!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
 
 <div align="center">
-  <h1>AutoJs6 Ace Editor Plugin</h1>
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-ace-editor-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
 
-  <p>AutoJs6용 독립형 Ace 코드 편집기 플러그인</p>
+  <p>언어 서비스를 제공하는 내장 Ace 코드 편집기</p>
 
   <p>
     <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Ace-Editor?label=Release"/></a>
@@ -154,7 +159,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -167,12 +172,20 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `개선` 번들 메인 앱 선언과 생성된 LSP 그룹에서 Previewer 명칭 동기화
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `수정` 호스트 테마와 초기 문서가 적용되기 전에 Ace WebView가 잠시 순백색 페이지를 노출하여 어두운 편집기 테마에서 눈에 띄는 깜박임이 발생하는 문제; 최초 표시는 고정 지연 대신 테마 적용, 문서 제출 및 안정된 그리기 신호를 명시적으로 기다림
 * `개선` 약 1.3 MiB의 전체 AutoJs6 자동 완성 인덱스를 최초 표시 동기 경로에서 분리하고 첫 코드 프레임이 표시된 뒤 유휴 시간에 로드하여 부트스트랩 인덱스를 끊김 없이 교체; Android 9-15의 5개 환경 모두에서 전역 항목 400개와 모듈 80개를 복원
+* `개선` README 레이아웃과 Gradle 플랫폼 버전 관리 방식을 통일
+* `개선` 플러그인 설명을 간결하게 다듬고 다국어 리소스의 문장 부호를 통일
 
 # v1.1.18
 
@@ -187,12 +200,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 * `기능` 고정된 ECJ 3.26.0과 축소된 Android API 36 stubs로 완전 오프라인 Java 단일 파일 진단 내장; 구문 오류와 확인되지 않은 기호를 기본적으로 정확한 범위에 표시하며, JDT Code Assist가 ART에서 사용할 수 없는 Eclipse Workspace/OSGi 환경을 요구하므로 자동 완성은 P2를 유지
 * `기능` Kotlin 2.2.21 인스턴스 API, 현재 파일의 보수적 형식 추론, safe-call 및 재사용한 Java/Android 인덱스로 오프라인 Kotlin P2+ 자동 완성 추가; 기기 내 compiler는 크기, ART 실행, 메모리 및 최소 SDK 검증에 실패해 Kotlin compiler와 의미 runtime을 포함하지 않음
 * `기능` AutoJs6 코드 편집기 설정에 동일한 9-mode 언어 지원 matrix와 TypeScript/JavaScript, Python, Lua 및 Java의 언어별 의미 switch를 표시; Kotlin은 P2+ 전용 사용 불가 상태로 계속 보이며 파일 형식 사용자 지정이 언어 재분류가 아닌 allowlist임을 명시
-
-# v1.1.17
-
-###### 2026/08/31
-
-* `기능` AutoJs6 `4.5.0` 색상 정확도 PNG 양자화 선언과 다시 생성한 main-app LSP 그룹을 포함: `images.quantizeToFile`은 파일에 직접 쓰고 크기와 품질 지표를 반환하며, `preserveAlpha`는 투명 또는 불투명 출력을 제어
 
 ##### 더 많은 릴리스 기록
 

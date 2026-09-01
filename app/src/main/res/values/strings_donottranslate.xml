@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">Ace Editor</string>
     <string name="entry_ace_editor_font_cascadia_code" translatable="false">Cascadia Code</string>
     <string name="entry_ace_editor_font_fira_code" translatable="false">Fira Code</string>
     <string name="entry_ace_editor_font_hack" translatable="false">Hack</string>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">محرر Ace</string>
     <string name="entry_ace_editor_font_system_monospace">خط Android أحادي المسافة</string>
     <string name="error_typescript_project_rename_invalid_name">أدخل معرف TypeScript صالحًا ومختلفًا.</string>
     <string name="error_typescript_project_rename_save_first">احفظ المستند النشط قبل إعادة تسمية رمز في المشروع.</string>
     <string name="error_typescript_project_rename_stale">تغير المشروع أو المستند النشط. شغّل إعادة التسمية مرة أخرى.</string>
-    <string name="plugin_description">محرر أكواد Ace مضمن لتطبيق AutoJs6</string>
+    <string name="plugin_description">محرر أكواد Ace مضمن مع خدمات لغوية</string>
     <string name="plugin_instruction">ثبت المكون الإضافي, ثم اختر Ace كمحرر البرامج النصية في AutoJs6.</string>
     <string name="text_copy_line">نسخ السطر</string>
     <string name="text_delete_line">حذف السطر</string>

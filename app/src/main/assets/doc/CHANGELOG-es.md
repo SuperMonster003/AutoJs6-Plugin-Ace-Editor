@@ -4,12 +4,20 @@
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `Mejora` Sincronizar la denominación Previewer en las declaraciones integradas de la aplicación principal y los grupos LSP generados
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `Corrección` La WebView de Ace podía mostrar brevemente una página totalmente blanca antes de aplicar el tema del host y el documento inicial, lo que producía un destello evidente con temas oscuros; la primera presentación ahora espera señales explícitas de tema aplicado, documento enviado y renderizado estable en lugar de un retraso fijo
 * `Mejora` Mueve el índice completo de autocompletado de AutoJs6 de aproximadamente 1.3 MiB fuera de la ruta síncrona de la primera presentación, lo carga durante el tiempo de inactividad posterior al primer fotograma de código visible y sustituye sin interrupciones el índice inicial; los cinco entornos Android 9-15 restauraron 400 elementos globales y 80 módulos
+* `Mejora` Unificar el diseño del README y la gestión de versiones de la plataforma Gradle
+* `Mejora` Simplificar la descripción del complemento y normalizar la puntuación de los recursos multilingües
 
 # v1.1.18
 

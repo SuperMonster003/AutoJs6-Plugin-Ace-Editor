@@ -1,9 +1,14 @@
 <!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
 
 <div align="center">
-  <h1>AutoJs6 Ace Editor Plugin</h1>
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-ace-editor-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
 
-  <p>Автономный плагин редактора кода Ace для AutoJs6</p>
+  <p>Встроенный редактор кода Ace с языковыми службами</p>
 
   <p>
     <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Ace-Editor?label=Release"/></a>
@@ -154,7 +159,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -167,12 +172,20 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `Улучшение` Синхронизировать именование Previewer во встроенных объявлениях основного приложения и сгенерированных группах LSP
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `Исправление` Ace WebView могла кратковременно показывать полностью белую страницу до применения темы хоста и начального документа, что создавало заметную вспышку при темных темах редактора; первая отрисовка теперь ожидает явных сигналов применения темы, передачи документа и стабильного кадра вместо фиксированной задержки
 * `Улучшение` Полный индекс автодополнения AutoJs6 размером около 1.3 MiB удален из синхронного пути первого отображения, загружается во время простоя после первого видимого кадра кода и бесшовно заменяет начальный индекс; все пять сред Android 9-15 восстановили 400 глобальных элементов и 80 модулей
+* `Улучшение` Унифицировать оформление README и управление версиями платформы Gradle
+* `Улучшение` Сократить описание плагина и унифицировать пунктуацию в многоязычных ресурсах
 
 # v1.1.18
 
@@ -187,12 +200,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 * `Функция` Добавлена полностью автономная диагностика одного Java-файла с закреплённым ECJ 3.26.0 и сокращёнными заглушками Android API 36: синтаксические ошибки и неразрешённые символы по умолчанию отмечаются точными диапазонами; дополнение остаётся на P2, поскольку JDT Code Assist требует недоступную в ART среду Eclipse Workspace/OSGi
 * `Функция` Добавлено автономное дополнение Kotlin P2+ с API экземпляров Kotlin 2.2.21, консервативным выводом типов текущего файла, safe-call и повторно используемыми индексами Java/Android; проверка компилятора на устройстве провалилась по размеру, работе ART, памяти и минимальному SDK, поэтому Kotlin compiler и семантический runtime не включены
 * `Функция` В настройках редактора кода AutoJs6 показана та же матрица из девяти режимов с переключателями семантики для TypeScript/JavaScript, Python, Lua и Java; Kotlin остается видимым, но недоступным на уровне P2+, а настройка типов файлов описана как список разрешений, а не смена языка
-
-# v1.1.17
-
-###### 2026/08/31
-
-* `Функция` Добавлены декларации PNG-квантования с корректной цветопередачей AutoJs6 `4.5.0` и заново созданная группа LSP main-app: `images.quantizeToFile` напрямую записывает файл и возвращает размер и метрики качества, а `preserveAlpha` управляет прозрачным или непрозрачным выводом
 
 ##### Подробнее об истории выпусков
 

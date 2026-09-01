@@ -1,7 +1,7 @@
 {
   "$name": "English",
   "text_current_lowercase": "current",
-  "text_plugin_synopsis": "Standalone Ace code editor plugin for AutoJs6",
+  "text_plugin_synopsis": "Embedded Ace code editor with language services",
   "h3_languages_with_ascii": "Languages",
   "p_languages_all_supported_for_readme": "The current README.md supports the following languages",
   "h3_introduction": "Introduction",

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ace 編輯器</string>
     <string name="entry_ace_editor_font_system_monospace">Android 系統預設等寬字型</string>
     <string name="error_typescript_project_rename_invalid_name">請輸入一個不同且有效的 TypeScript 識別碼.</string>
     <string name="error_typescript_project_rename_save_first">重新命名專案符號前請先儲存目前文件.</string>
     <string name="error_typescript_project_rename_stale">專案或目前文件已變更. 請重新執行重新命名.</string>
-    <string name="plugin_description">用於 AutoJs6 的嵌入式 Ace 程式碼編輯器</string>
+    <string name="plugin_description">整合語言服務的嵌入式 Ace 程式碼編輯器</string>
     <string name="plugin_instruction">安裝外掛程式, 然後在 AutoJs6 中選擇 Ace 作為指令碼編輯器.</string>
     <string name="text_copy_line">複製行</string>
     <string name="text_delete_line">刪除行</string>

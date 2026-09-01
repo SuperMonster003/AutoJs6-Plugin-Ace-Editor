@@ -1,9 +1,14 @@
 <!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
 
 <div align="center">
-  <h1>AutoJs6 Ace Editor Plugin</h1>
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-ace-editor-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
 
-  <p>Complemento independiente del editor de código Ace para AutoJs6</p>
+  <p>Editor de código Ace integrado con servicios de lenguaje</p>
 
   <p>
     <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Ace-Editor?label=Release"/></a>
@@ -154,7 +159,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -167,12 +172,20 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `Mejora` Sincronizar la denominación Previewer en las declaraciones integradas de la aplicación principal y los grupos LSP generados
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `Corrección` La WebView de Ace podía mostrar brevemente una página totalmente blanca antes de aplicar el tema del host y el documento inicial, lo que producía un destello evidente con temas oscuros; la primera presentación ahora espera señales explícitas de tema aplicado, documento enviado y renderizado estable en lugar de un retraso fijo
 * `Mejora` Mueve el índice completo de autocompletado de AutoJs6 de aproximadamente 1.3 MiB fuera de la ruta síncrona de la primera presentación, lo carga durante el tiempo de inactividad posterior al primer fotograma de código visible y sustituye sin interrupciones el índice inicial; los cinco entornos Android 9-15 restauraron 400 elementos globales y 80 módulos
+* `Mejora` Unificar el diseño del README y la gestión de versiones de la plataforma Gradle
+* `Mejora` Simplificar la descripción del complemento y normalizar la puntuación de los recursos multilingües
 
 # v1.1.18
 
@@ -187,12 +200,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Función` Integra diagnósticos Java de un solo archivo totalmente sin conexión con ECJ 3.26.0 fijado y stubs recortados de Android API 36: los errores de sintaxis y símbolos no resueltos reciben rangos exactos por defecto; el autocompletado permanece en P2 porque JDT Code Assist requiere un entorno Eclipse Workspace/OSGi no disponible en ART
 * `Función` Añade autocompletado Kotlin P2+ sin conexión con API de instancia de Kotlin 2.2.21, inferencias conservadoras del archivo actual, safe-call e índices Java/Android reutilizados; la puerta del compilador en el dispositivo falló por tamaño, ejecución ART, memoria y compatibilidad con el SDK mínimo, por lo que no se incluye compilador ni runtime semántico de Kotlin
 * `Función` Muestra la misma matriz de nueve modos en los ajustes del editor de código de AutoJs6 con interruptores semánticos para TypeScript/JavaScript, Python, Lua y Java; Kotlin permanece visible pero no disponible en P2+, y la personalización de tipos de archivo se explica como una lista de permitidos en vez de una reclasificación del lenguaje
-
-# v1.1.17
-
-###### 2026/08/31
-
-* `Función` Incluye las declaraciones de cuantizacion PNG con color correcto de AutoJs6 `4.5.0` y el grupo LSP main-app regenerado: `images.quantizeToFile` escribe directamente en un archivo y devuelve tamano y metricas de calidad, mientras `preserveAlpha` controla la salida transparente u opaca
 
 ##### Para ver más historial de versiones
 

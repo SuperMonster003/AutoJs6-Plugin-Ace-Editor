@@ -1,7 +1,7 @@
 {
   "$name": "繁體中文 (台灣)",
   "text_current_lowercase": "目前",
-  "text_plugin_synopsis": "用於 AutoJs6 的獨立 Ace 程式碼編輯器外掛",
+  "text_plugin_synopsis": "整合語言服務的嵌入式 Ace 程式碼編輯器",
   "h3_languages_with_ascii": "語言 (Languages)",
   "p_languages_all_supported_for_readme": "目前 README.md 支援以下語言",
   "h3_introduction": "簡介",

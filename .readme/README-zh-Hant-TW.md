@@ -1,9 +1,14 @@
 <!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
 
 <div align="center">
-  <h1>AutoJs6 Ace Editor Plugin</h1>
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-ace-editor-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
 
-  <p>用於 AutoJs6 的獨立 Ace 程式碼編輯器外掛</p>
+  <p>整合語言服務的嵌入式 Ace 程式碼編輯器</p>
 
   <p>
     <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Ace-Editor?label=Release"/></a>
@@ -154,7 +159,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -167,12 +172,20 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `優化` 同步內建主應用宣告及產生的 LSP 分組中的 Previewer 命名
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `修復` Ace WebView 在主機端主題與首份文件生效前可能短暫顯示純白背景, 尤其會在深色編輯器主題下產生明顯閃爍; 首次畫面現在由主題已套用, 文件已提交與穩定繪製訊號共同放行, 不依賴固定延遲
 * `優化` 將約 1.3 MiB 的完整 AutoJs6 自動完成索引移出首次畫面的同步路徑, 在第一個可見程式碼畫面後的閒置時段載入並無縫取代基礎索引; 五個 Android 9-15 環境均恢復 400 個全域項目與 80 個模組
+* `優化` 統一 README 版式與 Gradle 平台版本管理方式
+* `優化` 精簡外掛描述並規範多語言資源中的標點符號
 
 # v1.1.18
 
@@ -187,12 +200,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 * `新增` 透過固定版本的 ECJ 3.26.0 與裁剪的 Android API 36 stubs 內建完全離線的 Java 單檔診斷: 語法錯誤與未解析符號現預設獲得精確範圍標註; JDT Code Assist 依賴 ART 上不可用的 Eclipse Workspace/OSGi 執行環境, 因此補全繼續使用 P2
 * `新增` Kotlin P2+ 離線補全: 擴充 Kotlin 2.2.21 執行個體 API, 依目前檔案提供保守型別提示, 支援 safe-call 並重用 Java/Android 索引; 裝置內 compiler 因體積, ART 執行, 記憶體與最低 SDK 驗證未通過, 因此不內建 Kotlin compiler 或語意執行環境
 * `新增` 在 AutoJs6 程式碼編輯器設定中顯示同一份 9-mode 語言支援矩陣, 並為 TypeScript/JavaScript, Python, Lua 與 Java 提供逐語言語意開關; Kotlin 以 P2+ 無法使用狀態保持可見, 檔案類型自訂明確作為允許清單而非語言重新分類
-
-# v1.1.17
-
-###### 2026/08/31
-
-* `新增` 內建 AutoJs6 `4.5.0` 色彩正確的 PNG 量化宣告及重新產生的主應用程式 LSP 分組: `images.quantizeToFile` 直接寫入檔案並回傳大小與品質指標, `preserveAlpha` 控制透明或不透明輸出
 
 ##### 更多發行歷史可參閱
 

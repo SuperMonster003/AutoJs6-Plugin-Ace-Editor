@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Редактор Ace</string>
     <string name="entry_ace_editor_font_system_monospace">Системный моноширинный шрифт Android</string>
     <string name="error_typescript_project_rename_invalid_name">Введите другой допустимый идентификатор TypeScript.</string>
     <string name="error_typescript_project_rename_save_first">Сохраните активный документ перед переименованием символа проекта.</string>
     <string name="error_typescript_project_rename_stale">Проект или активный документ изменился. Запустите переименование снова.</string>
-    <string name="plugin_description">Встроенный редактор кода Ace для AutoJs6</string>
+    <string name="plugin_description">Встроенный редактор кода Ace с языковыми службами</string>
     <string name="plugin_instruction">Установите плагин, затем выберите Ace в качестве редактора скриптов в AutoJs6.</string>
     <string name="text_copy_line">Копировать строку</string>
     <string name="text_delete_line">Удалить строку</string>

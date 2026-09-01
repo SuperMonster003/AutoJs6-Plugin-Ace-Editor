@@ -1,9 +1,14 @@
 <!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
 
 <div align="center">
-  <h1>AutoJs6 Ace Editor Plugin</h1>
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-ace-editor-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
 
-  <p>Standalone Ace code editor plugin for AutoJs6</p>
+  <p>Embedded Ace code editor with language services</p>
 
   <p>
     <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Ace-Editor?label=Release"/></a>
@@ -154,7 +159,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -167,12 +172,20 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `Improvement` Synchronize the Previewer naming in bundled main-app declarations and generated LSP groups
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `Fix` Ace WebView could briefly expose a pure-white page before the host theme and initial document took effect, producing a conspicuous flash with dark editor themes; first presentation now waits for explicit theme-applied, document-committed, and stable-paint signals instead of a fixed delay
 * `Improvement` Move the approximately 1.3 MiB full AutoJs6 completion index out of the synchronous first-presentation path, loading it during idle time after the first visible code frame and seamlessly replacing the bootstrap index; all five Android 9-15 environments restored 400 globals and 80 modules
+* `Improvement` Standardize the README layout and Gradle platform version management
+* `Improvement` Refine the plugin description and normalize punctuation in multilingual resources
 
 # v1.1.18
 
@@ -187,12 +200,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Feature` Bundle fully offline Java single-file diagnostics with pinned ECJ 3.26.0 and trimmed Android API 36 stubs: syntax errors and unresolved symbols now receive exact-range annotations by default, while completion stays on P2 because JDT Code Assist requires an Eclipse Workspace/OSGi runtime unavailable on ART
 * `Feature` Add offline Kotlin P2+ completion with Kotlin 2.2.21 instance APIs, conservative current-file type hints, safe-call support, and reused Java/Android indexes; the on-device compiler gate failed on size, ART execution, memory, and min-SDK compatibility, so no Kotlin compiler or semantic runtime is bundled
 * `Feature` Expose the same nine-mode language support matrix in AutoJs6 code editor settings with per-language semantic switches for TypeScript/JavaScript, Python, Lua, and Java; Kotlin remains visibly unavailable at P2+, and file-type customization is documented as an allowlist rather than language reclassification
-
-# v1.1.17
-
-###### 2026/08/31
-
-* `Feature` Bundle the AutoJs6 `4.5.0` color-correct PNG quantization declarations and regenerated main-app LSP group: `images.quantizeToFile` streams directly to a file with size and quality metrics, while `preserveAlpha` controls transparent or opaque output
 
 ##### Complete release history
 

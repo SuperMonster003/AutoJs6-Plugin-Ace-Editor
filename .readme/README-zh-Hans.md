@@ -1,9 +1,14 @@
 <!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
 
 <div align="center">
-  <h1>AutoJs6 Ace Editor Plugin</h1>
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-ace-editor-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
 
-  <p>用于 AutoJs6 的独立 Ace 代码编辑器插件</p>
+  <p>集成语言服务的嵌入式 Ace 代码编辑器</p>
 
   <p>
     <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Ace-Editor?label=Release"/></a>
@@ -154,7 +159,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -167,12 +172,20 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `优化` 同步内置主应用声明及生成的 LSP 分组中的 Previewer 命名
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `修复` Ace WebView 在宿主主题与首份文档生效前可能短暂暴露纯白背景, 尤其会在深色编辑器主题下产生明显闪烁; 首屏现由主题已应用, 文档已提交及稳定绘制信号共同放行, 不依赖固定延迟
 * `优化` 将约 1.3 MiB 的完整 AutoJs6 补全索引移出首屏同步路径, 在首个可见代码帧后的空闲时段加载并无缝替换基础索引; 五个 Android 9-15 环境均恢复 400 个全局项与 80 个模块
+* `优化` 统一 README 版式与 Gradle 平台版本管理方式
+* `优化` 精简插件描述并规范多语言资源中的标点符号
 
 # v1.1.18
 
@@ -187,12 +200,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 * `新增` 通过固定版本的 ECJ 3.26.0 与裁剪的 Android API 36 存根内置完全离线的 Java 单文件诊断: 语法错误与未解析符号现默认获得精确范围标注; JDT Code Assist 依赖 ART 上不可用的 Eclipse Workspace/OSGi 运行时, 因此补全继续使用 P2
 * `新增` Kotlin P2+ 离线补全: 扩充 Kotlin 2.2.21 实例 API, 根据当前文件做保守类型提示, 支持 safe-call 并复用 Java/Android 索引; 设备内 compiler 因体积, ART 运行, 内存与最低 SDK 验证未通过, 因此不打包 Kotlin compiler 或语义运行时
 * `新增` 在 AutoJs6 代码编辑器设置中展示同一份 9-mode 语言支持矩阵, 并为 TypeScript/JavaScript, Python, Lua 与 Java 提供逐语言语义开关; Kotlin 以 P2+ 不可用状态保持可见, 文件类型自定义明确作为白名单而非语言重分类
-
-# v1.1.17
-
-###### 2026/08/31
-
-* `新增` 内置 AutoJs6 `4.5.0` 色彩正确的 PNG 量化声明及重新生成的主应用 LSP 分组: `images.quantizeToFile` 直接写入文件并返回大小与质量指标, `preserveAlpha` 控制透明或不透明输出
 
 ##### 更多发行历史可参阅
 

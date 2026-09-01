@@ -1,9 +1,14 @@
 <!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
 
 <div align="center">
-  <h1>AutoJs6 Ace Editor Plugin</h1>
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-ace-editor-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
 
-  <p>مكون إضافي مستقل لمحرر أكواد Ace في AutoJs6</p>
+  <p>محرر أكواد Ace مضمن مع خدمات لغوية</p>
 
   <p>
     <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Ace-Editor?label=Release"/></a>
@@ -154,7 +159,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -167,12 +172,20 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 
 ******
 
+# v1.1.20
+
+###### 2026/09/01
+
+* `تحسين` مزامنة تسمية Previewer في تصريحات التطبيق الرئيسي المضمنة ومجموعات LSP المولدة
+
 # v1.1.19
 
 ###### 2026/09/01
 
 * `إصلاح` كان WebView الخاص ب Ace قد يعرض صفحة بيضاء بالكامل لفترة وجيزة قبل تطبيق سمة المضيف والمستند الأولي, مما يسبب وميضا واضحا مع سمات المحرر الداكنة; ينتظر العرض الأول الآن إشارات صريحة لتطبيق السمة وإرسال المستند واستقرار الرسم بدلا من تأخير ثابت
 * `تحسين` نقل فهرس الإكمال الكامل ل AutoJs6 بحجم يقارب 1.3 MiB خارج مسار العرض الأول المتزامن, وتحميله أثناء وقت الخمول بعد أول إطار كود مرئي مع استبدال فهرس التمهيد بسلاسة; استعادت بيئات Android 9-15 الخمس كلها 400 عنصر عام و 80 وحدة
+* `تحسين` توحيد تخطيط README وطريقة إدارة إصدارات منصة Gradle
+* `تحسين` تبسيط وصف المكون الإضافي وتوحيد علامات الترقيم في الموارد متعددة اللغات
 
 # v1.1.18
 
@@ -187,12 +200,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.19-u
 * `ميزة` تضمين تشخيص Java لملف واحد يعمل بالكامل دون اتصال باستخدام ECJ 3.26.0 مثبت وstubs مختصرة من Android API 36: تحصل أخطاء الصياغة والرموز غير المحلولة افتراضيا على نطاقات دقيقة؛ ويبقى الإكمال على P2 لأن JDT Code Assist يتطلب بيئة Eclipse Workspace/OSGi غير المتاحة على ART
 * `ميزة` إضافة إكمال Kotlin P2+ دون اتصال مع واجهات مثيلات Kotlin 2.2.21 وتلميحات أنواع محافظة للملف الحالي ودعم safe-call وإعادة استخدام فهارس Java/Android؛ فشلت بوابة compiler داخل الجهاز بسبب الحجم وتشغيل ART والذاكرة وتوافق الحد الأدنى لـ SDK، لذلك لا يتم تضمين Kotlin compiler أو runtime دلالي
 * `ميزة` عرض مصفوفة دعم اللغات ذات الأوضاع التسعة نفسها في إعدادات محرر الشفرة في AutoJs6 مع مفاتيح دلالية مستقلة لـ TypeScript/JavaScript وPython وLua وJava; تبقى Kotlin ظاهرة وغير متاحة عند P2+ وتوضح تخصيصات أنواع الملفات على أنها allowlist لا إعادة تصنيف للغة
-
-# v1.1.17
-
-###### 2026/08/31
-
-* `ميزة` تضمين تعريفات تكميم PNG الصحيحة لونيا في AutoJs6 `4.5.0` ومجموعة LSP المعاد توليدها لـ main-app: تكتب `images.quantizeToFile` مباشرة إلى ملف وتعيد الحجم ومقاييس الجودة, بينما يتحكم `preserveAlpha` في الإخراج الشفاف أو المعتم
 
 ##### لمزيد من سجل الإصدارات
 

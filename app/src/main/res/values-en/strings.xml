@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ace Editor</string>
     <string name="entry_ace_editor_font_system_monospace">Android system monospace</string>
     <string name="error_typescript_project_rename_invalid_name">Enter a different valid TypeScript identifier.</string>
     <string name="error_typescript_project_rename_save_first">Save the active document before renaming a project symbol.</string>
     <string name="error_typescript_project_rename_stale">The project or active document changed. Run rename again.</string>
-    <string name="plugin_description">Embedded Ace code editor for AutoJs6</string>
+    <string name="plugin_description">Embedded Ace code editor with language services</string>
     <string name="plugin_instruction">Install the plugin, then select Ace as the script editor in AutoJs6.</string>
     <string name="text_copy_line">Copy line</string>
     <string name="text_delete_line">Delete line</string>

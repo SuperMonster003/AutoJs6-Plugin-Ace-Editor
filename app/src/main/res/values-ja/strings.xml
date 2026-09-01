@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ace エディター</string>
     <string name="entry_ace_editor_font_system_monospace">Android システム等幅フォント</string>
     <string name="error_typescript_project_rename_invalid_name">別の有効な TypeScript 識別子を入力してください.</string>
     <string name="error_typescript_project_rename_save_first">プロジェクトシンボルの名前を変更する前に現在のドキュメントを保存してください.</string>
     <string name="error_typescript_project_rename_stale">プロジェクトまたは現在のドキュメントが変更されました. 名前変更をもう一度実行してください.</string>
-    <string name="plugin_description">AutoJs6 用の組み込み Ace コードエディター</string>
+    <string name="plugin_description">言語サービスを備えた組み込み Ace コードエディター</string>
     <string name="plugin_instruction">プラグインをインストールし, AutoJs6 でスクリプトエディターとして Ace を選択します.</string>
     <string name="text_copy_line">行をコピー</string>
     <string name="text_delete_line">行を削除</string>

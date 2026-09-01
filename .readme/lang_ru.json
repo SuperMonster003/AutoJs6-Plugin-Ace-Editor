@@ -1,7 +1,7 @@
 {
   "$name": "Русский",
   "text_current_lowercase": "текущий",
-  "text_plugin_synopsis": "Автономный плагин редактора кода Ace для AutoJs6",
+  "text_plugin_synopsis": "Встроенный редактор кода Ace с языковыми службами",
   "h3_languages_with_ascii": "Языки (Languages)",
   "p_languages_all_supported_for_readme": "Текущий README.md поддерживает следующие языки",
   "h3_introduction": "Введение",
