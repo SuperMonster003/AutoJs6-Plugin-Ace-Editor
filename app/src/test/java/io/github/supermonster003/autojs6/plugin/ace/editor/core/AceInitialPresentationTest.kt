@@ -80,6 +80,29 @@ class AceInitialPresentationTest {
         assertTrue(completerSource.contains("replaceJavaScriptIndex: replaceJavaScriptIndex"))
     }
 
+    @Test
+    fun `Lua availability preflight keeps manifest and hashing work off the synchronous startup path`() {
+        val editorSource = readMainSource(
+            "io/github/supermonster003/autojs6/plugin/ace/editor/core/AceCodeEditor.kt",
+        )
+        val runtimeSource = readMainSource(
+            "io/github/supermonster003/autojs6/plugin/ace/editor/core/lsp/AceLuaLanguageServerRuntime.kt",
+        )
+        val preflightSource = runtimeSource
+            .substringAfter("fun isAvailable(context: Context)")
+            .substringBefore("fun isSupported(context: Context)")
+        val preparationSource = runtimeSource
+            .substringAfter("private fun prepare(context: Context)")
+            .substringBefore("private fun readManifest(context: Context)")
+
+        assertTrue(editorSource.contains("AceLuaLanguageServerRuntime.isAvailable(pluginContext)"))
+        assertFalse(preflightSource.contains("readManifest("))
+        assertFalse(preflightSource.contains("sha256("))
+        assertFalse(preflightSource.contains("verifyNativeLibrary("))
+        assertTrue(preparationSource.contains("readManifest(context)"))
+        assertTrue(preparationSource.contains("verifyNativeLibrary("))
+    }
+
     private fun readMainSource(relativePath: String): String {
         val workingDirectory = File(checkNotNull(System.getProperty("user.dir")))
         val candidates = listOf(

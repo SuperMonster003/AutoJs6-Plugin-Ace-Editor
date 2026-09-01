@@ -11,6 +11,42 @@ import org.junit.Test
 class AceLuaLanguageServerRuntimeTest {
 
     @Test
+    fun startupPreflightUsesOnlyInstalledFileAndAbiAvailability() {
+        val root = Files.createTempDirectory("autojs6-luals-preflight-test").toFile()
+        try {
+            val nativeLibrary = File(root, AceLuaLanguageServerRuntime.NATIVE_LIBRARY_NAME)
+
+            assertFalse(
+                AceLuaLanguageServerRuntime.hasInstalledNativeRuntime(
+                    root,
+                    listOf("arm64-v8a"),
+                ),
+            )
+
+            nativeLibrary.writeBytes(
+                byteArrayOf(0x7f, 'E'.code.toByte(), 'L'.code.toByte(), 'F'.code.toByte()),
+            )
+            nativeLibrary.setReadable(true)
+            nativeLibrary.setExecutable(true)
+
+            assertTrue(
+                AceLuaLanguageServerRuntime.hasInstalledNativeRuntime(
+                    root,
+                    listOf("x86", "arm64-v8a"),
+                ),
+            )
+            assertFalse(
+                AceLuaLanguageServerRuntime.hasInstalledNativeRuntime(
+                    root,
+                    listOf("x86"),
+                ),
+            )
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
     fun runtimeManifestPathsMustBeCanonicalRelativePaths() {
         listOf(
             "main.lua",

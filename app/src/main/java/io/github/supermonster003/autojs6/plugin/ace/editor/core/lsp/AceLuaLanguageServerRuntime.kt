@@ -32,6 +32,21 @@ internal object AceLuaLanguageServerRuntime {
     @Volatile
     private var cachedPreparation: Preparation? = null
 
+    /**
+     * Performs the cheap, side-effect-free preflight used while the editor page is starting.
+     *
+     * Startup configuration is requested synchronously by JavaScript before `notifyReady`. Reading
+     * the 273-entry manifest and hashing the native executable here makes the first Lua document
+     * pay cold-storage I/O on the WebView bridge. The complete manifest, size, and SHA-256 checks
+     * still run in [serverSpec] immediately before the executable can be launched.
+     */
+    fun isAvailable(context: Context): Boolean = runCatching {
+        hasInstalledNativeRuntime(
+            nativeLibraryDirectory = File(context.applicationContext.applicationInfo.nativeLibraryDir),
+            supportedAbis = Build.SUPPORTED_ABIS.asList(),
+        )
+    }.getOrDefault(false)
+
     fun isSupported(context: Context): Boolean = runCatching {
         val manifest = readManifest(context.applicationContext)
         val nativeLibrary = resolveNativeLibrary(context.applicationContext, manifest)
@@ -158,6 +173,15 @@ internal object AceLuaLanguageServerRuntime {
         }
         require(nativeLibrary.canExecute()) { "LuaLS native library is not executable" }
         return ResolvedNativeLibrary(abi, nativeLibrary)
+    }
+
+    internal fun hasInstalledNativeRuntime(
+        nativeLibraryDirectory: File,
+        supportedAbis: List<String>,
+    ): Boolean {
+        if (supportedAbis.none(SUPPORTED_NATIVE_ABIS::contains)) return false
+        val nativeLibrary = File(nativeLibraryDirectory, NATIVE_LIBRARY_NAME)
+        return nativeLibrary.isFile && nativeLibrary.canRead() && nativeLibrary.canExecute()
     }
 
     private fun verifyNativeLibrary(file: ResolvedNativeLibrary, expected: NativeLibrary) {
@@ -307,5 +331,11 @@ internal object AceLuaLanguageServerRuntime {
         val runtimeRoot: File,
         val logRoot: File,
         val metaRoot: File,
+    )
+
+    private val SUPPORTED_NATIVE_ABIS = setOf(
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86_64",
     )
 }

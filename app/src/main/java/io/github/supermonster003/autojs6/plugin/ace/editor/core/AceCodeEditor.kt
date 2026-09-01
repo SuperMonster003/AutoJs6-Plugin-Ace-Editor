@@ -137,7 +137,7 @@ class AceCodeEditor @JvmOverloads constructor(
         declarationGroupsProvider = { AceEditorLspPreferences.getDeclarationGroups(hostPreferences) },
         semanticLanguagesProvider = { AceEditorLspPreferences.getSemanticLanguages(hostPreferences) },
         luaServerAvailableProvider = {
-            AceLuaLanguageServerRuntime.isSupported(pluginContext)
+            AceLuaLanguageServerRuntime.isAvailable(pluginContext)
         },
         javaDiagnosticsAvailableProvider = javaSemanticRuntime::isSupported,
     )
