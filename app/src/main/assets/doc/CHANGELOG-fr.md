@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.21
+
+###### 2026/09/01
+
+* `Fonctionnalité` Intègre les déclarations Pinyin AutoJs6 `4.7.0` et les groupes LSP régénérés: `customDictionary` fournit des substitutions de lecture limitées à chaque appel, `compare` renvoie un ordre numérique, `compact` renvoie le produit cartésien de la matrice de candidats, et les types de l'API de plugin partagée sont synchronisés
+
 # v1.1.20
 
 ###### 2026/09/01

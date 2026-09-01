@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.1.21": {
+      "released_date": "2026/09/01",
+      "feature": [
+        "内置 AutoJs6 `4.7.0` Pinyin 声明及重新生成的 LSP 分组: `customDictionary` 支持仅当前调用生效的自定义读音覆盖, `compare` 返回数值排序结果, `compact` 返回候选矩阵笛卡尔积, 并同步共享插件 API 类型"
+      ]
+    },
     "v1.1.20": {
       "released_date": "2026/09/01",
       "improvement": [

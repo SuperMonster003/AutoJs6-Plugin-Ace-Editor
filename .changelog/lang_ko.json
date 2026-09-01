@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.1.21": {
+      "released_date": "2026/09/01",
+      "feature": [
+        "AutoJs6 `4.7.0` Pinyin 선언과 다시 생성한 LSP 그룹을 내장: `customDictionary` 는 호출 단위 발음 재정의, `compare` 는 숫자 정렬 결과, `compact` 는 후보 행렬의 데카르트 곱을 반환하고 공유 플러그인 API 타입도 동기화"
+      ]
+    },
     "v1.1.20": {
       "released_date": "2026/09/01",
       "improvement": [

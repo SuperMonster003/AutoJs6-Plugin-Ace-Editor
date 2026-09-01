@@ -159,7 +159,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -171,6 +171,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 ### 發行歷史
 
 ******
+
+# v1.1.21
+
+###### 2026/09/01
+
+* `新增` 內置 AutoJs6 `4.7.0` Pinyin 聲明及重新生成的 LSP 分組: `customDictionary` 支援僅當前調用生效的自訂讀音覆蓋, `compare` 返回數值排序結果, `compact` 返回候選矩陣笛卡爾積, 並同步共享插件 API 類型
 
 # v1.1.20
 
@@ -186,20 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 * `優化` 將約 1.3 MiB 的完整 AutoJs6 自動補全索引移出首屏同步路徑, 在首個可見程式碼畫面後的閒置時段載入並無縫取代基礎索引; 五個 Android 9-15 環境均恢復 400 個全域項目及 80 個模組
 * `優化` 統一 README 版式與 Gradle 平台版本管理方式
 * `優化` 精簡插件描述並規範多語言資源中的標點符號
-
-# v1.1.18
-
-###### 2026/08/31
-
-* `新增` 內置 AutoJs6 `4.6.0` 資源安全的 PNG 量化聲明及重新生成的主應用 LSP 分組: 可配置的 `maxPixels` 與 `maxMemoryBytes` 預算超限時傳回帶詳情的類型化錯誤, 結果公開 `peakWorkingMemoryBytes`, 取消 API 覆蓋明確請求與腳本結束
-* `新增` Python, Lua, Java 與 Kotlin 離線 P1 語言支援: 按副檔名路由 Ace mode, 提供語法高亮, 本語言關鍵字, snippets 與文件單詞補全; Lua 額外啟用 worker 語法診斷, 四門語言均與 AutoJs6/TypeScript 候選嚴格隔離
-* `新增` Python, Lua, Java 與 Kotlin 離線 P2 補全: 按需載入固定版本的標準庫索引, 並提取目前文件的 import, 函數, 類別, 方法, 參數和變數; 嚴格保持跨語言隔離及現有 JavaScript/TypeScript 行為
-* `新增` 新增可插拔八能力語義 Provider, 通用 JSON-RPC/LSP 核心及 WebWorker/裝置內 stdio 雙傳輸; TypeScript 已零回歸遷移, provider 故障時自動降級至 P2, 四門新語言語義開關預設關閉
-* `新增` 透過固定版本的 Pyright 1.1.413 Worker 和 271 個 typeshed 檔案內置完全離線的 Python 3.12 語義: 類型補全, hover, signature help, 診斷和定義跳轉現預設開啟, 不相容的舊 WebView 與執行故障會靜默降級至 P2
-* `新增` 透過固定版本的 LuaLS 3.18.2 裝置內伴生程序內置完全離線的 Lua 語義: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 原生資產缺失或損壞, 不支援的 ABI 與程序崩潰會靜默降級至 P2, 並以有限退避恢復
-* `新增` 透過固定版本的 ECJ 3.26.0 與裁剪的 Android API 36 stubs 內置完全離線的 Java 單檔診斷: 語法錯誤與未解析符號現預設獲得精確範圍標註; JDT Code Assist 依賴 ART 上不可用的 Eclipse Workspace/OSGi 執行環境, 因此補全繼續使用 P2
-* `新增` Kotlin P2+ 離線補全: 擴充 Kotlin 2.2.21 實例 API, 根據目前檔案提供保守類型提示, 支援 safe-call 並重用 Java/Android 索引; 裝置內 compiler 因體積, ART 執行, 記憶體與最低 SDK 驗證未通過, 因此不打包 Kotlin compiler 或語義執行環境
-* `新增` 在 AutoJs6 程式碼編輯器設定中展示同一份 9-mode 語言支援矩陣, 並為 TypeScript/JavaScript, Python, Lua 與 Java 提供逐語言語義開關; Kotlin 以 P2+ 不可用狀態保持可見, 文件類型自訂明確作為白名單而非語言重新分類
 
 ##### 更多發行歷史可參閱
 

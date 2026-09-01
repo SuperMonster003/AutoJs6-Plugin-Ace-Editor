@@ -159,7 +159,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -171,6 +171,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 ### 릴리스 기록
 
 ******
+
+# v1.1.21
+
+###### 2026/09/01
+
+* `기능` AutoJs6 `4.7.0` Pinyin 선언과 다시 생성한 LSP 그룹을 내장: `customDictionary` 는 호출 단위 발음 재정의, `compare` 는 숫자 정렬 결과, `compact` 는 후보 행렬의 데카르트 곱을 반환하고 공유 플러그인 API 타입도 동기화
 
 # v1.1.20
 
@@ -186,20 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 * `개선` 약 1.3 MiB의 전체 AutoJs6 자동 완성 인덱스를 최초 표시 동기 경로에서 분리하고 첫 코드 프레임이 표시된 뒤 유휴 시간에 로드하여 부트스트랩 인덱스를 끊김 없이 교체; Android 9-15의 5개 환경 모두에서 전역 항목 400개와 모듈 80개를 복원
 * `개선` README 레이아웃과 Gradle 플랫폼 버전 관리 방식을 통일
 * `개선` 플러그인 설명을 간결하게 다듬고 다국어 리소스의 문장 부호를 통일
-
-# v1.1.18
-
-###### 2026/08/31
-
-* `기능` AutoJs6 `4.6.0` 리소스 안전 PNG 양자화 선언과 다시 생성한 main-app LSP 그룹을 포함: 구성 가능한 `maxPixels` 및 `maxMemoryBytes` 예산 초과는 형식화된 세부 정보와 함께 실패하고, 결과는 `peakWorkingMemoryBytes`를 노출하며, 취소 API는 명시적 요청과 스크립트 종료를 처리
-* `기능` Python, Lua, Java 및 Kotlin 오프라인 P1 언어 지원 추가: 확장자별 Ace mode에서 구문 강조, 언어 키워드, 스니펫 및 문서 단어 완성을 제공; Lua는 worker 구문 진단도 활성화하며 네 언어 모두 AutoJs6/TypeScript 후보와 격리
-* `기능` Python, Lua, Java 및 Kotlin 오프라인 P2 자동 완성 추가: 고정 버전 표준 라이브러리 인덱스를 필요할 때 로드하고 현재 문서의 import, 함수, 클래스, 메서드, 매개변수 및 변수를 추출하며 언어 간 격리와 기존 JavaScript/TypeScript 동작을 유지
-* `기능` 8개 기능의 교체 가능한 의미 Provider, 범용 JSON-RPC/LSP 코어 및 WebWorker/기기 내 stdio 전송 추가; TypeScript는 회귀 없이 이전되고 provider 장애 시 P2로 대체되며 네 언어의 의미 스위치는 기본적으로 꺼짐
-* `기능` 고정된 Pyright 1.1.413 Worker와 271개 typeshed 파일 하위 집합으로 완전 오프라인 Python 3.12 의미 기능 내장; 타입 기반 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화하고 호환되지 않는 구형 WebView 또는 runtime 실패 시 조용히 P2로 전환
-* `기능` 고정된 기기 내 LuaLS 3.18.2 동반 프로세스로 완전 오프라인 Lua 의미 기능 내장; arm64-v8a, armeabi-v7a 및 x86_64에서 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화하고 네이티브 자산 누락이나 손상, 지원되지 않는 ABI 및 프로세스 충돌 시 조용히 P2로 전환한 뒤 제한된 백오프로 복구
-* `기능` 고정된 ECJ 3.26.0과 축소된 Android API 36 stubs로 완전 오프라인 Java 단일 파일 진단 내장; 구문 오류와 확인되지 않은 기호를 기본적으로 정확한 범위에 표시하며, JDT Code Assist가 ART에서 사용할 수 없는 Eclipse Workspace/OSGi 환경을 요구하므로 자동 완성은 P2를 유지
-* `기능` Kotlin 2.2.21 인스턴스 API, 현재 파일의 보수적 형식 추론, safe-call 및 재사용한 Java/Android 인덱스로 오프라인 Kotlin P2+ 자동 완성 추가; 기기 내 compiler는 크기, ART 실행, 메모리 및 최소 SDK 검증에 실패해 Kotlin compiler와 의미 runtime을 포함하지 않음
-* `기능` AutoJs6 코드 편집기 설정에 동일한 9-mode 언어 지원 matrix와 TypeScript/JavaScript, Python, Lua 및 Java의 언어별 의미 switch를 표시; Kotlin은 P2+ 전용 사용 불가 상태로 계속 보이며 파일 형식 사용자 지정이 언어 재분류가 아닌 allowlist임을 명시
 
 ##### 더 많은 릴리스 기록
 

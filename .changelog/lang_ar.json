@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.1.21": {
+      "released_date": "2026/09/01",
+      "feature": [
+        "تتضمن تعريفات Pinyin في AutoJs6 `4.7.0` ومجموعات LSP المعاد إنشاؤها: يوفر `customDictionary` تجاوزات قراءة لكل استدعاء, ويعيد `compare` نتيجة ترتيب رقمية, ويعيد `compact` الضرب الديكارتي لمصفوفة المرشحين, مع مزامنة أنواع API المكون الإضافي المشترك"
+      ]
+    },
     "v1.1.20": {
       "released_date": "2026/09/01",
       "improvement": [

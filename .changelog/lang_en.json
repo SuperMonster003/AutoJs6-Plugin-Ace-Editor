@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.21": {
+      "released_date": "2026/09/01",
+      "feature": [
+        "Bundle the AutoJs6 `4.7.0` Pinyin declarations and regenerated LSP groups: `customDictionary` provides per-call reading overrides, `compare` returns a numeric ordering result, `compact` returns the candidate matrix Cartesian product, and shared plugin API types are synchronized"
+      ]
+    },
     "v1.1.20": {
       "released_date": "2026/09/01",
       "improvement": [

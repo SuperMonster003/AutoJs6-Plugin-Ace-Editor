@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.1.21": {
+      "released_date": "2026/09/01",
+      "feature": [
+        "AutoJs6 `4.7.0` の Pinyin 宣言と再生成した LSP グループを内蔵: `customDictionary` は呼び出し単位の読み上書き, `compare` は数値の並び順, `compact` は候補行列の直積を返し, 共有プラグイン API 型も同期"
+      ]
+    },
     "v1.1.20": {
       "released_date": "2026/09/01",
       "improvement": [

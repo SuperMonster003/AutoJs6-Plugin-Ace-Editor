@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.1.21": {
+      "released_date": "2026/09/01",
+      "feature": [
+        "Включены объявления Pinyin AutoJs6 `4.7.0` и повторно созданные группы LSP: `customDictionary` задает переопределения чтений на один вызов, `compare` возвращает числовой порядок, `compact` возвращает декартово произведение матрицы вариантов, а типы общего API плагина синхронизированы"
+      ]
+    },
     "v1.1.20": {
       "released_date": "2026/09/01",
       "improvement": [

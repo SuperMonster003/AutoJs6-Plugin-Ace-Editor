@@ -159,7 +159,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -171,6 +171,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 ### 发行历史
 
 ******
+
+# v1.1.21
+
+###### 2026/09/01
+
+* `新增` 内置 AutoJs6 `4.7.0` Pinyin 声明及重新生成的 LSP 分组: `customDictionary` 支持仅当前调用生效的自定义读音覆盖, `compare` 返回数值排序结果, `compact` 返回候选矩阵笛卡尔积, 并同步共享插件 API 类型
 
 # v1.1.20
 
@@ -186,20 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 * `优化` 将约 1.3 MiB 的完整 AutoJs6 补全索引移出首屏同步路径, 在首个可见代码帧后的空闲时段加载并无缝替换基础索引; 五个 Android 9-15 环境均恢复 400 个全局项与 80 个模块
 * `优化` 统一 README 版式与 Gradle 平台版本管理方式
 * `优化` 精简插件描述并规范多语言资源中的标点符号
-
-# v1.1.18
-
-###### 2026/08/31
-
-* `新增` 内置 AutoJs6 `4.6.0` 资源安全的 PNG 量化声明及重新生成的主应用 LSP 分组: 可配置的 `maxPixels` 与 `maxMemoryBytes` 预算超限时返回带详情的类型化错误, 结果公开 `peakWorkingMemoryBytes`, 取消 API 覆盖显式请求与脚本退出
-* `新增` Python, Lua, Java 与 Kotlin 离线 P1 语言支持: 按扩展名路由 Ace mode, 提供语法高亮, 本语言关键字, snippets 与文档单词补全; Lua 额外启用 worker 语法诊断, 四门语言均与 AutoJs6/TypeScript 候选严格隔离
-* `新增` Python, Lua, Java 与 Kotlin 离线 P2 补全: 按需加载固定版本的标准库索引, 并提取当前文档的 import, 函数, 类, 方法, 参数和变量; 严格保持跨语言隔离及现有 JavaScript/TypeScript 行为
-* `新增` 新增可插拔八能力语义 Provider, 通用 JSON-RPC/LSP 核心及 WebWorker/设备内 stdio 双传输; TypeScript 已零回归迁移, provider 故障时自动降级至 P2, 四门新语言语义开关默认关闭
-* `新增` 通过固定版本的 Pyright 1.1.413 Worker 和 271 个 typeshed 文件内置完全离线的 Python 3.12 语义: 类型补全, hover, 签名帮助, 诊断和定义跳转现默认开启, 不兼容的老 WebView 与运行故障会静默降级至 P2
-* `新增` 通过固定版本的 LuaLS 3.18.2 设备内伴生进程内置完全离线的 Lua 语义: 补全, hover, 签名帮助, 诊断和定义跳转在 arm64-v8a, armeabi-v7a 与 x86_64 默认开启; 原生资产缺失或损坏, 不支持的 ABI 与进程崩溃会静默降级至 P2, 并以有界退避恢复
-* `新增` 通过固定版本的 ECJ 3.26.0 与裁剪的 Android API 36 存根内置完全离线的 Java 单文件诊断: 语法错误与未解析符号现默认获得精确范围标注; JDT Code Assist 依赖 ART 上不可用的 Eclipse Workspace/OSGi 运行时, 因此补全继续使用 P2
-* `新增` Kotlin P2+ 离线补全: 扩充 Kotlin 2.2.21 实例 API, 根据当前文件做保守类型提示, 支持 safe-call 并复用 Java/Android 索引; 设备内 compiler 因体积, ART 运行, 内存与最低 SDK 验证未通过, 因此不打包 Kotlin compiler 或语义运行时
-* `新增` 在 AutoJs6 代码编辑器设置中展示同一份 9-mode 语言支持矩阵, 并为 TypeScript/JavaScript, Python, Lua 与 Java 提供逐语言语义开关; Kotlin 以 P2+ 不可用状态保持可见, 文件类型自定义明确作为白名单而非语言重分类
 
 ##### 更多发行历史可参阅
 

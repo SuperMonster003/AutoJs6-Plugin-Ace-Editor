@@ -159,7 +159,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -171,6 +171,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 ### リリース履歴
 
 ******
+
+# v1.1.21
+
+###### 2026/09/01
+
+* `機能` AutoJs6 `4.7.0` の Pinyin 宣言と再生成した LSP グループを内蔵: `customDictionary` は呼び出し単位の読み上書き, `compare` は数値の並び順, `compact` は候補行列の直積を返し, 共有プラグイン API 型も同期
 
 # v1.1.20
 
@@ -186,20 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-u
 * `改善` 約 1.3 MiB の完全な AutoJs6 補完インデックスを初回表示の同期経路から外し, 最初のコード画面が表示された後のアイドル時間に読み込んでブートストラップインデックスをシームレスに置換; Android 9-15 の 5 環境すべてで 400 グローバル項目と 80 モジュールを復元
 * `改善` README のレイアウトと Gradle プラットフォームのバージョン管理方式を統一
 * `改善` プラグインの説明を簡潔にし, 多言語リソースの句読点を統一
-
-# v1.1.18
-
-###### 2026/08/31
-
-* `機能` AutoJs6 `4.6.0` のリソース安全な PNG 量子化宣言と再生成した main-app LSP グループを同梱: 設定可能な `maxPixels` と `maxMemoryBytes` の予算超過は型付き詳細で失敗し, 結果は `peakWorkingMemoryBytes` を公開し, キャンセル API は明示要求とスクリプト終了に対応
-* `機能` Python Lua Java Kotlin のオフライン P1 言語サポートを追加: 拡張子ごとの Ace mode で構文ハイライト キーワード スニペット 文書単語補完を提供; Lua は worker 構文診断も有効化し 4 言語すべてを AutoJs6/TypeScript 候補から分離
-* `機能` Python, Lua, Java, Kotlin のオフライン P2 補完を追加: 固定バージョンの標準ライブラリ索引を必要時に読み込み, 現在の文書から import, 関数, クラス, メソッド, 引数, 変数を抽出し, 言語間の分離と既存の JavaScript/TypeScript 動作を維持
-* `機能` 8 能力の差し替え可能なセマンティック Provider, 汎用 JSON-RPC/LSP コア, WebWorker/端末内 stdio トランスポートを追加; TypeScript は回帰なく移行し, provider 障害時は P2 にフォールバックし, 4 言語のセマンティック切り替えは既定で無効
-* `機能` 固定した Pyright 1.1.413 Worker と 271 ファイルの typeshed サブセットで完全オフラインの Python 3.12 セマンティック機能を内蔵; 型補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, 非対応の古い WebView や runtime 障害時は通知なしで P2 にフォールバック
-* `機能` 固定した端末内 LuaLS 3.18.2 コンパニオンプロセスで完全オフラインの Lua セマンティック機能を内蔵; arm64-v8a, armeabi-v7a, x86_64 では補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効化し, ネイティブアセットの欠落や破損, 非対応 ABI, プロセス障害時は通知なしで P2 に戻り有限バックオフで復旧
-* `機能` 固定した ECJ 3.26.0 と削減済み Android API 36 stubs により完全オフラインの Java 単一ファイル診断を内蔵; 構文エラーと未解決シンボルを既定で正確な範囲に表示し, JDT Code Assist が ART では利用できない Eclipse Workspace/OSGi 環境を必要とするため補完は P2 を維持
-* `機能` Kotlin 2.2.21 のインスタンス API, 現在のファイルの保守的な型推定, safe-call, 再利用した Java/Android 索引によるオフライン Kotlin P2+ 補完を追加; 端末内 compiler はサイズ, ART 実行, メモリ, 最低 SDK の検証に失敗したため Kotlin compiler とセマンティック runtime は同梱しない
-* `機能` AutoJs6 のコードエディタ設定に同じ 9-mode 言語サポート matrix を表示し, TypeScript/JavaScript, Python, Lua, Java の言語別セマンティック switch を追加; Kotlin は P2+ の利用不可状態で表示を保ち, ファイル種類のカスタマイズは言語再分類ではなく allowlist であることを明記
 
 ##### その他のリリース履歴
 

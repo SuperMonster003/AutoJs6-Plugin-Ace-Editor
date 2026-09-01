@@ -159,7 +159,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.20-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -171,6 +171,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.1.21
+
+###### 2026/09/01
+
+* `Fonctionnalité` Intègre les déclarations Pinyin AutoJs6 `4.7.0` et les groupes LSP régénérés: `customDictionary` fournit des substitutions de lecture limitées à chaque appel, `compare` renvoie un ordre numérique, `compact` renvoie le produit cartésien de la matrice de candidats, et les types de l'API de plugin partagée sont synchronisés
 
 # v1.1.20
 
@@ -186,20 +192,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 * `Amélioration` Déplace l'index de complétion AutoJs6 complet d'environ 1.3 MiB hors du chemin synchrone de première présentation, le charge pendant une période d'inactivité après la première image de code visible et remplace sans interruption l'index initial; les cinq environnements Android 9-15 ont restauré 400 éléments globaux et 80 modules
 * `Amélioration` Uniformiser la mise en page du README et la gestion des versions de la plateforme Gradle
 * `Amélioration` Simplifier la description du plugin et normaliser la ponctuation des ressources multilingues
-
-# v1.1.18
-
-###### 2026/08/31
-
-* `Fonctionnalité` Integre les declarations de quantification PNG a ressources controlees d'AutoJs6 `4.6.0` et le groupe LSP main-app regenere: les budgets configurables `maxPixels` et `maxMemoryBytes` echouent avec des details types, les resultats exposent `peakWorkingMemoryBytes` et les API d'annulation couvrent les demandes explicites et l'arret du script
-* `Fonctionnalité` Ajoute la prise en charge hors ligne P1 de Python, Lua, Java et Kotlin: les extensions routent vers des modes Ace dédiés avec coloration syntaxique, mots-clés, extraits et complétion des mots du document; Lua active aussi les diagnostics syntaxiques par worker et les quatre langages restent isolés des candidats AutoJs6/TypeScript
-* `Fonctionnalité` Ajoute la complétion hors ligne P2 pour Python, Lua, Java et Kotlin: des index de bibliothèques standard versionnés et chargés à la demande se combinent à l'extraction des imports, fonctions, classes, méthodes, paramètres et variables du document courant, tout en préservant l'isolation entre langages et le comportement JavaScript/TypeScript existant
-* `Fonctionnalité` Ajoute un Provider sémantique enfichable à huit capacités, un coeur JSON-RPC/LSP général et des transports WebWorker/stdio sur l'appareil; TypeScript migre sans régression, les pannes reviennent à P2 et les interrupteurs sémantiques des quatre nouveaux langages sont désactivés par défaut
-* `Fonctionnalité` Intègre la sémantique Python 3.12 entièrement hors ligne avec un Worker Pyright 1.1.413 épinglé et un sous-ensemble typeshed de 271 fichiers : complétion typée, survol, aide à la signature, diagnostics et définition sont activés par défaut, tandis que les anciens WebView incompatibles et les pannes du runtime reviennent silencieusement à P2
-* `Fonctionnalité` Intègre la sémantique Lua entièrement hors ligne avec un processus compagnon LuaLS 3.18.2 épinglé sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ressources natives absentes ou endommagées, les ABI non pris en charge et les pannes du processus reviennent silencieusement à P2 avec reprise par temporisation bornée
-* `Fonctionnalité` Intègre des diagnostics Java mono-fichier entièrement hors connexion avec ECJ 3.26.0 épinglé et des stubs Android API 36 élagués : les erreurs de syntaxe et symboles non résolus reçoivent par défaut des plages exactes ; la complétion reste en P2 car JDT Code Assist exige un environnement Eclipse Workspace/OSGi indisponible sur ART
-* `Fonctionnalité` Ajoute la complétion Kotlin P2+ hors connexion avec les API d'instance Kotlin 2.2.21, des inférences prudentes dans le fichier courant, les safe-calls et des index Java/Android réutilisés ; la validation du compilateur embarqué a échoué sur la taille, ART, la mémoire et le SDK minimal, donc aucun compilateur ni runtime sémantique Kotlin n'est inclus
-* `Fonctionnalité` Affiche la même matrice de neuf modes dans les paramètres de l'éditeur de code AutoJs6 avec des commutateurs sémantiques pour TypeScript/JavaScript, Python, Lua et Java; Kotlin reste visible mais indisponible en P2+, et la personnalisation des types de fichiers est expliquée comme une liste d'autorisation plutôt qu'une reclassification du langage
 
 ##### Pour plus d'historique des versions
 

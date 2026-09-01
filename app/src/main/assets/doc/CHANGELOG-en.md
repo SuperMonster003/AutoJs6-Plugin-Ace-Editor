@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.21
+
+###### 2026/09/01
+
+* `Feature` Bundle the AutoJs6 `4.7.0` Pinyin declarations and regenerated LSP groups: `customDictionary` provides per-call reading overrides, `compare` returns a numeric ordering result, `compact` returns the candidate matrix Cartesian product, and shared plugin API types are synchronized
+
 # v1.1.20
 
 ###### 2026/09/01
