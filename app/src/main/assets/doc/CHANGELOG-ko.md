@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `기능` AutoJs6 `4.8.0` 접근성 자동화 선언과 다시 생성한 LSP 그룹을 번들: `Flow` 체인과 `flow` 네임스페이스, 툴킷 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 등), 이벤트 기반 대기, `auto.explain` / `auto.dump` / `auto.stats`, 문자열 셀렉터 `select(syntax)` 와 `findIterator`; 메인 앱 선언은 AutoJs6 6.8.0 (5278) 에서 다시 생성
+
 # v1.1.21
 
 ###### 2026/09/01

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `機能` AutoJs6 `4.8.0` のアクセシビリティ自動化宣言と再生成した LSP グループを同梱: `Flow` チェーンと `flow` 名前空間, ツールキット (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` など), イベント駆動の待機, `auto.explain` / `auto.dump` / `auto.stats`, 文字列セレクター `select(syntax)` と `findIterator`; メインアプリ宣言は AutoJs6 6.8.0 (5278) から再生成
+
 # v1.1.21
 
 ###### 2026/09/01

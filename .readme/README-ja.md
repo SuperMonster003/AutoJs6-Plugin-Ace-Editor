@@ -159,7 +159,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-u
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `機能` AutoJs6 `4.8.0` のアクセシビリティ自動化宣言と再生成した LSP グループを同梱: `Flow` チェーンと `flow` 名前空間, ツールキット (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` など), イベント駆動の待機, `auto.explain` / `auto.dump` / `auto.stats`, 文字列セレクター `select(syntax)` と `findIterator`; メインアプリ宣言は AutoJs6 6.8.0 (5278) から再生成
+
 # v1.1.21
 
 ###### 2026/09/01
@@ -183,15 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-u
 ###### 2026/09/01
 
 * `改善` 内蔵のメインアプリ宣言と生成された LSP グループで Previewer の命名を同期
-
-# v1.1.19
-
-###### 2026/09/01
-
-* `修正` ホストテーマと初期ドキュメントが反映される前に Ace WebView が純白ページを短時間表示し, ダークエディタテーマで目立つ点滅が発生する問題; 初回表示は固定遅延ではなく, テーマ適用済み, ドキュメント送信済み, 安定描画の明示的なシグナルを待機
-* `改善` 約 1.3 MiB の完全な AutoJs6 補完インデックスを初回表示の同期経路から外し, 最初のコード画面が表示された後のアイドル時間に読み込んでブートストラップインデックスをシームレスに置換; Android 9-15 の 5 環境すべてで 400 グローバル項目と 80 モジュールを復元
-* `改善` README のレイアウトと Gradle プラットフォームのバージョン管理方式を統一
-* `改善` プラグインの説明を簡潔にし, 多言語リソースの句読点を統一
 
 ##### その他のリリース履歴
 

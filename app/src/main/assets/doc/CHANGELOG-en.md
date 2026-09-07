@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `Feature` Bundle the AutoJs6 `4.8.0` accessibility automation declarations and regenerated LSP groups: the `Flow` chain and `flow` namespace, the toolkit (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` and more), event-driven waits, `auto.explain` / `auto.dump` / `auto.stats`, the `select(syntax)` string selector and `findIterator`, with the main-app declarations regenerated from AutoJs6 6.8.0 (5278)
+
 # v1.1.21
 
 ###### 2026/09/01

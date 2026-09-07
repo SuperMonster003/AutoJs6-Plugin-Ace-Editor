@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `ميزة` تضمين تصريحات أتمتة إمكانية الوصول في AutoJs6 `4.8.0` ومجموعات LSP المعاد توليدها: سلسلة `Flow` ومساحة الأسماء `flow`، ومجموعة الأدوات (`smartClick` و`scrollUntil` و`typeInto` و`dismissPopups` و`collectList` و`launchAndWait` و`backUntil` و`toggle` وغيرها)، والانتظار المعتمد على الأحداث، و`auto.explain` / `auto.dump` / `auto.stats`، ومحدد النص `select(syntax)` و`findIterator`؛ مع إعادة توليد تصريحات التطبيق الرئيسي من AutoJs6 6.8.0 (5278)
+
 # v1.1.21
 
 ###### 2026/09/01

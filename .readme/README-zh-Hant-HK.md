@@ -159,7 +159,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-u
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `新增` 內置 AutoJs6 `4.8.0` 無障礙自動化聲明及重新生成的 LSP 分組: `Flow` 鏈式對象與 `flow` 命名空間, 工具集 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 等), 事件驅動等待, `auto.explain` / `auto.dump` / `auto.stats`, 字串選擇器 `select(syntax)` 與 `findIterator`, 主應用聲明由 AutoJs6 6.8.0 (5278) 重新生成
+
 # v1.1.21
 
 ###### 2026/09/01
@@ -183,15 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-u
 ###### 2026/09/01
 
 * `優化` 同步內置主應用聲明及生成的 LSP 分組中的 Previewer 命名
-
-# v1.1.19
-
-###### 2026/09/01
-
-* `修復` Ace WebView 在宿主主題及首份文件生效前可能短暫顯示純白背景, 尤其會在深色編輯器主題下產生明顯閃爍; 首屏現由主題已套用, 文件已提交及穩定繪製訊號共同放行, 不依賴固定延遲
-* `優化` 將約 1.3 MiB 的完整 AutoJs6 自動補全索引移出首屏同步路徑, 在首個可見程式碼畫面後的閒置時段載入並無縫取代基礎索引; 五個 Android 9-15 環境均恢復 400 個全域項目及 80 個模組
-* `優化` 統一 README 版式與 Gradle 平台版本管理方式
-* `優化` 精簡插件描述並規範多語言資源中的標點符號
 
 ##### 更多發行歷史可參閱
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.22": {
+      "released_date": "2026/09/07",
+      "feature": [
+        "Intègre les déclarations d'automatisation d'accessibilité AutoJs6 `4.8.0` et les groupes LSP régénérés : la chaîne `Flow` et l'espace de noms `flow`, la boîte à outils (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle`, etc.), les attentes pilotées par les événements, `auto.explain` / `auto.dump` / `auto.stats`, le sélecteur textuel `select(syntax)` et `findIterator` ; les déclarations de l'application principale sont régénérées depuis AutoJs6 6.8.0 (5278)"
+      ]
+    },
     "v1.1.21": {
       "released_date": "2026/09/01",
       "feature": [

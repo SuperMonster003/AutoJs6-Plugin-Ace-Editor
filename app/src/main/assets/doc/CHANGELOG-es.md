@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `Función` Incluye las declaraciones de automatización de accesibilidad de AutoJs6 `4.8.0` y los grupos LSP regenerados: la cadena `Flow` y el espacio de nombres `flow`, el kit de herramientas (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle`, etc.), las esperas dirigidas por eventos, `auto.explain` / `auto.dump` / `auto.stats`, el selector de cadena `select(syntax)` y `findIterator`; las declaraciones de la aplicación principal se regeneran desde AutoJs6 6.8.0 (5278)
+
 # v1.1.21
 
 ###### 2026/09/01

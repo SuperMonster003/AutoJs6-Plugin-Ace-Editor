@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `新增` 內置 AutoJs6 `4.8.0` 無障礙自動化聲明及重新生成的 LSP 分組: `Flow` 鏈式對象與 `flow` 命名空間, 工具集 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 等), 事件驅動等待, `auto.explain` / `auto.dump` / `auto.stats`, 字串選擇器 `select(syntax)` 與 `findIterator`, 主應用聲明由 AutoJs6 6.8.0 (5278) 重新生成
+
 # v1.1.21
 
 ###### 2026/09/01

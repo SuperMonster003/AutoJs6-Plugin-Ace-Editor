@@ -159,7 +159,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-u
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `기능` AutoJs6 `4.8.0` 접근성 자동화 선언과 다시 생성한 LSP 그룹을 번들: `Flow` 체인과 `flow` 네임스페이스, 툴킷 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 등), 이벤트 기반 대기, `auto.explain` / `auto.dump` / `auto.stats`, 문자열 셀렉터 `select(syntax)` 와 `findIterator`; 메인 앱 선언은 AutoJs6 6.8.0 (5278) 에서 다시 생성
+
 # v1.1.21
 
 ###### 2026/09/01
@@ -183,15 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-u
 ###### 2026/09/01
 
 * `개선` 번들 메인 앱 선언과 생성된 LSP 그룹에서 Previewer 명칭 동기화
-
-# v1.1.19
-
-###### 2026/09/01
-
-* `수정` 호스트 테마와 초기 문서가 적용되기 전에 Ace WebView가 잠시 순백색 페이지를 노출하여 어두운 편집기 테마에서 눈에 띄는 깜박임이 발생하는 문제; 최초 표시는 고정 지연 대신 테마 적용, 문서 제출 및 안정된 그리기 신호를 명시적으로 기다림
-* `개선` 약 1.3 MiB의 전체 AutoJs6 자동 완성 인덱스를 최초 표시 동기 경로에서 분리하고 첫 코드 프레임이 표시된 뒤 유휴 시간에 로드하여 부트스트랩 인덱스를 끊김 없이 교체; Android 9-15의 5개 환경 모두에서 전역 항목 400개와 모듈 80개를 복원
-* `개선` README 레이아웃과 Gradle 플랫폼 버전 관리 방식을 통일
-* `개선` 플러그인 설명을 간결하게 다듬고 다국어 리소스의 문장 부호를 통일
 
 ##### 더 많은 릴리스 기록
 

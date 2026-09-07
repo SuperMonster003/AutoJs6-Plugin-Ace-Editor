@@ -159,7 +159,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.21-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.22
+
+###### 2026/09/07
+
+* `Fonctionnalité` Intègre les déclarations d'automatisation d'accessibilité AutoJs6 `4.8.0` et les groupes LSP régénérés : la chaîne `Flow` et l'espace de noms `flow`, la boîte à outils (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle`, etc.), les attentes pilotées par les événements, `auto.explain` / `auto.dump` / `auto.stats`, le sélecteur textuel `select(syntax)` et `findIterator` ; les déclarations de l'application principale sont régénérées depuis AutoJs6 6.8.0 (5278)
+
 # v1.1.21
 
 ###### 2026/09/01
@@ -183,15 +189,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/01
 
 * `Amélioration` Synchroniser le nom Previewer dans les déclarations intégrées de l'application principale et les groupes LSP générés
-
-# v1.1.19
-
-###### 2026/09/01
-
-* `Correctif` La WebView Ace pouvait afficher brièvement une page entièrement blanche avant l'application du thème hôte et du document initial, provoquant un flash marqué avec les thèmes sombres; la première présentation attend désormais des signaux explicites de thème appliqué, document soumis et rendu stable au lieu d'un délai fixe
-* `Amélioration` Déplace l'index de complétion AutoJs6 complet d'environ 1.3 MiB hors du chemin synchrone de première présentation, le charge pendant une période d'inactivité après la première image de code visible et remplace sans interruption l'index initial; les cinq environnements Android 9-15 ont restauré 400 éléments globaux et 80 modules
-* `Amélioration` Uniformiser la mise en page du README et la gestion des versions de la plateforme Gradle
-* `Amélioration` Simplifier la description du plugin et normaliser la ponctuation des ressources multilingues
 
 ##### Pour plus d'historique des versions
 
