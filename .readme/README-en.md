@@ -159,7 +159,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `Feature` Bundle the AutoJs6 `4.8.1` console declaration update: `console.rawInput` / `console.input` restored, new `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` methods with the matching `console.build` options, and new JSX `<console>` / `<globalconsole>` elements with their attributes; the main-app declarations are regenerated from AutoJs6 6.8.0 (5279)
+
 # v1.1.22
 
 ###### 2026/09/07
@@ -183,12 +189,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/09/01
 
 * `Feature` Bundle the AutoJs6 `4.7.0` Pinyin declarations and regenerated LSP groups: `customDictionary` provides per-call reading overrides, `compare` returns a numeric ordering result, `compact` returns the candidate matrix Cartesian product, and shared plugin API types are synchronized
-
-# v1.1.20
-
-###### 2026/09/01
-
-* `Improvement` Synchronize the Previewer naming in bundled main-app declarations and generated LSP groups
 
 ##### Complete release history
 

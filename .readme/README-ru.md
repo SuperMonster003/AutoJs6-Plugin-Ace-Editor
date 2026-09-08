@@ -159,7 +159,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `Функция` Включено обновление объявлений консоли AutoJs6 `4.8.1`: восстановлены `console.rawInput` / `console.input`, добавлены методы `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` с соответствующими параметрами `console.build`, добавлены JSX-элементы `<console>` / `<globalconsole>` с их атрибутами; объявления основного приложения перегенерированы из AutoJs6 6.8.0 (5279)
+
 # v1.1.22
 
 ###### 2026/09/07
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 ###### 2026/09/01
 
 * `Функция` Включены объявления Pinyin AutoJs6 `4.7.0` и повторно созданные группы LSP: `customDictionary` задает переопределения чтений на один вызов, `compare` возвращает числовой порядок, `compact` возвращает декартово произведение матрицы вариантов, а типы общего API плагина синхронизированы
-
-# v1.1.20
-
-###### 2026/09/01
-
-* `Улучшение` Синхронизировать именование Previewer во встроенных объявлениях основного приложения и сгенерированных группах LSP
 
 ##### Подробнее об истории выпусков
 

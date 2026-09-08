@@ -159,7 +159,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `新增` 內建 AutoJs6 `4.8.1` 控制台宣告更新: 恢復 `console.rawInput` / `console.input`, 新增 `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 方法及對應的 `console.build` 選項, JSX 新增 `<console>` / `<globalconsole>` 元素及屬性宣告; 主應用宣告由 AutoJs6 6.8.0 (5279) 重新產生
+
 # v1.1.22
 
 ###### 2026/09/07
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 ###### 2026/09/01
 
 * `新增` 內建 AutoJs6 `4.7.0` Pinyin 宣告及重新產生的 LSP 分組: `customDictionary` 支援僅目前呼叫生效的自訂讀音覆寫, `compare` 回傳數值排序結果, `compact` 回傳候選矩陣笛卡兒積, 並同步共用外掛 API 型別
-
-# v1.1.20
-
-###### 2026/09/01
-
-* `優化` 同步內建主應用宣告及產生的 LSP 分組中的 Previewer 命名
 
 ##### 更多發行歷史可參閱
 

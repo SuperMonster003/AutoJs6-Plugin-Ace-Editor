@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `新增` 內建 AutoJs6 `4.8.1` 控制台宣告更新: 恢復 `console.rawInput` / `console.input`, 新增 `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 方法及對應的 `console.build` 選項, JSX 新增 `<console>` / `<globalconsole>` 元素及屬性宣告; 主應用宣告由 AutoJs6 6.8.0 (5279) 重新產生
+
 # v1.1.22
 
 ###### 2026/09/07

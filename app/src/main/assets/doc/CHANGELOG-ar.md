@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `ميزة` تضمين تحديث إعلانات وحدة التحكم في AutoJs6 `4.8.1`: استعادة `console.rawInput` / `console.input`, وإضافة الدوال `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` مع خيارات `console.build` المقابلة, وإضافة عنصري JSX `<console>` / `<globalconsole>` مع سماتهما; أعيد توليد إعلانات التطبيق الرئيسي من AutoJs6 6.8.0 (5279)
+
 # v1.1.22
 
 ###### 2026/09/07

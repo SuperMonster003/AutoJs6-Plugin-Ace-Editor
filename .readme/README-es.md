@@ -159,7 +159,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `Función` Incluye la actualización de declaraciones de la consola de AutoJs6 `4.8.1`: `console.rawInput` / `console.input` restaurados, nuevos métodos `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` con las opciones correspondientes de `console.build`, y nuevos elementos JSX `<console>` / `<globalconsole>` con sus atributos; las declaraciones de la aplicación principal se regeneran desde AutoJs6 6.8.0 (5279)
+
 # v1.1.22
 
 ###### 2026/09/07
@@ -183,12 +189,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/01
 
 * `Función` Incluye las declaraciones Pinyin de AutoJs6 `4.7.0` y los grupos LSP regenerados: `customDictionary` ofrece sustituciones de lectura por llamada, `compare` devuelve un orden numérico, `compact` devuelve el producto cartesiano de la matriz de candidatos y se sincronizan los tipos de la API compartida del plugin
-
-# v1.1.20
-
-###### 2026/09/01
-
-* `Mejora` Sincronizar la denominación Previewer en las declaraciones integradas de la aplicación principal y los grupos LSP generados
 
 ##### Para ver más historial de versiones
 

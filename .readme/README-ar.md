@@ -159,7 +159,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `ميزة` تضمين تحديث إعلانات وحدة التحكم في AutoJs6 `4.8.1`: استعادة `console.rawInput` / `console.input`, وإضافة الدوال `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` مع خيارات `console.build` المقابلة, وإضافة عنصري JSX `<console>` / `<globalconsole>` مع سماتهما; أعيد توليد إعلانات التطبيق الرئيسي من AutoJs6 6.8.0 (5279)
+
 # v1.1.22
 
 ###### 2026/09/07
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 ###### 2026/09/01
 
 * `ميزة` تتضمن تعريفات Pinyin في AutoJs6 `4.7.0` ومجموعات LSP المعاد إنشاؤها: يوفر `customDictionary` تجاوزات قراءة لكل استدعاء, ويعيد `compare` نتيجة ترتيب رقمية, ويعيد `compact` الضرب الديكارتي لمصفوفة المرشحين, مع مزامنة أنواع API المكون الإضافي المشترك
-
-# v1.1.20
-
-###### 2026/09/01
-
-* `تحسين` مزامنة تسمية Previewer في تصريحات التطبيق الرئيسي المضمنة ومجموعات LSP المولدة
 
 ##### لمزيد من سجل الإصدارات
 

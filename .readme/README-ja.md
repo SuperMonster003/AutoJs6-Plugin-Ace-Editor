@@ -159,7 +159,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `機能` AutoJs6 `4.8.1` のコンソール宣言更新を同梱: `console.rawInput` / `console.input` の復活, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` メソッドと対応する `console.build` オプションの追加, JSX の `<console>` / `<globalconsole>` 要素と属性の宣言を追加; メインアプリ宣言は AutoJs6 6.8.0 (5279) から再生成
+
 # v1.1.22
 
 ###### 2026/09/07
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 ###### 2026/09/01
 
 * `機能` AutoJs6 `4.7.0` の Pinyin 宣言と再生成した LSP グループを内蔵: `customDictionary` は呼び出し単位の読み上書き, `compare` は数値の並び順, `compact` は候補行列の直積を返し, 共有プラグイン API 型も同期
-
-# v1.1.20
-
-###### 2026/09/01
-
-* `改善` 内蔵のメインアプリ宣言と生成された LSP グループで Previewer の命名を同期
 
 ##### その他のリリース履歴
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `Feature` Bundle the AutoJs6 `4.8.1` console declaration update: `console.rawInput` / `console.input` restored, new `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` methods with the matching `console.build` options, and new JSX `<console>` / `<globalconsole>` elements with their attributes; the main-app declarations are regenerated from AutoJs6 6.8.0 (5279)
+
 # v1.1.22
 
 ###### 2026/09/07

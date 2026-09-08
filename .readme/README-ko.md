@@ -159,7 +159,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `기능` AutoJs6 `4.8.1` 콘솔 선언 업데이트 내장: `console.rawInput` / `console.input` 복원, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 메서드와 대응하는 `console.build` 옵션 추가, JSX `<console>` / `<globalconsole>` 요소 및 속성 선언 추가; 메인 앱 선언은 AutoJs6 6.8.0 (5279) 에서 재생성
+
 # v1.1.22
 
 ###### 2026/09/07
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.22-u
 ###### 2026/09/01
 
 * `기능` AutoJs6 `4.7.0` Pinyin 선언과 다시 생성한 LSP 그룹을 내장: `customDictionary` 는 호출 단위 발음 재정의, `compare` 는 숫자 정렬 결과, `compact` 는 후보 행렬의 데카르트 곱을 반환하고 공유 플러그인 API 타입도 동기화
-
-# v1.1.20
-
-###### 2026/09/01
-
-* `개선` 번들 메인 앱 선언과 생성된 LSP 그룹에서 Previewer 명칭 동기화
 
 ##### 더 많은 릴리스 기록
 

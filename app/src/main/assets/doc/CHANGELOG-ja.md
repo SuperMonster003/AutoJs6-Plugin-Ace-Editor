@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `機能` AutoJs6 `4.8.1` のコンソール宣言更新を同梱: `console.rawInput` / `console.input` の復活, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` メソッドと対応する `console.build` オプションの追加, JSX の `<console>` / `<globalconsole>` 要素と属性の宣言を追加; メインアプリ宣言は AutoJs6 6.8.0 (5279) から再生成
+
 # v1.1.22
 
 ###### 2026/09/07

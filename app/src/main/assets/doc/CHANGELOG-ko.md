@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `기능` AutoJs6 `4.8.1` 콘솔 선언 업데이트 내장: `console.rawInput` / `console.input` 복원, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 메서드와 대응하는 `console.build` 옵션 추가, JSX `<console>` / `<globalconsole>` 요소 및 속성 선언 추가; 메인 앱 선언은 AutoJs6 6.8.0 (5279) 에서 재생성
+
 # v1.1.22
 
 ###### 2026/09/07

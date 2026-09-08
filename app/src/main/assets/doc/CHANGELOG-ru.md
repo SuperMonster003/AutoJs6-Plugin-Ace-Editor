@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.23
+
+###### 2026/09/08
+
+* `Функция` Включено обновление объявлений консоли AutoJs6 `4.8.1`: восстановлены `console.rawInput` / `console.input`, добавлены методы `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` с соответствующими параметрами `console.build`, добавлены JSX-элементы `<console>` / `<globalconsole>` с их атрибутами; объявления основного приложения перегенерированы из AutoJs6 6.8.0 (5279)
+
 # v1.1.22
 
 ###### 2026/09/07
