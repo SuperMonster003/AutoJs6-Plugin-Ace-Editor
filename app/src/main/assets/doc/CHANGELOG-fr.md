@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `Amélioration` Les déclarations et la complétion MediaInfo couvrent streamNumber, countGet, infoKind et les capacités de requête
+
 # v1.1.23
 
 ###### 2026/09/08

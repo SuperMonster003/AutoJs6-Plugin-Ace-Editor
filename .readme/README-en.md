@@ -159,7 +159,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `Improvement` MediaInfo query declarations and completion cover streamNumber, countGet, infoKind and query capabilities
+
 # v1.1.23
 
 ###### 2026/09/08
@@ -183,12 +189,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/09/07
 
 * `Feature` Bundle the AutoJs6 `4.8.0` accessibility automation declarations and regenerated LSP groups: the `Flow` chain and `flow` namespace, the toolkit (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` and more), event-driven waits, `auto.explain` / `auto.dump` / `auto.stats`, the `select(syntax)` string selector and `findIterator`, with the main-app declarations regenerated from AutoJs6 6.8.0 (5278)
-
-# v1.1.21
-
-###### 2026/09/01
-
-* `Feature` Bundle the AutoJs6 `4.7.0` Pinyin declarations and regenerated LSP groups: `customDictionary` provides per-call reading overrides, `compare` returns a numeric ordering result, `compact` returns the candidate matrix Cartesian product, and shared plugin API types are synchronized
 
 ##### Complete release history
 

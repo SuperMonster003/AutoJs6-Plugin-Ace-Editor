@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `Improvement` MediaInfo query declarations and completion cover streamNumber, countGet, infoKind and query capabilities
+
 # v1.1.23
 
 ###### 2026/09/08

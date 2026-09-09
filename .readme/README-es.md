@@ -159,7 +159,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `Mejora` Las declaraciones y el autocompletado MediaInfo cubren streamNumber, countGet, infoKind y las capacidades de consulta
+
 # v1.1.23
 
 ###### 2026/09/08
@@ -183,12 +189,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/07
 
 * `Función` Incluye las declaraciones de automatización de accesibilidad de AutoJs6 `4.8.0` y los grupos LSP regenerados: la cadena `Flow` y el espacio de nombres `flow`, el kit de herramientas (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle`, etc.), las esperas dirigidas por eventos, `auto.explain` / `auto.dump` / `auto.stats`, el selector de cadena `select(syntax)` y `findIterator`; las declaraciones de la aplicación principal se regeneran desde AutoJs6 6.8.0 (5278)
-
-# v1.1.21
-
-###### 2026/09/01
-
-* `Función` Incluye las declaraciones Pinyin de AutoJs6 `4.7.0` y los grupos LSP regenerados: `customDictionary` ofrece sustituciones de lectura por llamada, `compare` devuelve un orden numérico, `compact` devuelve el producto cartesiano de la matriz de candidatos y se sincronizan los tipos de la API compartida del plugin
 
 ##### Para ver más historial de versiones
 

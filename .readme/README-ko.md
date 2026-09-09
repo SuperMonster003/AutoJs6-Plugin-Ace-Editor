@@ -159,7 +159,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `개선` MediaInfo 선언과 자동 완성이 streamNumber, countGet, infoKind 및 쿼리 기능을 지원
+
 # v1.1.23
 
 ###### 2026/09/08
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 ###### 2026/09/07
 
 * `기능` AutoJs6 `4.8.0` 접근성 자동화 선언과 다시 생성한 LSP 그룹을 번들: `Flow` 체인과 `flow` 네임스페이스, 툴킷 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 등), 이벤트 기반 대기, `auto.explain` / `auto.dump` / `auto.stats`, 문자열 셀렉터 `select(syntax)` 와 `findIterator`; 메인 앱 선언은 AutoJs6 6.8.0 (5278) 에서 다시 생성
-
-# v1.1.21
-
-###### 2026/09/01
-
-* `기능` AutoJs6 `4.7.0` Pinyin 선언과 다시 생성한 LSP 그룹을 내장: `customDictionary` 는 호출 단위 발음 재정의, `compare` 는 숫자 정렬 결과, `compact` 는 후보 행렬의 데카르트 곱을 반환하고 공유 플러그인 API 타입도 동기화
 
 ##### 더 많은 릴리스 기록
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.24": {
+      "released_date": "2026/09/10",
+      "improvement": [
+        "Les déclarations et la complétion MediaInfo couvrent streamNumber, countGet, infoKind et les capacités de requête"
+      ]
+    },
     "v1.1.23": {
       "released_date": "2026/09/08",
       "feature": [

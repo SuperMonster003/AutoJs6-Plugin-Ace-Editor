@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `Mejora` Las declaraciones y el autocompletado MediaInfo cubren streamNumber, countGet, infoKind y las capacidades de consulta
+
 # v1.1.23
 
 ###### 2026/09/08

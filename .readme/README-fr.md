@@ -159,7 +159,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `Amélioration` Les déclarations et la complétion MediaInfo couvrent streamNumber, countGet, infoKind et les capacités de requête
+
 # v1.1.23
 
 ###### 2026/09/08
@@ -183,12 +189,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/07
 
 * `Fonctionnalité` Intègre les déclarations d'automatisation d'accessibilité AutoJs6 `4.8.0` et les groupes LSP régénérés : la chaîne `Flow` et l'espace de noms `flow`, la boîte à outils (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle`, etc.), les attentes pilotées par les événements, `auto.explain` / `auto.dump` / `auto.stats`, le sélecteur textuel `select(syntax)` et `findIterator` ; les déclarations de l'application principale sont régénérées depuis AutoJs6 6.8.0 (5278)
-
-# v1.1.21
-
-###### 2026/09/01
-
-* `Fonctionnalité` Intègre les déclarations Pinyin AutoJs6 `4.7.0` et les groupes LSP régénérés: `customDictionary` fournit des substitutions de lecture limitées à chaque appel, `compare` renvoie un ordre numérique, `compact` renvoie le produit cartésien de la matrice de candidats, et les types de l'API de plugin partagée sont synchronisés
 
 ##### Pour plus d'historique des versions
 

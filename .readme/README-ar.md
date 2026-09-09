@@ -159,7 +159,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `تحسين` تغطي تعريفات وإكمال MediaInfo الخيارات streamNumber وcountGet وinfoKind وقدرات الاستعلام
+
 # v1.1.23
 
 ###### 2026/09/08
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 ###### 2026/09/07
 
 * `ميزة` تضمين تصريحات أتمتة إمكانية الوصول في AutoJs6 `4.8.0` ومجموعات LSP المعاد توليدها: سلسلة `Flow` ومساحة الأسماء `flow`، ومجموعة الأدوات (`smartClick` و`scrollUntil` و`typeInto` و`dismissPopups` و`collectList` و`launchAndWait` و`backUntil` و`toggle` وغيرها)، والانتظار المعتمد على الأحداث، و`auto.explain` / `auto.dump` / `auto.stats`، ومحدد النص `select(syntax)` و`findIterator`؛ مع إعادة توليد تصريحات التطبيق الرئيسي من AutoJs6 6.8.0 (5278)
-
-# v1.1.21
-
-###### 2026/09/01
-
-* `ميزة` تتضمن تعريفات Pinyin في AutoJs6 `4.7.0` ومجموعات LSP المعاد إنشاؤها: يوفر `customDictionary` تجاوزات قراءة لكل استدعاء, ويعيد `compare` نتيجة ترتيب رقمية, ويعيد `compact` الضرب الديكارتي لمصفوفة المرشحين, مع مزامنة أنواع API المكون الإضافي المشترك
 
 ##### لمزيد من سجل الإصدارات
 

@@ -159,7 +159,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `優化` MediaInfo 查詢宣告與補全涵蓋 streamNumber, countGet, infoKind 和查詢能力
+
 # v1.1.23
 
 ###### 2026/09/08
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 ###### 2026/09/07
 
 * `新增` 內建 AutoJs6 `4.8.0` 無障礙自動化宣告及重新產生的 LSP 分組: `Flow` 鏈式物件與 `flow` 命名空間, 工具集 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 等), 事件驅動等待, `auto.explain` / `auto.dump` / `auto.stats`, 字串選擇器 `select(syntax)` 與 `findIterator`, 主應用宣告由 AutoJs6 6.8.0 (5278) 重新產生
-
-# v1.1.21
-
-###### 2026/09/01
-
-* `新增` 內建 AutoJs6 `4.7.0` Pinyin 宣告及重新產生的 LSP 分組: `customDictionary` 支援僅目前呼叫生效的自訂讀音覆寫, `compare` 回傳數值排序結果, `compact` 回傳候選矩陣笛卡兒積, 並同步共用外掛 API 型別
 
 ##### 更多發行歷史可參閱
 

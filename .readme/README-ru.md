@@ -159,7 +159,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 
 ******
 
+# v1.1.24
+
+###### 2026/09/10
+
+* `Улучшение` Объявления и автодополнение MediaInfo охватывают streamNumber, countGet, infoKind и возможности запросов
+
 # v1.1.23
 
 ###### 2026/09/08
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.23-u
 ###### 2026/09/07
 
 * `Функция` Встроены объявления автоматизации специальных возможностей AutoJs6 `4.8.0` и заново сгенерированные группы LSP: цепочка `Flow` и пространство имён `flow`, набор инструментов (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` и другие), ожидания по событиям, `auto.explain` / `auto.dump` / `auto.stats`, строковый селектор `select(syntax)` и `findIterator`; объявления основного приложения заново сгенерированы из AutoJs6 6.8.0 (5278)
-
-# v1.1.21
-
-###### 2026/09/01
-
-* `Функция` Включены объявления Pinyin AutoJs6 `4.7.0` и повторно созданные группы LSP: `customDictionary` задает переопределения чтений на один вызов, `compare` возвращает числовой порядок, `compact` возвращает декартово произведение матрицы вариантов, а типы общего API плагина синхронизированы
 
 ##### Подробнее об истории выпусков
 
