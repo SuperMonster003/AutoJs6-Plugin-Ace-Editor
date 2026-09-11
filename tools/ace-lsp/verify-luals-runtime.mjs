@@ -185,6 +185,21 @@ function verifyElf(file, expected) {
   assert(buffer.readUInt16LE(16) === 3, `${file} is not an ET_DYN ELF`);
   assert(buffer.readUInt16LE(18) === expected.elfMachine,
     `${file} ELF machine is ${buffer.readUInt16LE(18)}; expected ${expected.elfMachine}`);
+  const is64 = expected.elfClass === 2;
+  const phOffset = readUnsigned(buffer, is64 ? 32 : 28, is64 ? 8 : 4);
+  const stride = buffer.readUInt16LE(is64 ? 54 : 42);
+  const count = buffer.readUInt16LE(is64 ? 56 : 44);
+  assert(stride >= (is64 ? 56 : 32) && count > 0 && phOffset + stride * count <= buffer.length,
+    `${file} has an invalid program header table`);
+  const loads = [];
+  for (let index = 0; index < count; index++) {
+    const at = phOffset + index * stride;
+    if (buffer.readUInt32LE(at) === 1) loads.push(readUnsigned(buffer, at + (is64 ? 48 : 28), is64 ? 8 : 4));
+  }
+  const minLoadAlign = Math.min(...loads);
+  assert(loads.length > 0 && minLoadAlign === expected.minLoadAlign,
+    `${file} PT_LOAD alignment ${minLoadAlign} does not match lock ${expected.minLoadAlign}`);
+  if (is64) assert(minLoadAlign >= 16384, `${file} requires 16 KB PT_LOAD alignment`);
   const needed = readNeededLibraries(buffer, expected.elfClass);
   const expectedNeeded = Array.isArray(expected.needed) ?
     [...expected.needed].sort() : ["libc.so", "libdl.so", "libm.so"];

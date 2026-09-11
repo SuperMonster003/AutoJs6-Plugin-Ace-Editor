@@ -159,7 +159,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 
 ******
 
+# v1.1.25
+
+###### 2026/09/11
+
+* `优化` 构建阶段校验 64 位原生库的 16 KB 页大小对齐, 检查 manifest 契约并输出 JSON 报告
+
 # v1.1.24
 
 ###### 2026/09/10
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 ###### 2026/09/08
 
 * `新增` 内置 AutoJs6 `4.8.1` 控制台声明更新: 恢复 `console.rawInput` / `console.input`, 新增 `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 方法及对应的 `console.build` 选项, JSX 新增 `<console>` / `<globalconsole>` 元素及属性声明; 主应用声明由 AutoJs6 6.8.0 (5279) 重新生成
-
-# v1.1.22
-
-###### 2026/09/07
-
-* `新增` 内置 AutoJs6 `4.8.0` 无障碍自动化声明及重新生成的 LSP 分组: `Flow` 链式对象与 `flow` 命名空间, 工具集 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 等), 事件驱动等待, `auto.explain` / `auto.dump` / `auto.stats`, 字符串选择器 `select(syntax)` 与 `findIterator`, 主应用声明由 AutoJs6 6.8.0 (5278) 重新生成
 
 ##### 更多发行历史可参阅
 
@@ -220,3 +220,6 @@ app/src/main/assets/doc/CHANGELOG*.md
 - Ace 官方网站: https://ace.c9.io
 - 第三方组件声明: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/THIRD_PARTY_NOTICES.md
 - 项目许可证: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/LICENSE
+
+
+[16 KB page alignment and build verification](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/docs/16kb.md)

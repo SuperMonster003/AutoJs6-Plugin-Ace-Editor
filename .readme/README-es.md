@@ -159,7 +159,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.1.25
+
+###### 2026/09/11
+
+* `Mejora` Verificación de compilación de la alineación de páginas de 16 KB en bibliotecas nativas de 64 bits, con controles del contrato manifest e informes JSON
+
 # v1.1.24
 
 ###### 2026/09/10
@@ -183,12 +189,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/08
 
 * `Función` Incluye la actualización de declaraciones de la consola de AutoJs6 `4.8.1`: `console.rawInput` / `console.input` restaurados, nuevos métodos `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` con las opciones correspondientes de `console.build`, y nuevos elementos JSX `<console>` / `<globalconsole>` con sus atributos; las declaraciones de la aplicación principal se regeneran desde AutoJs6 6.8.0 (5279)
-
-# v1.1.22
-
-###### 2026/09/07
-
-* `Función` Incluye las declaraciones de automatización de accesibilidad de AutoJs6 `4.8.0` y los grupos LSP regenerados: la cadena `Flow` y el espacio de nombres `flow`, el kit de herramientas (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle`, etc.), las esperas dirigidas por eventos, `auto.explain` / `auto.dump` / `auto.stats`, el selector de cadena `select(syntax)` y `findIterator`; las declaraciones de la aplicación principal se regeneran desde AutoJs6 6.8.0 (5278)
 
 ##### Para ver más historial de versiones
 
@@ -220,3 +220,6 @@ app/src/main/assets/doc/CHANGELOG*.md
 - Sitio web de Ace: https://ace.c9.io
 - Avisos de terceros: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/THIRD_PARTY_NOTICES.md
 - Licencia del proyecto: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/LICENSE
+
+
+[16 KB page alignment and build verification](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/docs/16kb.md)

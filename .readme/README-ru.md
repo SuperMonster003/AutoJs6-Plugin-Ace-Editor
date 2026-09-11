@@ -159,7 +159,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 
 ******
 
+# v1.1.25
+
+###### 2026/09/11
+
+* `Улучшение` Проверка выравнивания страниц 16 KB для 64-битных нативных библиотек при сборке, включая контракт manifest и отчеты JSON
+
 # v1.1.24
 
 ###### 2026/09/10
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 ###### 2026/09/08
 
 * `Функция` Включено обновление объявлений консоли AutoJs6 `4.8.1`: восстановлены `console.rawInput` / `console.input`, добавлены методы `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` с соответствующими параметрами `console.build`, добавлены JSX-элементы `<console>` / `<globalconsole>` с их атрибутами; объявления основного приложения перегенерированы из AutoJs6 6.8.0 (5279)
-
-# v1.1.22
-
-###### 2026/09/07
-
-* `Функция` Встроены объявления автоматизации специальных возможностей AutoJs6 `4.8.0` и заново сгенерированные группы LSP: цепочка `Flow` и пространство имён `flow`, набор инструментов (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` и другие), ожидания по событиям, `auto.explain` / `auto.dump` / `auto.stats`, строковый селектор `select(syntax)` и `findIterator`; объявления основного приложения заново сгенерированы из AutoJs6 6.8.0 (5278)
 
 ##### Подробнее об истории выпусков
 
@@ -220,3 +220,6 @@ app/src/main/assets/doc/CHANGELOG*.md
 - Сайт Ace: https://ace.c9.io
 - Уведомления о сторонних компонентах: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/THIRD_PARTY_NOTICES.md
 - Лицензия проекта: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/LICENSE
+
+
+[16 KB page alignment and build verification](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/docs/16kb.md)

@@ -159,7 +159,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 
 ******
 
+# v1.1.25
+
+###### 2026/09/11
+
+* `改善` 64 ビットのネイティブライブラリの 16 KB ページアラインメントをビルド時に検証, manifest 契約の検査と JSON レポートに対応
+
 # v1.1.24
 
 ###### 2026/09/10
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 ###### 2026/09/08
 
 * `機能` AutoJs6 `4.8.1` のコンソール宣言更新を同梱: `console.rawInput` / `console.input` の復活, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` メソッドと対応する `console.build` オプションの追加, JSX の `<console>` / `<globalconsole>` 要素と属性の宣言を追加; メインアプリ宣言は AutoJs6 6.8.0 (5279) から再生成
-
-# v1.1.22
-
-###### 2026/09/07
-
-* `機能` AutoJs6 `4.8.0` のアクセシビリティ自動化宣言と再生成した LSP グループを同梱: `Flow` チェーンと `flow` 名前空間, ツールキット (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` など), イベント駆動の待機, `auto.explain` / `auto.dump` / `auto.stats`, 文字列セレクター `select(syntax)` と `findIterator`; メインアプリ宣言は AutoJs6 6.8.0 (5278) から再生成
 
 ##### その他のリリース履歴
 
@@ -220,3 +220,6 @@ app/src/main/assets/doc/CHANGELOG*.md
 - Ace 公式サイト: https://ace.c9.io
 - サードパーティ通知: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/THIRD_PARTY_NOTICES.md
 - プロジェクトライセンス: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/LICENSE
+
+
+[16 KB page alignment and build verification](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/docs/16kb.md)

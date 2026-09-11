@@ -35,7 +35,8 @@
     "elfMachine": 3,
     "needed": [],
     "bytes": 1256,
-    "sha256": "7b8d72d1d2047c380e1399c5ef3da631168d4c1ad5ca3e8d73b059b2d48b0610"
+    "sha256": "7b8d72d1d2047c380e1399c5ef3da631168d4c1ad5ca3e8d73b059b2d48b0610",
+    "minLoadAlign": 16384
   },
   "abis": {
     "arm64-v8a": {
@@ -44,7 +45,8 @@
       "elfClass": 2,
       "elfMachine": 183,
       "bytes": 2226784,
-      "sha256": "c5c494904fedd297416dea27097c2b66bc32d034bbbff022123e512b45f2fd0e"
+      "sha256": "c5c494904fedd297416dea27097c2b66bc32d034bbbff022123e512b45f2fd0e",
+      "minLoadAlign": 16384
     },
     "armeabi-v7a": {
       "luamakeArch": "armv7a",
@@ -53,7 +55,8 @@
       "elfClass": 1,
       "elfMachine": 40,
       "bytes": 1842636,
-      "sha256": "7ccf9a901f5b0e05a10e7869399238982027c9538d572291553a9ea42010021b"
+      "sha256": "7ccf9a901f5b0e05a10e7869399238982027c9538d572291553a9ea42010021b",
+      "minLoadAlign": 4096
     },
     "x86_64": {
       "luamakeArch": "x86_64",
@@ -61,7 +64,8 @@
       "elfClass": 2,
       "elfMachine": 62,
       "bytes": 2220864,
-      "sha256": "f1a263dba47da7c7e7f6d91e8131465d426d55eb218e5d0c10ad0afdf3ad27a5"
+      "sha256": "f1a263dba47da7c7e7f6d91e8131465d426d55eb218e5d0c10ad0afdf3ad27a5",
+      "minLoadAlign": 16384
     }
   }
 }

@@ -93,6 +93,12 @@ function Replace-ExactText {
 
 $makePath = Join-Path $SourceRoot "make.lua"
 Replace-ExactText -Path $makePath -Before @'
+local lm = require 'luamake'
+'@ -After @'
+local lm = require 'luamake'
+lm.ldflags = { '-Wl,-z,max-page-size=16384', '-Wl,-z,common-page-size=16384' }
+'@
+Replace-ExactText -Path $makePath -Before @'
 local platform = require 'bee.platform'
 local exe      = platform.os == 'windows' and ".exe" or ""
 '@ -After @'
@@ -250,6 +256,7 @@ New-Item -ItemType Directory -Force -Path $compatibilityOutputDirectory | Out-Nu
     "-Wl,--strip-all" `
     "-Wl,-soname,$($compatibility.library)" `
     "-Wl,-z,max-page-size=16384" `
+    "-Wl,-z,common-page-size=16384" `
     -o $compatibilityOutput `
     $compatibilitySource
 if ($LASTEXITCODE -ne 0) { throw "LuaLS x86 install compatibility build failed." }

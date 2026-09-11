@@ -159,7 +159,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 
 ******
 
+# v1.1.25
+
+###### 2026/09/11
+
+* `تحسين` التحقق أثناء البناء من محاذاة صفحات 16 KB للمكتبات الأصلية ذات 64 بت, مع فحص عقد manifest وتقارير JSON
+
 # v1.1.24
 
 ###### 2026/09/10
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 ###### 2026/09/08
 
 * `ميزة` تضمين تحديث إعلانات وحدة التحكم في AutoJs6 `4.8.1`: استعادة `console.rawInput` / `console.input`, وإضافة الدوال `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` مع خيارات `console.build` المقابلة, وإضافة عنصري JSX `<console>` / `<globalconsole>` مع سماتهما; أعيد توليد إعلانات التطبيق الرئيسي من AutoJs6 6.8.0 (5279)
-
-# v1.1.22
-
-###### 2026/09/07
-
-* `ميزة` تضمين تصريحات أتمتة إمكانية الوصول في AutoJs6 `4.8.0` ومجموعات LSP المعاد توليدها: سلسلة `Flow` ومساحة الأسماء `flow`، ومجموعة الأدوات (`smartClick` و`scrollUntil` و`typeInto` و`dismissPopups` و`collectList` و`launchAndWait` و`backUntil` و`toggle` وغيرها)، والانتظار المعتمد على الأحداث، و`auto.explain` / `auto.dump` / `auto.stats`، ومحدد النص `select(syntax)` و`findIterator`؛ مع إعادة توليد تصريحات التطبيق الرئيسي من AutoJs6 6.8.0 (5278)
 
 ##### لمزيد من سجل الإصدارات
 
@@ -220,3 +220,6 @@ app/src/main/assets/doc/CHANGELOG*.md
 - موقع Ace: https://ace.c9.io
 - إشعارات الجهات الخارجية: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/THIRD_PARTY_NOTICES.md
 - ترخيص المشروع: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/LICENSE
+
+
+[16 KB page alignment and build verification](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/docs/16kb.md)

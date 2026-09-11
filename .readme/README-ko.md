@@ -159,7 +159,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 
 ******
 
+# v1.1.25
+
+###### 2026/09/11
+
+* `개선` 64비트 네이티브 라이브러리의 16 KB 페이지 정렬을 빌드 시 검증, manifest 계약 검사 및 JSON 보고서 지원
+
 # v1.1.24
 
 ###### 2026/09/10
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.24-u
 ###### 2026/09/08
 
 * `기능` AutoJs6 `4.8.1` 콘솔 선언 업데이트 내장: `console.rawInput` / `console.input` 복원, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 메서드와 대응하는 `console.build` 옵션 추가, JSX `<console>` / `<globalconsole>` 요소 및 속성 선언 추가; 메인 앱 선언은 AutoJs6 6.8.0 (5279) 에서 재생성
-
-# v1.1.22
-
-###### 2026/09/07
-
-* `기능` AutoJs6 `4.8.0` 접근성 자동화 선언과 다시 생성한 LSP 그룹을 번들: `Flow` 체인과 `flow` 네임스페이스, 툴킷 (`smartClick`, `scrollUntil`, `typeInto`, `dismissPopups`, `collectList`, `launchAndWait`, `backUntil`, `toggle` 등), 이벤트 기반 대기, `auto.explain` / `auto.dump` / `auto.stats`, 문자열 셀렉터 `select(syntax)` 와 `findIterator`; 메인 앱 선언은 AutoJs6 6.8.0 (5278) 에서 다시 생성
 
 ##### 더 많은 릴리스 기록
 
@@ -220,3 +220,6 @@ app/src/main/assets/doc/CHANGELOG*.md
 - Ace 웹사이트: https://ace.c9.io
 - 타사 고지 사항: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/THIRD_PARTY_NOTICES.md
 - 프로젝트 라이선스: https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/LICENSE
+
+
+[16 KB page alignment and build verification](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/docs/16kb.md)

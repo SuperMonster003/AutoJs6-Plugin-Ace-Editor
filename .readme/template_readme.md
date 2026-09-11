@@ -187,3 +187,6 @@ app/src/main/assets/doc/CHANGELOG*.md
 - {{ text_link_ace }}: {{ ace_url }}
 - {{ text_link_third_party_notices }}: {{ third_party_notices_url }}
 - {{ text_link_license }}: {{ license_url }}
+
+
+[16 KB page alignment and build verification](https://github.com/SuperMonster003/AutoJs6-Plugin-Ace-Editor/blob/master/docs/16kb.md)
