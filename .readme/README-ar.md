@@ -159,7 +159,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-u
 
 ******
 
+# v1.1.27
+
+###### 2026/09/13
+
+* `تحسين` تصريح رقمي للقراءة فقط وإكمال تلقائي لـ `device.pageSize`; مزامنة تصريحات AutoJs6 4.11.0 وإعادة إنشاء مجموعات LSP
+
 # v1.1.26
 
 ###### 2026/09/12
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-u
 ###### 2026/09/11
 
 * `تحسين` التحقق أثناء البناء من محاذاة صفحات 16 KB للمكتبات الأصلية ذات 64 بت, مع فحص عقد manifest وتقارير JSON
-
-# v1.1.24
-
-###### 2026/09/10
-
-* `تحسين` تغطي تعريفات وإكمال MediaInfo الخيارات streamNumber وcountGet وinfoKind وقدرات الاستعلام
 
 ##### لمزيد من سجل الإصدارات
 

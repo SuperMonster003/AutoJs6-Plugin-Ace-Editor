@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.27
+
+###### 2026/09/13
+
+* `Amélioration` Déclaration numérique en lecture seule et complétion pour `device.pageSize`; synchroniser les déclarations AutoJs6 4.11.0 et régénérer les groupes LSP
+
 # v1.1.26
 
 ###### 2026/09/12

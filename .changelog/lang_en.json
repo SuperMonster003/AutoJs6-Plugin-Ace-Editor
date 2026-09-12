@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.1.27": {
+      "released_date": "2026/09/13",
+      "improvement": [
+        "`device.pageSize` read-only number declaration and completion; synchronize AutoJs6 declarations 4.11.0 and regenerate LSP groups"
+      ]
+    },
     "v1.1.26": {
       "released_date": "2026/09/12",
       "improvement": [
