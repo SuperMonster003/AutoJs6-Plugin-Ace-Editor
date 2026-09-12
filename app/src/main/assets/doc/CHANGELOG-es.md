@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `Mejora` Las declaraciones y el autocompletado de OCR admiten la selección automática del motor, la lectura del modo efectivo, el restablecimiento con tap y las opciones de modo por llamada; sincronización de las declaraciones AutoJs6 4.10.0 y regeneración de los grupos LSP
+
 # v1.1.25
 
 ###### 2026/09/11

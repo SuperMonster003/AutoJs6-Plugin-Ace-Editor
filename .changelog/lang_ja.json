@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.1.26": {
+      "released_date": "2026/09/12",
+      "improvement": [
+        "OCR 宣言と補完がエンジンの自動選択, 実際のモードの取得, tap によるリセット, 呼び出しごとのモード指定に対応; AutoJs6 4.10.0 の宣言を同期し LSP グループを再生成"
+      ]
+    },
     "v1.1.25": {
       "released_date": "2026/09/11",
       "improvement": [

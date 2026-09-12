@@ -159,7 +159,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `Amélioration` Les déclarations et la complétion OCR prennent en charge la sélection automatique du moteur, la lecture du mode effectif, les réinitialisations par tap et les options de mode par appel; synchronisation des déclarations AutoJs6 4.10.0 et régénération des groupes LSP
+
 # v1.1.25
 
 ###### 2026/09/11
@@ -183,12 +189,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/10
 
 * `Amélioration` Les déclarations et la complétion MediaInfo couvrent streamNumber, countGet, infoKind et les capacités de requête
-
-# v1.1.23
-
-###### 2026/09/08
-
-* `Fonctionnalité` Intègre la mise à jour des déclarations de la console AutoJs6 `4.8.1` : `console.rawInput` / `console.input` restaurés, nouvelles méthodes `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` avec les options `console.build` correspondantes, et nouveaux éléments JSX `<console>` / `<globalconsole>` avec leurs attributs ; les déclarations de l'application principale sont régénérées depuis AutoJs6 6.8.0 (5279)
 
 ##### Pour plus d'historique des versions
 

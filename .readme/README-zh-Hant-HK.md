@@ -159,7 +159,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `優化` OCR 聲明與補全支援引擎自動選擇, 實際模式讀取, tap 重設及單次呼叫模式選項; 同步 AutoJs6 4.10.0 聲明並重新產生 LSP 分組
+
 # v1.1.25
 
 ###### 2026/09/11
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 ###### 2026/09/10
 
 * `優化` MediaInfo 查詢宣告與補全涵蓋 streamNumber, countGet, infoKind 和查詢能力
-
-# v1.1.23
-
-###### 2026/09/08
-
-* `新增` 內建 AutoJs6 `4.8.1` 控制台宣告更新: 恢復 `console.rawInput` / `console.input`, 新增 `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 方法及對應的 `console.build` 選項, JSX 新增 `<console>` / `<globalconsole>` 元素及屬性宣告; 主應用宣告由 AutoJs6 6.8.0 (5279) 重新產生
 
 ##### 更多發行歷史可參閱
 

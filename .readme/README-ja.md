@@ -159,7 +159,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `改善` OCR 宣言と補完がエンジンの自動選択, 実際のモードの取得, tap によるリセット, 呼び出しごとのモード指定に対応; AutoJs6 4.10.0 の宣言を同期し LSP グループを再生成
+
 # v1.1.25
 
 ###### 2026/09/11
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 ###### 2026/09/10
 
 * `改善` MediaInfo の型宣言と補完が streamNumber, countGet, infoKind とクエリ機能に対応
-
-# v1.1.23
-
-###### 2026/09/08
-
-* `機能` AutoJs6 `4.8.1` のコンソール宣言更新を同梱: `console.rawInput` / `console.input` の復活, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` メソッドと対応する `console.build` オプションの追加, JSX の `<console>` / `<globalconsole>` 要素と属性の宣言を追加; メインアプリ宣言は AutoJs6 6.8.0 (5279) から再生成
 
 ##### その他のリリース履歴
 

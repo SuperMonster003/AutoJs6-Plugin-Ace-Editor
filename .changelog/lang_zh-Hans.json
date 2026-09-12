@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.1.26": {
+      "released_date": "2026/09/12",
+      "improvement": [
+        "OCR 声明与补全支持引擎自动选择, 实际模式读取, tap 重置及单次调用模式选项; 同步 AutoJs6 4.10.0 声明并重新生成 LSP 分组"
+      ]
+    },
     "v1.1.25": {
       "released_date": "2026/09/11",
       "improvement": [

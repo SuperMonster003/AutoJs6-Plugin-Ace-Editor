@@ -159,7 +159,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `تحسين` تدعم تعريفات OCR والإكمال التلقائي اختيار المحرك تلقائيا وقراءة الوضع الفعلي وإعادة الضبط عبر tap وخيارات الوضع لكل استدعاء; مزامنة تعريفات AutoJs6 4.10.0 وإعادة توليد مجموعات LSP
+
 # v1.1.25
 
 ###### 2026/09/11
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 ###### 2026/09/10
 
 * `تحسين` تغطي تعريفات وإكمال MediaInfo الخيارات streamNumber وcountGet وinfoKind وقدرات الاستعلام
-
-# v1.1.23
-
-###### 2026/09/08
-
-* `ميزة` تضمين تحديث إعلانات وحدة التحكم في AutoJs6 `4.8.1`: استعادة `console.rawInput` / `console.input`, وإضافة الدوال `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` مع خيارات `console.build` المقابلة, وإضافة عنصري JSX `<console>` / `<globalconsole>` مع سماتهما; أعيد توليد إعلانات التطبيق الرئيسي من AutoJs6 6.8.0 (5279)
 
 ##### لمزيد من سجل الإصدارات
 

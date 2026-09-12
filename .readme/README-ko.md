@@ -159,7 +159,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.26-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `개선` OCR 선언 및 자동 완성에서 엔진 자동 선택, 실제 모드 읽기, tap 초기화 및 호출별 모드 옵션 지원; AutoJs6 4.10.0 선언 동기화 및 LSP 그룹 재생성
+
 # v1.1.25
 
 ###### 2026/09/11
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.25-u
 ###### 2026/09/10
 
 * `개선` MediaInfo 선언과 자동 완성이 streamNumber, countGet, infoKind 및 쿼리 기능을 지원
-
-# v1.1.23
-
-###### 2026/09/08
-
-* `기능` AutoJs6 `4.8.1` 콘솔 선언 업데이트 내장: `console.rawInput` / `console.input` 복원, `setTimeVisible` / `setTimeFormat` / `setColorful` / `setAvoidStatusBar` / `setInputVisible` 메서드와 대응하는 `console.build` 옵션 추가, JSX `<console>` / `<globalconsole>` 요소 및 속성 선언 추가; 메인 앱 선언은 AutoJs6 6.8.0 (5279) 에서 재생성
 
 ##### 더 많은 릴리스 기록
 

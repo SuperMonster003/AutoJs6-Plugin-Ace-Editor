@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `Amélioration` Les déclarations et la complétion OCR prennent en charge la sélection automatique du moteur, la lecture du mode effectif, les réinitialisations par tap et les options de mode par appel; synchronisation des déclarations AutoJs6 4.10.0 et régénération des groupes LSP
+
 # v1.1.25
 
 ###### 2026/09/11

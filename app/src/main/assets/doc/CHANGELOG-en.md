@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.26
+
+###### 2026/09/12
+
+* `Improvement` OCR declarations and completion support automatic engine selection, resolved mode reads, tap resets and per-call mode options; synchronize AutoJs6 declarations 4.10.0 and regenerate LSP groups
+
 # v1.1.25
 
 ###### 2026/09/11
