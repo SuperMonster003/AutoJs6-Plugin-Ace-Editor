@@ -39,6 +39,27 @@ class AceStdioLspProcessTransportTest {
     }
 
     @Test
+    fun explicitCrashHookStopsTheProcessAndReportsUnexpectedExit() {
+        val listener = RecordingListener()
+        val process = EchoProcess()
+        val transport = transport(
+            sessionId = "forced-crash-session",
+            listener = listener,
+            spec = spec(maxRestartAttempts = 0),
+            processFactory = AceLspProcessFactory { process },
+        )
+        try {
+            assertTrue(transport.start())
+            assertTrue(transport.markReady())
+            assertTrue(transport.forceCrashForTest())
+            assertTrue(listener.awaitState(AceStdioLspProcessTransport.State.CRASHED, 2_000L))
+            assertFalse(process.isAlive)
+        } finally {
+            transport.close()
+        }
+    }
+
+    @Test
     fun missingInitializeHandshakeCrashesWithoutRestartWhenPolicyDisablesIt() {
         val listener = RecordingListener()
         val transport = transport(

@@ -39,10 +39,8 @@ internal data class AceTypeScriptProjectTypeLayer(
             val projectRoot = findProjectRoot(document, profile.id) ?: return null
             val normalizedDocument = normalizedCanonicalFile(document)
             if (!isInside(normalizedDocument, projectRoot)) return null
-            val documentRelativePath = projectRoot.toPath()
-                .relativize(normalizedDocument.toPath())
-                .toString()
-                .replace(File.separatorChar, '/')
+            val documentRelativePath = normalizedDocument.relativeTo(projectRoot)
+                .invariantSeparatorsPath
                 .takeIf(String::isNotBlank)
                 ?: return null
             requireCanonicalRelativePath(documentRelativePath)
@@ -159,10 +157,8 @@ internal data class AceTypeScriptProjectTypeLayer(
                     val file = normalizedCanonicalFile(candidate)
                     require(isInside(file, dependencyRoot))
                     require(candidate.absoluteFile.normalize().path == file.path)
-                    val relativePath = dependencyRoot.toPath()
-                        .relativize(file.toPath())
-                        .toString()
-                        .replace(File.separatorChar, '/')
+                    val relativePath = file.relativeTo(dependencyRoot)
+                        .invariantSeparatorsPath
                     requireCanonicalRelativePath(relativePath)
                     dependencyPathBoundary(relativePath)?.let(boundaries::add)
                     if (!isCompilationRelevantDependencyPath(relativePath)) return@forEach
@@ -409,7 +405,7 @@ internal data class AceTypeScriptProjectTypeLayer(
             runCatching { file.canonicalFile }.getOrElse { file.absoluteFile.normalize() }
 
         private fun isInside(file: File, root: File): Boolean =
-            file.toPath().startsWith(root.toPath())
+            file.startsWith(root)
 
         private fun sha256(bytes: ByteArray): String =
             MessageDigest.getInstance("SHA-256").digest(bytes).toLowerHex()

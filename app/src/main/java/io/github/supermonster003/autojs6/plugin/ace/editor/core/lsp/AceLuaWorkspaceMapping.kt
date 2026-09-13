@@ -34,8 +34,8 @@ internal class AceLuaWorkspaceMapping private constructor(
     fun virtualUriForRealUri(realUri: String): String? {
         val target = localFile(realUri)?.normalizedCanonicalFile() ?: return null
         if (!contains(target)) return null
-        val relative = projectRoot.toPath().relativize(target.toPath())
-            .joinToString("/") { segment -> encodeSegment(segment.toString()) }
+        val relative = target.relativeTo(projectRoot).invariantSeparatorsPath
+            .split('/').joinToString("/") { segment -> encodeSegment(segment) }
         return "${AceLspServerManager.SYNTHETIC_ROOT_URI}/$relative"
     }
 
