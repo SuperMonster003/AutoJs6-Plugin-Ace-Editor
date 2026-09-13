@@ -170,9 +170,19 @@ class FontDownloaderTest {
         val bytes = FontTestFixtures.validWoff2()
         val font = FontTestFixtures.remoteFont(bytes, sha256 = "0".repeat(64))
         val downloader = FontDownloader(FontStore(directory), byteSource(mapOf(font.artifact.url to bytes)))
+        val failureObserved = CountDownLatch(1)
+        val partsRemovedBeforeFailure = AtomicBoolean(false)
         try {
-            val failure = runCatching { downloader.enqueue(font).future.get(5, TimeUnit.SECONDS) }.exceptionOrNull()
+            val subscription = downloader.enqueue(font) { event ->
+                if (event is FontDownloadEvent.Failure) {
+                    partsRemovedBeforeFailure.set(directory.resolve(".parts").listFiles().isNullOrEmpty())
+                    failureObserved.countDown()
+                }
+            }
+            val failure = runCatching { subscription.future.get(5, TimeUnit.SECONDS) }.exceptionOrNull()
             assertNotNull(failure)
+            assertTrue(failureObserved.await(5, TimeUnit.SECONDS))
+            assertTrue("Failure observers must see the partial payload already removed", partsRemovedBeforeFailure.get())
             assertNull(FontStore(directory).installedFont(font.id))
             assertTrue(directory.resolve(".parts").listFiles().isNullOrEmpty())
         } finally {

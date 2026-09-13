@@ -317,6 +317,13 @@ class FontDownloader(
         } catch (_: CancellationException) {
             finishCancelled(task)
         } catch (e: Throwable) {
+            // Failure completion must not race a retry or observer with the old partial payload.
+            try {
+                partFile?.let(store::discardPart)
+                partFile = null
+            } catch (cleanupError: Throwable) {
+                e.addSuppressed(cleanupError)
+            }
             finishFailure(task, e)
         } finally {
             partFile?.let(store::discardPart)
