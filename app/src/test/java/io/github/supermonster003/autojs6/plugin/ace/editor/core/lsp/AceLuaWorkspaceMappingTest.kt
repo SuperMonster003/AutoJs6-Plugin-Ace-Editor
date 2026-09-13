@@ -42,6 +42,14 @@ class AceLuaWorkspaceMappingTest {
                 ).canonicalFile,
             )
             assertTrue(mapping.contains(sibling))
+            assertEquals(
+                "${AceLspServerManager.SYNTHETIC_ROOT_URI}/",
+                mapping.virtualUriForRealUri(projectRoot.toURI().toASCIIString()),
+            )
+            assertEquals(
+                "${AceLspServerManager.SYNTHETIC_ROOT_URI}/lib/space%20%2B%20%23.lua",
+                mapping.virtualUriForRealUri(File(projectRoot, "lib/space + #.lua").toURI().toASCIIString()),
+            )
         } finally {
             projectRoot.deleteRecursively()
         }

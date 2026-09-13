@@ -177,6 +177,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-un
 
 ###### 2026/09/13
 
+* `수정` Lua 작업 공간 경로, TypeScript 종속성 스냅샷 및 언어 서버 테스트 종료의 Android 7 호환성 수정
 * `개선` 릴리스 서명 설정, 예상 APK 구성 및 문서 재생성 결과 검증
 * `개선` 기기 ABI에 맞는 APK 또는 universal APK를 선택하세요. Lua 의미 분석은 arm64-v8a, armeabi-v7a, x86_64에서 사용할 수 있으며 x86은 편집기와 정적 완성을 제공합니다.
 

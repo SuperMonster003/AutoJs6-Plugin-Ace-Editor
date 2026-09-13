@@ -177,6 +177,7 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ###### 2026/09/13
 
+* `Corrección` Corregida la compatibilidad con Android 7 de las rutas Lua, las instantáneas de dependencias TypeScript y la finalización de pruebas del servidor de lenguaje
 * `Mejora` Comprobación de la firma completa, los APK esperados y la documentación reproducible de cada versión
 * `Mejora` Elige el APK para la ABI del dispositivo o el APK universal. El análisis semántico de Lua está disponible en arm64-v8a, armeabi-v7a y x86_64; x86 conserva el editor y el autocompletado estático.
 

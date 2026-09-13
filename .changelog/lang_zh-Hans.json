@@ -10,6 +10,9 @@
       "improvement": [
         "校验发行签名配置, 预期 APK 集合与可复现文档",
         "可选择设备 ABI 对应的 APK 或 universal APK. Lua 语义分析支持 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留编辑器和静态补全."
+      ],
+      "fix": [
+        "修复 Lua 工作区路径, TypeScript 依赖快照和语言服务器测试终止操作的 Android 7 兼容性"
       ]
     },
     "v1.1.28": {

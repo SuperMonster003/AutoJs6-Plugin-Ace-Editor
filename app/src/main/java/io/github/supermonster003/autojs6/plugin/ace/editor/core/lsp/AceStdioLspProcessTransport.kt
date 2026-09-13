@@ -1,5 +1,6 @@
 package io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp
 
+import android.os.Build
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -181,7 +182,11 @@ internal class AceStdioLspProcessTransport(
             process?.takeIf { !closed && !expectedStop }
         } ?: return false
         return runCatching {
-            target.destroyForcibly()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                target.destroyForcibly()
+            } else {
+                target.destroy()
+            }
             true
         }.getOrDefault(false)
     }

@@ -177,6 +177,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-un
 
 ###### 2026/09/13
 
+* `修正` Lua ワークスペースのパス処理, TypeScript 依存関係のスナップショット, 言語サーバーのテスト終了処理で Android 7 互換性を修正
 * `改善` リリース署名の設定, APK の構成, ドキュメントの再生成結果を検証
 * `改善` 端末の ABI に対応する APK または universal APK を選択してください. Lua の意味解析は arm64-v8a, armeabi-v7a, x86_64 に対応し, x86 ではエディタと静的補完を利用できます.
 
