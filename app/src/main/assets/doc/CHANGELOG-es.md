@@ -4,6 +4,12 @@
 
 ******
 
+# v1.3.0
+
+###### 2026/09/13
+
+* `Función` Declaraciones y autocompletado de `pangu` para `spaceText`, `hasProperSpacing` e importaciones de módulos tipadas; sincronización de las declaraciones AutoJs6 4.12.0 y regeneración de grupos LSP
+
 # v1.2.0
 
 ###### 2026/09/13

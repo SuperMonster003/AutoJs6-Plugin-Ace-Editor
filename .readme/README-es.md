@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.3.0
+
+###### 2026/09/13
+
+* `Función` Declaraciones y autocompletado de `pangu` para `spaceText`, `hasProperSpacing` e importaciones de módulos tipadas; sincronización de las declaraciones AutoJs6 4.12.0 y regeneración de grupos LSP
 
 # v1.2.0
 
@@ -187,12 +193,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/13
 
 * `Corrección` Las declaraciones de `runtime.requestPermissions` aceptan permisos genéricos y los ejemplos usan arreglos, incluido `access_local_network`; sincronización de declaraciones AutoJs6 4.11.1 y grupos LSP
-
-# v1.1.27
-
-###### 2026/09/13
-
-* `Mejora` Declaración numérica de solo lectura y autocompletado de `device.pageSize`; sincronizar las declaraciones AutoJs6 4.11.0 y regenerar los grupos LSP
 
 ##### Para ver más historial de versiones
 

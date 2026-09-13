@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.3.0": {
+      "released_date": "2026/09/13",
+      "feature": [
+        "`pangu` 文字間距宣告與補全, 涵蓋 `spaceText`, `hasProperSpacing` 與具型別的模組匯入; 同步 AutoJs6 宣告 4.12.0 並重新產生 LSP 分組"
+      ]
+    },
     "v1.2.0": {
       "released_date": "2026/09/13",
       "improvement": [

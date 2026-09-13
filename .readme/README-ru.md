@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-un
 ### История выпусков
 
 ******
+
+# v1.3.0
+
+###### 2026/09/13
+
+* `Функция` Декларации и автодополнение `pangu` для `spaceText`, `hasProperSpacing` и типизированного импорта модуля; синхронизация деклараций AutoJs6 4.12.0 и повторная генерация групп LSP
 
 # v1.2.0
 
@@ -187,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-un
 ###### 2026/09/13
 
 * `Исправление` Объявления `runtime.requestPermissions` поддерживают произвольные имена разрешений и примеры с массивами, включая `access_local_network`; синхронизация объявлений AutoJs6 4.11.1 и групп LSP
-
-# v1.1.27
-
-###### 2026/09/13
-
-* `Улучшение` Числовое объявление только для чтения и автодополнение `device.pageSize`; синхронизация объявлений AutoJs6 4.11.0 и обновление групп LSP
 
 ##### Подробнее об истории выпусков
 
