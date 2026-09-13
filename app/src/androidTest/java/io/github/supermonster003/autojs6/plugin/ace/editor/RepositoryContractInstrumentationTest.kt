@@ -66,8 +66,9 @@ class RepositoryContractInstrumentationTest {
             assertEquals("ace-editor", info.id)
             assertEquals("editor", info.engine)
             assertEquals("ace", info.variant)
-            assertTrue(info.supportedAbis.isNotEmpty())
-            assertTrue(info.supportedAbis.all { it in setOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86") })
+            val supportedAbis = requireNotNull(info.supportedAbis)
+            assertTrue(supportedAbis.isNotEmpty())
+            assertTrue(supportedAbis.all { it in setOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86") })
             assertTrue((requireNotNull(info.capabilities).get(PluginCapabilityKeys.REQUIRES_HOST_VERSION) as Number).toLong() > 0)
             assertTrue(info.instruction?.isNotBlank() == true)
         } finally { context.unbindService(connection) }
