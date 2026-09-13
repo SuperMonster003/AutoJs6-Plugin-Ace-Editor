@@ -178,6 +178,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/09/13
 
 * `Fix` Preserve Android 7 compatibility for Lua workspace paths, TypeScript dependency snapshots and language-server test shutdown
+* `Fix` Remove failed font downloads and release their temporary-file leases before notifying subscribers
 * `Improvement` Release packages are checked for a complete signing configuration, exact APK contents and reproducible documentation
 * `Improvement` Choose the APK for your device ABI, or use the universal APK. Lua semantic analysis is available on arm64-v8a, armeabi-v7a and x86_64; x86 retains the editor and static completion.
 
