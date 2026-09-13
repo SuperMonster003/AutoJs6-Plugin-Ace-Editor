@@ -4,6 +4,12 @@
 
 ******
 
+# v1.3.0
+
+###### 2026/09/13
+
+* `Feature` `pangu` text spacing declarations and completion, including `spaceText`, `hasProperSpacing` and typed module imports; synchronize AutoJs6 declarations 4.12.0 and regenerate LSP groups
+
 # v1.2.0
 
 ###### 2026/09/13

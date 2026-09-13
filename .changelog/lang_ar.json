@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.3.0": {
+      "released_date": "2026/09/13",
+      "feature": [
+        "تصريحات وإكمال `pangu` لكل من `spaceText` و `hasProperSpacing` واستيراد الوحدة مع الأنواع; مزامنة تصريحات AutoJs6 4.12.0 وإعادة توليد مجموعات LSP"
+      ]
+    },
     "v1.2.0": {
       "released_date": "2026/09/13",
       "improvement": [
