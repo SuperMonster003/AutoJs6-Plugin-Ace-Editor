@@ -51,7 +51,7 @@ Le plugin AutoJs6 Ace Editor sépare du fichier APK hôte le runtime Ace WebView
 ******
 
 - Fournit l'ID de plugin `ace-editor`, le moteur `editor` et la variante `ace`, avec découverte via `org.autojs.plugin.INFO` et `org.autojs.plugin.EDITOR`.
-- Utilise le contrat Editor API 1 et nécessite AutoJs6 `6.8.0 Alpha7` build `5235` ou version ultérieure, ainsi qu'Android API 24 ou version ultérieure.
+- Utilise le contrat 5 de Editor API et nécessite AutoJs6 build 5276 ou ultérieur et Android API 24 ou ultérieur.
 - Prend en charge l'édition de texte, l'annulation et le rétablissement, la recherche et le remplacement, la recherche par expression régulière et par mot entier, la navigation du curseur et de la sélection, les opérations sur les lignes, les points d'arrêt, l'activation et la désactivation des commentaires et le formatage du code.
 - Inclut des services de langage JavaScript/TypeScript et des déclarations de types AutoJs6 avec complétion, informations au survol, diagnostics et aide à la signature, tandis que le service JSON fournit uniquement des diagnostics syntaxiques.
 - Ajoute l'analyse sémantique Python 3.12 via un WebWorker Pyright 1.1.413 chargé à la demande : complétion typée, survol, aide à la signature, diagnostics et définition ; les anciens WebView incompatibles conservent silencieusement P2.
@@ -59,6 +59,7 @@ Le plugin AutoJs6 Ace Editor sépare du fichier APK hôte le runtime Ace WebView
 - Prend en charge la préservation des fins de ligne CRLF, la synchronisation incrémentielle du texte, le chargement par blocs des textes volumineux, un mode allégé pour les lignes très longues, l'adaptation IME, la surveillance de l'état du runtime et les notifications invitant à revenir à l'éditeur natif de l'hôte.
 - Propose des thèmes et des paramètres d'affichage, ainsi qu'une gestion des polices avec vérification du catalogue signé, validation SHA-256/WOFF2, téléchargement, mise en cache, installation et suppression.
 - Les métadonnées du plugin, le README et le CHANGELOG sont localisés en espagnol, français, russe, arabe, japonais, coréen, anglais, chinois simplifié, chinois traditionnel de Hong Kong et chinois traditionnel de Taïwan.
+- Choisissez un APK adapté à votre ABI ou le paquet universal. La sémantique Lua fonctionne sur arm64-v8a, armeabi-v7a et x86_64; x86 conserve l'éditeur et la complétion statique.
 
 ******
 
@@ -159,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +173,13 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `Amélioration` Vérification de la signature complète, des APK attendus et de la reproductibilité de la documentation
+* `Amélioration` Choisissez un APK adapté à votre ABI ou le paquet universal. La sémantique Lua fonctionne sur arm64-v8a, armeabi-v7a et x86_64; x86 conserve l'éditeur et la complétion statique.
+
 # v1.1.28
 
 ###### 2026/09/13
@@ -183,12 +191,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/13
 
 * `Amélioration` Déclaration numérique en lecture seule et complétion pour `device.pageSize`; synchroniser les déclarations AutoJs6 4.11.0 et régénérer les groupes LSP
-
-# v1.1.26
-
-###### 2026/09/12
-
-* `Amélioration` Les déclarations et la complétion OCR prennent en charge la sélection automatique du moteur, la lecture du mode effectif, les réinitialisations par tap et les options de mode par appel; synchronisation des déclarations AutoJs6 4.10.0 et régénération des groupes LSP
 
 ##### Pour plus d'historique des versions
 

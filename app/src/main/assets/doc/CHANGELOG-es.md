@@ -4,6 +4,13 @@
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `Mejora` Comprobación de la firma completa, los APK esperados y la documentación reproducible de cada versión
+* `Mejora` Elige el APK para la ABI del dispositivo o el APK universal. El análisis semántico de Lua está disponible en arm64-v8a, armeabi-v7a y x86_64; x86 conserva el editor y el autocompletado estático.
+
 # v1.1.28
 
 ###### 2026/09/13

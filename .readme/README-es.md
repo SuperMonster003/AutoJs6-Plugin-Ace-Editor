@@ -51,7 +51,7 @@ El complemento AutoJs6 Ace Editor separa del APK anfitrión el runtime de Ace We
 ******
 
 - Proporciona el ID de complemento `ace-editor`, el motor `editor` y la variante `ace`, con descubrimiento mediante `org.autojs.plugin.INFO` y `org.autojs.plugin.EDITOR`.
-- Utiliza el contrato Editor API 1 y requiere AutoJs6 `6.8.0 Alpha7` build `5235` o posterior y Android API 24 o posterior.
+- Usa el contrato 5 de Editor API y requiere AutoJs6 build 5276 o posterior y Android API 24 o posterior.
 - Admite edición de texto, deshacer y rehacer, búsqueda y reemplazo, búsqueda por expresiones regulares y palabras completas, navegación del cursor y la selección, operaciones con líneas, puntos de interrupción, activación y desactivación de comentarios y formato de código.
 - Incluye servicios de lenguaje JavaScript/TypeScript y declaraciones de tipos de AutoJs6 con autocompletado, información al pasar el cursor, diagnósticos y ayuda de firmas, mientras que el servicio JSON solo proporciona diagnósticos de sintaxis.
 - Añade análisis semántico de Python 3.12 mediante un WebWorker Pyright 1.1.413 cargado bajo demanda: autocompletado con tipos, información al pasar el cursor, ayuda de firmas, diagnósticos y definiciones; los WebView antiguos incompatibles conservan P2 silenciosamente.
@@ -59,6 +59,7 @@ El complemento AutoJs6 Ace Editor separa del APK anfitrión el runtime de Ace We
 - Admite la conservación de CRLF, la sincronización incremental de texto, la carga por bloques de textos grandes, un modo ligero para líneas muy largas, la adaptación de IME, la supervisión del estado del runtime y las notificaciones para volver al editor nativo del anfitrión.
 - Proporciona temas y ajustes de visualización, además de gestión de fuentes con verificación de catálogos firmados, validación SHA-256/WOFF2, descarga, almacenamiento en caché, instalación y eliminación.
 - Los metadatos del complemento, el README y el CHANGELOG están localizados en español, francés, ruso, árabe, japonés, coreano, inglés, chino simplificado, chino tradicional de Hong Kong y chino tradicional de Taiwán.
+- Elige el APK para la ABI del dispositivo o el APK universal. El análisis semántico de Lua está disponible en arm64-v8a, armeabi-v7a y x86_64; x86 conserva el editor y el autocompletado estático.
 
 ******
 
@@ -159,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +173,13 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `Mejora` Comprobación de la firma completa, los APK esperados y la documentación reproducible de cada versión
+* `Mejora` Elige el APK para la ABI del dispositivo o el APK universal. El análisis semántico de Lua está disponible en arm64-v8a, armeabi-v7a y x86_64; x86 conserva el editor y el autocompletado estático.
+
 # v1.1.28
 
 ###### 2026/09/13
@@ -183,12 +191,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/13
 
 * `Mejora` Declaración numérica de solo lectura y autocompletado de `device.pageSize`; sincronizar las declaraciones AutoJs6 4.11.0 y regenerar los grupos LSP
-
-# v1.1.26
-
-###### 2026/09/12
-
-* `Mejora` Las declaraciones y el autocompletado de OCR admiten la selección automática del motor, la lectura del modo efectivo, el restablecimiento con tap y las opciones de modo por llamada; sincronización de las declaraciones AutoJs6 4.10.0 y regeneración de los grupos LSP
 
 ##### Para ver más historial de versiones
 

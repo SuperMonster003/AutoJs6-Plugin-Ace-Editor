@@ -9,6 +9,7 @@ import android.os.IBinder
 import org.autojs.plugin.common.api.IPluginInfoProvider
 import org.autojs.plugin.common.api.PluginCapabilityKeys
 import org.autojs.plugin.common.api.PluginInfo
+import java.util.zip.ZipFile
 
 class AceEditorInfoService : Service() {
 
@@ -28,7 +29,9 @@ class AceEditorInfoService : Service() {
                 id = AceEditorMetadata.PLUGIN_ID
                 engine = AceEditorMetadata.ENGINE
                 variant = AceEditorMetadata.VARIANT
-                supportedAbis = emptyArray()
+                supportedAbis = ZipFile(applicationInfo.sourceDir).use { apk ->
+                    packagedNativeAbis(apk.entries().asSequence().map { it.name })
+                }
                 capabilities = Bundle().apply {
                     putInt(PluginCapabilityKeys.REQUIRES_HOST_VERSION, REQUIRED_HOST_VERSION_CODE)
                     putInt(AceEditorMetadata.CAPABILITY_CONTRACT_VERSION, AceEditorMetadata.CONTRACT_VERSION)
