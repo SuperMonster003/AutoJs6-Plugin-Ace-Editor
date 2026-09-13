@@ -4,6 +4,13 @@
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `Improvement` Release packages are checked for a complete signing configuration, exact APK contents and reproducible documentation
+* `Improvement` Choose the APK for your device ABI, or use the universal APK. Lua semantic analysis is available on arm64-v8a, armeabi-v7a and x86_64; x86 retains the editor and static completion.
+
 # v1.1.28
 
 ###### 2026/09/13

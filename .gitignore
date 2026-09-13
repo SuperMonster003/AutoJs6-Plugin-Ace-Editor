@@ -17,3 +17,5 @@
 *.apk
 *.jks
 *.keystore
+
+*.pre-platform-versions.bak

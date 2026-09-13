@@ -51,7 +51,7 @@ AutoJs6 Ace Editor Plugin 將 Ace WebView 運行時, JavaScript bridge, 輸入�
 ******
 
 - 提供插件 ID `ace-editor`, 引擎 `editor` 和變體 `ace`, 支援透過 `org.autojs.plugin.INFO` 與 `org.autojs.plugin.EDITOR` 發現.
-- 使用 Editor API 合約 1, 需要 AutoJs6 `6.8.0 Alpha7` build `5235` 或更新版本和 Android API 24 或更新版本.
+- 使用 Editor API 契約 5, 需要 AutoJs6 建置 5276 及以上和 Android API 24 及以上.
 - 支援文本編輯, 撤銷/重做, 搜尋及取代, 正則表達式及全詞搜尋, 游標/選區導覽, 行操作, 斷點, 註釋切換和代碼格式化.
 - 內置 JavaScript/TypeScript 語言服務和 AutoJs6 類型聲明, 提供 completion, hover, diagnostics 和 signature help; JSON 僅提供語法診斷.
 - 透過按需建立的 Pyright 1.1.413 WebWorker 內置 Python 3.12 語義分析: 類型補全, hover, signature help, 診斷和定義跳轉; 不相容的舊 WebView 會靜默保留 P2.
@@ -59,6 +59,7 @@ AutoJs6 Ace Editor Plugin 將 Ace WebView 運行時, JavaScript bridge, 輸入�
 - 支援 CRLF 保留, 增量文本同步, 大文本分塊載入, 超長行輕量模式, IME 適配, 運行健康監測和切回宿主原生編輯器的通知.
 - 支援主題和顯示設定, 以及具備簽名目錄驗證, SHA-256/WOFF2 驗證, 下載, 緩存, 安裝和刪除功能的字體管理.
 - 插件資訊, README 與 CHANGELOG 支援西班牙語/法語/俄語/阿拉伯語/日語/韓語/英語/簡體中文/香港繁體/台灣繁體.
+- 可選擇裝置 ABI 對應的 APK 或 universal APK. Lua 語義分析支援 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留編輯器和靜態補全.
 
 ******
 
@@ -159,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -172,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-u
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `優化` 校驗發行簽署設定, 預期 APK 集合與可重現文件
+* `優化` 可選擇裝置 ABI 對應的 APK 或 universal APK. Lua 語義分析支援 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留編輯器和靜態補全.
+
 # v1.1.28
 
 ###### 2026/09/13
@@ -183,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-u
 ###### 2026/09/13
 
 * `優化` `device.pageSize` 唯讀數值宣告與補全, 同步 AutoJs6 宣告 4.11.0 並重新產生 LSP 分組
-
-# v1.1.26
-
-###### 2026/09/12
-
-* `優化` OCR 聲明與補全支援引擎自動選擇, 實際模式讀取, tap 重設及單次呼叫模式選項; 同步 AutoJs6 4.10.0 聲明並重新產生 LSP 分組
 
 ##### 更多發行歷史可參閱
 

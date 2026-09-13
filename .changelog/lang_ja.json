@@ -5,6 +5,13 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.2.0": {
+      "released_date": "2026/09/13",
+      "improvement": [
+        "リリース署名の設定, APK の構成, ドキュメントの再生成結果を検証",
+        "端末の ABI に対応する APK または universal APK を選択してください. Lua の意味解析は arm64-v8a, armeabi-v7a, x86_64 に対応し, x86 ではエディタと静的補完を利用できます."
+      ]
+    },
     "v1.1.28": {
       "released_date": "2026/09/13",
       "fix": [

@@ -400,7 +400,7 @@ android {
     }
 
     lint {
-        abortOnError = false
+        abortOnError = true
     }
 
     signingConfigs {
@@ -469,6 +469,15 @@ android {
         }
     }
 
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
+            isUniversalApk = true
+        }
+    }
+
     bundle {
         language.enableSplit = false
         density.enableSplit = false
@@ -527,25 +536,49 @@ tasks {
     }
 
     register<Copy>("appendDigestToReleasedFiles") {
-        val buildTypeRelease = "release"
-        val ext = utils.FILE_EXTENSION_APK
-        val dst = "${buildTypeRelease}s"
-        val srcDirs = listOf(file(buildTypeRelease)) + android.productFlavors.map { flavor ->
-            file("${flavor.name}/$buildTypeRelease")
+        group = "distribution"
+        dependsOn("assembleRelease", "verifySignedReleaseArtifacts")
+        val source = layout.buildDirectory.dir("outputs/apk/release")
+        val destination = rootProject.layout.projectDirectory.dir("releases")
+        from(source) {
+            include("*.apk")
+            eachFile { name = "${name.removeSuffix(".apk")}-${utils.digestCRC32(file)}.apk" }
         }
-
-        from(srcDirs) {
-            include("*.$ext")
-            eachFile {
-                val suffix = ".$ext"
-                val digest = utils.digestCRC32(file)
-                name = "${name.removeSuffix(suffix)}-$digest$suffix"
-            }
-        }
-        into(dst)
+        into(destination)
         includeEmptyDirs = false
         duplicatesStrategy = DuplicatesStrategy.FAIL
-
-        doLast { println("Destination: ${file(dst)}") }
     }
+}
+
+
+// Fail before collection when credentials, keystore or the actual APK set are incomplete.
+val verifySignedReleaseArtifacts = tasks.register("verifySignedReleaseArtifacts") {
+    group = "verification"
+    dependsOn("assembleRelease")
+    doLast {
+        val signing = android.buildTypes.getByName("release").signingConfig
+        check(signing != null && signing.storeFile?.isFile == true &&
+            !signing.storePassword.isNullOrBlank() && !signing.keyAlias.isNullOrBlank() &&
+            !signing.keyPassword.isNullOrBlank()) { "Release signing configuration is missing or incomplete" }
+        val directory = layout.buildDirectory.dir("outputs/apk/release").get().asFile
+        val apks = directory.listFiles { file -> file.isFile && file.extension == "apk" }.orEmpty()
+        check(apks.map { it.name }.toSet() == setOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86", "universal").map { "${rootProject.name}-v${versions.appVersionName}-$it.apk" }.toSet()) {
+            "Unexpected release APK set: ${apks.map { it.name }.sorted()}"
+        }
+        val buildTools = androidComponents.sdkComponents.sdkDirectory.get().asFile
+            .resolve("build-tools/${android.buildToolsVersion}")
+        val signerJar = buildTools.resolve("lib/apksigner.jar")
+        check(signerJar.isFile) { "Android SDK apksigner is unavailable" }
+        apks.forEach { apk ->
+        val result = providers.exec {
+            commandLine("java", "-jar", signerJar.absolutePath, "verify", apk.absolutePath)
+            isIgnoreExitValue = true
+        }.result.get()
+        check(result.exitValue == 0) { "Release APK signature verification failed" }
+        }
+    }
+}
+tasks.named("appendDigestToReleasedFiles") { dependsOn(verifySignedReleaseArtifacts) }
+tasks.matching { it.name == "prepareReleaseArtifacts" }.configureEach {
+    dependsOn(verifySignedReleaseArtifacts)
 }

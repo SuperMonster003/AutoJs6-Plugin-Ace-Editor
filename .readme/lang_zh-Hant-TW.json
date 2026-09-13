@@ -9,14 +9,15 @@
   "h3_functions": "功能",
   "features": [
     "提供外掛 ID `ace-editor`, 引擎 `editor` 和變體 `ace`, 供宿主透過 `org.autojs.plugin.INFO` 與 `org.autojs.plugin.EDITOR` 元件發現外掛.",
-    "使用 Editor API 合約 1, 需要 AutoJs6 `6.8.0 Alpha7` build `5235` 或更新版本和 Android API 24 或更新版本.",
+    "使用 Editor API 契約 5, 需要 AutoJs6 組建 5276 及以上和 Android API 24 及以上.",
     "支援文字編輯, 復原/重做, 尋找與取代, 規則運算式與全字詞搜尋, 游標/選取範圍導覽, 行操作, 中斷點, 註解切換和程式碼格式化.",
     "內建 JavaScript/TypeScript 語言服務和 AutoJs6 型別宣告, 提供 completion, hover, diagnostics 和 signature help; JSON 僅提供語法診斷.",
     "透過依需求建立的 Pyright 1.1.413 WebWorker 內建 Python 3.12 語意分析: 型別補全, hover, signature help, 診斷和定義跳轉; 不相容的舊 WebView 會靜默保留 P2.",
     "透過裝置內 LuaLS 3.18.2 伴生程序內建完全離線的 Lua 語意: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 不支援的 ABI 與執行失敗會靜默保留 P2.",
     "支援保留 CRLF, 增量文字同步, 大型文字分塊載入, 超長行輕量模式, IME 調整, 執行狀況監控和切回宿主原生編輯器的通知.",
     "支援主題與顯示設定, 以及具備簽章目錄驗證, SHA-256/WOFF2 驗證, 下載, 快取, 安裝和移除功能的字型管理.",
-    "外掛資訊, README 與 CHANGELOG 支援西班牙文/法文/俄文/阿拉伯文/日文/韓文/英文/簡體中文/香港繁體/台灣繁體."
+    "外掛資訊, README 與 CHANGELOG 支援西班牙文/法文/俄文/阿拉伯文/日文/韓文/英文/簡體中文/香港繁體/台灣繁體.",
+    "可選擇裝置 ABI 對應的 APK 或 universal APK. Lua 語意分析支援 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留編輯器和靜態補全."
   ],
   "h3_programming_language_support": "程式語言支援",
   "p_programming_language_support_intro": "下表說明目前內建的語言能力. 語意支援包括型別補全, 型別診斷, hover 與簽章提示",

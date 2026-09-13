@@ -5,6 +5,13 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.2.0": {
+      "released_date": "2026/09/13",
+      "improvement": [
+        "校验发行签名配置, 预期 APK 集合与可复现文档",
+        "可选择设备 ABI 对应的 APK 或 universal APK. Lua 语义分析支持 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留编辑器和静态补全."
+      ]
+    },
     "v1.1.28": {
       "released_date": "2026/09/13",
       "fix": [

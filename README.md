@@ -51,7 +51,7 @@ AutoJs6 Ace Editor Plugin 将 Ace WebView 运行时, JavaScript bridge, 输入�
 ******
 
 - 提供插件 ID `ace-editor`, 引擎 `editor` 和变体 `ace`, 支持通过 `org.autojs.plugin.INFO` 与 `org.autojs.plugin.EDITOR` 发现.
-- 使用 Editor API 合约 1, 最低支持 AutoJs6 `6.8.0 Alpha7` build `5235` 或更高版本, 以及 Android API 24 或更高版本.
+- 使用 Editor API 契约 5, 需要 AutoJs6 构建 5276 及以上和 Android API 24 及以上.
 - 支持文本编辑, 撤销/重做, 搜索替换, 正则与整词查找, 光标/选区导航, 行操作, 断点, 注释切换和代码格式化.
 - 内置 JavaScript/TypeScript 语言服务和 AutoJs6 类型声明, 提供补全, hover, diagnostics 与 signature help; JSON 文件支持语法诊断.
 - 通过按需创建的 Pyright 1.1.413 WebWorker 内置 Python 3.12 语义分析: 类型补全, hover, 签名帮助, 诊断和定义跳转; 不兼容的老 WebView 会静默保留 P2.
@@ -59,6 +59,7 @@ AutoJs6 Ace Editor Plugin 将 Ace WebView 运行时, JavaScript bridge, 输入�
 - 支持 CRLF 保留, 增量文本同步, 大文本分块加载, 超长行轻量模式, IME 适配, 运行健康监测和宿主原生编辑器回退通知.
 - 支持主题与显示设置, 以及带签名目录校验, SHA-256/WOFF2 校验, 下载, 缓存, 安装和删除能力的字体管理.
 - 插件信息, README 与 CHANGELOG 支持西班牙语/法语/俄语/阿拉伯语/日语/韩语/英语/简体中文/香港繁体/台湾繁体.
+- 可选择设备 ABI 对应的 APK 或 universal APK. Lua 语义分析支持 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留编辑器和静态补全.
 
 ******
 
@@ -159,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-u
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `优化` 校验发行签名配置, 预期 APK 集合与可复现文档
+* `优化` 可选择设备 ABI 对应的 APK 或 universal APK. Lua 语义分析支持 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留编辑器和静态补全.
+
 # v1.1.28
 
 ###### 2026/09/13
@@ -183,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-u
 ###### 2026/09/13
 
 * `优化` `device.pageSize` 只读数值声明与补全, 同步 AutoJs6 声明 4.11.0 并重新生成 LSP 分组
-
-# v1.1.26
-
-###### 2026/09/12
-
-* `优化` OCR 声明与补全支持引擎自动选择, 实际模式读取, tap 重置及单次调用模式选项; 同步 AutoJs6 4.10.0 声明并重新生成 LSP 分组
 
 ##### 更多发行历史可参阅
 

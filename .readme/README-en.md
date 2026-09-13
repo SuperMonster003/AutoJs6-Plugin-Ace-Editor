@@ -51,7 +51,7 @@ The AutoJs6 Ace Editor Plugin separates the Ace WebView runtime, JavaScript brid
 ******
 
 - Provides plugin ID `ace-editor`, engine `editor`, and variant `ace`, with discovery through `org.autojs.plugin.INFO` and `org.autojs.plugin.EDITOR`.
-- Uses Editor API contract 1 and requires AutoJs6 `6.8.0 Alpha7` build `5235` or later and Android API 24 or later.
+- Uses Editor API contract 5 and requires AutoJs6 build 5276 or later and Android API 24 or later.
 - Supports text editing, undo/redo, search and replace, regex and whole-word search, cursor and selection navigation, line operations, breakpoints, comment toggling, and code formatting.
 - Includes JavaScript/TypeScript language services and AutoJs6 type declarations with completion, hover, diagnostics, and signature help; JSON files receive syntax diagnostics.
 - Adds bundled Python 3.12 semantic analysis through a lazy Pyright 1.1.413 WebWorker: type-aware completion, hover, signature help, diagnostics, and definition; unsupported older WebViews silently retain P2.
@@ -59,6 +59,7 @@ The AutoJs6 Ace Editor Plugin separates the Ace WebView runtime, JavaScript brid
 - Supports CRLF preservation, incremental text synchronization, chunked loading for large text, a lightweight mode for very long lines, IME adaptation, runtime health monitoring, and host native editor fallback notifications.
 - Provides themes and display settings plus font management with signed catalog verification, SHA-256/WOFF2 validation, download, caching, installation, and removal.
 - Localizes plugin metadata, README, and changelog content for Spanish, French, Russian, Arabic, Japanese, Korean, English, Simplified Chinese, Hong Kong Traditional Chinese, and Taiwan Traditional Chinese.
+- Choose the APK for your device ABI, or use the universal APK. Lua semantic analysis is available on arm64-v8a, armeabi-v7a and x86_64; x86 retains the editor and static completion.
 
 ******
 
@@ -159,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +173,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `Improvement` Release packages are checked for a complete signing configuration, exact APK contents and reproducible documentation
+* `Improvement` Choose the APK for your device ABI, or use the universal APK. Lua semantic analysis is available on arm64-v8a, armeabi-v7a and x86_64; x86 retains the editor and static completion.
+
 # v1.1.28
 
 ###### 2026/09/13
@@ -183,12 +191,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/09/13
 
 * `Improvement` `device.pageSize` read-only number declaration and completion; synchronize AutoJs6 declarations 4.11.0 and regenerate LSP groups
-
-# v1.1.26
-
-###### 2026/09/12
-
-* `Improvement` OCR declarations and completion support automatic engine selection, resolved mode reads, tap resets and per-call mode options; synchronize AutoJs6 declarations 4.10.0 and regenerate LSP groups
 
 ##### Complete release history
 

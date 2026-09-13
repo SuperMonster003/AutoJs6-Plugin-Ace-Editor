@@ -4,6 +4,13 @@
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `Amélioration` Vérification de la signature complète, des APK attendus et de la reproductibilité de la documentation
+* `Amélioration` Choisissez un APK adapté à votre ABI ou le paquet universal. La sémantique Lua fonctionne sur arm64-v8a, armeabi-v7a et x86_64; x86 conserve l'éditeur et la complétion statique.
+
 # v1.1.28
 
 ###### 2026/09/13

@@ -51,7 +51,7 @@ AutoJs6 Ace Editor Plugin は, Ace WebView ランタイム, JavaScript ブリッ
 ******
 
 - プラグイン ID `ace-editor`, エンジン `editor`, バリアント `ace` を提供し, `org.autojs.plugin.INFO` と `org.autojs.plugin.EDITOR` を介した検出に対応します.
-- Editor API コントラクト 1 を使用し, AutoJs6 `6.8.0 Alpha7` build `5235` 以降および Android API 24 以降が必要です.
+- Editor API 契約 5 を使用し, AutoJs6 ビルド 5276 以降と Android API 24 以降が必要です.
 - テキスト編集, 元に戻す/やり直し, 検索と置換, 正規表現検索と単語単位検索, カーソルと選択範囲の移動, 行操作, ブレークポイント, コメントの切り替え, コード整形に対応します.
 - JavaScript/TypeScript 言語サービスと AutoJs6 型宣言を内蔵し, 補完, hover, diagnostics, signature help を提供します. JSON には syntax diagnostics のみを提供します.
 - 必要時に起動する Pyright 1.1.413 WebWorker で Python 3.12 セマンティック解析を内蔵し, 型補完, hover, signature help, diagnostics, 定義ジャンプを提供します. 非対応の古い WebView は通知なしで P2 を維持します.
@@ -59,6 +59,7 @@ AutoJs6 Ace Editor Plugin は, Ace WebView ランタイム, JavaScript ブリッ
 - CRLF の保持, 増分テキスト同期, 大容量テキストのチャンク読み込み, 非常に長い行向けの軽量モード, IME 対応, ランタイムの健全性監視, ホストのネイティブエディタへのフォールバック通知に対応します.
 - テーマと表示設定に加え, 署名付きカタログの検証, SHA-256/WOFF2 検証, ダウンロード, キャッシュ, インストール, 削除を備えたフォント管理を提供します.
 - プラグインメタデータ, README, CHANGELOG のコンテンツをスペイン語, フランス語, ロシア語, アラビア語, 日本語, 韓国語, 英語, 簡体字中国語, 香港繁体字中国語, 台湾繁体字中国語にローカライズしています.
+- 端末の ABI に対応する APK または universal APK を選択してください. Lua の意味解析は arm64-v8a, armeabi-v7a, x86_64 に対応し, x86 ではエディタと静的補完を利用できます.
 
 ******
 
@@ -159,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.2.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-u
 
 ******
 
+# v1.2.0
+
+###### 2026/09/13
+
+* `改善` リリース署名の設定, APK の構成, ドキュメントの再生成結果を検証
+* `改善` 端末の ABI に対応する APK または universal APK を選択してください. Lua の意味解析は arm64-v8a, armeabi-v7a, x86_64 に対応し, x86 ではエディタと静的補完を利用できます.
+
 # v1.1.28
 
 ###### 2026/09/13
@@ -183,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-u
 ###### 2026/09/13
 
 * `改善` `device.pageSize` の読み取り専用の数値宣言と補完, AutoJs6 宣言 4.11.0 を同期して LSP グループを再生成
-
-# v1.1.26
-
-###### 2026/09/12
-
-* `改善` OCR 宣言と補完がエンジンの自動選択, 実際のモードの取得, tap によるリセット, 呼び出しごとのモード指定に対応; AutoJs6 4.10.0 の宣言を同期し LSP グループを再生成
 
 ##### その他のリリース履歴
 
