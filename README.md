@@ -159,7 +159,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-u
 
 ******
 
+# v1.1.28
+
+###### 2026/09/13
+
+* `修复` `runtime.requestPermissions` 通用权限名的类型声明与数组示例, 支持 `access_local_network`; 同步 AutoJs6 声明 4.11.1 并重新生成 LSP 分组
+
 # v1.1.27
 
 ###### 2026/09/13
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-u
 ###### 2026/09/12
 
 * `优化` OCR 声明与补全支持引擎自动选择, 实际模式读取, tap 重置及单次调用模式选项; 同步 AutoJs6 4.10.0 声明并重新生成 LSP 分组
-
-# v1.1.25
-
-###### 2026/09/11
-
-* `优化` 构建阶段校验 64 位原生库的 16 KB 页大小对齐, 检查 manifest 契约并输出 JSON 报告
 
 ##### 更多发行历史可参阅
 

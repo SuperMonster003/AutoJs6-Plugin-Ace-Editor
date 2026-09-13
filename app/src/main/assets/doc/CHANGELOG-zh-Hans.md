@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.28
+
+###### 2026/09/13
+
+* `修复` `runtime.requestPermissions` 通用权限名的类型声明与数组示例, 支持 `access_local_network`; 同步 AutoJs6 声明 4.11.1 并重新生成 LSP 分组
+
 # v1.1.27
 
 ###### 2026/09/13

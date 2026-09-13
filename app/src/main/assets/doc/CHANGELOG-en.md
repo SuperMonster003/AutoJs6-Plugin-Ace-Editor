@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.28
+
+###### 2026/09/13
+
+* `Fix` `runtime.requestPermissions` declarations accept generic permission names and use array examples, including `access_local_network`; synchronize AutoJs6 declarations 4.11.1 and regenerate LSP groups
+
 # v1.1.27
 
 ###### 2026/09/13

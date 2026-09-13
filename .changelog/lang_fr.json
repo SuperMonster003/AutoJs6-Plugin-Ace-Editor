@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.1.28": {
+      "released_date": "2026/09/13",
+      "fix": [
+        "Les déclarations de `runtime.requestPermissions` acceptent les noms de permissions génériques et les exemples utilisent des tableaux, dont `access_local_network`; synchronisation des déclarations AutoJs6 4.11.1 et des groupes LSP"
+      ]
+    },
     "v1.1.27": {
       "released_date": "2026/09/13",
       "improvement": [

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.28
+
+###### 2026/09/13
+
+* `Correctif` Les déclarations de `runtime.requestPermissions` acceptent les noms de permissions génériques et les exemples utilisent des tableaux, dont `access_local_network`; synchronisation des déclarations AutoJs6 4.11.1 et des groupes LSP
+
 # v1.1.27
 
 ###### 2026/09/13

@@ -159,7 +159,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-u
 
 ******
 
+# v1.1.28
+
+###### 2026/09/13
+
+* `إصلاح` تصريحات `runtime.requestPermissions` تدعم أسماء الأذونات العامة وأمثلة المصفوفات بما فيها `access_local_network`; مزامنة تصريحات AutoJs6 4.11.1 وإعادة إنشاء مجموعات LSP
+
 # v1.1.27
 
 ###### 2026/09/13
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-u
 ###### 2026/09/12
 
 * `تحسين` تدعم تعريفات OCR والإكمال التلقائي اختيار المحرك تلقائيا وقراءة الوضع الفعلي وإعادة الضبط عبر tap وخيارات الوضع لكل استدعاء; مزامنة تعريفات AutoJs6 4.10.0 وإعادة توليد مجموعات LSP
-
-# v1.1.25
-
-###### 2026/09/11
-
-* `تحسين` التحقق أثناء البناء من محاذاة صفحات 16 KB للمكتبات الأصلية ذات 64 بت, مع فحص عقد manifest وتقارير JSON
 
 ##### لمزيد من سجل الإصدارات
 

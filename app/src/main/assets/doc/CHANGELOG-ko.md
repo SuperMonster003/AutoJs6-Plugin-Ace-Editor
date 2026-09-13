@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.28
+
+###### 2026/09/13
+
+* `수정` `runtime.requestPermissions` 선언이 일반 권한 이름과 배열 예제를 지원하며 `access_local_network` 포함; AutoJs6 선언 4.11.1 및 LSP 그룹 동기화
+
 # v1.1.27
 
 ###### 2026/09/13

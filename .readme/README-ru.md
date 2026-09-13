@@ -159,7 +159,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.28-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-u
 
 ******
 
+# v1.1.28
+
+###### 2026/09/13
+
+* `Исправление` Объявления `runtime.requestPermissions` поддерживают произвольные имена разрешений и примеры с массивами, включая `access_local_network`; синхронизация объявлений AutoJs6 4.11.1 и групп LSP
+
 # v1.1.27
 
 ###### 2026/09/13
@@ -183,12 +189,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.1.27-u
 ###### 2026/09/12
 
 * `Улучшение` Объявления и автодополнение OCR поддерживают автоматический выбор движка, чтение фактического режима, сброс через tap и параметры режима для отдельного вызова; синхронизированы объявления AutoJs6 4.10.0 и обновлены группы LSP
-
-# v1.1.25
-
-###### 2026/09/11
-
-* `Улучшение` Проверка выравнивания страниц 16 KB для 64-битных нативных библиотек при сборке, включая контракт manifest и отчеты JSON
 
 ##### Подробнее об истории выпусков
 
