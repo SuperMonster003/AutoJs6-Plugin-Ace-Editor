@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 ### سجل الإصدارات
 
 ******
+
+# v1.4.0
+
+###### 2026/09/14
+
+* `تحسين` مزامنة تصريحات AutoJs6 4.13.0 للحقل LaunchConfig.requiresSharedStorage وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
 
 # v1.3.0
 
@@ -187,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 * `إصلاح` تنظيف ملفات تنزيل الخطوط الفاشلة وتحرير حجوزاتها المؤقتة قبل إخطار المشتركين
 * `تحسين` التحقق من اكتمال إعداد توقيع حزم الإصدار وملفات APK المتوقعة وإمكانية إعادة إنشاء الوثائق
 * `تحسين` اختر APK المناسب لمعمارية جهازك أو استخدم universal. يتوفر التحليل الدلالي للغة Lua على arm64-v8a و armeabi-v7a و x86_64; يحتفظ x86 بالمحرر والإكمال الثابت.
-
-# v1.1.28
-
-###### 2026/09/13
-
-* `إصلاح` تصريحات `runtime.requestPermissions` تدعم أسماء الأذونات العامة وأمثلة المصفوفات بما فيها `access_local_network`; مزامنة تصريحات AutoJs6 4.11.1 وإعادة إنشاء مجموعات LSP
 
 ##### لمزيد من سجل الإصدارات
 

@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 ### リリース履歴
 
 ******
+
+# v1.4.0
+
+###### 2026/09/14
+
+* `改善` LaunchConfig.requiresSharedStorage の AutoJs6 4.13.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
 
 # v1.3.0
 
@@ -187,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 * `修正` 購読者への失敗通知前にフォントの一時ダウンロードファイルとリースを解放
 * `改善` リリース署名の設定, APK の構成, ドキュメントの再生成結果を検証
 * `改善` 端末の ABI に対応する APK または universal APK を選択してください. Lua の意味解析は arm64-v8a, armeabi-v7a, x86_64 に対応し, x86 ではエディタと静的補完を利用できます.
-
-# v1.1.28
-
-###### 2026/09/13
-
-* `修正` `runtime.requestPermissions` の型宣言を一般的な権限名と配列の例に対応させ, `access_local_network` をサポート; AutoJs6 宣言 4.11.1 と LSP グループを同期
 
 ##### その他のリリース履歴
 

@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 ### 发行历史
 
 ******
+
+# v1.4.0
+
+###### 2026/09/14
+
+* `优化` 同步 AutoJs6 4.13.0 声明中的 LaunchConfig.requiresSharedStorage, 更新资源与依赖声明并重新生成 LSP 分组
 
 # v1.3.0
 
@@ -187,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 * `修复` 在通知订阅者之前清理失败的字体下载及临时文件租约
 * `优化` 校验发行签名配置, 预期 APK 集合与可复现文档
 * `优化` 可选择设备 ABI 对应的 APK 或 universal APK. Lua 语义分析支持 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留编辑器和静态补全.
-
-# v1.1.28
-
-###### 2026/09/13
-
-* `修复` `runtime.requestPermissions` 通用权限名的类型声明与数组示例, 支持 `access_local_network`; 同步 AutoJs6 声明 4.11.1 并重新生成 LSP 分组
 
 ##### 更多发行历史可参阅
 
