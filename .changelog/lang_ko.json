@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.6.0": {
+      "released_date": "2026/09/14",
+      "improvement": [
+        "images.matchTemplate scales 옵션, 템플릿 매치 기하 필드 및 MatchingResult 보조 메서드의 AutoJs6 4.15.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성"
+      ]
+    },
     "v1.5.0": {
       "released_date": "2026/09/14",
       "improvement": [

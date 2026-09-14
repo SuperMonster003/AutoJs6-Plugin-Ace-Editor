@@ -4,6 +4,12 @@
 
 ******
 
+# v1.6.0
+
+###### 2026/09/14
+
+* `Improvement` Synchronize AutoJs6 4.15.0 declarations for the images.matchTemplate scales option, template match geometry fields and MatchingResult helpers, regenerate resource and dependency declarations and LSP groups
+
 # v1.5.0
 
 ###### 2026/09/14
