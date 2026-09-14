@@ -4,6 +4,12 @@
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `Улучшение` Синхронизация объявлений AutoJs6 4.14.0 для images.countPointsByColor, images.getMeanColor, images.readPixels и семейства colors.distance / invert / blend / contrast, обновление объявлений ресурсов и зависимостей и групп LSP
+
 # v1.4.0
 
 ###### 2026/09/14

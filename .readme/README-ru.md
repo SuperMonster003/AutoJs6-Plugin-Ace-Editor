@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `Улучшение` Синхронизация объявлений AutoJs6 4.14.0 для images.countPointsByColor, images.getMeanColor, images.readPixels и семейства colors.distance / invert / blend / contrast, обновление объявлений ресурсов и зависимостей и групп LSP
+
 # v1.4.0
 
 ###### 2026/09/14
@@ -184,15 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 ###### 2026/09/13
 
 * `Функция` Декларации и автодополнение `pangu` для `spaceText`, `hasProperSpacing` и типизированного импорта модуля; синхронизация деклараций AutoJs6 4.12.0 и повторная генерация групп LSP
-
-# v1.2.0
-
-###### 2026/09/13
-
-* `Исправление` Исправлена совместимость с Android 7 для путей Lua, снимков зависимостей TypeScript и завершения тестов языкового сервера
-* `Исправление` Удаление временных файлов неудачной загрузки шрифтов и освобождение блокировок до уведомления подписчиков
-* `Улучшение` Проверка полной настройки подписи, ожидаемого набора APK и воспроизводимости документации
-* `Улучшение` Выберите APK для ABI устройства или universal APK. Семантика Lua доступна на arm64-v8a, armeabi-v7a и x86_64; на x86 доступны редактор и статическое дополнение.
 
 ##### Подробнее об истории выпусков
 

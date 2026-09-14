@@ -4,6 +4,12 @@
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `改善` images.countPointsByColor, images.getMeanColor, images.readPixels および colors.distance / invert / blend / contrast 系メソッドの AutoJs6 4.14.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
+
 # v1.4.0
 
 ###### 2026/09/14

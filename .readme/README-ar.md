@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `تحسين` مزامنة تصريحات AutoJs6 4.14.0 للطرق images.countPointsByColor و images.getMeanColor و images.readPixels وعائلة colors.distance / invert / blend / contrast وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
+
 # v1.4.0
 
 ###### 2026/09/14
@@ -184,15 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 ###### 2026/09/13
 
 * `ميزة` تصريحات وإكمال `pangu` لكل من `spaceText` و `hasProperSpacing` واستيراد الوحدة مع الأنواع; مزامنة تصريحات AutoJs6 4.12.0 وإعادة توليد مجموعات LSP
-
-# v1.2.0
-
-###### 2026/09/13
-
-* `إصلاح` إصلاح التوافق مع Android 7 لمسارات مساحة عمل Lua ولقطات اعتماديات TypeScript وإنهاء اختبارات خادم اللغة
-* `إصلاح` تنظيف ملفات تنزيل الخطوط الفاشلة وتحرير حجوزاتها المؤقتة قبل إخطار المشتركين
-* `تحسين` التحقق من اكتمال إعداد توقيع حزم الإصدار وملفات APK المتوقعة وإمكانية إعادة إنشاء الوثائق
-* `تحسين` اختر APK المناسب لمعمارية جهازك أو استخدم universal. يتوفر التحليل الدلالي للغة Lua على arm64-v8a و armeabi-v7a و x86_64; يحتفظ x86 بالمحرر والإكمال الثابت.
 
 ##### لمزيد من سجل الإصدارات
 

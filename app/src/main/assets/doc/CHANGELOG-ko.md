@@ -4,6 +4,12 @@
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `개선` images.countPointsByColor, images.getMeanColor, images.readPixels 및 colors.distance / invert / blend / contrast 계열 메서드의 AutoJs6 4.14.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
+
 # v1.4.0
 
 ###### 2026/09/14

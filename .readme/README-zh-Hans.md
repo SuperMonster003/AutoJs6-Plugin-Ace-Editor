@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `优化` 同步 AutoJs6 4.14.0 声明中的 images.countPointsByColor, images.getMeanColor, images.readPixels 及 colors.distance / invert / blend / contrast 系列方法, 更新资源与依赖声明并重新生成 LSP 分组
+
 # v1.4.0
 
 ###### 2026/09/14
@@ -184,15 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 ###### 2026/09/13
 
 * `新增` `pangu` 文本间距声明与补全, 覆盖 `spaceText`, `hasProperSpacing` 与带类型的模块导入; 同步 AutoJs6 声明 4.12.0 并重新生成 LSP 分组
-
-# v1.2.0
-
-###### 2026/09/13
-
-* `修复` 修复 Lua 工作区路径, TypeScript 依赖快照和语言服务器测试终止操作的 Android 7 兼容性
-* `修复` 在通知订阅者之前清理失败的字体下载及临时文件租约
-* `优化` 校验发行签名配置, 预期 APK 集合与可复现文档
-* `优化` 可选择设备 ABI 对应的 APK 或 universal APK. Lua 语义分析支持 arm64-v8a, armeabi-v7a 和 x86_64; x86 保留编辑器和静态补全.
 
 ##### 更多发行历史可参阅
 

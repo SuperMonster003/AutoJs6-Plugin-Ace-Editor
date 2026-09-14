@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.5.0": {
+      "released_date": "2026/09/14",
+      "improvement": [
+        "مزامنة تصريحات AutoJs6 4.14.0 للطرق images.countPointsByColor و images.getMeanColor و images.readPixels وعائلة colors.distance / invert / blend / contrast وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP"
+      ]
+    },
     "v1.4.0": {
       "released_date": "2026/09/14",
       "improvement": [
