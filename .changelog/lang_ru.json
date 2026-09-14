@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.5.0": {
+      "released_date": "2026/09/14",
+      "improvement": [
+        "Синхронизация объявлений AutoJs6 4.14.0 для images.countPointsByColor, images.getMeanColor, images.readPixels и семейства colors.distance / invert / blend / contrast, обновление объявлений ресурсов и зависимостей и групп LSP"
+      ]
+    },
     "v1.4.0": {
       "released_date": "2026/09/14",
       "improvement": [

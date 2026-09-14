@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `改善` images.countPointsByColor, images.getMeanColor, images.readPixels および colors.distance / invert / blend / contrast 系メソッドの AutoJs6 4.14.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
+
 # v1.4.0
 
 ###### 2026/09/14
@@ -184,15 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-un
 ###### 2026/09/13
 
 * `機能` `pangu` の文字間隔に関する型宣言と補完, `spaceText`, `hasProperSpacing` と型付きモジュール読み込みに対応; AutoJs6 型宣言 4.12.0 を同期して LSP グループを再生成
-
-# v1.2.0
-
-###### 2026/09/13
-
-* `修正` Lua ワークスペースのパス処理, TypeScript 依存関係のスナップショット, 言語サーバーのテスト終了処理で Android 7 互換性を修正
-* `修正` 購読者への失敗通知前にフォントの一時ダウンロードファイルとリースを解放
-* `改善` リリース署名の設定, APK の構成, ドキュメントの再生成結果を検証
-* `改善` 端末の ABI に対応する APK または universal APK を選択してください. Lua の意味解析は arm64-v8a, armeabi-v7a, x86_64 に対応し, x86 ではエディタと静的補完を利用できます.
 
 ##### その他のリリース履歴
 

@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -173,6 +173,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `Amélioration` Synchroniser les déclarations AutoJs6 4.14.0 pour images.countPointsByColor, images.getMeanColor, images.readPixels et la famille colors.distance / invert / blend / contrast, et régénérer les déclarations des ressources, des dépendances et les groupes LSP
+
 # v1.4.0
 
 ###### 2026/09/14
@@ -184,15 +190,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/13
 
 * `Fonctionnalité` Déclarations et complétion de `pangu` pour `spaceText`, `hasProperSpacing` et les imports de module typés; synchronisation des déclarations AutoJs6 4.12.0 et régénération des groupes LSP
-
-# v1.2.0
-
-###### 2026/09/13
-
-* `Correctif` Compatibilité Android 7 corrigée pour les chemins Lua, les instantanés des dépendances TypeScript et l’arrêt des tests du serveur de langage
-* `Correctif` Supprimer les fichiers temporaires des polices en échec et libérer leurs verrous avant de notifier les abonnés
-* `Amélioration` Vérification de la signature complète, des APK attendus et de la reproductibilité de la documentation
-* `Amélioration` Choisissez un APK adapté à votre ABI ou le paquet universal. La sémantique Lua fonctionne sur arm64-v8a, armeabi-v7a et x86_64; x86 conserve l'éditeur et la complétion statique.
 
 ##### Pour plus d'historique des versions
 

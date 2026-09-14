@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.5.0": {
+      "released_date": "2026/09/14",
+      "improvement": [
+        "Synchronize AutoJs6 4.14.0 declarations for images.countPointsByColor, images.getMeanColor, images.readPixels and the colors.distance / invert / blend / contrast family, regenerate resource and dependency declarations and LSP groups"
+      ]
+    },
     "v1.4.0": {
       "released_date": "2026/09/14",
       "improvement": [

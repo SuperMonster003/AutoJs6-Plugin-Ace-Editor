@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.5.0": {
+      "released_date": "2026/09/14",
+      "improvement": [
+        "同步 AutoJs6 4.14.0 宣告中的 images.countPointsByColor, images.getMeanColor, images.readPixels 及 colors.distance / invert / blend / contrast 系列方法, 更新資源與相依性宣告並重新產生 LSP 分組"
+      ]
+    },
     "v1.4.0": {
       "released_date": "2026/09/14",
       "improvement": [

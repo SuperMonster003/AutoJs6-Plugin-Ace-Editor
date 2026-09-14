@@ -4,6 +4,12 @@
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `Improvement` Synchronize AutoJs6 4.14.0 declarations for images.countPointsByColor, images.getMeanColor, images.readPixels and the colors.distance / invert / blend / contrast family, regenerate resource and dependency declarations and LSP groups
+
 # v1.4.0
 
 ###### 2026/09/14

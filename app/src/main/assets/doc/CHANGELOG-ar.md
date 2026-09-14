@@ -4,6 +4,12 @@
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `تحسين` مزامنة تصريحات AutoJs6 4.14.0 للطرق images.countPointsByColor و images.getMeanColor و images.readPixels وعائلة colors.distance / invert / blend / contrast وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
+
 # v1.4.0
 
 ###### 2026/09/14

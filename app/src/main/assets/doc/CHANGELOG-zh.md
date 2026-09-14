@@ -4,6 +4,12 @@
 
 ******
 
+# v1.5.0
+
+###### 2026/09/14
+
+* `优化` 同步 AutoJs6 4.14.0 声明中的 images.countPointsByColor, images.getMeanColor, images.readPixels 及 colors.distance / invert / blend / contrast 系列方法, 更新资源与依赖声明并重新生成 LSP 分组
+
 # v1.4.0
 
 ###### 2026/09/14
