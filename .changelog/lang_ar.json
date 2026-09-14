@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.4.0": {
+      "released_date": "2026/09/14",
+      "improvement": [
+        "مزامنة تصريحات AutoJs6 4.13.0 للحقل LaunchConfig.requiresSharedStorage وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP"
+      ]
+    },
     "v1.3.0": {
       "released_date": "2026/09/13",
       "feature": [

@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.4.0
+
+###### 2026/09/14
+
+* `Improvement` Synchronize AutoJs6 4.13.0 declarations for LaunchConfig.requiresSharedStorage, regenerate resource and dependency declarations and LSP groups
 
 # v1.3.0
 
@@ -187,12 +193,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Fix` Remove failed font downloads and release their temporary-file leases before notifying subscribers
 * `Improvement` Release packages are checked for a complete signing configuration, exact APK contents and reproducible documentation
 * `Improvement` Choose the APK for your device ABI, or use the universal APK. Lua semantic analysis is available on arm64-v8a, armeabi-v7a and x86_64; x86 retains the editor and static completion.
-
-# v1.1.28
-
-###### 2026/09/13
-
-* `Fix` `runtime.requestPermissions` declarations accept generic permission names and use array examples, including `access_local_network`; synchronize AutoJs6 declarations 4.11.1 and regenerate LSP groups
 
 ##### Complete release history
 

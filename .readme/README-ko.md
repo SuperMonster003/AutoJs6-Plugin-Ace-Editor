@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 ### 릴리스 기록
 
 ******
+
+# v1.4.0
+
+###### 2026/09/14
+
+* `개선` LaunchConfig.requiresSharedStorage의 AutoJs6 4.13.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
 
 # v1.3.0
 
@@ -187,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 * `수정` 구독자에게 실패를 알리기 전에 글꼴 다운로드 임시 파일과 임대를 정리
 * `개선` 릴리스 서명 설정, 예상 APK 구성 및 문서 재생성 결과 검증
 * `개선` 기기 ABI에 맞는 APK 또는 universal APK를 선택하세요. Lua 의미 분석은 arm64-v8a, armeabi-v7a, x86_64에서 사용할 수 있으며 x86은 편집기와 정적 완성을 제공합니다.
-
-# v1.1.28
-
-###### 2026/09/13
-
-* `수정` `runtime.requestPermissions` 선언이 일반 권한 이름과 배열 예제를 지원하며 `access_local_network` 포함; AutoJs6 선언 4.11.1 및 LSP 그룹 동기화
 
 ##### 더 많은 릴리스 기록
 

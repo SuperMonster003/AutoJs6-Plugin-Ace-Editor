@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 ### История выпусков
 
 ******
+
+# v1.4.0
+
+###### 2026/09/14
+
+* `Улучшение` Синхронизация объявлений AutoJs6 4.13.0 для LaunchConfig.requiresSharedStorage, обновление объявлений ресурсов и зависимостей и групп LSP
 
 # v1.3.0
 
@@ -187,12 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-un
 * `Исправление` Удаление временных файлов неудачной загрузки шрифтов и освобождение блокировок до уведомления подписчиков
 * `Улучшение` Проверка полной настройки подписи, ожидаемого набора APK и воспроизводимости документации
 * `Улучшение` Выберите APK для ABI устройства или universal APK. Семантика Lua доступна на arm64-v8a, armeabi-v7a и x86_64; на x86 доступны редактор и статическое дополнение.
-
-# v1.1.28
-
-###### 2026/09/13
-
-* `Исправление` Объявления `runtime.requestPermissions` поддерживают произвольные имена разрешений и примеры с массивами, включая `access_local_network`; синхронизация объявлений AutoJs6 4.11.1 и групп LSP
 
 ##### Подробнее об истории выпусков
 

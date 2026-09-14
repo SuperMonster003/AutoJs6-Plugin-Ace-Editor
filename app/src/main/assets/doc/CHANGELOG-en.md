@@ -4,6 +4,12 @@
 
 ******
 
+# v1.4.0
+
+###### 2026/09/14
+
+* `Improvement` Synchronize AutoJs6 4.13.0 declarations for LaunchConfig.requiresSharedStorage, regenerate resource and dependency declarations and LSP groups
+
 # v1.3.0
 
 ###### 2026/09/13

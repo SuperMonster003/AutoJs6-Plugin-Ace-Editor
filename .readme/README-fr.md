@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.4.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.4.0
+
+###### 2026/09/14
+
+* `Amélioration` Synchroniser les déclarations AutoJs6 4.13.0 pour LaunchConfig.requiresSharedStorage et régénérer les déclarations des ressources, des dépendances et les groupes LSP
 
 # v1.3.0
 
@@ -187,12 +193,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 * `Correctif` Supprimer les fichiers temporaires des polices en échec et libérer leurs verrous avant de notifier les abonnés
 * `Amélioration` Vérification de la signature complète, des APK attendus et de la reproductibilité de la documentation
 * `Amélioration` Choisissez un APK adapté à votre ABI ou le paquet universal. La sémantique Lua fonctionne sur arm64-v8a, armeabi-v7a et x86_64; x86 conserve l'éditeur et la complétion statique.
-
-# v1.1.28
-
-###### 2026/09/13
-
-* `Correctif` Les déclarations de `runtime.requestPermissions` acceptent les noms de permissions génériques et les exemples utilisent des tableaux, dont `access_local_network`; synchronisation des déclarations AutoJs6 4.11.1 et des groupes LSP
 
 ##### Pour plus d'historique des versions
 
