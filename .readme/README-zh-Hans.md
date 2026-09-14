@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-un
 
 ******
 
+# v1.6.0
+
+###### 2026/09/14
+
+* `优化` 同步 AutoJs6 4.15.0 声明中的 images.matchTemplate scales 选项, 模板匹配项几何属性及 MatchingResult 辅助方法, 更新资源与依赖声明并重新生成 LSP 分组
+
 # v1.5.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-un
 ###### 2026/09/14
 
 * `优化` 同步 AutoJs6 4.13.0 声明中的 LaunchConfig.requiresSharedStorage, 更新资源与依赖声明并重新生成 LSP 分组
-
-# v1.3.0
-
-###### 2026/09/13
-
-* `新增` `pangu` 文本间距声明与补全, 覆盖 `spaceText`, `hasProperSpacing` 与带类型的模块导入; 同步 AutoJs6 声明 4.12.0 并重新生成 LSP 分组
 
 ##### 更多发行历史可参阅
 

@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-un
 
 ******
 
+# v1.6.0
+
+###### 2026/09/14
+
+* `تحسين` مزامنة تصريحات AutoJs6 4.15.0 لخيار scales في images.matchTemplate وحقول هندسة تطابق القالب والطرق المساعدة في MatchingResult وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
+
 # v1.5.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-un
 ###### 2026/09/14
 
 * `تحسين` مزامنة تصريحات AutoJs6 4.13.0 للحقل LaunchConfig.requiresSharedStorage وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
-
-# v1.3.0
-
-###### 2026/09/13
-
-* `ميزة` تصريحات وإكمال `pangu` لكل من `spaceText` و `hasProperSpacing` واستيراد الوحدة مع الأنواع; مزامنة تصريحات AutoJs6 4.12.0 وإعادة توليد مجموعات LSP
 
 ##### لمزيد من سجل الإصدارات
 

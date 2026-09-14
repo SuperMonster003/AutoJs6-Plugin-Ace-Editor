@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-un
 
 ******
 
+# v1.6.0
+
+###### 2026/09/14
+
+* `改善` images.matchTemplate の scales オプション, テンプレートマッチの形状フィールド, MatchingResult の補助メソッドに関する AutoJs6 4.15.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
+
 # v1.5.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.5.0-un
 ###### 2026/09/14
 
 * `改善` LaunchConfig.requiresSharedStorage の AutoJs6 4.13.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
-
-# v1.3.0
-
-###### 2026/09/13
-
-* `機能` `pangu` の文字間隔に関する型宣言と補完, `spaceText`, `hasProperSpacing` と型付きモジュール読み込みに対応; AutoJs6 型宣言 4.12.0 を同期して LSP グループを再生成
 
 ##### その他のリリース履歴
 

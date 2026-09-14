@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.6.0": {
+      "released_date": "2026/09/14",
+      "improvement": [
+        "同步 AutoJs6 4.15.0 声明中的 images.matchTemplate scales 选项, 模板匹配项几何属性及 MatchingResult 辅助方法, 更新资源与依赖声明并重新生成 LSP 分组"
+      ]
+    },
     "v1.5.0": {
       "released_date": "2026/09/14",
       "improvement": [
