@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `개선` images.matchFeatures 이미지 인수와 RANSAC 옵션, ObjectFrame 기하 속성과 매치 통계, ImageFeatures의 count와 method에 대한 AutoJs6 4.16.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
+
 # v1.6.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 ###### 2026/09/14
 
 * `개선` images.countPointsByColor, images.getMeanColor, images.readPixels 및 colors.distance / invert / blend / contrast 계열 메서드의 AutoJs6 4.14.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
-
-# v1.4.0
-
-###### 2026/09/14
-
-* `개선` LaunchConfig.requiresSharedStorage의 AutoJs6 4.13.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
 
 ##### 더 많은 릴리스 기록
 

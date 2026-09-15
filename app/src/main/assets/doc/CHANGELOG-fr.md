@@ -4,6 +4,12 @@
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `Amélioration` Synchroniser les déclarations AutoJs6 4.16.0 pour les arguments image et les options RANSAC de images.matchFeatures, la géométrie et les statistiques de correspondance d'ObjectFrame, ainsi que count et method d'ImageFeatures, et régénérer les déclarations des ressources, des dépendances et les groupes LSP
+
 # v1.6.0
 
 ###### 2026/09/14

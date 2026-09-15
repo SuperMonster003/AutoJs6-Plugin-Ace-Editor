@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.7.0": {
+      "released_date": "2026/09/15",
+      "improvement": [
+        "مزامنة تصريحات AutoJs6 4.16.0 لوسائط الصور وخيارات RANSAC في images.matchFeatures وهندسة ObjectFrame وإحصاءات التطابق و count و method في ImageFeatures وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP"
+      ]
+    },
     "v1.6.0": {
       "released_date": "2026/09/14",
       "improvement": [

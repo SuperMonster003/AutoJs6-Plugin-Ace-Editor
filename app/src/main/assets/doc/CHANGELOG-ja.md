@@ -4,6 +4,12 @@
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `改善` images.matchFeatures の画像引数と RANSAC オプション, ObjectFrame の形状とマッチ統計, ImageFeatures の count と method に関する AutoJs6 4.16.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
+
 # v1.6.0
 
 ###### 2026/09/14

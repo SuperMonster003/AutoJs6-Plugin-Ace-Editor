@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `優化` 同步 AutoJs6 4.16.0 宣告中的 images.matchFeatures 圖片參數與 RANSAC 選項, ObjectFrame 幾何屬性與比對統計, 以及 ImageFeatures 的 count 與 method, 更新資源與相依性宣告並重新產生 LSP 分組
+
 # v1.6.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 ###### 2026/09/14
 
 * `優化` 同步 AutoJs6 4.14.0 宣告中的 images.countPointsByColor, images.getMeanColor, images.readPixels 及 colors.distance / invert / blend / contrast 系列方法, 更新資源與相依性宣告並重新產生 LSP 分組
-
-# v1.4.0
-
-###### 2026/09/14
-
-* `優化` 同步 AutoJs6 4.13.0 宣告中的 LaunchConfig.requiresSharedStorage, 更新資源與相依性宣告並重新產生 LSP 分組
 
 ##### 更多發行歷史可參閱
 

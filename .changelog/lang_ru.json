@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.7.0": {
+      "released_date": "2026/09/15",
+      "improvement": [
+        "Синхронизация объявлений AutoJs6 4.16.0 для аргументов-изображений и опций RANSAC в images.matchFeatures, геометрии и статистики совпадений ObjectFrame, а также count и method в ImageFeatures, обновление объявлений ресурсов и зависимостей и групп LSP"
+      ]
+    },
     "v1.6.0": {
       "released_date": "2026/09/14",
       "improvement": [

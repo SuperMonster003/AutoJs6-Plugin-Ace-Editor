@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `改善` images.matchFeatures の画像引数と RANSAC オプション, ObjectFrame の形状とマッチ統計, ImageFeatures の count と method に関する AutoJs6 4.16.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
+
 # v1.6.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 ###### 2026/09/14
 
 * `改善` images.countPointsByColor, images.getMeanColor, images.readPixels および colors.distance / invert / blend / contrast 系メソッドの AutoJs6 4.14.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
-
-# v1.4.0
-
-###### 2026/09/14
-
-* `改善` LaunchConfig.requiresSharedStorage の AutoJs6 4.13.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
 
 ##### その他のリリース履歴
 
