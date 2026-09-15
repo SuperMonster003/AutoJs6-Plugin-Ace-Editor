@@ -36,7 +36,7 @@
   "p_programming_language_support_note": "Ace 1.4.12의 TSX는 TypeScript mode를 사용하므로 JSX 태그 강조는 부분 지원입니다. Python은 Python 3.12 표준 라이브러리 stub을 포함한 완전 오프라인 Pyright 1.1.413 Worker를 기본으로 사용하며 구형 WebView 비호환 또는 runtime 실패 시 조용히 P2로 전환합니다. Lua는 arm64-v8a, armeabi-v7a 및 x86_64에서 완전 오프라인 LuaLS 3.18.2 동반 프로세스를 기본으로 사용하며 네이티브 runtime을 사용할 수 없거나 실패하면 조용히 P2로 전환합니다. Java는 격리된 표준 라이브러리와 현재 문서 P2 자동 완성에 ECJ 단일 파일 진단을 결합합니다. Kotlin은 의미 Provider 없이 P2+ 자동 완성을 제공합니다",
   "p_language_settings": "AutoJs6 코드 편집기 설정은 동일한 9-mode matrix를 표시합니다. 전역 LSP switch가 모든 의미 서비스를 제어하고 TypeScript/JavaScript, Python, Lua 및 Java에는 언어별 switch가 있습니다; Kotlin은 표시되지만 사용할 수 없습니다. 파일 형식 목록이 먼저 평가됩니다: 인식된 suffix를 제거하면 해당 의미 기능이 꺼지고 custom suffix를 추가하면 파일이 LSP path에 들어갈 뿐 다른 언어로 재분류되거나 의미 Provider가 생성되지 않습니다",
   "h3_build": "빌드",
-  "p_build_requirements": "포함된 Gradle Wrapper를 JDK 17 이상 및 Android SDK 36과 함께 사용합니다",
+  "p_build_requirements": "포함된 Gradle Wrapper를 JDK 17 이상 및 Android SDK 37과 함께 사용합니다",
   "text_release_build": "Release 빌드",
   "p_build_params": "빌드 매개변수와 버전은 `version.properties`에서 가져옵니다. 현재 최소 SDK는 24이고 대상 SDK는 36입니다",
   "p_lsp_declarations_update": "`autojs6/types/**/*.d.ts`를 업데이트하거나 추가한 후 다음 작업을 단독으로 실행할 수 있습니다",

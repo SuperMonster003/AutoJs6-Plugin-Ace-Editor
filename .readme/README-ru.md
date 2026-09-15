@@ -91,7 +91,7 @@ TSX использует режим TypeScript из Ace 1.4.12, поэтому �
 
 ******
 
-Используйте включенный Gradle Wrapper с JDK 17 или новее и Android SDK 36:
+Используйте включенный Gradle Wrapper с JDK 17 или новее и Android SDK 37:
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 
 ******
 
+# v1.7.1
+
+###### 2026/09/15
+
+* `Улучшение` Поднят compileSdk до 37 (Android 17); targetSdk остаётся 36 до проверки поведения, зависящего от целевого уровня
+
 # v1.7.0
 
 ###### 2026/09/15
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 ###### 2026/09/14
 
 * `Улучшение` Синхронизация объявлений AutoJs6 4.15.0 для опции scales в images.matchTemplate, полей геометрии совпадения шаблона и вспомогательных методов MatchingResult, обновление объявлений ресурсов и зависимостей и групп LSP
-
-# v1.5.0
-
-###### 2026/09/14
-
-* `Улучшение` Синхронизация объявлений AutoJs6 4.14.0 для images.countPointsByColor, images.getMeanColor, images.readPixels и семейства colors.distance / invert / blend / contrast, обновление объявлений ресурсов и зависимостей и групп LSP
 
 ##### Подробнее об истории выпусков
 

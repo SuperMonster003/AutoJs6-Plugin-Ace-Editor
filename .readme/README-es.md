@@ -91,7 +91,7 @@ Los ajustes del editor de código de AutoJs6 muestran esta misma matriz de nueve
 
 ******
 
-Utilice el Gradle Wrapper incluido con JDK 17 o posterior y Android SDK 36:
+Utilice el Gradle Wrapper incluido con JDK 17 o posterior y Android SDK 37:
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -173,6 +173,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.7.1
+
+###### 2026/09/15
+
+* `Mejora` compileSdk sube a 37 (Android 17); targetSdk se mantiene en 36 hasta verificar el comportamiento que depende del objetivo
+
 # v1.7.0
 
 ###### 2026/09/15
@@ -184,12 +190,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/14
 
 * `Mejora` Sincronizar las declaraciones AutoJs6 4.15.0 de la opción scales de images.matchTemplate, los campos geométricos de las coincidencias de plantilla y los métodos auxiliares de MatchingResult, regenerar las declaraciones de recursos y dependencias y los grupos LSP
-
-# v1.5.0
-
-###### 2026/09/14
-
-* `Mejora` Sincronizar las declaraciones AutoJs6 4.14.0 de images.countPointsByColor, images.getMeanColor, images.readPixels y la familia colors.distance / invert / blend / contrast, regenerar las declaraciones de recursos y dependencias y los grupos LSP
 
 ##### Para ver más historial de versiones
 

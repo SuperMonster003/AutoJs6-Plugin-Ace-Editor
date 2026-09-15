@@ -91,7 +91,7 @@ AutoJs6 のコードエディタ設定は同じ 9-mode matrix を表示します
 
 ******
 
-同梱の Gradle Wrapper を JDK 17 以降および Android SDK 36 とともに使用します:
+同梱の Gradle Wrapper を JDK 17 以降および Android SDK 37 とともに使用します:
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 
 ******
 
+# v1.7.1
+
+###### 2026/09/15
+
+* `改善` compileSdk を 37 (Android 17) に引き上げ, targetSdk はターゲット依存の動作を検証するまで 36 のまま
+
 # v1.7.0
 
 ###### 2026/09/15
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 ###### 2026/09/14
 
 * `改善` images.matchTemplate の scales オプション, テンプレートマッチの形状フィールド, MatchingResult の補助メソッドに関する AutoJs6 4.15.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
-
-# v1.5.0
-
-###### 2026/09/14
-
-* `改善` images.countPointsByColor, images.getMeanColor, images.readPixels および colors.distance / invert / blend / contrast 系メソッドの AutoJs6 4.14.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
 
 ##### その他のリリース履歴
 

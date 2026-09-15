@@ -91,7 +91,7 @@
 
 ******
 
-استخدم Gradle Wrapper المرفق مع JDK 17 أو أحدث وAndroid SDK 36:
+استخدم Gradle Wrapper المرفق مع JDK 17 أو أحدث وAndroid SDK 37:
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 
 ******
 
+# v1.7.1
+
+###### 2026/09/15
+
+* `تحسين` رفع compileSdk إلى 37 (Android 17)؛ يبقى targetSdk عند 36 حتى يتم التحقق من السلوك المعتمد على الهدف
+
 # v1.7.0
 
 ###### 2026/09/15
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 ###### 2026/09/14
 
 * `تحسين` مزامنة تصريحات AutoJs6 4.15.0 لخيار scales في images.matchTemplate وحقول هندسة تطابق القالب والطرق المساعدة في MatchingResult وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
-
-# v1.5.0
-
-###### 2026/09/14
-
-* `تحسين` مزامنة تصريحات AutoJs6 4.14.0 للطرق images.countPointsByColor و images.getMeanColor و images.readPixels وعائلة colors.distance / invert / blend / contrast وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
 
 ##### لمزيد من سجل الإصدارات
 
