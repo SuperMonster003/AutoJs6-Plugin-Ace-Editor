@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-un
 
 ******
 
+# v1.7.2
+
+###### 2026/09/16
+
+* `優化` 繼 compileSdk 之後將 targetSdk 提升到 37 (Android 17), 外掛程式行為不受新目標版本影響
+
 # v1.7.1
 
 ###### 2026/09/15
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-un
 ###### 2026/09/15
 
 * `優化` 同步 AutoJs6 4.16.0 宣告中的 images.matchFeatures 圖片參數與 RANSAC 選項, ObjectFrame 幾何屬性與比對統計, 以及 ImageFeatures 的 count 與 method, 更新資源與相依性宣告並重新產生 LSP 分組
-
-# v1.6.0
-
-###### 2026/09/14
-
-* `優化` 同步 AutoJs6 4.15.0 宣告中的 images.matchTemplate scales 選項, 範本比對項幾何屬性及 MatchingResult 輔助方法, 更新資源與相依性宣告並重新產生 LSP 分組
 
 ##### 更多發行歷史可參閱
 
