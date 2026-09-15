@@ -4,6 +4,12 @@
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `優化` 同步 AutoJs6 4.16.0 宣告中的 images.matchFeatures 圖片參數與 RANSAC 選項, ObjectFrame 幾何屬性與比對統計, 以及 ImageFeatures 的 count 與 method, 更新資源與相依性宣告並重新產生 LSP 分組
+
 # v1.6.0
 
 ###### 2026/09/14

@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `تحسين` مزامنة تصريحات AutoJs6 4.16.0 لوسائط الصور وخيارات RANSAC في images.matchFeatures وهندسة ObjectFrame وإحصاءات التطابق و count و method في ImageFeatures وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
+
 # v1.6.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 ###### 2026/09/14
 
 * `تحسين` مزامنة تصريحات AutoJs6 4.14.0 للطرق images.countPointsByColor و images.getMeanColor و images.readPixels وعائلة colors.distance / invert / blend / contrast وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
-
-# v1.4.0
-
-###### 2026/09/14
-
-* `تحسين` مزامنة تصريحات AutoJs6 4.13.0 للحقل LaunchConfig.requiresSharedStorage وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
 
 ##### لمزيد من سجل الإصدارات
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `개선` images.matchFeatures 이미지 인수와 RANSAC 옵션, ObjectFrame 기하 속성과 매치 통계, ImageFeatures의 count와 method에 대한 AutoJs6 4.16.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
+
 # v1.6.0
 
 ###### 2026/09/14

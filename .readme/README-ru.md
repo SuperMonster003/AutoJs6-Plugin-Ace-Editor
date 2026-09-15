@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `Улучшение` Синхронизация объявлений AutoJs6 4.16.0 для аргументов-изображений и опций RANSAC в images.matchFeatures, геометрии и статистики совпадений ObjectFrame, а также count и method в ImageFeatures, обновление объявлений ресурсов и зависимостей и групп LSP
+
 # v1.6.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-un
 ###### 2026/09/14
 
 * `Улучшение` Синхронизация объявлений AutoJs6 4.14.0 для images.countPointsByColor, images.getMeanColor, images.readPixels и семейства colors.distance / invert / blend / contrast, обновление объявлений ресурсов и зависимостей и групп LSP
-
-# v1.4.0
-
-###### 2026/09/14
-
-* `Улучшение` Синхронизация объявлений AutoJs6 4.13.0 для LaunchConfig.requiresSharedStorage, обновление объявлений ресурсов и зависимостей и групп LSP
 
 ##### Подробнее об истории выпусков
 

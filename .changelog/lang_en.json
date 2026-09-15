@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.7.0": {
+      "released_date": "2026/09/15",
+      "improvement": [
+        "Synchronize AutoJs6 4.16.0 declarations for the images.matchFeatures image arguments and RANSAC options, ObjectFrame geometry and match statistics, and ImageFeatures count and method, regenerate resource and dependency declarations and LSP groups"
+      ]
+    },
     "v1.6.0": {
       "released_date": "2026/09/14",
       "improvement": [

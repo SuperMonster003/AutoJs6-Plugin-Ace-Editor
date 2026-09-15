@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -173,6 +173,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `Amélioration` Synchroniser les déclarations AutoJs6 4.16.0 pour les arguments image et les options RANSAC de images.matchFeatures, la géométrie et les statistiques de correspondance d'ObjectFrame, ainsi que count et method d'ImageFeatures, et régénérer les déclarations des ressources, des dépendances et les groupes LSP
+
 # v1.6.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/14
 
 * `Amélioration` Synchroniser les déclarations AutoJs6 4.14.0 pour images.countPointsByColor, images.getMeanColor, images.readPixels et la famille colors.distance / invert / blend / contrast, et régénérer les déclarations des ressources, des dépendances et les groupes LSP
-
-# v1.4.0
-
-###### 2026/09/14
-
-* `Amélioration` Synchroniser les déclarations AutoJs6 4.13.0 pour LaunchConfig.requiresSharedStorage et régénérer les déclarations des ressources, des dépendances et les groupes LSP
 
 ##### Pour plus d'historique des versions
 

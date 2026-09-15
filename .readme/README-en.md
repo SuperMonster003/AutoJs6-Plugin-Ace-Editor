@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -173,6 +173,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.7.0
+
+###### 2026/09/15
+
+* `Improvement` Synchronize AutoJs6 4.16.0 declarations for the images.matchFeatures image arguments and RANSAC options, ObjectFrame geometry and match statistics, and ImageFeatures count and method, regenerate resource and dependency declarations and LSP groups
+
 # v1.6.0
 
 ###### 2026/09/14
@@ -184,12 +190,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/09/14
 
 * `Improvement` Synchronize AutoJs6 4.14.0 declarations for images.countPointsByColor, images.getMeanColor, images.readPixels and the colors.distance / invert / blend / contrast family, regenerate resource and dependency declarations and LSP groups
-
-# v1.4.0
-
-###### 2026/09/14
-
-* `Improvement` Synchronize AutoJs6 4.13.0 declarations for LaunchConfig.requiresSharedStorage, regenerate resource and dependency declarations and LSP groups
 
 ##### Complete release history
 
