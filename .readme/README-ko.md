@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-un
 
 ******
 
+# v1.7.2
+
+###### 2026/09/16
+
+* `개선` compileSdk 에 이어 targetSdk 를 37 (Android 17) 로 올리며, 플러그인 동작은 새 대상 버전의 영향을 받지 않음
+
 # v1.7.1
 
 ###### 2026/09/15
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-un
 ###### 2026/09/15
 
 * `개선` images.matchFeatures 이미지 인수와 RANSAC 옵션, ObjectFrame 기하 속성과 매치 통계, ImageFeatures의 count와 method에 대한 AutoJs6 4.16.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
-
-# v1.6.0
-
-###### 2026/09/14
-
-* `개선` images.matchTemplate scales 옵션, 템플릿 매치 기하 필드 및 MatchingResult 보조 메서드의 AutoJs6 4.15.0 선언 동기화, 리소스 및 종속성 선언과 LSP 그룹 재생성
 
 ##### 더 많은 릴리스 기록
 
