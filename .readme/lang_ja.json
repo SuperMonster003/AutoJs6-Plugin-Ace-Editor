@@ -36,7 +36,7 @@
   "p_programming_language_support_note": "Ace 1.4.12 の TSX は TypeScript mode を使うため JSX タグのハイライトは一部対応です. Python は Python 3.12 標準ライブラリ stub を含む完全オフラインの Pyright 1.1.413 Worker を既定で使い, 古い WebView の非互換や runtime 障害時は通知なしで P2 に戻ります. Lua は arm64-v8a, armeabi-v7a, x86_64 で完全オフラインの LuaLS 3.18.2 コンパニオンプロセスを既定で使い, ネイティブ runtime が利用不能または障害時は通知なしで P2 に戻ります. Java は分離された標準ライブラリと現在文書の P2 補完に ECJ 単一ファイル診断を組み合わせます. Kotlin はセマンティック Provider なしで P2+ 補完を提供します",
   "p_language_settings": "AutoJs6 のコードエディタ設定は同じ 9-mode matrix を表示します. グローバル LSP switch がすべてのセマンティックサービスを制御し, TypeScript/JavaScript, Python, Lua, Java には言語別 switch があります; Kotlin は表示されますが利用できません. ファイル種類リストが最初に判定されます: 認識済み suffix を外すとそのセマンティック機能は無効になり, custom suffix の追加はファイルを LSP path に通すだけで別言語への再分類や Provider 作成は行いません",
   "h3_build": "ビルド",
-  "p_build_requirements": "同梱の Gradle Wrapper を JDK 17 以降および Android SDK 36 とともに使用します",
+  "p_build_requirements": "同梱の Gradle Wrapper を JDK 17 以降および Android SDK 37 とともに使用します",
   "text_release_build": "Release ビルド",
   "p_build_params": "ビルドパラメータとバージョンは `version.properties` から取得されます. 現在の最小 SDK は 24, ターゲット SDK は 36 です",
   "p_lsp_declarations_update": "`autojs6/types/**/*.d.ts` を更新または追加した後は, 次のタスクを単独で実行できます",

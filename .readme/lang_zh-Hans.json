@@ -36,7 +36,7 @@
   "p_programming_language_support_note": "Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 标签高亮仅部分可用. Python 默认使用完全离线的 Pyright 1.1.413 Worker 和 Python 3.12 标准库存根; 老 WebView 不兼容或运行失败时会静默降级至 P2. Lua 在 arm64-v8a, armeabi-v7a 与 x86_64 默认使用完全离线的 LuaLS 3.18.2 伴生进程; 原生运行时不可用或故障时会静默降级至 P2. Java 将相互隔离的标准库与当前文档 P2 补全和 ECJ 单文件诊断结合. Kotlin 提供 P2+ 补全, 但没有语义 Provider",
   "p_language_settings": "AutoJs6 的代码编辑器设置会展示同一份 9-mode 矩阵. 全局 LSP 开关控制所有语义服务, TypeScript/JavaScript, Python, Lua 与 Java 另有逐语言开关; Kotlin 保持可见但不可启用. 文件类型列表最先作为白名单判断: 移除已识别后缀会关闭该语言的语义, 添加自定义后缀只允许文件进入 LSP 路径, 不会把它重新识别为其他语言或创建语义 Provider",
   "h3_build": "构建",
-  "p_build_requirements": "需要 JDK 17 或更高版本和 Android SDK 36, 使用项目自带的 Gradle Wrapper",
+  "p_build_requirements": "需要 JDK 17 或更高版本和 Android SDK 37, 使用项目自带的 Gradle Wrapper",
   "text_release_build": "Release 构建",
   "p_build_params": "构建参数和版本号来自 `version.properties`, 当前最低 SDK 为 24, 目标 SDK 为 36",
   "p_lsp_declarations_update": "更新或新增 `autojs6/types/**/*.d.ts` 后, 可单独执行",

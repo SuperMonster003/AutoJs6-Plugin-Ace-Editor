@@ -91,7 +91,7 @@ AutoJs6 的代码编辑器设置会展示同一份 9-mode 矩阵. 全局 LSP 开
 
 ******
 
-需要 JDK 17 或更高版本和 Android SDK 36, 使用项目自带的 Gradle Wrapper:
+需要 JDK 17 或更高版本和 Android SDK 37, 使用项目自带的 Gradle Wrapper:
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.1-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 
 ******
 
+# v1.7.1
+
+###### 2026/09/15
+
+* `优化` 将 compileSdk 提升到 37 (Android 17), targetSdk 保持 36, 待依赖目标版本的行为验证后再提升
+
 # v1.7.0
 
 ###### 2026/09/15
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.0-un
 ###### 2026/09/14
 
 * `优化` 同步 AutoJs6 4.15.0 声明中的 images.matchTemplate scales 选项, 模板匹配项几何属性及 MatchingResult 辅助方法, 更新资源与依赖声明并重新生成 LSP 分组
-
-# v1.5.0
-
-###### 2026/09/14
-
-* `优化` 同步 AutoJs6 4.14.0 声明中的 images.countPointsByColor, images.getMeanColor, images.readPixels 及 colors.distance / invert / blend / contrast 系列方法, 更新资源与依赖声明并重新生成 LSP 分组
 
 ##### 更多发行历史可参阅
 
