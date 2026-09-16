@@ -4,6 +4,12 @@
 
 ******
 
+# v1.9.0
+
+###### 2026/09/16
+
+* `Función` Declaraciones de las API de clic por coordenadas y las pilas de tareas Flow, con autocompletado e índices LSP sincronizados
+
 # v1.8.0
 
 ###### 2026/09/16

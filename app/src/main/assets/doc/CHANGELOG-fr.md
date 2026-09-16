@@ -4,6 +4,12 @@
 
 ******
 
+# v1.9.0
+
+###### 2026/09/16
+
+* `Fonctionnalité` Déclarations des API de clic par coordonnées et des piles de tâches Flow, avec complétion et index LSP synchronisés
+
 # v1.8.0
 
 ###### 2026/09/16

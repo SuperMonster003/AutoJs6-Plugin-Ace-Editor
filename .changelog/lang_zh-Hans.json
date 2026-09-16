@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.9.0": {
+      "released_date": "2026/09/16",
+      "feature": [
+        "坐标点击 API 与 Flow 任务栈声明, 同步 LSP 补全与索引"
+      ]
+    },
     "v1.8.0": {
       "released_date": "2026/09/16",
       "feature": [

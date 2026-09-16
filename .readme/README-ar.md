@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-un
 
 ******
 
+# v1.9.0
+
+###### 2026/09/16
+
+* `ميزة` تعريفات واجهات النقر بالإحداثيات ومكدس مهام Flow مع مزامنة إكمال LSP والفهارس
+
 # v1.8.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-un
 ###### 2026/09/16
 
 * `تحسين` بعد compileSdk, رفع targetSdk إلى 37 (Android 17), لا يعتمد سلوك المكون الإضافي على الهدف الجديد
-
-# v1.7.1
-
-###### 2026/09/15
-
-* `تحسين` رفع compileSdk إلى 37 (Android 17)؛ يبقى targetSdk عند 36 حتى يتم التحقق من السلوك المعتمد على الهدف
 
 ##### لمزيد من سجل الإصدارات
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.9.0": {
+      "released_date": "2026/09/16",
+      "feature": [
+        "Coordinate-click API and Flow task-stack declarations with synchronized LSP completion and indexes"
+      ]
+    },
     "v1.8.0": {
       "released_date": "2026/09/16",
       "feature": [
