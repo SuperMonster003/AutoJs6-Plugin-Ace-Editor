@@ -17317,6 +17317,7 @@ declare namespace org {
 //org.autojs.autojs.core.ui.inflater.inflaters.ViewSwitcherInflater:1
 //org.autojs.autojs.core.ui.inflater.inflaters.WebViewInflater:1
 //org.autojs.autojs.core.ui.inflater.util.ValueMapper:1
+//org.autojs.autojs.engine.BunPluginWorkspaceArchive.Companion.writeArchive.lambda.0..inlined.sortedBy.1:1
 //org.autojs.autojs.engine.LuaModuleSnapshot.Companion.create..inlined.sortedBy.1:1
 //org.autojs.autojs.engine.NodeAndroidPackageInstallManager.collectPackageFiles..inlined.sortedBy.1:1
 //org.autojs.autojs.engine.NodeAndroidPackageInstallManager.collectPackageFiles.visit..inlined.sortedBy.1:1
@@ -17416,6 +17417,7 @@ declare namespace org {
 //org.autojs.autojs.ui.edit.toolbar.ToolbarFragment:1
 //org.autojs.autojs.ui.floating.LayoutFloatyWindow.switchWindow.lambda.1..inlined.compareBy.1:1
 //org.autojs.autojs.ui.fragment.BaseViewBindingFragment:1
+//org.autojs.autojs.ui.main.drawer.DrawerFragment.onCreate.12.3.1:1
 //org.autojs.autojs.ui.main.scripts.AndroidPackageArchiveInspector.chooseBase..inlined.sortedBy.1:1
 //org.autojs.autojs.ui.main.scripts.ApkInfoDialogManager.showMoreInfoDialog.1.1:1
 //org.autojs.autojs.ui.main.scripts.BundletoolTocDecoder.Toc.select..inlined.compareBy.1:1

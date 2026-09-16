@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -173,6 +173,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.8.0
+
+###### 2026/09/16
+
+* `Función` Declaraciones de tipos y autocompletado LSP para pasos opcionales, bucles limitados e instantáneas de estabilidad de Flow
+
 # v1.7.2
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/15
 
 * `Mejora` compileSdk sube a 37 (Android 17); targetSdk se mantiene en 36 hasta verificar el comportamiento que depende del objetivo
-
-# v1.7.0
-
-###### 2026/09/15
-
-* `Mejora` Sincronizar las declaraciones AutoJs6 4.16.0 de los argumentos de imagen y las opciones RANSAC de images.matchFeatures, la geometría y las estadísticas de coincidencia de ObjectFrame, y count y method de ImageFeatures, regenerar las declaraciones de recursos y dependencias y los grupos LSP
 
 ##### Para ver más historial de versiones
 

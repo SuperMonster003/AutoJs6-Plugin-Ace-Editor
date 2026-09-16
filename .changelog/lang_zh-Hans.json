@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.8.0": {
+      "released_date": "2026/09/16",
+      "feature": [
+        "Flow 可选步骤, 有界循环与稳定快照的类型声明和 LSP 补全"
+      ]
+    },
     "v1.7.2": {
       "released_date": "2026/09/16",
       "improvement": [

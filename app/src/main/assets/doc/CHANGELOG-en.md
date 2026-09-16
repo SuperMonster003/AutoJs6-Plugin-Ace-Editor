@@ -4,6 +4,12 @@
 
 ******
 
+# v1.8.0
+
+###### 2026/09/16
+
+* `Feature` Flow declarations and LSP completion for optional steps, bounded loops and stability snapshots
+
 # v1.7.2
 
 ###### 2026/09/16

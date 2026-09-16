@@ -312,7 +312,6 @@ declare namespace org {
 					public static pref_ace_lsp_enabled: number;
 					public static pref_ace_print_margin_enabled: number;
 					public static pref_ace_word_wrap_enabled: number;
-					public static pref_apk_builder_remote_build_enabled: number;
 					public static pref_auto_check_for_updates: number;
 					public static pref_editor_auto_show_log_bottom_sheet_on_run: number;
 					public static pref_editor_fullscreen_mode: number;
@@ -3635,6 +3634,11 @@ declare namespace org {
 					protected constructor();
 				}
 				export class _string_ {
+					public static a11y_advanced_protection_explanation: number;
+					public static a11y_advanced_protection_off: number;
+					public static a11y_advanced_protection_on: number;
+					public static a11y_advanced_protection_title: number;
+					public static a11y_advanced_protection_unknown: number;
 					public static android_black: number;
 					public static android_blue: number;
 					public static android_cyan: number;
@@ -3951,6 +3955,7 @@ declare namespace org {
 					public static description_launcher_shortcuts: number;
 					public static description_local_network_permission: number;
 					public static description_manage_ignored_updates_preference: number;
+					public static description_mcp_server: number;
 					public static description_night_mode: number;
 					public static description_night_mode_preference: number;
 					public static description_night_mode_preference_more: number;
@@ -4136,7 +4141,6 @@ declare namespace org {
 					public static error_android_package_file_unavailable: number;
 					public static error_android_package_installation_failed: number;
 					public static error_android_package_operation_in_progress: number;
-					public static error_apk_builder_remote_build_disabled_by_runtime_gate: number;
 					public static error_apk_builder_remote_build_not_supported_by_plugin: number;
 					public static error_apk_builder_template_host_version_outside_range: number;
 					public static error_apk_builder_template_untrusted_signing_certificate: number;
@@ -4467,7 +4471,6 @@ declare namespace org {
 					public static key_ace_word_wrap_enabled: number;
 					public static key_ai_settings: number;
 					public static key_all_files_access: number;
-					public static key_apk_builder_remote_build_enabled: number;
 					public static key_app_language: number;
 					public static key_app_language_ar: number;
 					public static key_app_language_auto: number;
@@ -4584,6 +4587,7 @@ declare namespace org {
 					public static key_log_activity_time_visible: number;
 					public static key_log_activity_typescript_console_visible: number;
 					public static key_manage_ignored_updates: number;
+					public static key_mcp_server_normally_closed: number;
 					public static key_night_mode: number;
 					public static key_night_mode_always_off: number;
 					public static key_night_mode_always_on: number;
@@ -5133,6 +5137,17 @@ declare namespace org {
 					public static logger_ver_history_raw_thread_success: number;
 					public static logger_ver_history_start_blob_thread: number;
 					public static logger_ver_history_start_raw_thread: number;
+					public static mcp_server_state_activation: number;
+					public static mcp_server_state_authorization: number;
+					public static mcp_server_state_disabled: number;
+					public static mcp_server_state_failed: number;
+					public static mcp_server_state_host_unavailable: number;
+					public static mcp_server_state_incompatible: number;
+					public static mcp_server_state_not_installed: number;
+					public static mcp_server_state_running: number;
+					public static mcp_server_state_starting: number;
+					public static mcp_server_state_stopped: number;
+					public static mcp_server_state_stopping: number;
 					public static md_amber_100: number;
 					public static md_amber_200: number;
 					public static md_amber_300: number;
@@ -5421,6 +5436,9 @@ declare namespace org {
 					public static plugin_item_info_package_size: number;
 					public static plugin_item_info_supported_abis: number;
 					public static plugin_item_info_updatable_version: number;
+					public static plugin_local_network_denied: number;
+					public static plugin_local_network_enable_explanation: number;
+					public static plugin_local_network_granted: number;
 					public static plugin_markdown_previewer_name: number;
 					public static plugin_three_ember_player_name: number;
 					public static plugin_three_terra_player_name: number;
@@ -5432,6 +5450,15 @@ declare namespace org {
 					public static prompt_ai_plugin_install_required: number;
 					public static prompt_ai_plugin_settings_unavailable: number;
 					public static prompt_file_may_not_be_a_valid_plugin_package_with_uri: number;
+					public static prompt_mcp_server_activate: number;
+					public static prompt_mcp_server_application_disabled: number;
+					public static prompt_mcp_server_authorize: number;
+					public static prompt_mcp_server_enable: number;
+					public static prompt_mcp_server_failed: number;
+					public static prompt_mcp_server_incompatible: number;
+					public static prompt_mcp_server_install: number;
+					public static prompt_mcp_server_settings_unavailable: number;
+					public static prompt_mcp_server_trust: number;
 					public static prompt_plugin_abi_mismatch_before_download: number;
 					public static prompt_plugin_abi_mismatch_before_enable: number;
 					public static prompt_plugin_hide_from_center: number;
@@ -5471,7 +5498,9 @@ declare namespace org {
 					public static summary_ace_word_wrap_enabled: number;
 					public static summary_all_files_access: number;
 					public static summary_all_files_access_inrt: number;
-					public static summary_apk_builder_remote_build_r1: number;
+					public static summary_bun_device_info_grant: number;
+					public static summary_bun_host_info_grant: number;
+					public static summary_bun_ui_toast_grant: number;
 					public static summary_clear_media_playback_history: number;
 					public static summary_code_editor_settings: number;
 					public static summary_dex_compiler_experimental_disabled: number;
@@ -5670,7 +5699,6 @@ declare namespace org {
 					public static text_android_sdk_version: number;
 					public static text_apk_builder: number;
 					public static text_apk_builder_plugin_unavailable: number;
-					public static text_apk_builder_remote_build: number;
 					public static text_apk_template_plugin_risk_prompt: number;
 					public static text_apk_template_unavailable: number;
 					public static text_apk_template_unavailable_prompt: number;
@@ -5791,6 +5819,10 @@ declare namespace org {
 					public static text_building_apk: number;
 					public static text_building_resources: number;
 					public static text_built_apk_file_path: number;
+					public static text_bun_device_info_grant: number;
+					public static text_bun_host_capabilities: number;
+					public static text_bun_host_info_grant: number;
+					public static text_bun_ui_toast_grant: number;
 					public static text_cancel: number;
 					public static text_cancel_simplified: number;
 					public static text_cancelling_archive_extraction: number;
@@ -5874,7 +5906,6 @@ declare namespace org {
 					public static text_confirm_to_delete: number;
 					public static text_confirm_to_remove: number;
 					public static text_confirm_to_uninstall: number;
-					public static text_connect_to_pc: number;
 					public static text_connected: number;
 					public static text_connected_count_with_colon: number;
 					public static text_connecting: number;
@@ -6310,6 +6341,7 @@ declare namespace org {
 					public static text_manage_key_store: number;
 					public static text_manifest: number;
 					public static text_maximize: number;
+					public static text_mcp_server: number;
 					public static text_min_version: number;
 					public static text_min_version_of_vscode_vsc_ext: number;
 					public static text_minimize: number;
@@ -6643,6 +6675,7 @@ declare namespace org {
 					public static text_release_notes: number;
 					public static text_reload_or_convert_to_encoding: number;
 					public static text_remote: number;
+					public static text_remote_connections: number;
 					public static text_remote_file_saved_to_local_storage_successfully: number;
 					public static text_remote_project_saved_to_local_storage_successfully: number;
 					public static text_remove_all_breakpoints: number;

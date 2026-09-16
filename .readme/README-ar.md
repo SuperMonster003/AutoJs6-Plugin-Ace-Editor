@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-un
 
 ******
 
+# v1.8.0
+
+###### 2026/09/16
+
+* `ميزة` تعريفات الأنواع وإكمال LSP لخطوات Flow الاختيارية والحلقات المحدودة ولقطات الاستقرار
+
 # v1.7.2
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-un
 ###### 2026/09/15
 
 * `تحسين` رفع compileSdk إلى 37 (Android 17)؛ يبقى targetSdk عند 36 حتى يتم التحقق من السلوك المعتمد على الهدف
-
-# v1.7.0
-
-###### 2026/09/15
-
-* `تحسين` مزامنة تصريحات AutoJs6 4.16.0 لوسائط الصور وخيارات RANSAC في images.matchFeatures وهندسة ObjectFrame وإحصاءات التطابق و count و method في ImageFeatures وتحديث تصريحات الموارد والتبعيات وإعادة توليد مجموعات LSP
 
 ##### لمزيد من سجل الإصدارات
 
