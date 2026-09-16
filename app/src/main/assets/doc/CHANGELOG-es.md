@@ -4,6 +4,12 @@
 
 ******
 
+# v1.8.0
+
+###### 2026/09/16
+
+* `Función` Declaraciones de tipos y autocompletado LSP para pasos opcionales, bucles limitados e instantáneas de estabilidad de Flow
+
 # v1.7.2
 
 ###### 2026/09/16

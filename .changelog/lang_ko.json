@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.8.0": {
+      "released_date": "2026/09/16",
+      "feature": [
+        "Flow 선택적 단계, 제한된 루프 및 안정화 스냅샷의 타입 선언과 LSP 자동 완성"
+      ]
+    },
     "v1.7.2": {
       "released_date": "2026/09/16",
       "improvement": [

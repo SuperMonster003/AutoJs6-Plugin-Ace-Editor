@@ -4,6 +4,12 @@
 
 ******
 
+# v1.8.0
+
+###### 2026/09/16
+
+* `Fonctionnalité` Déclarations de types et complétion LSP pour les étapes facultatives, les boucles bornées et les instantanés de stabilité Flow
+
 # v1.7.2
 
 ###### 2026/09/16

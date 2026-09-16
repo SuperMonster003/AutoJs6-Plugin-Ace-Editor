@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-un
 
 ******
 
+# v1.8.0
+
+###### 2026/09/16
+
+* `新增` Flow 可选步骤, 有界循环与稳定快照的类型声明和 LSP 补全
+
 # v1.7.2
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-un
 ###### 2026/09/15
 
 * `优化` 将 compileSdk 提升到 37 (Android 17), targetSdk 保持 36, 待依赖目标版本的行为验证后再提升
-
-# v1.7.0
-
-###### 2026/09/15
-
-* `优化` 同步 AutoJs6 4.16.0 声明中的 images.matchFeatures 图片参数与 RANSAC 选项, ObjectFrame 几何属性与匹配统计, 以及 ImageFeatures 的 count 与 method, 更新资源与依赖声明并重新生成 LSP 分组
 
 ##### 更多发行历史可参阅
 

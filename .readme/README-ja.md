@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-un
 
 ******
 
+# v1.8.0
+
+###### 2026/09/16
+
+* `機能` Flow の条件付きステップ, 回数制限付きループと安定性スナップショットの型宣言および LSP 補完
+
 # v1.7.2
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.7.2-un
 ###### 2026/09/15
 
 * `改善` compileSdk を 37 (Android 17) に引き上げ, targetSdk はターゲット依存の動作を検証するまで 36 のまま
-
-# v1.7.0
-
-###### 2026/09/15
-
-* `改善` images.matchFeatures の画像引数と RANSAC オプション, ObjectFrame の形状とマッチ統計, ImageFeatures の count と method に関する AutoJs6 4.16.0 型宣言を同期し, リソースと依存関係の宣言および LSP グループを再生成
 
 ##### その他のリリース履歴
 
