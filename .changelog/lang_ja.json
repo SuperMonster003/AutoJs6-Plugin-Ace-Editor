@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.9.0": {
+      "released_date": "2026/09/16",
+      "feature": [
+        "座標クリック API と Flow タスクスタックの型宣言, LSP 補完とインデックスの同期"
+      ]
+    },
     "v1.8.0": {
       "released_date": "2026/09/16",
       "feature": [

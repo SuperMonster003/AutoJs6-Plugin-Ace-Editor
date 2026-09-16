@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v1.9.0": {
+      "released_date": "2026/09/16",
+      "feature": [
+        "Declaraciones de las API de clic por coordenadas y las pilas de tareas Flow, con autocompletado e índices LSP sincronizados"
+      ]
+    },
     "v1.8.0": {
       "released_date": "2026/09/16",
       "feature": [

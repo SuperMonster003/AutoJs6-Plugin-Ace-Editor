@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.9.0": {
+      "released_date": "2026/09/16",
+      "feature": [
+        "Déclarations des API de clic par coordonnées et des piles de tâches Flow, avec complétion et index LSP synchronisés"
+      ]
+    },
     "v1.8.0": {
       "released_date": "2026/09/16",
       "feature": [

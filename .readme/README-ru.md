@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-un
 
 ******
 
+# v1.9.0
+
+###### 2026/09/16
+
+* `Функция` Объявления API нажатия по координатам и стеков задач Flow с синхронизацией автодополнения и индексов LSP
+
 # v1.8.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.8.0-un
 ###### 2026/09/16
 
 * `Улучшение` Вслед за compileSdk поднят targetSdk до 37 (Android 17); поведение плагина не зависит от нового целевого уровня
-
-# v1.7.1
-
-###### 2026/09/15
-
-* `Улучшение` Поднят compileSdk до 37 (Android 17); targetSdk остаётся 36 до проверки поведения, зависящего от целевого уровня
 
 ##### Подробнее об истории выпусков
 

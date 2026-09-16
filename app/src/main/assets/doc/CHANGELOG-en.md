@@ -4,6 +4,12 @@
 
 ******
 
+# v1.9.0
+
+###### 2026/09/16
+
+* `Feature` Coordinate-click API and Flow task-stack declarations with synchronized LSP completion and indexes
+
 # v1.8.0
 
 ###### 2026/09/16
