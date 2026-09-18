@@ -4,6 +4,12 @@
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `优化` 内置 AutoJs6 声明更新至 `4.17.0`: Level / LogConfigurator / LogManager 代理改为指向内置的 `org.autojs.autojs.core.console.log` 类, 三方库声明不再包含宿主已移除的库 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+
 # v1.9.0
 
 ###### 2026/09/16

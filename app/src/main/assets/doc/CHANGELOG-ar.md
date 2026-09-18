@@ -4,6 +4,12 @@
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `تحسين` تحديث إعلانات AutoJs6 المدمجة إلى `4.17.0`: وكلاء السجل Level / LogConfigurator / LogManager يشيرون الآن إلى فئات `org.autojs.autojs.core.console.log` المدمجة, وإعلانات المكتبات لم تعد تتضمن المكتبات التي أزيلت من المضيف (log4j و Flexmark و JavaMail و JUnit و github-api و Jackson و commons-io / lang3 و kotlin-reflect و SpongyCastle و media3 و Guava)
+
 # v1.9.0
 
 ###### 2026/09/16

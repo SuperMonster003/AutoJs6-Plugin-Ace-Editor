@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `优化` 内置 AutoJs6 声明更新至 `4.17.0`: Level / LogConfigurator / LogManager 代理改为指向内置的 `org.autojs.autojs.core.console.log` 类, 三方库声明不再包含宿主已移除的库 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+
 # v1.9.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 ###### 2026/09/16
 
 * `新增` Flow 可选步骤, 有界循环与稳定快照的类型声明和 LSP 补全
-
-# v1.7.2
-
-###### 2026/09/16
-
-* `优化` 继 compileSdk 之后将 targetSdk 提升到 37 (Android 17), 插件行为不受新目标版本影响
 
 ##### 更多发行历史可参阅
 

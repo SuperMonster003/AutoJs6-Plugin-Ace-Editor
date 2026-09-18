@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `개선` 내장 AutoJs6 선언을 `4.17.0`으로 업데이트: Level / LogConfigurator / LogManager 프록시가 내장 `org.autojs.autojs.core.console.log` 클래스를 가리키며, 라이브러리 선언에서 호스트에서 제거된 라이브러리 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) 를 제외
+
 # v1.9.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 ###### 2026/09/16
 
 * `기능` Flow 선택적 단계, 제한된 루프 및 안정화 스냅샷의 타입 선언과 LSP 자동 완성
-
-# v1.7.2
-
-###### 2026/09/16
-
-* `개선` compileSdk 에 이어 targetSdk 를 37 (Android 17) 로 올리며, 플러그인 동작은 새 대상 버전의 영향을 받지 않음
 
 ##### 더 많은 릴리스 기록
 

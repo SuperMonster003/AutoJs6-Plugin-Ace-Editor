@@ -4,6 +4,12 @@
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `Improvement` Bundled AutoJs6 declarations updated to `4.17.0`: the Level / LogConfigurator / LogManager proxies now point to the built-in `org.autojs.autojs.core.console.log` classes, and the library declarations no longer include the libraries removed from the host (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+
 # v1.9.0
 
 ###### 2026/09/16

@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `改善` 内蔵 AutoJs6 宣言を `4.17.0` に更新: Level / LogConfigurator / LogManager のプロキシは内蔵の `org.autojs.autojs.core.console.log` クラスを指すようになり, ライブラリ宣言からホストで削除されたライブラリ (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) を除外
+
 # v1.9.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 ###### 2026/09/16
 
 * `機能` Flow の条件付きステップ, 回数制限付きループと安定性スナップショットの型宣言および LSP 補完
-
-# v1.7.2
-
-###### 2026/09/16
-
-* `改善` compileSdk に続き targetSdk を 37 (Android 17) に引き上げ, プラグインの動作は新しいターゲットの影響を受けない
 
 ##### その他のリリース履歴
 

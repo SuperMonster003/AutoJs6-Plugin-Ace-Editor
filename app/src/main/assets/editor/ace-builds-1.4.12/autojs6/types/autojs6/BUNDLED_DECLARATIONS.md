@@ -1,7 +1,7 @@
 # Bundled AutoJs6 TypeScript Declarations
 
 - Source package: @sm003/autojs6-dts
-- Version: 4.16.0
+- Version: 4.17.0
 - License: MPL-2.0
 - Source location: local AutoJs6-TypeScript-Declarations checkout at import time.
 - Included files: the complete imported declaration package, including AutoJs6,

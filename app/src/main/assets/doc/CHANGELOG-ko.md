@@ -4,6 +4,12 @@
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `개선` 내장 AutoJs6 선언을 `4.17.0`으로 업데이트: Level / LogConfigurator / LogManager 프록시가 내장 `org.autojs.autojs.core.console.log` 클래스를 가리키며, 라이브러리 선언에서 호스트에서 제거된 라이브러리 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) 를 제외
+
 # v1.9.0
 
 ###### 2026/09/16

@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -173,6 +173,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `Improvement` Bundled AutoJs6 declarations updated to `4.17.0`: the Level / LogConfigurator / LogManager proxies now point to the built-in `org.autojs.autojs.core.console.log` classes, and the library declarations no longer include the libraries removed from the host (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+
 # v1.9.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/09/16
 
 * `Feature` Flow declarations and LSP completion for optional steps, bounded loops and stability snapshots
-
-# v1.7.2
-
-###### 2026/09/16
-
-* `Improvement` Raise targetSdk to 37 (Android 17) after compileSdk; the plugin's behavior does not depend on the new target
 
 ##### Complete release history
 

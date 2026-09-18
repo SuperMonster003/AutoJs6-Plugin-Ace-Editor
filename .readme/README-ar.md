@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `تحسين` تحديث إعلانات AutoJs6 المدمجة إلى `4.17.0`: وكلاء السجل Level / LogConfigurator / LogManager يشيرون الآن إلى فئات `org.autojs.autojs.core.console.log` المدمجة, وإعلانات المكتبات لم تعد تتضمن المكتبات التي أزيلت من المضيف (log4j و Flexmark و JavaMail و JUnit و github-api و Jackson و commons-io / lang3 و kotlin-reflect و SpongyCastle و media3 و Guava)
+
 # v1.9.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-un
 ###### 2026/09/16
 
 * `ميزة` تعريفات الأنواع وإكمال LSP لخطوات Flow الاختيارية والحلقات المحدودة ولقطات الاستقرار
-
-# v1.7.2
-
-###### 2026/09/16
-
-* `تحسين` بعد compileSdk, رفع targetSdk إلى 37 (Android 17), لا يعتمد سلوك المكون الإضافي على الهدف الجديد
 
 ##### لمزيد من سجل الإصدارات
 

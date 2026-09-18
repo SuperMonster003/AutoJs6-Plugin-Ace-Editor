@@ -4,6 +4,12 @@
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `Улучшение` Встроенные объявления AutoJs6 обновлены до `4.17.0`: прокси Level / LogConfigurator / LogManager теперь указывают на встроенные классы `org.autojs.autojs.core.console.log`, а объявления библиотек больше не содержат библиотеки, удалённые из хоста (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+
 # v1.9.0
 
 ###### 2026/09/16
