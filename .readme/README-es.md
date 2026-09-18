@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -173,6 +173,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `Mejora` Declaraciones integradas de AutoJs6 actualizadas a `4.17.0`: los proxies Level / LogConfigurator / LogManager apuntan ahora a las clases integradas `org.autojs.autojs.core.console.log`, y las declaraciones de bibliotecas ya no incluyen las bibliotecas eliminadas del host (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+
 # v1.9.0
 
 ###### 2026/09/16
@@ -184,12 +190,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/16
 
 * `Función` Declaraciones de tipos y autocompletado LSP para pasos opcionales, bucles limitados e instantáneas de estabilidad de Flow
-
-# v1.7.2
-
-###### 2026/09/16
-
-* `Mejora` Tras compileSdk, targetSdk sube a 37 (Android 17); el comportamiento del plugin no depende del nuevo objetivo
 
 ##### Para ver más historial de versiones
 

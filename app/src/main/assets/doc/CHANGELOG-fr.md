@@ -4,6 +4,12 @@
 
 ******
 
+# v1.10.0
+
+###### 2026/09/18
+
+* `Amélioration` Déclarations AutoJs6 intégrées mises à jour en `4.17.0` : les proxies Level / LogConfigurator / LogManager pointent désormais vers les classes intégrées `org.autojs.autojs.core.console.log`, et les déclarations de bibliothèques n'incluent plus les bibliothèques retirées de l'hôte (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+
 # v1.9.0
 
 ###### 2026/09/16
