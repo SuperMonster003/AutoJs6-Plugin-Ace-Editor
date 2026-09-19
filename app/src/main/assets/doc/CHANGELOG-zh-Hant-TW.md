@@ -6,8 +6,9 @@
 
 # v1.10.0
 
-###### 2026/09/18
+###### 2026/09/19
 
+* `修復` AGP 9.1 建置時的 SDK XML v4 解析警告及 JVM 單元測試組裝工作誤觸發 APK 原生程式庫對齊檢查的問題 (共用建置外掛 1.8.3)
 * `優化` 內建 AutoJs6 宣告更新至 `4.17.0`: Level / LogConfigurator / LogManager 代理改為指向內建的 `org.autojs.autojs.core.console.log` 類別, 第三方程式庫宣告不再包含宿主已移除的程式庫 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
 
 # v1.9.0
