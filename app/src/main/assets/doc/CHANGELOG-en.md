@@ -6,8 +6,9 @@
 
 # v1.10.0
 
-###### 2026/09/18
+###### 2026/09/19
 
+* `Fix` SDK XML v4 parsing warnings with AGP 9.1 and APK native alignment checks incorrectly triggered by JVM unit-test assembly tasks, using shared build plugins 1.8.3
 * `Improvement` Bundled AutoJs6 declarations updated to `4.17.0`: the Level / LogConfigurator / LogManager proxies now point to the built-in `org.autojs.autojs.core.console.log` classes, and the library declarations no longer include the libraries removed from the host (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
 
 # v1.9.0

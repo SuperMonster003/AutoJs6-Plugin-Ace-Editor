@@ -175,8 +175,9 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-u
 
 # v1.10.0
 
-###### 2026/09/18
+###### 2026/09/19
 
+* `수정` 공유 빌드 플러그인 1.8.3을 통해 AGP 9.1의 SDK XML v4 파싱 경고 및 JVM 단위 테스트 조립 작업에서 APK 네이티브 라이브러리 정렬 검사가 잘못 실행되는 문제 해결
 * `개선` 내장 AutoJs6 선언을 `4.17.0`으로 업데이트: Level / LogConfigurator / LogManager 프록시가 내장 `org.autojs.autojs.core.console.log` 클래스를 가리키며, 라이브러리 선언에서 호스트에서 제거된 라이브러리 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) 를 제외
 
 # v1.9.0

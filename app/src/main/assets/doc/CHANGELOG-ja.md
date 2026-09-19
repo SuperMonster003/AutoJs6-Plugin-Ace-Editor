@@ -6,8 +6,9 @@
 
 # v1.10.0
 
-###### 2026/09/18
+###### 2026/09/19
 
+* `修正` 共有ビルドプラグイン 1.8.3 により, AGP 9.1 での SDK XML v4 解析警告と, JVM 単体テストの組み立て時に APK ネイティブライブラリのアラインメント検証が誤って実行される問題
 * `改善` 内蔵 AutoJs6 宣言を `4.17.0` に更新: Level / LogConfigurator / LogManager のプロキシは内蔵の `org.autojs.autojs.core.console.log` クラスを指すようになり, ライブラリ宣言からホストで削除されたライブラリ (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) を除外
 
 # v1.9.0
