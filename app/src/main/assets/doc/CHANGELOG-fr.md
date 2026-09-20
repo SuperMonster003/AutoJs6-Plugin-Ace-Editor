@@ -4,6 +4,12 @@
 
 ******
 
+# v1.11.0
+
+###### 2026/09/20
+
+* `Amélioration` Déclarations AutoJs6 intégrées mises à jour en `4.18.0` : ajout des globaux `mail` / `$mail` et de l'espace de noms `Internal.Mail` du plugin Angus Mail (méthodes du client et méthodes relayées en formes synchrone et `Async`, événements de surveillance, objets message / pièce jointe / adresse, options de compte et préréglages de fournisseur, critères de recherche, documents de résultat et codes d'erreur), de sorte que la complétion et la vérification de types de l'éditeur couvrent désormais l'API de messagerie
+
 # v1.10.0
 
 ###### 2026/09/19

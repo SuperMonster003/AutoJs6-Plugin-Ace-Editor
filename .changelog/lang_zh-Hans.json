@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.11.0": {
+      "released_date": "2026/09/20",
+      "improvement": [
+        "内置 AutoJs6 声明更新至 `4.18.0`: 新增 Angus Mail 插件的 `mail` / `$mail` 全局对象与 `Internal.Mail` 命名空间 (客户端与转发方法的同步及 `Async` 形态, 监听事件, 邮件 / 附件 / 地址对象, 账户选项与服务商预设, 搜索条件, 结果文档与错误代码), 编辑器补全与类型检查随之覆盖邮件 API"
+      ]
+    },
     "v1.10.0": {
       "released_date": "2026/09/19",
       "improvement": [
