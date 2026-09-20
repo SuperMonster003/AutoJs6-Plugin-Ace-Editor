@@ -6,36 +6,62 @@ declare namespace AutoJs6 {
         window: Activity.PhoneWindow;
     }
 
+    interface Ai {
+        ask(input: Ai.Input, options?: Ai.Options): Promise<string>;
+        chat(input: Ai.Input, options?: Ai.Options): Promise<Ai.Response>;
+        stream(input: Ai.Input, options?: Ai.Options): Ai.Stream;
+        session(options?: Ai.SessionOptions | null): Promise<Ai.Session>;
+        catalog(options?: Ai.CatalogOptions | null): Promise<Ai.TargetCatalog>;
+    }
+
     interface App {
         autojs: Internal.Autojs;
         versionCode: number;
         versionName: string;
-        fileProviderAuthority: 'org.autojs.autojs.fileprovider' | string | null;
+        fileProviderAuthority: 'org.autojs.autojs.fileprovider' | string;
         intent(o: Intent.Common | Intent): Intent;
-        startActivity(o: Intent.CommonWithRoot | Intent.ShortForm.Activity | Intent | URI): void;
-        sendBroadcast(i: Intent.CommonWithRoot | Intent.ShortForm.Broadcast): void;
-        startService(i: Intent.CommonWithRoot): void;
-        sendEmail(options?: Intent.Email): void;
-        parseUri(uri: string | URI): android.net.Uri | null;
-        getUriForFile(path: string): string;
-        getAppByAlias(alias: App.Alias | string): App;
-        launch(app: App | App.Alias | App.PackageName): boolean;
+        startActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;
+        startDualActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;
+        sendBroadcast(i: Intent.CommonWithRoot | Intent.ShortForm.Broadcast | Intent): void;
+        startService(i: Intent.CommonWithRoot | Intent): void;
+        sendEmail(options: Intent.Email | null | undefined): void;
+        parseUri(uri: string | android.net.Uri | java.net.URI): android.net.Uri | null;
+        getUriForFile(path: string): android.net.Uri | null;
+        getAppByAlias(alias: App.Alias | string): org.autojs.autojs.util.App | null;
+        getInstalledApps(options?: App.PackageManagerOptions): App.AppInfo[];
+        getInstalledPackages(options?: App.PackageManagerOptions): App.InstalledPackageInfo[];
+        getApkInfo(path: string, options?: App.PackageManagerOptions): android.content.pm.PackageInfo | null;
+        launch(app: App.Preset | App.Alias | App.PackageName): boolean;
+        launchDual(app: App.Preset | App.Alias | App.PackageName): boolean;
         intentToShell(i: Intent.Common): string;
         openUrl(url: string | URI): void;
-        launchApp(app: App | App.Alias | App.AppName): boolean;
-        uninstall(app: App | App.Alias | App.PackageName): void;
-        getAppName(app: App | App.Alias | App.PackageName): string;
-        getCurrentActivity(): android.app.Activity;
+        openDualUrl(url: string | URI): void;
+        launchApp(app: App.Preset | App.Alias | App.AppName): boolean;
+        launchDualApp(app: App.Preset | App.Alias | App.AppName): boolean;
+        uninstall(app: App.Preset | App.Alias | App.PackageName): void;
+        uninstallDual(app: App.Preset | App.Alias | App.PackageName): void;
+        isInstalled(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;
+        isDualInstalled(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;
+        kill(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;
+        killDual(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;
+        getAppName(app: App.Preset | App.Alias | App.PackageName): string | null;
+        getCurrentActivity(): android.app.Activity | null;
         editFile(path: string): boolean;
         viewFile(path: string): boolean;
-        getPackageName(app: App | App.Alias | App.AppName): string;
-        setCurrentActivity(currentActivity: android.app.Activity): void;
-        launchPackage(app: App | App.Alias | App.PackageName): boolean;
+        getPackageName(app: App.Preset | App.Alias | App.AppName): string | null;
+        setCurrentActivity(currentActivity: android.app.Activity | null): void;
+        launchPackage(app: App.Preset | App.Alias | App.PackageName): boolean;
+        launchDualPackage(app: App.Preset | App.Alias | App.PackageName): boolean;
         sendLocalBroadcastSync(intent: Intent);
-        openAppSetting(app: App | App.Alias | App.PackageName): boolean;
-        launchSettings(app: App | App.Alias | App.PackageName): boolean;
+        openAppSetting(app: App.Preset | App.Alias | App.PackageName): boolean;
+        openAppSettings(app: App.Preset | App.Alias | App.PackageName): boolean;
+        launchAppDetailsSettings(app: App.Preset | App.Alias | App.PackageName): boolean;
+        launchSettings(app: App.Preset | App.Alias | App.PackageName): boolean;
+        launchDualAppDetailsSettings(app: App.Preset | App.Alias | App.PackageName): boolean;
+        launchDualSettings(app: App.Preset | App.Alias | App.PackageName): boolean;
+        openDualAppSetting(app: App.Preset | App.Alias | App.PackageName): boolean;
+        openDualAppSettings(app: App.Preset | App.Alias | App.PackageName): boolean;
         getFileProviderAuthority(): string;
-        openAppSettings(...args: any[]): any;
     }
 
     interface Arrayx {
@@ -75,11 +101,18 @@ declare namespace AutoJs6 {
         root: UiObject | null;
         rootInActiveWindow: UiObject | null;
         windowRoots: UiObject[];
+        getWindowRoot(window: android.view.accessibility.AccessibilityWindowInfo): UiObject | null;
         state: Automator.AutoState;
         waitFor(timeout?: number | null): void;
         setMode(modeStr: Automator.Mode): void;
         setFlags(flags: Automator.Flags | Automator.Flags[]): void;
         setWindowFilter(filter?: Automator.WindowFilterLike | null): void;
+        wait: Flow.WaitFunction<UiObject>;
+        findWindows(filter?: Automator.WindowFilterLike | null): android.view.accessibility.AccessibilityWindowInfo[];
+        findWindowRoots(filter?: Automator.WindowFilterLike | null): UiObject[];
+        explain(selector: Automator.Target, root?: UiObject | null): Automator.ExplainResult;
+        dump(options?: Automator.DumpFormat | Automator.DumpOptions): string;
+        stats: Automator.StatsSnapshot;
         launchSettings(): void;
         clearCache(): boolean;
         currentPackage(): string;
@@ -88,14 +121,18 @@ declare namespace AutoJs6 {
     }
 
     interface Autojs {
-        versionCode: string;
+        versionCode: number;
         versionName: string;
         versionDate: string;
         name: string;
         packageName: string;
-        R: org.autojs.autojs6.R;
+        R: typeof org.autojs.autojs6.R;
+        rotation: number;
+        orientation: number;
         version: AutojsVersion;
-        setRootMode(mode: number | boolean | 'auto' | 'root' | 'non-root', isWriteIntoPreference?: boolean | 'write_into_pref'): void;
+        setRootMode(mode: -1 | 0 | 1 | boolean | 'auto' | 'root' | 'non-root', isWriteIntoPreference?: boolean | 'write_into_pref'): void;
+        isScreenPortrait(): boolean;
+        isScreenLandscape(): boolean;
         getRootMode(): org.autojs.autojs.util.RootUtils.RootMode;
         isRootAvailable(): boolean;
         canModifySystemSettings(): boolean;
@@ -103,6 +140,8 @@ declare namespace AutoJs6 {
         canDisplayOverOtherApps(): boolean;
         getLanguage(): java.util.Locale;
         getLanguageTag(): string;
+        restart(scriptsAfterRestart?: string | string[]): void;
+        exit(scriptsAfterRestart?: string | string[]): void;
         themeColor: org.autojs.autojs.theme.ThemeColor;
     }
 
@@ -126,6 +165,9 @@ declare namespace AutoJs6 {
         lockScreen(): boolean;
         takeScreenshot(): boolean;
         headsethook(): boolean;
+        headsetHook(): boolean;
+        switchToInputMethodWithId(id: string): boolean;
+        switchToInputMethod(name: string): boolean;
         accessibilityButton(): boolean;
         accessibilityButtonChooser(): boolean;
         accessibilityShortcut(): boolean;
@@ -138,22 +180,42 @@ declare namespace AutoJs6 {
         quickSettings(): boolean;
         recents(): boolean;
         splitScreen(): boolean;
+        smartClick(target: Automator.Target, options?: Automator.SmartClickOptions): Automator.SmartClickResult;
+        smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions): Automator.SmartClickBoundsResult;
+        clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number): boolean;
+        clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number): boolean;
+        clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number): Automator.ClickedCandidate | null;
+        clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number): Automator.ClickedBoundsCandidate | null;
+        findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number): Automator.FoundCandidate | null;
+        scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions): UiObject;
+        typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions): UiObject;
+        dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number): Automator.ClickedCandidate | Automator.ClickedCandidate[] | Automator.PopupGuard | null;
+        collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions): any[];
+        launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number): Automator.LaunchResult;
+        backUntil(cond: Automator.Target, options?: Automator.BackOptions | number): any;
+        backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number): string;
+        toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;
+        retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;
+        waitForIdle(quietFor?: number): Automator.IdleResult;
+        waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;
+        waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;
+        waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;
     }
 
     interface Barcode {
-        detect(options?: DetectOptions): Barcode.Result | Barcode.Result[] | null;
+        detect(options: Barcode.DetectAllOptions): Barcode.Result[];
         detectAll(options?: DetectOptions): Barcode.Result[];
-        recognizeText(options?: DetectOptions): string | string[] | null;
+        recognizeText(options: Barcode.DetectAllOptions): string[];
         recognizeTexts(options?: DetectOptions): string[];
     }
 
     interface Base64 {
         encode(o: Base64.Input, encoding?: Base64.Encoding): string;
-        decode(o: Base64.Input, encoding?: Base64.Encoding): string;
+        decode(o: Base64.DecodeInput, encoding?: Base64.Encoding): string;
     }
 
     interface Color {
-        new(color?: OmniColor);
+        new(color?: OmniColor): Color;
         color: ColorInt;
         summary(): string;
         toHex(alpha?: boolean | 'auto' | 'none' | 'keep'): string;
@@ -210,6 +272,10 @@ declare namespace AutoJs6 {
         toHslaString(options?: boolean | StringOptions): string;
         isSimilar(other: OmniColor, threshold?: number, algorithm?: DetectionAlgorithm): boolean;
         isEqual(other: OmniColor, alphaMatters?: boolean): boolean;
+        distance(other: OmniColor, algorithm?: DetectionAlgorithm): number;
+        invert(): ColorInt;
+        blend(other: OmniColor, ratio?: number | PercentString): ColorInt;
+        contrast(background: OmniColor): number;
         equals(other: OmniColor): boolean;
         luminance(): number;
         toColorStateList(): android.content.res.ColorStateList;
@@ -822,6 +888,10 @@ declare namespace AutoJs6 {
         toHslaString(color: OmniColor, options?: boolean | StringOptions): string;
         isSimilar(colorA: OmniColor, colorB: OmniColor, threshold?: number, algorithm?: DetectionAlgorithm): boolean;
         isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean): boolean;
+        distance(colorA: OmniColor, colorB: OmniColor, algorithm?: DetectionAlgorithm): number;
+        invert(color: OmniColor): ColorInt;
+        blend(colorA: OmniColor, colorB: OmniColor, ratio?: number | PercentString): ColorInt;
+        contrast(foreground: OmniColor, background: OmniColor): number;
         equals(colorA: OmniColor, colorB: OmniColor): boolean;
         luminance(color: OmniColor): number;
         toColorStateList(...color: (OmniColor)[]): android.content.res.ColorStateList;
@@ -833,7 +903,7 @@ declare namespace AutoJs6 {
     interface Console {
         assert(value: boolean | (() => boolean), message?: string): void;
         rawInput(): string;
-        input(...data): any;
+        input(data?: any, ...args: any[]): any;
         verbose(data?: any, ...text): void;
         log(data?: any, ...text): void;
         info(data?: any, ...text): void;
@@ -877,6 +947,11 @@ declare namespace AutoJs6 {
         resetBackgroundAlpha(): this;
         setExitOnClose(timeout: number): this;
         setTouchable(touchable?: boolean): this;
+        setAvoidStatusBar(avoid?: boolean): this;
+        setTimeVisible(visible?: boolean): this;
+        setTimeFormat(pattern?: string): this;
+        setColorful(colorful?: boolean): this;
+        setInputVisible(visible?: boolean): this;
         printAllStackTrace(t: OmniThrowable): void;
     }
 
@@ -1031,10 +1106,10 @@ declare namespace AutoJs6 {
         KeyPair: typeof Crypto.KeyPair;
         fromHex(hex: string): number[];
         toHex(bytes: number[]): string;
-        digest(message: string, algorithm?: Crypto.DigestAlgorithm, options?: Crypto.DigestOptions): Crypto.Output;
-        encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;
-        decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;
-        generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm, length?: number): Crypto.KeyPair;
+        digest(message: Crypto.Input, algorithm?: Crypto.DigestAlgorithm, options?: Crypto.DigestOptions): Crypto.Output;
+        encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;
+        decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;
+        generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm): Crypto.KeyPair;
     }
 
     interface Cvt {
@@ -1047,6 +1122,7 @@ declare namespace AutoJs6 {
         rotation: number;
         orientation: number;
         density: number;
+        pageSize: number;
         summary(): string;
         digest(): string;
         buildId: string;
@@ -1126,7 +1202,7 @@ declare namespace AutoJs6 {
         confirm(title: string, content?: string, callback?: (input: null) => void): boolean | Promise<any>;
         select(title: string, items: any[], callback?: (selectedIndex: number) => void): number | Promise<number>;
         singleChoice(title: string, items: any[], defaultIndex?: number, callback?: (selectedIndex: number) => void): number | Promise<any>;
-        multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<any>;
+        multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<number[]>;
         build(properties: Dialogs.Build.Properties): Dialogs.JsDialog;
     }
 
@@ -1219,10 +1295,69 @@ declare namespace AutoJs6 {
         window(layout: org.autojs.autojs.core.floaty.BaseResizableFloatyWindow.ViewSupplier | Xml): org.autojs.autojs.runtime.api.Floaty.JsResizableWindow;
         rawWindow(layout: org.autojs.autojs.core.floaty.RawWindow.RawFloaty | Xml): org.autojs.autojs.runtime.api.Floaty.JsRawWindow;
         hasPermission(): boolean;
+        checkPermission(): boolean;
         requestPermission(): void;
         ensurePermission(): void;
         closeAll(): void;
         getClip(maxDelayAfterWindowReady?: number): string;
+    }
+
+    interface Flow {
+        wait: Flow.WaitFunction<UiObject>;
+        waitAsync: Flow.WaitFunction<UiObject>;
+        waitUntil: Flow.WaitFunction<UiObject>;
+        waitWhile: Flow.WaitWhileFunction;
+        waitForStable: Flow.WaitFunction<UiObject>;
+        waitForVisible: Flow.WaitFunction<UiObject>;
+        waitForHidden: Flow.WaitHiddenFunction;
+        waitForGone: Flow.WaitHiddenFunction;
+        waitForActivity: Flow.NativeWaitFunction;
+        waitForPackage: Flow.NativeWaitFunction;
+        waitThenClick: Flow.WaitFunction<UiObject>;
+        waitThenClickBounds: Flow.WaitFunction<UiObject>;
+        clickWait: Flow.WaitFunction<UiObject>;
+        clickBoundsWait: Flow.WaitFunction<UiObject>;
+        waitThenLongClick: Flow.WaitFunction<UiObject>;
+        waitForStableThenClick: Flow.WaitFunction<UiObject>;
+        waitForStableThenClickBounds: Flow.WaitFunction<UiObject>;
+        clickWhenStable: Flow.WaitFunction<UiObject>;
+        clickBoundsWhenStable: Flow.WaitFunction<UiObject>;
+        clickWhenStableAfter: Flow.WaitAfterFunction;
+        clickBoundsWhenStableAfter: Flow.WaitAfterFunction;
+        sleep(millis: number): Flow<void>;
+        delay(millis: number): Flow<void>;
+        run<R>(fn: () => R | Flow<R> | PromiseLike<R>): Flow<R>;
+        of<V>(value: V): Flow<V>;
+        Flow: Flow.Constructor;
+        all(...sources: Flow.Source[]): Flow<any[]>;
+        race(...sources: Flow.Source[]): Flow<any>;
+        any(...sources: Flow.Source[]): Flow<any>;
+        cancelAll(): number;
+        defaults(): Flow.Defaults;
+        trace(on?: boolean): boolean;
+        pending: number;
+        workers: number;
+        smartClick(target: Automator.Target, options?: Automator.SmartClickOptions, onOk?: Flow.OnOk<Automator.SmartClickResult>, onErr?: Flow.OnErr): Flow<Automator.SmartClickResult>;
+        smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions, onOk?: Flow.OnOk<Automator.SmartClickBoundsResult>, onErr?: Flow.OnErr): Flow<Automator.SmartClickBoundsResult>;
+        clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;
+        clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;
+        whenPresent(cond: Flow.SelectorCond, handler: (match: UiObject[]) => any, options: Flow.WhenPresentOptions & { resultType: '[]' }): Flow<null>;
+        repeatUntil: Flow.RepeatUntilFunction;
+        clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<Automator.ClickedCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedCandidate | null>;
+        clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<Automator.ClickedBoundsCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedBoundsCandidate | null>;
+        findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number, onOk?: Flow.OnOk<Automator.FoundCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.FoundCandidate | null>;
+        scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions, onOk?: Flow.OnOk<UiObject>, onErr?: Flow.OnErr): Flow<UiObject>;
+        typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions, onOk?: Flow.OnOk<UiObject>, onErr?: Flow.OnErr): Flow<UiObject>;
+        dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number, onOk?: Flow.OnOk<Automator.ClickedCandidate | Automator.ClickedCandidate[] | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedCandidate | Automator.ClickedCandidate[] | null>;
+        collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions, onOk?: Flow.OnOk<any[]>, onErr?: Flow.OnErr): Flow<any[]>;
+        launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number, onOk?: Flow.OnOk<Automator.LaunchResult>, onErr?: Flow.OnErr): Flow<Automator.LaunchResult>;
+        backUntil(cond: Automator.Target, options?: Automator.BackOptions | number, onOk?: Flow.OnOk<any>, onErr?: Flow.OnErr): Flow<any>;
+        backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number, onOk?: Flow.OnOk<string>, onErr?: Flow.OnErr): Flow<string>;
+        toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions, onOk?: Flow.OnOk<Automator.ToggleResult>, onErr?: Flow.OnErr): Flow<Automator.ToggleResult>;
+        waitForIdle(quietFor?: number): Flow<Automator.IdleResult>;
+        waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Flow<Automator.AccessibilityEvent>;
+        waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Flow<Automator.Toast>;
+        waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): Flow<org.autojs.autojs.core.notification.Notification>;
     }
 
     interface Fmt {
@@ -1266,6 +1401,22 @@ declare namespace AutoJs6 {
     }
 
     interface Images {
+        ObjectFrame: typeof Images.ObjectFrame;
+        invert(image: Images.ImageSource): ImageWrapper;
+        isGrayscale(image: Images.ComparableImageSource): boolean;
+        flip(image: Images.ImageSource): ImageWrapper;
+        detectColor( image: Images.ImageSource, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;
+        detectMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;
+        detectsMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;
+        findPointByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Point | null;
+        findPointByColorExactly( image: Images.ImageSource, color: Color$, options?: Pick<Images.ColorSearchOptions, 'region'>, ): OpenCV.Point | null;
+        findPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Points;
+        findPointByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Point | null;
+        findPointsByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Points;
+        countPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): number;
+        getMeanColor(image: Images.ImageSource, region?: OmniRegion): ColorInt;
+        findPointByImage( image: Images.ImageSource, template: Images.ImageSource, options?: Images.ImageSearchOptions, ): OpenCV.Point | null;
+        findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
         initOpenCvIfNeeded(): void;
         captureScreen(): ImageWrapper;
         read(path: string, isStrict?: boolean): ImageWrapper | null;
@@ -1279,49 +1430,50 @@ declare namespace AutoJs6 {
         blur( src: ImageWrapper, ksize: Side | [Width, Height?], anchor?: [X, Y], type?: Images.BorderTypes, ): ImageWrapper;
         concat( imgA: ImageWrapper, imgB: ImageWrapper, direction?: 'LEFT' | 'RIGHT' | 'TOP' | 'BOTTOM', ): ImageWrapper;
         cvtColor(src: ImageWrapper, code: ConversionCodes, dstCn?: number): ImageWrapper;
-        detectsColor( img: ImageWrapper, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;
-        findAllPointsForColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Points;
-        findCircles(grayImg: ImageWrapper, options?: Images.Circles.Options): Images.Circles.Result;
-        findColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;
-        findColorEquals(img: ImageWrapper, color: Color$, x?: X, y?: Y, width?: Width, height?: Height): OpenCV.Point | null;
-        findColorInRegion(img: ImageWrapper, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number): OpenCV.Point | null;
-        findImage(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;
-        findImageInRegion( image: ImageWrapper, template: ImageWrapper, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
-        findMultiColors( img: ImageWrapper, firstColor: Color$, paths: [X, Y, Color$][], options?: { region?: OmniRegion; threshold?: number; }, ): OpenCV.Point | null;
+        detectsColor( img: Images.ImageSource, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;
+        findAllPointsForColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Points;
+        findCircles(grayImg: ImageWrapper | string, options?: Images.Circles.Options): Images.Circles.Result;
+        findColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;
+        findColorEquals(img: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height): OpenCV.Point | null;
+        findColorInRegion(img: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number): OpenCV.Point | null;
+        findImageInRegion( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
+        findMultiColors( img: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: { region?: OmniRegion; similarity?: number; threshold?: number; }, ): OpenCV.Point | null;
         fromBase64(base64: string): ImageWrapper;
         fromBytes(bytes: number[]): ImageWrapper;
         gaussianBlur( src: ImageWrapper, ksize: Side | [Width, Height?], sigmaX?: number, sigmaY?: number, type?: Images.BorderTypes, ): ImageWrapper;
         bilateralFilter( img: ImageWrapper, d?: number, sigma_color?: number, sigma_space?: number, border_type?: Images.BorderTypes, ): ImageWrapper;
-        grayscale(src: ImageWrapper, dstCn?: number): ImageWrapper;
+        grayscale(src: Images.ImageSource, dstCn?: number): ImageWrapper;
         inRange(img: ImageWrapper, lowerBound: Color$, upperBound: Color$): ImageWrapper;
         interval(img: ImageWrapper, color: Color$, tolerance: number): ImageWrapper;
-        matchTemplate(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number; weakThreshold?: number; level?: number; region?: OmniRegion; max?: number; }): Images.MatchingResult;
+        matchTemplate(img: Images.ImageSource, template: Images.ImageSource, options?: { threshold?: number; weakThreshold?: number; level?: number; region?: OmniRegion; max?: number; scales?: number | number[]; scale?: number | number[]; useTransparentMask?: boolean; transparentMask?: boolean; }): Images.MatchingResult;
         matToImage(mat: org.autojs.autojs.core.opencv.Mat | org.opencv.core.Mat): ImageWrapper;
         medianBlur(src: ImageWrapper, ksize: Side | [Side, Side]): ImageWrapper;
-        readPixels(path: string): { data: number[], width: Width, height: Height };
+        readPixels(image: Images.ImageSource): { data: number[], width: Width, height: Height };
         requestScreenCapture(landscape?: boolean): boolean;
         requestScreenCaptureAsync(landscape?: boolean): Promise<boolean>;
         stopScreenCapture(): void;
         getScreenCaptureOptions(): org.autojs.autojs.core.image.capture.ScreenCapturer.Options | null;
-        resize(src: ImageWrapper, dsize: Side | [Width, Height?], interpolation?: Images.InterpolationFlags): ImageWrapper;
+        resize(src: ImageWrapper | string, dsize: [Side] | [Width, Height], interpolation?: Images.InterpolationFlags): ImageWrapper;
         rotate(img: ImageWrapper, degree: number, ctx?: number, cty?: number): ImageWrapper;
-        save(img: ImageWrapper, path: string, format?: Images.Format, quality?: number): boolean;
-        saveImage(img: ImageWrapper, path: string, format?: Images.Format, quality?: number): boolean;
-        scale(src: ImageWrapper, fx: number, fy: number, interpolation?: Images.InterpolationFlags): ImageWrapper;
+        save(img: ImageWrapper, path: string, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): boolean;
+        saveImage(img: ImageWrapper, path: string, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): boolean;
+        scale(src: ImageWrapper | string, fx: number, fy: number, interpolation?: Images.InterpolationFlags): ImageWrapper;
         threshold(src: ImageWrapper, threshold: number, maxVal: number, type?: Images.ThresholdTypes): ImageWrapper;
         toBase64(img: Images.ImageSource, format?: Images.Format, quality?: number): string;
         toBytes(img: Images.ImageSource, format?: Images.Format, quality?: number): number[];
         isRecycled(...images: ImageWrapper[]): boolean;
         recycle(...images: ImageWrapper[]): boolean;
-        compress(img: Images.ImageSource, format?: Images.Format, quality?: number): ImageWrapper;
-        compressToBytes(img: Images.ImageSource, format?: Images.Format, quality?: number): number[];
+        quantize(img: Images.ImageSource, options?: Images.PngQuantizationOptions): Images.PngQuantizationResult;
+        quantizeToFile(img: Images.ImageSource, path: string, options?: Images.PngQuantizationOptions): Images.PngQuantizationFileResult;
+        compress(img: Images.ImageSource, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): ImageWrapper;
+        compressToBytes(img: Images.ImageSource, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): number[];
         downsample(src: Images.DownsampleSource, reqWidth: number, reqHeight: number, withAlpha?: boolean): ImageWrapper;
         getSize(img: ImageWrapper | android.graphics.Bitmap | org.opencv.core.Mat | string): org.opencv.core.Size;
         getWidth(img: ImageWrapper | android.graphics.Bitmap | org.opencv.core.Mat | string): number;
         getHeight(img: ImageWrapper | android.graphics.Bitmap | org.opencv.core.Mat | string): number;
         buildRegion(img: Images.ImageSource, region: OmniRegion): org.opencv.core.Rect;
         detectAndComputeFeatures(img: Images.ImageSource, options?: Images.DetectAndComputeFeaturesOptions): Images.ImageFeatures;
-        matchFeatures(sceneFeatures: Images.ImageFeatures, objectFeatures: Images.ImageFeatures, options?: Images.FeatureMatchingOptions): Images.ObjectFrame | null;
+        matchFeatures(scene: Images.ImageFeatures | Images.ImageSource, object: Images.ImageFeatures | Images.ImageSource, options?: Images.FeatureMatchingOptions): Images.ObjectFrame | null;
         psnr(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource): number;
         ssim(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource): number;
         mssim(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource): number;
@@ -1330,7 +1482,6 @@ declare namespace AutoJs6 {
         ncc(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource): number;
         isEqual(imageA: Images.ImageSource, imageB: Images.ImageSource): boolean;
         getSimilarity(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource, options?: Images.SimilarityOptions): number;
-        detectColor(...args: any[]): any;
     }
 
     interface Jsox {
@@ -1372,6 +1523,17 @@ declare namespace AutoJs6 {
         KeyCode(...args: any[]): any;
     }
 
+    interface Mail {
+        connect(options: Mail.AccountOptions): Mail.Client;
+        connectAsync(options: Mail.AccountOptions): Promise<Mail.Client>;
+        setDefault(client: Mail.Client): Mail.Client;
+        default: Mail.Client | null;
+        close(): void;
+        providers: Mail.Providers;
+        accounts: Mail.Accounts;
+        MailError: Mail.MailErrorConstructor;
+    }
+
     interface Mathx {
         randInt(range?: number[]): number;
         sum(num: number[], fraction?: number): number;
@@ -1405,7 +1567,13 @@ declare namespace AutoJs6 {
     }
 
     interface Mediainfo {
+        SNAPSHOT_SCHEMA_V1: 'autojs6-plugin-mediainfo-snapshot-v1';
+        SNAPSHOT_SCHEMA_V2: 'autojs6-plugin-mediainfo-snapshot-v2';
         read(path: string): Mediainfo.Result;
+        get(path: string, streamKind: Mediainfo.StreamKind, parameter: string, options?: Mediainfo.QueryOptions): string;
+        countGet(path: string, streamKind: Exclude<Mediainfo.StreamKind, 'max'>): number;
+        snapshot(path: string, options: Mediainfo.SnapshotOptions & { readonly schema: 'autojs6-plugin-mediainfo-snapshot-v1' }): Mediainfo.SnapshotV1;
+        capabilities(): Mediainfo.Capabilities;
     }
 
     interface Mime {
@@ -4010,7 +4178,7 @@ declare namespace AutoJs6 {
     }
 
     interface Opencc {
-        convert(s: string, type: OpenCC.ConversionTypeName): string;
+        convert(s: string, type: OpenCC.ConversionType): string;
         hk2s(s: string): string;
         hk2t(s: string): string;
         jp2t(s: string): string;
@@ -4045,6 +4213,12 @@ declare namespace AutoJs6 {
         jp2twi(s: string): string;
     }
 
+    interface Pangu {
+        version: string;
+        spaceText(text: string): string;
+        hasProperSpacing(text: string): boolean;
+    }
+
     interface Pinyin {
         STYLE_NORMAL: PinyinStyle;
         STYLE_TONE: PinyinStyle;
@@ -4058,24 +4232,38 @@ declare namespace AutoJs6 {
         MODE_PLACE_NAME: PinyinMode;
         convert(hansArg: string, options?: Pinyin.ConvertOptions): Pinyin.ResultList;
         simple(str: string, enableNumericTone?: boolean, enableSegment?: boolean): string;
-        compare(hanA: string, hanB?: string): string;
-        compact(arr: Pinyin.Matrix, options?: unknown): string;
+        compare(hanA: string, hanB: string): number;
+        compact(arr: Pinyin.Matrix): Pinyin.Matrix;
         fromCodePoint(codePoint: number): string | null;
         fromPhrase(phrase: string): Pinyin.Matrix;
     }
 
     interface Pinyin4j {
         of(source: string, options?: string | Pinyin4j.Options): string;
+        readings(source: string, options?: Pinyin4j.ReadingsOptions): Pinyin4j.Matrix;
     }
 
     interface Plugins {
-        load(packageName: string): any;
+        extend: Plugins.Extend;
+        extendAll(): void;
+        extendAllBut(...names: Plugins.ExtensionName[]): void;
+        load(name: string): any;
+    }
+
+    interface Power_manager {
+        isIgnoringBatteryOptimizations(packageName?: string | null): boolean;
+        requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;
+    }
+
+    interface PowerManager {
+        isIgnoringBatteryOptimizations(packageName?: string | null): boolean;
+        requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;
     }
 
     interface Qrcode {
-        detect(options?: DetectOptions): QrCode.Result | QrCode.Result[] | null;
+        detect(options: QrCode.DetectAllOptions): QrCode.Result[];
         detectAll(options?: DetectOptions): QrCode.Result[];
-        recognizeText(options?: DetectOptions): string | string[] | null;
+        recognizeText(options: QrCode.DetectAllOptions): string[];
         recognizeTexts(options?: DetectOptions): string[];
     }
 
@@ -4113,7 +4301,9 @@ declare namespace AutoJs6 {
         isStopped(): boolean;
         loadDex(path: string): void;
         loadJar(path: string): void;
-        requestPermissions(permissions: ('access_fine_location' | 'record_audio')[]): void;
+        loadJarWithR8(program: string, keepRules: string[]): void;
+        retraceR8Stack(obfuscatedStackTrace: string, mapping: string, retraceMetadata: string): string;
+        requestPermissions(permissions: string[]): void;
         requiresApi(api: number): void;
         setApplicationContext(context: android.content.Context): void;
         setClip(text: string): void;
@@ -4189,6 +4379,11 @@ declare namespace AutoJs6 {
         unregisterAll(...args: any[]): any;
     }
 
+    interface Settings {
+        isEnabled(key: Settings.Key | string): boolean;
+        setEnabled(key: Settings.Key | string, enabled: boolean): void;
+    }
+
     interface Shell {
         execCommand(command: Shell.Command): AbstractShell.Result;
         getCommand(command: Shell.Command): string;
@@ -4229,19 +4424,24 @@ declare namespace AutoJs6 {
     }
 
     interface Tasks {
-        addTask<T extends TimedTask$ | IntentTask$>(task: T): T;
-        addDailyTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addWeeklyTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addDisposableTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;
+        addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
         addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;
+        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;
         getTimedTask(id: number): TimedTask$ | null;
         getIntentTask(id: number): IntentTask$ | null;
-        removeTask(task: TimedTask$ | IntentTask$ | null | undefined): boolean;
-        removeTimedTask(id: number): boolean;
-        removeIntentTask(id: number): boolean;
-        updateTask(task: TimedTask$ | IntentTask$ | null | undefined): boolean;
-        queryTimedTasks(options?: { path?: string }): TimedTask$[];
-        queryIntentTasks(options?: { path?: string, action?: string }): IntentTask$[];
+        removeTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): T;
+        removeTimedTask(id: number): TimedTask$ | null;
+        removeIntentTask(id: number): IntentTask$ | null;
+        updateTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;
+        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
+        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
         timeFlagToDays(flag: number): number[];
         daysToTimeFlag(days: number[]): number;
     }
@@ -4270,6 +4470,44 @@ declare namespace AutoJs6 {
 
     interface Toast {
         dismissAll(): void;
+    }
+
+    interface Tts {
+        maxInputLength: 3999;
+        maxSynthesisFileSize: 536870912;
+        QUEUE_FLUSH: 'flush';
+        QUEUE_ADD: 'add';
+        speak(text: string, options?: Tts.SpeechOptions): Promise<Tts.Result>;
+        enqueue(text: string, options?: Tts.SpeechOptions): Promise<Tts.Result>;
+        utterance(text: string, options?: Tts.SpeechOptions): Tts.Utterance;
+        speakTask(text: string, options?: Tts.SpeechOptions): Tts.Utterance;
+        enqueueUtterance(text: string, options?: Tts.SpeechOptions): Tts.Utterance;
+        enqueueTask(text: string, options?: Tts.SpeechOptions): Tts.Utterance;
+        synthesize(text: string, path: string, options?: Tts.SynthesisOptions): Promise<Tts.Result>;
+        synthesizeToFile(text: string, path: string, options?: Tts.SynthesisOptions): Promise<Tts.Result>;
+        synthesis(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;
+        synthesizeTask(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;
+        synthesisTask(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;
+        silence(duration: number, options?: Tts.SpeechOptions): Promise<Tts.Result>;
+        silenceTask(duration: number, options?: Tts.SpeechOptions): Tts.Utterance;
+        ready(engine?: Tts.EngineQuery): Promise<Tts.ReadyInfo>;
+        engines(engine?: Tts.EngineQuery): Promise<Tts.EngineInfo[]>;
+        voices(filter?: Tts.EngineQuery | Tts.VoiceFilter): Promise<Tts.VoiceInfo[]>;
+        languages(engine?: Tts.EngineQuery): Promise<string[]>;
+        isLanguageAvailable(locale: string, engine?: Tts.EngineQuery): Promise<boolean>;
+        languageAvailability(locale: string, engine?: Tts.EngineQuery): Promise<Tts.LanguageAvailability>;
+        stop(): number;
+        stopAll(): number;
+        reset(): number;
+        isSpeaking(): boolean;
+        isBusy(): boolean;
+        status(): Tts.Status;
+        defaults(): Tts.Defaults;
+        config(): Tts.Defaults;
+        configure(options: Tts.SpeechOptions): Tts.Defaults;
+        getMaxInputLength(): 3999;
+        openSettings(): boolean;
+        installData(engine?: Tts.EngineQuery): boolean;
     }
 
     interface Ui {
@@ -4356,6 +4594,7 @@ declare namespace AutoJs6 {
         ensureUndefinedType(...o: any[]): void;
         ensureBooleanType(...o: any[]): void;
         ensureSymbolType(...o: any[]): void;
+        ensureBigIntType(...o: any[]): void;
         ensureBigintType(...o: any[]): void;
         ensureObjectType(...o: any[]): void;
         ensureFunctionType(...o: any[]): void;
@@ -4367,9 +4606,42 @@ declare namespace AutoJs6 {
     }
 
     interface Web {
+        ByteString: typeof okio.ByteString;
         newInjectableWebView(context?: android.content.Context | string, url?: string): org.autojs.autojs.core.web.InjectableWebView;
         newInjectableWebClient(): org.autojs.autojs.core.web.InjectableWebClient;
-        newWebSocket(url: string): org.autojs.autojs.core.web.WebSocket;
+        newWebSocket(url: string, options?: Web.NewWebSocketOptions): org.autojs.autojs.core.web.WebSocket;
+    }
+
+    interface Work_manager {
+        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
+        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
+        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
+        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        getTimedTask(id: number): TimedTask$ | null;
+        getIntentTask(id: number): IntentTask$ | null;
+        removeTimedTask(id: number): boolean | null;
+        removeIntentTask(id: number): boolean | null;
+        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
+        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
+    }
+
+    interface WorkManager {
+        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
+        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
+        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
+        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        getTimedTask(id: number): TimedTask$ | null;
+        getIntentTask(id: number): IntentTask$ | null;
+        removeTimedTask(id: number): boolean | null;
+        removeIntentTask(id: number): boolean | null;
+        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
+        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
+    }
+
+    interface Yolo {
+        load(modelDir: string, options: Yolo.LoadOptions): Yolo.Detector;
     }
 
     interface Zip {
@@ -4383,6 +4655,7 @@ declare namespace AutoJs6 {
 }
 
 declare const activity: AutoJs6.Activity;
+declare const ai: AutoJs6.Ai;
 declare const app: AutoJs6.App;
 declare const Arrayx: AutoJs6.Arrayx;
 declare const auto: AutoJs6.Auto;
@@ -4403,12 +4676,14 @@ declare const engines: AutoJs6.Engines;
 declare const events: AutoJs6.Events;
 declare const files: AutoJs6.Files;
 declare const floaty: AutoJs6.Floaty;
+declare const flow: AutoJs6.Flow;
 declare const fmt: AutoJs6.Fmt;
 declare const http: AutoJs6.Http;
 declare const i18n: AutoJs6.I18n;
 declare const images: AutoJs6.Images;
 declare const jsox: AutoJs6.Jsox;
 declare const keys: AutoJs6.Keys;
+declare const mail: AutoJs6.Mail;
 declare const Mathx: AutoJs6.Mathx;
 declare const media: AutoJs6.Media;
 declare const mediainfo: AutoJs6.Mediainfo;
@@ -4417,9 +4692,12 @@ declare const notice: AutoJs6.Notice;
 declare const Numberx: AutoJs6.Numberx;
 declare const ocr: AutoJs6.Ocr;
 declare const opencc: AutoJs6.Opencc;
+declare const pangu: AutoJs6.Pangu;
 declare const pinyin: AutoJs6.Pinyin;
 declare const pinyin4j: AutoJs6.Pinyin4j;
 declare const plugins: AutoJs6.Plugins;
+declare const power_manager: AutoJs6.Power_manager;
+declare const powerManager: AutoJs6.PowerManager;
 declare const qrcode: AutoJs6.Qrcode;
 declare const recorder: AutoJs6.Recorder;
 declare const require: AutoJs6.Require;
@@ -4427,6 +4705,7 @@ declare const runtime: AutoJs6.Runtime;
 declare const s13n: AutoJs6.S13n;
 declare const selector: AutoJs6.Selector;
 declare const sensors: AutoJs6.Sensors;
+declare const settings: AutoJs6.Settings;
 declare const shell: AutoJs6.Shell;
 declare const shizuku: AutoJs6.Shizuku;
 declare const sqlite: AutoJs6.Sqlite;
@@ -4436,9 +4715,13 @@ declare const tasks: AutoJs6.Tasks;
 declare const threads: AutoJs6.Threads;
 declare const timers: AutoJs6.Timers;
 declare const toast: AutoJs6.Toast;
+declare const tts: AutoJs6.Tts;
 declare const ui: AutoJs6.Ui;
 declare const util: AutoJs6.Util;
 declare const web: AutoJs6.Web;
+declare const work_manager: AutoJs6.Work_manager;
+declare const workManager: AutoJs6.WorkManager;
+declare const yolo: AutoJs6.Yolo;
 declare const zip: AutoJs6.Zip;
 declare function sleep(...args: any[]): any;
 declare function currentPackage(...args: any[]): any;
@@ -4451,8 +4734,8 @@ declare function waitForActivity(...args: any[]): any;
 declare function waitForPackage(...args: any[]): any;
 declare function exit(...args: any[]): any;
 declare function random(...args: any[]): any;
-declare function launch(app: App | App.Alias | App.PackageName): boolean;
-declare function launchApp(app: App | App.Alias | App.AppName): boolean;
+declare function launch(app: App.Preset | App.Alias | App.PackageName): boolean;
+declare function launchApp(app: App.Preset | App.Alias | App.AppName): boolean;
 declare function launchPackage(...args: any[]): any;
 declare function getAppName(...args: any[]): any;
 declare function getPackageName(...args: any[]): any;
@@ -4531,9 +4814,9 @@ declare function isBigInt(...args: any[]): any;
 declare function requestScreenCapture(landscape?: boolean): boolean;
 declare function requestScreenCaptureAsync(...args: any[]): any;
 declare function captureScreen(): ImageWrapper;
-declare function findImage(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;
+declare function findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
 declare function findImageInRegion(...args: any[]): any;
-declare function findColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;
+declare function findColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;
 declare function findColorEquals(...args: any[]): any;
 declare function findColorInRegion(...args: any[]): any;
 declare function findMultiColors(...args: any[]): any;
@@ -4732,6 +5015,48 @@ declare function isUiThread(...args: any[]): any;
 declare function newInjectableWebClient(...args: any[]): any;
 declare function newInjectableWebView(...args: any[]): any;
 declare function newWebSocket(...args: any[]): any;
+declare function startActivity(...args: any[]): any;
+declare function startDualActivity(...args: any[]): any;
+declare function startService(...args: any[]): any;
+declare function sendEmail(...args: any[]): any;
+declare function sendBroadcast(...args: any[]): any;
+declare function sendLocalBroadcastSync(...args: any[]): any;
+declare function launchDual(...args: any[]): any;
+declare function launchDualApp(...args: any[]): any;
+declare function launchDualPackage(...args: any[]): any;
+declare function launchAppDetailsSettings(...args: any[]): any;
+declare function openAppSettings(...args: any[]): any;
+declare function launchDualAppDetailsSettings(...args: any[]): any;
+declare function launchDualSettings(...args: any[]): any;
+declare function openDualAppSetting(...args: any[]): any;
+declare function openDualAppSettings(...args: any[]): any;
+declare function isInstalled(...args: any[]): any;
+declare function isDualInstalled(...args: any[]): any;
+declare function uninstall(...args: any[]): any;
+declare function uninstallDual(...args: any[]): any;
+declare function kill(...args: any[]): any;
+declare function killDual(...args: any[]): any;
+declare function smartClick(target: Automator.Target, options?: Automator.SmartClickOptions): Automator.SmartClickResult;
+declare function smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions): Automator.SmartClickBoundsResult;
+declare function clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number): boolean;
+declare function clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number): boolean;
+declare function clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number): Automator.ClickedCandidate | null;
+declare function clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number): Automator.ClickedBoundsCandidate | null;
+declare function findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number): Automator.FoundCandidate | null;
+declare function scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions): UiObject;
+declare function typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions): UiObject;
+declare function dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number): Automator.ClickedCandidate | Automator.ClickedCandidate[] | Automator.PopupGuard | null;
+declare function collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions): any[];
+declare function launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number): Automator.LaunchResult;
+declare function backUntil(cond: Automator.Target, options?: Automator.BackOptions | number): any;
+declare function backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number): string;
+declare function toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;
+declare function retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;
+declare function waitForIdle(quietFor?: number): Automator.IdleResult;
+declare function waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;
+declare function waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;
+declare function waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;
+declare function findIterator(...args: any[]): any;
 declare const context: any;
 declare const isAutoJs6: any;
 declare const HEIGHT: any;
@@ -4743,12 +5068,30 @@ declare const species: any;
 declare const JavaAdapter: any;
 declare const Packages: any;
 declare const Error: any;
+declare const waitAsync: any;
+declare const waitThenClick: any;
+declare const waitThenClickBounds: any;
+declare const clickWait: any;
+declare const clickBoundsWait: any;
+declare const waitForStable: any;
+declare const waitForStableThenClick: any;
+declare const waitForStableThenClickBounds: any;
+declare const clickWhenStable: any;
+declare const clickBoundsWhenStable: any;
+declare const waitForVisible: any;
+declare const waitForHidden: any;
+declare const waitForGone: any;
+declare const clickWhenStableAfter: any;
+declare const clickBoundsWhenStableAfter: any;
 declare function isServiceRunning(): boolean;
 declare function ensureService(): void;
 declare function waitForService(timeout?: number): void;
 declare function lockScreen(): boolean;
 declare function takeScreenshot(): boolean;
 declare function headsethook(): boolean;
+declare function headsetHook(): boolean;
+declare function switchToInputMethodWithId(id: string): boolean;
+declare function switchToInputMethod(name: string): boolean;
 declare function accessibilityButton(): boolean;
 declare function accessibilityButtonChooser(): boolean;
 declare function accessibilityShortcut(): boolean;

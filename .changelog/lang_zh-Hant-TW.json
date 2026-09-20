@@ -8,7 +8,8 @@
     "v1.11.0": {
       "released_date": "2026/09/20",
       "improvement": [
-        "內建 AutoJs6 宣告更新至 `4.18.0`: 新增 Angus Mail 外掛的 `mail` / `$mail` 全域物件與 `Internal.Mail` 命名空間 (用戶端與轉發方法的同步及 `Async` 形態, 監聽事件, 郵件 / 附件 / 地址物件, 帳戶選項與服務商預設, 搜尋條件, 結果文件與錯誤代碼), 編輯器補全與型別檢查隨之涵蓋郵件 API"
+        "內建 AutoJs6 宣告更新至 `4.18.0`: 新增 Angus Mail 外掛的 `mail` / `$mail` 全域物件與 `Internal.Mail` 命名空間 (用戶端與轉發方法的同步及 `Async` 形態, 監聽事件, 郵件 / 附件 / 地址物件, 帳戶選項與服務商預設, 搜尋條件, 結果文件與錯誤代碼), 編輯器補全與型別檢查隨之涵蓋郵件 API",
+        "編輯器補全索引 `autojs6_indices.js` 與聚合宣告 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按內建宣告 `4.18.0` 再生成: 新增 `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager` 與 `workManager` 模組的補全與簽名提示, 宣告索引 `index.d.ts` 與 `BUNDLED_DECLARATIONS.md` 恢復為匯入指令碼生成的形態; 四個驗證指令碼與補全器測試全部通過"
       ]
     },
     "v1.10.0": {

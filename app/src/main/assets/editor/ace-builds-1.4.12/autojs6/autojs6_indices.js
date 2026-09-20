@@ -10,6 +10,11 @@
                 "doc": "AutoJs6 Activity API"
             },
             {
+                "name": "ai",
+                "type": "module",
+                "doc": "AutoJs6 Ai API"
+            },
+            {
                 "name": "app",
                 "type": "module",
                 "doc": "Application and intent helpers"
@@ -110,6 +115,11 @@
                 "doc": "Floating window helpers"
             },
             {
+                "name": "flow",
+                "type": "module",
+                "doc": "AutoJs6 FlowApi API"
+            },
+            {
                 "name": "fmt",
                 "type": "module",
                 "doc": "AutoJs6 Formatter API"
@@ -138,6 +148,11 @@
                 "name": "keys",
                 "type": "module",
                 "doc": "System key helpers"
+            },
+            {
+                "name": "mail",
+                "type": "module",
+                "doc": "AutoJs6 Mail API"
             },
             {
                 "name": "Mathx",
@@ -180,6 +195,11 @@
                 "doc": "AutoJs6 OpenCC API"
             },
             {
+                "name": "pangu",
+                "type": "module",
+                "doc": "AutoJs6 Pangu API"
+            },
+            {
                 "name": "pinyin",
                 "type": "module",
                 "doc": "AutoJs6 Pinyin API"
@@ -193,6 +213,16 @@
                 "name": "plugins",
                 "type": "module",
                 "doc": "AutoJs6 Plugins API"
+            },
+            {
+                "name": "power_manager",
+                "type": "module",
+                "doc": "AutoJs6 PowerManager API"
+            },
+            {
+                "name": "powerManager",
+                "type": "module",
+                "doc": "AutoJs6 PowerManager API"
             },
             {
                 "name": "qrcode",
@@ -228,6 +258,11 @@
                 "name": "sensors",
                 "type": "module",
                 "doc": "Sensor listener helpers"
+            },
+            {
+                "name": "settings",
+                "type": "module",
+                "doc": "AutoJs6 Settings API"
             },
             {
                 "name": "shell",
@@ -275,6 +310,11 @@
                 "doc": "AutoJs6 Toast API"
             },
             {
+                "name": "tts",
+                "type": "module",
+                "doc": "AutoJs6 Tts API"
+            },
+            {
                 "name": "ui",
                 "type": "module",
                 "doc": "UI DSL namespace"
@@ -288,6 +328,21 @@
                 "name": "web",
                 "type": "module",
                 "doc": "AutoJs6 Web API"
+            },
+            {
+                "name": "work_manager",
+                "type": "module",
+                "doc": "AutoJs6 WorkManager API"
+            },
+            {
+                "name": "workManager",
+                "type": "module",
+                "doc": "AutoJs6 WorkManager API"
+            },
+            {
+                "name": "yolo",
+                "type": "module",
+                "doc": "AutoJs6 Yolo API"
             },
             {
                 "name": "zip",
@@ -352,14 +407,14 @@
             {
                 "name": "launch",
                 "type": "function",
-                "doc": "launch(app: App | App.Alias | App.PackageName): boolean;",
-                "signature": "launch(app: App | App.Alias | App.PackageName): boolean;"
+                "doc": "launch(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                "signature": "launch(app: App.Preset | App.Alias | App.PackageName): boolean;"
             },
             {
                 "name": "launchApp",
                 "type": "function",
-                "doc": "launchApp(app: App | App.Alias | App.AppName): boolean;",
-                "signature": "launchApp(app: App | App.Alias | App.AppName): boolean;"
+                "doc": "launchApp(app: App.Preset | App.Alias | App.AppName): boolean;",
+                "signature": "launchApp(app: App.Preset | App.Alias | App.AppName): boolean;"
             },
             {
                 "name": "launchPackage",
@@ -775,8 +830,8 @@
             {
                 "name": "findImage",
                 "type": "function",
-                "doc": "findImage(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;",
-                "signature": "findImage(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;"
+                "doc": "findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;",
+                "signature": "findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;"
             },
             {
                 "name": "findImageInRegion",
@@ -786,8 +841,8 @@
             {
                 "name": "findColor",
                 "type": "function",
-                "doc": "findColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;",
-                "signature": "findColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;"
+                "doc": "findColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;",
+                "signature": "findColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;"
             },
             {
                 "name": "findColorEquals",
@@ -1781,6 +1836,236 @@
                 "doc": ""
             },
             {
+                "name": "startActivity",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "startDualActivity",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "startService",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "sendEmail",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "sendBroadcast",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "sendLocalBroadcastSync",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "launchDual",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "launchDualApp",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "launchDualPackage",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "launchAppDetailsSettings",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "openAppSettings",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "launchDualAppDetailsSettings",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "launchDualSettings",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "openDualAppSetting",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "openDualAppSettings",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "isInstalled",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "isDualInstalled",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "uninstall",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "uninstallDual",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "kill",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "killDual",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "smartClick",
+                "type": "function",
+                "doc": "smartClick(target: Automator.Target, options?: Automator.SmartClickOptions): Automator.SmartClickResult;",
+                "signature": "smartClick(target: Automator.Target, options?: Automator.SmartClickOptions): Automator.SmartClickResult;"
+            },
+            {
+                "name": "smartClickBounds",
+                "type": "function",
+                "doc": "smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions): Automator.SmartClickBoundsResult;",
+                "signature": "smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions): Automator.SmartClickBoundsResult;"
+            },
+            {
+                "name": "clickIfExists",
+                "type": "function",
+                "doc": "clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number): boolean;",
+                "signature": "clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number): boolean;"
+            },
+            {
+                "name": "clickBoundsIfExists",
+                "type": "function",
+                "doc": "clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number): boolean;",
+                "signature": "clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number): boolean;"
+            },
+            {
+                "name": "clickAny",
+                "type": "function",
+                "doc": "clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number): Automator.ClickedCandidate | null;",
+                "signature": "clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number): Automator.ClickedCandidate | null;"
+            },
+            {
+                "name": "clickBoundsAny",
+                "type": "function",
+                "doc": "clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number): Automator.ClickedBoundsCandidate | null;",
+                "signature": "clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number): Automator.ClickedBoundsCandidate | null;"
+            },
+            {
+                "name": "findAny",
+                "type": "function",
+                "doc": "findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number): Automator.FoundCandidate | null;",
+                "signature": "findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number): Automator.FoundCandidate | null;"
+            },
+            {
+                "name": "scrollUntil",
+                "type": "function",
+                "doc": "scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions): UiObject;",
+                "signature": "scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions): UiObject;"
+            },
+            {
+                "name": "typeInto",
+                "type": "function",
+                "doc": "typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions): UiObject;",
+                "signature": "typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions): UiObject;"
+            },
+            {
+                "name": "dismissPopups",
+                "type": "function",
+                "doc": "dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number): Automator.ClickedCandidate | Automator.ClickedCandidate[] | Automator.PopupGuard | null;",
+                "signature": "dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number): Automator.ClickedCandidate | Automator.ClickedCandidate[] | Automator.PopupGuard | null;"
+            },
+            {
+                "name": "collectList",
+                "type": "function",
+                "doc": "collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions): any[];",
+                "signature": "collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions): any[];"
+            },
+            {
+                "name": "launchAndWait",
+                "type": "function",
+                "doc": "launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number): Automator.LaunchResult;",
+                "signature": "launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number): Automator.LaunchResult;"
+            },
+            {
+                "name": "backUntil",
+                "type": "function",
+                "doc": "backUntil(cond: Automator.Target, options?: Automator.BackOptions | number): any;",
+                "signature": "backUntil(cond: Automator.Target, options?: Automator.BackOptions | number): any;"
+            },
+            {
+                "name": "backToApp",
+                "type": "function",
+                "doc": "backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number): string;",
+                "signature": "backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number): string;"
+            },
+            {
+                "name": "toggle",
+                "type": "function",
+                "doc": "toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;",
+                "signature": "toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;"
+            },
+            {
+                "name": "retry",
+                "type": "function",
+                "doc": "retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;",
+                "signature": "retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;"
+            },
+            {
+                "name": "waitForIdle",
+                "type": "function",
+                "doc": "waitForIdle(quietFor?: number): Automator.IdleResult;",
+                "signature": "waitForIdle(quietFor?: number): Automator.IdleResult;"
+            },
+            {
+                "name": "waitForEvent",
+                "type": "function",
+                "doc": "waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;",
+                "signature": "waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;"
+            },
+            {
+                "name": "waitForToast",
+                "type": "function",
+                "doc": "waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;",
+                "signature": "waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;"
+            },
+            {
+                "name": "waitForNotification",
+                "type": "function",
+                "doc": "waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;",
+                "signature": "waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;"
+            },
+            {
+                "name": "findIterator",
+                "type": "function",
+                "doc": ""
+            },
+            {
                 "name": "context",
                 "type": "variable",
                 "doc": ""
@@ -1836,6 +2121,81 @@
                 "doc": ""
             },
             {
+                "name": "waitAsync",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitThenClick",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitThenClickBounds",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "clickWait",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "clickBoundsWait",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitForStable",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitForStableThenClick",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitForStableThenClickBounds",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "clickWhenStable",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "clickBoundsWhenStable",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitForVisible",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitForHidden",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "waitForGone",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "clickWhenStableAfter",
+                "type": "variable",
+                "doc": ""
+            },
+            {
+                "name": "clickBoundsWhenStableAfter",
+                "type": "variable",
+                "doc": ""
+            },
+            {
                 "name": "isServiceRunning",
                 "type": "function",
                 "doc": "isServiceRunning(): boolean;",
@@ -1870,6 +2230,24 @@
                 "type": "function",
                 "doc": "headsethook(): boolean;",
                 "signature": "headsethook(): boolean;"
+            },
+            {
+                "name": "headsetHook",
+                "type": "function",
+                "doc": "headsetHook(): boolean;",
+                "signature": "headsetHook(): boolean;"
+            },
+            {
+                "name": "switchToInputMethodWithId",
+                "type": "function",
+                "doc": "switchToInputMethodWithId(id: string): boolean;",
+                "signature": "switchToInputMethodWithId(id: string): boolean;"
+            },
+            {
+                "name": "switchToInputMethod",
+                "type": "function",
+                "doc": "switchToInputMethod(name: string): boolean;",
+                "signature": "switchToInputMethod(name: string): boolean;"
             },
             {
                 "name": "accessibilityButton",
@@ -1989,6 +2367,38 @@
                     "signature": "window: Activity.PhoneWindow;"
                 }
             ],
+            "ai": [
+                {
+                    "name": "ask",
+                    "type": "function",
+                    "doc": "ask(input: Ai.Input, options?: Ai.Options): Promise<string>;",
+                    "signature": "ask(input: Ai.Input, options?: Ai.Options): Promise<string>;"
+                },
+                {
+                    "name": "chat",
+                    "type": "function",
+                    "doc": "chat(input: Ai.Input, options?: Ai.Options): Promise<Ai.Response>;",
+                    "signature": "chat(input: Ai.Input, options?: Ai.Options): Promise<Ai.Response>;"
+                },
+                {
+                    "name": "stream",
+                    "type": "function",
+                    "doc": "stream(input: Ai.Input, options?: Ai.Options): Ai.Stream;",
+                    "signature": "stream(input: Ai.Input, options?: Ai.Options): Ai.Stream;"
+                },
+                {
+                    "name": "session",
+                    "type": "function",
+                    "doc": "session(options?: Ai.SessionOptions | null): Promise<Ai.Session>;",
+                    "signature": "session(options?: Ai.SessionOptions | null): Promise<Ai.Session>;"
+                },
+                {
+                    "name": "catalog",
+                    "type": "function",
+                    "doc": "catalog(options?: Ai.CatalogOptions | null): Promise<Ai.TargetCatalog>;",
+                    "signature": "catalog(options?: Ai.CatalogOptions | null): Promise<Ai.TargetCatalog>;"
+                }
+            ],
             "app": [
                 {
                     "name": "autojs",
@@ -2011,8 +2421,8 @@
                 {
                     "name": "fileProviderAuthority",
                     "type": "variable",
-                    "doc": "fileProviderAuthority: 'org.autojs.autojs.fileprovider' | string | null;",
-                    "signature": "fileProviderAuthority: 'org.autojs.autojs.fileprovider' | string | null;"
+                    "doc": "fileProviderAuthority: 'org.autojs.autojs.fileprovider' | string;",
+                    "signature": "fileProviderAuthority: 'org.autojs.autojs.fileprovider' | string;"
                 },
                 {
                     "name": "intent",
@@ -2023,50 +2433,80 @@
                 {
                     "name": "startActivity",
                     "type": "function",
-                    "doc": "startActivity(o: Intent.CommonWithRoot | Intent.ShortForm.Activity | Intent | URI): void;",
-                    "signature": "startActivity(o: Intent.CommonWithRoot | Intent.ShortForm.Activity | Intent | URI): void;"
+                    "doc": "startActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;",
+                    "signature": "startActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;"
+                },
+                {
+                    "name": "startDualActivity",
+                    "type": "function",
+                    "doc": "startDualActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;",
+                    "signature": "startDualActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;"
                 },
                 {
                     "name": "sendBroadcast",
                     "type": "function",
-                    "doc": "sendBroadcast(i: Intent.CommonWithRoot | Intent.ShortForm.Broadcast): void;",
-                    "signature": "sendBroadcast(i: Intent.CommonWithRoot | Intent.ShortForm.Broadcast): void;"
+                    "doc": "sendBroadcast(i: Intent.CommonWithRoot | Intent.ShortForm.Broadcast | Intent): void;",
+                    "signature": "sendBroadcast(i: Intent.CommonWithRoot | Intent.ShortForm.Broadcast | Intent): void;"
                 },
                 {
                     "name": "startService",
                     "type": "function",
-                    "doc": "startService(i: Intent.CommonWithRoot): void;",
-                    "signature": "startService(i: Intent.CommonWithRoot): void;"
+                    "doc": "startService(i: Intent.CommonWithRoot | Intent): void;",
+                    "signature": "startService(i: Intent.CommonWithRoot | Intent): void;"
                 },
                 {
                     "name": "sendEmail",
                     "type": "function",
-                    "doc": "sendEmail(options?: Intent.Email): void;",
-                    "signature": "sendEmail(options?: Intent.Email): void;"
+                    "doc": "sendEmail(options: Intent.Email | null | undefined): void;",
+                    "signature": "sendEmail(options: Intent.Email | null | undefined): void;"
                 },
                 {
                     "name": "parseUri",
                     "type": "function",
-                    "doc": "parseUri(uri: string | URI): android.net.Uri | null;",
-                    "signature": "parseUri(uri: string | URI): android.net.Uri | null;"
+                    "doc": "parseUri(uri: string | android.net.Uri | java.net.URI): android.net.Uri | null;",
+                    "signature": "parseUri(uri: string | android.net.Uri | java.net.URI): android.net.Uri | null;"
                 },
                 {
                     "name": "getUriForFile",
                     "type": "function",
-                    "doc": "getUriForFile(path: string): string;",
-                    "signature": "getUriForFile(path: string): string;"
+                    "doc": "getUriForFile(path: string): android.net.Uri | null;",
+                    "signature": "getUriForFile(path: string): android.net.Uri | null;"
                 },
                 {
                     "name": "getAppByAlias",
                     "type": "function",
-                    "doc": "getAppByAlias(alias: App.Alias | string): App;",
-                    "signature": "getAppByAlias(alias: App.Alias | string): App;"
+                    "doc": "getAppByAlias(alias: App.Alias | string): org.autojs.autojs.util.App | null;",
+                    "signature": "getAppByAlias(alias: App.Alias | string): org.autojs.autojs.util.App | null;"
+                },
+                {
+                    "name": "getInstalledApps",
+                    "type": "function",
+                    "doc": "getInstalledApps(options?: App.PackageManagerOptions): App.AppInfo[];",
+                    "signature": "getInstalledApps(options?: App.PackageManagerOptions): App.AppInfo[];"
+                },
+                {
+                    "name": "getInstalledPackages",
+                    "type": "function",
+                    "doc": "getInstalledPackages(options?: App.PackageManagerOptions): App.InstalledPackageInfo[];",
+                    "signature": "getInstalledPackages(options?: App.PackageManagerOptions): App.InstalledPackageInfo[];"
+                },
+                {
+                    "name": "getApkInfo",
+                    "type": "function",
+                    "doc": "getApkInfo(path: string, options?: App.PackageManagerOptions): android.content.pm.PackageInfo | null;",
+                    "signature": "getApkInfo(path: string, options?: App.PackageManagerOptions): android.content.pm.PackageInfo | null;"
                 },
                 {
                     "name": "launch",
                     "type": "function",
-                    "doc": "launch(app: App | App.Alias | App.PackageName): boolean;",
-                    "signature": "launch(app: App | App.Alias | App.PackageName): boolean;"
+                    "doc": "launch(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launch(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "launchDual",
+                    "type": "function",
+                    "doc": "launchDual(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launchDual(app: App.Preset | App.Alias | App.PackageName): boolean;"
                 },
                 {
                     "name": "intentToShell",
@@ -2081,28 +2521,70 @@
                     "signature": "openUrl(url: string | URI): void;"
                 },
                 {
+                    "name": "openDualUrl",
+                    "type": "function",
+                    "doc": "openDualUrl(url: string | URI): void;",
+                    "signature": "openDualUrl(url: string | URI): void;"
+                },
+                {
                     "name": "launchApp",
                     "type": "function",
-                    "doc": "launchApp(app: App | App.Alias | App.AppName): boolean;",
-                    "signature": "launchApp(app: App | App.Alias | App.AppName): boolean;"
+                    "doc": "launchApp(app: App.Preset | App.Alias | App.AppName): boolean;",
+                    "signature": "launchApp(app: App.Preset | App.Alias | App.AppName): boolean;"
+                },
+                {
+                    "name": "launchDualApp",
+                    "type": "function",
+                    "doc": "launchDualApp(app: App.Preset | App.Alias | App.AppName): boolean;",
+                    "signature": "launchDualApp(app: App.Preset | App.Alias | App.AppName): boolean;"
                 },
                 {
                     "name": "uninstall",
                     "type": "function",
-                    "doc": "uninstall(app: App | App.Alias | App.PackageName): void;",
-                    "signature": "uninstall(app: App | App.Alias | App.PackageName): void;"
+                    "doc": "uninstall(app: App.Preset | App.Alias | App.PackageName): void;",
+                    "signature": "uninstall(app: App.Preset | App.Alias | App.PackageName): void;"
+                },
+                {
+                    "name": "uninstallDual",
+                    "type": "function",
+                    "doc": "uninstallDual(app: App.Preset | App.Alias | App.PackageName): void;",
+                    "signature": "uninstallDual(app: App.Preset | App.Alias | App.PackageName): void;"
+                },
+                {
+                    "name": "isInstalled",
+                    "type": "function",
+                    "doc": "isInstalled(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;",
+                    "signature": "isInstalled(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;"
+                },
+                {
+                    "name": "isDualInstalled",
+                    "type": "function",
+                    "doc": "isDualInstalled(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;",
+                    "signature": "isDualInstalled(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;"
+                },
+                {
+                    "name": "kill",
+                    "type": "function",
+                    "doc": "kill(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;",
+                    "signature": "kill(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;"
+                },
+                {
+                    "name": "killDual",
+                    "type": "function",
+                    "doc": "killDual(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;",
+                    "signature": "killDual(app: App.Preset | App.Alias | App.AppName | App.PackageName): boolean;"
                 },
                 {
                     "name": "getAppName",
                     "type": "function",
-                    "doc": "getAppName(app: App | App.Alias | App.PackageName): string;",
-                    "signature": "getAppName(app: App | App.Alias | App.PackageName): string;"
+                    "doc": "getAppName(app: App.Preset | App.Alias | App.PackageName): string | null;",
+                    "signature": "getAppName(app: App.Preset | App.Alias | App.PackageName): string | null;"
                 },
                 {
                     "name": "getCurrentActivity",
                     "type": "function",
-                    "doc": "getCurrentActivity(): android.app.Activity;",
-                    "signature": "getCurrentActivity(): android.app.Activity;"
+                    "doc": "getCurrentActivity(): android.app.Activity | null;",
+                    "signature": "getCurrentActivity(): android.app.Activity | null;"
                 },
                 {
                     "name": "editFile",
@@ -2119,20 +2601,26 @@
                 {
                     "name": "getPackageName",
                     "type": "function",
-                    "doc": "getPackageName(app: App | App.Alias | App.AppName): string;",
-                    "signature": "getPackageName(app: App | App.Alias | App.AppName): string;"
+                    "doc": "getPackageName(app: App.Preset | App.Alias | App.AppName): string | null;",
+                    "signature": "getPackageName(app: App.Preset | App.Alias | App.AppName): string | null;"
                 },
                 {
                     "name": "setCurrentActivity",
                     "type": "function",
-                    "doc": "setCurrentActivity(currentActivity: android.app.Activity): void;",
-                    "signature": "setCurrentActivity(currentActivity: android.app.Activity): void;"
+                    "doc": "setCurrentActivity(currentActivity: android.app.Activity | null): void;",
+                    "signature": "setCurrentActivity(currentActivity: android.app.Activity | null): void;"
                 },
                 {
                     "name": "launchPackage",
                     "type": "function",
-                    "doc": "launchPackage(app: App | App.Alias | App.PackageName): boolean;",
-                    "signature": "launchPackage(app: App | App.Alias | App.PackageName): boolean;"
+                    "doc": "launchPackage(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launchPackage(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "launchDualPackage",
+                    "type": "function",
+                    "doc": "launchDualPackage(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launchDualPackage(app: App.Preset | App.Alias | App.PackageName): boolean;"
                 },
                 {
                     "name": "sendLocalBroadcastSync",
@@ -2143,25 +2631,56 @@
                 {
                     "name": "openAppSetting",
                     "type": "function",
-                    "doc": "openAppSetting(app: App | App.Alias | App.PackageName): boolean;",
-                    "signature": "openAppSetting(app: App | App.Alias | App.PackageName): boolean;"
+                    "doc": "openAppSetting(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "openAppSetting(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "openAppSettings",
+                    "type": "function",
+                    "doc": "openAppSettings(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "openAppSettings(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "launchAppDetailsSettings",
+                    "type": "function",
+                    "doc": "launchAppDetailsSettings(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launchAppDetailsSettings(app: App.Preset | App.Alias | App.PackageName): boolean;"
                 },
                 {
                     "name": "launchSettings",
                     "type": "function",
-                    "doc": "launchSettings(app: App | App.Alias | App.PackageName): boolean;",
-                    "signature": "launchSettings(app: App | App.Alias | App.PackageName): boolean;"
+                    "doc": "launchSettings(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launchSettings(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "launchDualAppDetailsSettings",
+                    "type": "function",
+                    "doc": "launchDualAppDetailsSettings(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launchDualAppDetailsSettings(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "launchDualSettings",
+                    "type": "function",
+                    "doc": "launchDualSettings(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "launchDualSettings(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "openDualAppSetting",
+                    "type": "function",
+                    "doc": "openDualAppSetting(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "openDualAppSetting(app: App.Preset | App.Alias | App.PackageName): boolean;"
+                },
+                {
+                    "name": "openDualAppSettings",
+                    "type": "function",
+                    "doc": "openDualAppSettings(app: App.Preset | App.Alias | App.PackageName): boolean;",
+                    "signature": "openDualAppSettings(app: App.Preset | App.Alias | App.PackageName): boolean;"
                 },
                 {
                     "name": "getFileProviderAuthority",
                     "type": "function",
                     "doc": "getFileProviderAuthority(): string;",
                     "signature": "getFileProviderAuthority(): string;"
-                },
-                {
-                    "name": "openAppSettings",
-                    "type": "function",
-                    "doc": ""
                 }
             ],
             "Arrayx": [
@@ -2366,6 +2885,12 @@
                     "signature": "windowRoots: UiObject[];"
                 },
                 {
+                    "name": "getWindowRoot",
+                    "type": "function",
+                    "doc": "getWindowRoot(window: android.view.accessibility.AccessibilityWindowInfo): UiObject | null;",
+                    "signature": "getWindowRoot(window: android.view.accessibility.AccessibilityWindowInfo): UiObject | null;"
+                },
+                {
                     "name": "state",
                     "type": "variable",
                     "doc": "state: Automator.AutoState;",
@@ -2394,6 +2919,42 @@
                     "type": "function",
                     "doc": "setWindowFilter(filter?: Automator.WindowFilterLike | null): void;",
                     "signature": "setWindowFilter(filter?: Automator.WindowFilterLike | null): void;"
+                },
+                {
+                    "name": "wait",
+                    "type": "variable",
+                    "doc": "wait: Flow.WaitFunction<UiObject>;",
+                    "signature": "wait: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "findWindows",
+                    "type": "function",
+                    "doc": "findWindows(filter?: Automator.WindowFilterLike | null): android.view.accessibility.AccessibilityWindowInfo[];",
+                    "signature": "findWindows(filter?: Automator.WindowFilterLike | null): android.view.accessibility.AccessibilityWindowInfo[];"
+                },
+                {
+                    "name": "findWindowRoots",
+                    "type": "function",
+                    "doc": "findWindowRoots(filter?: Automator.WindowFilterLike | null): UiObject[];",
+                    "signature": "findWindowRoots(filter?: Automator.WindowFilterLike | null): UiObject[];"
+                },
+                {
+                    "name": "explain",
+                    "type": "function",
+                    "doc": "explain(selector: Automator.Target, root?: UiObject | null): Automator.ExplainResult;",
+                    "signature": "explain(selector: Automator.Target, root?: UiObject | null): Automator.ExplainResult;"
+                },
+                {
+                    "name": "dump",
+                    "type": "function",
+                    "doc": "dump(options?: Automator.DumpFormat | Automator.DumpOptions): string;",
+                    "signature": "dump(options?: Automator.DumpFormat | Automator.DumpOptions): string;"
+                },
+                {
+                    "name": "stats",
+                    "type": "variable",
+                    "doc": "stats: Automator.StatsSnapshot;",
+                    "signature": "stats: Automator.StatsSnapshot;"
                 },
                 {
                     "name": "launchSettings",
@@ -2430,8 +2991,8 @@
                 {
                     "name": "versionCode",
                     "type": "variable",
-                    "doc": "versionCode: string;",
-                    "signature": "versionCode: string;"
+                    "doc": "versionCode: number;",
+                    "signature": "versionCode: number;"
                 },
                 {
                     "name": "versionName",
@@ -2460,8 +3021,20 @@
                 {
                     "name": "R",
                     "type": "variable",
-                    "doc": "R: org.autojs.autojs6.R;",
-                    "signature": "R: org.autojs.autojs6.R;"
+                    "doc": "R: typeof org.autojs.autojs6.R;",
+                    "signature": "R: typeof org.autojs.autojs6.R;"
+                },
+                {
+                    "name": "rotation",
+                    "type": "variable",
+                    "doc": "rotation: number;",
+                    "signature": "rotation: number;"
+                },
+                {
+                    "name": "orientation",
+                    "type": "variable",
+                    "doc": "orientation: number;",
+                    "signature": "orientation: number;"
                 },
                 {
                     "name": "version",
@@ -2472,8 +3045,20 @@
                 {
                     "name": "setRootMode",
                     "type": "function",
-                    "doc": "setRootMode(mode: number | boolean | 'auto' | 'root' | 'non-root', isWriteIntoPreference?: boolean | 'write_into_pref'): void;",
-                    "signature": "setRootMode(mode: number | boolean | 'auto' | 'root' | 'non-root', isWriteIntoPreference?: boolean | 'write_into_pref'): void;"
+                    "doc": "setRootMode(mode: -1 | 0 | 1 | boolean | 'auto' | 'root' | 'non-root', isWriteIntoPreference?: boolean | 'write_into_pref'): void;",
+                    "signature": "setRootMode(mode: -1 | 0 | 1 | boolean | 'auto' | 'root' | 'non-root', isWriteIntoPreference?: boolean | 'write_into_pref'): void;"
+                },
+                {
+                    "name": "isScreenPortrait",
+                    "type": "function",
+                    "doc": "isScreenPortrait(): boolean;",
+                    "signature": "isScreenPortrait(): boolean;"
+                },
+                {
+                    "name": "isScreenLandscape",
+                    "type": "function",
+                    "doc": "isScreenLandscape(): boolean;",
+                    "signature": "isScreenLandscape(): boolean;"
                 },
                 {
                     "name": "getRootMode",
@@ -2516,6 +3101,18 @@
                     "type": "function",
                     "doc": "getLanguageTag(): string;",
                     "signature": "getLanguageTag(): string;"
+                },
+                {
+                    "name": "restart",
+                    "type": "function",
+                    "doc": "restart(scriptsAfterRestart?: string | string[]): void;",
+                    "signature": "restart(scriptsAfterRestart?: string | string[]): void;"
+                },
+                {
+                    "name": "exit",
+                    "type": "function",
+                    "doc": "exit(scriptsAfterRestart?: string | string[]): void;",
+                    "signature": "exit(scriptsAfterRestart?: string | string[]): void;"
                 },
                 {
                     "name": "themeColor",
@@ -2640,6 +3237,24 @@
                     "signature": "headsethook(): boolean;"
                 },
                 {
+                    "name": "headsetHook",
+                    "type": "function",
+                    "doc": "headsetHook(): boolean;",
+                    "signature": "headsetHook(): boolean;"
+                },
+                {
+                    "name": "switchToInputMethodWithId",
+                    "type": "function",
+                    "doc": "switchToInputMethodWithId(id: string): boolean;",
+                    "signature": "switchToInputMethodWithId(id: string): boolean;"
+                },
+                {
+                    "name": "switchToInputMethod",
+                    "type": "function",
+                    "doc": "switchToInputMethod(name: string): boolean;",
+                    "signature": "switchToInputMethod(name: string): boolean;"
+                },
+                {
                     "name": "accessibilityButton",
                     "type": "function",
                     "doc": "accessibilityButton(): boolean;",
@@ -2710,14 +3325,134 @@
                     "type": "function",
                     "doc": "splitScreen(): boolean;",
                     "signature": "splitScreen(): boolean;"
+                },
+                {
+                    "name": "smartClick",
+                    "type": "function",
+                    "doc": "smartClick(target: Automator.Target, options?: Automator.SmartClickOptions): Automator.SmartClickResult;",
+                    "signature": "smartClick(target: Automator.Target, options?: Automator.SmartClickOptions): Automator.SmartClickResult;"
+                },
+                {
+                    "name": "smartClickBounds",
+                    "type": "function",
+                    "doc": "smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions): Automator.SmartClickBoundsResult;",
+                    "signature": "smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions): Automator.SmartClickBoundsResult;"
+                },
+                {
+                    "name": "clickIfExists",
+                    "type": "function",
+                    "doc": "clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number): boolean;",
+                    "signature": "clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number): boolean;"
+                },
+                {
+                    "name": "clickBoundsIfExists",
+                    "type": "function",
+                    "doc": "clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number): boolean;",
+                    "signature": "clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number): boolean;"
+                },
+                {
+                    "name": "clickAny",
+                    "type": "function",
+                    "doc": "clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number): Automator.ClickedCandidate | null;",
+                    "signature": "clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number): Automator.ClickedCandidate | null;"
+                },
+                {
+                    "name": "clickBoundsAny",
+                    "type": "function",
+                    "doc": "clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number): Automator.ClickedBoundsCandidate | null;",
+                    "signature": "clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number): Automator.ClickedBoundsCandidate | null;"
+                },
+                {
+                    "name": "findAny",
+                    "type": "function",
+                    "doc": "findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number): Automator.FoundCandidate | null;",
+                    "signature": "findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number): Automator.FoundCandidate | null;"
+                },
+                {
+                    "name": "scrollUntil",
+                    "type": "function",
+                    "doc": "scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions): UiObject;",
+                    "signature": "scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions): UiObject;"
+                },
+                {
+                    "name": "typeInto",
+                    "type": "function",
+                    "doc": "typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions): UiObject;",
+                    "signature": "typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions): UiObject;"
+                },
+                {
+                    "name": "dismissPopups",
+                    "type": "function",
+                    "doc": "dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number): Automator.ClickedCandidate | Automator.ClickedCandidate[] | Automator.PopupGuard | null;",
+                    "signature": "dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number): Automator.ClickedCandidate | Automator.ClickedCandidate[] | Automator.PopupGuard | null;"
+                },
+                {
+                    "name": "collectList",
+                    "type": "function",
+                    "doc": "collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions): any[];",
+                    "signature": "collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions): any[];"
+                },
+                {
+                    "name": "launchAndWait",
+                    "type": "function",
+                    "doc": "launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number): Automator.LaunchResult;",
+                    "signature": "launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number): Automator.LaunchResult;"
+                },
+                {
+                    "name": "backUntil",
+                    "type": "function",
+                    "doc": "backUntil(cond: Automator.Target, options?: Automator.BackOptions | number): any;",
+                    "signature": "backUntil(cond: Automator.Target, options?: Automator.BackOptions | number): any;"
+                },
+                {
+                    "name": "backToApp",
+                    "type": "function",
+                    "doc": "backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number): string;",
+                    "signature": "backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number): string;"
+                },
+                {
+                    "name": "toggle",
+                    "type": "function",
+                    "doc": "toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;",
+                    "signature": "toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;"
+                },
+                {
+                    "name": "retry",
+                    "type": "function",
+                    "doc": "retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;",
+                    "signature": "retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;"
+                },
+                {
+                    "name": "waitForIdle",
+                    "type": "function",
+                    "doc": "waitForIdle(quietFor?: number): Automator.IdleResult;",
+                    "signature": "waitForIdle(quietFor?: number): Automator.IdleResult;"
+                },
+                {
+                    "name": "waitForEvent",
+                    "type": "function",
+                    "doc": "waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;",
+                    "signature": "waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;"
+                },
+                {
+                    "name": "waitForToast",
+                    "type": "function",
+                    "doc": "waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;",
+                    "signature": "waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;"
+                },
+                {
+                    "name": "waitForNotification",
+                    "type": "function",
+                    "doc": "waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;",
+                    "signature": "waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;"
                 }
             ],
             "barcode": [
                 {
                     "name": "detect",
                     "type": "function",
-                    "doc": "detect(options?: DetectOptions): Barcode.Result | Barcode.Result[] | null;",
-                    "signature": "detect(options?: DetectOptions): Barcode.Result | Barcode.Result[] | null;"
+                    "doc": "detect(options: Barcode.DetectAllOptions): Barcode.Result[];",
+                    "signature": "detect(options: Barcode.DetectAllOptions): Barcode.Result[];"
                 },
                 {
                     "name": "detectAll",
@@ -2728,8 +3463,8 @@
                 {
                     "name": "recognizeText",
                     "type": "function",
-                    "doc": "recognizeText(options?: DetectOptions): string | string[] | null;",
-                    "signature": "recognizeText(options?: DetectOptions): string | string[] | null;"
+                    "doc": "recognizeText(options: Barcode.DetectAllOptions): string[];",
+                    "signature": "recognizeText(options: Barcode.DetectAllOptions): string[];"
                 },
                 {
                     "name": "recognizeTexts",
@@ -2748,16 +3483,16 @@
                 {
                     "name": "decode",
                     "type": "function",
-                    "doc": "decode(o: Base64.Input, encoding?: Base64.Encoding): string;",
-                    "signature": "decode(o: Base64.Input, encoding?: Base64.Encoding): string;"
+                    "doc": "decode(o: Base64.DecodeInput, encoding?: Base64.Encoding): string;",
+                    "signature": "decode(o: Base64.DecodeInput, encoding?: Base64.Encoding): string;"
                 }
             ],
             "Color": [
                 {
                     "name": "new",
                     "type": "function",
-                    "doc": "new(color?: OmniColor);",
-                    "signature": "new(color?: OmniColor);"
+                    "doc": "new(color?: OmniColor): Color;",
+                    "signature": "new(color?: OmniColor): Color;"
                 },
                 {
                     "name": "color",
@@ -3094,6 +3829,30 @@
                     "type": "function",
                     "doc": "isEqual(other: OmniColor, alphaMatters?: boolean): boolean;",
                     "signature": "isEqual(other: OmniColor, alphaMatters?: boolean): boolean;"
+                },
+                {
+                    "name": "distance",
+                    "type": "function",
+                    "doc": "distance(other: OmniColor, algorithm?: DetectionAlgorithm): number;",
+                    "signature": "distance(other: OmniColor, algorithm?: DetectionAlgorithm): number;"
+                },
+                {
+                    "name": "invert",
+                    "type": "function",
+                    "doc": "invert(): ColorInt;",
+                    "signature": "invert(): ColorInt;"
+                },
+                {
+                    "name": "blend",
+                    "type": "function",
+                    "doc": "blend(other: OmniColor, ratio?: number | PercentString): ColorInt;",
+                    "signature": "blend(other: OmniColor, ratio?: number | PercentString): ColorInt;"
+                },
+                {
+                    "name": "contrast",
+                    "type": "function",
+                    "doc": "contrast(background: OmniColor): number;",
+                    "signature": "contrast(background: OmniColor): number;"
                 },
                 {
                     "name": "equals",
@@ -6752,6 +7511,30 @@
                     "signature": "isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean): boolean;"
                 },
                 {
+                    "name": "distance",
+                    "type": "function",
+                    "doc": "distance(colorA: OmniColor, colorB: OmniColor, algorithm?: DetectionAlgorithm): number;",
+                    "signature": "distance(colorA: OmniColor, colorB: OmniColor, algorithm?: DetectionAlgorithm): number;"
+                },
+                {
+                    "name": "invert",
+                    "type": "function",
+                    "doc": "invert(color: OmniColor): ColorInt;",
+                    "signature": "invert(color: OmniColor): ColorInt;"
+                },
+                {
+                    "name": "blend",
+                    "type": "function",
+                    "doc": "blend(colorA: OmniColor, colorB: OmniColor, ratio?: number | PercentString): ColorInt;",
+                    "signature": "blend(colorA: OmniColor, colorB: OmniColor, ratio?: number | PercentString): ColorInt;"
+                },
+                {
+                    "name": "contrast",
+                    "type": "function",
+                    "doc": "contrast(foreground: OmniColor, background: OmniColor): number;",
+                    "signature": "contrast(foreground: OmniColor, background: OmniColor): number;"
+                },
+                {
                     "name": "equals",
                     "type": "function",
                     "doc": "equals(colorA: OmniColor, colorB: OmniColor): boolean;",
@@ -6804,8 +7587,8 @@
                 {
                     "name": "input",
                     "type": "function",
-                    "doc": "input(...data): any;",
-                    "signature": "input(...data): any;"
+                    "doc": "input(data?: any, ...args: any[]): any;",
+                    "signature": "input(data?: any, ...args: any[]): any;"
                 },
                 {
                     "name": "verbose",
@@ -7064,6 +7847,36 @@
                     "type": "function",
                     "doc": "setTouchable(touchable?: boolean): this;",
                     "signature": "setTouchable(touchable?: boolean): this;"
+                },
+                {
+                    "name": "setAvoidStatusBar",
+                    "type": "function",
+                    "doc": "setAvoidStatusBar(avoid?: boolean): this;",
+                    "signature": "setAvoidStatusBar(avoid?: boolean): this;"
+                },
+                {
+                    "name": "setTimeVisible",
+                    "type": "function",
+                    "doc": "setTimeVisible(visible?: boolean): this;",
+                    "signature": "setTimeVisible(visible?: boolean): this;"
+                },
+                {
+                    "name": "setTimeFormat",
+                    "type": "function",
+                    "doc": "setTimeFormat(pattern?: string): this;",
+                    "signature": "setTimeFormat(pattern?: string): this;"
+                },
+                {
+                    "name": "setColorful",
+                    "type": "function",
+                    "doc": "setColorful(colorful?: boolean): this;",
+                    "signature": "setColorful(colorful?: boolean): this;"
+                },
+                {
+                    "name": "setInputVisible",
+                    "type": "function",
+                    "doc": "setInputVisible(visible?: boolean): this;",
+                    "signature": "setInputVisible(visible?: boolean): this;"
                 },
                 {
                     "name": "printAllStackTrace",
@@ -7944,26 +8757,26 @@
                 {
                     "name": "digest",
                     "type": "function",
-                    "doc": "digest(message: string, algorithm?: Crypto.DigestAlgorithm, options?: Crypto.DigestOptions): Crypto.Output;",
-                    "signature": "digest(message: string, algorithm?: Crypto.DigestAlgorithm, options?: Crypto.DigestOptions): Crypto.Output;"
+                    "doc": "digest(message: Crypto.Input, algorithm?: Crypto.DigestAlgorithm, options?: Crypto.DigestOptions): Crypto.Output;",
+                    "signature": "digest(message: Crypto.Input, algorithm?: Crypto.DigestAlgorithm, options?: Crypto.DigestOptions): Crypto.Output;"
                 },
                 {
                     "name": "encrypt",
                     "type": "function",
-                    "doc": "encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;",
-                    "signature": "encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;"
+                    "doc": "encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;",
+                    "signature": "encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;"
                 },
                 {
                     "name": "decrypt",
                     "type": "function",
-                    "doc": "decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;",
-                    "signature": "decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;"
+                    "doc": "decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;",
+                    "signature": "decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;"
                 },
                 {
                     "name": "generateKeyPair",
                     "type": "function",
-                    "doc": "generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm, length?: number): Crypto.KeyPair;",
-                    "signature": "generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm, length?: number): Crypto.KeyPair;"
+                    "doc": "generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm): Crypto.KeyPair;",
+                    "signature": "generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm): Crypto.KeyPair;"
                 }
             ],
             "cvt": [
@@ -8004,6 +8817,12 @@
                     "type": "variable",
                     "doc": "density: number;",
                     "signature": "density: number;"
+                },
+                {
+                    "name": "pageSize",
+                    "type": "variable",
+                    "doc": "pageSize: number;",
+                    "signature": "pageSize: number;"
                 },
                 {
                     "name": "summary",
@@ -8465,8 +9284,8 @@
                 {
                     "name": "multiChoice",
                     "type": "function",
-                    "doc": "multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<any>;",
-                    "signature": "multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<any>;"
+                    "doc": "multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<number[]>;",
+                    "signature": "multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<number[]>;"
                 },
                 {
                     "name": "build",
@@ -8942,6 +9761,12 @@
                     "signature": "hasPermission(): boolean;"
                 },
                 {
+                    "name": "checkPermission",
+                    "type": "function",
+                    "doc": "checkPermission(): boolean;",
+                    "signature": "checkPermission(): boolean;"
+                },
+                {
                     "name": "requestPermission",
                     "type": "function",
                     "doc": "requestPermission(): void;",
@@ -8964,6 +9789,338 @@
                     "type": "function",
                     "doc": "getClip(maxDelayAfterWindowReady?: number): string;",
                     "signature": "getClip(maxDelayAfterWindowReady?: number): string;"
+                }
+            ],
+            "flow": [
+                {
+                    "name": "wait",
+                    "type": "variable",
+                    "doc": "wait: Flow.WaitFunction<UiObject>;",
+                    "signature": "wait: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitAsync",
+                    "type": "variable",
+                    "doc": "waitAsync: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitAsync: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitUntil",
+                    "type": "variable",
+                    "doc": "waitUntil: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitUntil: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitWhile",
+                    "type": "variable",
+                    "doc": "waitWhile: Flow.WaitWhileFunction;",
+                    "signature": "waitWhile: Flow.WaitWhileFunction;"
+                },
+                {
+                    "name": "waitForStable",
+                    "type": "variable",
+                    "doc": "waitForStable: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitForStable: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitForVisible",
+                    "type": "variable",
+                    "doc": "waitForVisible: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitForVisible: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitForHidden",
+                    "type": "variable",
+                    "doc": "waitForHidden: Flow.WaitHiddenFunction;",
+                    "signature": "waitForHidden: Flow.WaitHiddenFunction;"
+                },
+                {
+                    "name": "waitForGone",
+                    "type": "variable",
+                    "doc": "waitForGone: Flow.WaitHiddenFunction;",
+                    "signature": "waitForGone: Flow.WaitHiddenFunction;"
+                },
+                {
+                    "name": "waitForActivity",
+                    "type": "variable",
+                    "doc": "waitForActivity: Flow.NativeWaitFunction;",
+                    "signature": "waitForActivity: Flow.NativeWaitFunction;"
+                },
+                {
+                    "name": "waitForPackage",
+                    "type": "variable",
+                    "doc": "waitForPackage: Flow.NativeWaitFunction;",
+                    "signature": "waitForPackage: Flow.NativeWaitFunction;"
+                },
+                {
+                    "name": "waitThenClick",
+                    "type": "variable",
+                    "doc": "waitThenClick: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitThenClick: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitThenClickBounds",
+                    "type": "variable",
+                    "doc": "waitThenClickBounds: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitThenClickBounds: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "clickWait",
+                    "type": "variable",
+                    "doc": "clickWait: Flow.WaitFunction<UiObject>;",
+                    "signature": "clickWait: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "clickBoundsWait",
+                    "type": "variable",
+                    "doc": "clickBoundsWait: Flow.WaitFunction<UiObject>;",
+                    "signature": "clickBoundsWait: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitThenLongClick",
+                    "type": "variable",
+                    "doc": "waitThenLongClick: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitThenLongClick: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitForStableThenClick",
+                    "type": "variable",
+                    "doc": "waitForStableThenClick: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitForStableThenClick: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "waitForStableThenClickBounds",
+                    "type": "variable",
+                    "doc": "waitForStableThenClickBounds: Flow.WaitFunction<UiObject>;",
+                    "signature": "waitForStableThenClickBounds: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "clickWhenStable",
+                    "type": "variable",
+                    "doc": "clickWhenStable: Flow.WaitFunction<UiObject>;",
+                    "signature": "clickWhenStable: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "clickBoundsWhenStable",
+                    "type": "variable",
+                    "doc": "clickBoundsWhenStable: Flow.WaitFunction<UiObject>;",
+                    "signature": "clickBoundsWhenStable: Flow.WaitFunction<UiObject>;"
+                },
+                {
+                    "name": "clickWhenStableAfter",
+                    "type": "variable",
+                    "doc": "clickWhenStableAfter: Flow.WaitAfterFunction;",
+                    "signature": "clickWhenStableAfter: Flow.WaitAfterFunction;"
+                },
+                {
+                    "name": "clickBoundsWhenStableAfter",
+                    "type": "variable",
+                    "doc": "clickBoundsWhenStableAfter: Flow.WaitAfterFunction;",
+                    "signature": "clickBoundsWhenStableAfter: Flow.WaitAfterFunction;"
+                },
+                {
+                    "name": "sleep",
+                    "type": "function",
+                    "doc": "sleep(millis: number): Flow<void>;",
+                    "signature": "sleep(millis: number): Flow<void>;"
+                },
+                {
+                    "name": "delay",
+                    "type": "function",
+                    "doc": "delay(millis: number): Flow<void>;",
+                    "signature": "delay(millis: number): Flow<void>;"
+                },
+                {
+                    "name": "run",
+                    "type": "function",
+                    "doc": "run<R>(fn: () => R | Flow<R> | PromiseLike<R>): Flow<R>;",
+                    "signature": "run<R>(fn: () => R | Flow<R> | PromiseLike<R>): Flow<R>;"
+                },
+                {
+                    "name": "of",
+                    "type": "function",
+                    "doc": "of<V>(value: V): Flow<V>;",
+                    "signature": "of<V>(value: V): Flow<V>;"
+                },
+                {
+                    "name": "Flow",
+                    "type": "variable",
+                    "doc": "Flow: Flow.Constructor;",
+                    "signature": "Flow: Flow.Constructor;"
+                },
+                {
+                    "name": "all",
+                    "type": "function",
+                    "doc": "all(...sources: Flow.Source[]): Flow<any[]>;",
+                    "signature": "all(...sources: Flow.Source[]): Flow<any[]>;"
+                },
+                {
+                    "name": "race",
+                    "type": "function",
+                    "doc": "race(...sources: Flow.Source[]): Flow<any>;",
+                    "signature": "race(...sources: Flow.Source[]): Flow<any>;"
+                },
+                {
+                    "name": "any",
+                    "type": "function",
+                    "doc": "any(...sources: Flow.Source[]): Flow<any>;",
+                    "signature": "any(...sources: Flow.Source[]): Flow<any>;"
+                },
+                {
+                    "name": "cancelAll",
+                    "type": "function",
+                    "doc": "cancelAll(): number;",
+                    "signature": "cancelAll(): number;"
+                },
+                {
+                    "name": "defaults",
+                    "type": "function",
+                    "doc": "defaults(): Flow.Defaults;",
+                    "signature": "defaults(): Flow.Defaults;"
+                },
+                {
+                    "name": "trace",
+                    "type": "function",
+                    "doc": "trace(on?: boolean): boolean;",
+                    "signature": "trace(on?: boolean): boolean;"
+                },
+                {
+                    "name": "pending",
+                    "type": "variable",
+                    "doc": "pending: number;",
+                    "signature": "pending: number;"
+                },
+                {
+                    "name": "workers",
+                    "type": "variable",
+                    "doc": "workers: number;",
+                    "signature": "workers: number;"
+                },
+                {
+                    "name": "smartClick",
+                    "type": "function",
+                    "doc": "smartClick(target: Automator.Target, options?: Automator.SmartClickOptions, onOk?: Flow.OnOk<Automator.SmartClickResult>, onErr?: Flow.OnErr): Flow<Automator.SmartClickResult>;",
+                    "signature": "smartClick(target: Automator.Target, options?: Automator.SmartClickOptions, onOk?: Flow.OnOk<Automator.SmartClickResult>, onErr?: Flow.OnErr): Flow<Automator.SmartClickResult>;"
+                },
+                {
+                    "name": "smartClickBounds",
+                    "type": "function",
+                    "doc": "smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions, onOk?: Flow.OnOk<Automator.SmartClickBoundsResult>, onErr?: Flow.OnErr): Flow<Automator.SmartClickBoundsResult>;",
+                    "signature": "smartClickBounds(target: Automator.Target, options?: Automator.ClickBoundsOptions, onOk?: Flow.OnOk<Automator.SmartClickBoundsResult>, onErr?: Flow.OnErr): Flow<Automator.SmartClickBoundsResult>;"
+                },
+                {
+                    "name": "clickIfExists",
+                    "type": "function",
+                    "doc": "clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;",
+                    "signature": "clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;"
+                },
+                {
+                    "name": "clickBoundsIfExists",
+                    "type": "function",
+                    "doc": "clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;",
+                    "signature": "clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;"
+                },
+                {
+                    "name": "whenPresent",
+                    "type": "function",
+                    "doc": "whenPresent(cond: Flow.SelectorCond, handler: (match: UiObject[]) => any, options: Flow.WhenPresentOptions & { resultType: '[]' }): Flow<null>;",
+                    "signature": "whenPresent(cond: Flow.SelectorCond, handler: (match: UiObject[]) => any, options: Flow.WhenPresentOptions & { resultType: '[]' }): Flow<null>;"
+                },
+                {
+                    "name": "repeatUntil",
+                    "type": "variable",
+                    "doc": "repeatUntil: Flow.RepeatUntilFunction;",
+                    "signature": "repeatUntil: Flow.RepeatUntilFunction;"
+                },
+                {
+                    "name": "clickAny",
+                    "type": "function",
+                    "doc": "clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<Automator.ClickedCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedCandidate | null>;",
+                    "signature": "clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<Automator.ClickedCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedCandidate | null>;"
+                },
+                {
+                    "name": "clickBoundsAny",
+                    "type": "function",
+                    "doc": "clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<Automator.ClickedBoundsCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedBoundsCandidate | null>;",
+                    "signature": "clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<Automator.ClickedBoundsCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedBoundsCandidate | null>;"
+                },
+                {
+                    "name": "findAny",
+                    "type": "function",
+                    "doc": "findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number, onOk?: Flow.OnOk<Automator.FoundCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.FoundCandidate | null>;",
+                    "signature": "findAny(targets: Automator.Target | Automator.Target[], options?: Automator.ToolOptions | number, onOk?: Flow.OnOk<Automator.FoundCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.FoundCandidate | null>;"
+                },
+                {
+                    "name": "scrollUntil",
+                    "type": "function",
+                    "doc": "scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions, onOk?: Flow.OnOk<UiObject>, onErr?: Flow.OnErr): Flow<UiObject>;",
+                    "signature": "scrollUntil(target: Automator.Target, options?: Automator.ScrollUntilOptions, onOk?: Flow.OnOk<UiObject>, onErr?: Flow.OnErr): Flow<UiObject>;"
+                },
+                {
+                    "name": "typeInto",
+                    "type": "function",
+                    "doc": "typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions, onOk?: Flow.OnOk<UiObject>, onErr?: Flow.OnErr): Flow<UiObject>;",
+                    "signature": "typeInto(target: Automator.TextTarget, text: string, options?: Automator.TypeIntoOptions, onOk?: Flow.OnOk<UiObject>, onErr?: Flow.OnErr): Flow<UiObject>;"
+                },
+                {
+                    "name": "dismissPopups",
+                    "type": "function",
+                    "doc": "dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number, onOk?: Flow.OnOk<Automator.ClickedCandidate | Automator.ClickedCandidate[] | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedCandidate | Automator.ClickedCandidate[] | null>;",
+                    "signature": "dismissPopups(targets: Automator.Target | Automator.Target[], options?: Automator.DismissPopupsOptions | number, onOk?: Flow.OnOk<Automator.ClickedCandidate | Automator.ClickedCandidate[] | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedCandidate | Automator.ClickedCandidate[] | null>;"
+                },
+                {
+                    "name": "collectList",
+                    "type": "function",
+                    "doc": "collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions, onOk?: Flow.OnOk<any[]>, onErr?: Flow.OnErr): Flow<any[]>;",
+                    "signature": "collectList(container: Automator.Target | null, item: Automator.Target, options?: Automator.CollectListOptions, onOk?: Flow.OnOk<any[]>, onErr?: Flow.OnErr): Flow<any[]>;"
+                },
+                {
+                    "name": "launchAndWait",
+                    "type": "function",
+                    "doc": "launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number, onOk?: Flow.OnOk<Automator.LaunchResult>, onErr?: Flow.OnErr): Flow<Automator.LaunchResult>;",
+                    "signature": "launchAndWait(app: Automator.AppLike, options?: Automator.LaunchOptions | number, onOk?: Flow.OnOk<Automator.LaunchResult>, onErr?: Flow.OnErr): Flow<Automator.LaunchResult>;"
+                },
+                {
+                    "name": "backUntil",
+                    "type": "function",
+                    "doc": "backUntil(cond: Automator.Target, options?: Automator.BackOptions | number, onOk?: Flow.OnOk<any>, onErr?: Flow.OnErr): Flow<any>;",
+                    "signature": "backUntil(cond: Automator.Target, options?: Automator.BackOptions | number, onOk?: Flow.OnOk<any>, onErr?: Flow.OnErr): Flow<any>;"
+                },
+                {
+                    "name": "backToApp",
+                    "type": "function",
+                    "doc": "backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number, onOk?: Flow.OnOk<string>, onErr?: Flow.OnErr): Flow<string>;",
+                    "signature": "backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number, onOk?: Flow.OnOk<string>, onErr?: Flow.OnErr): Flow<string>;"
+                },
+                {
+                    "name": "toggle",
+                    "type": "function",
+                    "doc": "toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions, onOk?: Flow.OnOk<Automator.ToggleResult>, onErr?: Flow.OnErr): Flow<Automator.ToggleResult>;",
+                    "signature": "toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions, onOk?: Flow.OnOk<Automator.ToggleResult>, onErr?: Flow.OnErr): Flow<Automator.ToggleResult>;"
+                },
+                {
+                    "name": "waitForIdle",
+                    "type": "function",
+                    "doc": "waitForIdle(quietFor?: number): Flow<Automator.IdleResult>;",
+                    "signature": "waitForIdle(quietFor?: number): Flow<Automator.IdleResult>;"
+                },
+                {
+                    "name": "waitForEvent",
+                    "type": "function",
+                    "doc": "waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Flow<Automator.AccessibilityEvent>;",
+                    "signature": "waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Flow<Automator.AccessibilityEvent>;"
+                },
+                {
+                    "name": "waitForToast",
+                    "type": "function",
+                    "doc": "waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Flow<Automator.Toast>;",
+                    "signature": "waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Flow<Automator.Toast>;"
+                },
+                {
+                    "name": "waitForNotification",
+                    "type": "function",
+                    "doc": "waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): Flow<org.autojs.autojs.core.notification.Notification>;",
+                    "signature": "waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): Flow<org.autojs.autojs.core.notification.Notification>;"
                 }
             ],
             "fmt": [
@@ -9160,6 +10317,102 @@
             ],
             "images": [
                 {
+                    "name": "ObjectFrame",
+                    "type": "variable",
+                    "doc": "ObjectFrame: typeof Images.ObjectFrame;",
+                    "signature": "ObjectFrame: typeof Images.ObjectFrame;"
+                },
+                {
+                    "name": "invert",
+                    "type": "function",
+                    "doc": "invert(image: Images.ImageSource): ImageWrapper;",
+                    "signature": "invert(image: Images.ImageSource): ImageWrapper;"
+                },
+                {
+                    "name": "isGrayscale",
+                    "type": "function",
+                    "doc": "isGrayscale(image: Images.ComparableImageSource): boolean;",
+                    "signature": "isGrayscale(image: Images.ComparableImageSource): boolean;"
+                },
+                {
+                    "name": "flip",
+                    "type": "function",
+                    "doc": "flip(image: Images.ImageSource): ImageWrapper;",
+                    "signature": "flip(image: Images.ImageSource): ImageWrapper;"
+                },
+                {
+                    "name": "detectColor",
+                    "type": "function",
+                    "doc": "detectColor( image: Images.ImageSource, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;",
+                    "signature": "detectColor( image: Images.ImageSource, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;"
+                },
+                {
+                    "name": "detectMultiColors",
+                    "type": "function",
+                    "doc": "detectMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;",
+                    "signature": "detectMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;"
+                },
+                {
+                    "name": "detectsMultiColors",
+                    "type": "function",
+                    "doc": "detectsMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;",
+                    "signature": "detectsMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;"
+                },
+                {
+                    "name": "findPointByColor",
+                    "type": "function",
+                    "doc": "findPointByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Point | null;",
+                    "signature": "findPointByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Point | null;"
+                },
+                {
+                    "name": "findPointByColorExactly",
+                    "type": "function",
+                    "doc": "findPointByColorExactly( image: Images.ImageSource, color: Color$, options?: Pick<Images.ColorSearchOptions, 'region'>, ): OpenCV.Point | null;",
+                    "signature": "findPointByColorExactly( image: Images.ImageSource, color: Color$, options?: Pick<Images.ColorSearchOptions, 'region'>, ): OpenCV.Point | null;"
+                },
+                {
+                    "name": "findPointsByColor",
+                    "type": "function",
+                    "doc": "findPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Points;",
+                    "signature": "findPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Points;"
+                },
+                {
+                    "name": "findPointByColors",
+                    "type": "function",
+                    "doc": "findPointByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Point | null;",
+                    "signature": "findPointByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Point | null;"
+                },
+                {
+                    "name": "findPointsByColors",
+                    "type": "function",
+                    "doc": "findPointsByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Points;",
+                    "signature": "findPointsByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Points;"
+                },
+                {
+                    "name": "countPointsByColor",
+                    "type": "function",
+                    "doc": "countPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): number;",
+                    "signature": "countPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): number;"
+                },
+                {
+                    "name": "getMeanColor",
+                    "type": "function",
+                    "doc": "getMeanColor(image: Images.ImageSource, region?: OmniRegion): ColorInt;",
+                    "signature": "getMeanColor(image: Images.ImageSource, region?: OmniRegion): ColorInt;"
+                },
+                {
+                    "name": "findPointByImage",
+                    "type": "function",
+                    "doc": "findPointByImage( image: Images.ImageSource, template: Images.ImageSource, options?: Images.ImageSearchOptions, ): OpenCV.Point | null;",
+                    "signature": "findPointByImage( image: Images.ImageSource, template: Images.ImageSource, options?: Images.ImageSearchOptions, ): OpenCV.Point | null;"
+                },
+                {
+                    "name": "findImage",
+                    "type": "function",
+                    "doc": "findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;",
+                    "signature": "findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;"
+                },
+                {
                     "name": "initOpenCvIfNeeded",
                     "type": "function",
                     "doc": "initOpenCvIfNeeded(): void;",
@@ -9240,56 +10493,50 @@
                 {
                     "name": "detectsColor",
                     "type": "function",
-                    "doc": "detectsColor( img: ImageWrapper, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;",
-                    "signature": "detectsColor( img: ImageWrapper, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;"
+                    "doc": "detectsColor( img: Images.ImageSource, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;",
+                    "signature": "detectsColor( img: Images.ImageSource, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;"
                 },
                 {
                     "name": "findAllPointsForColor",
                     "type": "function",
-                    "doc": "findAllPointsForColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Points;",
-                    "signature": "findAllPointsForColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Points;"
+                    "doc": "findAllPointsForColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Points;",
+                    "signature": "findAllPointsForColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Points;"
                 },
                 {
                     "name": "findCircles",
                     "type": "function",
-                    "doc": "findCircles(grayImg: ImageWrapper, options?: Images.Circles.Options): Images.Circles.Result;",
-                    "signature": "findCircles(grayImg: ImageWrapper, options?: Images.Circles.Options): Images.Circles.Result;"
+                    "doc": "findCircles(grayImg: ImageWrapper | string, options?: Images.Circles.Options): Images.Circles.Result;",
+                    "signature": "findCircles(grayImg: ImageWrapper | string, options?: Images.Circles.Options): Images.Circles.Result;"
                 },
                 {
                     "name": "findColor",
                     "type": "function",
-                    "doc": "findColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;",
-                    "signature": "findColor(img: ImageWrapper, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;"
+                    "doc": "findColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;",
+                    "signature": "findColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;"
                 },
                 {
                     "name": "findColorEquals",
                     "type": "function",
-                    "doc": "findColorEquals(img: ImageWrapper, color: Color$, x?: X, y?: Y, width?: Width, height?: Height): OpenCV.Point | null;",
-                    "signature": "findColorEquals(img: ImageWrapper, color: Color$, x?: X, y?: Y, width?: Width, height?: Height): OpenCV.Point | null;"
+                    "doc": "findColorEquals(img: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height): OpenCV.Point | null;",
+                    "signature": "findColorEquals(img: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height): OpenCV.Point | null;"
                 },
                 {
                     "name": "findColorInRegion",
                     "type": "function",
-                    "doc": "findColorInRegion(img: ImageWrapper, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number): OpenCV.Point | null;",
-                    "signature": "findColorInRegion(img: ImageWrapper, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number): OpenCV.Point | null;"
-                },
-                {
-                    "name": "findImage",
-                    "type": "function",
-                    "doc": "findImage(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;",
-                    "signature": "findImage(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;"
+                    "doc": "findColorInRegion(img: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number): OpenCV.Point | null;",
+                    "signature": "findColorInRegion(img: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number): OpenCV.Point | null;"
                 },
                 {
                     "name": "findImageInRegion",
                     "type": "function",
-                    "doc": "findImageInRegion( image: ImageWrapper, template: ImageWrapper, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;",
-                    "signature": "findImageInRegion( image: ImageWrapper, template: ImageWrapper, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;"
+                    "doc": "findImageInRegion( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;",
+                    "signature": "findImageInRegion( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;"
                 },
                 {
                     "name": "findMultiColors",
                     "type": "function",
-                    "doc": "findMultiColors( img: ImageWrapper, firstColor: Color$, paths: [X, Y, Color$][], options?: { region?: OmniRegion; threshold?: number; }, ): OpenCV.Point | null;",
-                    "signature": "findMultiColors( img: ImageWrapper, firstColor: Color$, paths: [X, Y, Color$][], options?: { region?: OmniRegion; threshold?: number; }, ): OpenCV.Point | null;"
+                    "doc": "findMultiColors( img: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: { region?: OmniRegion; similarity?: number; threshold?: number; }, ): OpenCV.Point | null;",
+                    "signature": "findMultiColors( img: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: { region?: OmniRegion; similarity?: number; threshold?: number; }, ): OpenCV.Point | null;"
                 },
                 {
                     "name": "fromBase64",
@@ -9318,8 +10565,8 @@
                 {
                     "name": "grayscale",
                     "type": "function",
-                    "doc": "grayscale(src: ImageWrapper, dstCn?: number): ImageWrapper;",
-                    "signature": "grayscale(src: ImageWrapper, dstCn?: number): ImageWrapper;"
+                    "doc": "grayscale(src: Images.ImageSource, dstCn?: number): ImageWrapper;",
+                    "signature": "grayscale(src: Images.ImageSource, dstCn?: number): ImageWrapper;"
                 },
                 {
                     "name": "inRange",
@@ -9336,8 +10583,8 @@
                 {
                     "name": "matchTemplate",
                     "type": "function",
-                    "doc": "matchTemplate(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number; weakThreshold?: number; level?: number; region?: OmniRegion; max?: number; }): Images.MatchingResult;",
-                    "signature": "matchTemplate(img: ImageWrapper, template: ImageWrapper, options?: { threshold?: number; weakThreshold?: number; level?: number; region?: OmniRegion; max?: number; }): Images.MatchingResult;"
+                    "doc": "matchTemplate(img: Images.ImageSource, template: Images.ImageSource, options?: { threshold?: number; weakThreshold?: number; level?: number; region?: OmniRegion; max?: number; scales?: number | number[]; scale?: number | number[]; useTransparentMask?: boolean; transparentMask?: boolean; }): Images.MatchingResult;",
+                    "signature": "matchTemplate(img: Images.ImageSource, template: Images.ImageSource, options?: { threshold?: number; weakThreshold?: number; level?: number; region?: OmniRegion; max?: number; scales?: number | number[]; scale?: number | number[]; useTransparentMask?: boolean; transparentMask?: boolean; }): Images.MatchingResult;"
                 },
                 {
                     "name": "matToImage",
@@ -9354,8 +10601,8 @@
                 {
                     "name": "readPixels",
                     "type": "function",
-                    "doc": "readPixels(path: string): { data: number[], width: Width, height: Height };",
-                    "signature": "readPixels(path: string): { data: number[], width: Width, height: Height };"
+                    "doc": "readPixels(image: Images.ImageSource): { data: number[], width: Width, height: Height };",
+                    "signature": "readPixels(image: Images.ImageSource): { data: number[], width: Width, height: Height };"
                 },
                 {
                     "name": "requestScreenCapture",
@@ -9384,8 +10631,8 @@
                 {
                     "name": "resize",
                     "type": "function",
-                    "doc": "resize(src: ImageWrapper, dsize: Side | [Width, Height?], interpolation?: Images.InterpolationFlags): ImageWrapper;",
-                    "signature": "resize(src: ImageWrapper, dsize: Side | [Width, Height?], interpolation?: Images.InterpolationFlags): ImageWrapper;"
+                    "doc": "resize(src: ImageWrapper | string, dsize: [Side] | [Width, Height], interpolation?: Images.InterpolationFlags): ImageWrapper;",
+                    "signature": "resize(src: ImageWrapper | string, dsize: [Side] | [Width, Height], interpolation?: Images.InterpolationFlags): ImageWrapper;"
                 },
                 {
                     "name": "rotate",
@@ -9396,20 +10643,20 @@
                 {
                     "name": "save",
                     "type": "function",
-                    "doc": "save(img: ImageWrapper, path: string, format?: Images.Format, quality?: number): boolean;",
-                    "signature": "save(img: ImageWrapper, path: string, format?: Images.Format, quality?: number): boolean;"
+                    "doc": "save(img: ImageWrapper, path: string, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): boolean;",
+                    "signature": "save(img: ImageWrapper, path: string, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): boolean;"
                 },
                 {
                     "name": "saveImage",
                     "type": "function",
-                    "doc": "saveImage(img: ImageWrapper, path: string, format?: Images.Format, quality?: number): boolean;",
-                    "signature": "saveImage(img: ImageWrapper, path: string, format?: Images.Format, quality?: number): boolean;"
+                    "doc": "saveImage(img: ImageWrapper, path: string, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): boolean;",
+                    "signature": "saveImage(img: ImageWrapper, path: string, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): boolean;"
                 },
                 {
                     "name": "scale",
                     "type": "function",
-                    "doc": "scale(src: ImageWrapper, fx: number, fy: number, interpolation?: Images.InterpolationFlags): ImageWrapper;",
-                    "signature": "scale(src: ImageWrapper, fx: number, fy: number, interpolation?: Images.InterpolationFlags): ImageWrapper;"
+                    "doc": "scale(src: ImageWrapper | string, fx: number, fy: number, interpolation?: Images.InterpolationFlags): ImageWrapper;",
+                    "signature": "scale(src: ImageWrapper | string, fx: number, fy: number, interpolation?: Images.InterpolationFlags): ImageWrapper;"
                 },
                 {
                     "name": "threshold",
@@ -9442,16 +10689,28 @@
                     "signature": "recycle(...images: ImageWrapper[]): boolean;"
                 },
                 {
+                    "name": "quantize",
+                    "type": "function",
+                    "doc": "quantize(img: Images.ImageSource, options?: Images.PngQuantizationOptions): Images.PngQuantizationResult;",
+                    "signature": "quantize(img: Images.ImageSource, options?: Images.PngQuantizationOptions): Images.PngQuantizationResult;"
+                },
+                {
+                    "name": "quantizeToFile",
+                    "type": "function",
+                    "doc": "quantizeToFile(img: Images.ImageSource, path: string, options?: Images.PngQuantizationOptions): Images.PngQuantizationFileResult;",
+                    "signature": "quantizeToFile(img: Images.ImageSource, path: string, options?: Images.PngQuantizationOptions): Images.PngQuantizationFileResult;"
+                },
+                {
                     "name": "compress",
                     "type": "function",
-                    "doc": "compress(img: Images.ImageSource, format?: Images.Format, quality?: number): ImageWrapper;",
-                    "signature": "compress(img: Images.ImageSource, format?: Images.Format, quality?: number): ImageWrapper;"
+                    "doc": "compress(img: Images.ImageSource, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): ImageWrapper;",
+                    "signature": "compress(img: Images.ImageSource, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): ImageWrapper;"
                 },
                 {
                     "name": "compressToBytes",
                     "type": "function",
-                    "doc": "compressToBytes(img: Images.ImageSource, format?: Images.Format, quality?: number): number[];",
-                    "signature": "compressToBytes(img: Images.ImageSource, format?: Images.Format, quality?: number): number[];"
+                    "doc": "compressToBytes(img: Images.ImageSource, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): number[];",
+                    "signature": "compressToBytes(img: Images.ImageSource, format?: Images.Format, qualityOrOptions?: number | Images.PngQuantizationOptions): number[];"
                 },
                 {
                     "name": "downsample",
@@ -9492,8 +10751,8 @@
                 {
                     "name": "matchFeatures",
                     "type": "function",
-                    "doc": "matchFeatures(sceneFeatures: Images.ImageFeatures, objectFeatures: Images.ImageFeatures, options?: Images.FeatureMatchingOptions): Images.ObjectFrame | null;",
-                    "signature": "matchFeatures(sceneFeatures: Images.ImageFeatures, objectFeatures: Images.ImageFeatures, options?: Images.FeatureMatchingOptions): Images.ObjectFrame | null;"
+                    "doc": "matchFeatures(scene: Images.ImageFeatures | Images.ImageSource, object: Images.ImageFeatures | Images.ImageSource, options?: Images.FeatureMatchingOptions): Images.ObjectFrame | null;",
+                    "signature": "matchFeatures(scene: Images.ImageFeatures | Images.ImageSource, object: Images.ImageFeatures | Images.ImageSource, options?: Images.FeatureMatchingOptions): Images.ObjectFrame | null;"
                 },
                 {
                     "name": "psnr",
@@ -9542,11 +10801,6 @@
                     "type": "function",
                     "doc": "getSimilarity(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource, options?: Images.SimilarityOptions): number;",
                     "signature": "getSimilarity(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource, options?: Images.SimilarityOptions): number;"
-                },
-                {
-                    "name": "detectColor",
-                    "type": "function",
-                    "doc": ""
                 }
             ],
             "jsox": [
@@ -9732,6 +10986,56 @@
                     "doc": ""
                 }
             ],
+            "mail": [
+                {
+                    "name": "connect",
+                    "type": "function",
+                    "doc": "connect(options: Mail.AccountOptions): Mail.Client;",
+                    "signature": "connect(options: Mail.AccountOptions): Mail.Client;"
+                },
+                {
+                    "name": "connectAsync",
+                    "type": "function",
+                    "doc": "connectAsync(options: Mail.AccountOptions): Promise<Mail.Client>;",
+                    "signature": "connectAsync(options: Mail.AccountOptions): Promise<Mail.Client>;"
+                },
+                {
+                    "name": "setDefault",
+                    "type": "function",
+                    "doc": "setDefault(client: Mail.Client): Mail.Client;",
+                    "signature": "setDefault(client: Mail.Client): Mail.Client;"
+                },
+                {
+                    "name": "default",
+                    "type": "variable",
+                    "doc": "default: Mail.Client | null;",
+                    "signature": "default: Mail.Client | null;"
+                },
+                {
+                    "name": "close",
+                    "type": "function",
+                    "doc": "close(): void;",
+                    "signature": "close(): void;"
+                },
+                {
+                    "name": "providers",
+                    "type": "variable",
+                    "doc": "providers: Mail.Providers;",
+                    "signature": "providers: Mail.Providers;"
+                },
+                {
+                    "name": "accounts",
+                    "type": "variable",
+                    "doc": "accounts: Mail.Accounts;",
+                    "signature": "accounts: Mail.Accounts;"
+                },
+                {
+                    "name": "MailError",
+                    "type": "variable",
+                    "doc": "MailError: Mail.MailErrorConstructor;",
+                    "signature": "MailError: Mail.MailErrorConstructor;"
+                }
+            ],
             "Mathx": [
                 {
                     "name": "randInt",
@@ -9885,10 +11189,46 @@
             ],
             "mediainfo": [
                 {
+                    "name": "SNAPSHOT_SCHEMA_V1",
+                    "type": "variable",
+                    "doc": "SNAPSHOT_SCHEMA_V1: 'autojs6-plugin-mediainfo-snapshot-v1';",
+                    "signature": "SNAPSHOT_SCHEMA_V1: 'autojs6-plugin-mediainfo-snapshot-v1';"
+                },
+                {
+                    "name": "SNAPSHOT_SCHEMA_V2",
+                    "type": "variable",
+                    "doc": "SNAPSHOT_SCHEMA_V2: 'autojs6-plugin-mediainfo-snapshot-v2';",
+                    "signature": "SNAPSHOT_SCHEMA_V2: 'autojs6-plugin-mediainfo-snapshot-v2';"
+                },
+                {
                     "name": "read",
                     "type": "function",
                     "doc": "read(path: string): Mediainfo.Result;",
                     "signature": "read(path: string): Mediainfo.Result;"
+                },
+                {
+                    "name": "get",
+                    "type": "function",
+                    "doc": "get(path: string, streamKind: Mediainfo.StreamKind, parameter: string, options?: Mediainfo.QueryOptions): string;",
+                    "signature": "get(path: string, streamKind: Mediainfo.StreamKind, parameter: string, options?: Mediainfo.QueryOptions): string;"
+                },
+                {
+                    "name": "countGet",
+                    "type": "function",
+                    "doc": "countGet(path: string, streamKind: Exclude<Mediainfo.StreamKind, 'max'>): number;",
+                    "signature": "countGet(path: string, streamKind: Exclude<Mediainfo.StreamKind, 'max'>): number;"
+                },
+                {
+                    "name": "snapshot",
+                    "type": "function",
+                    "doc": "snapshot(path: string, options: Mediainfo.SnapshotOptions & { readonly schema: 'autojs6-plugin-mediainfo-snapshot-v1' }): Mediainfo.SnapshotV1;",
+                    "signature": "snapshot(path: string, options: Mediainfo.SnapshotOptions & { readonly schema: 'autojs6-plugin-mediainfo-snapshot-v1' }): Mediainfo.SnapshotV1;"
+                },
+                {
+                    "name": "capabilities",
+                    "type": "function",
+                    "doc": "capabilities(): Mediainfo.Capabilities;",
+                    "signature": "capabilities(): Mediainfo.Capabilities;"
                 }
             ],
             "mime": [
@@ -25437,8 +26777,8 @@
                 {
                     "name": "convert",
                     "type": "function",
-                    "doc": "convert(s: string, type: OpenCC.ConversionTypeName): string;",
-                    "signature": "convert(s: string, type: OpenCC.ConversionTypeName): string;"
+                    "doc": "convert(s: string, type: OpenCC.ConversionType): string;",
+                    "signature": "convert(s: string, type: OpenCC.ConversionType): string;"
                 },
                 {
                     "name": "hk2s",
@@ -25633,6 +26973,26 @@
                     "signature": "jp2twi(s: string): string;"
                 }
             ],
+            "pangu": [
+                {
+                    "name": "version",
+                    "type": "variable",
+                    "doc": "version: string;",
+                    "signature": "version: string;"
+                },
+                {
+                    "name": "spaceText",
+                    "type": "function",
+                    "doc": "spaceText(text: string): string;",
+                    "signature": "spaceText(text: string): string;"
+                },
+                {
+                    "name": "hasProperSpacing",
+                    "type": "function",
+                    "doc": "hasProperSpacing(text: string): boolean;",
+                    "signature": "hasProperSpacing(text: string): boolean;"
+                }
+            ],
             "pinyin": [
                 {
                     "name": "STYLE_NORMAL",
@@ -25709,14 +27069,14 @@
                 {
                     "name": "compare",
                     "type": "function",
-                    "doc": "compare(hanA: string, hanB?: string): string;",
-                    "signature": "compare(hanA: string, hanB?: string): string;"
+                    "doc": "compare(hanA: string, hanB: string): number;",
+                    "signature": "compare(hanA: string, hanB: string): number;"
                 },
                 {
                     "name": "compact",
                     "type": "function",
-                    "doc": "compact(arr: Pinyin.Matrix, options?: unknown): string;",
-                    "signature": "compact(arr: Pinyin.Matrix, options?: unknown): string;"
+                    "doc": "compact(arr: Pinyin.Matrix): Pinyin.Matrix;",
+                    "signature": "compact(arr: Pinyin.Matrix): Pinyin.Matrix;"
                 },
                 {
                     "name": "fromCodePoint",
@@ -25737,22 +27097,74 @@
                     "type": "function",
                     "doc": "of(source: string, options?: string | Pinyin4j.Options): string;",
                     "signature": "of(source: string, options?: string | Pinyin4j.Options): string;"
+                },
+                {
+                    "name": "readings",
+                    "type": "function",
+                    "doc": "readings(source: string, options?: Pinyin4j.ReadingsOptions): Pinyin4j.Matrix;",
+                    "signature": "readings(source: string, options?: Pinyin4j.ReadingsOptions): Pinyin4j.Matrix;"
                 }
             ],
             "plugins": [
                 {
+                    "name": "extend",
+                    "type": "variable",
+                    "doc": "extend: Plugins.Extend;",
+                    "signature": "extend: Plugins.Extend;"
+                },
+                {
+                    "name": "extendAll",
+                    "type": "function",
+                    "doc": "extendAll(): void;",
+                    "signature": "extendAll(): void;"
+                },
+                {
+                    "name": "extendAllBut",
+                    "type": "function",
+                    "doc": "extendAllBut(...names: Plugins.ExtensionName[]): void;",
+                    "signature": "extendAllBut(...names: Plugins.ExtensionName[]): void;"
+                },
+                {
                     "name": "load",
                     "type": "function",
-                    "doc": "load(packageName: string): any;",
-                    "signature": "load(packageName: string): any;"
+                    "doc": "load(name: string): any;",
+                    "signature": "load(name: string): any;"
+                }
+            ],
+            "power_manager": [
+                {
+                    "name": "isIgnoringBatteryOptimizations",
+                    "type": "function",
+                    "doc": "isIgnoringBatteryOptimizations(packageName?: string | null): boolean;",
+                    "signature": "isIgnoringBatteryOptimizations(packageName?: string | null): boolean;"
+                },
+                {
+                    "name": "requestIgnoreBatteryOptimizations",
+                    "type": "function",
+                    "doc": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;",
+                    "signature": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;"
+                }
+            ],
+            "powerManager": [
+                {
+                    "name": "isIgnoringBatteryOptimizations",
+                    "type": "function",
+                    "doc": "isIgnoringBatteryOptimizations(packageName?: string | null): boolean;",
+                    "signature": "isIgnoringBatteryOptimizations(packageName?: string | null): boolean;"
+                },
+                {
+                    "name": "requestIgnoreBatteryOptimizations",
+                    "type": "function",
+                    "doc": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;",
+                    "signature": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;"
                 }
             ],
             "qrcode": [
                 {
                     "name": "detect",
                     "type": "function",
-                    "doc": "detect(options?: DetectOptions): QrCode.Result | QrCode.Result[] | null;",
-                    "signature": "detect(options?: DetectOptions): QrCode.Result | QrCode.Result[] | null;"
+                    "doc": "detect(options: QrCode.DetectAllOptions): QrCode.Result[];",
+                    "signature": "detect(options: QrCode.DetectAllOptions): QrCode.Result[];"
                 },
                 {
                     "name": "detectAll",
@@ -25763,8 +27175,8 @@
                 {
                     "name": "recognizeText",
                     "type": "function",
-                    "doc": "recognizeText(options?: DetectOptions): string | string[] | null;",
-                    "signature": "recognizeText(options?: DetectOptions): string | string[] | null;"
+                    "doc": "recognizeText(options: QrCode.DetectAllOptions): string[];",
+                    "signature": "recognizeText(options: QrCode.DetectAllOptions): string[];"
                 },
                 {
                     "name": "recognizeTexts",
@@ -25941,10 +27353,22 @@
                     "signature": "loadJar(path: string): void;"
                 },
                 {
+                    "name": "loadJarWithR8",
+                    "type": "function",
+                    "doc": "loadJarWithR8(program: string, keepRules: string[]): void;",
+                    "signature": "loadJarWithR8(program: string, keepRules: string[]): void;"
+                },
+                {
+                    "name": "retraceR8Stack",
+                    "type": "function",
+                    "doc": "retraceR8Stack(obfuscatedStackTrace: string, mapping: string, retraceMetadata: string): string;",
+                    "signature": "retraceR8Stack(obfuscatedStackTrace: string, mapping: string, retraceMetadata: string): string;"
+                },
+                {
                     "name": "requestPermissions",
                     "type": "function",
-                    "doc": "requestPermissions(permissions: ('access_fine_location' | 'record_audio')[]): void;",
-                    "signature": "requestPermissions(permissions: ('access_fine_location' | 'record_audio')[]): void;"
+                    "doc": "requestPermissions(permissions: string[]): void;",
+                    "signature": "requestPermissions(permissions: string[]): void;"
                 },
                 {
                     "name": "requiresApi",
@@ -26289,6 +27713,20 @@
                     "doc": ""
                 }
             ],
+            "settings": [
+                {
+                    "name": "isEnabled",
+                    "type": "function",
+                    "doc": "isEnabled(key: Settings.Key | string): boolean;",
+                    "signature": "isEnabled(key: Settings.Key | string): boolean;"
+                },
+                {
+                    "name": "setEnabled",
+                    "type": "function",
+                    "doc": "setEnabled(key: Settings.Key | string, enabled: boolean): void;",
+                    "signature": "setEnabled(key: Settings.Key | string, enabled: boolean): void;"
+                }
+            ],
             "shell": [
                 {
                     "name": "execCommand",
@@ -26447,32 +27885,62 @@
                 {
                     "name": "addTask",
                     "type": "function",
-                    "doc": "addTask<T extends TimedTask$ | IntentTask$>(task: T): T;",
-                    "signature": "addTask<T extends TimedTask$ | IntentTask$>(task: T): T;"
+                    "doc": "addTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;",
+                    "signature": "addTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;"
+                },
+                {
+                    "name": "addTimedTask",
+                    "type": "function",
+                    "doc": "addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addDailyTask",
                     "type": "function",
-                    "doc": "addDailyTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addDailyTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addWeeklyTask",
                     "type": "function",
-                    "doc": "addWeeklyTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addWeeklyTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                },
+                {
+                    "name": "addMonthlyTask",
+                    "type": "function",
+                    "doc": "addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                },
+                {
+                    "name": "addYearlyTask",
+                    "type": "function",
+                    "doc": "addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addDisposableTask",
                     "type": "function",
-                    "doc": "addDisposableTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addDisposableTask<TResult = TimedTask$>(options?: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                },
+                {
+                    "name": "addCountdownTask",
+                    "type": "function",
+                    "doc": "addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addIntentTask",
                     "type": "function",
                     "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;",
                     "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;"
+                },
+                {
+                    "name": "addBroadcastIntentTask",
+                    "type": "function",
+                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;",
+                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;"
                 },
                 {
                     "name": "getTimedTask",
@@ -26489,38 +27957,38 @@
                 {
                     "name": "removeTask",
                     "type": "function",
-                    "doc": "removeTask(task: TimedTask$ | IntentTask$ | null | undefined): boolean;",
-                    "signature": "removeTask(task: TimedTask$ | IntentTask$ | null | undefined): boolean;"
+                    "doc": "removeTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): T;",
+                    "signature": "removeTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): T;"
                 },
                 {
                     "name": "removeTimedTask",
                     "type": "function",
-                    "doc": "removeTimedTask(id: number): boolean;",
-                    "signature": "removeTimedTask(id: number): boolean;"
+                    "doc": "removeTimedTask(id: number): TimedTask$ | null;",
+                    "signature": "removeTimedTask(id: number): TimedTask$ | null;"
                 },
                 {
                     "name": "removeIntentTask",
                     "type": "function",
-                    "doc": "removeIntentTask(id: number): boolean;",
-                    "signature": "removeIntentTask(id: number): boolean;"
+                    "doc": "removeIntentTask(id: number): IntentTask$ | null;",
+                    "signature": "removeIntentTask(id: number): IntentTask$ | null;"
                 },
                 {
                     "name": "updateTask",
                     "type": "function",
-                    "doc": "updateTask(task: TimedTask$ | IntentTask$ | null | undefined): boolean;",
-                    "signature": "updateTask(task: TimedTask$ | IntentTask$ | null | undefined): boolean;"
+                    "doc": "updateTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;",
+                    "signature": "updateTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;"
                 },
                 {
                     "name": "queryTimedTasks",
                     "type": "function",
-                    "doc": "queryTimedTasks(options?: { path?: string }): TimedTask$[];",
-                    "signature": "queryTimedTasks(options?: { path?: string }): TimedTask$[];"
+                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
+                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
                 },
                 {
                     "name": "queryIntentTasks",
                     "type": "function",
-                    "doc": "queryIntentTasks(options?: { path?: string, action?: string }): IntentTask$[];",
-                    "signature": "queryIntentTasks(options?: { path?: string, action?: string }): IntentTask$[];"
+                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
+                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
                 },
                 {
                     "name": "timeFlagToDays",
@@ -26634,6 +28102,218 @@
                     "type": "function",
                     "doc": "dismissAll(): void;",
                     "signature": "dismissAll(): void;"
+                }
+            ],
+            "tts": [
+                {
+                    "name": "maxInputLength",
+                    "type": "variable",
+                    "doc": "maxInputLength: 3999;",
+                    "signature": "maxInputLength: 3999;"
+                },
+                {
+                    "name": "maxSynthesisFileSize",
+                    "type": "variable",
+                    "doc": "maxSynthesisFileSize: 536870912;",
+                    "signature": "maxSynthesisFileSize: 536870912;"
+                },
+                {
+                    "name": "QUEUE_FLUSH",
+                    "type": "variable",
+                    "doc": "QUEUE_FLUSH: 'flush';",
+                    "signature": "QUEUE_FLUSH: 'flush';"
+                },
+                {
+                    "name": "QUEUE_ADD",
+                    "type": "variable",
+                    "doc": "QUEUE_ADD: 'add';",
+                    "signature": "QUEUE_ADD: 'add';"
+                },
+                {
+                    "name": "speak",
+                    "type": "function",
+                    "doc": "speak(text: string, options?: Tts.SpeechOptions): Promise<Tts.Result>;",
+                    "signature": "speak(text: string, options?: Tts.SpeechOptions): Promise<Tts.Result>;"
+                },
+                {
+                    "name": "enqueue",
+                    "type": "function",
+                    "doc": "enqueue(text: string, options?: Tts.SpeechOptions): Promise<Tts.Result>;",
+                    "signature": "enqueue(text: string, options?: Tts.SpeechOptions): Promise<Tts.Result>;"
+                },
+                {
+                    "name": "utterance",
+                    "type": "function",
+                    "doc": "utterance(text: string, options?: Tts.SpeechOptions): Tts.Utterance;",
+                    "signature": "utterance(text: string, options?: Tts.SpeechOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "speakTask",
+                    "type": "function",
+                    "doc": "speakTask(text: string, options?: Tts.SpeechOptions): Tts.Utterance;",
+                    "signature": "speakTask(text: string, options?: Tts.SpeechOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "enqueueUtterance",
+                    "type": "function",
+                    "doc": "enqueueUtterance(text: string, options?: Tts.SpeechOptions): Tts.Utterance;",
+                    "signature": "enqueueUtterance(text: string, options?: Tts.SpeechOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "enqueueTask",
+                    "type": "function",
+                    "doc": "enqueueTask(text: string, options?: Tts.SpeechOptions): Tts.Utterance;",
+                    "signature": "enqueueTask(text: string, options?: Tts.SpeechOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "synthesize",
+                    "type": "function",
+                    "doc": "synthesize(text: string, path: string, options?: Tts.SynthesisOptions): Promise<Tts.Result>;",
+                    "signature": "synthesize(text: string, path: string, options?: Tts.SynthesisOptions): Promise<Tts.Result>;"
+                },
+                {
+                    "name": "synthesizeToFile",
+                    "type": "function",
+                    "doc": "synthesizeToFile(text: string, path: string, options?: Tts.SynthesisOptions): Promise<Tts.Result>;",
+                    "signature": "synthesizeToFile(text: string, path: string, options?: Tts.SynthesisOptions): Promise<Tts.Result>;"
+                },
+                {
+                    "name": "synthesis",
+                    "type": "function",
+                    "doc": "synthesis(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;",
+                    "signature": "synthesis(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "synthesizeTask",
+                    "type": "function",
+                    "doc": "synthesizeTask(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;",
+                    "signature": "synthesizeTask(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "synthesisTask",
+                    "type": "function",
+                    "doc": "synthesisTask(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;",
+                    "signature": "synthesisTask(text: string, path: string, options?: Tts.SynthesisOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "silence",
+                    "type": "function",
+                    "doc": "silence(duration: number, options?: Tts.SpeechOptions): Promise<Tts.Result>;",
+                    "signature": "silence(duration: number, options?: Tts.SpeechOptions): Promise<Tts.Result>;"
+                },
+                {
+                    "name": "silenceTask",
+                    "type": "function",
+                    "doc": "silenceTask(duration: number, options?: Tts.SpeechOptions): Tts.Utterance;",
+                    "signature": "silenceTask(duration: number, options?: Tts.SpeechOptions): Tts.Utterance;"
+                },
+                {
+                    "name": "ready",
+                    "type": "function",
+                    "doc": "ready(engine?: Tts.EngineQuery): Promise<Tts.ReadyInfo>;",
+                    "signature": "ready(engine?: Tts.EngineQuery): Promise<Tts.ReadyInfo>;"
+                },
+                {
+                    "name": "engines",
+                    "type": "function",
+                    "doc": "engines(engine?: Tts.EngineQuery): Promise<Tts.EngineInfo[]>;",
+                    "signature": "engines(engine?: Tts.EngineQuery): Promise<Tts.EngineInfo[]>;"
+                },
+                {
+                    "name": "voices",
+                    "type": "function",
+                    "doc": "voices(filter?: Tts.EngineQuery | Tts.VoiceFilter): Promise<Tts.VoiceInfo[]>;",
+                    "signature": "voices(filter?: Tts.EngineQuery | Tts.VoiceFilter): Promise<Tts.VoiceInfo[]>;"
+                },
+                {
+                    "name": "languages",
+                    "type": "function",
+                    "doc": "languages(engine?: Tts.EngineQuery): Promise<string[]>;",
+                    "signature": "languages(engine?: Tts.EngineQuery): Promise<string[]>;"
+                },
+                {
+                    "name": "isLanguageAvailable",
+                    "type": "function",
+                    "doc": "isLanguageAvailable(locale: string, engine?: Tts.EngineQuery): Promise<boolean>;",
+                    "signature": "isLanguageAvailable(locale: string, engine?: Tts.EngineQuery): Promise<boolean>;"
+                },
+                {
+                    "name": "languageAvailability",
+                    "type": "function",
+                    "doc": "languageAvailability(locale: string, engine?: Tts.EngineQuery): Promise<Tts.LanguageAvailability>;",
+                    "signature": "languageAvailability(locale: string, engine?: Tts.EngineQuery): Promise<Tts.LanguageAvailability>;"
+                },
+                {
+                    "name": "stop",
+                    "type": "function",
+                    "doc": "stop(): number;",
+                    "signature": "stop(): number;"
+                },
+                {
+                    "name": "stopAll",
+                    "type": "function",
+                    "doc": "stopAll(): number;",
+                    "signature": "stopAll(): number;"
+                },
+                {
+                    "name": "reset",
+                    "type": "function",
+                    "doc": "reset(): number;",
+                    "signature": "reset(): number;"
+                },
+                {
+                    "name": "isSpeaking",
+                    "type": "function",
+                    "doc": "isSpeaking(): boolean;",
+                    "signature": "isSpeaking(): boolean;"
+                },
+                {
+                    "name": "isBusy",
+                    "type": "function",
+                    "doc": "isBusy(): boolean;",
+                    "signature": "isBusy(): boolean;"
+                },
+                {
+                    "name": "status",
+                    "type": "function",
+                    "doc": "status(): Tts.Status;",
+                    "signature": "status(): Tts.Status;"
+                },
+                {
+                    "name": "defaults",
+                    "type": "function",
+                    "doc": "defaults(): Tts.Defaults;",
+                    "signature": "defaults(): Tts.Defaults;"
+                },
+                {
+                    "name": "config",
+                    "type": "function",
+                    "doc": "config(): Tts.Defaults;",
+                    "signature": "config(): Tts.Defaults;"
+                },
+                {
+                    "name": "configure",
+                    "type": "function",
+                    "doc": "configure(options: Tts.SpeechOptions): Tts.Defaults;",
+                    "signature": "configure(options: Tts.SpeechOptions): Tts.Defaults;"
+                },
+                {
+                    "name": "getMaxInputLength",
+                    "type": "function",
+                    "doc": "getMaxInputLength(): 3999;",
+                    "signature": "getMaxInputLength(): 3999;"
+                },
+                {
+                    "name": "openSettings",
+                    "type": "function",
+                    "doc": "openSettings(): boolean;",
+                    "signature": "openSettings(): boolean;"
+                },
+                {
+                    "name": "installData",
+                    "type": "function",
+                    "doc": "installData(engine?: Tts.EngineQuery): boolean;",
+                    "signature": "installData(engine?: Tts.EngineQuery): boolean;"
                 }
             ],
             "ui": [
@@ -27120,6 +28800,12 @@
                     "signature": "ensureSymbolType(...o: any[]): void;"
                 },
                 {
+                    "name": "ensureBigIntType",
+                    "type": "function",
+                    "doc": "ensureBigIntType(...o: any[]): void;",
+                    "signature": "ensureBigIntType(...o: any[]): void;"
+                },
+                {
                     "name": "ensureBigintType",
                     "type": "function",
                     "doc": "ensureBigintType(...o: any[]): void;",
@@ -27170,6 +28856,12 @@
             ],
             "web": [
                 {
+                    "name": "ByteString",
+                    "type": "variable",
+                    "doc": "ByteString: typeof okio.ByteString;",
+                    "signature": "ByteString: typeof okio.ByteString;"
+                },
+                {
                     "name": "newInjectableWebView",
                     "type": "function",
                     "doc": "newInjectableWebView(context?: android.content.Context | string, url?: string): org.autojs.autojs.core.web.InjectableWebView;",
@@ -27184,8 +28876,152 @@
                 {
                     "name": "newWebSocket",
                     "type": "function",
-                    "doc": "newWebSocket(url: string): org.autojs.autojs.core.web.WebSocket;",
-                    "signature": "newWebSocket(url: string): org.autojs.autojs.core.web.WebSocket;"
+                    "doc": "newWebSocket(url: string, options?: Web.NewWebSocketOptions): org.autojs.autojs.core.web.WebSocket;",
+                    "signature": "newWebSocket(url: string, options?: Web.NewWebSocketOptions): org.autojs.autojs.core.web.WebSocket;"
+                }
+            ],
+            "work_manager": [
+                {
+                    "name": "addDailyTask",
+                    "type": "function",
+                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;",
+                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;"
+                },
+                {
+                    "name": "addWeeklyTask",
+                    "type": "function",
+                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;",
+                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;"
+                },
+                {
+                    "name": "addDisposableTask",
+                    "type": "function",
+                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;",
+                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;"
+                },
+                {
+                    "name": "addIntentTask",
+                    "type": "function",
+                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
+                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                },
+                {
+                    "name": "addBroadcastIntentTask",
+                    "type": "function",
+                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
+                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                },
+                {
+                    "name": "getTimedTask",
+                    "type": "function",
+                    "doc": "getTimedTask(id: number): TimedTask$ | null;",
+                    "signature": "getTimedTask(id: number): TimedTask$ | null;"
+                },
+                {
+                    "name": "getIntentTask",
+                    "type": "function",
+                    "doc": "getIntentTask(id: number): IntentTask$ | null;",
+                    "signature": "getIntentTask(id: number): IntentTask$ | null;"
+                },
+                {
+                    "name": "removeTimedTask",
+                    "type": "function",
+                    "doc": "removeTimedTask(id: number): boolean | null;",
+                    "signature": "removeTimedTask(id: number): boolean | null;"
+                },
+                {
+                    "name": "removeIntentTask",
+                    "type": "function",
+                    "doc": "removeIntentTask(id: number): boolean | null;",
+                    "signature": "removeIntentTask(id: number): boolean | null;"
+                },
+                {
+                    "name": "queryTimedTasks",
+                    "type": "function",
+                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
+                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
+                },
+                {
+                    "name": "queryIntentTasks",
+                    "type": "function",
+                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
+                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
+                }
+            ],
+            "workManager": [
+                {
+                    "name": "addDailyTask",
+                    "type": "function",
+                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;",
+                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;"
+                },
+                {
+                    "name": "addWeeklyTask",
+                    "type": "function",
+                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;",
+                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;"
+                },
+                {
+                    "name": "addDisposableTask",
+                    "type": "function",
+                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;",
+                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;"
+                },
+                {
+                    "name": "addIntentTask",
+                    "type": "function",
+                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
+                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                },
+                {
+                    "name": "addBroadcastIntentTask",
+                    "type": "function",
+                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
+                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                },
+                {
+                    "name": "getTimedTask",
+                    "type": "function",
+                    "doc": "getTimedTask(id: number): TimedTask$ | null;",
+                    "signature": "getTimedTask(id: number): TimedTask$ | null;"
+                },
+                {
+                    "name": "getIntentTask",
+                    "type": "function",
+                    "doc": "getIntentTask(id: number): IntentTask$ | null;",
+                    "signature": "getIntentTask(id: number): IntentTask$ | null;"
+                },
+                {
+                    "name": "removeTimedTask",
+                    "type": "function",
+                    "doc": "removeTimedTask(id: number): boolean | null;",
+                    "signature": "removeTimedTask(id: number): boolean | null;"
+                },
+                {
+                    "name": "removeIntentTask",
+                    "type": "function",
+                    "doc": "removeIntentTask(id: number): boolean | null;",
+                    "signature": "removeIntentTask(id: number): boolean | null;"
+                },
+                {
+                    "name": "queryTimedTasks",
+                    "type": "function",
+                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
+                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
+                },
+                {
+                    "name": "queryIntentTasks",
+                    "type": "function",
+                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
+                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
+                }
+            ],
+            "yolo": [
+                {
+                    "name": "load",
+                    "type": "function",
+                    "doc": "load(modelDir: string, options: Yolo.LoadOptions): Yolo.Detector;",
+                    "signature": "load(modelDir: string, options: Yolo.LoadOptions): Yolo.Detector;"
                 }
             ],
             "zip": [
