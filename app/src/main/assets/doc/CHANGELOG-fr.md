@@ -9,6 +9,7 @@
 ###### 2026/09/20
 
 * `Amélioration` Déclarations AutoJs6 intégrées mises à jour en `4.18.0` : ajout des globaux `mail` / `$mail` et de l'espace de noms `Internal.Mail` du plugin Angus Mail (méthodes du client et méthodes relayées en formes synchrone et `Async`, événements de surveillance, objets message / pièce jointe / adresse, options de compte et préréglages de fournisseur, critères de recherche, documents de résultat et codes d'erreur), de sorte que la complétion et la vérification de types de l'éditeur couvrent désormais l'API de messagerie
+* `Amélioration` Index de complétion de l'éditeur `autojs6_indices.js` et déclaration agrégée `lib.autojs6.d.ts` régénérés par le `tools/ace-completion` de l'hôte à partir des déclarations intégrées `4.18.0` : complétion et aide de signature pour les modules `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager` et `workManager`, index de déclarations `index.d.ts` et `BUNDLED_DECLARATIONS.md` ramenés à la forme produite par le script d'import ; les quatre scripts de vérification et le test du compléteur passent
 
 # v1.10.0
 

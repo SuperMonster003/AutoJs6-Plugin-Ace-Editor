@@ -178,6 +178,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 ###### 2026/09/20
 
 * `改善` 内蔵 AutoJs6 宣言を `4.18.0` に更新: Angus Mail プラグインの `mail` / `$mail` グローバルと `Internal.Mail` 名前空間 (クライアントと転送メソッドの同期および `Async` 形式, 監視イベント, メール / 添付 / アドレスオブジェクト, アカウントオプションとプロバイダープリセット, 検索条件, 結果ドキュメントとエラーコード) を追加し, エディタ補完と型チェックがメール API を対象に含むようになりました
+* `改善` エディタの補完インデックス `autojs6_indices.js` と集約宣言 `lib.autojs6.d.ts` をホストの `tools/ace-completion` で内蔵宣言 `4.18.0` から再生成: `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager`, `workManager` モジュールの補完とシグネチャヘルプを追加し, 宣言インデックス `index.d.ts` と `BUNDLED_DECLARATIONS.md` をインポートスクリプトが生成する形式に戻しました; 4 つの検証スクリプトと補完テストがすべて通過
 
 # v1.10.0
 
