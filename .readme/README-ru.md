@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 ### История выпусков
 
 ******
+
+# v1.12.0
+
+###### 2026/09/21
+
+* `Улучшение` Встроенные объявления AutoJs6 обновлены до `4.19.0`: добавлены глобальные объекты `epub` / `$epub` и пространство имён `Internal.Epub` плагина Readium EPUB Reader (открытие книги и удобный слой в синхронной и `Async` формах, члены `Book` для метаданных, оглавления, порядка чтения, извлечения текста, экспорта обложки и ресурсов и поиска, события и методы управления `ReaderSession`, настройки чтения, локатор, документы результатов и коды ошибок), поэтому автодополнение и проверка типов в редакторе теперь охватывают API EPUB
 
 # v1.11.0
 
@@ -186,12 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 
 * `Исправление` Предупреждения чтения SDK XML v4 с AGP 9.1 и ошибочный запуск проверки выравнивания нативных библиотек APK при сборке модульных тестов JVM, устраненные общими плагинами сборки 1.8.3
 * `Улучшение` Встроенные объявления AutoJs6 обновлены до `4.17.0`: прокси Level / LogConfigurator / LogManager теперь указывают на встроенные классы `org.autojs.autojs.core.console.log`, а объявления библиотек больше не содержат библиотеки, удалённые из хоста (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
-
-# v1.9.0
-
-###### 2026/09/16
-
-* `Функция` Объявления API нажатия по координатам и стеков задач Flow с синхронизацией автодополнения и индексов LSP
 
 ##### Подробнее об истории выпусков
 

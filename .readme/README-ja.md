@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 ### リリース履歴
 
 ******
+
+# v1.12.0
+
+###### 2026/09/21
+
+* `改善` 内蔵 AutoJs6 宣言を `4.19.0` に更新: Readium EPUB Reader プラグインの `epub` / `$epub` グローバルと `Internal.Epub` 名前空間 (書籍を開く操作と簡易層の同期および `Async` 形式, `Book` のメタデータ, 目次, 読み順, 本文抽出, 表紙とリソースの書き出しおよび検索メンバー, `ReaderSession` のイベントと制御メソッド, 閲覧設定, 位置オブジェクト, 結果ドキュメントとエラーコード) を追加し, エディタ補完と型チェックが EPUB API を対象に含むようになりました
 
 # v1.11.0
 
@@ -186,12 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 
 * `修正` 共有ビルドプラグイン 1.8.3 により, AGP 9.1 での SDK XML v4 解析警告と, JVM 単体テストの組み立て時に APK ネイティブライブラリのアラインメント検証が誤って実行される問題
 * `改善` 内蔵 AutoJs6 宣言を `4.17.0` に更新: Level / LogConfigurator / LogManager のプロキシは内蔵の `org.autojs.autojs.core.console.log` クラスを指すようになり, ライブラリ宣言からホストで削除されたライブラリ (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) を除外
-
-# v1.9.0
-
-###### 2026/09/16
-
-* `機能` 座標クリック API と Flow タスクスタックの型宣言, LSP 補完とインデックスの同期
 
 ##### その他のリリース履歴
 

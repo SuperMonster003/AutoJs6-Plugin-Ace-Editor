@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 ### 릴리스 기록
 
 ******
+
+# v1.12.0
+
+###### 2026/09/21
+
+* `개선` 내장 AutoJs6 선언을 `4.19.0`으로 업데이트: Readium EPUB Reader 플러그인의 `epub` / `$epub` 전역 객체와 `Internal.Epub` 네임스페이스 (책 열기와 편의 계층의 동기 / `Async` 형태, `Book` 의 메타데이터, 목차, 읽기 순서, 본문 추출, 표지와 리소스 내보내기 및 검색 멤버, `ReaderSession` 이벤트와 제어 메서드, 읽기 환경설정, 위치 객체, 결과 문서와 오류 코드) 를 추가하여 편집기 완성과 타입 검사가 EPUB API 를 다루게 되었습니다
 
 # v1.11.0
 
@@ -186,12 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 
 * `수정` 공유 빌드 플러그인 1.8.3을 통해 AGP 9.1의 SDK XML v4 파싱 경고 및 JVM 단위 테스트 조립 작업에서 APK 네이티브 라이브러리 정렬 검사가 잘못 실행되는 문제 해결
 * `개선` 내장 AutoJs6 선언을 `4.17.0`으로 업데이트: Level / LogConfigurator / LogManager 프록시가 내장 `org.autojs.autojs.core.console.log` 클래스를 가리키며, 라이브러리 선언에서 호스트에서 제거된 라이브러리 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) 를 제외
-
-# v1.9.0
-
-###### 2026/09/16
-
-* `기능` 좌표 클릭 API 및 Flow 작업 스택 선언과 LSP 자동 완성 및 인덱스 동기화
 
 ##### 더 많은 릴리스 기록
 

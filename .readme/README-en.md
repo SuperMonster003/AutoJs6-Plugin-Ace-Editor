@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.12.0
+
+###### 2026/09/21
+
+* `Improvement` Bundled AutoJs6 declarations updated to `4.19.0`: the `epub` / `$epub` globals and the `Internal.Epub` namespace of the Readium EPUB Reader plugin (book opening and the convenience layer in synchronous and `Async` forms, `Book` members for metadata, table of contents, reading order, text extraction, cover and resource export and search, `ReaderSession` events and controls, reading preferences, locator, result documents and error codes), so editor completion and type checking now cover the EPUB API
 
 # v1.11.0
 
@@ -186,12 +192,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 * `Fix` SDK XML v4 parsing warnings with AGP 9.1 and APK native alignment checks incorrectly triggered by JVM unit-test assembly tasks, using shared build plugins 1.8.3
 * `Improvement` Bundled AutoJs6 declarations updated to `4.17.0`: the Level / LogConfigurator / LogManager proxies now point to the built-in `org.autojs.autojs.core.console.log` classes, and the library declarations no longer include the libraries removed from the host (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
-
-# v1.9.0
-
-###### 2026/09/16
-
-* `Feature` Coordinate-click API and Flow task-stack declarations with synchronized LSP completion and indexes
 
 ##### Complete release history
 

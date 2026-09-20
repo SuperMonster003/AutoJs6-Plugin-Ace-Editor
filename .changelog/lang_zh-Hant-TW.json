@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.12.0": {
+      "released_date": "2026/09/21",
+      "improvement": [
+        "內建 AutoJs6 宣告更新至 `4.19.0`: 新增 Readium EPUB Reader 外掛的 `epub` / `$epub` 全域物件與 `Internal.Epub` 命名空間 (開啟書籍與便捷層的同步及 `Async` 形態, `Book` 的中繼資料, 目錄, 閱讀順序, 正文擷取, 封面與資源匯出及搜尋成員, `ReaderSession` 事件與控制方法, 閱讀偏好, 位置物件, 結果文件與錯誤代碼), 編輯器補全與型別檢查隨之涵蓋 EPUB API"
+      ]
+    },
     "v1.11.0": {
       "released_date": "2026/09/20",
       "improvement": [
