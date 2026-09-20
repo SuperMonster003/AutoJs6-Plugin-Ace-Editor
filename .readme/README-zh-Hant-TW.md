@@ -178,6 +178,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 ###### 2026/09/21
 
 * `優化` 內建 AutoJs6 宣告更新至 `4.19.0`: 新增 Readium EPUB Reader 外掛的 `epub` / `$epub` 全域物件與 `Internal.Epub` 命名空間 (開啟書籍與便捷層的同步及 `Async` 形態, `Book` 的中繼資料, 目錄, 閱讀順序, 正文擷取, 封面與資源匯出及搜尋成員, `ReaderSession` 事件與控制方法, 閱讀偏好, 位置物件, 結果文件與錯誤代碼), 編輯器補全與型別檢查隨之涵蓋 EPUB API
+* `優化` 編輯器補全索引 `autojs6_indices.js` 與聚合宣告 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按內建宣告 `4.19.0` 再生成, 新增 `epub` 模組的補全與簽名提示; 四個驗證指令碼與補全器測試全部通過
 
 # v1.11.0
 
