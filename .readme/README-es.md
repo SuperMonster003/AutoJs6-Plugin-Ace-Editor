@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.11.0
+
+###### 2026/09/20
+
+* `Mejora` Declaraciones integradas de AutoJs6 actualizadas a `4.18.0`: se añaden los globales `mail` / `$mail` y el espacio de nombres `Internal.Mail` del plugin Angus Mail (métodos del cliente y reenviados en forma síncrona y `Async`, eventos de vigilancia, objetos de mensaje / adjunto / dirección, opciones de cuenta y preajustes de proveedor, consultas de búsqueda, documentos de resultado y códigos de error), de modo que el autocompletado y la comprobación de tipos del editor ya cubren la API de correo
 
 # v1.10.0
 
@@ -185,12 +191,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/16
 
 * `Función` Declaraciones de las API de clic por coordenadas y las pilas de tareas Flow, con autocompletado e índices LSP sincronizados
-
-# v1.8.0
-
-###### 2026/09/16
-
-* `Función` Declaraciones de tipos y autocompletado LSP para pasos opcionales, bucles limitados e instantáneas de estabilidad de Flow
 
 ##### Para ver más historial de versiones
 

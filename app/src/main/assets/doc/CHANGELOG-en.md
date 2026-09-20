@@ -4,6 +4,12 @@
 
 ******
 
+# v1.11.0
+
+###### 2026/09/20
+
+* `Improvement` Bundled AutoJs6 declarations updated to `4.18.0`: the `mail` / `$mail` globals and the `Internal.Mail` namespace of the Angus Mail plugin (client and forwarded methods in synchronous and `Async` forms, watch events, message / attachment / address objects, account options and provider presets, search queries, result documents and error codes), so editor completion and type checking now cover the mail API
+
 # v1.10.0
 
 ###### 2026/09/19

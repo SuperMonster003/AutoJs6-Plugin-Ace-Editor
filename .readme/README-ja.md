@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-u
 ### リリース履歴
 
 ******
+
+# v1.11.0
+
+###### 2026/09/20
+
+* `改善` 内蔵 AutoJs6 宣言を `4.18.0` に更新: Angus Mail プラグインの `mail` / `$mail` グローバルと `Internal.Mail` 名前空間 (クライアントと転送メソッドの同期および `Async` 形式, 監視イベント, メール / 添付 / アドレスオブジェクト, アカウントオプションとプロバイダープリセット, 検索条件, 結果ドキュメントとエラーコード) を追加し, エディタ補完と型チェックがメール API を対象に含むようになりました
 
 # v1.10.0
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-u
 ###### 2026/09/16
 
 * `機能` 座標クリック API と Flow タスクスタックの型宣言, LSP 補完とインデックスの同期
-
-# v1.8.0
-
-###### 2026/09/16
-
-* `機能` Flow の条件付きステップ, 回数制限付きループと安定性スナップショットの型宣言および LSP 補完
 
 ##### その他のリリース履歴
 

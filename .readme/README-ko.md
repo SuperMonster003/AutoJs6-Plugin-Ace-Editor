@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-u
 ### 릴리스 기록
 
 ******
+
+# v1.11.0
+
+###### 2026/09/20
+
+* `개선` 내장 AutoJs6 선언을 `4.18.0`으로 업데이트: Angus Mail 플러그인의 `mail` / `$mail` 전역 객체와 `Internal.Mail` 네임스페이스 (클라이언트 및 전달 메서드의 동기 / `Async` 형태, 감시 이벤트, 메일 / 첨부 / 주소 객체, 계정 옵션과 제공자 프리셋, 검색 조건, 결과 문서와 오류 코드) 를 추가하여 편집기 완성과 타입 검사가 메일 API 를 다루게 되었습니다
 
 # v1.10.0
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-u
 ###### 2026/09/16
 
 * `기능` 좌표 클릭 API 및 Flow 작업 스택 선언과 LSP 자동 완성 및 인덱스 동기화
-
-# v1.8.0
-
-###### 2026/09/16
-
-* `기능` Flow 선택적 단계, 제한된 루프 및 안정화 스냅샷의 타입 선언과 LSP 자동 완성
 
 ##### 더 많은 릴리스 기록
 

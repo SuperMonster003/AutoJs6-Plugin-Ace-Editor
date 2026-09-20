@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-u
 ### 发行历史
 
 ******
+
+# v1.11.0
+
+###### 2026/09/20
+
+* `优化` 内置 AutoJs6 声明更新至 `4.18.0`: 新增 Angus Mail 插件的 `mail` / `$mail` 全局对象与 `Internal.Mail` 命名空间 (客户端与转发方法的同步及 `Async` 形态, 监听事件, 邮件 / 附件 / 地址对象, 账户选项与服务商预设, 搜索条件, 结果文档与错误代码), 编辑器补全与类型检查随之覆盖邮件 API
 
 # v1.10.0
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-u
 ###### 2026/09/16
 
 * `新增` 坐标点击 API 与 Flow 任务栈声明, 同步 LSP 补全与索引
-
-# v1.8.0
-
-###### 2026/09/16
-
-* `新增` Flow 可选步骤, 有界循环与稳定快照的类型声明和 LSP 补全
 
 ##### 更多发行历史可参阅
 

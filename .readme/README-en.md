@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.11.0
+
+###### 2026/09/20
+
+* `Improvement` Bundled AutoJs6 declarations updated to `4.18.0`: the `mail` / `$mail` globals and the `Internal.Mail` namespace of the Angus Mail plugin (client and forwarded methods in synchronous and `Async` forms, watch events, message / attachment / address objects, account options and provider presets, search queries, result documents and error codes), so editor completion and type checking now cover the mail API
 
 # v1.10.0
 
@@ -185,12 +191,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/09/16
 
 * `Feature` Coordinate-click API and Flow task-stack declarations with synchronized LSP completion and indexes
-
-# v1.8.0
-
-###### 2026/09/16
-
-* `Feature` Flow declarations and LSP completion for optional steps, bounded loops and stability snapshots
 
 ##### Complete release history
 
