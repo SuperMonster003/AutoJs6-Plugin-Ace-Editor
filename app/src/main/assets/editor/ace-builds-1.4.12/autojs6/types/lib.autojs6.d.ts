@@ -1216,6 +1216,28 @@ declare namespace AutoJs6 {
         execAutoFile(path: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
     }
 
+    interface Epub {
+        open(source: Epub.Source): Epub.Book;
+        openAsync(source: Epub.Source): Promise<Epub.Book>;
+        metadata(source: Epub.Source): Epub.Metadata;
+        metadataAsync(source: Epub.Source): Promise<Epub.Metadata>;
+        toc(source: Epub.Source): Epub.TocEntry[];
+        tocAsync(source: Epub.Source): Promise<Epub.TocEntry[]>;
+        readingOrder(source: Epub.Source): Epub.ReadingOrderEntry[];
+        readingOrderAsync(source: Epub.Source): Promise<Epub.ReadingOrderEntry[]>;
+        text(source: Epub.Source, target?: Epub.TextTarget | null, options?: Epub.TextOptions): string;
+        textAsync(source: Epub.Source, target?: Epub.TextTarget | null, options?: Epub.TextOptions): Promise<string>;
+        cover(source: Epub.Source): ImageWrapper;
+        coverAsync(source: Epub.Source): Promise<ImageWrapper>;
+        search(source: Epub.Source, query: string, options?: Epub.SearchOptions): Epub.SearchHit[];
+        searchAsync(source: Epub.Source, query: string, options?: Epub.SearchOptions): Promise<Epub.SearchHit[]>;
+        read(source: Epub.Source, options?: Epub.ReadOptions): Epub.ReaderSession;
+        readAsync(source: Epub.Source, options?: Epub.ReadOptions): Promise<Epub.ReaderSession>;
+        isAvailable(): boolean;
+        isAvailableAsync(): Promise<boolean>;
+        EpubError: Epub.EpubErrorConstructor;
+    }
+
     interface Events {
         broadcast: org.autojs.autojs.core.broadcast.BroadcastEmitter;
         emitter(): EventEmitter$;
@@ -4673,6 +4695,7 @@ declare const cvt: AutoJs6.Cvt;
 declare const device: AutoJs6.Device;
 declare const dialogs: AutoJs6.Dialogs;
 declare const engines: AutoJs6.Engines;
+declare const epub: AutoJs6.Epub;
 declare const events: AutoJs6.Events;
 declare const files: AutoJs6.Files;
 declare const floaty: AutoJs6.Floaty;
