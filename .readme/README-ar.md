@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 ### سجل الإصدارات
 
 ******
+
+# v1.12.0
+
+###### 2026/09/21
+
+* `تحسين` تحديث إعلانات AutoJs6 المدمجة إلى `4.19.0`: إضافة الكائنين العامين `epub` / `$epub` ومساحة الأسماء `Internal.Epub` لإضافة Readium EPUB Reader (فتح الكتب والطبقة المريحة بالشكلين المتزامن و `Async`, أعضاء `Book` للبيانات الوصفية وجدول المحتويات وترتيب القراءة واستخراج النص وتصدير الغلاف والموارد والبحث, أحداث `ReaderSession` وأساليب التحكم, تفضيلات القراءة, كائن الموضع, مستندات النتائج ورموز الأخطاء), فأصبح إكمال المحرر وفحص الأنواع يشملان واجهة EPUB
 
 # v1.11.0
 
@@ -186,12 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 
 * `إصلاح` تحذيرات قراءة SDK XML v4 مع AGP 9.1 وتشغيل فحص محاذاة مكتبات APK الأصلية خطأ عند تجميع اختبارات JVM, باستخدام إضافات البناء المشتركة 1.8.3
 * `تحسين` تحديث إعلانات AutoJs6 المدمجة إلى `4.17.0`: وكلاء السجل Level / LogConfigurator / LogManager يشيرون الآن إلى فئات `org.autojs.autojs.core.console.log` المدمجة, وإعلانات المكتبات لم تعد تتضمن المكتبات التي أزيلت من المضيف (log4j و Flexmark و JavaMail و JUnit و github-api و Jackson و commons-io / lang3 و kotlin-reflect و SpongyCastle و media3 و Guava)
-
-# v1.9.0
-
-###### 2026/09/16
-
-* `ميزة` تعريفات واجهات النقر بالإحداثيات ومكدس مهام Flow مع مزامنة إكمال LSP والفهارس
 
 ##### لمزيد من سجل الإصدارات
 

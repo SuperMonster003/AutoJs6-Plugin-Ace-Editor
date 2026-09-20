@@ -4,6 +4,12 @@
 
 ******
 
+# v1.12.0
+
+###### 2026/09/21
+
+* `Amélioration` Déclarations AutoJs6 intégrées mises à jour en `4.19.0` : ajout des globaux `epub` / `$epub` et de l'espace de noms `Internal.Epub` du plugin Readium EPUB Reader (ouverture de livres et couche pratique en formes synchrone et `Async`, membres de `Book` pour les métadonnées, la table des matières, l'ordre de lecture, l'extraction de texte, l'export de la couverture et des ressources et la recherche, événements et commandes de `ReaderSession`, préférences de lecture, localisateur, documents de résultat et codes d'erreur), de sorte que la complétion et la vérification de types de l'éditeur couvrent désormais l'API EPUB
+
 # v1.11.0
 
 ###### 2026/09/20

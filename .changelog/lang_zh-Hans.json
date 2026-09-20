@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.12.0": {
+      "released_date": "2026/09/21",
+      "improvement": [
+        "内置 AutoJs6 声明更新至 `4.19.0`: 新增 Readium EPUB Reader 插件的 `epub` / `$epub` 全局对象与 `Internal.Epub` 命名空间 (打开书籍与便捷层的同步及 `Async` 形态, `Book` 的元数据, 目录, 阅读顺序, 正文提取, 封面与资源导出及搜索成员, `ReaderSession` 事件与控制方法, 阅读偏好, 位置对象, 结果文档与错误代码), 编辑器补全与类型检查随之覆盖 EPUB API"
+      ]
+    },
     "v1.11.0": {
       "released_date": "2026/09/20",
       "improvement": [

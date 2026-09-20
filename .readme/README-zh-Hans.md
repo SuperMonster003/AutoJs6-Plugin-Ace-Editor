@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 ### 发行历史
 
 ******
+
+# v1.12.0
+
+###### 2026/09/21
+
+* `优化` 内置 AutoJs6 声明更新至 `4.19.0`: 新增 Readium EPUB Reader 插件的 `epub` / `$epub` 全局对象与 `Internal.Epub` 命名空间 (打开书籍与便捷层的同步及 `Async` 形态, `Book` 的元数据, 目录, 阅读顺序, 正文提取, 封面与资源导出及搜索成员, `ReaderSession` 事件与控制方法, 阅读偏好, 位置对象, 结果文档与错误代码), 编辑器补全与类型检查随之覆盖 EPUB API
 
 # v1.11.0
 
@@ -186,12 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.11.0-u
 
 * `修复` AGP 9.1 构建时的 SDK XML v4 解析警告及 JVM 单元测试组装任务误触发 APK 原生库对齐检查的问题 (共享构建插件 1.8.3)
 * `优化` 内置 AutoJs6 声明更新至 `4.17.0`: Level / LogConfigurator / LogManager 代理改为指向内置的 `org.autojs.autojs.core.console.log` 类, 三方库声明不再包含宿主已移除的库 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
-
-# v1.9.0
-
-###### 2026/09/16
-
-* `新增` 坐标点击 API 与 Flow 任务栈声明, 同步 LSP 补全与索引
 
 ##### 更多发行历史可参阅
 

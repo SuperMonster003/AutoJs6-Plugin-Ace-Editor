@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.12.0": {
+      "released_date": "2026/09/21",
+      "improvement": [
+        "内蔵 AutoJs6 宣言を `4.19.0` に更新: Readium EPUB Reader プラグインの `epub` / `$epub` グローバルと `Internal.Epub` 名前空間 (書籍を開く操作と簡易層の同期および `Async` 形式, `Book` のメタデータ, 目次, 読み順, 本文抽出, 表紙とリソースの書き出しおよび検索メンバー, `ReaderSession` のイベントと制御メソッド, 閲覧設定, 位置オブジェクト, 結果ドキュメントとエラーコード) を追加し, エディタ補完と型チェックが EPUB API を対象に含むようになりました"
+      ]
+    },
     "v1.11.0": {
       "released_date": "2026/09/20",
       "improvement": [
