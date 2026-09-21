@@ -10,6 +10,7 @@
 
 * `優化` 內置 AutoJs6 聲明更新至 `4.19.0`: 新增 Readium EPUB Reader 插件的 `epub` / `$epub` 全局對象與 `Internal.Epub` 命名空間 (開啟書籍與便捷層的同步及 `Async` 形態, `Book` 的元數據, 目錄, 閱讀順序, 正文提取, 封面與資源導出及搜索成員, `ReaderSession` 事件與控制方法, 閱讀偏好, 位置對象, 結果文檔與錯誤代碼), 編輯器補全與類型檢查隨之覆蓋 EPUB API
 * `優化` 編輯器補全索引 `autojs6_indices.js` 與聚合聲明 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按內置聲明 `4.19.0` 再生成, 新增 `epub` 模組的補全與簽名提示; 四個校驗腳本與補全器測試全部通過
+* `優化` 內置 AutoJs6 聲明 `4.19.0` 補充 Readium EPUB Reader 插件 1.1.0 的高亮與筆記 (EPUB 契約版本 2): `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` 與 `ReaderSession` 的 `highlight` 事件 (`HighlightEvent`); 補全索引 `autojs6_indices.js` 與聚合聲明 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 再生成, 四個校驗腳本與補全器測試全部通過
 
 # v1.11.0
 

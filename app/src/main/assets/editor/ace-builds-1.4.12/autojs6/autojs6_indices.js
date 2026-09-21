@@ -9429,6 +9429,18 @@
                     "signature": "searchAsync(source: Epub.Source, query: string, options?: Epub.SearchOptions): Promise<Epub.SearchHit[]>;"
                 },
                 {
+                    "name": "annotations",
+                    "type": "function",
+                    "doc": "annotations(source: Epub.Source): Epub.Annotation[];",
+                    "signature": "annotations(source: Epub.Source): Epub.Annotation[];"
+                },
+                {
+                    "name": "annotationsAsync",
+                    "type": "function",
+                    "doc": "annotationsAsync(source: Epub.Source): Promise<Epub.Annotation[]>;",
+                    "signature": "annotationsAsync(source: Epub.Source): Promise<Epub.Annotation[]>;"
+                },
+                {
                     "name": "read",
                     "type": "function",
                     "doc": "read(source: Epub.Source, options?: Epub.ReadOptions): Epub.ReaderSession;",

@@ -10,6 +10,7 @@
 
 * `Amélioration` Déclarations AutoJs6 intégrées mises à jour en `4.19.0` : ajout des globaux `epub` / `$epub` et de l'espace de noms `Internal.Epub` du plugin Readium EPUB Reader (ouverture de livres et couche pratique en formes synchrone et `Async`, membres de `Book` pour les métadonnées, la table des matières, l'ordre de lecture, l'extraction de texte, l'export de la couverture et des ressources et la recherche, événements et commandes de `ReaderSession`, préférences de lecture, localisateur, documents de résultat et codes d'erreur), de sorte que la complétion et la vérification de types de l'éditeur couvrent désormais l'API EPUB
 * `Amélioration` Index de complétion de l'éditeur `autojs6_indices.js` et déclaration agrégée `lib.autojs6.d.ts` régénérés par le `tools/ace-completion` de l'hôte à partir des déclarations intégrées `4.19.0` : complétion et aide de signature pour le module `epub` ; les quatre scripts de vérification et le test du compléteur passent
+* `Amélioration` Déclarations intégrées AutoJs6 `4.19.0` complétées par les surlignages et notes du plugin Readium EPUB Reader 1.1.0 (contrat EPUB version 2) : `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` et l'événement `highlight` de `ReaderSession` (`HighlightEvent`) ; les index de complétion `autojs6_indices.js` et la déclaration agrégée `lib.autojs6.d.ts` régénérés par le `tools/ace-completion` de l'hôte, les quatre scripts de vérification et le test du compléteur passent
 
 # v1.11.0
 
