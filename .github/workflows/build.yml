@@ -74,4 +74,4 @@ jobs:
           arch: x86_64
           profile: pixel_7
           disable-animations: true
-          script: ./gradlew --max-workers=2 -Pautojs.gradle.build.number.auto.increment.enabled=false -Pautojs.gradle.build.time.update.enabled=false :app:connectedDebugAndroidTest --stacktrace
+          script: bash ./gradlew --max-workers=2 -Pautojs.gradle.build.number.auto.increment.enabled=false -Pautojs.gradle.build.time.update.enabled=false :app:connectedDebugAndroidTest --stacktrace

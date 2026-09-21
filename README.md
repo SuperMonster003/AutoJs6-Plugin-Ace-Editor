@@ -177,23 +177,23 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 
 ###### 2026/09/21
 
-* `优化` 内置 AutoJs6 声明更新至 `4.19.0`: 新增 Readium EPUB Reader 插件的 `epub` / `$epub` 全局对象与 `Internal.Epub` 命名空间 (打开书籍与便捷层的同步及 `Async` 形态, `Book` 的元数据, 目录, 阅读顺序, 正文提取, 封面与资源导出及搜索成员, `ReaderSession` 事件与控制方法, 阅读偏好, 位置对象, 结果文档与错误代码), 编辑器补全与类型检查随之覆盖 EPUB API
-* `优化` 编辑器补全索引 `autojs6_indices.js` 与聚合声明 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按内置声明 `4.19.0` 再生成, 新增 `epub` 模块的补全与签名提示; 四个校验脚本与补全器测试全部通过
-* `优化` 内置 AutoJs6 声明 `4.19.0` 补充 Readium EPUB Reader 插件 1.1.0 的高亮与笔记 (EPUB 契约版本 2): `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` 与 `ReaderSession` 的 `highlight` 事件 (`HighlightEvent`); 补全索引 `autojs6_indices.js` 与聚合声明 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 再生成, 四个校验脚本与补全器测试全部通过
+* `优化` 内置 AutoJs6 声明升级至 4.19.0, 补全及类型检查支持 epub/$epub 的书籍读取, 内容提取, 搜索及阅读器控制
+* `优化` 编辑器补全索引 autojs6_indices.js 与聚合声明 lib.autojs6.d.ts 由宿主 `tools/ace-completion` 按内置声明 `4.19.0` 再生成, 新增 epub 模块的补全与签名提示; 四个校验脚本与补全器测试全部通过
+* `优化` EPUB 补全支持高亮与笔记查询及标注变更事件 (配套 AutoJs6 声明 4.19.0 及 Readium EPUB Reader 1.1.0)
 
 # v1.11.0
 
 ###### 2026/09/20
 
-* `优化` 内置 AutoJs6 声明更新至 `4.18.0`: 新增 Angus Mail 插件的 `mail` / `$mail` 全局对象与 `Internal.Mail` 命名空间 (客户端与转发方法的同步及 `Async` 形态, 监听事件, 邮件 / 附件 / 地址对象, 账户选项与服务商预设, 搜索条件, 结果文档与错误代码), 编辑器补全与类型检查随之覆盖邮件 API
-* `优化` 编辑器补全索引 `autojs6_indices.js` 与聚合声明 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按内置声明 `4.18.0` 再生成: 新增 `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager` 与 `workManager` 模块的补全与签名提示, 声明索引 `index.d.ts` 与 `BUNDLED_DECLARATIONS.md` 恢复为导入脚本生成的形态; 四个校验脚本与补全器测试全部通过
+* `优化` 内置 AutoJs6 声明升级至 4.18.0, 补全及类型检查支持 mail/$mail 的账户, 收发邮件及监听接口
+* `优化` 补全索引同步 AutoJs6 声明 4.18.0, 补充 mail/ai/tts/flow/pangu/settings/yolo/powerManager/workManager 的补全及签名提示
 
 # v1.10.0
 
 ###### 2026/09/19
 
-* `修复` AGP 9.1 构建时的 SDK XML v4 解析警告及 JVM 单元测试组装任务误触发 APK 原生库对齐检查的问题 (共享构建插件 1.8.3)
-* `优化` 内置 AutoJs6 声明更新至 `4.17.0`: Level / LogConfigurator / LogManager 代理改为指向内置的 `org.autojs.autojs.core.console.log` 类, 三方库声明不再包含宿主已移除的库 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
+* `修复` AGP 9.1 构建时的 SDK XML v4 解析警告, 以及 JVM 单元测试误触发 APK 原生库对齐检查的问题 (共享构建插件 1.8.3)
+* `优化` 内置 AutoJs6 声明升级至 4.17.0, 日志类型改用宿主内置实现, 移除宿主已不再使用的第三方库声明
 
 ##### 更多发行历史可参阅
 
