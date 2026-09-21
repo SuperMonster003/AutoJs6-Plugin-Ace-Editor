@@ -1231,6 +1231,8 @@ declare namespace AutoJs6 {
         coverAsync(source: Epub.Source): Promise<ImageWrapper>;
         search(source: Epub.Source, query: string, options?: Epub.SearchOptions): Epub.SearchHit[];
         searchAsync(source: Epub.Source, query: string, options?: Epub.SearchOptions): Promise<Epub.SearchHit[]>;
+        annotations(source: Epub.Source): Epub.Annotation[];
+        annotationsAsync(source: Epub.Source): Promise<Epub.Annotation[]>;
         read(source: Epub.Source, options?: Epub.ReadOptions): Epub.ReaderSession;
         readAsync(source: Epub.Source, options?: Epub.ReadOptions): Promise<Epub.ReaderSession>;
         isAvailable(): boolean;

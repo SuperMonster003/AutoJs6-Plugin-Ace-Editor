@@ -179,6 +179,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 
 * `改善` 内蔵 AutoJs6 宣言を `4.19.0` に更新: Readium EPUB Reader プラグインの `epub` / `$epub` グローバルと `Internal.Epub` 名前空間 (書籍を開く操作と簡易層の同期および `Async` 形式, `Book` のメタデータ, 目次, 読み順, 本文抽出, 表紙とリソースの書き出しおよび検索メンバー, `ReaderSession` のイベントと制御メソッド, 閲覧設定, 位置オブジェクト, 結果ドキュメントとエラーコード) を追加し, エディタ補完と型チェックが EPUB API を対象に含むようになりました
 * `改善` エディタの補完インデックス `autojs6_indices.js` と集約宣言 `lib.autojs6.d.ts` をホストの `tools/ace-completion` で内蔵宣言 `4.19.0` から再生成し, `epub` モジュールの補完とシグネチャヘルプを追加; 4 つの検証スクリプトと補完テストがすべて通過
+* `改善` 内蔵 AutoJs6 宣言 `4.19.0` に Readium EPUB Reader プラグイン 1.1.0 のハイライトとノート (EPUB コントラクトバージョン 2) を補完: `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` と `ReaderSession` の `highlight` イベント (`HighlightEvent`); 補完インデックス `autojs6_indices.js` と集約宣言 `lib.autojs6.d.ts` をホストの `tools/ace-completion` で再生成し, 4 つの検証スクリプトと補完テストがすべて通過
 
 # v1.11.0
 
