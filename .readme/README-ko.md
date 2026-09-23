@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 ### 릴리스 기록
 
 ******
+
+# v1.12.1
+
+###### 2026/09/23
+
+* `개선` 내장 AutoJs6 선언을 4.20.0으로 업데이트하고 ai.agent.result/context 및 실행 컨텍스트 타입의 편집기 완성 동기화
 
 # v1.12.0
 
@@ -187,13 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 
 * `개선` 내장 AutoJs6 선언을 `4.18.0`으로 업데이트: Angus Mail 플러그인의 `mail` / `$mail` 전역 객체와 `Internal.Mail` 네임스페이스 (클라이언트 및 전달 메서드의 동기 / `Async` 형태, 감시 이벤트, 메일 / 첨부 / 주소 객체, 계정 옵션과 제공자 프리셋, 검색 조건, 결과 문서와 오류 코드) 를 추가하여 편집기 완성과 타입 검사가 메일 API 를 다루게 되었습니다
 * `개선` 편집기 완성 색인 `autojs6_indices.js` 와 집계 선언 `lib.autojs6.d.ts` 를 호스트 `tools/ace-completion` 으로 내장 선언 `4.18.0` 에서 다시 생성: `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager`, `workManager` 모듈의 완성과 시그니처 도움말을 추가하고, 선언 색인 `index.d.ts` 와 `BUNDLED_DECLARATIONS.md` 를 가져오기 스크립트가 생성하는 형태로 되돌렸습니다; 네 개의 검증 스크립트와 완성기 테스트가 모두 통과
-
-# v1.10.0
-
-###### 2026/09/19
-
-* `수정` 공유 빌드 플러그인 1.8.3을 통해 AGP 9.1의 SDK XML v4 파싱 경고 및 JVM 단위 테스트 조립 작업에서 APK 네이티브 라이브러리 정렬 검사가 잘못 실행되는 문제 해결
-* `개선` 내장 AutoJs6 선언을 `4.17.0`으로 업데이트: Level / LogConfigurator / LogManager 프록시가 내장 `org.autojs.autojs.core.console.log` 클래스를 가리키며, 라이브러리 선언에서 호스트에서 제거된 라이브러리 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava) 를 제외
 
 ##### 더 많은 릴리스 기록
 

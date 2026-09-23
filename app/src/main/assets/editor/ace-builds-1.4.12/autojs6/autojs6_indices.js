@@ -2374,6 +2374,12 @@
             ],
             "ai": [
                 {
+                    "name": "agent",
+                    "type": "variable",
+                    "doc": "agent: Ai.Agent;",
+                    "signature": "agent: Ai.Agent;"
+                },
+                {
                     "name": "ask",
                     "type": "function",
                     "doc": "ask(input: Ai.Input, options?: Ai.Options): Promise<string>;",

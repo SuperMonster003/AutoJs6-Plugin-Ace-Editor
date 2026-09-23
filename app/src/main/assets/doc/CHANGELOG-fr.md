@@ -4,6 +4,12 @@
 
 ******
 
+# v1.12.1
+
+###### 2026/09/23
+
+* `Amélioration` Déclarations AutoJs6 intégrées en version 4.20.0 et complétion de ai.agent.result/context et des types du contexte d'exécution
+
 # v1.12.0
 
 ###### 2026/09/21

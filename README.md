@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 ### 发行历史
 
 ******
+
+# v1.12.1
+
+###### 2026/09/23
+
+* `优化` 内置 AutoJs6 声明更新至 4.20.0, 同步 ai.agent.result/context 与执行上下文类型的编辑器补全
 
 # v1.12.0
 
@@ -187,13 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 
 * `优化` 内置 AutoJs6 声明升级至 4.18.0, 补全及类型检查支持 mail/$mail 的账户, 收发邮件及监听接口
 * `优化` 补全索引同步 AutoJs6 声明 4.18.0, 补充 mail/ai/tts/flow/pangu/settings/yolo/powerManager/workManager 的补全及签名提示
-
-# v1.10.0
-
-###### 2026/09/19
-
-* `修复` AGP 9.1 构建时的 SDK XML v4 解析警告, 以及 JVM 单元测试误触发 APK 原生库对齐检查的问题 (共享构建插件 1.8.3)
-* `优化` 内置 AutoJs6 声明升级至 4.17.0, 日志类型改用宿主内置实现, 移除宿主已不再使用的第三方库声明
 
 ##### 更多发行历史可参阅
 

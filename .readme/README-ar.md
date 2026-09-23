@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 ### سجل الإصدارات
 
 ******
+
+# v1.12.1
+
+###### 2026/09/23
+
+* `تحسين` تصريحات AutoJs6 المضمنة 4.20.0 وإكمال المحرر لواجهات ai.agent.result/context وأنواع سياق التنفيذ
 
 # v1.12.0
 
@@ -187,13 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 
 * `تحسين` تحديث إعلانات AutoJs6 المدمجة إلى `4.18.0`: إضافة الكائنين العامين `mail` / `$mail` ومساحة الأسماء `Internal.Mail` لإضافة Angus Mail (أساليب العميل والأساليب المحوّلة بالشكلين المتزامن و `Async`, أحداث المراقبة, كائنات الرسالة / المرفق / العنوان, خيارات الحساب وإعدادات مزودي الخدمة المسبقة, شروط البحث, مستندات النتائج ورموز الأخطاء), فأصبح إكمال المحرر وفحص الأنواع يشملان واجهة البريد
 * `تحسين` إعادة توليد فهارس الإكمال في المحرر `autojs6_indices.js` والإعلان المجمع `lib.autojs6.d.ts` بواسطة `tools/ace-completion` في المضيف من الإعلانات المدمجة `4.18.0`: إكمال ومساعدة توقيعات لوحدات `mail` و `ai` و `tts` و `flow` و `pangu` و `settings` و `yolo` و `powerManager` و `workManager`, وإعادة فهرس الإعلانات `index.d.ts` و `BUNDLED_DECLARATIONS.md` إلى الشكل الذي ينتجه سكربت الاستيراد; نجاح سكربتات التحقق الأربعة واختبار المكمل جميعا
-
-# v1.10.0
-
-###### 2026/09/19
-
-* `إصلاح` تحذيرات قراءة SDK XML v4 مع AGP 9.1 وتشغيل فحص محاذاة مكتبات APK الأصلية خطأ عند تجميع اختبارات JVM, باستخدام إضافات البناء المشتركة 1.8.3
-* `تحسين` تحديث إعلانات AutoJs6 المدمجة إلى `4.17.0`: وكلاء السجل Level / LogConfigurator / LogManager يشيرون الآن إلى فئات `org.autojs.autojs.core.console.log` المدمجة, وإعلانات المكتبات لم تعد تتضمن المكتبات التي أزيلت من المضيف (log4j و Flexmark و JavaMail و JUnit و github-api و Jackson و commons-io / lang3 و kotlin-reflect و SpongyCastle و media3 و Guava)
 
 ##### لمزيد من سجل الإصدارات
 

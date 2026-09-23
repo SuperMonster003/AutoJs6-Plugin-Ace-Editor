@@ -4,6 +4,12 @@
 
 ******
 
+# v1.12.1
+
+###### 2026/09/23
+
+* `Improvement` Bundled AutoJs6 declarations 4.20.0 and editor completion for ai.agent.result/context and execution context types
+
 # v1.12.0
 
 ###### 2026/09/21

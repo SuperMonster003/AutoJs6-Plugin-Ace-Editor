@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.12.1": {
+      "released_date": "2026/09/23",
+      "improvement": [
+        "内置 AutoJs6 声明更新至 4.20.0, 同步 ai.agent.result/context 与执行上下文类型的编辑器补全"
+      ]
+    },
     "v1.12.0": {
       "released_date": "2026/09/21",
       "improvement": [

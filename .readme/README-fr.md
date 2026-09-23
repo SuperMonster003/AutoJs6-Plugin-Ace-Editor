@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.12.1
+
+###### 2026/09/23
+
+* `Amélioration` Déclarations AutoJs6 intégrées en version 4.20.0 et complétion de ai.agent.result/context et des types du contexte d'exécution
 
 # v1.12.0
 
@@ -187,13 +193,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 * `Amélioration` Déclarations AutoJs6 intégrées mises à jour en `4.18.0` : ajout des globaux `mail` / `$mail` et de l'espace de noms `Internal.Mail` du plugin Angus Mail (méthodes du client et méthodes relayées en formes synchrone et `Async`, événements de surveillance, objets message / pièce jointe / adresse, options de compte et préréglages de fournisseur, critères de recherche, documents de résultat et codes d'erreur), de sorte que la complétion et la vérification de types de l'éditeur couvrent désormais l'API de messagerie
 * `Amélioration` Index de complétion de l'éditeur `autojs6_indices.js` et déclaration agrégée `lib.autojs6.d.ts` régénérés par le `tools/ace-completion` de l'hôte à partir des déclarations intégrées `4.18.0` : complétion et aide de signature pour les modules `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager` et `workManager`, index de déclarations `index.d.ts` et `BUNDLED_DECLARATIONS.md` ramenés à la forme produite par le script d'import ; les quatre scripts de vérification et le test du compléteur passent
-
-# v1.10.0
-
-###### 2026/09/19
-
-* `Correctif` Avertissements de lecture SDK XML v4 avec AGP 9.1 et contrôles d'alignement natif des APK déclenchés par erreur lors de l'assemblage des tests unitaires JVM, avec les plugins de compilation partagés 1.8.3
-* `Amélioration` Déclarations AutoJs6 intégrées mises à jour en `4.17.0` : les proxies Level / LogConfigurator / LogManager pointent désormais vers les classes intégrées `org.autojs.autojs.core.console.log`, et les déclarations de bibliothèques n'incluent plus les bibliothèques retirées de l'hôte (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
 
 ##### Pour plus d'historique des versions
 

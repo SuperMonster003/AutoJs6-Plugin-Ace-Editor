@@ -160,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 ### 發行歷史
 
 ******
+
+# v1.12.1
+
+###### 2026/09/23
+
+* `優化` 內置 AutoJs6 宣告更新至 4.20.0, 同步 ai.agent.result/context 與執行上下文類型的編輯器補全
 
 # v1.12.0
 
@@ -187,13 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.0-u
 
 * `優化` 內置 AutoJs6 聲明更新至 `4.18.0`: 新增 Angus Mail 插件的 `mail` / `$mail` 全局對象與 `Internal.Mail` 命名空間 (客戶端與轉發方法的同步及 `Async` 形態, 監聽事件, 郵件 / 附件 / 地址對象, 賬戶選項與服務商預設, 搜索條件, 結果文檔與錯誤代碼), 編輯器補全與類型檢查隨之覆蓋郵件 API
 * `優化` 編輯器補全索引 `autojs6_indices.js` 與聚合聲明 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按內置聲明 `4.18.0` 再生成: 新增 `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager` 與 `workManager` 模組的補全與簽名提示, 聲明索引 `index.d.ts` 與 `BUNDLED_DECLARATIONS.md` 恢復為匯入腳本生成的形態; 四個校驗腳本與補全器測試全部通過
-
-# v1.10.0
-
-###### 2026/09/19
-
-* `修復` AGP 9.1 構建時的 SDK XML v4 解析警告及 JVM 單元測試組裝任務誤觸發 APK 原生程式庫對齊檢查的問題 (共用構建外掛 1.8.3)
-* `優化` 內置 AutoJs6 聲明更新至 `4.17.0`: Level / LogConfigurator / LogManager 代理改為指向內置的 `org.autojs.autojs.core.console.log` 類, 三方庫聲明不再包含宿主已移除的庫 (log4j, Flexmark, JavaMail, JUnit, github-api, Jackson, commons-io / lang3, kotlin-reflect, SpongyCastle, media3, Guava)
 
 ##### 更多發行歷史可參閱
 
