@@ -7,6 +7,7 @@ declare namespace AutoJs6 {
     }
 
     interface Ai {
+        agent: Ai.Agent;
         ask(input: Ai.Input, options?: Ai.Options): Promise<string>;
         chat(input: Ai.Input, options?: Ai.Options): Promise<Ai.Response>;
         stream(input: Ai.Input, options?: Ai.Options): Ai.Stream;

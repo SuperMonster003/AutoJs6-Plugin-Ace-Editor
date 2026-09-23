@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.12.1": {
+      "released_date": "2026/09/23",
+      "improvement": [
+        "내장 AutoJs6 선언을 4.20.0으로 업데이트하고 ai.agent.result/context 및 실행 컨텍스트 타입의 편집기 완성 동기화"
+      ]
+    },
     "v1.12.0": {
       "released_date": "2026/09/21",
       "improvement": [
