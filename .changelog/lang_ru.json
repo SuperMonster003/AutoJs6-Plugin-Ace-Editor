@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.13.0": {
+      "released_date": "2026/09/24",
+      "improvement": [
+        "Объявления AutoJs6 4.21.0 и дополнение API задач ai.agent, включая члены AgentRun, типы событий и параметры задач"
+      ]
+    },
     "v1.12.1": {
       "released_date": "2026/09/23",
       "improvement": [

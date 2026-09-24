@@ -4,6 +4,12 @@
 
 ******
 
+# v1.13.0
+
+###### 2026/09/24
+
+* `Amélioration` Déclarations AutoJs6 4.21.0 et complétion des API de tâches ai.agent, avec membres AgentRun, types des événements et options
+
 # v1.12.1
 
 ###### 2026/09/23
