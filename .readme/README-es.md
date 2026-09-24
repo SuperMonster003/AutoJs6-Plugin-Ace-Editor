@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.13.0
+
+###### 2026/09/24
+
+* `Mejora` Declaraciones AutoJs6 4.21.0 y autocompletado de tareas ai.agent, con miembros AgentRun, tipos de eventos y opciones
 
 # v1.12.1
 
@@ -186,13 +192,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Mejora` Declaraciones integradas de AutoJs6 actualizadas a `4.19.0`: se añaden los globales `epub` / `$epub` y el espacio de nombres `Internal.Epub` del plugin Readium EPUB Reader (apertura de libros y capa de conveniencia en forma síncrona y `Async`, miembros de `Book` para metadatos, índice, orden de lectura, extracción de texto, exportación de portada y recursos y búsqueda, eventos y controles de `ReaderSession`, preferencias de lectura, localizador, documentos de resultado y códigos de error), de modo que el autocompletado y la comprobación de tipos del editor ya cubren la API de EPUB
 * `Mejora` Índices de autocompletado del editor `autojs6_indices.js` y declaración agregada `lib.autojs6.d.ts` regenerados por `tools/ace-completion` del host a partir de las declaraciones integradas `4.19.0`: autocompletado y ayuda de firmas para el módulo `epub`; los cuatro scripts de verificación y la prueba del completador pasan
 * `Mejora` Declaraciones integradas de AutoJs6 `4.19.0` ampliadas con los resaltados y notas del plugin Readium EPUB Reader 1.1.0 (versión 2 del contrato EPUB): `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` y el evento `highlight` de `ReaderSession` (`HighlightEvent`); los índices de autocompletado `autojs6_indices.js` y la declaración agregada `lib.autojs6.d.ts` regenerados por `tools/ace-completion` del host, los cuatro scripts de verificación y la prueba del completador pasan
-
-# v1.11.0
-
-###### 2026/09/20
-
-* `Mejora` Declaraciones integradas de AutoJs6 actualizadas a `4.18.0`: se añaden los globales `mail` / `$mail` y el espacio de nombres `Internal.Mail` del plugin Angus Mail (métodos del cliente y reenviados en forma síncrona y `Async`, eventos de vigilancia, objetos de mensaje / adjunto / dirección, opciones de cuenta y preajustes de proveedor, consultas de búsqueda, documentos de resultado y códigos de error), de modo que el autocompletado y la comprobación de tipos del editor ya cubren la API de correo
-* `Mejora` Índices de autocompletado del editor `autojs6_indices.js` y declaración agregada `lib.autojs6.d.ts` regenerados por `tools/ace-completion` del host a partir de las declaraciones integradas `4.18.0`: autocompletado y ayuda de firmas para los módulos `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager` y `workManager`, y el índice de declaraciones `index.d.ts` y `BUNDLED_DECLARATIONS.md` restaurados a la forma que genera el script de importación; los cuatro scripts de verificación y la prueba del completador pasan
 
 ##### Para ver más historial de versiones
 

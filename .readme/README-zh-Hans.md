@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-u
 ### 发行历史
 
 ******
+
+# v1.13.0
+
+###### 2026/09/24
+
+* `优化` AutoJs6 声明 4.21.0 与 ai.agent 任务 API 补全, 包括 AgentRun 成员, 事件类型及任务选项
 
 # v1.12.1
 
@@ -186,13 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-u
 * `优化` 内置 AutoJs6 声明升级至 4.19.0, 补全及类型检查支持 epub/$epub 的书籍读取, 内容提取, 搜索及阅读器控制
 * `优化` 编辑器补全索引 autojs6_indices.js 与聚合声明 lib.autojs6.d.ts 由宿主 `tools/ace-completion` 按内置声明 `4.19.0` 再生成, 新增 epub 模块的补全与签名提示; 四个校验脚本与补全器测试全部通过
 * `优化` EPUB 补全支持高亮与笔记查询及标注变更事件 (配套 AutoJs6 声明 4.19.0 及 Readium EPUB Reader 1.1.0)
-
-# v1.11.0
-
-###### 2026/09/20
-
-* `优化` 内置 AutoJs6 声明升级至 4.18.0, 补全及类型检查支持 mail/$mail 的账户, 收发邮件及监听接口
-* `优化` 补全索引同步 AutoJs6 声明 4.18.0, 补充 mail/ai/tts/flow/pangu/settings/yolo/powerManager/workManager 的补全及签名提示
 
 ##### 更多发行历史可参阅
 

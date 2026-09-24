@@ -322,6 +322,7 @@
             globals: [],
             modules: Object.create(null),
             aliases: Object.create(null),
+            instanceOnlyModules: indices && indices.instanceOnlyModules || [],
             snippets: indices && indices.snippets || [],
             language: options.language || indices && indices.language || "",
             schemaVersion: indices && indices.schemaVersion || 1,
@@ -867,7 +868,7 @@
             add(nameOf(item));
         });
         Object.keys(source.modules || {}).forEach(function(moduleName) {
-            if (moduleName.indexOf(".") < 0) {
+            if (moduleName.indexOf(".") < 0 && (source.instanceOnlyModules || []).indexOf(moduleName) < 0) {
                 add(moduleName);
             }
         });
@@ -1288,6 +1289,7 @@
         return {
             globals: (localContext.globals || []).concat(source.globals || []),
             modules: source.modules,
+            instanceOnlyModules: source.instanceOnlyModules || [],
             aliases: mergeAliases(source.aliases, localContext.aliases),
             snippets: source.snippets || [],
             language: source.language,

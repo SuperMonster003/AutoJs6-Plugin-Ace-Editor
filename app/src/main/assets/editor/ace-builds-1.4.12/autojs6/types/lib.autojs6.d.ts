@@ -6,6 +6,40 @@ declare namespace AutoJs6 {
         window: Activity.PhoneWindow;
     }
 
+    interface Agent {
+        run(goal: string, options?: AgentRunOptions): AgentRun;
+        create(options: AgentRunOptions): AgentAssistant;
+        get(id: string): AgentRun | null;
+        list(filter?: AgentListFilter): Promise<AgentRunSummary[]>;
+        catalog(query?: string): Promise<AgentScriptEntry[]>;
+        presets(): Promise<string[]>;
+        status(): AgentLinkStatus;
+        result(value: JsonValue): boolean;
+        context(): AgentExecutionContext | null;
+    }
+
+    interface AgentAssistant {
+        options: AgentRunOptions;
+        run(goal: string, overrides?: AgentRunOptions): AgentRun;
+    }
+
+    interface AgentRun {
+        id: string;
+        state: AgentState;
+        goal: string;
+        startedAt: number;
+        detached: boolean;
+        error: AgentError | null;
+        result: Promise<AgentResult>;
+        on<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;
+        off<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;
+        once<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;
+        respond(requestId: string, value: string | boolean): boolean;
+        confirm(requestId: string, allowed: boolean, scope?: 'once' | 'run'): boolean;
+        cancel(reason?: string): this;
+        join(timeoutMs?: number): AgentResult;
+    }
+
     interface Ai {
         agent: Ai.Agent;
         ask(input: Ai.Input, options?: Ai.Options): Promise<string>;

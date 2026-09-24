@@ -2,6 +2,11 @@
     "use strict";
 
     var indices = {
+        "instanceOnlyModules": [
+            "Agent",
+            "AgentAssistant",
+            "AgentRun"
+        ],
         "version": 1,
         "globals": [
             {
@@ -2370,6 +2375,162 @@
                     "type": "variable",
                     "doc": "window: Activity.PhoneWindow;",
                     "signature": "window: Activity.PhoneWindow;"
+                }
+            ],
+            "Agent": [
+                {
+                    "name": "run",
+                    "type": "function",
+                    "doc": "run(goal: string, options?: AgentRunOptions): AgentRun;",
+                    "signature": "run(goal: string, options?: AgentRunOptions): AgentRun;"
+                },
+                {
+                    "name": "create",
+                    "type": "function",
+                    "doc": "create(options: AgentRunOptions): AgentAssistant;",
+                    "signature": "create(options: AgentRunOptions): AgentAssistant;"
+                },
+                {
+                    "name": "get",
+                    "type": "function",
+                    "doc": "get(id: string): AgentRun | null;",
+                    "signature": "get(id: string): AgentRun | null;"
+                },
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(filter?: AgentListFilter): Promise<AgentRunSummary[]>;",
+                    "signature": "list(filter?: AgentListFilter): Promise<AgentRunSummary[]>;"
+                },
+                {
+                    "name": "catalog",
+                    "type": "function",
+                    "doc": "catalog(query?: string): Promise<AgentScriptEntry[]>;",
+                    "signature": "catalog(query?: string): Promise<AgentScriptEntry[]>;"
+                },
+                {
+                    "name": "presets",
+                    "type": "function",
+                    "doc": "presets(): Promise<string[]>;",
+                    "signature": "presets(): Promise<string[]>;"
+                },
+                {
+                    "name": "status",
+                    "type": "function",
+                    "doc": "status(): AgentLinkStatus;",
+                    "signature": "status(): AgentLinkStatus;"
+                },
+                {
+                    "name": "result",
+                    "type": "function",
+                    "doc": "result(value: JsonValue): boolean;",
+                    "signature": "result(value: JsonValue): boolean;"
+                },
+                {
+                    "name": "context",
+                    "type": "function",
+                    "doc": "context(): AgentExecutionContext | null;",
+                    "signature": "context(): AgentExecutionContext | null;"
+                }
+            ],
+            "AgentAssistant": [
+                {
+                    "name": "options",
+                    "type": "variable",
+                    "doc": "options: AgentRunOptions;",
+                    "signature": "options: AgentRunOptions;"
+                },
+                {
+                    "name": "run",
+                    "type": "function",
+                    "doc": "run(goal: string, overrides?: AgentRunOptions): AgentRun;",
+                    "signature": "run(goal: string, overrides?: AgentRunOptions): AgentRun;"
+                }
+            ],
+            "AgentRun": [
+                {
+                    "name": "id",
+                    "type": "variable",
+                    "doc": "id: string;",
+                    "signature": "id: string;"
+                },
+                {
+                    "name": "state",
+                    "type": "variable",
+                    "doc": "state: AgentState;",
+                    "signature": "state: AgentState;"
+                },
+                {
+                    "name": "goal",
+                    "type": "variable",
+                    "doc": "goal: string;",
+                    "signature": "goal: string;"
+                },
+                {
+                    "name": "startedAt",
+                    "type": "variable",
+                    "doc": "startedAt: number;",
+                    "signature": "startedAt: number;"
+                },
+                {
+                    "name": "detached",
+                    "type": "variable",
+                    "doc": "detached: boolean;",
+                    "signature": "detached: boolean;"
+                },
+                {
+                    "name": "error",
+                    "type": "variable",
+                    "doc": "error: AgentError | null;",
+                    "signature": "error: AgentError | null;"
+                },
+                {
+                    "name": "result",
+                    "type": "variable",
+                    "doc": "result: Promise<AgentResult>;",
+                    "signature": "result: Promise<AgentResult>;"
+                },
+                {
+                    "name": "on",
+                    "type": "function",
+                    "doc": "on<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;",
+                    "signature": "on<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;"
+                },
+                {
+                    "name": "off",
+                    "type": "function",
+                    "doc": "off<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;",
+                    "signature": "off<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;"
+                },
+                {
+                    "name": "once",
+                    "type": "function",
+                    "doc": "once<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;",
+                    "signature": "once<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;"
+                },
+                {
+                    "name": "respond",
+                    "type": "function",
+                    "doc": "respond(requestId: string, value: string | boolean): boolean;",
+                    "signature": "respond(requestId: string, value: string | boolean): boolean;"
+                },
+                {
+                    "name": "confirm",
+                    "type": "function",
+                    "doc": "confirm(requestId: string, allowed: boolean, scope?: 'once' | 'run'): boolean;",
+                    "signature": "confirm(requestId: string, allowed: boolean, scope?: 'once' | 'run'): boolean;"
+                },
+                {
+                    "name": "cancel",
+                    "type": "function",
+                    "doc": "cancel(reason?: string): this;",
+                    "signature": "cancel(reason?: string): this;"
+                },
+                {
+                    "name": "join",
+                    "type": "function",
+                    "doc": "join(timeoutMs?: number): AgentResult;",
+                    "signature": "join(timeoutMs?: number): AgentResult;"
                 }
             ],
             "ai": [

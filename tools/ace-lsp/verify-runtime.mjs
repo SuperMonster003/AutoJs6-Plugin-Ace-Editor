@@ -846,6 +846,33 @@ function verifyDependencyTypeLayer(paths) {
     };
 }
 
+function verifyAgentTaskCompletion(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const libraryTextByUri = typeScriptLibraryTextByUri(paths);
+    libraryTextByUri["file:///autojs6/types/generated/lib.autojs6.core.d.ts"] = readFileSync(paths.core, "utf8");
+    libraryTextByUri["file:///autojs6/types/lib.autojs6.extra.d.ts"] = readFileSync(paths.compatibility, "utf8");
+    const service = context.AutoJsAceTsLanguageService.create({
+        documentUri: "file:///autojs6/editor/agent-task.js", libraryTextByUri,
+    });
+    const cases = [
+        ["ai.agent.", ["run", "create", "get", "list", "catalog", "presets", "status", "result", "context"]],
+        ["let run = ai.agent.run('Goal');\nrun.", ["id", "state", "goal", "startedAt", "detached", "on", "off", "once", "respond", "confirm", "cancel", "result", "join"]],
+        ["let assistant = ai.agent.create({tools: ['user']});\nassistant.", ["run", "options"]],
+        ["let run = ai.agent.run('Goal');\nrun.on('input', event => { event.", ["requestId", "question", "kind", "readOnly", "timeoutMs"]],
+    ];
+    try {
+        for (const [source, expected] of cases) {
+            const lines = source.split("\n");
+            service.getDiagnostics(sessionFor(source), source);
+            let actual = [];
+            service.getCompletions(sessionFor(source), { row: lines.length - 1, column: lines.at(-1).length }, "",
+                (_error, entries) => { actual = entries || []; }, source);
+            for (const name of expected) assert(actual.some((entry) => entry.caption === name), `Missing Agent completion ${name}: ${source}; state=${JSON.stringify(service.getState())}; entries=${JSON.stringify(actual.map((entry) => entry.caption))}`);
+        }
+    } finally { service.dispose(); }
+    return { cases: cases.length, instanceAndEventInference: true };
+}
+
 function verifyExecutionProfileConsistency(paths, ts) {
     const context = createBrowserTypeScriptContext(paths);
     const libraryTextByUri = typeScriptLibraryTextByUri(paths);
@@ -3334,6 +3361,7 @@ function main() {
     const settingsContract = verifySettingsContract(paths);
     const browserService = verifyBrowserLanguageService(paths, ts.version);
     const dependencyTypes = verifyDependencyTypeLayer(paths);
+    const agentTasks = verifyAgentTaskCompletion(paths);
     const incrementalProjectDiagnostics = verifyIncrementalProjectDiagnostics(paths);
     const executionProfiles = verifyExecutionProfileConsistency(paths, ts);
     const optionalGroups = verifyOptionalGroupCompletions(paths);
@@ -3354,6 +3382,7 @@ function main() {
             settingsContract,
             browserService,
             dependencyTypes,
+            agentTasks,
             incrementalProjectDiagnostics,
             executionProfiles,
             optionalGroups,

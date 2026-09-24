@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-u
 ### 發行歷史
 
 ******
+
+# v1.13.0
+
+###### 2026/09/24
+
+* `優化` AutoJs6 宣告 4.21.0 與 ai.agent 任務 API 補全, 包括 AgentRun 成員, 事件型別及任務選項
 
 # v1.12.1
 
@@ -186,13 +192,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.12.1-u
 * `優化` 內建 AutoJs6 宣告更新至 `4.19.0`: 新增 Readium EPUB Reader 外掛的 `epub` / `$epub` 全域物件與 `Internal.Epub` 命名空間 (開啟書籍與便捷層的同步及 `Async` 形態, `Book` 的中繼資料, 目錄, 閱讀順序, 正文擷取, 封面與資源匯出及搜尋成員, `ReaderSession` 事件與控制方法, 閱讀偏好, 位置物件, 結果文件與錯誤代碼), 編輯器補全與型別檢查隨之涵蓋 EPUB API
 * `優化` 編輯器補全索引 `autojs6_indices.js` 與聚合宣告 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按內建宣告 `4.19.0` 再生成, 新增 `epub` 模組的補全與簽名提示; 四個驗證指令碼與補全器測試全部通過
 * `優化` 內建 AutoJs6 宣告 `4.19.0` 補充 Readium EPUB Reader 外掛 1.1.0 的螢光標示與筆記 (EPUB 契約版本 2): `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` 與 `ReaderSession` 的 `highlight` 事件 (`HighlightEvent`); 補全索引 `autojs6_indices.js` 與聚合宣告 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 再生成, 四個驗證指令碼與補全器測試全部通過
-
-# v1.11.0
-
-###### 2026/09/20
-
-* `優化` 內建 AutoJs6 宣告更新至 `4.18.0`: 新增 Angus Mail 外掛的 `mail` / `$mail` 全域物件與 `Internal.Mail` 命名空間 (用戶端與轉發方法的同步及 `Async` 形態, 監聽事件, 郵件 / 附件 / 地址物件, 帳戶選項與服務商預設, 搜尋條件, 結果文件與錯誤代碼), 編輯器補全與型別檢查隨之涵蓋郵件 API
-* `優化` 編輯器補全索引 `autojs6_indices.js` 與聚合宣告 `lib.autojs6.d.ts` 由宿主 `tools/ace-completion` 按內建宣告 `4.18.0` 再生成: 新增 `mail`, `ai`, `tts`, `flow`, `pangu`, `settings`, `yolo`, `powerManager` 與 `workManager` 模組的補全與簽名提示, 宣告索引 `index.d.ts` 與 `BUNDLED_DECLARATIONS.md` 恢復為匯入指令碼生成的形態; 四個驗證指令碼與補全器測試全部通過
 
 ##### 更多發行歷史可參閱
 
