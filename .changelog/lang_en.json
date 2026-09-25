@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.13.1": {
+      "released_date": "2026/09/25",
+      "improvement": [
+        "Bundle AutoJs6 declarations 4.21.1 with Agent preset, tool permission, budget and memory guidance in editor hints"
+      ]
+    },
     "v1.13.0": {
       "released_date": "2026/09/24",
       "improvement": [

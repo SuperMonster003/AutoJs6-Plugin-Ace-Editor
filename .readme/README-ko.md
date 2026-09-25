@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-u
 
 ******
 
+# v1.13.1
+
+###### 2026/09/25
+
+* `개선` AutoJs6 선언 4.21.1을 포함하고 편집기 힌트에 Agent 프리셋, 도구 권한, 예산 및 메모리 설명을 제공
+
 # v1.13.0
 
 ###### 2026/09/24
@@ -184,14 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-u
 ###### 2026/09/23
 
 * `개선` 내장 AutoJs6 선언을 4.20.0으로 업데이트하고 ai.agent.result/context 및 실행 컨텍스트 타입의 편집기 완성 동기화
-
-# v1.12.0
-
-###### 2026/09/21
-
-* `개선` 내장 AutoJs6 선언을 `4.19.0`으로 업데이트: Readium EPUB Reader 플러그인의 `epub` / `$epub` 전역 객체와 `Internal.Epub` 네임스페이스 (책 열기와 편의 계층의 동기 / `Async` 형태, `Book` 의 메타데이터, 목차, 읽기 순서, 본문 추출, 표지와 리소스 내보내기 및 검색 멤버, `ReaderSession` 이벤트와 제어 메서드, 읽기 환경설정, 위치 객체, 결과 문서와 오류 코드) 를 추가하여 편집기 완성과 타입 검사가 EPUB API 를 다루게 되었습니다
-* `개선` 편집기 완성 색인 `autojs6_indices.js` 와 집계 선언 `lib.autojs6.d.ts` 를 호스트 `tools/ace-completion` 으로 내장 선언 `4.19.0` 에서 다시 생성하여 `epub` 모듈의 완성과 시그니처 도움말을 추가; 네 개의 검증 스크립트와 완성기 테스트가 모두 통과
-* `개선` 내장 AutoJs6 선언 `4.19.0` 에 Readium EPUB Reader 플러그인 1.1.0 의 하이라이트와 메모 (EPUB 계약 버전 2) 를 보강: `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` 와 `ReaderSession` 의 `highlight` 이벤트 (`HighlightEvent`); 완성 색인 `autojs6_indices.js` 와 집계 선언 `lib.autojs6.d.ts` 를 호스트 `tools/ace-completion` 으로 다시 생성하여 네 개의 검증 스크립트와 완성기 테스트가 모두 통과
 
 ##### 더 많은 릴리스 기록
 

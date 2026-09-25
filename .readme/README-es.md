@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -173,6 +173,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.13.1
+
+###### 2026/09/25
+
+* `Mejora` Incluir las declaraciones AutoJs6 4.21.1 con indicaciones sobre preajustes de Agent, permisos de herramientas, presupuestos y memoria en el editor
+
 # v1.13.0
 
 ###### 2026/09/24
@@ -184,14 +190,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/09/23
 
 * `Mejora` Declaraciones AutoJs6 integradas 4.20.0 y autocompletado de ai.agent.result/context y los tipos del contexto de ejecución
-
-# v1.12.0
-
-###### 2026/09/21
-
-* `Mejora` Declaraciones integradas de AutoJs6 actualizadas a `4.19.0`: se añaden los globales `epub` / `$epub` y el espacio de nombres `Internal.Epub` del plugin Readium EPUB Reader (apertura de libros y capa de conveniencia en forma síncrona y `Async`, miembros de `Book` para metadatos, índice, orden de lectura, extracción de texto, exportación de portada y recursos y búsqueda, eventos y controles de `ReaderSession`, preferencias de lectura, localizador, documentos de resultado y códigos de error), de modo que el autocompletado y la comprobación de tipos del editor ya cubren la API de EPUB
-* `Mejora` Índices de autocompletado del editor `autojs6_indices.js` y declaración agregada `lib.autojs6.d.ts` regenerados por `tools/ace-completion` del host a partir de las declaraciones integradas `4.19.0`: autocompletado y ayuda de firmas para el módulo `epub`; los cuatro scripts de verificación y la prueba del completador pasan
-* `Mejora` Declaraciones integradas de AutoJs6 `4.19.0` ampliadas con los resaltados y notas del plugin Readium EPUB Reader 1.1.0 (versión 2 del contrato EPUB): `epub.annotations` / `annotationsAsync`, `Book.annotations` / `annotationsAsync`, `Internal.Epub.Annotation` / `AnnotationStyle` y el evento `highlight` de `ReaderSession` (`HighlightEvent`); los índices de autocompletado `autojs6_indices.js` y la declaración agregada `lib.autojs6.d.ts` regenerados por `tools/ace-completion` del host, los cuatro scripts de verificación y la prueba del completador pasan
 
 ##### Para ver más historial de versiones
 

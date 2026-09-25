@@ -4,6 +4,12 @@
 
 ******
 
+# v1.13.1
+
+###### 2026/09/25
+
+* `Amélioration` Intégrer les déclarations AutoJs6 4.21.1 avec des indications sur les préréglages Agent, les autorisations des outils, les budgets et la mémoire dans les aides de l'éditeur
+
 # v1.13.0
 
 ###### 2026/09/24

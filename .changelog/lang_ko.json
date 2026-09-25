@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.13.1": {
+      "released_date": "2026/09/25",
+      "improvement": [
+        "AutoJs6 선언 4.21.1을 포함하고 편집기 힌트에 Agent 프리셋, 도구 권한, 예산 및 메모리 설명을 제공"
+      ]
+    },
     "v1.13.0": {
       "released_date": "2026/09/24",
       "improvement": [

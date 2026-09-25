@@ -4,6 +4,12 @@
 
 ******
 
+# v1.13.1
+
+###### 2026/09/25
+
+* `Improvement` Bundle AutoJs6 declarations 4.21.1 with Agent preset, tool permission, budget and memory guidance in editor hints
+
 # v1.13.0
 
 ###### 2026/09/24
