@@ -177,6 +177,7 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ###### 2026/09/25
 
+* `Correctif` Le service de langage Lua signale une taille incorrecte du fichier natif lorsqu'un APK 32 bits est installé sur un appareil 64 bits
 * `Amélioration` Intégrer les déclarations AutoJs6 4.21.1 avec des indications sur les préréglages Agent, les autorisations des outils, les budgets et la mémoire dans les aides de l'éditeur
 
 # v1.13.0

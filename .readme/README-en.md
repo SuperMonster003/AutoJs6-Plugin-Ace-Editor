@@ -177,6 +177,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ###### 2026/09/25
 
+* `Fix` Lua language service reports a native file size mismatch when a 32-bit APK is installed on a 64-bit device
 * `Improvement` Bundle AutoJs6 declarations 4.21.1 with Agent preset, tool permission, budget and memory guidance in editor hints
 
 # v1.13.0

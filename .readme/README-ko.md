@@ -177,6 +177,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-u
 
 ###### 2026/09/25
 
+* `수정` 64비트 기기에 32비트 APK를 설치하면 Lua 언어 서비스가 네이티브 파일 크기 불일치를 보고하는 문제
 * `개선` AutoJs6 선언 4.21.1을 포함하고 편집기 힌트에 Agent 프리셋, 도구 권한, 예산 및 메모리 설명을 제공
 
 # v1.13.0

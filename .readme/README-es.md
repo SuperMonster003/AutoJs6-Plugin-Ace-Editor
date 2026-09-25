@@ -177,6 +177,7 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ###### 2026/09/25
 
+* `Corrección` El servicio de lenguaje Lua informa de un tamaño incorrecto del archivo nativo al instalar un APK de 32 bits en un dispositivo de 64 bits
 * `Mejora` Incluir las declaraciones AutoJs6 4.21.1 con indicaciones sobre preajustes de Agent, permisos de herramientas, presupuestos y memoria en el editor
 
 # v1.13.0
