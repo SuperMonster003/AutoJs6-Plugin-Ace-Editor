@@ -6,6 +6,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.supermonster003.autojs6.plugin.ace.editor.AceEditorPluginEntrypoint
@@ -45,6 +46,16 @@ import java.util.concurrent.atomic.AtomicReference
 
 @RunWith(AndroidJUnit4::class)
 class AceCodeEditorSmokeTest {
+    private fun runtimeDiagnostics(
+        scenario: ActivityScenario<AceEditorTestActivity>,
+        session: org.autojs.plugin.editor.api.EditorPluginSession,
+    ): String {
+        val value = AtomicReference<String>()
+        scenario.onActivity {
+            value.set(session.createDiagnosticsSnapshot(null, "auto").values.getString("lspRuntimeState"))
+        }
+        return value.get().orEmpty()
+    }
 
     @Test
     fun requiredAceAssetsArePackaged() {
@@ -455,7 +466,8 @@ class AceCodeEditorSmokeTest {
             }
 
             assertEquals(
-                "Live diagnostics should contain exactly one unresolved import: $diagnosticCodes",
+                "Live diagnostics should contain exactly one unresolved import: $diagnosticCodes; " +
+                    runtimeDiagnostics(scenario, session.get()),
                 1,
                 diagnosticCodes.count { code -> code == "2307" },
             )
@@ -644,8 +656,9 @@ class AceCodeEditorSmokeTest {
             assertTrue("ACE did not produce a project rename candidate", renameInvoked)
 
             onView(withHint(R.string.text_typescript_project_rename_new_name))
+                .inRoot(isDialog())
                 .perform(replaceText("projectAnswer"))
-            onView(withText(android.R.string.ok)).perform(click())
+            onView(withText(android.R.string.ok)).inRoot(isDialog()).perform(click())
             assertTrue(
                 "ACE did not publish the project rename request",
                 projectRenameRequested.await(10, TimeUnit.SECONDS),

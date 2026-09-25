@@ -2,6 +2,7 @@ package io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp
 
 import android.content.Context
 import android.os.Build
+import java.io.DataInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.security.MessageDigest
@@ -163,16 +164,35 @@ internal object AceLuaLanguageServerRuntime {
         context: Context,
         manifest: RuntimeManifest,
     ): ResolvedNativeLibrary {
-        val abi = Build.SUPPORTED_ABIS.firstOrNull(manifest.nativeLibraries::containsKey)
-            ?: error("LuaLS is unavailable for ABI ${Build.SUPPORTED_ABIS.joinToString()}")
         val nativeRoot = File(context.applicationInfo.nativeLibraryDir).canonicalFile
         val nativeLibrary = File(nativeRoot, NATIVE_LIBRARY_NAME).canonicalFile
         require(nativeLibrary.parentFile == nativeRoot) { "LuaLS native path escaped nativeLibraryDir" }
         require(nativeLibrary.isFile && nativeLibrary.canRead()) {
-            "LuaLS native library is missing for $abi"
+            "LuaLS native library is missing"
         }
         require(nativeLibrary.canExecute()) { "LuaLS native library is not executable" }
+        // A 64-bit device can install a 32-bit split. Verify the executable Android actually
+        // extracted, including when a host of another bitness launches this child process.
+        val header = ByteArray(20)
+        DataInputStream(nativeLibrary.inputStream()).use { it.readFully(header) }
+        val abi = requireNotNull(installedNativeAbi(header)) { "Unsupported LuaLS ELF header" }
+        require(abi in Build.SUPPORTED_ABIS && abi in manifest.nativeLibraries) {
+            "LuaLS is unavailable for installed ABI $abi"
+        }
         return ResolvedNativeLibrary(abi, nativeLibrary)
+    }
+
+    internal fun installedNativeAbi(header: ByteArray): String? {
+        if (header.size < 20 || header[0] != 0x7f.toByte() || header[1] != 'E'.code.toByte() ||
+            header[2] != 'L'.code.toByte() || header[3] != 'F'.code.toByte() ||
+            header[5] != 1.toByte() || header[6] != 1.toByte()) return null
+        val machine = (header[18].toInt() and 0xff) or ((header[19].toInt() and 0xff) shl 8)
+        return when (header[4].toInt() to machine) {
+            1 to 40 -> "armeabi-v7a"
+            2 to 183 -> "arm64-v8a"
+            2 to 62 -> "x86_64"
+            else -> null
+        }
     }
 
     internal fun hasInstalledNativeRuntime(
