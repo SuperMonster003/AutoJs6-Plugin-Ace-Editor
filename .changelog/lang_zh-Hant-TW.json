@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.13.1": {
+      "released_date": "2026/09/25",
+      "improvement": [
+        "內建 AutoJs6 宣告 4.21.1, 在編輯器提示中說明 Agent 預設, 工具權限, 預算和記憶範圍"
+      ]
+    },
     "v1.13.0": {
       "released_date": "2026/09/24",
       "improvement": [

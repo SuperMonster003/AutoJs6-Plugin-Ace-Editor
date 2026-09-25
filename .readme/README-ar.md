@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-u
 
 ******
 
+# v1.13.1
+
+###### 2026/09/25
+
+* `تحسين` تضمين تعريفات AutoJs6 4.21.1 مع إرشادات إعدادات Agent وأذونات الأدوات والميزانية والذاكرة في تلميحات المحرر
+
 # v1.13.0
 
 ###### 2026/09/24
@@ -184,14 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.0-u
 ###### 2026/09/23
 
 * `تحسين` تصريحات AutoJs6 المضمنة 4.20.0 وإكمال المحرر لواجهات ai.agent.result/context وأنواع سياق التنفيذ
-
-# v1.12.0
-
-###### 2026/09/21
-
-* `تحسين` تحديث إعلانات AutoJs6 المدمجة إلى `4.19.0`: إضافة الكائنين العامين `epub` / `$epub` ومساحة الأسماء `Internal.Epub` لإضافة Readium EPUB Reader (فتح الكتب والطبقة المريحة بالشكلين المتزامن و `Async`, أعضاء `Book` للبيانات الوصفية وجدول المحتويات وترتيب القراءة واستخراج النص وتصدير الغلاف والموارد والبحث, أحداث `ReaderSession` وأساليب التحكم, تفضيلات القراءة, كائن الموضع, مستندات النتائج ورموز الأخطاء), فأصبح إكمال المحرر وفحص الأنواع يشملان واجهة EPUB
-* `تحسين` إعادة توليد فهارس الإكمال في المحرر `autojs6_indices.js` والإعلان المجمع `lib.autojs6.d.ts` بواسطة `tools/ace-completion` في المضيف من الإعلانات المدمجة `4.19.0`: إكمال ومساعدة توقيعات لوحدة `epub`; نجاح سكربتات التحقق الأربعة واختبار المكمل جميعا
-* `تحسين` استكمال إعلانات AutoJs6 المدمجة `4.19.0` بتمييزات وملاحظات إضافة Readium EPUB Reader 1.1.0 (الإصدار 2 من عقد EPUB): `epub.annotations` / `annotationsAsync` و `Book.annotations` / `annotationsAsync` و `Internal.Epub.Annotation` / `AnnotationStyle` وحدث `highlight` في `ReaderSession` (`HighlightEvent`); إعادة توليد فهارس الإكمال `autojs6_indices.js` والإعلان المجمع `lib.autojs6.d.ts` بواسطة `tools/ace-completion` في المضيف, ونجاح سكربتات التحقق الأربعة واختبار المكمل
 
 ##### لمزيد من سجل الإصدارات
 
