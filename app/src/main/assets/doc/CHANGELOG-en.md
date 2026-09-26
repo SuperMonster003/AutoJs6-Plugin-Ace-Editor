@@ -4,6 +4,12 @@
 
 ******
 
+# v1.14.0
+
+###### 2026/09/26
+
+* `Improvement` Bundle AutoJs6 declarations 4.22.0 with the default-off script_dynamic Agent group and individual source confirmation guidance
+
 # v1.13.1
 
 ###### 2026/09/25

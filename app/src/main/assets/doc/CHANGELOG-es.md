@@ -4,6 +4,12 @@
 
 ******
 
+# v1.14.0
+
+###### 2026/09/26
+
+* `Mejora` Incluye declaraciones AutoJs6 4.22.0 con el grupo Agent script_dynamic desactivado inicialmente e indicaciones de confirmación individual del código
+
 # v1.13.1
 
 ###### 2026/09/25
