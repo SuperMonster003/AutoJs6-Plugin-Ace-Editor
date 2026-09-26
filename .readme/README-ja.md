@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-u
 ### リリース履歴
 
 ******
+
+# v1.14.0
+
+###### 2026/09/26
+
+* `改善` AutoJs6 宣言 4.22.0 を同梱し, 初期状態で無効な Agent script_dynamic グループとソースごとの確認に関する補完説明を追加
 
 # v1.13.1
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-u
 ###### 2026/09/24
 
 * `改善` AutoJs6 宣言 4.21.0 と ai.agent タスク API の補完, AgentRun メンバー, イベント型, タスクオプションに対応
-
-# v1.12.1
-
-###### 2026/09/23
-
-* `改善` 内蔵 AutoJs6 宣言を 4.20.0 に更新し, ai.agent.result/context と実行コンテキスト型のエディター補完を同期
 
 ##### その他のリリース履歴
 

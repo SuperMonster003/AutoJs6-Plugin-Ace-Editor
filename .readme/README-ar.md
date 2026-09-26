@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-u
 ### سجل الإصدارات
 
 ******
+
+# v1.14.0
+
+###### 2026/09/26
+
+* `تحسين` تضمين تعريفات AutoJs6 4.22.0 مع مجموعة Agent script_dynamic المعطلة افتراضيا وإرشادات تأكيد كل مصدر برمجي بشكل منفصل
 
 # v1.13.1
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-u
 ###### 2026/09/24
 
 * `تحسين` تعريفات AutoJs6 4.21.0 وإكمال واجهة مهام ai.agent مع أعضاء AgentRun وأنواع الأحداث وخيارات المهام
-
-# v1.12.1
-
-###### 2026/09/23
-
-* `تحسين` تصريحات AutoJs6 المضمنة 4.20.0 وإكمال المحرر لواجهات ai.agent.result/context وأنواع سياق التنفيذ
 
 ##### لمزيد من سجل الإصدارات
 

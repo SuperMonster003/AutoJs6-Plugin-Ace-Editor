@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.14.0": {
+      "released_date": "2026/09/26",
+      "improvement": [
+        "Bundle AutoJs6 declarations 4.22.0 with the default-off script_dynamic Agent group and individual source confirmation guidance"
+      ]
+    },
     "v1.13.1": {
       "released_date": "2026/09/25",
       "fix": [

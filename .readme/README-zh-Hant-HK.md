@@ -160,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-u
 ### 發行歷史
 
 ******
+
+# v1.14.0
+
+###### 2026/09/26
+
+* `優化` 附帶 AutoJs6 聲明 4.22.0, 補充預設關閉的 Agent script_dynamic 工具組及每份原始碼單獨確認的編輯器提示
 
 # v1.13.1
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.13.1-u
 ###### 2026/09/24
 
 * `優化` AutoJs6 宣告 4.21.0 與 ai.agent 任務 API 補全, 包括 AgentRun 成員, 事件類型及任務選項
-
-# v1.12.1
-
-###### 2026/09/23
-
-* `優化` 內置 AutoJs6 宣告更新至 4.20.0, 同步 ai.agent.result/context 與執行上下文類型的編輯器補全
 
 ##### 更多發行歷史可參閱
 
