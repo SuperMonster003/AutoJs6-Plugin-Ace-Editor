@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.15.0": {
+      "released_date": "2026/09/26",
+      "improvement": [
+        "AutoJs6 型別宣告 4.23.0: 本機或外部 MCP 伺服器的所選工具, 按伺服器設定風險等級, mcp 工具群組預設關閉"
+      ]
+    },
     "v1.14.0": {
       "released_date": "2026/09/26",
       "improvement": [

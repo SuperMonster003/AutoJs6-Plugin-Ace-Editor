@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.15.0": {
+      "released_date": "2026/09/26",
+      "improvement": [
+        "Объявления типов AutoJs6 4.23.0: Выбранные инструменты локальных или внешних серверов MCP с отдельным уровнем риска; группа mcp изначально выключена"
+      ]
+    },
     "v1.14.0": {
       "released_date": "2026/09/26",
       "improvement": [

@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-u
 ### سجل الإصدارات
 
 ******
+
+# v1.15.0
+
+###### 2026/09/26
+
+* `تحسين` تعريفات AutoJs6 4.23.0: أدوات MCP المختارة من خوادم محلية أو خارجية مع مستوى خطر لكل خادم ومجموعة mcp معطلة افتراضيا
 
 # v1.14.0
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-u
 
 * `إصلاح` إبلاغ خدمة لغة Lua عن عدم تطابق حجم الملف الأصلي عند تثبيت APK ‏32 بت على جهاز 64 بت
 * `تحسين` تضمين تعريفات AutoJs6 4.21.1 مع إرشادات إعدادات Agent وأذونات الأدوات والميزانية والذاكرة في تلميحات المحرر
-
-# v1.13.0
-
-###### 2026/09/24
-
-* `تحسين` تعريفات AutoJs6 4.21.0 وإكمال واجهة مهام ai.agent مع أعضاء AgentRun وأنواع الأحداث وخيارات المهام
 
 ##### لمزيد من سجل الإصدارات
 

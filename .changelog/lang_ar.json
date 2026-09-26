@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.15.0": {
+      "released_date": "2026/09/26",
+      "improvement": [
+        "تعريفات AutoJs6 4.23.0: أدوات MCP المختارة من خوادم محلية أو خارجية مع مستوى خطر لكل خادم ومجموعة mcp معطلة افتراضيا"
+      ]
+    },
     "v1.14.0": {
       "released_date": "2026/09/26",
       "improvement": [

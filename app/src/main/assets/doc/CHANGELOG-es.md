@@ -4,6 +4,12 @@
 
 ******
 
+# v1.15.0
+
+###### 2026/09/26
+
+* `Mejora` Declaraciones AutoJs6 4.23.0: Herramientas MCP de servidores locales o externos seleccionados, con riesgo por servidor y el grupo mcp desactivado inicialmente
+
 # v1.14.0
 
 ###### 2026/09/26
