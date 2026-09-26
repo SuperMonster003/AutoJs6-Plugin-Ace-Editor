@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-u
 ### 发行历史
 
 ******
+
+# v1.15.0
+
+###### 2026/09/26
+
+* `优化` AutoJs6 类型声明 4.23.0: 本机或外部 MCP 服务器的选定工具, 按服务器设置风险等级, mcp 工具组默认关闭
 
 # v1.14.0
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-u
 
 * `修复` 64 位设备安装 32 位 APK 时 Lua 语言服务误报原生文件大小不匹配的问题
 * `优化` 内置 AutoJs6 声明 4.21.1, 在编辑器提示中说明 Agent 预设, 工具权限, 预算和记忆范围
-
-# v1.13.0
-
-###### 2026/09/24
-
-* `优化` AutoJs6 声明 4.21.0 与 ai.agent 任务 API 补全, 包括 AgentRun 成员, 事件类型及任务选项
 
 ##### 更多发行历史可参阅
 

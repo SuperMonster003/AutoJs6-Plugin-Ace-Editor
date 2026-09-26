@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.15.0": {
+      "released_date": "2026/09/26",
+      "improvement": [
+        "Déclarations AutoJs6 4.23.0: Outils MCP de serveurs locaux ou externes choisis, avec un niveau de risque par serveur et le groupe mcp désactivé par défaut"
+      ]
+    },
     "v1.14.0": {
       "released_date": "2026/09/26",
       "improvement": [

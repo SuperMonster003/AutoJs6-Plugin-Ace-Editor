@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-u
 ### 릴리스 기록
 
 ******
+
+# v1.15.0
+
+###### 2026/09/26
+
+* `개선` AutoJs6 타입 선언 4.23.0: 선택한 로컬 또는 외부 MCP 서버 도구와 서버별 위험 설정, 기본적으로 꺼진 mcp 그룹
 
 # v1.14.0
 
@@ -185,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.14.0-u
 
 * `수정` 64비트 기기에 32비트 APK를 설치하면 Lua 언어 서비스가 네이티브 파일 크기 불일치를 보고하는 문제
 * `개선` AutoJs6 선언 4.21.1을 포함하고 편집기 힌트에 Agent 프리셋, 도구 권한, 예산 및 메모리 설명을 제공
-
-# v1.13.0
-
-###### 2026/09/24
-
-* `개선` AutoJs6 선언 4.21.0 및 ai.agent 작업 API 자동 완성, AgentRun 멤버, 이벤트 형식 및 작업 옵션 포함
 
 ##### 더 많은 릴리스 기록
 
