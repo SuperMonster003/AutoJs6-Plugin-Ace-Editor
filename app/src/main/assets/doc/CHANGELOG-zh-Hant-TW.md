@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `優化` AutoJs6 型別宣告 4.24.0: AgentRunOptions 的 plan 選項 (計畫模式), AgentInputEvent 的 plan 類型與 steps 欄位, AgentRun.respond 接受 1 到 8 條字串組成的陣列以回應計畫審閱
+
 # v1.15.0
 
 ###### 2026/09/26

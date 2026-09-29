@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `改善` AutoJs6 型宣言 4.24.0: AgentRunOptions の plan オプション (計画モード), AgentInputEvent の plan 種別と steps フィールド, 計画レビューに 1 から 8 個の文字列配列で応答できる AgentRun.respond
+
 # v1.15.0
 
 ###### 2026/09/26

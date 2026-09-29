@@ -160,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-u
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `優化` AutoJs6 型別宣告 4.24.0: AgentRunOptions 的 plan 選項 (計劃模式), AgentInputEvent 的 plan 類型與 steps 欄位, AgentRun.respond 接受 1 到 8 條字串組成的陣列以回應計劃審閱
+
 # v1.15.0
 
 ###### 2026/09/26
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-u
 ###### 2026/09/26
 
 * `優化` 附帶 AutoJs6 聲明 4.22.0, 補充預設關閉的 Agent script_dynamic 工具組及每份原始碼單獨確認的編輯器提示
-
-# v1.13.1
-
-###### 2026/09/25
-
-* `修復` 64 位裝置安裝 32 位 APK 時 Lua 語言服務誤報原生檔案大小不符的問題
-* `優化` 內置 AutoJs6 宣告 4.21.1, 在編輯器提示中說明 Agent 預設, 工具權限, 預算和記憶範圍
 
 ##### 更多發行歷史可參閱
 

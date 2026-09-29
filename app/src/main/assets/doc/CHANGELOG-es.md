@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `Mejora` Declaraciones AutoJs6 4.24.0: la opción plan de AgentRunOptions (modo de plan), el tipo plan y el campo steps de AgentInputEvent, y AgentRun.respond aceptando un arreglo de 1 a 8 cadenas para responder a una revisión de plan
+
 # v1.15.0
 
 ###### 2026/09/26

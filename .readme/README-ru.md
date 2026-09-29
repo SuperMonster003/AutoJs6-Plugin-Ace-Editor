@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-u
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `Улучшение` Декларации AutoJs6 4.24.0: параметр plan в AgentRunOptions (режим плана), тип plan и поле steps в AgentInputEvent, а также AgentRun.respond, принимающий массив из 1-8 строк для ответа на проверку плана
+
 # v1.15.0
 
 ###### 2026/09/26
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-u
 ###### 2026/09/26
 
 * `Улучшение` Объявления AutoJs6 4.22.0 с отключенной по умолчанию группой Agent script_dynamic и подсказками об отдельном подтверждении каждого исходного кода
-
-# v1.13.1
-
-###### 2026/09/25
-
-* `Исправление` Служба языка Lua сообщает о несовпадении размера нативного файла при установке 32-битного APK на 64-битное устройство
-* `Улучшение` Включены объявления AutoJs6 4.21.1 с подсказками редактора о пресетах Agent, разрешениях инструментов, бюджетах и памяти
 
 ##### Подробнее об истории выпусков
 
