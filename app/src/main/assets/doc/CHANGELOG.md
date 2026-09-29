@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `优化` AutoJs6 类型声明 4.24.0: AgentRunOptions 的 plan 选项 (计划模式), AgentInputEvent 的 plan 类型与 steps 字段, AgentRun.respond 接受 1 到 8 条字符串组成的数组以回应计划审阅
+
 # v1.15.0
 
 ###### 2026/09/26

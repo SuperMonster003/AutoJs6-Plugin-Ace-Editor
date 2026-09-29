@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `Amélioration` Déclarations AutoJs6 4.24.0: l'option plan de AgentRunOptions (mode plan), le type plan et le champ steps de AgentInputEvent, et AgentRun.respond acceptant un tableau de 1 à 8 chaînes pour répondre à une revue de plan
+
 # v1.15.0
 
 ###### 2026/09/26

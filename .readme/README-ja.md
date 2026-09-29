@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-u
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `改善` AutoJs6 型宣言 4.24.0: AgentRunOptions の plan オプション (計画モード), AgentInputEvent の plan 種別と steps フィールド, 計画レビューに 1 から 8 個の文字列配列で応答できる AgentRun.respond
+
 # v1.15.0
 
 ###### 2026/09/26
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-u
 ###### 2026/09/26
 
 * `改善` AutoJs6 宣言 4.22.0 を同梱し, 初期状態で無効な Agent script_dynamic グループとソースごとの確認に関する補完説明を追加
-
-# v1.13.1
-
-###### 2026/09/25
-
-* `修正` 64 ビット端末に 32 ビット APK をインストールした場合に Lua 言語サービスがネイティブファイルのサイズ不一致を報告する問題
-* `改善` AutoJs6 宣言 4.21.1 を同梱し, エディターのヒントに Agent プリセット, ツール権限, 予算, メモリの説明を追加
 
 ##### その他のリリース履歴
 

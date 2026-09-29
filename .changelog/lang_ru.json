@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.16.0": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "Декларации AutoJs6 4.24.0: параметр plan в AgentRunOptions (режим плана), тип plan и поле steps в AgentInputEvent, а также AgentRun.respond, принимающий массив из 1-8 строк для ответа на проверку плана"
+      ]
+    },
     "v1.15.0": {
       "released_date": "2026/09/26",
       "improvement": [

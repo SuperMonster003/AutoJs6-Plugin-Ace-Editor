@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.15.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -173,6 +173,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `Amélioration` Déclarations AutoJs6 4.24.0: l'option plan de AgentRunOptions (mode plan), le type plan et le champ steps de AgentInputEvent, et AgentRun.respond acceptant un tableau de 1 à 8 chaînes pour répondre à une revue de plan
+
 # v1.15.0
 
 ###### 2026/09/26
@@ -184,13 +190,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/26
 
 * `Amélioration` Intègre les déclarations AutoJs6 4.22.0 avec le groupe Agent script_dynamic désactivé par défaut et les indications de confirmation de chaque source
-
-# v1.13.1
-
-###### 2026/09/25
-
-* `Correctif` Le service de langage Lua signale une taille incorrecte du fichier natif lorsqu'un APK 32 bits est installé sur un appareil 64 bits
-* `Amélioration` Intégrer les déclarations AutoJs6 4.21.1 avec des indications sur les préréglages Agent, les autorisations des outils, les budgets et la mémoire dans les aides de l'éditeur
 
 ##### Pour plus d'historique des versions
 

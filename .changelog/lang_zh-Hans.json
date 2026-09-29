@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.16.0": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "AutoJs6 类型声明 4.24.0: AgentRunOptions 的 plan 选项 (计划模式), AgentInputEvent 的 plan 类型与 steps 字段, AgentRun.respond 接受 1 到 8 条字符串组成的数组以回应计划审阅"
+      ]
+    },
     "v1.15.0": {
       "released_date": "2026/09/26",
       "improvement": [

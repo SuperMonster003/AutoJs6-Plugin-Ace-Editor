@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `개선` AutoJs6 타입 선언 4.24.0: AgentRunOptions의 plan 옵션 (계획 모드), AgentInputEvent의 plan 종류와 steps 필드, 계획 검토에 1개에서 8개의 문자열 배열로 응답하는 AgentRun.respond
+
 # v1.15.0
 
 ###### 2026/09/26

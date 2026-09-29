@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.0
+
+###### 2026/09/29
+
+* `Improvement` AutoJs6 declarations 4.24.0: the plan option of AgentRunOptions (plan mode), the plan kind and steps field of AgentInputEvent, and AgentRun.respond accepting an array of 1 to 8 strings to answer a plan review
+
 # v1.15.0
 
 ###### 2026/09/26
