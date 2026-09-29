@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.1-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -173,6 +173,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.16.1
+
+###### 2026/09/29
+
+* `Amélioration` Déclarations AutoJs6 4.24.1: JSDoc pour la connexion à la demande de 3-Stove Agent, le centre de plugins comme unique interrupteur, l'attente initiale sur un thread de travail, status en lecture seule et aucune reprise de tâches; signatures inchangées
+
 # v1.16.0
 
 ###### 2026/09/29
@@ -184,12 +190,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/09/26
 
 * `Amélioration` Déclarations AutoJs6 4.23.0: Outils MCP de serveurs locaux ou externes choisis, avec un niveau de risque par serveur et le groupe mcp désactivé par défaut
-
-# v1.14.0
-
-###### 2026/09/26
-
-* `Amélioration` Intègre les déclarations AutoJs6 4.22.0 avec le groupe Agent script_dynamic désactivé par défaut et les indications de confirmation de chaque source
 
 ##### Pour plus d'historique des versions
 

@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-u
 
 ******
 
+# v1.16.1
+
+###### 2026/09/29
+
+* `تحسين` تعريفات AutoJs6 4.24.1: توثيق اتصال 3-Stove Agent عند الحاجة ومركز المكونات كمفتاح التفعيل الوحيد وانتظار الاتصال الأول في خيط العمل و status للقراءة فقط وعدم إعادة المهام, دون تغيير توقيعات الأنواع
+
 # v1.16.0
 
 ###### 2026/09/29
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-u
 ###### 2026/09/26
 
 * `تحسين` تعريفات AutoJs6 4.23.0: أدوات MCP المختارة من خوادم محلية أو خارجية مع مستوى خطر لكل خادم ومجموعة mcp معطلة افتراضيا
-
-# v1.14.0
-
-###### 2026/09/26
-
-* `تحسين` تضمين تعريفات AutoJs6 4.22.0 مع مجموعة Agent script_dynamic المعطلة افتراضيا وإرشادات تأكيد كل مصدر برمجي بشكل منفصل
 
 ##### لمزيد من سجل الإصدارات
 

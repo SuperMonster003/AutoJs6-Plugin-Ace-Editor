@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.16.1": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "AutoJs6 선언 4.24.1: 3-Stove Agent 필요 시 연결, 플러그인 센터의 통합 활성화, 최초 연결을 기다리는 작업 스레드, 읽기 전용 status와 작업 재실행 금지를 설명하는 JSDoc. 타입 서명 변경 없음"
+      ]
+    },
     "v1.16.0": {
       "released_date": "2026/09/29",
       "improvement": [

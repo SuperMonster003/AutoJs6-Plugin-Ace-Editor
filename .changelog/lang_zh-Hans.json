@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.16.1": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "AutoJs6 声明 4.24.1: 3-Stove Agent 按需连接与插件中心统一启用的 JSDoc, 同步等待首次连接的工作线程要求, status 只读和任务不重放, 无类型签名变化"
+      ]
+    },
     "v1.16.0": {
       "released_date": "2026/09/29",
       "improvement": [

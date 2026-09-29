@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.1-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-u
 
 ******
 
+# v1.16.1
+
+###### 2026/09/29
+
+* `개선` AutoJs6 선언 4.24.1: 3-Stove Agent 필요 시 연결, 플러그인 센터의 통합 활성화, 최초 연결을 기다리는 작업 스레드, 읽기 전용 status와 작업 재실행 금지를 설명하는 JSDoc. 타입 서명 변경 없음
+
 # v1.16.0
 
 ###### 2026/09/29
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-u
 ###### 2026/09/26
 
 * `개선` AutoJs6 타입 선언 4.23.0: 선택한 로컬 또는 외부 MCP 서버 도구와 서버별 위험 설정, 기본적으로 꺼진 mcp 그룹
-
-# v1.14.0
-
-###### 2026/09/26
-
-* `개선` AutoJs6 선언 4.22.0을 포함하고 기본 비활성 Agent script_dynamic 그룹과 소스별 확인에 관한 편집기 도움말 제공
 
 ##### 더 많은 릴리스 기록
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.16.1": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "AutoJs6 型宣言 4.24.1: 3-Stove Agent の必要時接続, プラグインセンターでの一元的な有効化, 初回接続を待つ作業スレッド, 読み取り専用 status とタスクを再実行しない動作の JSDoc. 型シグネチャの変更なし"
+      ]
+    },
     "v1.16.0": {
       "released_date": "2026/09/29",
       "improvement": [

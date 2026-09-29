@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.1-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-u
 
 ******
 
+# v1.16.1
+
+###### 2026/09/29
+
+* `优化` AutoJs6 声明 4.24.1: 3-Stove Agent 按需连接与插件中心统一启用的 JSDoc, 同步等待首次连接的工作线程要求, status 只读和任务不重放, 无类型签名变化
+
 # v1.16.0
 
 ###### 2026/09/29
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.0-u
 ###### 2026/09/26
 
 * `优化` AutoJs6 类型声明 4.23.0: 本机或外部 MCP 服务器的选定工具, 按服务器设置风险等级, mcp 工具组默认关闭
-
-# v1.14.0
-
-###### 2026/09/26
-
-* `优化` 附带 AutoJs6 声明 4.22.0, 补充默认关闭的 Agent script_dynamic 工具组及每份源码单独确认的编辑器提示
 
 ##### 更多发行历史可参阅
 

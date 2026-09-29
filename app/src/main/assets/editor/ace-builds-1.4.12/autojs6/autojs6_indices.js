@@ -2511,8 +2511,8 @@
                 {
                     "name": "respond",
                     "type": "function",
-                    "doc": "respond(requestId: string, value: string | boolean): boolean;",
-                    "signature": "respond(requestId: string, value: string | boolean): boolean;"
+                    "doc": "respond(requestId: string, value: string | boolean | string[]): boolean;",
+                    "signature": "respond(requestId: string, value: string | boolean | string[]): boolean;"
                 },
                 {
                     "name": "confirm",
