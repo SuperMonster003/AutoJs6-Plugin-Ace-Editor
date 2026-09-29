@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v1.16.1": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "Declaraciones AutoJs6 4.24.1: JSDoc para conexión bajo demanda de 3-Stove Agent, centro de plugins como único interruptor, espera inicial en un hilo de trabajo, status de solo lectura y sin repetición de tareas; firmas sin cambios"
+      ]
+    },
     "v1.16.0": {
       "released_date": "2026/09/29",
       "improvement": [

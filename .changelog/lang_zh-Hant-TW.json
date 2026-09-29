@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.16.1": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "AutoJs6 宣告 4.24.1: 3-Stove Agent 按需連線與外掛中心統一啟用的 JSDoc, 同步等待首次連線的工作執行緒要求, status 唯讀和任務不重播, 無型別簽章變更"
+      ]
+    },
     "v1.16.0": {
       "released_date": "2026/09/29",
       "improvement": [

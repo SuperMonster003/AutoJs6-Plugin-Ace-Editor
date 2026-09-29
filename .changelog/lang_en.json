@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.16.1": {
+      "released_date": "2026/09/29",
+      "improvement": [
+        "AutoJs6 declarations 4.24.1: JSDoc for 3-Stove Agent on-demand connections, Plugin Center as the sole enable switch, worker-thread waits for the initial connection, read-only status and no task replay; no type signature changes"
+      ]
+    },
     "v1.16.0": {
       "released_date": "2026/09/29",
       "improvement": [

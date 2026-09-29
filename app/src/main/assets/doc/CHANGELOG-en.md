@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.1
+
+###### 2026/09/29
+
+* `Improvement` AutoJs6 declarations 4.24.1: JSDoc for 3-Stove Agent on-demand connections, Plugin Center as the sole enable switch, worker-thread waits for the initial connection, read-only status and no task replay; no type signature changes
+
 # v1.16.0
 
 ###### 2026/09/29

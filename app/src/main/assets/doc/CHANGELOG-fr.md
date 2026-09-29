@@ -4,6 +4,12 @@
 
 ******
 
+# v1.16.1
+
+###### 2026/09/29
+
+* `Amélioration` Déclarations AutoJs6 4.24.1: JSDoc pour la connexion à la demande de 3-Stove Agent, le centre de plugins comme unique interrupteur, l'attente initiale sur un thread de travail, status en lecture seule et aucune reprise de tâches; signatures inchangées
+
 # v1.16.0
 
 ###### 2026/09/29

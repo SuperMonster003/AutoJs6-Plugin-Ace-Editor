@@ -34,7 +34,7 @@ declare namespace AutoJs6 {
         on<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;
         off<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;
         once<K extends keyof AgentEventMap>(event: K, listener: (event: AgentEventMap[K]) => void): this;
-        respond(requestId: string, value: string | boolean): boolean;
+        respond(requestId: string, value: string | boolean | string[]): boolean;
         confirm(requestId: string, allowed: boolean, scope?: 'once' | 'run'): boolean;
         cancel(reason?: string): this;
         join(timeoutMs?: number): AgentResult;
