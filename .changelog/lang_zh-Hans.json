@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.17.0": {
+      "released_date": "2026/10/01",
+      "improvement": [
+        "AutoJs6 declarations 4.25.0: installer / $installer 脚本接口, 同步与异步安装, 会话事件, 来源检查, 卸载与授权方式, 包含默认交互和取消语义"
+      ]
+    },
     "v1.16.1": {
       "released_date": "2026/09/29",
       "improvement": [

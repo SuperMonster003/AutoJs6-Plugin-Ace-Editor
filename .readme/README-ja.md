@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.17.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.1-u
 
 ******
 
+# v1.17.0
+
+###### 2026/10/01
+
+* `改善` AutoJs6 declarations 4.25.0: installer / $installer スクリプト API, 同期および非同期インストール, セッションイベント, ソース検査, アンインストールと認可方式, デフォルトの操作とキャンセルの動作
+
 # v1.16.1
 
 ###### 2026/09/29
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.16.1-u
 ###### 2026/09/29
 
 * `改善` AutoJs6 型宣言 4.24.0: AgentRunOptions の plan オプション (計画モード), AgentInputEvent の plan 種別と steps フィールド, 計画レビューに 1 から 8 個の文字列配列で応答できる AgentRun.respond
-
-# v1.15.0
-
-###### 2026/09/26
-
-* `改善` AutoJs6 型宣言 4.23.0: 選択したローカルまたは外部 MCP サーバーのツールに対応し, サーバーごとにリスクを設定. mcp グループは初期状態で無効
 
 ##### その他のリリース履歴
 

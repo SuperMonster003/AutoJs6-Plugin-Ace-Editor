@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.17.0": {
+      "released_date": "2026/10/01",
+      "improvement": [
+        "AutoJs6 declarations 4.25.0: installer / $installer 指令碼介面, 同步與非同步安裝, 工作階段事件, 來源檢查, 解除安裝與授權方式, 包含預設互動和取消語義"
+      ]
+    },
     "v1.16.1": {
       "released_date": "2026/09/29",
       "improvement": [

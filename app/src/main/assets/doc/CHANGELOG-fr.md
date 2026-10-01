@@ -4,6 +4,12 @@
 
 ******
 
+# v1.17.0
+
+###### 2026/10/01
+
+* `Amélioration` AutoJs6 declarations 4.25.0: API de script installer / $installer, installation synchrone et asynchrone, événements de session, inspection des sources, désinstallation et autorisations, avec interaction par défaut et annulation
+
 # v1.16.1
 
 ###### 2026/09/29

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.17.0": {
+      "released_date": "2026/10/01",
+      "improvement": [
+        "AutoJs6 declarations 4.25.0: Скриптовый API installer / $installer, синхронная и асинхронная установка, события сеанса, проверка источников, удаление и способы авторизации, включая взаимодействие по умолчанию и отмену"
+      ]
+    },
     "v1.16.1": {
       "released_date": "2026/09/29",
       "improvement": [

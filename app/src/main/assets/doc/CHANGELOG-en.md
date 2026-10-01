@@ -4,6 +4,12 @@
 
 ******
 
+# v1.17.0
+
+###### 2026/10/01
+
+* `Improvement` AutoJs6 declarations 4.25.0: installer / $installer script API, synchronous and asynchronous installation, session events, source inspection, uninstall and authorizers, including default interaction and cancellation behavior
+
 # v1.16.1
 
 ###### 2026/09/29
