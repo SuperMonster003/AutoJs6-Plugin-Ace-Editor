@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.19.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.27.0: Installer の高度なオプション, 所有権と DexOpt の観測結果, optimizing 段階, V3 対応確認とローカル署名/ブロックリストの条件"
+      ]
+    },
     "v1.18.1": {
       "released_date": "2026/10/02",
       "improvement": [

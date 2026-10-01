@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.19.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.27.0: Installer advanced options, ownership and DexOpt observations, optimizing stage, V3 negotiation and local signature/blacklist policy boundaries"
+      ]
+    },
     "v1.18.1": {
       "released_date": "2026/10/02",
       "improvement": [

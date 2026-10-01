@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.19.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.27.0: Installer 고급 옵션, 소유권과 DexOpt 관찰 결과, optimizing 단계, V3 지원 확인 및 로컬 서명/차단 목록 조건"
+      ]
+    },
     "v1.18.1": {
       "released_date": "2026/10/02",
       "improvement": [

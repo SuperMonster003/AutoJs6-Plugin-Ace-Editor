@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.19.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.27.0: Installer 進階安裝選項, 擁有權與 DexOpt 觀察結果, optimizing 階段, V3 能力協商及本機簽章/黑名單界限"
+      ]
+    },
     "v1.18.1": {
       "released_date": "2026/10/02",
       "improvement": [

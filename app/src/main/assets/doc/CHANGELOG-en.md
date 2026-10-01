@@ -4,6 +4,12 @@
 
 ******
 
+# v1.19.0
+
+###### 2026/10/02
+
+* `Improvement` AutoJs6 declarations 4.27.0: Installer advanced options, ownership and DexOpt observations, optimizing stage, V3 negotiation and local signature/blacklist policy boundaries
+
 # v1.18.1
 
 ###### 2026/10/02
