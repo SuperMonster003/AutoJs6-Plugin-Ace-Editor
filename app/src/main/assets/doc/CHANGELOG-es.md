@@ -4,6 +4,12 @@
 
 ******
 
+# v1.18.1
+
+###### 2026/10/02
+
+* `Mejora` AutoJs6 declarations 4.26.1: Aclarar los valores persistentes del instalador: Dhizuku API 26-33, identidad Root/system en user 0, autorizaciones automáticas admitidas, registros locales y escrituras sin confirmar
+
 # v1.18.0
 
 ###### 2026/10/02

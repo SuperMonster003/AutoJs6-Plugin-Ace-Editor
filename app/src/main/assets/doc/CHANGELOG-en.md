@@ -4,6 +4,12 @@
 
 ******
 
+# v1.18.1
+
+###### 2026/10/02
+
+* `Improvement` AutoJs6 declarations 4.26.1: Clarify persistent installer defaults: Dhizuku API 26-33, Root/system identity in user 0, eligible automatic authorizers, local configuration receipts and unconfirmed writes
+
 # v1.18.0
 
 ###### 2026/10/02

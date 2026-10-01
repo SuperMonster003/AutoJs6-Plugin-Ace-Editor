@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.1-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-u
 
 ******
 
+# v1.18.1
+
+###### 2026/10/02
+
+* `改善` AutoJs6 declarations 4.26.1: インストーラーの永続デフォルト条件を明確化: Dhizuku API 26-33, user 0 の Root/system 権限, 自動認証の対象, ローカル設定記録と未確認の書き込み
+
 # v1.18.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-u
 ###### 2026/10/01
 
 * `改善` AutoJs6 declarations 4.25.0: installer / $installer スクリプト API, 同期および非同期インストール, セッションイベント, ソース検査, アンインストールと認可方式, デフォルトの操作とキャンセルの動作
-
-# v1.16.1
-
-###### 2026/09/29
-
-* `改善` AutoJs6 型宣言 4.24.1: 3-Stove Agent の必要時接続, プラグインセンターでの一元的な有効化, 初回接続を待つ作業スレッド, 読み取り専用 status とタスクを再実行しない動作の JSDoc. 型シグネチャの変更なし
 
 ##### その他のリリース履歴
 

@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.1-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-u
 
 ******
 
+# v1.18.1
+
+###### 2026/10/02
+
+* `優化` AutoJs6 declarations 4.26.1: 明確安裝器持久預設界限: Dhizuku API 26-33, Root/system 身分與 user 0, 自動授權篩選, 本機設定回執和未確認寫入
+
 # v1.18.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-u
 ###### 2026/10/01
 
 * `優化` AutoJs6 declarations 4.25.0: installer / $installer 指令碼介面, 同步與非同步安裝, 工作階段事件, 來源檢查, 解除安裝與授權方式, 包含預設互動和取消語義
-
-# v1.16.1
-
-###### 2026/09/29
-
-* `優化` AutoJs6 宣告 4.24.1: 3-Stove Agent 按需連線與外掛中心統一啟用的 JSDoc, 同步等待首次連線的工作執行緒要求, status 唯讀和任務不重播, 無型別簽章變更
 
 ##### 更多發行歷史可參閱
 

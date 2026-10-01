@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.1-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -173,6 +173,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.18.1
+
+###### 2026/10/02
+
+* `Improvement` AutoJs6 declarations 4.26.1: Clarify persistent installer defaults: Dhizuku API 26-33, Root/system identity in user 0, eligible automatic authorizers, local configuration receipts and unconfirmed writes
+
 # v1.18.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/01
 
 * `Improvement` AutoJs6 declarations 4.25.0: installer / $installer script API, synchronous and asynchronous installation, session events, source inspection, uninstall and authorizers, including default interaction and cancellation behavior
-
-# v1.16.1
-
-###### 2026/09/29
-
-* `Improvement` AutoJs6 declarations 4.24.1: JSDoc for 3-Stove Agent on-demand connections, Plugin Center as the sole enable switch, worker-thread waits for the initial connection, read-only status and no task replay; no type signature changes
 
 ##### Complete release history
 
