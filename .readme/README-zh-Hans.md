@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.19.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.1-u
 
 ******
 
+# v1.19.0
+
+###### 2026/10/02
+
+* `优化` AutoJs6 declarations 4.27.0: Installer 高级安装选项, 所有权与 DexOpt 观察结果, optimizing 阶段, V3 能力协商及本地签名/黑名单边界
+
 # v1.18.1
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.1-u
 ###### 2026/10/02
 
 * `优化` AutoJs6 declarations 4.26.0: installer P8: Dhizuku 授权, notification 安装, preferred/persistent 默认模式及插件能力限制
-
-# v1.17.0
-
-###### 2026/10/01
-
-* `优化` AutoJs6 declarations 4.25.0: installer / $installer 脚本接口, 同步与异步安装, 会话事件, 来源检查, 卸载与授权方式, 包含默认交互和取消语义
 
 ##### 更多发行历史可参阅
 
