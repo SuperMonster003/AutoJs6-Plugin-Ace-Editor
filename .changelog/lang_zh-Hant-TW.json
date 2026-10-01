@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.18.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.26.0: installer P8: Dhizuku 授權, notification 安裝, preferred/persistent 預設模式及外掛能力限制"
+      ]
+    },
     "v1.17.0": {
       "released_date": "2026/10/01",
       "improvement": [
