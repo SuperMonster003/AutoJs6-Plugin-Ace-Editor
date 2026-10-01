@@ -4,6 +4,12 @@
 
 ******
 
+# v1.18.0
+
+###### 2026/10/02
+
+* `优化` AutoJs6 declarations 4.26.0: installer P8: Dhizuku 授权, notification 安装, preferred/persistent 默认模式及插件能力限制
+
 # v1.17.0
 
 ###### 2026/10/01

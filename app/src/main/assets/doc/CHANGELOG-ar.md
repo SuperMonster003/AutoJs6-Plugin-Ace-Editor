@@ -4,6 +4,12 @@
 
 ******
 
+# v1.18.0
+
+###### 2026/10/02
+
+* `تحسين` AutoJs6 declarations 4.26.0: installer P8: تفويض Dhizuku وتثبيت notification وأوضاع preferred/persistent الافتراضية وحدود إمكانات الملحق
+
 # v1.17.0
 
 ###### 2026/10/01

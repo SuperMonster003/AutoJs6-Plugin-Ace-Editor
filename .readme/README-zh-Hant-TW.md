@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.17.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.18.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.17.0-u
 
 ******
 
+# v1.18.0
+
+###### 2026/10/02
+
+* `優化` AutoJs6 declarations 4.26.0: installer P8: Dhizuku 授權, notification 安裝, preferred/persistent 預設模式及外掛能力限制
+
 # v1.17.0
 
 ###### 2026/10/01
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.17.0-u
 ###### 2026/09/29
 
 * `優化` AutoJs6 宣告 4.24.1: 3-Stove Agent 按需連線與外掛中心統一啟用的 JSDoc, 同步等待首次連線的工作執行緒要求, status 唯讀和任務不重播, 無型別簽章變更
-
-# v1.16.0
-
-###### 2026/09/29
-
-* `優化` AutoJs6 型別宣告 4.24.0: AgentRunOptions 的 plan 選項 (計畫模式), AgentInputEvent 的 plan 類型與 steps 欄位, AgentRun.respond 接受 1 到 8 條字串組成的陣列以回應計畫審閱
 
 ##### 更多發行歷史可參閱
 
