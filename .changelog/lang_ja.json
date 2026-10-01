@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.18.1": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.26.1: インストーラーの永続デフォルト条件を明確化: Dhizuku API 26-33, user 0 の Root/system 権限, 自動認証の対象, ローカル設定記録と未確認の書き込み"
+      ]
+    },
     "v1.18.0": {
       "released_date": "2026/10/02",
       "improvement": [

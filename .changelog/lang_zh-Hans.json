@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.18.1": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.26.1: 明确安装器持久默认边界: Dhizuku API 26-33, Root/system 身份与 user 0, 自动授权筛选, 本地配置回执和未确认写入"
+      ]
+    },
     "v1.18.0": {
       "released_date": "2026/10/02",
       "improvement": [
