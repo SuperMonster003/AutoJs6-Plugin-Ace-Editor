@@ -4,6 +4,12 @@
 
 ******
 
+# v1.20.0
+
+###### 2026/10/02
+
+* `Improvement` AutoJs6 declarations 4.28.0: Installer source/package-prefix profiles, explicit-option precedence and three nullable resets, sourceDeleteRequested and shared batch-source retention; requires host 5312+ and matching plugin support
+
 # v1.19.0
 
 ###### 2026/10/02
