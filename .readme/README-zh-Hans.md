@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-u
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `优化` AutoJs6 declarations 4.29.0: 选择器新增 minDepth / maxDepth / minIndexInParent / maxIndexInParent (含边界, 需要宿主 6.8.0+), 并补充缺失的 childCount / minChildCount / maxChildCount 声明
+
 # v1.20.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-u
 ###### 2026/10/02
 
 * `优化` AutoJs6 declarations 4.27.0: Installer 高级安装选项, 所有权与 DexOpt 观察结果, optimizing 阶段, V3 能力协商及本地签名/黑名单边界
-
-# v1.18.1
-
-###### 2026/10/02
-
-* `优化` AutoJs6 declarations 4.26.1: 明确安装器持久默认边界: Dhizuku API 26-33, Root/system 身份与 user 0, 自动授权筛选, 本地配置回执和未确认写入
 
 ##### 更多发行历史可参阅
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `개선` AutoJs6 declarations 4.29.0: 선택자 minDepth / maxDepth / minIndexInParent / maxIndexInParent 추가 (경계 포함, 호스트 6.8.0+ 필요), 누락된 childCount / minChildCount / maxChildCount 선언 보완
+
 # v1.20.0
 
 ###### 2026/10/02

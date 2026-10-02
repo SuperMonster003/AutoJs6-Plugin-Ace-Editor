@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-u
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `改善` AutoJs6 declarations 4.29.0: セレクターに minDepth / maxDepth / minIndexInParent / maxIndexInParent を追加 (境界を含む, ホスト 6.8.0+ が必要), 欠けていた childCount / minChildCount / maxChildCount の宣言を補完
+
 # v1.20.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-u
 ###### 2026/10/02
 
 * `改善` AutoJs6 declarations 4.27.0: Installer の高度なオプション, 所有権と DexOpt の観測結果, optimizing 段階, V3 対応確認とローカル署名/ブロックリストの条件
-
-# v1.18.1
-
-###### 2026/10/02
-
-* `改善` AutoJs6 declarations 4.26.1: インストーラーの永続デフォルト条件を明確化: Dhizuku API 26-33, user 0 の Root/system 権限, 自動認証の対象, ローカル設定記録と未確認の書き込み
 
 ##### その他のリリース履歴
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `Improvement` AutoJs6 declarations 4.29.0: selector minDepth / maxDepth / minIndexInParent / maxIndexInParent (inclusive, host 6.8.0+ required), plus the missing childCount / minChildCount / maxChildCount declarations
+
 # v1.20.0
 
 ###### 2026/10/02

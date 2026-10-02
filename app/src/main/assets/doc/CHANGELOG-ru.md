@@ -4,6 +4,12 @@
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `Улучшение` AutoJs6 declarations 4.29.0: селекторы minDepth / maxDepth / minIndexInParent / maxIndexInParent (включительно, требуется хост 6.8.0+), а также недостающие объявления childCount / minChildCount / maxChildCount
+
 # v1.20.0
 
 ###### 2026/10/02
