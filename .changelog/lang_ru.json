@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.20.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.28.0: Профили Installer по источнику/префиксу пакета, приоритет явных параметров и три сброса через null, sourceDeleteRequested и сохранение общих источников пакета операций; нужен хост 5312+ и совместимый плагин"
+      ]
+    },
     "v1.19.0": {
       "released_date": "2026/10/02",
       "improvement": [

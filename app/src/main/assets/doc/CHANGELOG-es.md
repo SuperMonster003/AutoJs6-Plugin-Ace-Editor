@@ -4,6 +4,12 @@
 
 ******
 
+# v1.20.0
+
+###### 2026/10/02
+
+* `Mejora` AutoJs6 declarations 4.28.0: Perfiles de Installer por origen/prefijo de paquete, prioridad de opciones explícitas y tres restablecimientos con null, sourceDeleteRequested y conservación de fuentes compartidas del lote; requiere anfitrión 5312+ y plugin compatible
+
 # v1.19.0
 
 ###### 2026/10/02

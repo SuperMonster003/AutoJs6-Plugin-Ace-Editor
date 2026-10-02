@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.19.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.19.0-u
 
 ******
 
+# v1.20.0
+
+###### 2026/10/02
+
+* `改善` AutoJs6 declarations 4.28.0: Installer の起点/パッケージ名プレフィックス別プロファイル, 明示オプションの優先と 3 項目の null リセット, sourceDeleteRequested とバッチ共有ソースの保持. ホスト 5312+ と対応プラグインが必要
+
 # v1.19.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.19.0-u
 ###### 2026/10/02
 
 * `改善` AutoJs6 declarations 4.26.1: インストーラーの永続デフォルト条件を明確化: Dhizuku API 26-33, user 0 の Root/system 権限, 自動認証の対象, ローカル設定記録と未確認の書き込み
-
-# v1.18.0
-
-###### 2026/10/02
-
-* `改善` AutoJs6 declarations 4.26.0: installer P8: Dhizuku 認可, notification インストール, preferred/persistent の既定モードとプラグイン機能の制限
 
 ##### その他のリリース履歴
 

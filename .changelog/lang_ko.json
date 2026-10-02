@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.20.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.28.0: Installer 출처/패키지 접두사별 프로필, 명시적 옵션 우선 및 세 가지 null 재설정, sourceDeleteRequested와 일괄 공유 소스 보존. 호스트 5312+ 및 호환 플러그인 필요"
+      ]
+    },
     "v1.19.0": {
       "released_date": "2026/10/02",
       "improvement": [

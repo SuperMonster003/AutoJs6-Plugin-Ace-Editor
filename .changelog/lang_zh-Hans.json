@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.20.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.28.0: Installer 来源/包名前缀配置, 显式选项优先与三个可空重置字段, sourceDeleteRequested 及批量共享来源保留, 需要宿主 5312+ 和插件对应能力"
+      ]
+    },
     "v1.19.0": {
       "released_date": "2026/10/02",
       "improvement": [

@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.19.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.20.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.19.0-u
 
 ******
 
+# v1.20.0
+
+###### 2026/10/02
+
+* `Улучшение` AutoJs6 declarations 4.28.0: Профили Installer по источнику/префиксу пакета, приоритет явных параметров и три сброса через null, sourceDeleteRequested и сохранение общих источников пакета операций; нужен хост 5312+ и совместимый плагин
+
 # v1.19.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.19.0-u
 ###### 2026/10/02
 
 * `Улучшение` AutoJs6 declarations 4.26.1: Уточнены постоянные настройки установщика: Dhizuku API 26-33, Root/system для user 0, автоматический выбор доступных разрешений, локальные записи и неподтвержденные изменения
-
-# v1.18.0
-
-###### 2026/10/02
-
-* `Улучшение` AutoJs6 declarations 4.26.0: installer P8: авторизация Dhizuku, установка notification, режимы по умолчанию preferred/persistent и ограничения возможностей плагина
 
 ##### Подробнее об истории выпусков
 
