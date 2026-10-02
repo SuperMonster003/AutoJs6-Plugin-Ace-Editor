@@ -4,6 +4,12 @@
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `優化` AutoJs6 declarations 4.29.0: 選擇器新增 minDepth / maxDepth / minIndexInParent / maxIndexInParent (含邊界, 需要宿主 6.8.0+), 並補充缺失的 childCount / minChildCount / maxChildCount 宣告
+
 # v1.20.0
 
 ###### 2026/10/02

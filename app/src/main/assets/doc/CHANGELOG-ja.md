@@ -4,6 +4,12 @@
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `改善` AutoJs6 declarations 4.29.0: セレクターに minDepth / maxDepth / minIndexInParent / maxIndexInParent を追加 (境界を含む, ホスト 6.8.0+ が必要), 欠けていた childCount / minChildCount / maxChildCount の宣言を補完
+
 # v1.20.0
 
 ###### 2026/10/02

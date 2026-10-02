@@ -4,6 +4,12 @@
 
 ******
 
+# v1.21.0
+
+###### 2026/10/02
+
+* `تحسين` AutoJs6 declarations 4.29.0: محددات minDepth / maxDepth / minIndexInParent / maxIndexInParent (شاملة للحدود, تتطلب المضيف 6.8.0+), بالإضافة إلى تصريحات childCount / minChildCount / maxChildCount المفقودة
+
 # v1.20.0
 
 ###### 2026/10/02

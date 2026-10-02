@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.21.0": {
+      "released_date": "2026/10/02",
+      "improvement": [
+        "AutoJs6 declarations 4.29.0: 선택자 minDepth / maxDepth / minIndexInParent / maxIndexInParent 추가 (경계 포함, 호스트 6.8.0+ 필요), 누락된 childCount / minChildCount / maxChildCount 선언 보완"
+      ]
+    },
     "v1.20.0": {
       "released_date": "2026/10/02",
       "improvement": [
