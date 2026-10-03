@@ -1245,6 +1245,120 @@ function verifyOptionalGroupCompletions(paths) {
     };
 }
 
+function verifyComposeDeclarations(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const baseLibraries = typeScriptLibraryTextByUri(paths);
+    const coreUri = "file:///autojs6/types/generated/lib.autojs6.core.d.ts";
+    const compatibilityUri = "file:///autojs6/types/lib.autojs6.extra.d.ts";
+    baseLibraries[coreUri] = readFileSync(paths.core, "utf8");
+    baseLibraries[compatibilityUri] = readFileSync(paths.compatibility, "utf8");
+    const factories = [
+        "AlertDialog", "Box", "Button", "Card", "Checkbox", "CircularProgressIndicator", "Column",
+        "ElevatedButton", "FilledTonalButton", "HorizontalDivider", "Icon", "IconButton", "Image",
+        "LazyColumn", "LazyRow", "LinearProgressIndicator", "OutlinedButton", "OutlinedTextField",
+        "RadioButton", "Row", "Scaffold", "Slider", "Spacer", "Surface", "Switch", "Text",
+        "TextButton", "TextField", "TopAppBar",
+    ];
+    const invalidInputs = [
+        ["image number", "compose.Image({ src: 123 });", 2322],
+        ["image boolean", "compose.Image({ src: false });", 2322],
+        ["color boolean", "compose.Text({ color: true });", 2345],
+        ["native bitmap read", "const n: number = compose.Image({ src: '/tmp/test.png' }).src;", 2322],
+        ["empty scroll", "compose.LazyColumn().scrollTo({});", 2345],
+        ["empty set", "compose.Text().set();", 2554],
+        ["field callback", "compose.TextField({ onValueChange(value: number) {} });", 2345],
+    ];
+    const validInput = [
+        "const field = compose.TextField({ onValueChange(text, selection, editSeq) {",
+        "  const value: string = text; const index: number = selection.start; const seq: number = editSeq;",
+        "  this.edit({ text: value });",
+        "} });",
+        "field.set(null).set(undefined); compose.theme(undefined); compose.Text(undefined);",
+        "const page = compose.mount(compose.Scaffold({}, field), { theme: undefined });",
+        "page.showSnackbar('saved', { duration: null, onAction: function () { this.close(); } });",
+        "const image = images.read('/tmp/test.png'); if (image !== null) compose.Image({ src: image });",
+        "compose.Text({ color: Color('blue') });",
+    ].join("\n");
+    const result = {};
+    for (const mode of ["default", "optional"]) {
+        const libraryTextByUri = { ...baseLibraries };
+        const errors = [];
+        const options = {
+            documentUri: `file:///autojs6/editor/compose-${mode}.ts`,
+            libraryTextByUri,
+            notifyError: (message) => errors.push(String(message)),
+        };
+        if (mode === "optional") {
+            options.libraryUris = ["file:///autojs6/typescript/lib.es2018.d.ts", coreUri, compatibilityUri];
+            for (const group of ["android", "libraries", "resources", "main-app"]) {
+                const uri = `file:///autojs6/types/generated/lib.autojs6.${group}.d.ts`;
+                libraryTextByUri[uri] = readFileSync(paths[group], "utf8");
+                options.libraryUris.push(uri);
+            }
+        }
+        // The default branch neither supplies nor enables any optional native declaration group.
+        const service = context.AutoJsAceTsLanguageService.create(options);
+        try {
+            function diagnostics(text) {
+                const values = service.getDiagnostics(sessionFor(text), text);
+                assert(Array.isArray(values), `Compose ${mode} diagnostics did not run`);
+                return values;
+            }
+            const rootNames = completionNames(service, "compose.", "");
+            assert(factories.every((name) => rootNames.includes(name)), `Compose ${mode} lost a node factory`);
+            assert(!rootNames.includes("Snackbar"), `Compose ${mode} exposed Snackbar as a node factory`);
+            const fieldNames = completionNames(service, "compose.TextField({ ", "");
+            assert(
+                ["text", "onValueChange", "keyboardType", "label"].every((name) => fieldNames.includes(name)),
+                `Compose ${mode} lost TextField property completion`,
+            );
+            const signatureText = "const field = compose.TextField(); field.on('valueChange', ";
+            const signature = service.getSignatureHelp(
+                sessionFor(signatureText), { row: 0, column: signatureText.length }, signatureText,
+            )?.signature || "";
+            assert(
+                signature.includes("text: string") && signature.includes("selection: Internal.ComposeSelection") &&
+                    signature.includes("editSeq: number"),
+                `Compose ${mode} lost the TextField event signature: ${signature}`,
+            );
+            const validDiagnostics = diagnostics(validInput);
+            assert(validDiagnostics.length === 0,
+                `Compose ${mode} rejected valid script inputs: ${validDiagnostics.map((item) => item.text).join("; ")}`);
+            const diagnosticCodes = {};
+            for (const [label, source, expectedCode] of invalidInputs) {
+                const codes = diagnostics(source).map((item) => Number(item.raw));
+                assert(codes.includes(expectedCode),
+                    `Compose ${mode} accepted ${label} or lost its type: ${JSON.stringify(codes)}`);
+                diagnosticCodes[label] = codes;
+            }
+            if (mode === "optional") {
+                const nativeDiagnostics = diagnostics([
+                    "declare const bitmap: android.graphics.Bitmap;",
+                    "declare const image: ImageWrapper;",
+                    "declare const color: org.autojs.autojs.theme.ThemeColor;",
+                    "compose.Image({ src: image }); compose.Text({ color });",
+                    "const exact: android.graphics.Bitmap | null = compose.Image({ src: bitmap }).src;",
+                ].join("\n"));
+                assert(nativeDiagnostics.length === 0,
+                    `Compose native types lost assignability: ${nativeDiagnostics.map((item) => item.text).join("; ")}`);
+            }
+            const state = service.getState();
+            assert(state.ready && errors.length === 0,
+                `Compose ${mode} service failed: ${state.reason}; ${errors.join("; ")}`);
+            result[mode] = {
+                factoryCount: factories.length,
+                typedFieldSignature: true,
+                validInputDiagnosticCount: validDiagnostics.length,
+                diagnosticCodes,
+                nativeAssignabilityChecked: mode === "optional",
+            };
+        } finally {
+            service.dispose();
+        }
+    }
+    return result;
+}
+
 function createFakeTimer() {
     let nextId = 1;
     const entries = new Map();
@@ -3365,6 +3479,7 @@ function main() {
     const incrementalProjectDiagnostics = verifyIncrementalProjectDiagnostics(paths);
     const executionProfiles = verifyExecutionProfileConsistency(paths, ts);
     const optionalGroups = verifyOptionalGroupCompletions(paths);
+    const composeDeclarations = verifyComposeDeclarations(paths);
     const diagnosticScheduler = verifyDiagnosticScheduler(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const completerLanguageIsolation = verifyCompleterLanguageIsolation(paths);
@@ -3386,6 +3501,7 @@ function main() {
             incrementalProjectDiagnostics,
             executionProfiles,
             optionalGroups,
+            composeDeclarations,
             diagnosticScheduler,
             completionRefresh,
             completerLanguageIsolation,

@@ -160,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `新增` AutoJs6 declarations 4.30.0: Compose UI 的節點, 狀態, Modifier, 主題, 會話與懸浮窗補全, 包含組件事件參數和類型化錯誤 (需要配套本地宿主及 Compose UI 插件)
+
 # v1.21.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 ###### 2026/10/02
 
 * `優化` AutoJs6 declarations 4.28.0: Installer 來源/套件名稱前綴配置, 明確指定的選項優先與三個可空重設欄位, sourceDeleteRequested 及批次共用來源保留, 需要宿主 5312+ 及插件對應能力
-
-# v1.19.0
-
-###### 2026/10/02
-
-* `優化` AutoJs6 declarations 4.27.0: Installer 進階安裝選項, 擁有權與 DexOpt 觀察結果, optimizing 階段, V3 能力協商及本機簽章/黑名單界限
 
 ##### 更多發行歷史可參閱
 

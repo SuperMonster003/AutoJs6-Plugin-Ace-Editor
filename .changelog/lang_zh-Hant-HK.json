@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.22.0": {
+      "released_date": "2026/10/03",
+      "feature": [
+        "AutoJs6 declarations 4.30.0: Compose UI 的節點, 狀態, Modifier, 主題, 會話與懸浮窗補全, 包含組件事件參數和類型化錯誤 (需要配套本地宿主及 Compose UI 插件)"
+      ]
+    },
     "v1.21.0": {
       "released_date": "2026/10/02",
       "improvement": [

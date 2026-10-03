@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -173,6 +173,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `Función` AutoJs6 declarations 4.30.0: autocompletado de nodos, estado, modificadores, temas, sesiones y ventanas flotantes de Compose UI, con parámetros de eventos y errores tipados (requiere un host local compatible y el plugin Compose UI)
+
 # v1.21.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/02
 
 * `Mejora` AutoJs6 declarations 4.28.0: Perfiles de Installer por origen/prefijo de paquete, prioridad de opciones explícitas y tres restablecimientos con null, sourceDeleteRequested y conservación de fuentes compartidas del lote; requiere anfitrión 5312+ y plugin compatible
-
-# v1.19.0
-
-###### 2026/10/02
-
-* `Mejora` AutoJs6 declarations 4.27.0: Opciones avanzadas de Installer, observaciones de propiedad y DexOpt, fase optimizing, negociación V3 y límites de las reglas locales de firma/bloqueo
 
 ##### Para ver más historial de versiones
 

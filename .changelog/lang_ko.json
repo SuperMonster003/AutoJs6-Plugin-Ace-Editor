@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.22.0": {
+      "released_date": "2026/10/03",
+      "feature": [
+        "AutoJs6 declarations 4.30.0: Compose UI 노드, 상태, Modifier, 테마, 세션과 플로팅 창 자동 완성, 컴포넌트 이벤트 매개변수와 형식화된 오류 포함 (호환되는 로컬 호스트와 Compose UI 플러그인 필요)"
+      ]
+    },
     "v1.21.0": {
       "released_date": "2026/10/02",
       "improvement": [

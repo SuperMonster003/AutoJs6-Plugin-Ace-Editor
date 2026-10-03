@@ -4,6 +4,12 @@
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `Fonctionnalité` AutoJs6 declarations 4.30.0: complétion des noeuds, états, modificateurs, thèmes, sessions et fenêtres flottantes Compose UI, avec paramètres des événements et erreurs typées (hôte local compatible et plugin Compose UI requis)
+
 # v1.21.0
 
 ###### 2026/10/02

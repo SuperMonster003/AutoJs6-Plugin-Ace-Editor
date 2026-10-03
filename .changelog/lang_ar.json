@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.22.0": {
+      "released_date": "2026/10/03",
+      "feature": [
+        "AutoJs6 declarations 4.30.0: إكمال عقد Compose UI والحالة والمعدلات والسمات والجلسات والنوافذ العائمة, مع معاملات أحداث المكونات والأخطاء المحددة النوع (يتطلب إصدارا محليا متوافقا من المضيف وإضافة Compose UI)"
+      ]
+    },
     "v1.21.0": {
       "released_date": "2026/10/02",
       "improvement": [

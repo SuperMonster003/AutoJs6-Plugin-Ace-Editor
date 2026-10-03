@@ -43,6 +43,13 @@ Optional group dependencies are:
 
 All optional groups are disabled by default in the host editor settings.
 
+`:app:verifyAutoJs6LspRuntime` checks Compose completion, event signatures and
+invalid inputs with the real bundled TypeScript service using both the default
+core/compatibility roots and all optional groups. Its default checks prevent
+missing native declarations from turning image/color inputs into unrestricted
+`any`; the optional-group checks retain native Bitmap, ImageWrapper and
+ThemeColor assignability.
+
 ## M2 static-completion indices
 
 Python, Lua, Java, and Kotlin use deterministic, project-maintained static
