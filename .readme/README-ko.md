@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `기능` AutoJs6 declarations 4.30.0: Compose UI 노드, 상태, Modifier, 테마, 세션과 플로팅 창 자동 완성, 컴포넌트 이벤트 매개변수와 형식화된 오류 포함 (호환되는 로컬 호스트와 Compose UI 플러그인 필요)
+
 # v1.21.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 ###### 2026/10/02
 
 * `개선` AutoJs6 declarations 4.28.0: Installer 출처/패키지 접두사별 프로필, 명시적 옵션 우선 및 세 가지 null 재설정, sourceDeleteRequested와 일괄 공유 소스 보존. 호스트 5312+ 및 호환 플러그인 필요
-
-# v1.19.0
-
-###### 2026/10/02
-
-* `개선` AutoJs6 declarations 4.27.0: Installer 고급 옵션, 소유권과 DexOpt 관찰 결과, optimizing 단계, V3 지원 확인 및 로컬 서명/차단 목록 조건
 
 ##### 더 많은 릴리스 기록
 

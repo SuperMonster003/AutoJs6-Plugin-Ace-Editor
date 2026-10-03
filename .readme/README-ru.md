@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `Функция` AutoJs6 declarations 4.30.0: дополнение узлов, состояния, модификаторов, тем, сеансов и плавающих окон Compose UI, с параметрами событий и типизированными ошибками (нужны совместимая локальная сборка хоста и плагин Compose UI)
+
 # v1.21.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 ###### 2026/10/02
 
 * `Улучшение` AutoJs6 declarations 4.28.0: Профили Installer по источнику/префиксу пакета, приоритет явных параметров и три сброса через null, sourceDeleteRequested и сохранение общих источников пакета операций; нужен хост 5312+ и совместимый плагин
-
-# v1.19.0
-
-###### 2026/10/02
-
-* `Улучшение` AutoJs6 declarations 4.27.0: Расширенные параметры Installer, наблюдения владения и DexOpt, этап optimizing, согласование V3 и ограничения локальных правил подписи/блокировки
 
 ##### Подробнее об истории выпусков
 

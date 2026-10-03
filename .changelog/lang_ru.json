@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.22.0": {
+      "released_date": "2026/10/03",
+      "feature": [
+        "AutoJs6 declarations 4.30.0: дополнение узлов, состояния, модификаторов, тем, сеансов и плавающих окон Compose UI, с параметрами событий и типизированными ошибками (нужны совместимая локальная сборка хоста и плагин Compose UI)"
+      ]
+    },
     "v1.21.0": {
       "released_date": "2026/10/02",
       "improvement": [

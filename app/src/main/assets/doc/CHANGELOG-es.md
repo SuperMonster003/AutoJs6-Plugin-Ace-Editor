@@ -4,6 +4,12 @@
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `Función` AutoJs6 declarations 4.30.0: autocompletado de nodos, estado, modificadores, temas, sesiones y ventanas flotantes de Compose UI, con parámetros de eventos y errores tipados (requiere un host local compatible y el plugin Compose UI)
+
 # v1.21.0
 
 ###### 2026/10/02

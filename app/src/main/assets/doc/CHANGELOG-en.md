@@ -4,6 +4,12 @@
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `Feature` AutoJs6 declarations 4.30.0: completion for Compose UI nodes, state, modifiers, themes, sessions and floating windows, with component event parameters and typed errors (requires a matching local host and the Compose UI plugin)
+
 # v1.21.0
 
 ###### 2026/10/02

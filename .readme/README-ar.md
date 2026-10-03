@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 
 ******
 
+# v1.22.0
+
+###### 2026/10/03
+
+* `ميزة` AutoJs6 declarations 4.30.0: إكمال عقد Compose UI والحالة والمعدلات والسمات والجلسات والنوافذ العائمة, مع معاملات أحداث المكونات والأخطاء المحددة النوع (يتطلب إصدارا محليا متوافقا من المضيف وإضافة Compose UI)
+
 # v1.21.0
 
 ###### 2026/10/02
@@ -184,12 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.21.0-u
 ###### 2026/10/02
 
 * `تحسين` AutoJs6 declarations 4.28.0: ملفات إعداد Installer حسب المصدر/بادئة الحزمة, أولوية الخيارات الصريحة وثلاثة حقول تقبل null لإعادة الضبط, sourceDeleteRequested وحفظ مصادر الدفعة المشتركة; يتطلب المضيف 5312+ ودعم الملحق
-
-# v1.19.0
-
-###### 2026/10/02
-
-* `تحسين` AutoJs6 declarations 4.27.0: خيارات Installer المتقدمة ونتائج رصد الملكية و DexOpt ومرحلة optimizing والتفاوض على V3 وحدود سياسات التوقيع والحظر المحلية
 
 ##### لمزيد من سجل الإصدارات
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.22.0": {
+      "released_date": "2026/10/03",
+      "feature": [
+        "AutoJs6 declarations 4.30.0: complétion des noeuds, états, modificateurs, thèmes, sessions et fenêtres flottantes Compose UI, avec paramètres des événements et erreurs typées (hôte local compatible et plugin Compose UI requis)"
+      ]
+    },
     "v1.21.0": {
       "released_date": "2026/10/02",
       "improvement": [
