@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -173,6 +173,13 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `Note` TSX nécessite le build local AutoJs6 6.8.0 / 5319 correspondant et TypeScript Engine avec les déclarations Compose; installer uniquement le moteur de rendu ne suffit pas
+* `Fonctionnalité` autojs6-dts 4.31.0: TSX prend en charge `<compose.Column>`, `<compose:Text>`, les références aux fabriques de noeuds, les fragments, les emplacements et les rappels réactifs; un même arbre ne peut pas mélanger Compose et les anciens noeuds XML
+
 # v1.22.0
 
 ###### 2026/10/03
@@ -184,12 +191,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/02
 
 * `Amélioration` AutoJs6 declarations 4.29.0 : sélecteurs minDepth / maxDepth / minIndexInParent / maxIndexInParent (bornes incluses, hôte 6.8.0+ requis), plus les déclarations manquantes childCount / minChildCount / maxChildCount
-
-# v1.20.0
-
-###### 2026/10/02
-
-* `Amélioration` AutoJs6 declarations 4.28.0: Profils Installer par source/préfixe de paquet, priorité des options explicites et trois réinitialisations nullables, sourceDeleteRequested et conservation des sources partagées du lot; hôte 5312+ et plugin compatible requis
 
 ##### Pour plus d'historique des versions
 

@@ -4,6 +4,13 @@
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `힌트` TSX에는 일치하는 AutoJs6 6.8.0 / 5319 로컬 호스트와 Compose 선언이 포함된 TypeScript Engine 빌드가 필요합니다. 렌더러만 설치하면 TSX를 사용할 수 없습니다
+* `기능` autojs6-dts 4.31.0: TSX는 `<compose.Column>`, `<compose:Text>`, 노드 팩토리 참조, Fragment, 슬롯 및 반응형 콜백을 지원합니다. 하나의 트리에서 Compose와 기존 XML 노드를 혼합할 수 없습니다
+
 # v1.22.0
 
 ###### 2026/10/03

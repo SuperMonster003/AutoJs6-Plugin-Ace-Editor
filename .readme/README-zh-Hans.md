@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `提示` TSX 需要匹配的 AutoJs6 6.8.0 / 5319 本地宿主与内置 Compose 声明的配套 TypeScript Engine 构建; 单独安装渲染器不会增加 TSX 支持
+* `新增` autojs6-dts 4.31.0: TSX 支持 `<compose.Column>`, `<compose:Text>`, 节点工厂引用, Fragment, 插槽及响应式回调; 同一棵树不能混用 Compose 与旧 XML 节点
+
 # v1.22.0
 
 ###### 2026/10/03
@@ -184,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 ###### 2026/10/02
 
 * `优化` AutoJs6 declarations 4.29.0: 选择器新增 minDepth / maxDepth / minIndexInParent / maxIndexInParent (含边界, 需要宿主 6.8.0+), 并补充缺失的 childCount / minChildCount / maxChildCount 声明
-
-# v1.20.0
-
-###### 2026/10/02
-
-* `优化` AutoJs6 declarations 4.28.0: Installer 来源/包名前缀配置, 显式选项优先与三个可空重置字段, sourceDeleteRequested 及批量共享来源保留, 需要宿主 5312+ 和插件对应能力
 
 ##### 更多发行历史可参阅
 

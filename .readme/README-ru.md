@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `Подсказка` TSX требует совместимую локальную сборку AutoJs6 6.8.0 / 5319 и TypeScript Engine с объявлениями Compose; одной установки рендерера недостаточно
+* `Функция` autojs6-dts 4.31.0: TSX поддерживает `<compose.Column>`, `<compose:Text>`, ссылки на фабрики узлов, фрагменты, слоты и реактивные обработчики; одно дерево не может смешивать Compose и прежние XML-узлы
+
 # v1.22.0
 
 ###### 2026/10/03
@@ -184,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 ###### 2026/10/02
 
 * `Улучшение` AutoJs6 declarations 4.29.0: селекторы minDepth / maxDepth / minIndexInParent / maxIndexInParent (включительно, требуется хост 6.8.0+), а также недостающие объявления childCount / minChildCount / maxChildCount
-
-# v1.20.0
-
-###### 2026/10/02
-
-* `Улучшение` AutoJs6 declarations 4.28.0: Профили Installer по источнику/префиксу пакета, приоритет явных параметров и три сброса через null, sourceDeleteRequested и сохранение общих источников пакета операций; нужен хост 5312+ и совместимый плагин
 
 ##### Подробнее об истории выпусков
 

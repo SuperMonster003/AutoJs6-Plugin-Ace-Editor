@@ -4,6 +4,13 @@
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `Note` TSX nécessite le build local AutoJs6 6.8.0 / 5319 correspondant et TypeScript Engine avec les déclarations Compose; installer uniquement le moteur de rendu ne suffit pas
+* `Fonctionnalité` autojs6-dts 4.31.0: TSX prend en charge `<compose.Column>`, `<compose:Text>`, les références aux fabriques de noeuds, les fragments, les emplacements et les rappels réactifs; un même arbre ne peut pas mélanger Compose et les anciens noeuds XML
+
 # v1.22.0
 
 ###### 2026/10/03
