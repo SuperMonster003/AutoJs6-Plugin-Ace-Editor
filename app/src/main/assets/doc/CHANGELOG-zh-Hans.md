@@ -10,6 +10,7 @@
 
 * `提示` TSX 需要匹配的 AutoJs6 6.8.0 / 5319 本地宿主与内置 Compose 声明的配套 TypeScript Engine 构建; 单独安装渲染器不会增加 TSX 支持
 * `新增` autojs6-dts 4.31.0: TSX 支持 `<compose.Column>`, `<compose:Text>`, 节点工厂引用, Fragment, 插槽及响应式回调; 同一棵树不能混用 Compose 与旧 XML 节点
+* `优化` 插件中心图标采用统一工作台调整后的尺寸, 位置, 亮暗图稿与圆形底色, 保留可重建原稿和参数
 
 # v1.22.0
 

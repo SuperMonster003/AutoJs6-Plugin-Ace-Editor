@@ -179,6 +179,7 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 * `Aviso` TSX requiere el host local AutoJs6 6.8.0 / 5319 correspondiente y TypeScript Engine con declaraciones Compose; instalar solo el renderizador no añade soporte TSX
 * `Función` autojs6-dts 4.31.0: TSX admite `<compose.Column>`, `<compose:Text>`, referencias a fábricas de nodos, fragmentos, slots y callbacks reactivos; un mismo árbol no puede mezclar Compose y nodos XML existentes
+* `Mejora` Los iconos del centro de plugins usan los tamaños, posiciones, imágenes claras y oscuras y fondos circulares ajustados en Icon Studio, conservando fuentes y parámetros reproducibles
 
 # v1.22.0
 

@@ -12,6 +12,9 @@
       ],
       "hint": [
         "TSX requiere el host local AutoJs6 6.8.0 / 5319 correspondiente y TypeScript Engine con declaraciones Compose; instalar solo el renderizador no añade soporte TSX"
+      ],
+      "improvement": [
+        "Los iconos del centro de plugins usan los tamaños, posiciones, imágenes claras y oscuras y fondos circulares ajustados en Icon Studio, conservando fuentes y parámetros reproducibles"
       ]
     },
     "v1.22.0": {
