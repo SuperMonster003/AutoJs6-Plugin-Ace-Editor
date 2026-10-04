@@ -179,6 +179,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 
 * `提示` TSX 需要相符的 AutoJs6 6.8.0 / 5319 本機宿主與內建 Compose 宣告的配套 TypeScript Engine 建置; 單獨安裝轉譯器不會增加 TSX 支援
 * `新增` autojs6-dts 4.31.0: TSX 支援 `<compose.Column>`, `<compose:Text>`, 節點工廠參照, Fragment, 插槽及響應式回呼; 同一棵樹不能混用 Compose 與舊 XML 節點
+* `優化` 外掛程式中心圖示採用統一工作台調整後的尺寸, 位置, 明暗圖稿與圓形底色, 保留可重建原稿和參數
 
 # v1.22.0
 

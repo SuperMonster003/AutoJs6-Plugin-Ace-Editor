@@ -12,6 +12,9 @@
       ],
       "hint": [
         "TSX nécessite le build local AutoJs6 6.8.0 / 5319 correspondant et TypeScript Engine avec les déclarations Compose; installer uniquement le moteur de rendu ne suffit pas"
+      ],
+      "improvement": [
+        "Les icônes du centre de plugins utilisent les tailles, positions, images claires et sombres et fonds circulaires réglés dans Icon Studio, avec les sources et paramètres permettant de les reproduire"
       ]
     },
     "v1.22.0": {

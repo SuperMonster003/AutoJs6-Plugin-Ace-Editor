@@ -7,3 +7,9 @@ This repository contains the AutoJs6 Ace editor and its language-service runtime
 Read [the complete repository standard](docs/development/repository-standard.md). It supplements the product-specific instructions above. Use the publicly released platform and native-alignment plugins, currently 1.8.3. Do not use consumer gradle/data overrides or sibling-repository build dependencies.
 
 Inspect status, branch, recent commits and all diffs first. Do not overwrite or include another task's pending documentation, declaration or version changes in a commit. Generated documentation, provenance and public API synchronization require coordination with their owning task. Before each authorized commit set VERSION_BUILD to the current reachable HEAD count plus one, and verify it after committing.
+
+
+## Icon Studio publication snapshot (2026-10-04)
+
+- `.icons/recipe.json` and its content-addressed original assets own the current icon geometry, tone and backgrounds. Keep the portable renderer, generated resources, keep rules and icon CI in the same change.
+- Use `.python/generate_icon_studio.py --check` for read-only reproduction checks. Optical size bands are advisory; retain canvas, transparency and safe-circle checks. Three uses neutral foregrounds and fixed #FAFAFA / #212121 surfaces; other plugins may use colored artwork and custom or transparent surfaces.
