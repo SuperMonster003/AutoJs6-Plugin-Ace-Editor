@@ -59,9 +59,15 @@ class FontDownloaderTest {
         val bytes = FontTestFixtures.validWoff2(size = 192)
         val font = FontTestFixtures.remoteFont(bytes)
         val events = Collections.synchronizedList(mutableListOf<FontDownloadEvent>())
+        val successDelivered = CountDownLatch(1)
         val downloader = FontDownloader(FontStore(directory), byteSource(mapOf(font.artifact.url to bytes)))
         try {
-            val installed = downloader.enqueue(font) { events += it }.future.get(5, TimeUnit.SECONDS)
+            val installed = downloader.enqueue(font) {
+                events += it
+                if (it is FontDownloadEvent.Success) successDelivered.countDown()
+            }.future.get(5, TimeUnit.SECONDS)
+            // Completing the transfer future and delivering its listener event are separate steps.
+            assertTrue("The success listener must be notified", successDelivered.await(5, TimeUnit.SECONDS))
             val store = FontStore(directory)
 
             assertEquals(font.id, installed.fontId)
