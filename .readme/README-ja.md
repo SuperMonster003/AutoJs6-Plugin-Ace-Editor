@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `ヒント` TSX には対応する AutoJs6 6.8.0 / 5319 ローカルホストと Compose 宣言を含む TypeScript Engine ビルドが必要です. レンダラーのインストールだけでは TSX は利用できません
+* `機能` autojs6-dts 4.31.0: TSX は `<compose.Column>`, `<compose:Text>`, ノードファクトリへの参照, Fragment, スロットとリアクティブなコールバックに対応. 同じツリーで Compose と従来の XML ノードを混在させることはできません
+
 # v1.22.0
 
 ###### 2026/10/03
@@ -184,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 ###### 2026/10/02
 
 * `改善` AutoJs6 declarations 4.29.0: セレクターに minDepth / maxDepth / minIndexInParent / maxIndexInParent を追加 (境界を含む, ホスト 6.8.0+ が必要), 欠けていた childCount / minChildCount / maxChildCount の宣言を補完
-
-# v1.20.0
-
-###### 2026/10/02
-
-* `改善` AutoJs6 declarations 4.28.0: Installer の起点/パッケージ名プレフィックス別プロファイル, 明示オプションの優先と 3 項目の null リセット, sourceDeleteRequested とバッチ共有ソースの保持. ホスト 5312+ と対応プラグインが必要
 
 ##### その他のリリース履歴
 

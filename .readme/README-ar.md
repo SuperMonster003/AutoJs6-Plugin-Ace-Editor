@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `تلميح` يتطلب TSX إصدار المضيف المحلي AutoJs6 6.8.0 / 5319 المطابق وإصدار TypeScript Engine الذي يتضمن تعريفات Compose. تثبيت العارض وحده لا يضيف دعم TSX
+* `ميزة` autojs6-dts 4.31.0: يدعم TSX الصيغ `<compose.Column>` و `<compose:Text>` ومراجع مصانع العقد و Fragment والخانات والاستدعاءات التفاعلية. لا يمكن خلط عقد Compose وعقد XML القديمة في شجرة واحدة
+
 # v1.22.0
 
 ###### 2026/10/03
@@ -184,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 ###### 2026/10/02
 
 * `تحسين` AutoJs6 declarations 4.29.0: محددات minDepth / maxDepth / minIndexInParent / maxIndexInParent (شاملة للحدود, تتطلب المضيف 6.8.0+), بالإضافة إلى تصريحات childCount / minChildCount / maxChildCount المفقودة
-
-# v1.20.0
-
-###### 2026/10/02
-
-* `تحسين` AutoJs6 declarations 4.28.0: ملفات إعداد Installer حسب المصدر/بادئة الحزمة, أولوية الخيارات الصريحة وثلاثة حقول تقبل null لإعادة الضبط, sourceDeleteRequested وحفظ مصادر الدفعة المشتركة; يتطلب المضيف 5312+ ودعم الملحق
 
 ##### لمزيد من سجل الإصدارات
 

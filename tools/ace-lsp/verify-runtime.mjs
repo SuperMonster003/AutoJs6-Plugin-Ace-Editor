@@ -1359,6 +1359,107 @@ function verifyComposeDeclarations(paths) {
     return result;
 }
 
+function verifyComposeTsxDeclarations(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const baseLibraries = typeScriptLibraryTextByUri(paths);
+    const coreUri = "file:///autojs6/types/generated/lib.autojs6.core.d.ts";
+    const compatibilityUri = "file:///autojs6/types/lib.autojs6.extra.d.ts";
+    baseLibraries[coreUri] = readFileSync(paths.core, "utf8");
+    baseLibraries[compatibilityUri] = readFileSync(paths.compatibility, "utf8");
+    const valid = [
+        "const Alias = compose.Column; const TextAlias = $compose.Text;",
+        "const page = <Alias spacing={8}><TextAlias text='Value'/>",
+        "  <compose.Button onClick={function () { this.enabled=false; }}>Go</compose.Button>",
+        "  <compose.TextField onValueChange={function (text,selection,seq) {",
+        "    const s:string=text; const n:number=selection.start; const q:number=seq; this.edit({text:s});",
+        "  }}/></Alias>;",
+        "const namespaced = <compose:Column spacing='8dp'><compose:Text text='NS'/>",
+        "  <compose:Slider value={0.5} onValueChange={function (value) { const n:number=value; this.value=n; }}/>",
+        "</compose:Column>;",
+        "const fragment = <><compose.Text text='Single'/></>; compose.mount(fragment);",
+        "const xml = <vertical w='*'><text text='XML'/><button text='Legacy'/></vertical>; ui.layout(xml);",
+        // Shared JSX expressions keep the historical implicit-any boundary. These assignments
+        // are recorded limitations, never proof that mixed trees are accepted by the runtime.
+        "const legacyBoundary: Internal.ComposeNode = xml; const expressionBoundary: number = page;",
+    ].join("\n");
+    const invalid = [
+        ["value text", "const x=<compose.Text text={1}/>;"],
+        ["namespace text", "const x=<compose:Text text={1}/>;"],
+        ["unknown props", "const x=<compose.Text checked={true}/>;"],
+        ["field callback", "const x=<compose.TextField onValueChange={(text:number)=>{}}/>;"],
+        ["namespace callback", "const x=<compose:TextField onValueChange={(text:number)=>{}}/>;"],
+        ["missing icon", "const x=<compose.Icon/>;"],
+        ["missing image", "const x=<compose:Image/>;"],
+        ["image primitive", "const x=<compose.Image src={1}/>;"],
+        ["color primitive", "const x=<compose:Text color={true}/>;"],
+        ["missing confirm", "const x=<compose.AlertDialog/>;"],
+        ["unknown component", "const x=<compose:NotAComponent/>;"],
+        ["command-only Snackbar", "const x=<compose:Snackbar message='x'/>;"],
+        ["numeric child", "const x=<compose.Column>{1}</compose.Column>;"],
+        ["boolean child", "const x=<compose:Column>{true}</compose:Column>;"],
+        ["leaf text", "const x=<compose.Text>not children</compose.Text>;"],
+        ["multiple surface children", "const x=<compose:Surface><compose:Text/><compose:Text/></compose:Surface>;"],
+        ["legacy unknown attr", "const x=<text composeOnlyOption={true}/>;"],
+    ];
+    const xmlTags = ["vertical", "frame", "linear", "horizontal", "relative", "button", "text", "input", "img",
+        "datepicker", "timepicker", "webview", "progressbar", "seekbar", "spinner", "radio", "radiogroup", "checkbox",
+        "scroll", "toolbar", "canvas", "list", "grid", "drawer", "appbar", "tabs", "viewpager", "card", "fab",
+        "console", "globalconsole", "x-img", "x-text", "x-input", "x-button", "x-img-button"];
+    const results = {};
+    for (const mode of ["default", "optional"]) {
+        const libraryTextByUri = {...baseLibraries};
+        const errors = [];
+        const options = {
+            documentUri: `file:///autojs6/editor/compose-${mode}.tsx`, executionProfile: "rhino", typescriptVersion: "6.0.3",
+            libraryTextByUri, notifyError: (message) => errors.push(String(message)),
+        };
+        if (mode === "optional") {
+            options.libraryUris = ["file:///autojs6/typescript/lib.es2018.d.ts", coreUri, compatibilityUri];
+            for (const group of ["android", "libraries", "resources", "main-app"]) {
+                const uri = `file:///autojs6/types/generated/lib.autojs6.${group}.d.ts`;
+                libraryTextByUri[uri] = readFileSync(paths[group], "utf8");
+                options.libraryUris.push(uri);
+            }
+        }
+        const service = context.AutoJsAceTsLanguageService.create(options);
+        try {
+            function diagnostics(source) {
+                const result = service.getDiagnostics(sessionFor(source), source);
+                assert(Array.isArray(result), `Compose TSX ${mode} diagnostics did not run`);
+                return result;
+            }
+            const positiveDiagnostics = diagnostics(valid);
+            assert(positiveDiagnostics.length === 0,
+                `Compose TSX ${mode} rejected valid markup: ${positiveDiagnostics.map((item) => item.text).join("; ")}`);
+            const legacy = xmlTags.map((tag, index) => `const legacy${index}=<${tag}/>;`).join("\n");
+            assert(diagnostics(legacy).length === 0, `Compose TSX ${mode} broke an existing XML tag`);
+            const expectedAttributes = ["text", "onValueChange", "keyboardType", "label", "ref"];
+            const valueAttributes = completionNames(service, "<compose.TextField ", "");
+            assert(expectedAttributes.every((name) => valueAttributes.includes(name)),
+                `Compose TSX ${mode} lost value-tag attribute completion: ${valueAttributes.slice(0, 40).join(",")}`);
+            // TypeScript 6.0.3 currently returns globals at this namespaced-tag attribute
+            // position, even in its unwrapped language service. Keep accurate diagnostics
+            // below, report this completion limit, and allow an upstream improvement later.
+            const namespaceAttributes = completionNames(service, "<compose:TextField ", "");
+            const namespaceAttributeCompletion = expectedAttributes.every((name) => namespaceAttributes.includes(name));
+            const codes = {};
+            for (const [label, source] of invalid) {
+                const values = diagnostics(source);
+                assert(values.length > 0 && values.some((item) => [2322, 2339, 2741, 2745, 2746, 2747].includes(Number(item.raw))),
+                    `Compose TSX ${mode} accepted ${label}: ${JSON.stringify(values)}`);
+                codes[label] = values.map((item) => Number(item.raw));
+            }
+            assert(diagnostics("const leaf=<compose.Text><compose.Text/></compose.Text>;").length === 0,
+                "The normal strict profile's implicit-any JSX leaf-child limit changed; review exactOptionalPropertyTypes before updating this expectation");
+            assert(service.getState().ready && errors.length === 0, `Compose TSX ${mode} service failed: ${errors.join("; ")}`);
+            results[mode] = {profile: "rhino", validDiagnostics: positiveDiagnostics.length,
+                preservedXmlTags: xmlTags.length, valueAttributeCompletion: true, namespaceAttributeCompletion,
+                expressionDomainCheckedByRuntime: true, diagnosticCodes: codes};
+        } finally { service.dispose(); }
+    }
+    return results;
+}
+
 function createFakeTimer() {
     let nextId = 1;
     const entries = new Map();
@@ -3480,6 +3581,7 @@ function main() {
     const executionProfiles = verifyExecutionProfileConsistency(paths, ts);
     const optionalGroups = verifyOptionalGroupCompletions(paths);
     const composeDeclarations = verifyComposeDeclarations(paths);
+    const composeTsxDeclarations = verifyComposeTsxDeclarations(paths);
     const diagnosticScheduler = verifyDiagnosticScheduler(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const completerLanguageIsolation = verifyCompleterLanguageIsolation(paths);
@@ -3502,6 +3604,7 @@ function main() {
             executionProfiles,
             optionalGroups,
             composeDeclarations,
+            composeTsxDeclarations,
             diagnosticScheduler,
             completionRefresh,
             completerLanguageIsolation,

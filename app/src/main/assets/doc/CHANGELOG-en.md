@@ -4,6 +4,13 @@
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `Hint` TSX requires the matching AutoJs6 6.8.0 / 5319 local host and companion TypeScript Engine build with Compose declarations; installing the renderer alone does not add TSX support
+* `Feature` autojs6-dts 4.31.0: TSX supports `<compose.Column>`, `<compose:Text>`, references to node factories, fragments, slots and reactive callbacks; a single tree cannot mix Compose and legacy XML nodes
+
 # v1.22.0
 
 ###### 2026/10/03

@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `힌트` TSX에는 일치하는 AutoJs6 6.8.0 / 5319 로컬 호스트와 Compose 선언이 포함된 TypeScript Engine 빌드가 필요합니다. 렌더러만 설치하면 TSX를 사용할 수 없습니다
+* `기능` autojs6-dts 4.31.0: TSX는 `<compose.Column>`, `<compose:Text>`, 노드 팩토리 참조, Fragment, 슬롯 및 반응형 콜백을 지원합니다. 하나의 트리에서 Compose와 기존 XML 노드를 혼합할 수 없습니다
+
 # v1.22.0
 
 ###### 2026/10/03
@@ -184,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-u
 ###### 2026/10/02
 
 * `개선` AutoJs6 declarations 4.29.0: 선택자 minDepth / maxDepth / minIndexInParent / maxIndexInParent 추가 (경계 포함, 호스트 6.8.0+ 필요), 누락된 childCount / minChildCount / maxChildCount 선언 보완
-
-# v1.20.0
-
-###### 2026/10/02
-
-* `개선` AutoJs6 declarations 4.28.0: Installer 출처/패키지 접두사별 프로필, 명시적 옵션 우선 및 세 가지 null 재설정, sourceDeleteRequested와 일괄 공유 소스 보존. 호스트 5312+ 및 호환 플러그인 필요
 
 ##### 더 많은 릴리스 기록
 

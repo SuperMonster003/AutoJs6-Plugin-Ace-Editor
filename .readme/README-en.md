@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.22.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -173,6 +173,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.23.0
+
+###### 2026/10/04
+
+* `Hint` TSX requires the matching AutoJs6 6.8.0 / 5319 local host and companion TypeScript Engine build with Compose declarations; installing the renderer alone does not add TSX support
+* `Feature` autojs6-dts 4.31.0: TSX supports `<compose.Column>`, `<compose:Text>`, references to node factories, fragments, slots and reactive callbacks; a single tree cannot mix Compose and legacy XML nodes
+
 # v1.22.0
 
 ###### 2026/10/03
@@ -184,12 +191,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/02
 
 * `Improvement` AutoJs6 declarations 4.29.0: selector minDepth / maxDepth / minIndexInParent / maxIndexInParent (inclusive, host 6.8.0+ required), plus the missing childCount / minChildCount / maxChildCount declarations
-
-# v1.20.0
-
-###### 2026/10/02
-
-* `Improvement` AutoJs6 declarations 4.28.0: Installer source/package-prefix profiles, explicit-option precedence and three nullable resets, sourceDeleteRequested and shared batch-source retention; requires host 5312+ and matching plugin support
 
 ##### Complete release history
 
