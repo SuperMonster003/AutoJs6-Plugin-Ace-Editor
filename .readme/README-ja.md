@@ -175,11 +175,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 
 # v1.23.0
 
-###### 2026/10/04
+###### 2026/10/05
 
 * `ヒント` TSX には対応する AutoJs6 6.8.0 / 5319 ローカルホストと Compose 宣言を含む TypeScript Engine ビルドが必要です. レンダラーのインストールだけでは TSX は利用できません
 * `機能` autojs6-dts 4.31.0: TSX は `<compose.Column>`, `<compose:Text>`, ノードファクトリへの参照, Fragment, スロットとリアクティブなコールバックに対応. 同じツリーで Compose と従来の XML ノードを混在させることはできません
 * `改善` プラグインセンターのアイコンに Icon Studio で調整したサイズ, 位置, 明暗の図稿と円形背景を適用し, 再生成可能な原稿とパラメーターを保持
+* `改善` Android のアプリ情報アイコンに Icon Studio と共通の図案と明暗の背景色を使用し, プラグインセンターの透明な図案と既存のランチャー設定を維持
 
 # v1.22.0
 
