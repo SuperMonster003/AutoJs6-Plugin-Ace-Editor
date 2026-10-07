@@ -4,6 +4,13 @@
 
 ******
 
+# v1.26.0
+
+###### 2026/10/07
+
+* `Note` Cette intégration nécessite AutoJs6 6.8.0 / 5320 et un build Compose UI avec extension AndroidView; TSX nécessite aussi TypeScript Engine 0.6.5. Le rendu V1 de base conserve le minimum 5316
+* `Fonctionnalité` autojs6-dts 4.33.0: Les conteneurs XML `<compose>` et compose.attach intègrent des sessions Compose indépendantes dans les pages UI ou les fenêtres flottantes existantes; compose.AndroidView affiche une View Android existante ou renvoyée par une fabrique synchrone
+
 # v1.25.0
 
 ###### 2026/10/07

@@ -160,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 ### 發行歷史
 
 ******
+
+# v1.26.0
+
+###### 2026/10/07
+
+* `提示` 互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主與支援 AndroidView 擴充的 Compose UI 建構; TSX 另需 TypeScript Engine 0.6.5. 基礎 V1 渲染最低宿主仍為 5316
+* `新增` autojs6-dts 4.33.0: XML `<compose>` 容器與 compose.attach 可在 UI 頁面或舊懸浮窗內嵌入獨立 Compose 工作階段; compose.AndroidView 可承載現有 Android View 或同步工廠傳回的 View
 
 # v1.25.0
 
@@ -188,12 +195,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 * `新增` autojs6-dts 4.31.0: TSX 支援 `<compose.Column>`, `<compose:Text>`, 節點工廠參照, Fragment, 插槽及響應式回呼; 同一棵樹不能混用 Compose 與舊 XML 節點
 * `優化` 外掛程式中心圖示採用統一工作台調整後的尺寸, 位置, 明暗圖稿與圓形底色, 保留可重建原稿和參數
 * `優化` Android 系統應用程式資訊圖示與圖示工作台共用圖稿及明暗底色, 保留外掛程式中心透明圖稿與現有啟動器選項
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `新增` AutoJs6 declarations 4.30.0: Compose UI 的節點, 狀態, Modifier, 主題, 會話與懸浮窗補全, 包含組件事件參數和類型化錯誤 (需要配套本地宿主及 Compose UI 插件)
 
 ##### 更多發行歷史可參閱
 

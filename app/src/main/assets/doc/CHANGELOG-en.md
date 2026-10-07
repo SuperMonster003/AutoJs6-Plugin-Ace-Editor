@@ -4,6 +4,13 @@
 
 ******
 
+# v1.26.0
+
+###### 2026/10/07
+
+* `Hint` Interop requires the matching AutoJs6 6.8.0 / 5320 host and a Compose UI build with the AndroidView extension; TSX also requires TypeScript Engine 0.6.5. Basic V1 rendering keeps the 5316 minimum
+* `Feature` autojs6-dts 4.33.0: XML `<compose>` containers and compose.attach embed independent Compose sessions in UI pages or legacy floating windows; compose.AndroidView embeds an existing Android View or one returned by a synchronous factory
+
 # v1.25.0
 
 ###### 2026/10/07

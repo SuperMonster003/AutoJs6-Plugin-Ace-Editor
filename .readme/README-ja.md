@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 ### リリース履歴
 
 ******
+
+# v1.26.0
+
+###### 2026/10/07
+
+* `ヒント` 相互運用には対応する AutoJs6 6.8.0 / 5320 ホストと AndroidView 拡張対応の Compose UI が必要です. TSX には TypeScript Engine 0.6.5 も必要です. 基本 V1 描画の最小ホストは引き続き 5316 です
+* `機能` autojs6-dts 4.33.0: XML `<compose>` コンテナと compose.attach は UI ページや既存のフローティングウィンドウに独立した Compose セッションを埋め込みます. compose.AndroidView は既存の Android View または同期ファクトリが返す View を表示します
 
 # v1.25.0
 
@@ -188,12 +195,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 * `機能` autojs6-dts 4.31.0: TSX は `<compose.Column>`, `<compose:Text>`, ノードファクトリへの参照, Fragment, スロットとリアクティブなコールバックに対応. 同じツリーで Compose と従来の XML ノードを混在させることはできません
 * `改善` プラグインセンターのアイコンに Icon Studio で調整したサイズ, 位置, 明暗の図稿と円形背景を適用し, 再生成可能な原稿とパラメーターを保持
 * `改善` Android のアプリ情報アイコンに Icon Studio と共通の図案と明暗の背景色を使用し, プラグインセンターの透明な図案と既存のランチャー設定を維持
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `機能` AutoJs6 declarations 4.30.0: Compose UI のノード, 状態, Modifier, テーマ, セッション, フローティングウィンドウの補完, コンポーネントのイベント引数と型付きエラーに対応 (対応するローカルホストと Compose UI プラグインが必要)
 
 ##### その他のリリース履歴
 

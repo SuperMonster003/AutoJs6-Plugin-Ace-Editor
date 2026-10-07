@@ -1534,6 +1534,119 @@ function verifyComposeTsxDeclarations(paths) {
     return results;
 }
 
+function verifyComposeInteropDeclarations(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const baseLibraries = typeScriptLibraryTextByUri(paths);
+    const coreUri = "file:///autojs6/types/generated/lib.autojs6.core.d.ts";
+    const compatibilityUri = "file:///autojs6/types/lib.autojs6.extra.d.ts";
+    baseLibraries[coreUri] = readFileSync(paths.core, "utf8");
+    baseLibraries[compatibilityUri] = readFileSync(paths.compatibility, "utf8");
+    const prefix = "declare const nativeView: Internal.Compose.NativeView;\n";
+    const valid = prefix + [
+        "const factory:Internal.Compose.ViewFactory=function(context){return nativeView;};",
+        "const node=compose.AndroidView({view:factory, onClick:function(){const actual:Internal.Compose.NativeView=this.view;}});",
+        "const readback:Internal.Compose.NativeView=node.get('view'); node.set({view:nativeView}); node.view=factory;",
+        "const generic=compose.createElement('AndroidView',{view:nativeView});",
+        "const session:Internal.Compose.Session=compose.attach(ui.findById('host'),node,{theme:{seed:'#336699'}});",
+        "compose.attach(nativeView,()=>compose.Column({},compose.AndroidView({view:factory})));",
+        "const xml=<vertical><compose id='host' w='*' h='100'/></vertical>; ui.layout(xml);",
+        "const value=<compose.AndroidView view={factory} testTag='native'/>;",
+        "const qualified=<compose:AndroidView view={(context)=>nativeView}/>;",
+        "const Alias=compose.AndroidView; const alias=<Alias view={nativeView}/>;",
+        "const inflated=<compose.AndroidView view={context=>ui.inflate(<button text='Native' onClick={function(view){const emitter:EventEmitter$=this;view.setText('Clicked');}}/>)} />;",
+        "const lab:number[]=colors.toOklab('#336699'); const contrast:ColorInt=colors.ensureContrast('#336699','white');",
+        "const theme:Colors.Theme=colors.theme; const term:Internal.Terminal=terminal; const termAlias:Internal.Terminal=$terminal;",
+    ].join("\n");
+    const invalid = [
+        ["missing view", "compose.AndroidView();"],
+        ["empty props", "compose.AndroidView({});"],
+        ["wire number", "compose.AndroidView({view:1});"],
+        ["XML string", "compose.AndroidView({view:'<text/>'});"],
+        ["boolean View", "compose.AndroidView({view:true});"],
+        ["null View", "compose.AndroidView({view:null});"],
+        ["Promise View", "compose.AndroidView({view:Promise.resolve(nativeView)});"],
+        ["async factory", "compose.AndroidView({view:async()=>nativeView});"],
+        ["text factory", "compose.AndroidView({view:()=> 'not a View'});"],
+        ["void factory", "compose.AndroidView({view:()=>{}});"],
+        ["factory Context", "compose.AndroidView({view:(context:number)=>nativeView});"],
+        ["factory receiver", "compose.AndroidView({view:function(){this.set({view:nativeView});return nativeView;}});"],
+        ["update prop", "compose.AndroidView({view:nativeView,update:()=>{}});"],
+        ["onRelease prop", "compose.AndroidView({view:nativeView,onRelease:()=>{}});"],
+        ["ordinary child", "compose.AndroidView({view:nativeView},compose.Text({text:'child'}));"],
+        ["slot", "compose.AndroidView({view:nativeView,content:compose.Text({text:'child'})});"],
+        ["set Promise", "compose.AndroidView({view:nativeView}).set({view:Promise.resolve(nativeView)});"],
+        ["getter factory", "const f:Internal.Compose.ViewFactory=compose.AndroidView({view:nativeView}).view;"],
+        ["string container", "compose.attach('host',compose.Text({text:'x'}));"],
+        ["Promise container", "compose.attach(Promise.resolve(nativeView),compose.Text({text:'x'}));"],
+        ["function container", "compose.attach(()=>nativeView,compose.Text({text:'x'}));"],
+        ["attach options", "compose.attach(nativeView,compose.Text({text:'x'}),{raw:true});"],
+        ["attach render View", "compose.attach(nativeView,()=>nativeView);"],
+        ["JSX missing View", "const x=<compose:AndroidView/>;"],
+        ["JSX async factory", "const x=<compose.AndroidView view={async()=>nativeView}/>;"],
+        ["JSX leaf text", "const x=<compose:AndroidView view={nativeView}>child</compose:AndroidView>;"],
+        ["XML container text", "const x=<compose id='host'>child</compose>;"],
+        ["XML container props", "const x=<compose view={nativeView}/>;"],
+        ["XML listener method name", "const x=<button onClick='onNativeClick'/>;"],
+        ["XML listener argument", "const x=<button onClick={(view:number)=>{}}/>;"],
+    ];
+    const results = {};
+    for (const mode of ["default", "optional"]) {
+        const libraryTextByUri = {...baseLibraries};
+        const errors = [];
+        const options = {documentUri: `file:///autojs6/editor/compose-interop-${mode}.tsx`,
+            executionProfile: "rhino", typescriptVersion: "6.0.3", libraryTextByUri,
+            notifyError: (message) => errors.push(String(message))};
+        if (mode === "optional") {
+            options.libraryUris = ["file:///autojs6/typescript/lib.es2018.d.ts", coreUri, compatibilityUri];
+            for (const group of ["android", "libraries", "resources", "main-app"]) {
+                const uri = `file:///autojs6/types/generated/lib.autojs6.${group}.d.ts`;
+                libraryTextByUri[uri] = readFileSync(paths[group], "utf8");
+                options.libraryUris.push(uri);
+            }
+        }
+        const service = context.AutoJsAceTsLanguageService.create(options);
+        try {
+            function diagnostics(source) {
+                const result = service.getDiagnostics(sessionFor(source), source);
+                assert(Array.isArray(result), `Compose interop ${mode} diagnostics did not run`);
+                return result;
+            }
+            const positive = diagnostics(valid);
+            assert(positive.length === 0,
+                `Compose interop ${mode} rejected valid inputs: ${positive.map((item) => item.text).join("; ")}`);
+            const codes = {};
+            for (const [label, source] of invalid) {
+                const values = diagnostics(prefix + source);
+                assert(values.some((item) => [2322, 2339, 2345, 2353, 2554, 2741, 2745, 2746, 2747].includes(Number(item.raw))),
+                    `Compose interop ${mode} accepted ${label}: ${JSON.stringify(values)}`);
+                codes[label] = values.map((item) => Number(item.raw));
+            }
+            const props = completionNames(service, "<compose.AndroidView ", "");
+            assert(["view", "modifier", "ref", "testTag"].every((name) => props.includes(name)),
+                `Compose interop ${mode} lost AndroidView props`);
+            const members = completionNames(service, "compose.", "");
+            assert(["attach", "AndroidView"].every((name) => members.includes(name)), `Compose interop ${mode} lost public members`);
+            // Color constants exceed the editor's normal 300-item completion budget. Use real
+            // typed prefixes so this probes member availability without changing that limit.
+            for (const name of ["theme", "toOklab", "ensureContrast", "nightVariant"]) {
+                const typedPrefix = name.slice(0, 3);
+                const colors = completionNames(service, "colors." + typedPrefix, typedPrefix);
+                assert(colors.includes(name), `Compose interop ${mode} lost colors.${name}: ${colors.join(",")}`);
+            }
+            if (mode === "optional") {
+                const native = diagnostics("declare const v:android.view.View; compose.AndroidView({view:v}); " +
+                    "compose.AndroidView({view:context=>{const c:android.content.Context=context;return new android.widget.TextView(c);}});");
+                assert(native.length === 0, `Compose native View/Context assignability failed: ${native.map((item) => item.text).join("; ")}`);
+            }
+            assert(service.getState().ready && errors.length === 0, `Compose interop ${mode} service failed: ${errors.join("; ")}`);
+            results[mode] = {profile: "rhino", validDiagnostics: positive.length, diagnosticCodes: codes,
+                viewAttributeCompletion: true, latestColorsAndTerminalRetained: true,
+                nativeAssignabilityChecked: mode === "optional"};
+        } finally { service.dispose(); }
+    }
+    return results;
+}
+
 function createFakeTimer() {
     let nextId = 1;
     const entries = new Map();
@@ -3657,6 +3770,7 @@ function main() {
     const composeDeclarations = verifyComposeDeclarations(paths);
     const composeTsxDeclarations = verifyComposeTsxDeclarations(paths);
     const colorsAndTerminalDeclarations = verifyColorsAndTerminalDeclarations(paths);
+    const composeInteropDeclarations = verifyComposeInteropDeclarations(paths);
     const diagnosticScheduler = verifyDiagnosticScheduler(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const completerLanguageIsolation = verifyCompleterLanguageIsolation(paths);
@@ -3681,6 +3795,7 @@ function main() {
             composeDeclarations,
             composeTsxDeclarations,
             colorsAndTerminalDeclarations,
+            composeInteropDeclarations,
             diagnosticScheduler,
             completionRefresh,
             completerLanguageIsolation,

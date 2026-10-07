@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 ### 릴리스 기록
 
 ******
+
+# v1.26.0
+
+###### 2026/10/07
+
+* `힌트` 상호 운용에는 일치하는 AutoJs6 6.8.0 / 5320 호스트와 AndroidView 확장을 지원하는 Compose UI가 필요합니다. TSX에는 TypeScript Engine 0.6.5도 필요합니다. 기본 V1 렌더링의 최소 호스트는 계속 5316입니다
+* `기능` autojs6-dts 4.33.0: XML `<compose>` 컨테이너와 compose.attach로 UI 페이지나 기존 플로팅 창에 독립적인 Compose 세션을 삽입합니다. compose.AndroidView는 기존 Android View 또는 동기 팩토리가 반환하는 View를 표시합니다
 
 # v1.25.0
 
@@ -188,12 +195,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 * `기능` autojs6-dts 4.31.0: TSX는 `<compose.Column>`, `<compose:Text>`, 노드 팩토리 참조, Fragment, 슬롯 및 반응형 콜백을 지원합니다. 하나의 트리에서 Compose와 기존 XML 노드를 혼합할 수 없습니다
 * `개선` 플러그인 센터 아이콘에 Icon Studio에서 조정한 크기, 위치, 밝은 이미지와 어두운 이미지 및 원형 배경을 적용하고 재생성 가능한 원본과 매개변수를 유지
 * `개선` Android 앱 정보 아이콘에 Icon Studio의 그림과 밝은 배경 및 어두운 배경을 사용하고 플러그인 센터의 투명 그림과 기존 런처 옵션을 유지
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `기능` AutoJs6 declarations 4.30.0: Compose UI 노드, 상태, Modifier, 테마, 세션과 플로팅 창 자동 완성, 컴포넌트 이벤트 매개변수와 형식화된 오류 포함 (호환되는 로컬 호스트와 Compose UI 플러그인 필요)
 
 ##### 더 많은 릴리스 기록
 

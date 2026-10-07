@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.26.0
+
+###### 2026/10/07
+
+* `Hint` Interop requires the matching AutoJs6 6.8.0 / 5320 host and a Compose UI build with the AndroidView extension; TSX also requires TypeScript Engine 0.6.5. Basic V1 rendering keeps the 5316 minimum
+* `Feature` autojs6-dts 4.33.0: XML `<compose>` containers and compose.attach embed independent Compose sessions in UI pages or legacy floating windows; compose.AndroidView embeds an existing Android View or one returned by a synchronous factory
 
 # v1.25.0
 
@@ -188,12 +195,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Feature` autojs6-dts 4.31.0: TSX supports `<compose.Column>`, `<compose:Text>`, references to node factories, fragments, slots and reactive callbacks; a single tree cannot mix Compose and legacy XML nodes
 * `Improvement` Plugin Center icons use the sizes, positions, light and dark artwork, and circular backgrounds adjusted in Icon Studio, retaining reproducible sources and parameters
 * `Improvement` Android App info icons share Icon Studio artwork and light/dark backgrounds while preserving transparent Plugin Center artwork and existing launcher choices
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `Feature` AutoJs6 declarations 4.30.0: completion for Compose UI nodes, state, modifiers, themes, sessions and floating windows, with component event parameters and typed errors (requires a matching local host and the Compose UI plugin)
 
 ##### Complete release history
 

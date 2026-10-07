@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 ### سجل الإصدارات
 
 ******
+
+# v1.26.0
+
+###### 2026/10/07
+
+* `تلميح` يتطلب التكامل المضيف المطابق AutoJs6 6.8.0 / 5320 وبنية Compose UI تدعم امتداد AndroidView. يتطلب TSX أيضا TypeScript Engine 0.6.5. يبقى الحد الأدنى لعرض V1 الأساسي هو 5316
+* `ميزة` autojs6-dts 4.33.0: تدمج حاويات XML `<compose>` و compose.attach جلسات Compose مستقلة في صفحات UI أو النوافذ العائمة الحالية. يعرض compose.AndroidView عنصرا جاهزا من Android View أو عنصرا تعيده دالة إنشاء متزامنة
 
 # v1.25.0
 
@@ -188,12 +195,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 * `ميزة` autojs6-dts 4.31.0: يدعم TSX الصيغ `<compose.Column>` و `<compose:Text>` ومراجع مصانع العقد و Fragment والخانات والاستدعاءات التفاعلية. لا يمكن خلط عقد Compose وعقد XML القديمة في شجرة واحدة
 * `تحسين` تستخدم أيقونات مركز الملحقات الأحجام والمواضع والصور الفاتحة والداكنة والخلفيات الدائرية المعدلة في Icon Studio مع الاحتفاظ بالمصادر والمعلمات لإعادة إنتاجها
 * `تحسين` تستخدم أيقونات معلومات التطبيق في Android صور Icon Studio وخلفياته الفاتحة والداكنة مع الحفاظ على الصور الشفافة في مركز الملحقات وخيارات المشغل الحالية
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `ميزة` AutoJs6 declarations 4.30.0: إكمال عقد Compose UI والحالة والمعدلات والسمات والجلسات والنوافذ العائمة, مع معاملات أحداث المكونات والأخطاء المحددة النوع (يتطلب إصدارا محليا متوافقا من المضيف وإضافة Compose UI)
 
 ##### لمزيد من سجل الإصدارات
 
