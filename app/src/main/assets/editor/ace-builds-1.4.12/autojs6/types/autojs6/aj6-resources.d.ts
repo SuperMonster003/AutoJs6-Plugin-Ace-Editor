@@ -5540,8 +5540,8 @@ declare namespace org {
 					public static plugin_local_network_enable_explanation: number;
 					public static plugin_local_network_granted: number;
 					public static plugin_markdown_previewer_name: number;
-					public static plugin_readium_epub_reader_name: number;
 					public static plugin_three_amber_player_name: number;
+					public static plugin_three_folio_epub_name: number;
 					public static plugin_three_terra_player_name: number;
 					public static prompt_ace_editor_plugin_required: number;
 					public static prompt_add_ignored_app_version: number;
