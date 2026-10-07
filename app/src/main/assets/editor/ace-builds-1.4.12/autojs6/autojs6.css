@@ -234,11 +234,62 @@ body.autojs6-host-selection-action-mode .ace_mobile-menu {
     color: #0f5e5e;
 }
 
+.autojs6_signature_tooltip_header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
 .autojs6_signature_tooltip_caption {
     margin-bottom: 3px;
     font-size: 11px;
     font-weight: 700;
     color: var(--autojs6-theme-caption-foreground);
+}
+
+.autojs6_signature_tooltip_nav {
+    display: none;
+    flex: none;
+    align-items: center;
+    margin: -7px -6px 0 0;
+    font-size: 11px;
+    line-height: 1;
+    color: var(--autojs6-theme-muted-foreground);
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.autojs6_signature_tooltip_nav_visible {
+    display: inline-flex;
+}
+
+.autojs6_signature_tooltip_nav_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    color: var(--autojs6-theme-foreground);
+    font: inherit;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.autojs6_signature_tooltip_nav_button:active {
+    background: var(--autojs6-theme-border);
+}
+
+.autojs6_signature_tooltip_nav_counter {
+    min-width: 28px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 .autojs6_signature_tooltip_signature {

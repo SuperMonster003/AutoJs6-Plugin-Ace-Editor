@@ -277,24 +277,132 @@
         return findSignatureHelpFromText(text, offset);
     }
 
+    function isInsideCallArguments(session, pos) {
+        if (!session) {
+            return false;
+        }
+        pos = normalizePosition(pos);
+        var text = textFromSession(session);
+        var offset = Math.max(0, Math.min(positionToIndex(session, pos), text.length));
+        return findOpenParen(text, offset) >= 0;
+    }
+
+    // Providers may return a single signature (static index, built-ins, Python, Lua) or the
+    // TypeScript shape with every overload in `signatures`. Normalize both for the controller.
+    function normalizeSignatureHelp(help) {
+        if (!help) {
+            return null;
+        }
+        var signatures = Array.isArray(help.signatures) && help.signatures.length ?
+            help.signatures.slice(0) :
+            [{
+                caption: help.caption,
+                signature: help.signature,
+                parameters: Array.isArray(help.parameters) ? help.parameters.slice(0) : [],
+                parameterDocs: Array.isArray(help.parameterDocs) ? help.parameterDocs.slice(0) : [],
+                isVariadic: !!help.isVariadic,
+                docText: help.docText || ""
+            }];
+        if (!signatures[0] || !signatures[0].signature) {
+            return null;
+        }
+        var activeSignature = Number(help.activeSignature);
+        if (!(activeSignature >= 0 && activeSignature < signatures.length)) {
+            activeSignature = 0;
+        }
+        var spanStart = Number(help.applicableSpanStart);
+        return {
+            caption: help.caption || signatures[activeSignature].caption || "",
+            callee: help.callee || "",
+            signatures: signatures,
+            activeSignature: activeSignature,
+            activeParameter: Math.max(0, Number(help.activeParameter) || 0),
+            key: spanStart >= 0 ? "span:" + spanStart : "callee:" + String(help.callee || help.caption || "")
+        };
+    }
+
     function createController(config) {
         config = config || {};
         var editor = config.editor || null;
         var session = config.session || (editor && editor.session) || null;
         var delayMs = Math.max(0, Number(config.delayMs) || DEFAULT_DELAY_MS);
         var element = null;
+        var headerElement = null;
         var captionElement = null;
+        var navElement = null;
+        var navCounterElement = null;
         var signatureElement = null;
         var summaryElement = null;
         var timer = null;
         var attached = false;
         var visible = false;
         var lastSignature = null;
+        var lastHelp = null;
+        var lastPosition = null;
+        var selectedSignature = 0;
+        var pinnedKey = null;
+        var pinnedIndex = -1;
         var requestSerial = 0;
 
         function notify(message, error) {
             if (typeof config.notifyError === "function") {
                 config.notifyError(String(message || "ACE signature help error"), error);
+            }
+        }
+
+        function stopNavEvent(event) {
+            if (event && typeof event.preventDefault === "function") {
+                event.preventDefault();
+            }
+            if (event && typeof event.stopPropagation === "function") {
+                event.stopPropagation();
+            }
+        }
+
+        function createNavButton(label, delta) {
+            var button = global.document.createElement("button");
+            button.className = "autojs6_signature_tooltip_nav_button";
+            button.textContent = label;
+            if (typeof button.setAttribute === "function") {
+                button.setAttribute("type", "button");
+                button.setAttribute("tabindex", "-1");
+            }
+            if (typeof button.addEventListener === "function") {
+                // Keep focus (and the soft keyboard) on the editor. preventDefault on touchend
+                // also suppresses the synthetic click, so a tap cycles exactly once.
+                button.addEventListener("mousedown", stopNavEvent);
+                button.addEventListener("touchstart", stopNavEvent, { passive: false });
+                button.addEventListener("touchend", function(event) {
+                    stopNavEvent(event);
+                    cycleSignature(delta);
+                });
+                button.addEventListener("click", function(event) {
+                    stopNavEvent(event);
+                    cycleSignature(delta);
+                });
+            }
+            return button;
+        }
+
+        function createNavElement() {
+            var nav = global.document.createElement("div");
+            nav.className = "autojs6_signature_tooltip_nav";
+            nav.appendChild(createNavButton("‹", -1));
+            navCounterElement = global.document.createElement("span");
+            navCounterElement.className = "autojs6_signature_tooltip_nav_counter";
+            nav.appendChild(navCounterElement);
+            nav.appendChild(createNavButton("›", 1));
+            return nav;
+        }
+
+        function setNavVisible(shown, text) {
+            if (!navElement) {
+                return;
+            }
+            navElement.className = "autojs6_signature_tooltip_nav" +
+                (shown ? " autojs6_signature_tooltip_nav_visible" : "");
+            if (navCounterElement) {
+                navCounterElement.textContent = shown ? String(text || "") : "";
             }
         }
 
@@ -306,9 +414,16 @@
             element.className = "autojs6_signature_tooltip";
             element.style.display = "none";
 
+            headerElement = global.document.createElement("div");
+            headerElement.className = "autojs6_signature_tooltip_header";
+            element.appendChild(headerElement);
+
             captionElement = global.document.createElement("div");
             captionElement.className = "autojs6_signature_tooltip_caption";
-            element.appendChild(captionElement);
+            headerElement.appendChild(captionElement);
+
+            navElement = createNavElement();
+            headerElement.appendChild(navElement);
 
             signatureElement = global.document.createElement("div");
             signatureElement.className = "autojs6_signature_tooltip_signature";
@@ -438,10 +553,23 @@
             box.style.top = Math.round(top) + "px";
         }
 
-        function renderSignature(help) {
-            var active = help.activeParameter;
-            var html = escapeHtml(help.signature);
-            var parameter = help.parameters[active];
+        function activeParameterIndex(entry, activeParameter) {
+            var count = entry && entry.parameters ? entry.parameters.length : 0;
+            if (count === 0) {
+                return -1;
+            }
+            if (activeParameter < count) {
+                return activeParameter;
+            }
+            // Arguments beyond the declared list belong to a trailing rest parameter.
+            var last = String(entry.parameters[count - 1] || "");
+            return entry.isVariadic || last.indexOf("...") === 0 ? count - 1 : -1;
+        }
+
+        function renderSignature(entry, activeParameter) {
+            var html = escapeHtml(entry.signature);
+            var index = activeParameterIndex(entry, activeParameter);
+            var parameter = index >= 0 ? entry.parameters[index] : null;
             if (parameter) {
                 html = html.replace(
                     escapeHtml(parameter),
@@ -458,7 +586,56 @@
             return findSignatureHelp(session, pos);
         }
 
-        function showAtPosition(pos) {
+        function currentSignature() {
+            if (!lastHelp) {
+                return null;
+            }
+            return lastHelp.signatures[selectedSignature] || lastHelp.signatures[0] || null;
+        }
+
+        function render() {
+            var entry = currentSignature();
+            if (!entry) {
+                hide();
+                return false;
+            }
+            ensureElement();
+            var active = lastHelp.activeParameter;
+            var index = activeParameterIndex(entry, active);
+            var parameterDoc = index >= 0 && entry.parameterDocs ? entry.parameterDocs[index] : "";
+            captionElement.textContent = entry.caption || lastHelp.caption || "";
+            signatureElement.innerHTML = renderSignature(entry, active);
+            summaryElement.textContent = parameterDoc || entry.docText || "";
+            var count = lastHelp.signatures.length;
+            setNavVisible(count > 1, (selectedSignature + 1) + "/" + count);
+            element.style.display = "block";
+            visible = true;
+            lastSignature = {
+                caption: captionElement.textContent,
+                signature: entry.signature,
+                parameters: entry.parameters,
+                activeParameter: active,
+                docText: summaryElement.textContent
+            };
+            positionElement(lastPosition || normalizePosition(editor && editor.getCursorPosition && editor.getCursorPosition()));
+            return true;
+        }
+
+        function cycleSignature(delta) {
+            if (!visible || !lastHelp || lastHelp.signatures.length < 2) {
+                return false;
+            }
+            var count = lastHelp.signatures.length;
+            delta = Number(delta) || 1;
+            selectedSignature = ((selectedSignature + delta) % count + count) % count;
+            // Remember the manual choice for this call; it resets once the call changes.
+            pinnedKey = lastHelp.key;
+            pinnedIndex = selectedSignature;
+            return render();
+        }
+
+        // `options.force` is reserved for the auto-policy gate (explicit triggers bypass it).
+        function showAtPosition(pos, options) {
             try {
                 pos = normalizePosition(pos || (editor && editor.getCursorPosition && editor.getCursorPosition()));
                 var activeRequest = ++requestSerial;
@@ -472,19 +649,21 @@
                     if (activeRequest !== requestSerial || !attached) {
                         return false;
                     }
-                    if (error || !help) {
+                    var normalized = error ? null : normalizeSignatureHelp(help);
+                    if (!normalized) {
                         hide();
                         return false;
                     }
-                    ensureElement();
-                    captionElement.textContent = help.caption;
-                    signatureElement.innerHTML = renderSignature(help);
-                    summaryElement.textContent = help.docText || "";
-                    element.style.display = "block";
-                    visible = true;
-                    lastSignature = help;
-                    positionElement(pos);
-                    return true;
+                    if (normalized.key !== pinnedKey) {
+                        pinnedKey = null;
+                        pinnedIndex = -1;
+                    }
+                    selectedSignature = pinnedIndex >= 0 && pinnedIndex < normalized.signatures.length ?
+                        pinnedIndex :
+                        normalized.activeSignature;
+                    lastHelp = normalized;
+                    lastPosition = pos;
+                    return render();
                 }
                 var returned = resolveSignatureHelp(pos, finish);
                 if (returned && typeof returned.then === "function") {
@@ -562,6 +741,7 @@
             }
             visible = false;
             lastSignature = null;
+            lastHelp = null;
         }
 
         function isInsideTooltipEvent(event) {
@@ -644,8 +824,19 @@
                 domCreated: !!element,
                 signature: lastSignature && lastSignature.signature || "",
                 caption: lastSignature && lastSignature.caption || "",
-                activeParameter: lastSignature ? lastSignature.activeParameter : -1
+                activeParameter: lastSignature ? lastSignature.activeParameter : -1,
+                signatureCount: lastHelp ? lastHelp.signatures.length : 0,
+                activeSignature: lastHelp ? selectedSignature : -1,
+                pinnedSignature: pinnedIndex >= 0
             };
+        }
+
+        function isVisible() {
+            return visible;
+        }
+
+        function getSignatureCount() {
+            return lastHelp ? lastHelp.signatures.length : 0;
         }
 
         attach();
@@ -656,6 +847,9 @@
             destroy: destroy,
             hide: hide,
             showAtPosition: showAtPosition,
+            cycleSignature: cycleSignature,
+            isVisible: isVisible,
+            getSignatureCount: getSignatureCount,
             getState: getState
         };
     }
@@ -664,6 +858,8 @@
         builtins: BUILTIN_SIGNATURES,
         findSignatureHelpFromText: findSignatureHelpFromText,
         findSignatureHelp: findSignatureHelp,
+        normalizeSignatureHelp: normalizeSignatureHelp,
+        isInsideCallArguments: isInsideCallArguments,
         createController: createController,
         install: createController
     };

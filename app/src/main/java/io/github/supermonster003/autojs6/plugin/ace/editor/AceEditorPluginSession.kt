@@ -199,6 +199,8 @@ class AceEditorPluginSession internal constructor(
 
     override fun handleEscapeKey() = editor.handleEscapeKey()
 
+    override fun triggerSmartHint() = editor.triggerSmartHint()
+
     override fun copyLine() {
         val clipboard = hostContext.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
         clipboard.setPrimaryClip(ClipData.newPlainText(null, editor.cursorLineText))

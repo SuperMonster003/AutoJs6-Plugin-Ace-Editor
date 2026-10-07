@@ -174,9 +174,10 @@ class AceHistoryOperationBridgeTest {
             File(workingDirectory, "app/src/main/assets/editor/ace-builds-1.4.12/autojs6/$relativePath"),
             File(workingDirectory, "src/main/assets/editor/ace-builds-1.4.12/autojs6/$relativePath"),
         )
+        // Assertions below match multi-line snippets with "\n"; a CRLF checkout must not break them.
         return checkNotNull(candidates.firstOrNull(File::isFile)) {
             "Unable to locate ACE asset: $relativePath"
-        }.readText()
+        }.readText().replace("\r\n", "\n")
     }
 
     private fun readMainSource(fileName: String): String {

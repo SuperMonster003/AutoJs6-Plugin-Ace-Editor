@@ -1409,6 +1409,8 @@
             selection: selection,
             selectedText: selection.text,
             completionPopupOpen: isCompletionPopupOpen(),
+            signatureHelpVisible: isSignatureHelpVisible(),
+            signatureCount: getSignatureHelpCount(),
             scroll: getScrollState(),
             breakpoints: getBreakpoints()
         };
@@ -3967,6 +3969,147 @@
         }
     }
 
+    function identifierPrefixBefore(pos) {
+        if (!session || !pos) {
+            return "";
+        }
+        var line = String(session.getLine(pos.row) || "").substring(0, pos.column);
+        var match = /[A-Za-z_$][A-Za-z0-9_$]*$/.exec(line);
+        return match ? match[0] : "";
+    }
+
+    function isCursorInsideWord(pos) {
+        if (!session || !pos) {
+            return false;
+        }
+        var line = String(session.getLine(pos.row) || "");
+        return /[A-Za-z0-9_$]/.test(line.charAt(pos.column - 1)) &&
+            /[A-Za-z0-9_$]/.test(line.charAt(pos.column));
+    }
+
+    function isCursorInsideCallArguments(pos) {
+        var api = global.AutoJsAceSignatureHelp;
+        return !!(session && pos && api && typeof api.isInsideCallArguments === "function" &&
+            api.isInsideCallArguments(session, pos));
+    }
+
+    function startSmartHintCompletion() {
+        if (!editor || isReadOnly() || typeof editor.execCommand !== "function") {
+            return false;
+        }
+        if (memberCompletionRestartTimer !== null) {
+            clearTimeout(memberCompletionRestartTimer);
+            memberCompletionRestartTimer = null;
+        }
+        cancelLspCompletionRefresh();
+        if (editor.completer && typeof editor.completer.detach === "function") {
+            editor.completer.detach();
+        }
+        editor.execCommand("startAutocomplete");
+        return true;
+    }
+
+    function isSignatureHelpVisible() {
+        return !!(signatureHelpController && typeof signatureHelpController.isVisible === "function" &&
+            signatureHelpController.isVisible());
+    }
+
+    function getSignatureHelpCount() {
+        return signatureHelpController && typeof signatureHelpController.getSignatureCount === "function" ?
+            signatureHelpController.getSignatureCount() : 0;
+    }
+
+    function cycleSignatureHelp(delta) {
+        if (!signatureHelpController || typeof signatureHelpController.cycleSignature !== "function") {
+            return false;
+        }
+        var cycled = signatureHelpController.cycleSignature(delta);
+        if (cycled) {
+            notifyStateChanged("signatureHelpCycled");
+        }
+        return cycled;
+    }
+
+    function showSignatureHelpAtCursor() {
+        if (!signatureHelpController || !editor) {
+            return false;
+        }
+        return signatureHelpController.showAtPosition(editor.getCursorPosition(), { force: true }) === true;
+    }
+
+    function showSymbolDocumentationAtCursor() {
+        if (!tooltipController || !editor) {
+            return false;
+        }
+        return tooltipController.showAtPosition(editor.getCursorPosition()) === true;
+    }
+
+    function triggerSignatureHelp(source) {
+        var result = "none";
+        try {
+            if (isSignatureHelpVisible() && getSignatureHelpCount() > 1 && cycleSignatureHelp(1)) {
+                result = "overload";
+            } else if (showSignatureHelpAtCursor()) {
+                result = "signature";
+            }
+        } catch (error) {
+            notifyRecoverableError("signatureHelp", error);
+        }
+        notifyStateChanged("signatureHelp:" + String(source || "") + ":" + result);
+        return result;
+    }
+
+    function triggerSymbolDocumentation(source) {
+        var result = "none";
+        try {
+            if (showSymbolDocumentationAtCursor()) {
+                result = "hover";
+            }
+        } catch (error) {
+            notifyRecoverableError("symbolDocumentation", error);
+        }
+        notifyStateChanged("symbolDocumentation:" + String(source || "") + ":" + result);
+        return result;
+    }
+
+    // Unified smart hint entry (TAB long-press, Ctrl-Space, action favorites). The cursor context
+    // decides: completion for an identifier prefix or member access, overload cycling while the
+    // signature box is visible, symbol documentation inside a word, signature help inside a call,
+    // and finally plain completion. Read-only mode skips the completion branches.
+    function triggerSmartHint(source) {
+        if (!editor || !session) {
+            return "none";
+        }
+        var result = "none";
+        try {
+            var pos = editor.getCursorPosition();
+            var readOnly = isReadOnly();
+            var prefix = identifierPrefixBefore(pos);
+            var insideWord = isCursorInsideWord(pos);
+            var insideCall = isCursorInsideCallArguments(pos);
+            if (!readOnly && !insideWord && (prefix || isCursorAfterMemberDot())) {
+                if (startSmartHintCompletion()) {
+                    result = "completion";
+                }
+                if (insideCall) {
+                    showSignatureHelpAtCursor();
+                }
+            } else if (isSignatureHelpVisible() && getSignatureHelpCount() > 1 && cycleSignatureHelp(1)) {
+                result = "overload";
+            } else if ((insideWord || (readOnly && prefix)) && showSymbolDocumentationAtCursor()) {
+                result = "hover";
+            } else if (insideCall && showSignatureHelpAtCursor()) {
+                result = "signature";
+            } else if (!readOnly && startSmartHintCompletion()) {
+                result = "completion";
+            }
+        } catch (error) {
+            notifyRecoverableError("smartHint", error);
+        }
+        notifyStateChanged("smartHint:" + String(source || "") + ":" + result);
+        return result;
+    }
+
     function insertAtLine(row, text) {
         return runTextMutation("insertAtLine", function() {
             session.insert({ row: clampRow(row), column: 0 }, text || "");
@@ -5154,6 +5297,32 @@
                     requestProjectRename(editor.getCursorPosition());
                 }
             });
+            // Hardware keyboard entries for the smart hints. Ctrl-Space replaces Ace's default
+            // startAutocomplete binding so the key follows the same context rules as TAB long-press.
+            editor.commands.addCommand({
+                name: "autojs6SmartHint",
+                bindKey: { win: "Ctrl-Space|Alt-Space", mac: "Ctrl-Space|Alt-Space" },
+                readOnly: true,
+                exec: function() {
+                    triggerSmartHint("keyboard");
+                }
+            });
+            editor.commands.addCommand({
+                name: "autojs6SignatureHelp",
+                bindKey: { win: "Ctrl-Shift-Space", mac: "Ctrl-Shift-Space" },
+                readOnly: true,
+                exec: function() {
+                    triggerSignatureHelp("keyboard");
+                }
+            });
+            editor.commands.addCommand({
+                name: "autojs6ShowHover",
+                bindKey: { win: "Ctrl-Q", mac: "Ctrl-Q" },
+                readOnly: true,
+                exec: function() {
+                    triggerSymbolDocumentation("keyboard");
+                }
+            });
         }
         installMemberCompletionDotTrigger();
         installTouchCursorSelectionGuard();
@@ -5267,6 +5436,9 @@
             acceptCompletionOrInsertTab: acceptCompletionOrInsertTab,
             moveCompletionSelectionOrCursor: moveCompletionSelectionOrCursor,
             handleEscapeKey: handleEscapeKey,
+            triggerSmartHint: triggerSmartHint,
+            triggerSignatureHelp: triggerSignatureHelp,
+            triggerSymbolDocumentation: triggerSymbolDocumentation,
             refreshSelectionActionMode: updateActionModeFromSelection,
             suppressSelectionActionModeMenu: suppressSelectionActionModeMenu,
             suppressTextMutationSelectionMenu: suppressTextMutationSelectionMenu,
@@ -5396,8 +5568,11 @@
             },
             showSignatureHelp: function(row, column) {
                 return signatureHelpController ?
-                    signatureHelpController.showAtPosition({ row: row, column: column }) :
+                    signatureHelpController.showAtPosition({ row: row, column: column }, { force: true }) :
                     false;
+            },
+            cycleSignatureHelp: function(delta) {
+                return cycleSignatureHelp(delta);
             },
             hideSignatureHelp: function() {
                 if (signatureHelpController) {

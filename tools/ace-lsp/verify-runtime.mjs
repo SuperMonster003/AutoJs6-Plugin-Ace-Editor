@@ -331,9 +331,26 @@ function verifyBrowserLanguageService(paths, expectedVersion) {
         "const __compatAlias: AutoJs6.App.Alias = \"autojs6\";",
     ].join("\n");
     const diagnostics = service.getDiagnostics(sessionFor(text), text) || [];
+    // Signature help keeps every overload (P1 of the host ace-smart-hints roadmap).
+    const spliceText = "const __compatList: number[] = []; __compatList.splice(0, 1, 2);";
+    const spliceHelp = service.getSignatureHelp(
+        sessionFor(spliceText),
+        { row: 0, column: spliceText.indexOf("(0, 1, 2)") + "(0, 1, ".length },
+        spliceText,
+    );
     const state = service.getState();
     service.dispose();
 
+    assert(
+        Array.isArray(spliceHelp?.signatures) && spliceHelp.signatures.length >= 2,
+        `Array#splice signature help should expose every overload: ${JSON.stringify(spliceHelp)}`,
+    );
+    assert(
+        spliceHelp.signature === spliceHelp.signatures[spliceHelp.activeSignature].signature &&
+            spliceHelp.activeParameter === 2 &&
+            spliceHelp.signatures.some((entry) => entry.isVariadic),
+        `Array#splice signature help top-level fields should mirror the active overload: ${JSON.stringify(spliceHelp)}`,
+    );
     assert(state.ready, `Browser language service is not ready: ${state.reason}`);
     assert(state.version === expectedVersion, `Expected TypeScript ${expectedVersion}, got ${state.version}`);
     assert(state.expectedVersion === expectedVersion, "Browser service did not enforce the bundled TypeScript version");

@@ -714,6 +714,14 @@ class AceCodeEditor @JvmOverloads constructor(
         invokeAce("handleEscapeKey")
     }
 
+    /**
+     * Context-aware smart hint trigger. The bridge skips the completion branch while the editor is
+     * read-only, so this stays available for signature help and symbol documentation.
+     */
+    fun triggerSmartHint() {
+        invokeAce("triggerSmartHint", quote("host"))
+    }
+
     fun insert(line: Int, text: String?) {
         if (!canMutateText("insertAtLine")) {
             return

@@ -1097,6 +1097,30 @@
             }
         }
 
+        function signatureHelpItemToEntry(item) {
+            var separator = partsToString(item.separatorDisplayParts) || ", ";
+            var parameters = (item.parameters || []).map(function(parameter) {
+                return partsToString(parameter.displayParts);
+            });
+            var parameterDocs = (item.parameters || []).map(function(parameter) {
+                return partsToString(parameter.documentation);
+            });
+            var signature = partsToString(item.prefixDisplayParts) +
+                parameters.join(separator) +
+                partsToString(item.suffixDisplayParts);
+            if (!signature) {
+                return null;
+            }
+            return {
+                caption: signature.replace(/\(.*/, ""),
+                signature: signature,
+                parameters: parameters,
+                parameterDocs: parameterDocs,
+                isVariadic: !!item.isVariadic,
+                docText: partsToString(item.documentation)
+            };
+        }
+
         function getSignatureHelp(session, pos, documentText) {
             try {
                 if (!syncSession(session, documentText)) {
@@ -1109,23 +1133,37 @@
                 if (!help || !help.items || !help.items.length) {
                     return null;
                 }
-                var item = help.items[Math.max(0, Number(help.selectedItemIndex) || 0)] || help.items[0];
-                var separator = partsToString(item.separatorDisplayParts) || ", ";
-                var parameters = (item.parameters || []).map(function(parameter) {
-                    return partsToString(parameter.displayParts);
-                });
-                var signature = partsToString(item.prefixDisplayParts) +
-                    parameters.join(separator) +
-                    partsToString(item.suffixDisplayParts);
-                if (!signature) {
+                // Keep every overload. The top-level fields mirror the signature TypeScript
+                // selected for the current argument list so existing consumers keep working.
+                var selectedItemIndex = Math.max(0, Number(help.selectedItemIndex) || 0);
+                var signatures = [];
+                var activeSignature = 0;
+                for (var i = 0; i < help.items.length; i++) {
+                    var entry = signatureHelpItemToEntry(help.items[i]);
+                    if (!entry) {
+                        continue;
+                    }
+                    if (i === selectedItemIndex) {
+                        activeSignature = signatures.length;
+                    }
+                    signatures.push(entry);
+                }
+                if (!signatures.length) {
                     return null;
                 }
+                var active = signatures[activeSignature];
                 return {
-                    caption: signature.replace(/\(.*/, ""),
-                    signature: signature,
-                    parameters: parameters,
+                    caption: active.caption,
+                    signature: active.signature,
+                    parameters: active.parameters,
+                    parameterDocs: active.parameterDocs,
+                    isVariadic: active.isVariadic,
                     activeParameter: Math.max(0, Number(help.argumentIndex) || 0),
-                    docText: partsToString(item.documentation)
+                    docText: active.docText,
+                    signatures: signatures,
+                    activeSignature: activeSignature,
+                    argumentCount: Math.max(0, Number(help.argumentCount) || 0),
+                    applicableSpanStart: help.applicableSpan ? Math.max(-1, Number(help.applicableSpan.start)) : -1
                 };
             } catch (error) {
                 notify(config, "ACE TS signature help failed: " + error, error);
