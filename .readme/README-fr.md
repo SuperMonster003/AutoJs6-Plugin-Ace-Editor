@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.28.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,13 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.28.0
+
+###### 2026/10/07
+
+* `Note` Nécessite l'hôte AutoJs6 6.8.0 / 5321 correspondant et une version de Compose UI prenant en charge les dialogues; TSX nécessite TypeScript Engine 0.6.6. Les scripts non UI doivent déjà disposer de l'autorisation de superposition, que cet appel ne demande pas
+* `Fonctionnalité` autojs6-dts 4.34.0: compose.dialog ouvre des sessions de dialogue ou de panneau inférieur indépendantes avec les options cancelable/thème typées, les racines TSX et le contenu AndroidView
 
 # v1.27.0
 
@@ -190,13 +197,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 * `Fonctionnalité` autojs6-dts 4.33.0: Les conteneurs XML `<compose>` et compose.attach intègrent des sessions Compose indépendantes dans les pages UI ou les fenêtres flottantes existantes; compose.AndroidView affiche une View Android existante ou renvoyée par une fabrique synchrone
 * `Amélioration` Les surcharges se changent avec Alt+Haut / Alt+Bas sur clavier physique (le déplacement de lignes par défaut d'Ace est conservé sans indication multi-surcharges), les touches Haut et Bas de la barre de touches de l'hôte (désactivable dans les paramètres) et les boutons haut / bas en haut à droite de la fenêtre d'indication
 * `Amélioration` Les indications de paramètres réapparaissent après un appui dans la zone d'édition (pas après un défilement), et ESC masque à la fois les indications de paramètres et la documentation du symbole
-
-# v1.25.0
-
-###### 2026/10/07
-
-* `Fonctionnalité` AutoJs6 declarations 4.32.0: complétion des conversions OKLab/OKLCH, de l'ajustement du contraste, des harmonies, des gammes de tons, des couleurs dérivées, des variantes de nuit, de la simulation des déficiences de la vision des couleurs, des couleurs dominantes d'une image et de l'algorithme de détection oklab de colors, ainsi que du contrôle de la couleur du thème avec colors.theme (AutoJs6 6.8.0 requis)
-* `Fonctionnalité` AutoJs6 declarations 4.32.0: complétion des sessions terminal / $terminal, des options d'ouverture et d'exécution, de l'environnement, de l'état du plugin et des types d'erreur (plugin 3-Shell Terminal requis)
 
 ##### Pour plus d'historique des versions
 

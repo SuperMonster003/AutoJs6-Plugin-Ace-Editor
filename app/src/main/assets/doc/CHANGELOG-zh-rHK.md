@@ -4,6 +4,13 @@
 
 ******
 
+# v1.28.0
+
+###### 2026/10/07
+
+* `提示` 需要配套 AutoJs6 6.8.0 / 5321 宿主及支援對話框的 Compose UI 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請
+* `新增` autojs6-dts 4.34.0: compose.dialog 建立獨立對話框或底部彈層工作階段, 提供 cancelable/主題選項, TSX 根節點和 AndroidView 內容的類型補全
+
 # v1.27.0
 
 ###### 2026/10/07

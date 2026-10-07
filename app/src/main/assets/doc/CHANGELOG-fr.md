@@ -4,6 +4,13 @@
 
 ******
 
+# v1.28.0
+
+###### 2026/10/07
+
+* `Note` Nécessite l'hôte AutoJs6 6.8.0 / 5321 correspondant et une version de Compose UI prenant en charge les dialogues; TSX nécessite TypeScript Engine 0.6.6. Les scripts non UI doivent déjà disposer de l'autorisation de superposition, que cet appel ne demande pas
+* `Fonctionnalité` autojs6-dts 4.34.0: compose.dialog ouvre des sessions de dialogue ou de panneau inférieur indépendantes avec les options cancelable/thème typées, les racines TSX et le contenu AndroidView
+
 # v1.27.0
 
 ###### 2026/10/07

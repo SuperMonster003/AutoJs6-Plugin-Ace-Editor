@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.28.0": {
+      "released_date": "2026/10/07",
+      "feature": [
+        "autojs6-dts 4.34.0: compose.dialog открывает независимые сеансы диалога или нижней панели с типизированными параметрами cancelable/темы, корнями TSX и содержимым AndroidView"
+      ],
+      "hint": [
+        "Требуются совместимый хост AutoJs6 6.8.0 / 5321 и сборка Compose UI с поддержкой диалогов; для TSX также нужен TypeScript Engine 0.6.6. Скриптам без UI заранее нужно разрешение наложения, этот вызов его не запрашивает"
+      ]
+    },
     "v1.27.0": {
       "released_date": "2026/10/07",
       "improvement": [

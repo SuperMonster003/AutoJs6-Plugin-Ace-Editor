@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.28.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,13 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.28.0
+
+###### 2026/10/07
+
+* `Aviso` Requiere el host AutoJs6 6.8.0 / 5321 correspondiente y una compilación de Compose UI con diálogos; TSX requiere TypeScript Engine 0.6.6. Los scripts sin UI necesitan permiso de superposición previo, que esta llamada no solicita
+* `Función` autojs6-dts 4.34.0: compose.dialog abre sesiones independientes de diálogo o panel inferior con opciones cancelable/tema tipadas, raíces TSX y contenido AndroidView
 
 # v1.27.0
 
@@ -190,13 +197,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Función` autojs6-dts 4.33.0: Los contenedores XML `<compose>` y compose.attach integran sesiones Compose independientes en páginas UI o ventanas flotantes existentes; compose.AndroidView muestra una View Android existente o devuelta por una fábrica síncrona
 * `Mejora` Las sobrecargas se cambian con Alt+Arriba / Alt+Abajo en teclado físico (sin sugerencia de varias sobrecargas se conserva el movimiento de líneas predeterminado de Ace), las teclas Arriba y Abajo de la barra de teclas del anfitrión (se puede desactivar en los ajustes) y los botones arriba / abajo de la esquina superior derecha de la ventana de sugerencias
 * `Mejora` Las sugerencias de parámetros reaparecen tras tocar el área de edición (no tras desplazarse), y ESC oculta tanto las sugerencias de parámetros como la documentación del símbolo
-
-# v1.25.0
-
-###### 2026/10/07
-
-* `Función` AutoJs6 declarations 4.32.0: autocompletado de la conversión OKLab/OKLCH, el ajuste de contraste, armonías, escalas tonales, colores derivados, variantes nocturnas, la simulación de deficiencias de la visión del color, los colores dominantes de una imagen y el algoritmo de detección oklab de colors, además del control del color del tema con colors.theme (requiere AutoJs6 6.8.0)
-* `Función` AutoJs6 declarations 4.32.0: autocompletado de sesiones de terminal / $terminal, opciones de apertura y ejecución, entorno, estado del plugin y tipos de error (requiere el plugin 3-Shell Terminal)
 
 ##### Para ver más historial de versiones
 

@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.28.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-u
 ### リリース履歴
 
 ******
+
+# v1.28.0
+
+###### 2026/10/07
+
+* `ヒント` 対応する AutoJs6 6.8.0 / 5321 ホストとダイアログ対応の Compose UI が必要. TSX には TypeScript Engine 0.6.6 も必要. 非 UI スクリプトでは事前のオーバーレイ権限が必要で, この呼び出しは権限を要求しません
+* `機能` autojs6-dts 4.34.0: compose.dialog で独立したダイアログまたはボトムシートのセッションを作成し, cancelable/テーマ設定, TSX ルートと AndroidView コンテンツの型補完を提供
 
 # v1.27.0
 
@@ -190,13 +197,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-u
 * `機能` autojs6-dts 4.33.0: XML `<compose>` コンテナと compose.attach は UI ページや既存のフローティングウィンドウに独立した Compose セッションを埋め込みます. compose.AndroidView は既存の Android View または同期ファクトリが返す View を表示します
 * `改善` オーバーロードの切り替えがハードウェアキーボードの Alt+Up / Alt+Down (複数オーバーロードのヒント非表示時は Ace 既定の行移動を維持), ホストのキーボードバーの上下キー (設定でオフ可能), ヒントウィンドウ右上の上下ボタンに対応
 * `改善` パラメーターヒントは編集領域のタップ後に再表示され (スクロール後は再表示しない), ESC でパラメーターヒントとシンボルのドキュメントを同時に非表示
-
-# v1.25.0
-
-###### 2026/10/07
-
-* `機能` AutoJs6 declarations 4.32.0: colors の OKLab/OKLCH 変換, コントラスト調整, 調和色, 色階, 派生配色, 夜間の対応色, 色覚特性のシミュレーション, 画像の主要色の抽出, oklab 検出アルゴリズムの補完, および colors.theme によるテーマカラー制御 (AutoJs6 6.8.0 が必要)
-* `機能` AutoJs6 declarations 4.32.0: terminal / $terminal のセッション, オープンと実行のオプション, 環境, プラグイン状態, エラー型の補完 (3-Shell Terminal プラグインが必要)
 
 ##### その他のリリース履歴
 

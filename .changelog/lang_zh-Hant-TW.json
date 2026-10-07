@@ -5,6 +5,15 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.28.0": {
+      "released_date": "2026/10/07",
+      "feature": [
+        "autojs6-dts 4.34.0: compose.dialog 建立獨立對話方塊或底部彈層工作階段, 提供 cancelable/佈景主題選項, TSX 根節點和 AndroidView 內容的型別補全"
+      ],
+      "hint": [
+        "需要配套 AutoJs6 6.8.0 / 5321 主程式及支援對話方塊的 Compose UI 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請"
+      ]
+    },
     "v1.27.0": {
       "released_date": "2026/10/07",
       "improvement": [

@@ -5,6 +5,15 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.28.0": {
+      "released_date": "2026/10/07",
+      "feature": [
+        "autojs6-dts 4.34.0: compose.dialog で独立したダイアログまたはボトムシートのセッションを作成し, cancelable/テーマ設定, TSX ルートと AndroidView コンテンツの型補完を提供"
+      ],
+      "hint": [
+        "対応する AutoJs6 6.8.0 / 5321 ホストとダイアログ対応の Compose UI が必要. TSX には TypeScript Engine 0.6.6 も必要. 非 UI スクリプトでは事前のオーバーレイ権限が必要で, この呼び出しは権限を要求しません"
+      ]
+    },
     "v1.27.0": {
       "released_date": "2026/10/07",
       "improvement": [

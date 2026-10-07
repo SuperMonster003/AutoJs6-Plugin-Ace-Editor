@@ -1647,6 +1647,94 @@ function verifyComposeInteropDeclarations(paths) {
     return results;
 }
 
+function verifyComposeDialogDeclarations(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const baseLibraries = typeScriptLibraryTextByUri(paths);
+    const coreUri = "file:///autojs6/types/generated/lib.autojs6.core.d.ts";
+    const compatibilityUri = "file:///autojs6/types/lib.autojs6.extra.d.ts";
+    baseLibraries[coreUri] = readFileSync(paths.core, "utf8");
+    baseLibraries[compatibilityUri] = readFileSync(paths.compatibility, "utf8");
+    const valid = [
+        "const options:Internal.Compose.DialogOptions={type:'bottomSheet',cancelable:false,theme:{seed:'#336699'}};",
+        "const first:Internal.Compose.Session=compose.dialog(compose.Text({text:'Alert'}));",
+        "const state=compose.state(0); const sheet=compose.dialog(()=>compose.Scaffold({},compose.Text({text:String(state.value)})),options);",
+        "const n:number=sheet.update(()=>{state.value++;return state.value;}); sheet.post(()=>{state.value++;});",
+        "sheet.on('close',function(){const session:Internal.Compose.Session=this;}); sheet.showSnackbar('Saved').close();",
+        "compose.dialog(compose.Text({text:'Default'}),null); compose.dialog(compose.Text({text:'Default'}),undefined);",
+        "compose.dialog(compose.Text({text:'Theme'}),{theme:null}); compose.dialog(compose.Text({text:'Theme'}),{theme:undefined});",
+        "const jsx=compose.dialog(<><compose.Column><compose:Text text='TSX'/></compose.Column></>);",
+        "const render=compose.dialog(()=> <compose.Text text={String(state.value)}/>,{type:'bottomSheet'});",
+        "compose.dialog(<compose.AndroidView view={context=>ui.inflate(<button text='Native'/>)}/>);",
+    ].join("\n");
+    const invalid = [
+        ["missing root", "compose.dialog();"],
+        ["string root", "compose.dialog('Alert');"],
+        ["null root", "compose.dialog(null);"],
+        ["array root", "compose.dialog([compose.Text({text:'Alert'})]);"],
+        ["async render", "compose.dialog(async()=>compose.Text({text:'Alert'}));"],
+        ["primitive render", "compose.dialog(()=> 'Alert');"],
+        ["unknown type", "compose.dialog(compose.Text(),{type:'bottomsheet'});"],
+        ["native class as type", "compose.dialog(compose.Text(),{type:'ModalBottomSheet'});"],
+        ["null type", "compose.dialog(compose.Text(),{type:null});"],
+        ["string cancelable", "compose.dialog(compose.Text(),{cancelable:'false'});"],
+        ["null cancelable", "compose.dialog(compose.Text(),{cancelable:null});"],
+        ["native window token", "compose.dialog(compose.Text(),{token:{}});"],
+        ["native window type", "compose.dialog(compose.Text(),{windowType:2038});"],
+        ["floaty flag", "compose.dialog(compose.Text(),{raw:true});"],
+        ["theme value", "compose.dialog(compose.Text(),{theme:{dark:1}});"],
+        ["Promise return", "const p:Promise<Internal.Compose.Session>=compose.dialog(compose.Text());"],
+        ["floaty control", "compose.dialog(compose.Text()).setPosition(0,0);"],
+        ["dismiss listener", "compose.dialog(compose.Text()).on('dismiss',function(){});"],
+    ];
+    const results = {};
+    for (const mode of ["default", "optional"]) {
+        const libraryTextByUri = {...baseLibraries};
+        const errors = [];
+        const options = {documentUri: `file:///autojs6/editor/compose-dialog-${mode}.tsx`,
+            executionProfile: "rhino", typescriptVersion: "6.0.3", libraryTextByUri,
+            notifyError: (message) => errors.push(String(message))};
+        if (mode === "optional") {
+            options.libraryUris = ["file:///autojs6/typescript/lib.es2018.d.ts", coreUri, compatibilityUri];
+            for (const group of ["android", "libraries", "resources", "main-app"]) {
+                const uri = `file:///autojs6/types/generated/lib.autojs6.${group}.d.ts`;
+                libraryTextByUri[uri] = readFileSync(paths[group], "utf8");
+                options.libraryUris.push(uri);
+            }
+        }
+        const service = context.AutoJsAceTsLanguageService.create(options);
+        try {
+            function diagnostics(source) {
+                const result = service.getDiagnostics(sessionFor(source), source);
+                assert(Array.isArray(result), `Compose dialog ${mode} diagnostics did not run`);
+                return result;
+            }
+            const positive = diagnostics(valid);
+            assert(positive.length === 0,
+                `Compose dialog ${mode} rejected valid inputs: ${positive.map((item) => item.text).join("; ")}`);
+            const codes = {};
+            for (const [label, source] of invalid) {
+                const values = diagnostics(source);
+                assert(values.some((item) => [2322, 2339, 2345, 2353, 2554, 2739, 2740, 2769, 2820].includes(Number(item.raw))),
+                    `Compose dialog ${mode} accepted ${label}: ${JSON.stringify(values)}`);
+                codes[label] = values.map((item) => Number(item.raw));
+            }
+            assert(completionNames(service, "compose.di", "di").includes("dialog"), `Compose dialog ${mode} lost member completion`);
+            const optionNames = completionNames(service, "compose.dialog(compose.Text(), {", "");
+            assert(["type", "cancelable", "theme"].every((name) => optionNames.includes(name)),
+                `Compose dialog ${mode} lost option completion: ${optionNames.join(",")}`);
+            assert(!optionNames.includes("windowType") && !optionNames.includes("token"), "Native dialog options leaked into completion");
+            // The editor's existing normal strict profile does not distinguish an absent optional
+            // key from explicit undefined. The separate exact-mode compiler fixture rejects both.
+            assert(diagnostics("compose.dialog(compose.Text(),{type:undefined,cancelable:undefined});").length === 0,
+                "Review the normal strict optional-property boundary before changing this expectation");
+            assert(service.getState().ready && errors.length === 0, `Compose dialog ${mode} service failed: ${errors.join("; ")}`);
+            results[mode] = {profile: "rhino", validDiagnostics: positive.length, diagnosticCodes: codes,
+                optionCompletion: true, explicitUndefinedRequiresExactOptionalProperties: true};
+        } finally { service.dispose(); }
+    }
+    return results;
+}
+
 function createFakeTimer() {
     let nextId = 1;
     const entries = new Map();
@@ -3771,6 +3859,7 @@ function main() {
     const composeTsxDeclarations = verifyComposeTsxDeclarations(paths);
     const colorsAndTerminalDeclarations = verifyColorsAndTerminalDeclarations(paths);
     const composeInteropDeclarations = verifyComposeInteropDeclarations(paths);
+    const composeDialogDeclarations = verifyComposeDialogDeclarations(paths);
     const diagnosticScheduler = verifyDiagnosticScheduler(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const completerLanguageIsolation = verifyCompleterLanguageIsolation(paths);
@@ -3796,6 +3885,7 @@ function main() {
             composeTsxDeclarations,
             colorsAndTerminalDeclarations,
             composeInteropDeclarations,
+            composeDialogDeclarations,
             diagnosticScheduler,
             completionRefresh,
             completerLanguageIsolation,

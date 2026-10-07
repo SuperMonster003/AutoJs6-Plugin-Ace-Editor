@@ -5,6 +5,15 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.28.0": {
+      "released_date": "2026/10/07",
+      "feature": [
+        "autojs6-dts 4.34.0: يفتح compose.dialog جلسات مستقلة لمربعات الحوار أو اللوحات السفلية مع أنواع خيارات cancelable/السمة وجذور TSX ومحتوى AndroidView"
+      ],
+      "hint": [
+        "يتطلب مضيف AutoJs6 6.8.0 / 5321 المتوافق وإصدار Compose UI يدعم مربعات الحوار; ويتطلب TSX أيضا TypeScript Engine 0.6.6. تحتاج البرامج النصية غير UI إلى إذن تراكب ممنوح مسبقا, ولا يطلبه هذا الاستدعاء"
+      ]
+    },
     "v1.27.0": {
       "released_date": "2026/10/07",
       "improvement": [
