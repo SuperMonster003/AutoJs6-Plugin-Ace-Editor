@@ -3699,6 +3699,10 @@ declare namespace org {
 				export class raw {
 					public static ace_font_catalog_public_key_v1: number;
 					public static ace_font_catalog_v1: number;
+					public static codegen_model_catalog_debug_test_public_key_v1: number;
+					public static codegen_model_catalog_debug_test_v1: number;
+					public static codegen_model_catalog_public_key_v1: number;
+					public static codegen_model_catalog_v1: number;
 					public static color_search_help_document: number;
 					public static isrg_root_x1: number;
 					public static licenses: number;
@@ -4574,6 +4578,7 @@ declare namespace org {
 					public static key_client_mode_reconnect_on_network_change: number;
 					public static key_client_mode_restore_on_launch: number;
 					public static key_client_socket_normally_closed: number;
+					public static key_codegen_model_current: number;
 					public static key_color_select_activity_legacy_layout: number;
 					public static key_console_element_time_format: number;
 					public static key_console_element_time_visible: number;
