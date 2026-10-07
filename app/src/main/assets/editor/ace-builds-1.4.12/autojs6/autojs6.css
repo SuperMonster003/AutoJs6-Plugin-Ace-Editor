@@ -154,9 +154,14 @@ body.autojs6-host-selection-action-mode .ace_mobile-menu {
     font-family: var(--autojs6-editor-font-family);
     font-size: 12px;
     line-height: 1.45;
-    pointer-events: none;
-    -webkit-user-select: none;
-    user-select: none;
+    /* Touch users read long documentation by scrolling inside the box; taps on it must not
+       reach the editor (they would hide it), so the box takes pointer events itself. */
+    pointer-events: auto;
+    touch-action: pan-x pan-y;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .autojs6_signature_tooltip {

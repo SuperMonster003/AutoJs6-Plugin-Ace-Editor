@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -172,6 +172,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 ### 發行歷史
 
 ******
+
+# v1.27.0
+
+###### 2026/10/07
+
+* `優化` 靜態索引與內建簽章支援重載方法: 從捆綁宣告收錄 146 個重載 (如 app.startActivity), lib.autojs6.d.ts 同步輸出全部重載宣告, 內建 ECMAScript 簽章增加 splice / replace / JSON.stringify / Array.from / Math.max 等
+* `優化` Python / Lua 參數提示保留伺服器回傳的全部簽章並支援切換; 智慧提示在非同步參數提示未回傳時不再誤彈補全
+* `優化` 懸停文件框支援觸控捲動與選取文字
 
 # v1.26.0
 
@@ -187,13 +195,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 * `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 轉換, 對比度調整, 和諧色, 色階, 衍生配色, 夜間對應色, 色覺缺陷模擬, 圖片主要顏色擷取與 oklab 偵測演算法補全, 以及 colors.theme 主題色控制 (需要 AutoJs6 6.8.0)
 * `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的工作階段, 開啟與執行選項, 環境, 外掛狀態和錯誤型別補全 (需要 3-Shell Terminal 外掛)
-
-# v1.24.0
-
-###### 2026/10/07
-
-* `新增` 智慧提示統一觸發: 宿主多功能鍵盤 TAB 鍵長按與硬體鍵盤 Ctrl+Space / Alt+Space 依游標上下文顯示程式碼補全, 參數提示或符號文件, 參數提示已顯示時切換重載方法; Ctrl+Shift+Space 顯示或切換參數提示, Ctrl+Q 顯示符號文件 (需要支援編輯器契約 6 的 AutoJs6 6.8.0 宿主, 舊宿主下 TAB 長按保持原有行為)
-* `優化` 參數提示支援重載方法: 顯示重載序號並可點按切換, 同一呼叫內保持手動選擇, 實參超出形參時高亮 rest 參數, 優先顯示目前參數的文件
 
 ##### 更多發行歷史可參閱
 

@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,14 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.27.0
+
+###### 2026/10/07
+
+* `Mejora` El índice estático y las firmas integradas admiten métodos sobrecargados: se recopilan 146 sobrecargas de las declaraciones incluidas (como app.startActivity), lib.autojs6.d.ts emite todas las sobrecargas y las firmas ECMAScript integradas incorporan splice / replace / JSON.stringify / Array.from / Math.max y más
+* `Mejora` Las sugerencias de parámetros de Python / Lua conservan todas las firmas devueltas por el servidor y se pueden recorrer; las sugerencias inteligentes ya no recurren al autocompletado mientras hay una sugerencia de parámetros asíncrona pendiente
+* `Mejora` La caja de documentación emergente se puede desplazar y seleccionar en pantallas táctiles
 
 # v1.26.0
 
@@ -187,13 +195,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 * `Función` AutoJs6 declarations 4.32.0: autocompletado de la conversión OKLab/OKLCH, el ajuste de contraste, armonías, escalas tonales, colores derivados, variantes nocturnas, la simulación de deficiencias de la visión del color, los colores dominantes de una imagen y el algoritmo de detección oklab de colors, además del control del color del tema con colors.theme (requiere AutoJs6 6.8.0)
 * `Función` AutoJs6 declarations 4.32.0: autocompletado de sesiones de terminal / $terminal, opciones de apertura y ejecución, entorno, estado del plugin y tipos de error (requiere el plugin 3-Shell Terminal)
-
-# v1.24.0
-
-###### 2026/10/07
-
-* `Función` Activador unificado de sugerencias inteligentes: la pulsación larga de TAB en la barra de teclas del anfitrión y los atajos físicos Ctrl+Space / Alt+Space muestran, según el contexto del cursor, el autocompletado de código, las sugerencias de parámetros o la documentación del símbolo, y cambian de sobrecarga cuando las sugerencias de parámetros están visibles; Ctrl+Shift+Space muestra o recorre las sugerencias de parámetros y Ctrl+Q muestra la documentación del símbolo (requiere un anfitrión AutoJs6 6.8.0 con contrato de editor 6; los anfitriones antiguos conservan el comportamiento anterior de la pulsación larga de TAB)
-* `Mejora` Las sugerencias de parámetros admiten métodos sobrecargados: se muestra el número de sobrecarga con cambio al tocar, la elección manual se conserva dentro de la misma llamada, los argumentos adicionales resaltan el parámetro rest y se da prioridad a la documentación del parámetro actual
 
 ##### Para ver más historial de versiones
 

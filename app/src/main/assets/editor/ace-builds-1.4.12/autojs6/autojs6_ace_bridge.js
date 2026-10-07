@@ -4183,7 +4183,10 @@
         if (!signatureHelpController || !editor) {
             return false;
         }
-        return signatureHelpController.showAtPosition(editor.getCursorPosition(), { force: true }) === true;
+        var shown = signatureHelpController.showAtPosition(editor.getCursorPosition(), { force: true }) === true;
+        // Python / Lua answer asynchronously: a pending request counts as handled so the
+        // smart hint dispatch does not fall through to completion.
+        return shown || (typeof signatureHelpController.isPending === "function" && signatureHelpController.isPending());
     }
 
     function showSymbolDocumentationAtCursor() {

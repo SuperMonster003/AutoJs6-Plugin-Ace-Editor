@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,14 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.27.0
+
+###### 2026/10/07
+
+* `Amélioration` L'index statique et les signatures intégrées prennent en charge les méthodes surchargées: 146 surcharges sont collectées depuis les déclarations embarquées (par exemple app.startActivity), lib.autojs6.d.ts émet toutes les surcharges et les signatures ECMAScript intégrées gagnent splice / replace / JSON.stringify / Array.from / Math.max et d'autres
+* `Amélioration` Les indications de paramètres Python / Lua conservent toutes les signatures renvoyées par le serveur et peuvent être parcourues; les suggestions intelligentes ne retombent plus sur la complétion tant qu'une indication de paramètres asynchrone est en attente
+* `Amélioration` La boîte de documentation au survol peut être défilée et sélectionnée sur écran tactile
 
 # v1.26.0
 
@@ -187,13 +195,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 * `Fonctionnalité` AutoJs6 declarations 4.32.0: complétion des conversions OKLab/OKLCH, de l'ajustement du contraste, des harmonies, des gammes de tons, des couleurs dérivées, des variantes de nuit, de la simulation des déficiences de la vision des couleurs, des couleurs dominantes d'une image et de l'algorithme de détection oklab de colors, ainsi que du contrôle de la couleur du thème avec colors.theme (AutoJs6 6.8.0 requis)
 * `Fonctionnalité` AutoJs6 declarations 4.32.0: complétion des sessions terminal / $terminal, des options d'ouverture et d'exécution, de l'environnement, de l'état du plugin et des types d'erreur (plugin 3-Shell Terminal requis)
-
-# v1.24.0
-
-###### 2026/10/07
-
-* `Fonctionnalité` Déclencheur unifié des suggestions intelligentes: l'appui long sur TAB dans la barre de touches de l'hôte et les raccourcis matériels Ctrl+Space / Alt+Space affichent selon le contexte du curseur la complétion de code, les indications de paramètres ou la documentation du symbole, et passent à la surcharge suivante lorsque les indications de paramètres sont visibles; Ctrl+Shift+Space affiche ou fait défiler les indications de paramètres, Ctrl+Q affiche la documentation du symbole (nécessite un hôte AutoJs6 6.8.0 avec le contrat d'éditeur 6; les hôtes plus anciens conservent l'ancien comportement de l'appui long sur TAB)
-* `Amélioration` Les indications de paramètres prennent en charge les méthodes surchargées: numéro de surcharge affiché avec changement par appui, choix manuel conservé au sein du même appel, mise en évidence du paramètre rest pour les arguments excédentaires et priorité à la documentation du paramètre courant
 
 ##### Pour plus d'historique des versions
 

@@ -4,6 +4,14 @@
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `Improvement` The static index and built-in signatures support overloaded methods: 146 overloads are collected from the bundled declarations (such as app.startActivity), lib.autojs6.d.ts emits every overload and the built-in ECMAScript signatures gain splice / replace / JSON.stringify / Array.from / Math.max and more
+* `Improvement` Python / Lua parameter hints keep every signature returned by the server and can be cycled; smart hints no longer fall back to completion while an asynchronous parameter hint is pending
+* `Improvement` The hover documentation box can be scrolled and selected on touch screens
+
 # v1.26.0
 
 ###### 2026/10/07

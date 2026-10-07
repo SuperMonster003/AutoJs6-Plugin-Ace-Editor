@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -172,6 +172,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 ### 릴리스 기록
 
 ******
+
+# v1.27.0
+
+###### 2026/10/07
+
+* `개선` 정적 인덱스와 내장 시그니처가 오버로드된 메서드를 지원: 번들 선언에서 146 개의 오버로드 (app.startActivity 등) 수집, lib.autojs6.d.ts 도 모든 오버로드를 출력, 내장 ECMAScript 시그니처에 splice / replace / JSON.stringify / Array.from / Math.max 등 추가
+* `개선` Python / Lua 매개 변수 힌트가 서버가 반환한 모든 시그니처를 유지하고 전환 가능; 비동기 매개 변수 힌트를 기다리는 동안 스마트 힌트가 완성으로 전환되지 않음
+* `개선` 호버 문서 상자가 터치 화면에서 스크롤과 텍스트 선택을 지원
 
 # v1.26.0
 
@@ -187,13 +195,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 * `기능` AutoJs6 declarations 4.32.0: colors의 OKLab/OKLCH 변환, 대비 조정, 조화색, 색조 단계, 파생 색상, 야간 대응색, 색각 이상 시뮬레이션, 이미지 주요 색상 추출, oklab 감지 알고리즘 자동 완성 및 colors.theme 테마 색상 제어 (AutoJs6 6.8.0 필요)
 * `기능` AutoJs6 declarations 4.32.0: terminal / $terminal 세션, 열기 및 실행 옵션, 환경, 플러그인 상태와 오류 형식 자동 완성 (3-Shell Terminal 플러그인 필요)
-
-# v1.24.0
-
-###### 2026/10/07
-
-* `기능` 스마트 힌트 통합 트리거: 호스트 키보드 바의 TAB 키 길게 누르기와 하드웨어 키보드 Ctrl+Space / Alt+Space 로 커서 컨텍스트에 따라 코드 완성, 매개 변수 힌트 또는 심볼 문서를 표시하고, 매개 변수 힌트가 표시 중일 때는 오버로드를 전환; Ctrl+Shift+Space 는 매개 변수 힌트 표시 / 전환, Ctrl+Q 는 심볼 문서 표시 (편집기 계약 6 을 지원하는 AutoJs6 6.8.0 호스트 필요, 이전 호스트에서는 TAB 길게 누르기의 기존 동작 유지)
-* `개선` 매개 변수 힌트가 오버로드된 메서드를 지원: 오버로드 번호를 표시하고 탭으로 전환, 같은 호출 내에서는 수동 선택을 유지, 인수가 매개 변수 수를 넘으면 rest 매개 변수를 강조, 현재 매개 변수의 문서를 우선 표시
 
 ##### 더 많은 릴리스 기록
 

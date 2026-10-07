@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 ### リリース履歴
 
 ******
+
+# v1.27.0
+
+###### 2026/10/07
+
+* `改善` 静的インデックスと組み込みシグネチャがオーバーロードに対応: 同梱宣言から 146 件のオーバーロード (app.startActivity など) を収録, lib.autojs6.d.ts も全オーバーロードを出力, 組み込み ECMAScript シグネチャに splice / replace / JSON.stringify / Array.from / Math.max などを追加
+* `改善` Python / Lua のパラメーターヒントがサーバーの返す全シグネチャを保持して切り替え可能に; 非同期のパラメーターヒント待機中はスマートヒントが補完へ切り替わらない
+* `改善` ホバードキュメントボックスがタッチ画面でのスクロールと文字選択に対応
 
 # v1.26.0
 
@@ -187,13 +195,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 * `機能` AutoJs6 declarations 4.32.0: colors の OKLab/OKLCH 変換, コントラスト調整, 調和色, 色階, 派生配色, 夜間の対応色, 色覚特性のシミュレーション, 画像の主要色の抽出, oklab 検出アルゴリズムの補完, および colors.theme によるテーマカラー制御 (AutoJs6 6.8.0 が必要)
 * `機能` AutoJs6 declarations 4.32.0: terminal / $terminal のセッション, オープンと実行のオプション, 環境, プラグイン状態, エラー型の補完 (3-Shell Terminal プラグインが必要)
-
-# v1.24.0
-
-###### 2026/10/07
-
-* `機能` スマートヒントの統一トリガー: ホストのキーボードバーで TAB キーを長押し, またはハードウェアキーボードの Ctrl+Space / Alt+Space で, カーソルの文脈に応じてコード補完, パラメーターヒント, シンボルのドキュメントを表示し, パラメーターヒント表示中はオーバーロードを切り替える; Ctrl+Shift+Space はパラメーターヒントの表示 / 切り替え, Ctrl+Q はシンボルのドキュメント表示 (エディター契約 6 対応の AutoJs6 6.8.0 ホストが必要, 旧ホストでは TAB 長押しの従来動作を維持)
-* `改善` パラメーターヒントがオーバーロードされたメソッドに対応: オーバーロード番号を表示してタップで切り替え, 同じ呼び出し内では手動の選択を維持, 引数が仮引数を超える場合は rest パラメーターを強調, 現在のパラメーターのドキュメントを優先表示
 
 ##### その他のリリース履歴
 

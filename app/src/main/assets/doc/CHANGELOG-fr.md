@@ -4,6 +4,14 @@
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `Amélioration` L'index statique et les signatures intégrées prennent en charge les méthodes surchargées: 146 surcharges sont collectées depuis les déclarations embarquées (par exemple app.startActivity), lib.autojs6.d.ts émet toutes les surcharges et les signatures ECMAScript intégrées gagnent splice / replace / JSON.stringify / Array.from / Math.max et d'autres
+* `Amélioration` Les indications de paramètres Python / Lua conservent toutes les signatures renvoyées par le serveur et peuvent être parcourues; les suggestions intelligentes ne retombent plus sur la complétion tant qu'une indication de paramètres asynchrone est en attente
+* `Amélioration` La boîte de documentation au survol peut être défilée et sélectionnée sur écran tactile
+
 # v1.26.0
 
 ###### 2026/10/07

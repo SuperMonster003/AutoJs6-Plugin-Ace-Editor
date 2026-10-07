@@ -5,6 +5,14 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.27.0": {
+      "released_date": "2026/10/07",
+      "improvement": [
+        "靜態索引與內建簽章支援重載方法: 從捆綁宣告收錄 146 個重載 (如 app.startActivity), lib.autojs6.d.ts 同步輸出全部重載宣告, 內建 ECMAScript 簽章增加 splice / replace / JSON.stringify / Array.from / Math.max 等",
+        "Python / Lua 參數提示保留伺服器回傳的全部簽章並支援切換; 智慧提示在非同步參數提示未回傳時不再誤彈補全",
+        "懸停文件框支援觸控捲動與選取文字"
+      ]
+    },
     "v1.26.0": {
       "released_date": "2026/10/07",
       "feature": [

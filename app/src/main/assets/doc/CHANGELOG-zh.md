@@ -4,6 +4,14 @@
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `优化` 静态索引与内置签名支持重载方法: 从捆绑声明收录 146 个重载 (如 app.startActivity), lib.autojs6.d.ts 同步输出全部重载声明, 内置 ECMAScript 签名增加 splice / replace / JSON.stringify / Array.from / Math.max 等
+* `优化` Python / Lua 参数提示保留服务器返回的全部签名并支持切换; 智能提示在异步参数提示未返回时不再误弹补全
+* `优化` 悬停文档框支持触屏滚动与选择文本
+
 # v1.26.0
 
 ###### 2026/10/07

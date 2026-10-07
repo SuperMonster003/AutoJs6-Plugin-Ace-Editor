@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,14 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.27.0
+
+###### 2026/10/07
+
+* `Improvement` The static index and built-in signatures support overloaded methods: 146 overloads are collected from the bundled declarations (such as app.startActivity), lib.autojs6.d.ts emits every overload and the built-in ECMAScript signatures gain splice / replace / JSON.stringify / Array.from / Math.max and more
+* `Improvement` Python / Lua parameter hints keep every signature returned by the server and can be cycled; smart hints no longer fall back to completion while an asynchronous parameter hint is pending
+* `Improvement` The hover documentation box can be scrolled and selected on touch screens
 
 # v1.26.0
 
@@ -187,13 +195,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 * `Feature` AutoJs6 declarations 4.32.0: completion for colors OKLab/OKLCH conversion, contrast adjustment, harmonies, tonal scales, derived colors, night variants, color vision deficiency simulation, dominant image colors and the oklab detection algorithm, plus colors.theme theme color control (requires AutoJs6 6.8.0)
 * `Feature` AutoJs6 declarations 4.32.0: completion for terminal / $terminal sessions, open and exec options, environment, plugin state and error types (requires the 3-Shell Terminal plugin)
-
-# v1.24.0
-
-###### 2026/10/07
-
-* `Feature` Unified smart hint trigger: the host keyboard bar's TAB long-press and the hardware Ctrl+Space / Alt+Space show code completion, parameter hints or symbol documentation based on the cursor context and cycle overloads while parameter hints are visible; Ctrl+Shift+Space shows or cycles parameter hints and Ctrl+Q shows symbol documentation (requires an AutoJs6 6.8.0 host with editor contract 6; older hosts keep the previous TAB long-press behavior)
-* `Improvement` Parameter hints support overloaded methods: the overload index is shown with tappable switching, a manual choice is kept within the same call, extra arguments highlight the rest parameter and the current parameter's documentation is preferred
 
 ##### Complete release history
 

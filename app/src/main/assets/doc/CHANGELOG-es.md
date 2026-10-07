@@ -4,6 +4,14 @@
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `Mejora` El índice estático y las firmas integradas admiten métodos sobrecargados: se recopilan 146 sobrecargas de las declaraciones incluidas (como app.startActivity), lib.autojs6.d.ts emite todas las sobrecargas y las firmas ECMAScript integradas incorporan splice / replace / JSON.stringify / Array.from / Math.max y más
+* `Mejora` Las sugerencias de parámetros de Python / Lua conservan todas las firmas devueltas por el servidor y se pueden recorrer; las sugerencias inteligentes ya no recurren al autocompletado mientras hay una sugerencia de parámetros asíncrona pendiente
+* `Mejora` La caja de documentación emergente se puede desplazar y seleccionar en pantallas táctiles
+
 # v1.26.0
 
 ###### 2026/10/07
