@@ -5,11 +5,30 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v1.26.0": {
+      "released_date": "2026/10/07",
+      "feature": [
+        "Les paramètres \"Suggestions intelligentes\" de l'hôte sont pris en compte: déclenchement de la complétion automatique, caractères minimum, délai de complétion, déclenchement des indications de paramètres et changement de surcharge avec les flèches s'appliquent immédiatement; la complétion en direct est désormais planifiée par le plugin selon ces paramètres (nécessite un hôte AutoJs6 6.8.0)"
+      ],
+      "improvement": [
+        "Les surcharges se changent avec Alt+Haut / Alt+Bas sur clavier physique (le déplacement de lignes par défaut d'Ace est conservé sans indication multi-surcharges), les touches Haut et Bas de la barre de touches de l'hôte (désactivable dans les paramètres) et les boutons haut / bas en haut à droite de la fenêtre d'indication",
+        "Les indications de paramètres réapparaissent après un appui dans la zone d'édition (pas après un défilement), et ESC masque à la fois les indications de paramètres et la documentation du symbole"
+      ]
+    },
     "v1.25.0": {
       "released_date": "2026/10/07",
       "feature": [
         "AutoJs6 declarations 4.32.0: complétion des conversions OKLab/OKLCH, de l'ajustement du contraste, des harmonies, des gammes de tons, des couleurs dérivées, des variantes de nuit, de la simulation des déficiences de la vision des couleurs, des couleurs dominantes d'une image et de l'algorithme de détection oklab de colors, ainsi que du contrôle de la couleur du thème avec colors.theme (AutoJs6 6.8.0 requis)",
         "AutoJs6 declarations 4.32.0: complétion des sessions terminal / $terminal, des options d'ouverture et d'exécution, de l'environnement, de l'état du plugin et des types d'erreur (plugin 3-Shell Terminal requis)"
+      ]
+    },
+    "v1.24.0": {
+      "released_date": "2026/10/07",
+      "feature": [
+        "Déclencheur unifié des suggestions intelligentes: l'appui long sur TAB dans la barre de touches de l'hôte et les raccourcis matériels Ctrl+Space / Alt+Space affichent selon le contexte du curseur la complétion de code, les indications de paramètres ou la documentation du symbole, et passent à la surcharge suivante lorsque les indications de paramètres sont visibles; Ctrl+Shift+Space affiche ou fait défiler les indications de paramètres, Ctrl+Q affiche la documentation du symbole (nécessite un hôte AutoJs6 6.8.0 avec le contrat d'éditeur 6; les hôtes plus anciens conservent l'ancien comportement de l'appui long sur TAB)"
+      ],
+      "improvement": [
+        "Les indications de paramètres prennent en charge les méthodes surchargées: numéro de surcharge affiché avec changement par appui, choix manuel conservé au sein du même appel, mise en évidence du paramètre rest pour les arguments excédentaires et priorité à la documentation du paramètre courant"
       ]
     },
     "v1.23.0": {

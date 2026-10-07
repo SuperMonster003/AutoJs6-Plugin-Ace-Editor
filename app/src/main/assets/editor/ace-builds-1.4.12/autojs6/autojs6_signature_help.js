@@ -321,11 +321,21 @@
         };
     }
 
+    var AUTO_TRIGGERS = { cursor: true, typing: true, off: true };
+
+    function normalizeAutoTrigger(mode) {
+        mode = String(mode || "").toLowerCase();
+        return AUTO_TRIGGERS[mode] ? mode : "cursor";
+    }
+
     function createController(config) {
         config = config || {};
         var editor = config.editor || null;
         var session = config.session || (editor && editor.session) || null;
         var delayMs = Math.max(0, Number(config.delayMs) || DEFAULT_DELAY_MS);
+        var autoTrigger = normalizeAutoTrigger(config.autoTrigger);
+        var touchActive = false;
+        var touchScrolled = false;
         var element = null;
         var headerElement = null;
         var captionElement = null;
@@ -387,11 +397,12 @@
         function createNavElement() {
             var nav = global.document.createElement("div");
             nav.className = "autojs6_signature_tooltip_nav";
-            nav.appendChild(createNavButton("‹", -1));
+            // Up = previous overload, down = next overload; shown only for 2+ signatures.
+            nav.appendChild(createNavButton("▴", -1));
             navCounterElement = global.document.createElement("span");
             navCounterElement.className = "autojs6_signature_tooltip_nav_counter";
             nav.appendChild(navCounterElement);
-            nav.appendChild(createNavButton("›", 1));
+            nav.appendChild(createNavButton("▾", 1));
             return nav;
         }
 
@@ -724,10 +735,55 @@
                 name === "paste";
         }
 
+        function isTriggerCharacterExec(event) {
+            if (commandName(event) !== "insertstring") {
+                return false;
+            }
+            var text = commandText(event);
+            return text === "(" || text === "," || text.indexOf("(") >= 0;
+        }
+
+        // Auto policy: "cursor" shows whenever the caret is inside a call, "typing" only after a
+        // trigger character (the box still follows the caret while visible), "off" leaves
+        // everything to explicit triggers (showAtPosition with force).
+        function scheduleAuto(kind) {
+            if (autoTrigger === "off") {
+                return false;
+            }
+            if (autoTrigger === "typing" && kind !== "typing" && !visible) {
+                return false;
+            }
+            schedule();
+            return true;
+        }
+
+        function onCursorChange() {
+            scheduleAuto("cursor");
+        }
+
         function onAfterExec(event) {
             if (shouldScheduleAfterExec(event)) {
-                schedule();
+                scheduleAuto(isTriggerCharacterExec(event) ? "typing" : "cursor");
             }
+        }
+
+        function onScroll() {
+            if (touchActive) {
+                touchScrolled = true;
+            }
+            hide();
+        }
+
+        function setAutoTrigger(mode) {
+            autoTrigger = normalizeAutoTrigger(mode);
+            if (autoTrigger === "off") {
+                hide();
+            }
+            return autoTrigger;
+        }
+
+        function getAutoTrigger() {
+            return autoTrigger;
         }
 
         function hide() {
@@ -753,21 +809,45 @@
         }
 
         function hideFromEditorPointer(event) {
-            if (!isInsideTooltipEvent(event)) {
-                hide();
+            if (isInsideTooltipEvent(event)) {
+                return;
             }
+            if (event && event.type === "touchstart") {
+                touchActive = true;
+                touchScrolled = false;
+            }
+            hide();
+        }
+
+        // A tap that did not scroll re-evaluates the caret (tapping the same spot produces no
+        // changeCursor event); a scroll or fling leaves the box hidden.
+        function onTouchEnd(event) {
+            if (isInsideTooltipEvent(event)) {
+                return;
+            }
+            var scrolled = touchScrolled;
+            touchActive = false;
+            touchScrolled = false;
+            if (!scrolled) {
+                scheduleAuto("cursor");
+            }
+        }
+
+        function onTouchCancel() {
+            touchActive = false;
+            touchScrolled = false;
         }
 
         function attach() {
             if (attached || !editor || !editor.on) {
                 return;
             }
-            editor.selection.on("changeCursor", schedule);
-            editor.selection.on("changeSelection", schedule);
+            editor.selection.on("changeCursor", onCursorChange);
+            editor.selection.on("changeSelection", onCursorChange);
             if (session && session.on) {
-                session.on("change", schedule);
-                session.on("changeScrollTop", hide);
-                session.on("changeScrollLeft", hide);
+                session.on("change", onCursorChange);
+                session.on("changeScrollTop", onScroll);
+                session.on("changeScrollLeft", onScroll);
             }
             if (editor.commands && editor.commands.on) {
                 editor.commands.on("afterExec", onAfterExec);
@@ -775,6 +855,8 @@
             if (editor.container && editor.container.addEventListener) {
                 editor.container.addEventListener("mousedown", hideFromEditorPointer);
                 editor.container.addEventListener("touchstart", hideFromEditorPointer);
+                editor.container.addEventListener("touchend", onTouchEnd);
+                editor.container.addEventListener("touchcancel", onTouchCancel);
                 editor.container.addEventListener("wheel", hideFromEditorPointer);
             }
             attached = true;
@@ -783,13 +865,13 @@
         function detach() {
             hide();
             if (attached && editor && editor.selection) {
-                editor.selection.off("changeCursor", schedule);
-                editor.selection.off("changeSelection", schedule);
+                editor.selection.off("changeCursor", onCursorChange);
+                editor.selection.off("changeSelection", onCursorChange);
             }
             if (attached && session && session.off) {
-                session.off("change", schedule);
-                session.off("changeScrollTop", hide);
-                session.off("changeScrollLeft", hide);
+                session.off("change", onCursorChange);
+                session.off("changeScrollTop", onScroll);
+                session.off("changeScrollLeft", onScroll);
             }
             if (attached && editor && editor.commands) {
                 if (editor.commands.off) {
@@ -801,6 +883,8 @@
             if (attached && editor && editor.container && editor.container.removeEventListener) {
                 editor.container.removeEventListener("mousedown", hideFromEditorPointer);
                 editor.container.removeEventListener("touchstart", hideFromEditorPointer);
+                editor.container.removeEventListener("touchend", onTouchEnd);
+                editor.container.removeEventListener("touchcancel", onTouchCancel);
                 editor.container.removeEventListener("wheel", hideFromEditorPointer);
             }
             attached = false;
@@ -827,7 +911,8 @@
                 activeParameter: lastSignature ? lastSignature.activeParameter : -1,
                 signatureCount: lastHelp ? lastHelp.signatures.length : 0,
                 activeSignature: lastHelp ? selectedSignature : -1,
-                pinnedSignature: pinnedIndex >= 0
+                pinnedSignature: pinnedIndex >= 0,
+                autoTrigger: autoTrigger
             };
         }
 
@@ -850,6 +935,8 @@
             cycleSignature: cycleSignature,
             isVisible: isVisible,
             getSignatureCount: getSignatureCount,
+            setAutoTrigger: setAutoTrigger,
+            getAutoTrigger: getAutoTrigger,
             getState: getState
         };
     }

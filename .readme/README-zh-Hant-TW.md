@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -173,6 +173,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 
 ******
 
+# v1.26.0
+
+###### 2026/10/07
+
+* `新增` 宿主 "智慧提示" 設定生效: 自動補全觸發方式, 補全最少觸發字元數, 補全觸發延遲, 參數提示觸發方式與方向鍵切換重載開關, 修改後即時套用; 即時補全改由插件依設定排程 (需要 AutoJs6 6.8.0 宿主)
+* `優化` 重載切換支援硬體鍵盤 Alt+Up / Alt+Down (未顯示多重載參數提示時保持 Ace 預設的移動行), 宿主多功能鍵盤上下鍵 (可在設定中關閉) 及提示視窗右上角的上下按鈕
+* `優化` 參數提示在編輯區點按後恢復顯示 (捲動後不恢復), ESC 同時隱藏參數提示與符號文件
+
 # v1.25.0
 
 ###### 2026/10/07
@@ -180,20 +188,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 * `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 轉換, 對比度調整, 和諧色, 色階, 衍生配色, 夜間對應色, 色覺缺陷模擬, 圖片主要顏色擷取與 oklab 偵測演算法補全, 以及 colors.theme 主題色控制 (需要 AutoJs6 6.8.0)
 * `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的工作階段, 開啟與執行選項, 環境, 外掛狀態和錯誤型別補全 (需要 3-Shell Terminal 外掛)
 
-# v1.23.0
+# v1.24.0
 
-###### 2026/10/05
+###### 2026/10/07
 
-* `提示` TSX 需要相符的 AutoJs6 6.8.0 / 5319 本機宿主與內建 Compose 宣告的配套 TypeScript Engine 建置; 單獨安裝轉譯器不會增加 TSX 支援
-* `新增` autojs6-dts 4.31.0: TSX 支援 `<compose.Column>`, `<compose:Text>`, 節點工廠參照, Fragment, 插槽及響應式回呼; 同一棵樹不能混用 Compose 與舊 XML 節點
-* `優化` 外掛程式中心圖示採用統一工作台調整後的尺寸, 位置, 明暗圖稿與圓形底色, 保留可重建原稿和參數
-* `優化` Android 系統應用程式資訊圖示與圖示工作台共用圖稿及明暗底色, 保留外掛程式中心透明圖稿與現有啟動器選項
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `新增` AutoJs6 declarations 4.30.0: Compose UI 的節點, 狀態, Modifier, 主題, 工作階段與浮動視窗補全, 包含元件事件參數和型別化錯誤 (需要配套本機宿主及 Compose UI 外掛)
+* `新增` 智慧提示統一觸發: 宿主多功能鍵盤 TAB 鍵長按與硬體鍵盤 Ctrl+Space / Alt+Space 依游標上下文顯示程式碼補全, 參數提示或符號文件, 參數提示已顯示時切換重載方法; Ctrl+Shift+Space 顯示或切換參數提示, Ctrl+Q 顯示符號文件 (需要支援編輯器契約 6 的 AutoJs6 6.8.0 宿主, 舊宿主下 TAB 長按保持原有行為)
+* `優化` 參數提示支援重載方法: 顯示重載序號並可點按切換, 同一呼叫內保持手動選擇, 實參超出形參時高亮 rest 參數, 優先顯示目前參數的文件
 
 ##### 更多發行歷史可參閱
 

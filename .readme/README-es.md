@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -173,6 +173,14 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v1.26.0
+
+###### 2026/10/07
+
+* `Función` Los ajustes "Sugerencias inteligentes" del anfitrión tienen efecto: activación del autocompletado, caracteres mínimos, retraso del autocompletado, activación de las sugerencias de parámetros y cambio de sobrecarga con las flechas se aplican de inmediato; el autocompletado en vivo ahora lo programa el plugin según estos ajustes (requiere un anfitrión AutoJs6 6.8.0)
+* `Mejora` Las sobrecargas se cambian con Alt+Arriba / Alt+Abajo en teclado físico (sin sugerencia de varias sobrecargas se conserva el movimiento de líneas predeterminado de Ace), las teclas Arriba y Abajo de la barra de teclas del anfitrión (se puede desactivar en los ajustes) y los botones arriba / abajo de la esquina superior derecha de la ventana de sugerencias
+* `Mejora` Las sugerencias de parámetros reaparecen tras tocar el área de edición (no tras desplazarse), y ESC oculta tanto las sugerencias de parámetros como la documentación del símbolo
+
 # v1.25.0
 
 ###### 2026/10/07
@@ -180,20 +188,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Función` AutoJs6 declarations 4.32.0: autocompletado de la conversión OKLab/OKLCH, el ajuste de contraste, armonías, escalas tonales, colores derivados, variantes nocturnas, la simulación de deficiencias de la visión del color, los colores dominantes de una imagen y el algoritmo de detección oklab de colors, además del control del color del tema con colors.theme (requiere AutoJs6 6.8.0)
 * `Función` AutoJs6 declarations 4.32.0: autocompletado de sesiones de terminal / $terminal, opciones de apertura y ejecución, entorno, estado del plugin y tipos de error (requiere el plugin 3-Shell Terminal)
 
-# v1.23.0
+# v1.24.0
 
-###### 2026/10/05
+###### 2026/10/07
 
-* `Aviso` TSX requiere el host local AutoJs6 6.8.0 / 5319 correspondiente y TypeScript Engine con declaraciones Compose; instalar solo el renderizador no añade soporte TSX
-* `Función` autojs6-dts 4.31.0: TSX admite `<compose.Column>`, `<compose:Text>`, referencias a fábricas de nodos, fragmentos, slots y callbacks reactivos; un mismo árbol no puede mezclar Compose y nodos XML existentes
-* `Mejora` Los iconos del centro de plugins usan los tamaños, posiciones, imágenes claras y oscuras y fondos circulares ajustados en Icon Studio, conservando fuentes y parámetros reproducibles
-* `Mejora` Los iconos de información de la aplicación de Android comparten las imágenes y los fondos claros y oscuros de Icon Studio, conservando las imágenes transparentes del centro de plugins y las opciones del lanzador
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `Función` AutoJs6 declarations 4.30.0: autocompletado de nodos, estado, modificadores, temas, sesiones y ventanas flotantes de Compose UI, con parámetros de eventos y errores tipados (requiere un host local compatible y el plugin Compose UI)
+* `Función` Activador unificado de sugerencias inteligentes: la pulsación larga de TAB en la barra de teclas del anfitrión y los atajos físicos Ctrl+Space / Alt+Space muestran, según el contexto del cursor, el autocompletado de código, las sugerencias de parámetros o la documentación del símbolo, y cambian de sobrecarga cuando las sugerencias de parámetros están visibles; Ctrl+Shift+Space muestra o recorre las sugerencias de parámetros y Ctrl+Q muestra la documentación del símbolo (requiere un anfitrión AutoJs6 6.8.0 con contrato de editor 6; los anfitriones antiguos conservan el comportamiento anterior de la pulsación larga de TAB)
+* `Mejora` Las sugerencias de parámetros admiten métodos sobrecargados: se muestra el número de sobrecarga con cambio al tocar, la elección manual se conserva dentro de la misma llamada, los argumentos adicionales resaltan el parámetro rest y se da prioridad a la documentación del parámetro actual
 
 ##### Para ver más historial de versiones
 

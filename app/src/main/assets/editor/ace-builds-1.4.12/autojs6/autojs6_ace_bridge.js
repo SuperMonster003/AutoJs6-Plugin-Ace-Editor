@@ -45,6 +45,8 @@
     var cursorNotifySuppressionDepth = 0;
     var actionModeNotifyTimer = null;
     var memberCompletionRestartTimer = null;
+    var liveCompletionTimer = null;
+    var smartHintOptions = null;
     var fontMetricsRefreshTimer = null;
     var fontMetricsRefreshFrameScheduled = false;
     var fontMetricsReadySerial = 0;
@@ -3245,7 +3247,8 @@
         session.setUseWrapMode(enabled ? false : preferredWordWrapEnabled);
         editor.setOption("wrap", enabled ? false : preferredWordWrapEnabled);
         editor.setOption("enableBasicAutocompletion", !enabled);
-        editor.setOption("enableLiveAutocompletion", !enabled);
+        // Live completion stays owned by the bridge (see scheduleLiveCompletion).
+        editor.setOption("enableLiveAutocompletion", false);
         if (enabled && typeof session.setAnnotations === "function") {
             session.setAnnotations([]);
         }
@@ -3733,9 +3736,23 @@
             if (!event || !event.command) {
                 return;
             }
-            if (event.command.name === "insertstring" && commandInsertedText(event) === ".") {
-                scheduleMemberCompletionAfterDot();
-                return;
+            var options = currentSmartHintOptions();
+            if (event.command.name === "insertstring") {
+                if (commandInsertedText(event) === ".") {
+                    if (options.completionTrigger !== "off") {
+                        scheduleMemberCompletionAfterDot();
+                    }
+                    return;
+                }
+                // Replaces Ace's live autocompletion so the trigger mode, minimum prefix
+                // length and delay from the host settings apply.
+                scheduleLiveCompletion();
+            } else if (event.command.name === "backspace") {
+                cancelLiveCompletion();
+                if (isCompletionPopupOpen() && completionPrefixLength() === 0 &&
+                    typeof editor.completer.detach === "function") {
+                    editor.completer.detach();
+                }
             }
             if (!event.command.readOnly) {
                 scheduleLspCompletionRefresh();
@@ -3785,6 +3802,12 @@
         if (isCompletionPopupOpen() && editor.completer.goTo) {
             editor.completer.goTo(delta < 0 ? "up" : "down");
             notifyStateChanged("completionSelectionChanged");
+            return true;
+        }
+        // Keyboard-bar Up / Down switch overloads while the signature box shows several of
+        // them (host setting "arrowOverloadCycling"); otherwise they move the caret by a line.
+        if (currentSmartHintOptions().arrowOverloadCycling &&
+            isSignatureHelpVisible() && getSignatureHelpCount() > 1 && cycleSignatureHelp(delta)) {
             return true;
         }
         if (delta < 0) {
@@ -3953,6 +3976,13 @@
             if (editor.completer && editor.completer.detach) {
                 editor.completer.detach();
             }
+            cancelLiveCompletion();
+            if (signatureHelpController && typeof signatureHelpController.hide === "function") {
+                signatureHelpController.hide();
+            }
+            if (tooltipController && typeof tooltipController.hide === "function") {
+                tooltipController.hide();
+            }
             if (editor.commands && editor.commands.exec) {
                 editor.commands.exec("esc", editor);
             }
@@ -3967,6 +3997,125 @@
             notifyRecoverableError("escapeKey", error);
             return false;
         }
+    }
+
+    var SMART_HINT_COMPLETION_TRIGGERS = { identifier: true, dot: true, off: true };
+    var SMART_HINT_SIGNATURE_TRIGGERS = { cursor: true, typing: true, off: true };
+
+    function defaultSmartHintOptions() {
+        return {
+            completionTrigger: "identifier",
+            completionMinChars: 1,
+            completionDelayMs: 0,
+            signatureTrigger: "cursor",
+            arrowOverloadCycling: true
+        };
+    }
+
+    function normalizeSmartHintOptions(raw) {
+        var defaults = defaultSmartHintOptions();
+        var source = raw;
+        if (typeof raw === "string") {
+            try {
+                source = raw ? JSON.parse(raw) : {};
+            } catch (error) {
+                source = {};
+            }
+        }
+        source = source && typeof source === "object" ? source : {};
+        var completionTrigger = String(source.completionTrigger || defaults.completionTrigger).toLowerCase();
+        var signatureTrigger = String(source.signatureTrigger || defaults.signatureTrigger).toLowerCase();
+        var minChars = Math.round(Number(source.completionMinChars));
+        var delayMs = Math.round(Number(source.completionDelayMs));
+        var cycling = source.arrowOverloadCycling;
+        return {
+            completionTrigger: SMART_HINT_COMPLETION_TRIGGERS[completionTrigger] ? completionTrigger : defaults.completionTrigger,
+            completionMinChars: minChars >= 1 && minChars <= 10 ? minChars : defaults.completionMinChars,
+            completionDelayMs: delayMs >= 0 && delayMs <= 5000 ? delayMs : defaults.completionDelayMs,
+            signatureTrigger: SMART_HINT_SIGNATURE_TRIGGERS[signatureTrigger] ? signatureTrigger : defaults.signatureTrigger,
+            arrowOverloadCycling: cycling === null || typeof cycling === "undefined" ?
+                defaults.arrowOverloadCycling :
+                cycling === true || String(cycling).toLowerCase() === "true"
+        };
+    }
+
+    function currentSmartHintOptions() {
+        if (!smartHintOptions) {
+            smartHintOptions = defaultSmartHintOptions();
+        }
+        return smartHintOptions;
+    }
+
+    function applySmartHintOptions(raw) {
+        smartHintOptions = normalizeSmartHintOptions(raw);
+        cancelLiveCompletion();
+        if (editor && typeof editor.setOption === "function") {
+            // The bridge owns live completion so the threshold, delay and trigger mode apply.
+            editor.setOption("enableLiveAutocompletion", false);
+        }
+        if (signatureHelpController && typeof signatureHelpController.setAutoTrigger === "function") {
+            signatureHelpController.setAutoTrigger(smartHintOptions.signatureTrigger);
+        }
+        notifyStateChanged("smartHintOptionsChanged");
+        return smartHintOptions;
+    }
+
+    function completionPrefixLength() {
+        try {
+            var util = global.ace && global.ace.require && global.ace.require("ace/autocomplete/util");
+            if (util && typeof util.getCompletionPrefix === "function") {
+                return String(util.getCompletionPrefix(editor) || "").length;
+            }
+        } catch (error) {
+            // Fall back to the bridge's own identifier scan below.
+        }
+        return editor && editor.getCursorPosition ? identifierPrefixBefore(editor.getCursorPosition()).length : 0;
+    }
+
+    function cancelLiveCompletion() {
+        if (liveCompletionTimer !== null) {
+            clearTimeout(liveCompletionTimer);
+            liveCompletionTimer = null;
+        }
+    }
+
+    function startLiveCompletionIfEligible() {
+        liveCompletionTimer = null;
+        var options = currentSmartHintOptions();
+        if (!editor || typeof editor.execCommand !== "function" || documentLongLineSafetyMode ||
+            isReadOnly() || isCompletionPopupOpen() || options.completionTrigger !== "identifier") {
+            return false;
+        }
+        if (completionPrefixLength() < options.completionMinChars) {
+            return false;
+        }
+        editor.execCommand("startAutocomplete");
+        return true;
+    }
+
+    function scheduleLiveCompletion() {
+        cancelLiveCompletion();
+        var options = currentSmartHintOptions();
+        if (options.completionTrigger !== "identifier") {
+            return;
+        }
+        if (options.completionDelayMs > 0) {
+            liveCompletionTimer = global.setTimeout(startLiveCompletionIfEligible, options.completionDelayMs);
+        } else {
+            startLiveCompletionIfEligible();
+        }
+    }
+
+    // Alt-Up / Alt-Down: switch overloads while the signature box shows several, otherwise
+    // keep Ace's default "move lines" behavior (blocked by Ace itself in read-only mode).
+    function cycleSignatureHelpOrMoveLines(delta) {
+        if (isSignatureHelpVisible() && getSignatureHelpCount() > 1 && cycleSignatureHelp(delta)) {
+            return "overload";
+        }
+        if (editor && typeof editor.execCommand === "function") {
+            editor.execCommand(delta < 0 ? "movelinesup" : "movelinesdown");
+        }
+        return "lines";
     }
 
     function identifierPrefixBefore(pos) {
@@ -5259,7 +5408,9 @@
         );
         editor.setOptions({
             enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
+            // Live completion is driven by the bridge (scheduleLiveCompletion) so the host's
+            // smart hint settings (trigger mode, minimum prefix, delay) apply.
+            enableLiveAutocompletion: false,
             enableSnippets: true,
             showPrintMargin: printMarginEnabled,
             displayIndentGuides: indentGuidesEnabled,
@@ -5323,6 +5474,22 @@
                     triggerSymbolDocumentation("keyboard");
                 }
             });
+            editor.commands.addCommand({
+                name: "autojs6OverloadUp",
+                bindKey: { win: "Alt-Up", mac: "Option-Up" },
+                readOnly: true,
+                exec: function() {
+                    cycleSignatureHelpOrMoveLines(-1);
+                }
+            });
+            editor.commands.addCommand({
+                name: "autojs6OverloadDown",
+                bindKey: { win: "Alt-Down", mac: "Option-Down" },
+                readOnly: true,
+                exec: function() {
+                    cycleSignatureHelpOrMoveLines(1);
+                }
+            });
         }
         installMemberCompletionDotTrigger();
         installTouchCursorSelectionGuard();
@@ -5346,7 +5513,9 @@
                 return;
             }
             if (isSingleInsertedText(delta, ".")) {
-                scheduleMemberCompletionAfterDot();
+                if (currentSmartHintOptions().completionTrigger !== "off") {
+                    scheduleMemberCompletionAfterDot();
+                }
             } else {
                 scheduleLspCompletionRefresh();
             }
@@ -5574,6 +5743,12 @@
             cycleSignatureHelp: function(delta) {
                 return cycleSignatureHelp(delta);
             },
+            setSmartHintOptions: function(options) {
+                return applySmartHintOptions(options);
+            },
+            getSmartHintOptions: function() {
+                return currentSmartHintOptions();
+            },
             hideSignatureHelp: function() {
                 if (signatureHelpController) {
                     signatureHelpController.hide();
@@ -5669,6 +5844,8 @@
                 notifyRecoverableError("signatureHelp", error);
             }
         }
+
+        applySmartHintOptions(callBridgeString("getSmartHintOptions", "{}"));
 
         var json = fullStateJson();
         callBridge("notifyReady", [json]);

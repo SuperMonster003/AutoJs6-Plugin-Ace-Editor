@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -173,6 +173,14 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.26.0
+
+###### 2026/10/07
+
+* `Feature` Host "Smart hints" settings take effect: automatic completion trigger, minimum characters for completion, completion delay, parameter hints trigger and the arrow-key overload switch apply immediately; live completion is now scheduled by the plugin according to these settings (requires an AutoJs6 6.8.0 host)
+* `Improvement` Overloads can be switched with the hardware Alt+Up / Alt+Down (Ace's default line moving is kept while no multi-overload hint is shown), the host keyboard bar's Up and Down keys (can be turned off in settings) and the up / down buttons at the top right of the hint window
+* `Improvement` Parameter hints reappear after tapping the editor (not after scrolling), and ESC hides both parameter hints and symbol documentation
+
 # v1.25.0
 
 ###### 2026/10/07
@@ -180,20 +188,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Feature` AutoJs6 declarations 4.32.0: completion for colors OKLab/OKLCH conversion, contrast adjustment, harmonies, tonal scales, derived colors, night variants, color vision deficiency simulation, dominant image colors and the oklab detection algorithm, plus colors.theme theme color control (requires AutoJs6 6.8.0)
 * `Feature` AutoJs6 declarations 4.32.0: completion for terminal / $terminal sessions, open and exec options, environment, plugin state and error types (requires the 3-Shell Terminal plugin)
 
-# v1.23.0
+# v1.24.0
 
-###### 2026/10/05
+###### 2026/10/07
 
-* `Hint` TSX requires the matching AutoJs6 6.8.0 / 5319 local host and companion TypeScript Engine build with Compose declarations; installing the renderer alone does not add TSX support
-* `Feature` autojs6-dts 4.31.0: TSX supports `<compose.Column>`, `<compose:Text>`, references to node factories, fragments, slots and reactive callbacks; a single tree cannot mix Compose and legacy XML nodes
-* `Improvement` Plugin Center icons use the sizes, positions, light and dark artwork, and circular backgrounds adjusted in Icon Studio, retaining reproducible sources and parameters
-* `Improvement` Android App info icons share Icon Studio artwork and light/dark backgrounds while preserving transparent Plugin Center artwork and existing launcher choices
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `Feature` AutoJs6 declarations 4.30.0: completion for Compose UI nodes, state, modifiers, themes, sessions and floating windows, with component event parameters and typed errors (requires a matching local host and the Compose UI plugin)
+* `Feature` Unified smart hint trigger: the host keyboard bar's TAB long-press and the hardware Ctrl+Space / Alt+Space show code completion, parameter hints or symbol documentation based on the cursor context and cycle overloads while parameter hints are visible; Ctrl+Shift+Space shows or cycles parameter hints and Ctrl+Q shows symbol documentation (requires an AutoJs6 6.8.0 host with editor contract 6; older hosts keep the previous TAB long-press behavior)
+* `Improvement` Parameter hints support overloaded methods: the overload index is shown with tappable switching, a manual choice is kept within the same call, extra arguments highlight the rest parameter and the current parameter's documentation is preferred
 
 ##### Complete release history
 

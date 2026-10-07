@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,6 +173,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 
 ******
 
+# v1.26.0
+
+###### 2026/10/07
+
+* `新增` 宿主 "智能提示" 设置生效: 自动补全触发方式, 补全最少触发字符数, 补全触发延迟, 参数提示触发方式与方向键切换重载开关, 修改后即时应用; 实时补全改由插件按设置调度 (需要 AutoJs6 6.8.0 宿主)
+* `优化` 重载切换支持硬件键盘 Alt+Up / Alt+Down (未显示多重载参数提示时保持 Ace 默认的移动行), 宿主多功能键盘上下键 (可在设置中关闭) 及提示窗口右上角的上下按钮
+* `优化` 参数提示在编辑区点按后恢复显示 (滚动后不恢复), ESC 同时隐藏参数提示与符号文档
+
 # v1.25.0
 
 ###### 2026/10/07
@@ -180,20 +188,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-u
 * `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 转换, 对比度调整, 和谐色, 色阶, 派生配色, 夜间对应色, 色觉缺陷模拟, 图像主要颜色提取与 oklab 检测算法补全, 以及 colors.theme 主题色控制 (需要 AutoJs6 6.8.0)
 * `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的会话, 打开与执行选项, 环境, 插件状态和错误类型补全 (需要 3-Shell Terminal 插件)
 
-# v1.23.0
+# v1.24.0
 
-###### 2026/10/05
+###### 2026/10/07
 
-* `提示` TSX 需要匹配的 AutoJs6 6.8.0 / 5319 本地宿主与内置 Compose 声明的配套 TypeScript Engine 构建; 单独安装渲染器不会增加 TSX 支持
-* `新增` autojs6-dts 4.31.0: TSX 支持 `<compose.Column>`, `<compose:Text>`, 节点工厂引用, Fragment, 插槽及响应式回调; 同一棵树不能混用 Compose 与旧 XML 节点
-* `优化` 插件中心图标采用统一工作台调整后的尺寸, 位置, 亮暗图稿与圆形底色, 保留可重建原稿和参数
-* `优化` Android 系统应用信息图标与图标工作台共用图稿和亮暗底色, 保留插件中心透明图稿及现有启动器选项
-
-# v1.22.0
-
-###### 2026/10/03
-
-* `新增` AutoJs6 declarations 4.30.0: Compose UI 的节点, 状态, Modifier, 主题, 会话与悬浮窗补全, 包含组件事件参数和类型化错误 (需要配套本地宿主及 Compose UI 插件)
+* `新增` 智能提示统一触发: 宿主多功能键盘 TAB 键长按与硬件键盘 Ctrl+Space / Alt+Space 按光标上下文显示代码补全, 参数提示或符号文档, 参数提示已显示时切换重载方法; Ctrl+Shift+Space 显示或切换参数提示, Ctrl+Q 显示符号文档 (需要支持编辑器契约 6 的 AutoJs6 6.8.0 宿主, 旧宿主下 TAB 长按保持原有行为)
+* `优化` 参数提示支持重载方法: 显示重载序号并可点按切换, 同一调用内保持手动选择, 实参超出形参时高亮 rest 参数, 优先显示当前参数的文档
 
 ##### 更多发行历史可参阅
 
