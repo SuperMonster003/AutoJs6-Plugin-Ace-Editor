@@ -4,6 +4,12 @@
 
 ******
 
+# v1.29.0
+
+###### 2026/10/08
+
+* `Amélioration` Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants Compose UI V2
+
 # v1.28.0
 
 ###### 2026/10/07

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.29.0": {
+      "released_date": "2026/10/08",
+      "improvement": [
+        "Compose UI V2 组件的 TypeScript / TSX 属性, 插槽和事件声明"
+      ]
+    },
     "v1.28.0": {
       "released_date": "2026/10/07",
       "feature": [

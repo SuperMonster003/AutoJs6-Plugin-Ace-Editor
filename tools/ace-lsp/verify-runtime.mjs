@@ -1735,6 +1735,122 @@ function verifyComposeDialogDeclarations(paths) {
     return results;
 }
 
+function verifyComposeV2Declarations(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const baseLibraries = typeScriptLibraryTextByUri(paths);
+    const coreUri = "file:///autojs6/types/generated/lib.autojs6.core.d.ts";
+    const compatibilityUri = "file:///autojs6/types/lib.autojs6.extra.d.ts";
+    baseLibraries[coreUri] = readFileSync(paths.core, "utf8");
+    baseLibraries[compatibilityUri] = readFileSync(paths.compatibility, "utf8");
+    const valid = [
+        "const icon=()=>compose.Icon({name:'Home'}); const label=()=>compose.Text({text:'Home'});",
+        "const bar=compose.NavigationBar({},compose.NavigationBarItem({icon:icon(),selected:true,label:label()}));",
+        "const rail=compose.NavigationRail({header:label()},compose.NavigationRailItem({slots:{icon:icon()}}));",
+        "const drawer=compose.NavigationDrawer({drawerContent:compose.NavigationDrawerItem({label:label(),badge:compose.Badge({text:'2'})}),onOpenChange:function(open){this.open=open;}},label());",
+        "const tabs=compose.TabRow({selectedIndex:0},compose.Tab({text:label(),icon:icon()}));",
+        "const sheet=compose.ModalBottomSheet({cancelable:false,onDismissRequest:function(){this.open=false;}},label());",
+        "const menu=compose.DropdownMenu({anchor:label()},compose.DropdownMenuItem({text:label(),leadingIcon:icon()}));",
+        "const date=compose.DatePicker({selectedDateMillis:null,onDateChange:function(value){const n:number|null=value;this.selectedDateMillis=n;},onDisplayModeChange:function(mode){const m:'picker'|'input'=mode;this.displayMode=m;}});",
+        "const time=compose.TimePicker({hour:10,minute:30,displayMode:'input',onTimeChange:function(hour,minute){this.set({hour,minute});}});",
+        "const pager=compose.HorizontalPager({page:0,onPageChange:function(page){this.page=page;}},label());pager.scrollTo({index:0,offset:2});",
+        "const grid=compose.LazyVerticalGrid({columns:2,contentPadding:[2,'4dp']},label());const padding:number|number[]=grid.contentPadding;grid.scrollTo(0);",
+        "const assist=compose.AssistChip({label:'Assist'});const wideFilter=compose.FilterChip({label:'Filter',onSelectedChange:function(selected){this.selected=selected;}});",
+        "const wideInput=compose.InputChip({slots:{label:'Input'},selected:true});const badge=compose.Badge({visible:true},icon());",
+        "const segments=compose.SegmentedButton({mode:'multi'},compose.SegmentedButtonItem({label:'One',onSelectedChange:function(selected){this.selected=selected;}}));",
+        "const fab=compose.FloatingActionButton({shape:'circle'},icon());",
+        "const search=compose.SearchBar({query:'',onQueryChange:function(text){this.query=text;},onSearch:function(text){const q:string=text;},onExpandedChange:function(expanded){this.expanded=expanded;}},label());",
+        "const tooltip=compose.Tooltip({tooltip:'Help',onOpenChange:function(open){this.open=open;}},label());",
+        "const refresh=compose.PullToRefresh({onRefresh:function(){this.refreshing=true;}},grid);",
+        "const ref=compose.ref<Internal.Compose.Node<'SearchBar'>>();const jsx=<compose.Column><compose:DatePicker/><compose.TimePicker/><compose.SearchBar ref={ref}/><compose:FilterChip label='Filter'/></compose.Column>;compose.mount(jsx);",
+        "const old=<vertical><text text='XML'/><compose id='host'/></vertical>;ui.layout(old);",
+    ].join("\n");
+    const invalid = [
+        ["missing navigation icon", "compose.NavigationBarItem({});"],
+        ["missing rail icon", "const x=<compose:NavigationRailItem/>;"],
+        ["missing drawer content", "compose.NavigationDrawer({});"],
+        ["missing drawer label", "compose.NavigationDrawerItem({});"],
+        ["missing menu anchor", "compose.DropdownMenu({open:true});"],
+        ["missing menu text", "compose.DropdownMenuItem({});"],
+        ["missing assist label", "compose.AssistChip();"],
+        ["missing filter label", "const x=<compose.FilterChip/>;"],
+        ["missing input label", "compose.InputChip({});"],
+        ["missing segmented label", "compose.SegmentedButtonItem({});"],
+        ["missing tooltip", "compose.Tooltip({});"],
+        ["wrong navigation child", "compose.NavigationBar({},compose.Text());"],
+        ["wrong rail child", "compose.NavigationRail({},compose.NavigationBarItem({icon:'Home'}));"],
+        ["wrong tab child", "compose.TabRow({children:[compose.Text()]});"],
+        ["text segmented child", "compose.SegmentedButton({},'Wrong');"],
+        ["date object", "compose.DatePicker({selectedDateMillis:new Date()});"],
+        ["date mode", "compose.DatePicker({displayMode:'calendar'});"],
+        ["nullable date callback", "compose.DatePicker({onDateChange:(value:number)=>{}});"],
+        ["date mode callback", "compose.DatePicker({onDisplayModeChange:(mode:'calendar')=>{}});"],
+        ["time mode", "compose.TimePicker({displayMode:'clock'});"],
+        ["time callback", "compose.TimePicker({onTimeChange:(hour:string,minute:number)=>{}});"],
+        ["time unknown slot", "compose.TimePicker({slots:{label:'Time'}});"],
+        ["pager index", "compose.HorizontalPager({page:'1'});"],
+        ["grid columns", "compose.LazyVerticalGrid({columns:'2'});"],
+        ["grid padding", "compose.LazyVerticalGrid({contentPadding:[1,2,3]});"],
+        ["chip selection", "compose.FilterChip({label:'Filter',selected:'yes'});"],
+        ["badge text", "compose.Badge({text:3});"],
+        ["segmented mode", "compose.SegmentedButton({mode:'singleChoice'});"],
+        ["search callback", "compose.SearchBar({onSearch:(text:number)=>{}});"],
+        ["expanded callback", "compose.SearchBar({onExpandedChange:(expanded:string)=>{}});"],
+        ["refresh callback", "compose.PullToRefresh({onRefresh:true});"],
+        ["date leaf children", "compose.DatePicker({},compose.Text());"],
+        ["search edit command", "compose.SearchBar().edit({text:'x'});"],
+        ["unknown namespace component", "const x=<compose:DateRangePicker/>;"],
+    ];
+    const additions = ["NavigationBar", "NavigationBarItem", "NavigationRail", "NavigationRailItem", "NavigationDrawer",
+        "NavigationDrawerItem", "TabRow", "Tab", "ModalBottomSheet", "DropdownMenu", "DropdownMenuItem", "DatePicker", "TimePicker",
+        "HorizontalPager", "LazyVerticalGrid", "AssistChip", "FilterChip", "InputChip", "Badge", "SegmentedButton",
+        "SegmentedButtonItem", "FloatingActionButton", "SearchBar", "Tooltip", "PullToRefresh"];
+    const results = {};
+    for (const mode of ["default", "optional"]) {
+        const libraryTextByUri = {...baseLibraries};
+        const errors = [];
+        const options = {documentUri: `file:///autojs6/editor/compose-v2-${mode}.tsx`,
+            executionProfile: "rhino", typescriptVersion: "6.0.3", libraryTextByUri,
+            notifyError: (message) => errors.push(String(message))};
+        if (mode === "optional") {
+            options.libraryUris = ["file:///autojs6/typescript/lib.es2018.d.ts", coreUri, compatibilityUri];
+            for (const group of ["android", "libraries", "resources", "main-app"]) {
+                const uri = `file:///autojs6/types/generated/lib.autojs6.${group}.d.ts`;
+                libraryTextByUri[uri] = readFileSync(paths[group], "utf8");
+                options.libraryUris.push(uri);
+            }
+        }
+        const service = context.AutoJsAceTsLanguageService.create(options);
+        try {
+            function diagnostics(source) {
+                const result = service.getDiagnostics(sessionFor(source), source);
+                assert(Array.isArray(result), `Compose V2 ${mode} diagnostics did not run`);
+                return result;
+            }
+            const positive = diagnostics(valid);
+            assert(positive.length === 0, `Compose V2 ${mode} rejected valid inputs: ${positive.map((item) => item.text).join("; ")}`);
+            const codes = {};
+            for (const [label, source] of invalid) {
+                const values = diagnostics(source);
+                assert(values.some((item) => [2322, 2339, 2345, 2353, 2554, 2741, 2769, 2820].includes(Number(item.raw))),
+                    `Compose V2 ${mode} accepted ${label}: ${JSON.stringify(values)}`);
+                codes[label] = values.map((item) => Number(item.raw));
+            }
+            const members = completionNames(service, "compose.", "");
+            assert(additions.every((name) => members.includes(name)), `Compose V2 ${mode} lost component completion`);
+            const dateAttributes = completionNames(service, "<compose.DatePicker ", "");
+            assert(["selectedDateMillis", "displayMode", "onDateChange", "onDisplayModeChange", "ref"].every((name) => dateAttributes.includes(name)),
+                `Compose V2 ${mode} lost DatePicker attributes: ${dateAttributes.join(",")}`);
+            const searchAttributes = completionNames(service, "<compose.SearchBar ", "");
+            assert(["query", "expanded", "onQueryChange", "onSearch", "onExpandedChange"].every((name) => searchAttributes.includes(name)),
+                `Compose V2 ${mode} lost SearchBar attributes: ${searchAttributes.join(",")}`);
+            assert(service.getState().ready && errors.length === 0, `Compose V2 ${mode} service failed: ${errors.join("; ")}`);
+            results[mode] = {profile: "rhino", validDiagnostics: positive.length, diagnosticCodes: codes,
+                appendedComponentCount: additions.length, componentCompletion: true, valueAttributeCompletion: true};
+        } finally { service.dispose(); }
+    }
+    return results;
+}
+
 function createFakeTimer() {
     let nextId = 1;
     const entries = new Map();
@@ -3860,6 +3976,7 @@ function main() {
     const colorsAndTerminalDeclarations = verifyColorsAndTerminalDeclarations(paths);
     const composeInteropDeclarations = verifyComposeInteropDeclarations(paths);
     const composeDialogDeclarations = verifyComposeDialogDeclarations(paths);
+    const composeV2Declarations = verifyComposeV2Declarations(paths);
     const diagnosticScheduler = verifyDiagnosticScheduler(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const completerLanguageIsolation = verifyCompleterLanguageIsolation(paths);
@@ -3886,6 +4003,7 @@ function main() {
             colorsAndTerminalDeclarations,
             composeInteropDeclarations,
             composeDialogDeclarations,
+            composeV2Declarations,
             diagnosticScheduler,
             completionRefresh,
             completerLanguageIsolation,

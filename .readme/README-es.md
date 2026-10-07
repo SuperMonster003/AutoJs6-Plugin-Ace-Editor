@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.28.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `Mejora` Declaraciones TypeScript / TSX de propiedades, ranuras y eventos de componentes Compose UI V2
 
 # v1.28.0
 
@@ -187,16 +193,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Mejora` El índice estático y las firmas integradas admiten métodos sobrecargados: se recopilan 146 sobrecargas de las declaraciones incluidas (como app.startActivity), lib.autojs6.d.ts emite todas las sobrecargas y las firmas ECMAScript integradas incorporan splice / replace / JSON.stringify / Array.from / Math.max y más
 * `Mejora` Las sugerencias de parámetros de Python / Lua conservan todas las firmas devueltas por el servidor y se pueden recorrer; las sugerencias inteligentes ya no recurren al autocompletado mientras hay una sugerencia de parámetros asíncrona pendiente
 * `Mejora` La caja de documentación emergente se puede desplazar y seleccionar en pantallas táctiles
-
-# v1.26.0
-
-###### 2026/10/07
-
-* `Aviso` La integración requiere AutoJs6 6.8.0 / 5320 y un build de Compose UI con la extensión AndroidView; TSX también requiere TypeScript Engine 0.6.5. El renderizado V1 básico mantiene el mínimo 5316
-* `Función` Los ajustes "Sugerencias inteligentes" del anfitrión tienen efecto: activación del autocompletado, caracteres mínimos, retraso del autocompletado, activación de las sugerencias de parámetros y cambio de sobrecarga con las flechas se aplican de inmediato; el autocompletado en vivo ahora lo programa el plugin según estos ajustes (requiere un anfitrión AutoJs6 6.8.0)
-* `Función` autojs6-dts 4.33.0: Los contenedores XML `<compose>` y compose.attach integran sesiones Compose independientes en páginas UI o ventanas flotantes existentes; compose.AndroidView muestra una View Android existente o devuelta por una fábrica síncrona
-* `Mejora` Las sobrecargas se cambian con Alt+Arriba / Alt+Abajo en teclado físico (sin sugerencia de varias sobrecargas se conserva el movimiento de líneas predeterminado de Ace), las teclas Arriba y Abajo de la barra de teclas del anfitrión (se puede desactivar en los ajustes) y los botones arriba / abajo de la esquina superior derecha de la ventana de sugerencias
-* `Mejora` Las sugerencias de parámetros reaparecen tras tocar el área de edición (no tras desplazarse), y ESC oculta tanto las sugerencias de parámetros como la documentación del símbolo
 
 ##### Para ver más historial de versiones
 

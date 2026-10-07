@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.29.0": {
+      "released_date": "2026/10/08",
+      "improvement": [
+        "Объявления TypeScript / TSX для свойств, слотов и событий компонентов Compose UI V2"
+      ]
+    },
     "v1.28.0": {
       "released_date": "2026/10/07",
       "feature": [

@@ -160,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.28.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.28.0-u
 ### 發行歷史
 
 ******
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `優化` Compose UI V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
 
 # v1.28.0
 
@@ -187,16 +193,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.28.0-u
 * `優化` 靜態索引與內建簽章支援重載方法: 從捆綁宣告收錄 146 個重載 (如 app.startActivity), lib.autojs6.d.ts 同步輸出全部重載宣告, 內建 ECMAScript 簽章增加 splice / replace / JSON.stringify / Array.from / Math.max 等
 * `優化` Python / Lua 參數提示保留伺服器回傳的全部簽章並支援切換; 智慧提示在非同步參數提示未回傳時不再誤彈補全
 * `優化` 懸停文件框支援觸控捲動與選取文字
-
-# v1.26.0
-
-###### 2026/10/07
-
-* `提示` 互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主與支援 AndroidView 擴充的 Compose UI 建構; TSX 另需 TypeScript Engine 0.6.5. 基礎 V1 渲染最低宿主仍為 5316
-* `新增` 宿主 "智慧提示" 設定生效: 自動補全觸發方式, 補全最少觸發字元數, 補全觸發延遲, 參數提示觸發方式與方向鍵切換重載開關, 修改後即時套用; 即時補全改由插件依設定排程 (需要 AutoJs6 6.8.0 宿主)
-* `新增` autojs6-dts 4.33.0: XML `<compose>` 容器與 compose.attach 可在 UI 頁面或舊懸浮窗內嵌入獨立 Compose 工作階段; compose.AndroidView 可承載現有 Android View 或同步工廠傳回的 View
-* `優化` 重載切換支援硬件鍵盤 Alt+Up / Alt+Down (未顯示多重載參數提示時保持 Ace 預設的移動行), 宿主多功能鍵盤上下鍵 (可在設定中關閉) 及提示視窗右上角的上下按鈕
-* `優化` 參數提示在編輯區點按後恢復顯示 (捲動後不恢復), ESC 同時隱藏參數提示與符號文件
 
 ##### 更多發行歷史可參閱
 

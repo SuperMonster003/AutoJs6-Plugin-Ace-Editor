@@ -4,6 +4,12 @@
 
 ******
 
+# v1.29.0
+
+###### 2026/10/08
+
+* `Improvement` TypeScript / TSX properties, slots and event declarations for Compose UI V2 components
+
 # v1.28.0
 
 ###### 2026/10/07
