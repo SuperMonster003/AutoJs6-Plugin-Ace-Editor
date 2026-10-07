@@ -4,12 +4,23 @@
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `优化` 静态索引与内置签名支持重载方法: 从捆绑声明收录 146 个重载 (如 app.startActivity), lib.autojs6.d.ts 同步输出全部重载声明, 内置 ECMAScript 签名增加 splice / replace / JSON.stringify / Array.from / Math.max 等
+* `优化` Python / Lua 参数提示保留服务器返回的全部签名并支持切换; 智能提示在异步参数提示未返回时不再误弹补全
+* `优化` 悬停文档框支持触屏滚动与选择文本
+
 # v1.26.0
 
 ###### 2026/10/07
 
 * `提示` 互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主与支持 AndroidView 扩展的 Compose UI 构建; TSX 还需 TypeScript Engine 0.6.5. 基础 V1 渲染最低宿主仍为 5316
+* `新增` 宿主 "智能提示" 设置生效: 自动补全触发方式, 补全最少触发字符数, 补全触发延迟, 参数提示触发方式与方向键切换重载开关, 修改后即时应用; 实时补全改由插件按设置调度 (需要 AutoJs6 6.8.0 宿主)
 * `新增` autojs6-dts 4.33.0: XML `<compose>` 容器与 compose.attach 可在 UI 页面或旧悬浮窗内嵌入独立 Compose 会话; compose.AndroidView 可承载现有 Android View 或同步工厂返回的 View
+* `优化` 重载切换支持硬件键盘 Alt+Up / Alt+Down (未显示多重载参数提示时保持 Ace 默认的移动行), 宿主多功能键盘上下键 (可在设置中关闭) 及提示窗口右上角的上下按钮
+* `优化` 参数提示在编辑区点按后恢复显示 (滚动后不恢复), ESC 同时隐藏参数提示与符号文档
 
 # v1.25.0
 
@@ -17,6 +28,13 @@
 
 * `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 转换, 对比度调整, 和谐色, 色阶, 派生配色, 夜间对应色, 色觉缺陷模拟, 图像主要颜色提取与 oklab 检测算法补全, 以及 colors.theme 主题色控制 (需要 AutoJs6 6.8.0)
 * `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的会话, 打开与执行选项, 环境, 插件状态和错误类型补全 (需要 3-Shell Terminal 插件)
+
+# v1.24.0
+
+###### 2026/10/07
+
+* `新增` 智能提示统一触发: 宿主多功能键盘 TAB 键长按与硬件键盘 Ctrl+Space / Alt+Space 按光标上下文显示代码补全, 参数提示或符号文档, 参数提示已显示时切换重载方法; Ctrl+Shift+Space 显示或切换参数提示, Ctrl+Q 显示符号文档 (需要支持编辑器契约 6 的 AutoJs6 6.8.0 宿主, 旧宿主下 TAB 长按保持原有行为)
+* `优化` 参数提示支持重载方法: 显示重载序号并可点按切换, 同一调用内保持手动选择, 实参超出形参时高亮 rest 参数, 优先显示当前参数的文档
 
 # v1.23.0
 

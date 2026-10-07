@@ -116,24 +116,51 @@
         if (!Array.isArray(signatures) || signatures.length === 0) {
             return null;
         }
-        var activeSignature = Math.max(0, Number(result.activeSignature) || 0);
-        var signature = signatures[Math.min(activeSignature, signatures.length - 1)] || {};
-        var signatureLabel = String(signature.label || "");
-        if (!signatureLabel) {
+        var requestedSignature = Math.max(0, Number(result.activeSignature) || 0);
+        // Keep every overload (LSP `signatures`) so the hint box can cycle through them; the
+        // top-level fields mirror the server's active signature for older consumers.
+        var entries = [];
+        var activeSignature = 0;
+        for (var i = 0; i < signatures.length; i++) {
+            var candidate = signatures[i] || {};
+            var label = String(candidate.label || "");
+            if (!label) {
+                continue;
+            }
+            if (i === requestedSignature) {
+                activeSignature = entries.length;
+            }
+            var parameters = copyArray(candidate.parameters);
+            entries.push({
+                caption: "Python signature",
+                signature: label,
+                parameters: parameters.map(function(parameter) {
+                    return parameterLabel(label, parameter);
+                }),
+                parameterDocs: parameters.map(function(parameter) {
+                    return contentText(parameter && parameter.documentation);
+                }),
+                docText: contentText(candidate.documentation)
+            });
+        }
+        if (!entries.length) {
             return null;
         }
+        var signature = signatures[Math.min(requestedSignature, signatures.length - 1)] || {};
+        var active = entries[activeSignature];
         return {
-            caption: "Python signature",
-            signature: signatureLabel,
-            parameters: copyArray(signature.parameters).map(function(parameter) {
-                return parameterLabel(signatureLabel, parameter);
-            }),
+            caption: active.caption,
+            signature: active.signature,
+            parameters: active.parameters.slice(0),
+            parameterDocs: active.parameterDocs.slice(0),
             activeParameter: Math.max(
                 0,
                 Number(result.activeParameter != null ?
                     result.activeParameter : signature.activeParameter) || 0
             ),
-            docText: contentText(signature.documentation),
+            docText: active.docText,
+            signatures: entries,
+            activeSignature: activeSignature,
             autojs6Python: true
         };
     }

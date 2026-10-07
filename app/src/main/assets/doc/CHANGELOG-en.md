@@ -4,12 +4,23 @@
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `Improvement` The static index and built-in signatures support overloaded methods: 146 overloads are collected from the bundled declarations (such as app.startActivity), lib.autojs6.d.ts emits every overload and the built-in ECMAScript signatures gain splice / replace / JSON.stringify / Array.from / Math.max and more
+* `Improvement` Python / Lua parameter hints keep every signature returned by the server and can be cycled; smart hints no longer fall back to completion while an asynchronous parameter hint is pending
+* `Improvement` The hover documentation box can be scrolled and selected on touch screens
+
 # v1.26.0
 
 ###### 2026/10/07
 
 * `Hint` Interop requires the matching AutoJs6 6.8.0 / 5320 host and a Compose UI build with the AndroidView extension; TSX also requires TypeScript Engine 0.6.5. Basic V1 rendering keeps the 5316 minimum
+* `Feature` Host "Smart hints" settings take effect: automatic completion trigger, minimum characters for completion, completion delay, parameter hints trigger and the arrow-key overload switch apply immediately; live completion is now scheduled by the plugin according to these settings (requires an AutoJs6 6.8.0 host)
 * `Feature` autojs6-dts 4.33.0: XML `<compose>` containers and compose.attach embed independent Compose sessions in UI pages or legacy floating windows; compose.AndroidView embeds an existing Android View or one returned by a synchronous factory
+* `Improvement` Overloads can be switched with the hardware Alt+Up / Alt+Down (Ace's default line moving is kept while no multi-overload hint is shown), the host keyboard bar's Up and Down keys (can be turned off in settings) and the up / down buttons at the top right of the hint window
+* `Improvement` Parameter hints reappear after tapping the editor (not after scrolling), and ESC hides both parameter hints and symbol documentation
 
 # v1.25.0
 
@@ -17,6 +28,13 @@
 
 * `Feature` AutoJs6 declarations 4.32.0: completion for colors OKLab/OKLCH conversion, contrast adjustment, harmonies, tonal scales, derived colors, night variants, color vision deficiency simulation, dominant image colors and the oklab detection algorithm, plus colors.theme theme color control (requires AutoJs6 6.8.0)
 * `Feature` AutoJs6 declarations 4.32.0: completion for terminal / $terminal sessions, open and exec options, environment, plugin state and error types (requires the 3-Shell Terminal plugin)
+
+# v1.24.0
+
+###### 2026/10/07
+
+* `Feature` Unified smart hint trigger: the host keyboard bar's TAB long-press and the hardware Ctrl+Space / Alt+Space show code completion, parameter hints or symbol documentation based on the cursor context and cycle overloads while parameter hints are visible; Ctrl+Shift+Space shows or cycles parameter hints and Ctrl+Q shows symbol documentation (requires an AutoJs6 6.8.0 host with editor contract 6; older hosts keep the previous TAB long-press behavior)
+* `Improvement` Parameter hints support overloaded methods: the overload index is shown with tappable switching, a manual choice is kept within the same call, extra arguments highlight the rest parameter and the current parameter's documentation is preferred
 
 # v1.23.0
 

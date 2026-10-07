@@ -917,6 +917,7 @@ class AceCodeEditor @JvmOverloads constructor(
         invokeAce("setGutterWidthMode", quote(AceEditorDisplayPreferences.gutterWidthMode(hostPreferences)))
         invokeAce("setFontLigaturesEnabled", AceEditorDisplayPreferences.isFontLigaturesEnabled(hostPreferences).toString())
         invokeAce("setFontStylesEnabled", AceEditorDisplayPreferences.isFontStylesEnabled(hostPreferences).toString())
+        invokeAce("setSmartHintOptions", quote(AceEditorSmartHintPreferences.optionsJson(hostPreferences)))
     }
 
     private fun applyPinchToZoomStrategy() {
@@ -1938,6 +1939,10 @@ class AceCodeEditor @JvmOverloads constructor(
 
     internal fun bridgeFontStylesEnabled(): Boolean {
         return AceEditorDisplayPreferences.isFontStylesEnabled(hostPreferences)
+    }
+
+    internal fun bridgeSmartHintOptions(): String {
+        return AceEditorSmartHintPreferences.optionsJson(hostPreferences)
     }
 
     internal fun bridgeWordWrapEnabled(): Boolean {

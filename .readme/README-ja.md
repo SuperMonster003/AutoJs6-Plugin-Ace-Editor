@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,12 +173,23 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `改善` 静的インデックスと組み込みシグネチャがオーバーロードに対応: 同梱宣言から 146 件のオーバーロード (app.startActivity など) を収録, lib.autojs6.d.ts も全オーバーロードを出力, 組み込み ECMAScript シグネチャに splice / replace / JSON.stringify / Array.from / Math.max などを追加
+* `改善` Python / Lua のパラメーターヒントがサーバーの返す全シグネチャを保持して切り替え可能に; 非同期のパラメーターヒント待機中はスマートヒントが補完へ切り替わらない
+* `改善` ホバードキュメントボックスがタッチ画面でのスクロールと文字選択に対応
+
 # v1.26.0
 
 ###### 2026/10/07
 
 * `ヒント` 相互運用には対応する AutoJs6 6.8.0 / 5320 ホストと AndroidView 拡張対応の Compose UI が必要です. TSX には TypeScript Engine 0.6.5 も必要です. 基本 V1 描画の最小ホストは引き続き 5316 です
+* `機能` ホストの "スマートヒント" 設定が有効に: 自動補完のトリガー, 補完の最小文字数, 補完の遅延, パラメーターヒントのトリガー, 矢印キーでのオーバーロード切り替えの各設定が即時に反映され, ライブ補完はプラグインが設定に従ってスケジュール (AutoJs6 6.8.0 ホストが必要)
 * `機能` autojs6-dts 4.33.0: XML `<compose>` コンテナと compose.attach は UI ページや既存のフローティングウィンドウに独立した Compose セッションを埋め込みます. compose.AndroidView は既存の Android View または同期ファクトリが返す View を表示します
+* `改善` オーバーロードの切り替えがハードウェアキーボードの Alt+Up / Alt+Down (複数オーバーロードのヒント非表示時は Ace 既定の行移動を維持), ホストのキーボードバーの上下キー (設定でオフ可能), ヒントウィンドウ右上の上下ボタンに対応
+* `改善` パラメーターヒントは編集領域のタップ後に再表示され (スクロール後は再表示しない), ESC でパラメーターヒントとシンボルのドキュメントを同時に非表示
 
 # v1.25.0
 
@@ -186,15 +197,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 * `機能` AutoJs6 declarations 4.32.0: colors の OKLab/OKLCH 変換, コントラスト調整, 調和色, 色階, 派生配色, 夜間の対応色, 色覚特性のシミュレーション, 画像の主要色の抽出, oklab 検出アルゴリズムの補完, および colors.theme によるテーマカラー制御 (AutoJs6 6.8.0 が必要)
 * `機能` AutoJs6 declarations 4.32.0: terminal / $terminal のセッション, オープンと実行のオプション, 環境, プラグイン状態, エラー型の補完 (3-Shell Terminal プラグインが必要)
-
-# v1.23.0
-
-###### 2026/10/05
-
-* `ヒント` TSX には対応する AutoJs6 6.8.0 / 5319 ローカルホストと Compose 宣言を含む TypeScript Engine ビルドが必要です. レンダラーのインストールだけでは TSX は利用できません
-* `機能` autojs6-dts 4.31.0: TSX は `<compose.Column>`, `<compose:Text>`, ノードファクトリへの参照, Fragment, スロットとリアクティブなコールバックに対応. 同じツリーで Compose と従来の XML ノードを混在させることはできません
-* `改善` プラグインセンターのアイコンに Icon Studio で調整したサイズ, 位置, 明暗の図稿と円形背景を適用し, 再生成可能な原稿とパラメーターを保持
-* `改善` Android のアプリ情報アイコンに Icon Studio と共通の図案と明暗の背景色を使用し, プラグインセンターの透明な図案と既存のランチャー設定を維持
 
 ##### その他のリリース履歴
 

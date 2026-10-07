@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,12 +173,23 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `개선` 정적 인덱스와 내장 시그니처가 오버로드된 메서드를 지원: 번들 선언에서 146 개의 오버로드 (app.startActivity 등) 수집, lib.autojs6.d.ts 도 모든 오버로드를 출력, 내장 ECMAScript 시그니처에 splice / replace / JSON.stringify / Array.from / Math.max 등 추가
+* `개선` Python / Lua 매개 변수 힌트가 서버가 반환한 모든 시그니처를 유지하고 전환 가능; 비동기 매개 변수 힌트를 기다리는 동안 스마트 힌트가 완성으로 전환되지 않음
+* `개선` 호버 문서 상자가 터치 화면에서 스크롤과 텍스트 선택을 지원
+
 # v1.26.0
 
 ###### 2026/10/07
 
 * `힌트` 상호 운용에는 일치하는 AutoJs6 6.8.0 / 5320 호스트와 AndroidView 확장을 지원하는 Compose UI가 필요합니다. TSX에는 TypeScript Engine 0.6.5도 필요합니다. 기본 V1 렌더링의 최소 호스트는 계속 5316입니다
+* `기능` 호스트 "스마트 힌트" 설정 적용: 자동 완성 트리거, 완성 최소 문자 수, 완성 지연, 매개 변수 힌트 트리거, 방향키 오버로드 전환 설정이 즉시 반영되며, 실시간 완성은 플러그인이 설정에 따라 예약 (AutoJs6 6.8.0 호스트 필요)
 * `기능` autojs6-dts 4.33.0: XML `<compose>` 컨테이너와 compose.attach로 UI 페이지나 기존 플로팅 창에 독립적인 Compose 세션을 삽입합니다. compose.AndroidView는 기존 Android View 또는 동기 팩토리가 반환하는 View를 표시합니다
+* `개선` 오버로드 전환이 하드웨어 키보드 Alt+Up / Alt+Down (다중 오버로드 힌트가 없을 때는 Ace 기본 줄 이동 유지), 호스트 키보드 바의 위아래 키 (설정에서 끌 수 있음), 힌트 창 오른쪽 위의 위아래 버튼을 지원
+* `개선` 매개 변수 힌트가 편집 영역을 탭한 뒤 다시 표시되며 (스크롤 후에는 표시되지 않음), ESC 가 매개 변수 힌트와 심볼 문서를 함께 숨김
 
 # v1.25.0
 
@@ -186,15 +197,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 * `기능` AutoJs6 declarations 4.32.0: colors의 OKLab/OKLCH 변환, 대비 조정, 조화색, 색조 단계, 파생 색상, 야간 대응색, 색각 이상 시뮬레이션, 이미지 주요 색상 추출, oklab 감지 알고리즘 자동 완성 및 colors.theme 테마 색상 제어 (AutoJs6 6.8.0 필요)
 * `기능` AutoJs6 declarations 4.32.0: terminal / $terminal 세션, 열기 및 실행 옵션, 환경, 플러그인 상태와 오류 형식 자동 완성 (3-Shell Terminal 플러그인 필요)
-
-# v1.23.0
-
-###### 2026/10/05
-
-* `힌트` TSX에는 일치하는 AutoJs6 6.8.0 / 5319 로컬 호스트와 Compose 선언이 포함된 TypeScript Engine 빌드가 필요합니다. 렌더러만 설치하면 TSX를 사용할 수 없습니다
-* `기능` autojs6-dts 4.31.0: TSX는 `<compose.Column>`, `<compose:Text>`, 노드 팩토리 참조, Fragment, 슬롯 및 반응형 콜백을 지원합니다. 하나의 트리에서 Compose와 기존 XML 노드를 혼합할 수 없습니다
-* `개선` 플러그인 센터 아이콘에 Icon Studio에서 조정한 크기, 위치, 밝은 이미지와 어두운 이미지 및 원형 배경을 적용하고 재생성 가능한 원본과 매개변수를 유지
-* `개선` Android 앱 정보 아이콘에 Icon Studio의 그림과 밝은 배경 및 어두운 배경을 사용하고 플러그인 센터의 투명 그림과 기존 런처 옵션을 유지
 
 ##### 더 많은 릴리스 기록
 

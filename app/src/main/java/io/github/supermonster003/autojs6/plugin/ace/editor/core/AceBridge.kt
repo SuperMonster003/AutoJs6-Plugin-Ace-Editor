@@ -143,6 +143,11 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun getSmartHintOptions(): String {
+        return editor.bridgeSmartHintOptions()
+    }
+
+    @JavascriptInterface
     fun isJavaDiagnosticsSupported(): Boolean {
         return editor.bridgeJavaDiagnosticsSupported()
     }

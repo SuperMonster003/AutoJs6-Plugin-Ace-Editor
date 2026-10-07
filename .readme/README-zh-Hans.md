@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,12 +173,23 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 ******
 
+# v1.27.0
+
+###### 2026/10/07
+
+* `优化` 静态索引与内置签名支持重载方法: 从捆绑声明收录 146 个重载 (如 app.startActivity), lib.autojs6.d.ts 同步输出全部重载声明, 内置 ECMAScript 签名增加 splice / replace / JSON.stringify / Array.from / Math.max 等
+* `优化` Python / Lua 参数提示保留服务器返回的全部签名并支持切换; 智能提示在异步参数提示未返回时不再误弹补全
+* `优化` 悬停文档框支持触屏滚动与选择文本
+
 # v1.26.0
 
 ###### 2026/10/07
 
 * `提示` 互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主与支持 AndroidView 扩展的 Compose UI 构建; TSX 还需 TypeScript Engine 0.6.5. 基础 V1 渲染最低宿主仍为 5316
+* `新增` 宿主 "智能提示" 设置生效: 自动补全触发方式, 补全最少触发字符数, 补全触发延迟, 参数提示触发方式与方向键切换重载开关, 修改后即时应用; 实时补全改由插件按设置调度 (需要 AutoJs6 6.8.0 宿主)
 * `新增` autojs6-dts 4.33.0: XML `<compose>` 容器与 compose.attach 可在 UI 页面或旧悬浮窗内嵌入独立 Compose 会话; compose.AndroidView 可承载现有 Android View 或同步工厂返回的 View
+* `优化` 重载切换支持硬件键盘 Alt+Up / Alt+Down (未显示多重载参数提示时保持 Ace 默认的移动行), 宿主多功能键盘上下键 (可在设置中关闭) 及提示窗口右上角的上下按钮
+* `优化` 参数提示在编辑区点按后恢复显示 (滚动后不恢复), ESC 同时隐藏参数提示与符号文档
 
 # v1.25.0
 
@@ -186,15 +197,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.26.0-u
 
 * `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 转换, 对比度调整, 和谐色, 色阶, 派生配色, 夜间对应色, 色觉缺陷模拟, 图像主要颜色提取与 oklab 检测算法补全, 以及 colors.theme 主题色控制 (需要 AutoJs6 6.8.0)
 * `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的会话, 打开与执行选项, 环境, 插件状态和错误类型补全 (需要 3-Shell Terminal 插件)
-
-# v1.23.0
-
-###### 2026/10/05
-
-* `提示` TSX 需要匹配的 AutoJs6 6.8.0 / 5319 本地宿主与内置 Compose 声明的配套 TypeScript Engine 构建; 单独安装渲染器不会增加 TSX 支持
-* `新增` autojs6-dts 4.31.0: TSX 支持 `<compose.Column>`, `<compose:Text>`, 节点工厂引用, Fragment, 插槽及响应式回调; 同一棵树不能混用 Compose 与旧 XML 节点
-* `优化` 插件中心图标采用统一工作台调整后的尺寸, 位置, 亮暗图稿与圆形底色, 保留可重建原稿和参数
-* `优化` Android 系统应用信息图标与图标工作台共用图稿和亮暗底色, 保留插件中心透明图稿及现有启动器选项
 
 ##### 更多发行历史可参阅
 

@@ -56,7 +56,9 @@ declare namespace AutoJs6 {
         fileProviderAuthority: 'org.autojs.autojs.fileprovider' | string;
         intent(o: Intent.Common | Intent): Intent;
         startActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;
+        startActivity(o: Intent.CommonWithRoot | Intent, options: Intent.CommonWithRoot): void;
         startDualActivity(o: Intent.CommonWithRoot | string | Intent | android.net.Uri | java.net.URI): void;
+        startDualActivity(o: Intent.CommonWithRoot | Intent, options: Intent.CommonWithRoot): void;
         sendBroadcast(i: Intent.CommonWithRoot | Intent.ShortForm.Broadcast | Intent): void;
         startService(i: Intent.CommonWithRoot | Intent): void;
         sendEmail(options: Intent.Email | null | undefined): void;
@@ -127,7 +129,9 @@ declare namespace AutoJs6 {
         isOperational(): boolean;
         stateListener(listener?: Automator.StateListener | null): void;
         registerEvent(name: string, listener?: Automator.AccessibilityEventListener | null): void;
+        registerEvent(name: string, listener: Automator.AccessibilityEventListener, options: Automator.RegisterEventOptions): void;
         registerEvents(name: string, listener?: Automator.AccessibilityEventListener | null): void;
+        registerEvents(name: string, listener: Automator.AccessibilityEventListener, options: Automator.RegisterEventOptions): void;
         removeEvent(name: string): void;
         removeEvents(name: string): void;
         service: org.autojs.autojs.core.accessibility.AccessibilityService | null;
@@ -182,17 +186,72 @@ declare namespace AutoJs6 {
 
     interface Automator {
         click(x: number, y: number): boolean;
+        click(point: [x: number, y: number]): boolean;
+        click(point: {x: number, y: number}): boolean;
+        click(point: android.graphics.Point): boolean;
+        click(point: org.opencv.core.Point): boolean;
+        click(text: string, index?: number): boolean;
+        click(left: number, top: number, right: number, bottom: number): boolean;
+        click(widget: UiObject): boolean;
+        click(bounds: android.graphics.Rect): boolean;
         longClick(x: number, y: number): boolean;
+        longClick(point: [x: number, y: number]): boolean;
+        longClick(point: {x: number, y: number}): boolean;
+        longClick(point: android.graphics.Point): boolean;
+        longClick(point: org.opencv.core.Point): boolean;
+        longClick(text: string, index?: number): boolean;
+        longClick(left: number, top: number, right: number, bottom: number): boolean;
+        longClick(widget: UiObject): boolean;
+        longClick(bounds: android.graphics.Rect): boolean;
         press(x: number, y: number, duration?: number): boolean;
+        press(point: [x: number, y: number], duration?: number): boolean;
+        press(duration: number, point: [x: number, y: number]): boolean;
         swipe(x1: number, y1: number, x2: number, y2: number, duration: number): boolean;
+        swipe(pointA: [x: number, y: number], pointB: [x: number, y: number], duration: number): boolean;
+        swipe(pointsGroup: [[x: number, y: number], [x: number, y: number]], duration: number): boolean;
+        swipe(points: [x1: number, y1: number, x2: number, y2: number], duration: number): boolean;
+        swipe(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number]): boolean;
+        swipe(duration: number, pointsGroup: [[x: number, y: number], [x: number, y: number]]): boolean;
+        swipe(duration: number, points: [x1: number, y1: number, x2: number, y2: number]): boolean;
         gesture(duration: number, ...point: [x: number, y: number][]): boolean;
+        gesture(duration: number, pointsGroup: [...[x: number, y: number][]]): boolean;
+        gesture(duration: number, points: [...number[]]): boolean;
         gestureAsync(duration: number, point: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], pointG: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], pointG: [x: number, y: number], pointH: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], pointG: [x: number, y: number], pointH: [x: number, y: number], pointI: [x: number, y: number], callback: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, pointsGroup: [...[x: number, y: number][]], callback?: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, points: [...number[]], callback?: GestureResultCallbackLike): void;
+        gestureAsync(duration: number, ...point: [x: number, y: number][]): void;
         gestures(...stroke: StrokeParams[]): boolean;
         gesturesAsync(stroke: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, strokeI: StrokeParams, callback: GestureResultCallbackLike): void;
+        gesturesAsync(strokesGroup: [...StrokeParams[]], callback?: GestureResultCallbackLike): void;
+        gesturesAsync(...stroke: StrokeParams[]): void;
         scrollDown(): boolean;
+        scrollDown(index: number): boolean;
+        scrollDown(text: string, index?: number): boolean;
+        scrollDown(left: number, top: number, right: number, bottom: number): boolean;
         scrollUp(): boolean;
+        scrollUp(index: number): boolean;
+        scrollUp(text: string, index?: number): boolean;
+        scrollUp(left: number, top: number, right: number, bottom: number): boolean;
         setText(text: string): boolean;
+        setText(index: number, text: string): boolean;
         input(text: string): boolean;
+        input(index: number, text: string): boolean;
         captureScreen(): ImageWrapper;
         isServiceRunning(): boolean;
         ensureService(): void;
@@ -232,16 +291,46 @@ declare namespace AutoJs6 {
         toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;
         retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;
         waitForIdle(quietFor?: number): Automator.IdleResult;
+        waitForIdle(options: Automator.IdleOptions): Automator.IdleResult;
         waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;
+        waitForEvent(type: string | string[] | null, timeout: number, filter?: Automator.EventFilter | null): Automator.AccessibilityEvent;
         waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;
+        waitForToast(timeout: number): Automator.Toast;
         waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;
+        waitForNotification(timeout: number): org.autojs.autojs.core.notification.Notification;
     }
 
     interface Barcode {
         detect(options: Barcode.DetectAllOptions): Barcode.Result[];
+        detect(options: DetectOptions, isAll: true): Barcode.Result[];
+        detect(isAll: true): Barcode.Result[];
+        detect(img: ImageWrapper | string, options: Barcode.DetectAllOptions): Barcode.Result[];
+        detect(img: ImageWrapper | string, isAll: true): Barcode.Result[];
+        detect(img: ImageWrapper | string, options: DetectOptions, isAll: true): Barcode.Result[];
+        detect(options?: DetectOptions): Barcode.Result | Barcode.Result[] | null;
+        detect(options: DetectOptions, isAll: boolean): Barcode.Result | Barcode.Result[] | null;
+        detect(isAll: false): Barcode.Result | null;
+        detect(isAll: boolean): Barcode.Result | Barcode.Result[] | null;
+        detect(img: ImageWrapper | string, options?: DetectOptions): Barcode.Result | Barcode.Result[] | null;
+        detect(img: ImageWrapper | string, isAll: boolean): Barcode.Result | Barcode.Result[] | null;
+        detect(img: ImageWrapper | string, options: DetectOptions, isAll: boolean): Barcode.Result | Barcode.Result[] | null;
         detectAll(options?: DetectOptions): Barcode.Result[];
+        detectAll(img: ImageWrapper | string, options?: DetectOptions): Barcode.Result[];
         recognizeText(options: Barcode.DetectAllOptions): string[];
+        recognizeText(options: DetectOptions, isAll: true): string[];
+        recognizeText(isAll: true): string[];
+        recognizeText(img: ImageWrapper | string, options: Barcode.DetectAllOptions): string[];
+        recognizeText(img: ImageWrapper | string, isAll: true): string[];
+        recognizeText(img: ImageWrapper | string, options: DetectOptions, isAll: true): string[];
+        recognizeText(options?: DetectOptions): string | string[] | null;
+        recognizeText(options: DetectOptions, isAll: boolean): string | string[] | null;
+        recognizeText(isAll: false): string | null;
+        recognizeText(isAll: boolean): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, options?: DetectOptions): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, isAll: boolean): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, options: DetectOptions, isAll: boolean): string | string[] | null;
         recognizeTexts(options?: DetectOptions): string[];
+        recognizeTexts(img: ImageWrapper | string, options?: DetectOptions): string[];
     }
 
     interface Base64 {
@@ -251,9 +340,11 @@ declare namespace AutoJs6 {
 
     interface Color {
         new(color?: OmniColor): Color;
+        new(r: ColorComponent, g: ColorComponent, b: ColorComponent, a?: ColorComponent): Color;
         color: ColorInt;
         summary(): string;
         toHex(alpha?: boolean | 'auto' | 'none' | 'keep'): string;
+        toHex(length: 8 | 6 | 3): string;
         toFullHex(): string;
         toInt(): number;
         alpha(options?: ComponentOptions): number;
@@ -285,12 +376,25 @@ declare namespace AutoJs6 {
         setBlueRelative(percentage: number | PercentString): this;
         removeBlue(): this;
         setRgb(red: ColorComponent, green: ColorComponent, blue: ColorComponent): this;
+        setRgb(rgb: [ColorComponent, ColorComponent, ColorComponent]): this;
+        setRgb(color: OmniColor): this;
         setArgb(alpha: ColorComponent, red: ColorComponent, green: ColorComponent, blue: ColorComponent): this;
+        setArgb(components: ColorComponent[]): this;
+        setArgb(colorHex: '#AARRGGBB' | string): this;
         setRgba(red: ColorComponent, green: ColorComponent, blue: ColorComponent, alpha: ColorComponent): this;
+        setRgba(rgb: ColorComponent[], alpha: ColorComponent): this;
+        setRgba(components: ColorComponent[]): this;
+        setRgba(colorHex: '#RRGGBBAA' | string): this;
         setHsv(h: ColorHueComponent, s: ColorComponent, v: ColorComponent): this;
+        setHsv(components: (ColorComponent | ColorHueComponent)[]): this;
         setHsva(h: ColorHueComponent, s: ColorComponent, v: ColorComponent, a: ColorComponent): this;
+        setHsva(hsv: (ColorHueComponent | ColorComponent)[], a: ColorComponent): this;
+        setHsva(components: (ColorComponent | ColorHueComponent)[]): this;
         setHsl(h: ColorHueComponent, s: ColorComponent, l: ColorComponent): this;
+        setHsl(components: (ColorComponent | ColorHueComponent)[]): this;
         setHsla(h: ColorHueComponent, s: ColorComponent, l: ColorComponent, a: ColorComponent): this;
+        setHsla(hsl: (ColorHueComponent | ColorComponent)[], a: ColorComponent): this;
+        setHsla(components: (ColorComponent | ColorHueComponent)[]): this;
         toRgb(): number[];
         toRgba(options?: ToComponentOptions): number[];
         toArgb(options?: ToComponentOptions): number[];
@@ -306,8 +410,10 @@ declare namespace AutoJs6 {
         toHslString(): string;
         toHslaString(options?: boolean | StringOptions): string;
         isSimilar(other: OmniColor, threshold?: number, algorithm?: DetectionAlgorithm): boolean;
+        isSimilar(other: OmniColor, options: { threshold?: number; similarity?: number; algorithm?: DetectionAlgorithm; }): boolean;
         isEqual(other: OmniColor, alphaMatters?: boolean): boolean;
         distance(other: OmniColor, algorithm?: DetectionAlgorithm): number;
+        distance(other: OmniColor, options: { algorithm?: DetectionAlgorithm; }): number;
         invert(): ColorInt;
         blend(other: OmniColor, ratio?: number | PercentString): ColorInt;
         contrast(background: OmniColor): number;
@@ -324,6 +430,7 @@ declare namespace AutoJs6 {
         android: typeof org.autojs.autojs.core.image.ColorTable.Android;
         all: Colors.ColorMap;
         themeColor: org.autojs.autojs.theme.ThemeColor;
+        theme: Colors.Theme;
         ALICE_BLUE: number;
         ALIZARIN_CRIMSON: number;
         AMBER: number;
@@ -898,46 +1005,115 @@ declare namespace AutoJs6 {
         toInt(color: OmniColor): number;
         parseColor(colorString: string): number;
         toHex(color: OmniColor, alpha?: boolean | 'auto' | 'none' | 'keep'): string;
+        toHex(color: OmniColor, length: 8 | 6 | 3): string;
         toString(color: OmniColor, alpha?: boolean | 'auto' | 'none' | 'keep'): string;
+        toString(color: OmniColor, length: 8 | 6 | 3): string;
         toFullHex(color: OmniColor): string;
         rgb(red: ColorComponent, green: ColorComponent, blue: ColorComponent): number;
+        rgb(rgb: [ColorComponent, ColorComponent, ColorComponent]): number;
+        rgb(color: OmniColor): number;
         argb(alpha: ColorComponent, red: ColorComponent, green: ColorComponent, blue: ColorComponent): number;
+        argb(components: ColorComponent[]): number;
+        argb(colorHex: '#AARRGGBB' | string): number;
         rgba(red: ColorComponent, green: ColorComponent, blue: ColorComponent, alpha: ColorComponent): number;
+        rgba(rgb: ColorComponent[], alpha: ColorComponent): number;
+        rgba(components: ColorComponent[]): number;
+        rgba(colorHex: '#RRGGBBAA' | string): number;
         hsv(h: ColorHueComponent, s: ColorComponent, v: ColorComponent): number;
+        hsv(components: (ColorComponent | ColorHueComponent)[]): number;
         hsva(h: ColorHueComponent, s: ColorComponent, v: ColorComponent, a: ColorComponent): number;
+        hsva(hsv: (ColorHueComponent | ColorComponent)[], a: ColorComponent): number;
+        hsva(components: (ColorComponent | ColorHueComponent)[]): number;
         hsl(h: ColorHueComponent, s: ColorComponent, l: ColorComponent): number;
+        hsl(components: (ColorComponent | ColorHueComponent)[]): number;
         hsla(h: ColorHueComponent, s: ColorComponent, l: ColorComponent, a: ColorComponent): number;
+        hsla(hsl: (ColorHueComponent | ColorComponent)[], a: ColorComponent): number;
+        hsla(components: (ColorComponent | ColorHueComponent)[]): number;
         toRgb(color: OmniColor): number[];
         toRgba(color: OmniColor, options?: ToComponentOptions): number[];
         toArgb(color: OmniColor, options?: ToComponentOptions): number[];
         toHsv(color: OmniColor): number[];
+        toHsv(color: OmniColor, hsvResultContainer: FloatArray): number[];
+        toHsv(r: ColorComponent, g: ColorComponent, b: ColorComponent): number[];
+        toHsv(r: ColorComponent, g: ColorComponent, b: ColorComponent, hsvResultContainer: FloatArray): number[];
         toHsva(color: OmniColor): number[];
+        toHsva(color: OmniColor, hsvaResultContainer: FloatArray): number[];
+        toHsva(r: ColorComponent, g: ColorComponent, b: ColorComponent, a: ColorComponent): number[];
+        toHsva(r: ColorComponent, g: ColorComponent, b: ColorComponent, a: ColorComponent, hsvaResultContainer: FloatArray): number[];
         toHsl(color: OmniColor): number[];
+        toHsl(color: OmniColor, hslResultContainer: FloatArray): number[];
+        toHsl(r: ColorComponent, g: ColorComponent, b: ColorComponent): number[];
+        toHsl(r: ColorComponent, g: ColorComponent, b: ColorComponent, hslResultContainer: FloatArray): number[];
         toHsla(color: OmniColor): number[];
+        toHsla(r: ColorComponent, g: ColorComponent, b: ColorComponent, a: ColorComponent): number[];
         toRgbString(color: OmniColor): string;
+        toRgbString(r: ColorComponent, g: ColorComponent, b: ColorComponent): string;
         toRgbaString(color: OmniColor, options?: boolean | StringOptions): string;
         toArgbString(color: OmniColor, options?: boolean | StringOptions): string;
         toHsvString(color: OmniColor): string;
+        toHsvString(r: ColorComponent, g: ColorComponent, b: ColorComponent): string;
         toHsvaString(color: OmniColor, options?: boolean | StringOptions): string;
         toHslString(color: OmniColor): string;
+        toHslString(r: ColorComponent, g: ColorComponent, b: ColorComponent): string;
         toHslaString(color: OmniColor, options?: boolean | StringOptions): string;
         isSimilar(colorA: OmniColor, colorB: OmniColor, threshold?: number, algorithm?: DetectionAlgorithm): boolean;
+        isSimilar(colorA: OmniColor, colorB: OmniColor, options: { threshold?: number; similarity?: number; algorithm?: DetectionAlgorithm; }): boolean;
         isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean): boolean;
         distance(colorA: OmniColor, colorB: OmniColor, algorithm?: DetectionAlgorithm): number;
+        distance(colorA: OmniColor, colorB: OmniColor, options: { algorithm?: DetectionAlgorithm; }): number;
         invert(color: OmniColor): ColorInt;
         blend(colorA: OmniColor, colorB: OmniColor, ratio?: number | PercentString): ColorInt;
         contrast(foreground: OmniColor, background: OmniColor): number;
+        toOklab(color: OmniColor): number[];
+        oklab(L: number | PercentString, a: number, b: number, alpha?: number): ColorInt;
+        oklab(components: (number | PercentString)[]): ColorInt;
+        toOklch(color: OmniColor): number[];
+        oklch(L: number | PercentString, C: number, h: number, alpha?: number): ColorInt;
+        oklch(components: (number | PercentString)[]): ColorInt;
+        ensureContrast(color: OmniColor, background: OmniColor, ratio?: number): ColorInt;
+        harmony(color: OmniColor, type: Colors.HarmonyType): ColorInt[];
+        tones(color: OmniColor, count?: number): ColorInt[];
+        derive(color: OmniColor): Colors.DerivedColors;
+        nightVariant(color: OmniColor): ColorInt;
+        simulate(color: OmniColor, deficiency: Colors.ColorVisionDeficiency): ColorInt;
+        extract(image: ImageWrapper, options?: Colors.ExtractOptions): ColorInt[];
         equals(colorA: OmniColor, colorB: OmniColor): boolean;
         luminance(color: OmniColor): number;
         toColorStateList(...color: (OmniColor)[]): android.content.res.ColorStateList;
         setPaintColor(paint: Paint, color: OmniColor): void;
         build(): Color;
+        build(color: OmniColor): Color;
+        build(r: ColorComponent, g: ColorComponent, b: ColorComponent): Color;
+        build(r: ColorComponent, g: ColorComponent, b: ColorComponent, a: ColorComponent): Color;
         summary(color: OmniColor): string;
+    }
+
+    interface Compose {
+        version: { plugin: string; contract: number; compose: string } | null;
+        sessions: ReadonlyArray<ComposeSession>;
+        ComposeError: ComposeErrorConstructor;
+        isAvailable(): boolean;
+        createElement<N extends ComposeCatalogNodeName>(type: N, ...args: ComposeFactoryArguments<N>): ComposeNode<N>;
+        modifier(): ComposeModifier;
+        state<T>(initial: T): ComposeState<T>;
+        ref<T extends ComposeNode = ComposeNode>(): ComposeRef<T>;
+        batch<T>(callback: () => T): T;
+        mount(root: ComposeNode | (() => ComposeNode), options?: ComposeMountOptions | null): ComposeSession;
+        floaty(root: ComposeNode | (() => ComposeNode), options?: ComposeFloatyOptions | null): ComposeFloatyWindow;
+        post(callback: () => void, delay?: number): void;
+        theme(): ComposeThemeSnapshot;
+        theme(theme: ComposeTheme | null | undefined): ComposeThemeSnapshot;
+    }
+
+    interface ComposeError {
+        new(message?: string, code?: ComposeErrorCode | string, nodeId?: number | null, prop?: string | null, cause?: unknown): ComposeError;
+        prototype: ComposeError;
     }
 
     interface Console {
         assert(value: boolean | (() => boolean), message?: string): void;
         rawInput(): string;
+        rawInput(data: any, ...args: any[]): string;
         input(data?: any, ...args: any[]): any;
         verbose(data?: any, ...text): void;
         log(data?: any, ...text): void;
@@ -948,6 +1124,7 @@ declare namespace AutoJs6 {
         time(label?: string): void;
         timeEnd(label?: string): void;
         trace(message: string, ...args): void;
+        trace(message: string, level: 'verbose' | 'debug' | 'info' | 'warn' | 'error' | number): void;
         setGlobalLogConfig(config: Console.GlobalLogConfig): void;
         resetGlobalLogConfig(): void;
         show(isAutoExpand?: boolean): this;
@@ -970,6 +1147,9 @@ declare namespace AutoJs6 {
         setTitleIconsTint(color: OmniColor): this;
         setContentTextSize(size: number): this;
         setContentTextColor(colors: OmniColor): this;
+        setContentTextColor(colors: OmniColor[]): this;
+        setContentTextColor(colors: { verbose?: OmniColor; log?: OmniColor; info?: OmniColor; warn?: OmniColor; error?: OmniColor; assert?: OmniColor; }): this;
+        setContentTextColor(verbose: OmniColor, log?: OmniColor, info?: OmniColor, warn?: OmniColor, error?: OmniColor, assert?: OmniColor): this;
         setContentBackgroundColor(color: OmniColor): this;
         setContentBackgroundTint(color: OmniColor): this;
         setContentBackgroundAlpha(alpha: number): this;
@@ -981,6 +1161,7 @@ declare namespace AutoJs6 {
         setBackgroundAlpha(alpha: number): this;
         resetBackgroundAlpha(): this;
         setExitOnClose(timeout: number): this;
+        setExitOnClose(exitOnClose?: boolean): this;
         setTouchable(touchable?: boolean): this;
         setAvoidStatusBar(avoid?: boolean): this;
         setTimeVisible(visible?: boolean): this;
@@ -1142,9 +1323,13 @@ declare namespace AutoJs6 {
         fromHex(hex: string): number[];
         toHex(bytes: number[]): string;
         digest(message: Crypto.Input, algorithm?: Crypto.DigestAlgorithm, options?: Crypto.DigestOptions): Crypto.Output;
+        digest(message: Crypto.Input, options: Crypto.DigestOptions): Crypto.Output;
         encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;
+        encrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;
         decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options: Crypto.CipherFileOptions, ): void;
+        decrypt(data: Crypto.Input, key: Crypto.Key | java.security.Key, transformation: Crypto.CipherTransformation.All, options?: Crypto.CipherOptions, ): Crypto.Output;
         generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm): Crypto.KeyPair;
+        generateKeyPair(algorithm: Crypto.KeyPairGeneratorAlgorithm, length: number): Crypto.KeyPair;
     }
 
     interface Cvt {
@@ -1202,8 +1387,11 @@ declare namespace AutoJs6 {
         isScreenPortrait(): boolean;
         isScreenLandscape(): boolean;
         keepAwake(flags: number): void;
+        keepAwake(flags: number, timeout: number): void;
         keepScreenDim(): void;
+        keepScreenDim(timeout: number): void;
         keepScreenOn(): void;
+        keepScreenOn(timeout: number): void;
         setAlarmVolume(i: number): void;
         setBrightness(b: number): void;
         setBrightnessMode(b: number): void;
@@ -1211,6 +1399,8 @@ declare namespace AutoJs6 {
         setNotificationVolume(i: number): void;
         toString(): string;
         vibrate(pattern: OmniVibrationPattern, delay?: number): void;
+        vibrate(millis: number): void;
+        vibrate(off: number, millis: number): void;
         wakeUp(): void;
         wakeUpIfNeeded(): void;
         getIpAddress(useIPv4?: boolean | null): string;
@@ -1236,8 +1426,10 @@ declare namespace AutoJs6 {
         alert(title: string, content?: string, callback?: (input: null) => void): void | Promise<any>;
         confirm(title: string, content?: string, callback?: (input: null) => void): boolean | Promise<any>;
         select(title: string, items: any[], callback?: (selectedIndex: number) => void): number | Promise<number>;
+        select(title: string, ...items: any[]): number;
         singleChoice(title: string, items: any[], defaultIndex?: number, callback?: (selectedIndex: number) => void): number | Promise<any>;
         multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<number[]>;
+        multiChoice( title: string, items: any[], defaultIndices: number[] | null | undefined, callback: (selectedIndices: number[]) => void, ): number[] | null;
         build(properties: Dialogs.Build.Properties): Dialogs.JsDialog;
     }
 
@@ -1263,7 +1455,9 @@ declare namespace AutoJs6 {
         text(source: Epub.Source, target?: Epub.TextTarget | null, options?: Epub.TextOptions): string;
         textAsync(source: Epub.Source, target?: Epub.TextTarget | null, options?: Epub.TextOptions): Promise<string>;
         cover(source: Epub.Source): ImageWrapper;
+        cover(source: Epub.Source, outputPath: string, options?: Epub.ExportOptions): string;
         coverAsync(source: Epub.Source): Promise<ImageWrapper>;
+        coverAsync(source: Epub.Source, outputPath: string, options?: Epub.ExportOptions): Promise<string>;
         search(source: Epub.Source, query: string, options?: Epub.SearchOptions): Epub.SearchHit[];
         searchAsync(source: Epub.Source, query: string, options?: Epub.SearchOptions): Promise<Epub.SearchHit[]>;
         annotations(source: Epub.Source): Epub.Annotation[];
@@ -1278,6 +1472,8 @@ declare namespace AutoJs6 {
     interface Events {
         broadcast: org.autojs.autojs.core.broadcast.BroadcastEmitter;
         emitter(): EventEmitter$;
+        emitter(thread: java.lang.Thread): EventEmitter$;
+        emitter(thread: org.autojs.autojs.core.looper.MainThreadProxy): EventEmitter$;
         setTouchEventTimeout(timeout: number): void;
         getTouchEventTimeout(): number;
         observeKey(): void;
@@ -1291,12 +1487,16 @@ declare namespace AutoJs6 {
         onKeyDown(keyName: Keys.Name, listener: (event: android.view.KeyEvent) => void): org.autojs.autojs.runtime.api.Events;
         onKeyUp(keyName: Keys.Name, listener: (event: android.view.KeyEvent) => void): org.autojs.autojs.runtime.api.Events;
         onNotification(listener: (notification: org.autojs.autojs.core.notification.Notification) => void): org.autojs.autojs.runtime.api.Events;
+        onNotification(notification: org.autojs.autojs.core.notification.Notification): void;
         onToast(listener: (toast: org.autojs.autojs.core.accessibility.AccessibilityNotificationObserver.Toast) => void): org.autojs.autojs.runtime.api.Events;
+        onToast(toast: org.autojs.autojs.core.accessibility.AccessibilityNotificationObserver.Toast): void;
         onTouch(listener: (point: android.graphics.Point) => void): org.autojs.autojs.runtime.api.Events;
+        onTouch(x: number, y: number): void;
         removeAllKeyDownListeners(keyName: Keys.Name): org.autojs.autojs.runtime.api.Events;
         removeAllKeyUpListeners(keyName: Keys.Name): org.autojs.autojs.runtime.api.Events;
         removeAllTouchListeners(): org.autojs.autojs.runtime.api.Events;
         setKeyInterceptionEnabled(interceptionEnabled: boolean): void;
+        setKeyInterceptionEnabled(keyName: Keys.Name, interceptionEnabled: boolean): void;
         on(...args: any[]): any;
         once(...args: any[]): any;
         emit(...args: any[]): any;
@@ -1337,6 +1537,7 @@ declare namespace AutoJs6 {
         listDir(path: string, filter?: org.autojs.autojs.tool.Func1<string, java.lang.Boolean> | ((name: string) => boolean)): string[];
         move(pathFrom: string, pathTo: string): boolean;
         open(path: string, mode?: 'r', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;
+        open(path: string, mode: 'w' | 'a', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PWritableTextFile;
         path(relativePath?: string | null): string | null;
         read(path: string, encoding?: StandardCharsets): string;
         readAssets(path: Files.AssetsPaths, encoding?: StandardCharsets): string;
@@ -1352,7 +1553,9 @@ declare namespace AutoJs6 {
 
     interface Floaty {
         window(layout: org.autojs.autojs.core.floaty.BaseResizableFloatyWindow.ViewSupplier | Xml): org.autojs.autojs.runtime.api.Floaty.JsResizableWindow;
+        window(layout: android.view.View): org.autojs.autojs.runtime.api.Floaty.JsResizableWindow;
         rawWindow(layout: org.autojs.autojs.core.floaty.RawWindow.RawFloaty | Xml): org.autojs.autojs.runtime.api.Floaty.JsRawWindow;
+        rawWindow(layout: android.view.View): org.autojs.autojs.runtime.api.Floaty.JsRawWindow;
         hasPermission(): boolean;
         checkPermission(): boolean;
         requestPermission(): void;
@@ -1384,15 +1587,21 @@ declare namespace AutoJs6 {
         clickWhenStableAfter: Flow.WaitAfterFunction;
         clickBoundsWhenStableAfter: Flow.WaitAfterFunction;
         sleep(millis: number): Flow<void>;
+        sleep(millisMin: number, millisMax: number | string): Flow<void>;
         delay(millis: number): Flow<void>;
+        delay(millisMin: number, millisMax: number | string): Flow<void>;
         run<R>(fn: () => R | Flow<R> | PromiseLike<R>): Flow<R>;
         of<V>(value: V): Flow<V>;
         Flow: Flow.Constructor;
         all(...sources: Flow.Source[]): Flow<any[]>;
+        all(sources: Flow.Source[]): Flow<any[]>;
         race(...sources: Flow.Source[]): Flow<any>;
+        race(sources: Flow.Source[]): Flow<any>;
         any(...sources: Flow.Source[]): Flow<any>;
+        any(sources: Flow.Source[]): Flow<any>;
         cancelAll(): number;
         defaults(): Flow.Defaults;
+        defaults(options: Flow.DefaultsOptions): Flow.Defaults;
         trace(on?: boolean): boolean;
         pending: number;
         workers: number;
@@ -1401,6 +1610,7 @@ declare namespace AutoJs6 {
         clickIfExists(target: Automator.Target, options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;
         clickBoundsIfExists(target: Automator.Target, options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<boolean>, onErr?: Flow.OnErr): Flow<boolean>;
         whenPresent(cond: Flow.SelectorCond, handler: (match: UiObject[]) => any, options: Flow.WhenPresentOptions & { resultType: '[]' }): Flow<null>;
+        whenPresent<R = UiObject>(cond: Flow.Cond<R>, handler: (match: R) => any, options?: Flow.WhenPresentOptions): Flow<null>;
         repeatUntil: Flow.RepeatUntilFunction;
         clickAny(targets: Automator.Target | Automator.Target[], options?: Automator.SmartClickOptions | number, onOk?: Flow.OnOk<Automator.ClickedCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedCandidate | null>;
         clickBoundsAny(targets: Automator.Target | Automator.Target[], options?: Automator.ClickBoundsOptions | number, onOk?: Flow.OnOk<Automator.ClickedBoundsCandidate | null>, onErr?: Flow.OnErr): Flow<Automator.ClickedBoundsCandidate | null>;
@@ -1414,9 +1624,13 @@ declare namespace AutoJs6 {
         backToApp(app: Automator.AppLike, options?: Automator.BackOptions | number, onOk?: Flow.OnOk<string>, onErr?: Flow.OnErr): Flow<string>;
         toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions, onOk?: Flow.OnOk<Automator.ToggleResult>, onErr?: Flow.OnErr): Flow<Automator.ToggleResult>;
         waitForIdle(quietFor?: number): Flow<Automator.IdleResult>;
+        waitForIdle(options: Automator.IdleOptions): Flow<Automator.IdleResult>;
         waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Flow<Automator.AccessibilityEvent>;
+        waitForEvent(type: string | string[] | null, timeout: number, filter?: Automator.EventFilter | null): Flow<Automator.AccessibilityEvent>;
         waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Flow<Automator.Toast>;
+        waitForToast(timeout: number): Flow<Automator.Toast>;
         waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): Flow<org.autojs.autojs.core.notification.Notification>;
+        waitForNotification(timeout: number): Flow<org.autojs.autojs.core.notification.Notification>;
     }
 
     interface Fmt {
@@ -1456,6 +1670,7 @@ declare namespace AutoJs6 {
         getLocale(): string;
         getFinalFallback(): string;
         load(messageSource: object, locale: string): void;
+        load(messageSource: string, locale?: string): void;
         loadAll(): void;
     }
 
@@ -1464,26 +1679,34 @@ declare namespace AutoJs6 {
         invert(image: Images.ImageSource): ImageWrapper;
         isGrayscale(image: Images.ComparableImageSource): boolean;
         flip(image: Images.ImageSource): ImageWrapper;
+        flip(image: Images.ImageSource, orientation: Images.FlipOrientation): ImageWrapper;
+        flip(image: Images.ImageSource, horizontal: boolean, vertical: boolean): ImageWrapper;
         detectColor( image: Images.ImageSource, color: Color$, x: number, y: number, threshold?: number, algorithm?: DetectionAlgorithm, ): boolean;
         detectMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;
         detectsMultiColors( image: Images.ImageSource, x: number, y: number, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): boolean;
         findPointByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Point | null;
+        findPointByColor( image: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
         findPointByColorExactly( image: Images.ImageSource, color: Color$, options?: Pick<Images.ColorSearchOptions, 'region'>, ): OpenCV.Point | null;
+        findPointByColorExactly( image: Images.ImageSource, color: Color$, x?: X, y?: Y, width?: Width, height?: Height, ): OpenCV.Point | null;
         findPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): OpenCV.Points;
         findPointByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Point | null;
         findPointsByColors( image: Images.ImageSource, firstColor: Color$, paths: Images.ColorPath[], options?: Images.ColorSearchOptions, ): OpenCV.Points;
         countPointsByColor( image: Images.ImageSource, color: Color$, options?: Images.ColorSearchOptions, ): number;
         getMeanColor(image: Images.ImageSource, region?: OmniRegion): ColorInt;
         findPointByImage( image: Images.ImageSource, template: Images.ImageSource, options?: Images.ImageSearchOptions, ): OpenCV.Point | null;
+        findPointByImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
         findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
+        findImage(img: Images.ImageSource, template: Images.ImageSource, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;
         initOpenCvIfNeeded(): void;
         captureScreen(): ImageWrapper;
+        captureScreen(path: string): boolean;
         read(path: string, isStrict?: boolean): ImageWrapper | null;
         imread(path: string): org.autojs.autojs.core.opencv.Mat;
         copy(image: Images.ImageSource): ImageWrapper;
         load(src: string): ImageWrapper | null;
         loadAsync(src: string): Promise<ImageWrapper | null>;
         clip(image: Images.ImageSource, x: number, y: number, w: number, h: number): ImageWrapper;
+        clip(image: Images.ImageSource, region: OmniRegion): ImageWrapper;
         pixel(image: ImageWrapper, x: number, y: number): ColorInt;
         adaptiveThreshold( src: ImageWrapper, maxValue: number, adaptiveMethod: Images.AdaptiveThresholdTypes, thresholdType: 'BINARY' | 'BINARY_INV', blockSize: number, C: number, ): ImageWrapper;
         blur( src: ImageWrapper, ksize: Side | [Width, Height?], anchor?: [X, Y], type?: Images.BorderTypes, ): ImageWrapper;
@@ -1509,7 +1732,11 @@ declare namespace AutoJs6 {
         medianBlur(src: ImageWrapper, ksize: Side | [Side, Side]): ImageWrapper;
         readPixels(image: Images.ImageSource): { data: number[], width: Width, height: Height };
         requestScreenCapture(landscape?: boolean): boolean;
+        requestScreenCapture(options: Images.ScreenCaptureOptions): boolean;
+        requestScreenCapture(width: number, height: number): boolean;
         requestScreenCaptureAsync(landscape?: boolean): Promise<boolean>;
+        requestScreenCaptureAsync(options: Images.ScreenCaptureOptions): Promise<boolean>;
+        requestScreenCaptureAsync(width: number, height: number): Promise<boolean>;
         stopScreenCapture(): void;
         getScreenCaptureOptions(): org.autojs.autojs.core.image.capture.ScreenCapturer.Options | null;
         resize(src: ImageWrapper | string, dsize: [Side] | [Width, Height], interpolation?: Images.InterpolationFlags): ImageWrapper;
@@ -1541,6 +1768,31 @@ declare namespace AutoJs6 {
         ncc(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource): number;
         isEqual(imageA: Images.ImageSource, imageB: Images.ImageSource): boolean;
         getSimilarity(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource, options?: Images.SimilarityOptions): number;
+    }
+
+    interface Installer {
+        install(source: Installer.InstallSource, options?: Installer.InstallOptions): Installer.InstallResult;
+        install(sources: Installer.InstallSource[], options?: Installer.InstallOptions): Installer.InstallResult[];
+        install(source: Installer.InstallSource | Installer.InstallSource[], options?: Installer.InstallOptions): Installer.InstallResult | Installer.InstallResult[];
+        installAsync(source: Installer.InstallSource, options?: Installer.InstallOptions): Promise<Installer.InstallResult>;
+        installAsync(sources: Installer.InstallSource[], options?: Installer.InstallOptions): Promise<Installer.InstallResult[]>;
+        installAsync(source: Installer.InstallSource | Installer.InstallSource[], options?: Installer.InstallOptions): Promise<Installer.InstallResult | Installer.InstallResult[]>;
+        session(source: Installer.InstallSource, options?: Installer.InstallOptions): Installer.InstallSession<Installer.InstallResult>;
+        session(sources: Installer.InstallSource[], options?: Installer.InstallOptions): Installer.InstallSession<Installer.InstallResult[]>;
+        session(source: Installer.InstallSource | Installer.InstallSource[], options?: Installer.InstallOptions): Installer.InstallSession;
+        uninstall(packageName: string, options?: Installer.UninstallOptions): Installer.UninstallResult;
+        uninstallAsync(packageName: string, options?: Installer.UninstallOptions): Promise<Installer.UninstallResult>;
+        inspect(source: Installer.Source): Installer.PackageArchiveInfo;
+        inspectAsync(source: Installer.Source): Promise<Installer.PackageArchiveInfo>;
+        authorizer: Installer.Authorizers;
+        isDefault(): boolean;
+        setDefault(enabled?: boolean, options?: Installer.DefaultOptions): boolean;
+        setDefaultAsync(enabled?: boolean, options?: Installer.DefaultOptions): Promise<boolean>;
+        users(): Installer.DeviceUser[];
+        usersAsync(): Promise<Installer.DeviceUser[]>;
+        isAvailable(): boolean;
+        status: Installer.Status;
+        InstallerError: Installer.InstallerErrorConstructor;
     }
 
     interface Jsox {
@@ -1584,8 +1836,12 @@ declare namespace AutoJs6 {
 
     interface Mail {
         connect(options: Mail.AccountOptions): Mail.Client;
+        connect(alias: string): Mail.Client;
         connectAsync(options: Mail.AccountOptions): Promise<Mail.Client>;
+        connectAsync(alias: string): Promise<Mail.Client>;
         setDefault(client: Mail.Client): Mail.Client;
+        setDefault(options: Mail.AccountOptions): Mail.Client;
+        setDefault(alias: string): Mail.Client;
         default: Mail.Client | null;
         close(): void;
         providers: Mail.Providers;
@@ -1595,15 +1851,27 @@ declare namespace AutoJs6 {
 
     interface Mathx {
         randInt(range?: number[]): number;
+        randInt(stop: number): number;
+        randInt(start: number, stop: number): number;
+        randInt(...numbers: number[]): number;
         sum(num: number[], fraction?: number): number;
+        sum(...nums: number[]): number;
         avg(num: number[], fraction?: number): number;
+        avg(...nums: number[]): number;
         median(num?: number[], fraction?: number): number;
+        median(...nums: number[]): number;
         var(num: number[], fraction?: number): number;
+        var(...nums: number[]): number;
         std(num: number[], fraction?: number): number;
+        std(...nums: number[]): number;
         cv(num: number[], fraction?: number): number;
+        cv(...nums: number[]): number;
         max(num: number[], fraction?: number): number;
+        max(...nums: number[]): number;
         min(num: number[], fraction?: number): number;
+        min(...nums: number[]): number;
         dist( point1: [number, number] | { x: number, y: number } | org.opencv.core.Point | android.graphics.Rect, point2: [number, number] | { x: number, y: number } | org.opencv.core.Point | android.graphics.Rect, fraction?: number, ): number;
+        dist(rect: android.graphics.Rect, fraction?: number): number;
         logMn(base: number, antilogarithm: number, fraction?: number): number;
         floorLog(base: number, antilogarithm: number): number;
         ceilLog(base: number, antilogarithm: number): number;
@@ -1632,11 +1900,15 @@ declare namespace AutoJs6 {
         get(path: string, streamKind: Mediainfo.StreamKind, parameter: string, options?: Mediainfo.QueryOptions): string;
         countGet(path: string, streamKind: Exclude<Mediainfo.StreamKind, 'max'>): number;
         snapshot(path: string, options: Mediainfo.SnapshotOptions & { readonly schema: 'autojs6-plugin-mediainfo-snapshot-v1' }): Mediainfo.SnapshotV1;
+        snapshot(path: string, options: Mediainfo.SnapshotOptions & { readonly schema: 'autojs6-plugin-mediainfo-snapshot-v2' }): Mediainfo.SnapshotV2;
+        snapshot(path: string, options?: Mediainfo.DefaultSnapshotOptions): Mediainfo.SnapshotV1;
+        snapshot(path: string, options: Mediainfo.SnapshotOptions): Mediainfo.Snapshot;
         capabilities(): Mediainfo.Capabilities;
     }
 
     interface Mime {
         getMediaType(mediaType: string): okhttp3.MediaType;
+        getMediaType(mimeType: string): string;
         fromFileOr(path: string, defaultType: string): string;
         fromFileOrWildcard(path: string): string;
         parseMediaType(mediaType: string): okhttp3.MediaType | null;
@@ -1644,7 +1916,9 @@ declare namespace AutoJs6 {
         DIRECTORY_MIME_TYPE: eu.medsea.mimeutil.MimeType;
         UNKNOWN_MIME_TYPE: eu.medsea.mimeutil.MimeType;
         addKnownMimeType(mimeType: eu.medsea.mimeutil.MimeType): void;
+        addKnownMimeType(mimeType: string): void;
         getExtension(file: java.io.File): string;
+        getExtension(fileName: string): string;
         getFirstMimeType(mimeTypes: string): eu.medsea.mimeutil.MimeType;
         getInputStreamForURL(url: java.net.URL): java.io.InputStream;
         getKnownMimeTypes(): java.util.Collection<any>;
@@ -1656,6 +1930,7 @@ declare namespace AutoJs6 {
         getSubtype(mimeType: string): string;
         getType(mimeType: string): string;
         isMimeTypeKnown(mimeType: eu.medsea.mimeutil.MimeType): boolean;
+        isMimeTypeKnown(mimeType: string): boolean;
         isTextMimeType(mimeType: eu.medsea.mimeutil.MimeType): boolean;
         APPLICATION_1D_INTERLEAVED_PARITYFEC: "application/1d-interleaved-parityfec";
         APPLICATION_3GPDASH_QOE_REPORT_XML: "application/3gpdash-qoe-report+xml";
@@ -4230,7 +4505,13 @@ declare namespace AutoJs6 {
         mlkit: OcrMLKit;
         rapid: OcrRapid;
         recognizeText(options?: DetectOptionsAny): string[];
+        recognizeText(region: OmniRegion): string[];
+        recognizeText(img: ImageWrapper | string, options?: DetectOptionsAny): string[];
+        recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
         detect(options?: DetectOptionsAny): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsAny): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
         mode: ModeName;
         tap(mode: Mode): void;
         summary(): string;
@@ -4321,9 +4602,35 @@ declare namespace AutoJs6 {
 
     interface Qrcode {
         detect(options: QrCode.DetectAllOptions): QrCode.Result[];
+        detect(options: DetectOptions, isAll: true): QrCode.Result[];
+        detect(isAll: true): QrCode.Result[];
+        detect(img: ImageWrapper | string, options: QrCode.DetectAllOptions): QrCode.Result[];
+        detect(img: ImageWrapper | string, isAll: true): QrCode.Result[];
+        detect(img: ImageWrapper | string, options: DetectOptions, isAll: true): QrCode.Result[];
+        detect(options?: DetectOptions): QrCode.Result | QrCode.Result[] | null;
+        detect(options: DetectOptions, isAll: boolean): QrCode.Result | QrCode.Result[] | null;
+        detect(isAll: false): QrCode.Result | null;
+        detect(isAll: boolean): QrCode.Result | QrCode.Result[] | null;
+        detect(img: ImageWrapper | string, options?: DetectOptions): QrCode.Result | QrCode.Result[] | null;
+        detect(img: ImageWrapper | string, isAll: boolean): QrCode.Result | QrCode.Result[] | null;
+        detect(img: ImageWrapper | string, options: DetectOptions, isAll: boolean): QrCode.Result | QrCode.Result[] | null;
         detectAll(options?: DetectOptions): QrCode.Result[];
+        detectAll(img: ImageWrapper | string, options?: DetectOptions): QrCode.Result[];
         recognizeText(options: QrCode.DetectAllOptions): string[];
+        recognizeText(options: DetectOptions, isAll: true): string[];
+        recognizeText(isAll: true): string[];
+        recognizeText(img: ImageWrapper | string, options: QrCode.DetectAllOptions): string[];
+        recognizeText(img: ImageWrapper | string, isAll: true): string[];
+        recognizeText(img: ImageWrapper | string, options: DetectOptions, isAll: true): string[];
+        recognizeText(options?: DetectOptions): string | string[] | null;
+        recognizeText(options: DetectOptions, isAll: boolean): string | string[] | null;
+        recognizeText(isAll: false): string | null;
+        recognizeText(isAll: boolean): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, options?: DetectOptions): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, isAll: boolean): string | string[] | null;
+        recognizeText(img: ImageWrapper | string, options: DetectOptions, isAll: boolean): string | string[] | null;
         recognizeTexts(options?: DetectOptions): string[];
+        recognizeTexts(img: ImageWrapper | string, options?: DetectOptions): string[];
     }
 
     interface Recorder {
@@ -4355,12 +4662,18 @@ declare namespace AutoJs6 {
         topLevelScope: org.autojs.autojs.rhino.TopLevelScope;
         createContinuation(scope?: org.mozilla.javascript.Scriptable): org.autojs.autojs.rhino.continuation.Continuation;
         exit(): void;
+        exit(e: java.lang.Throwable): void;
         getClip(): string;
         getImages(): org.autojs.autojs.runtime.api.Images;
         isStopped(): boolean;
         loadDex(path: string): void;
         loadJar(path: string): void;
         loadJarWithR8(program: string, keepRules: string[]): void;
+        loadJarWithR8(program: string, keepRules: string[], exportDirectory: string): void;
+        loadJarWithR8(program: string, keepRules: string[], orderedClasspath: string[]): void;
+        loadJarWithR8(program: string, keepRules: string[], orderedClasspath: string[], exportDirectory: string): void;
+        loadJarWithR8(program: string, keepRules: string[], orderedClasspath: string[], consumerRules: string[], consumerRuleClasspathOrdinals: number[]): void;
+        loadJarWithR8(program: string, keepRules: string[], orderedClasspath: string[], consumerRules: string[], consumerRuleClasspathOrdinals: number[], exportDirectory: string): void;
         retraceR8Stack(obfuscatedStackTrace: string, mapping: string, retraceMetadata: string): string;
         requestPermissions(permissions: string[]): void;
         requiresApi(api: number): void;
@@ -4378,7 +4691,12 @@ declare namespace AutoJs6 {
         color(o: OmniColor): ColorInt;
         throwable(o: OmniThrowable): java.lang.Throwable;
         point(o: { x: number, y: number }): android.graphics.Point;
+        point(o: android.graphics.Point): android.graphics.Point;
+        point(o: org.opencv.core.Point): android.graphics.Point;
+        point(o: [number, number]): android.graphics.Point;
+        point(x: number, y?: number): android.graphics.Point;
         time(source: S13n.TimeSourceParam, options: { fromUnit?: S13n.TimeUnitParam; toUnit?: S13n.TimeUnitParam; }): number;
+        time(source: S13n.TimeSourceParam, fromUnit?: S13n.TimeUnitParam, toUnit?: S13n.TimeUnitParam): number;
         bytes(source: Converter.BytesValue, fromUnit?: S13n.BytesUnitParam): Converter.BytesResult;
     }
 
@@ -4434,6 +4752,17 @@ declare namespace AutoJs6 {
     interface Sensors {
         ignoresUnsupportedSensor: boolean;
         register(sensorName: string, delay?: number): org.autojs.autojs.runtime.api.Sensors.SensorEventEmitter;
+        register(sensorName: 'light', delay?: number): Sensors.Light;
+        register(sensorName: 'accelerometer', delay?: number): Sensors.Accelerometer;
+        register(sensorName: 'ambient_temperature', delay?: number): Sensors.AmbientTemperature;
+        register(sensorName: 'gravity', delay?: number): Sensors.Gravity;
+        register(sensorName: 'gyroscope', delay?: number): Sensors.Gyroscope;
+        register(sensorName: 'linear_acceleration', delay?: number): Sensors.LinearAcceleration;
+        register(sensorName: 'magnetic_field', delay?: number): Sensors.MagneticField;
+        register(sensorName: 'orientation', delay?: number): Sensors.Orientation;
+        register(sensorName: 'pressure', delay?: number): Sensors.Pressure;
+        register(sensorName: 'proximity', delay?: number): Sensors.Proximity;
+        register(sensorName: 'relative_humidity', delay?: number): Sensors.RelativeHumidity;
         unregister(...args: any[]): any;
         unregisterAll(...args: any[]): any;
     }
@@ -4445,7 +4774,13 @@ declare namespace AutoJs6 {
 
     interface Shell {
         execCommand(command: Shell.Command): AbstractShell.Result;
+        execCommand(command: Shell.Command, withRoot: boolean | number): AbstractShell.Result;
+        execCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): AbstractShell.Result;
+        execCommand(command: Shell.Command, commandArgument: Shell.CommandArguments, withRoot: boolean | number): AbstractShell.Result;
         getCommand(command: Shell.Command): string;
+        getCommand(command: Shell.Command, withRoot: boolean | number): string;
+        getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): string;
+        getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments, withRoot: boolean | number): string;
         fromIntent(i: Intent.Common): string;
         kill(app: org.autojs.autojs.util.App | string): boolean;
         currentPackage(): string;
@@ -4456,7 +4791,13 @@ declare namespace AutoJs6 {
     interface Shizuku {
         state: Shizuku.State;
         execCommand(command: Shell.Command): AbstractShell.Result;
+        execCommand(command: Shell.Command, withRoot: boolean | number): AbstractShell.Result;
+        execCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): AbstractShell.Result;
+        execCommand(command: Shell.Command, commandArgument: Shell.CommandArguments, withRoot: boolean | number): AbstractShell.Result;
         getCommand(command: Shell.Command): string;
+        getCommand(command: Shell.Command, withRoot: boolean | number): string;
+        getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): string;
+        getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments, withRoot: boolean | number): string;
         kill(app: org.autojs.autojs.util.App | string): boolean;
         currentPackage(): string;
         currentActivity(): string;
@@ -4480,6 +4821,8 @@ declare namespace AutoJs6 {
         getInt(propName: string, defaultValue?: number): number | null;
         getBoolean(propName: string, defaultValue?: boolean): boolean | null;
         getAll(): SysProps.Properties;
+        getAll(filter: SysProps.Filter | SysProps.FilterOptions): SysProps.Properties;
+        getAll(keyFilter: SysProps.Filter, valueFilter: SysProps.Filter): SysProps.Properties;
     }
 
     interface Tasks {
@@ -4497,12 +4840,41 @@ declare namespace AutoJs6 {
         getIntentTask(id: number): IntentTask$ | null;
         removeTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): T;
         removeTimedTask(id: number): TimedTask$ | null;
+        removeTimedTask<TResult = TimedTask$ | null>( id: number, options: Tasks.Fulfillment<TimedTask$ | null, TResult>, ): Tasks.FulfillmentResult<TimedTask$ | null, TResult>;
         removeIntentTask(id: number): IntentTask$ | null;
+        removeIntentTask<TResult = IntentTask$ | null>( id: number, options: Tasks.Fulfillment<IntentTask$ | null, TResult>, ): Tasks.FulfillmentResult<IntentTask$ | null, TResult>;
         updateTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;
         queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
         queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
         timeFlagToDays(flag: number): number[];
         daysToTimeFlag(days: number[]): number;
+    }
+
+    interface Terminal {
+        open(): Terminal.Session;
+        open(directory: string): Terminal.Session;
+        open(options: Terminal.OpenOptions): Terminal.Session;
+        openAsync(): Promise<Terminal.Session>;
+        openAsync(directory: string): Promise<Terminal.Session>;
+        openAsync(options: Terminal.OpenOptions): Promise<Terminal.Session>;
+        sessions(): Terminal.Session[];
+        sessionsAsync(): Promise<Terminal.Session[]>;
+        session(id: string): Terminal.Session | null;
+        close(id: string): boolean;
+        closeAsync(id: string): Promise<boolean>;
+        closeAll(): number;
+        closeAllAsync(): Promise<number>;
+        show(id?: string): void;
+        showAsync(id?: string): Promise<void>;
+        state(): Terminal.PluginState;
+        isAvailable(): boolean;
+        isAvailableAsync(): Promise<boolean>;
+        exec(command: string, options?: Terminal.ExecOptions): Terminal.Session;
+        execAsync(command: string, options?: Terminal.ExecOptions): Promise<Terminal.Session>;
+        env(): Terminal.Environment;
+        envAsync(): Promise<Terminal.Environment>;
+        npm: Terminal.Npm;
+        TerminalError: Terminal.ErrorConstructor;
     }
 
     interface Threads {
@@ -4706,9 +5078,13 @@ declare namespace AutoJs6 {
     interface Zip {
         open(zipPath: string, options?: Zip.OpenOptions): Zip.ZipFileHandle;
         zipFile(filePath: string, destZipPath: Zip.DestinationPath, options?: Zip.ZipOptions): Zip.ZipFileHandle;
+        zipFile(filePath: string, options: Zip.ZipOptions): Zip.ZipFileHandle;
         zipDir(dirPath: string, destZipPath: Zip.DestinationPath, options?: Zip.ZipOptions): Zip.ZipFileHandle;
+        zipDir(dirPath: string, options: Zip.ZipOptions): Zip.ZipFileHandle;
         zipFiles(filePathList: Zip.FilePathList, destZipPath: Zip.DestinationPath, options?: Zip.ZipOptions): Zip.ZipFileHandle;
+        zipFiles(filePathList: Zip.FilePathList, options: Zip.ZipOptions): Zip.ZipFileHandle;
         unzip(zipPath: string, destPath: Zip.DestinationPath, options?: Zip.UnzipOptions): Zip.ZipFileHandle;
+        unzip(zipPath: string, options: Zip.UnzipOptions): Zip.ZipFileHandle;
     }
 
 }
@@ -4724,6 +5100,8 @@ declare const barcode: AutoJs6.Barcode;
 declare const base64: AutoJs6.Base64;
 declare const Color: AutoJs6.Color;
 declare const colors: AutoJs6.Colors;
+declare const compose: AutoJs6.Compose;
+declare const ComposeError: AutoJs6.ComposeError;
 declare const console: AutoJs6.Console;
 declare const context: AutoJs6.Context;
 declare const continuation: AutoJs6.Continuation;
@@ -4741,6 +5119,7 @@ declare const fmt: AutoJs6.Fmt;
 declare const http: AutoJs6.Http;
 declare const i18n: AutoJs6.I18n;
 declare const images: AutoJs6.Images;
+declare const installer: AutoJs6.Installer;
 declare const jsox: AutoJs6.Jsox;
 declare const keys: AutoJs6.Keys;
 declare const mail: AutoJs6.Mail;
@@ -4772,6 +5151,7 @@ declare const sqlite: AutoJs6.Sqlite;
 declare const storages: AutoJs6.Storages;
 declare const sysprops: AutoJs6.Sysprops;
 declare const tasks: AutoJs6.Tasks;
+declare const terminal: AutoJs6.Terminal;
 declare const threads: AutoJs6.Threads;
 declare const timers: AutoJs6.Timers;
 declare const toast: AutoJs6.Toast;
@@ -4809,17 +5189,72 @@ declare function quickSettings(): boolean;
 declare function recents(): boolean;
 declare function splitScreen(): boolean;
 declare function click(x: number, y: number): boolean;
+declare function click(point: [x: number, y: number]): boolean;
+declare function click(point: {x: number, y: number}): boolean;
+declare function click(point: android.graphics.Point): boolean;
+declare function click(point: org.opencv.core.Point): boolean;
+declare function click(text: string, index?: number): boolean;
+declare function click(left: number, top: number, right: number, bottom: number): boolean;
+declare function click(widget: UiObject): boolean;
+declare function click(bounds: android.graphics.Rect): boolean;
 declare function longClick(x: number, y: number): boolean;
+declare function longClick(point: [x: number, y: number]): boolean;
+declare function longClick(point: {x: number, y: number}): boolean;
+declare function longClick(point: android.graphics.Point): boolean;
+declare function longClick(point: org.opencv.core.Point): boolean;
+declare function longClick(text: string, index?: number): boolean;
+declare function longClick(left: number, top: number, right: number, bottom: number): boolean;
+declare function longClick(widget: UiObject): boolean;
+declare function longClick(bounds: android.graphics.Rect): boolean;
 declare function press(x: number, y: number, duration?: number): boolean;
+declare function press(point: [x: number, y: number], duration?: number): boolean;
+declare function press(duration: number, point: [x: number, y: number]): boolean;
 declare function swipe(x1: number, y1: number, x2: number, y2: number, duration: number): boolean;
+declare function swipe(pointA: [x: number, y: number], pointB: [x: number, y: number], duration: number): boolean;
+declare function swipe(pointsGroup: [[x: number, y: number], [x: number, y: number]], duration: number): boolean;
+declare function swipe(points: [x1: number, y1: number, x2: number, y2: number], duration: number): boolean;
+declare function swipe(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number]): boolean;
+declare function swipe(duration: number, pointsGroup: [[x: number, y: number], [x: number, y: number]]): boolean;
+declare function swipe(duration: number, points: [x1: number, y1: number, x2: number, y2: number]): boolean;
 declare function gesture(duration: number, ...point: [x: number, y: number][]): boolean;
+declare function gesture(duration: number, pointsGroup: [...[x: number, y: number][]]): boolean;
+declare function gesture(duration: number, points: [...number[]]): boolean;
 declare function gestureAsync(duration: number, point: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], pointG: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], pointG: [x: number, y: number], pointH: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointA: [x: number, y: number], pointB: [x: number, y: number], pointC: [x: number, y: number], pointD: [x: number, y: number], pointE: [x: number, y: number], pointF: [x: number, y: number], pointG: [x: number, y: number], pointH: [x: number, y: number], pointI: [x: number, y: number], callback: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, pointsGroup: [...[x: number, y: number][]], callback?: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, points: [...number[]], callback?: GestureResultCallbackLike): void;
+declare function gestureAsync(duration: number, ...point: [x: number, y: number][]): void;
 declare function gestures(...stroke: StrokeParams[]): boolean;
 declare function gesturesAsync(stroke: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, strokeI: StrokeParams, callback: GestureResultCallbackLike): void;
+declare function gesturesAsync(strokesGroup: [...StrokeParams[]], callback?: GestureResultCallbackLike): void;
+declare function gesturesAsync(...stroke: StrokeParams[]): void;
 declare function scrollDown(): boolean;
+declare function scrollDown(index: number): boolean;
+declare function scrollDown(text: string, index?: number): boolean;
+declare function scrollDown(left: number, top: number, right: number, bottom: number): boolean;
 declare function scrollUp(): boolean;
+declare function scrollUp(index: number): boolean;
+declare function scrollUp(text: string, index?: number): boolean;
+declare function scrollUp(left: number, top: number, right: number, bottom: number): boolean;
 declare function setText(text: string): boolean;
+declare function setText(index: number, text: string): boolean;
 declare function input(text: string): boolean;
+declare function input(index: number, text: string): boolean;
 declare function log(...args: any[]): any;
 declare function print(...args: any[]): any;
 declare function err(...args: any[]): any;
@@ -4872,9 +5307,13 @@ declare function isEmptyObject(...args: any[]): any;
 declare function isInteger(...args: any[]): any;
 declare function isBigInt(...args: any[]): any;
 declare function requestScreenCapture(landscape?: boolean): boolean;
+declare function requestScreenCapture(options: Images.ScreenCaptureOptions): boolean;
+declare function requestScreenCapture(width: number, height: number): boolean;
 declare function requestScreenCaptureAsync(...args: any[]): any;
 declare function captureScreen(): ImageWrapper;
+declare function captureScreen(path: string): boolean;
 declare function findImage( image: Images.ImageSource, template: Images.ImageSource, x?: X, y?: Y, width?: Width, height?: Height, threshold?: number, ): OpenCV.Point | null;
+declare function findImage(img: Images.ImageSource, template: Images.ImageSource, options?: { threshold?: number, weakThreshold?: number, level?: number, region?: OmniRegion, }): OpenCV.Point | null;
 declare function findImageInRegion(...args: any[]): any;
 declare function findColor(img: Images.ImageSource, color: Color$, options?: { similarity?: number, threshold?: number, region?: OmniRegion, }): OpenCV.Point | null;
 declare function findColorEquals(...args: any[]): any;
@@ -5113,10 +5552,21 @@ declare function backToApp(app: Automator.AppLike, options?: Automator.BackOptio
 declare function toggle(target: Automator.Target, checked: boolean, options?: Automator.ToggleOptions): Automator.ToggleResult;
 declare function retry<R>(fn: (attempt: number) => R, options?: Automator.RetryOptions | number): R;
 declare function waitForIdle(quietFor?: number): Automator.IdleResult;
+declare function waitForIdle(options: Automator.IdleOptions): Automator.IdleResult;
 declare function waitForEvent(type?: string | string[] | null, filter?: Automator.EventFilter | null, timeout?: number): Automator.AccessibilityEvent;
+declare function waitForEvent(type: string | string[] | null, timeout: number, filter?: Automator.EventFilter | null): Automator.AccessibilityEvent;
 declare function waitForToast(text?: Automator.ToastFilter | null, timeout?: number): Automator.Toast;
+declare function waitForToast(timeout: number): Automator.Toast;
 declare function waitForNotification(filter?: Automator.NotificationFilter | null, timeout?: number): org.autojs.autojs.core.notification.Notification;
+declare function waitForNotification(timeout: number): org.autojs.autojs.core.notification.Notification;
 declare function findIterator(...args: any[]): any;
+declare function childCount(...args: any[]): any;
+declare function maxChildCount(...args: any[]): any;
+declare function maxDepth(...args: any[]): any;
+declare function maxIndexInParent(...args: any[]): any;
+declare function minChildCount(...args: any[]): any;
+declare function minDepth(...args: any[]): any;
+declare function minIndexInParent(...args: any[]): any;
 declare const context: any;
 declare const isAutoJs6: any;
 declare const HEIGHT: any;

@@ -93,8 +93,201 @@
             parameters: ["onRejected?: Function"],
             returnType: "Promise",
             summary: "Registers a callback for promise rejection."
+        },
+        // Overloaded built-ins: `signatures` lists every overload; the first one doubles as the
+        // compatibility `signature`. Generic names (slice, parse, keys...) only match with their
+        // receiver so user functions with the same name do not pick them up.
+        {
+            name: "Array.prototype.splice",
+            aliases: ["Array.prototype.splice", "splice"],
+            signature: "splice(start: number, deleteCount?: number): any[]",
+            parameters: ["start: number", "deleteCount?: number"],
+            returnType: "any[]",
+            summary: "Removes elements from an array and returns the removed elements.",
+            signatures: [
+                {
+                    signature: "splice(start: number, deleteCount?: number): any[]",
+                    parameters: ["start: number", "deleteCount?: number"],
+                    returnType: "any[]",
+                    summary: "Removes elements from an array and returns the removed elements."
+                },
+                {
+                    signature: "splice(start: number, deleteCount: number, ...items: any[]): any[]",
+                    parameters: ["start: number", "deleteCount: number", "...items: any[]"],
+                    returnType: "any[]",
+                    isVariadic: true,
+                    summary: "Removes elements from an array, inserts new elements in their place and returns the removed elements."
+                }
+            ]
+        },
+        {
+            name: "Array.prototype.slice",
+            aliases: ["Array.prototype.slice"],
+            signature: "slice(start?: number, end?: number): any[]",
+            parameters: ["start?: number", "end?: number"],
+            returnType: "any[]",
+            summary: "Returns a shallow copy of a section of an array."
+        },
+        {
+            name: "Array.prototype.indexOf",
+            aliases: ["Array.prototype.indexOf", "indexOf"],
+            signature: "indexOf(searchElement: any, fromIndex?: number): number",
+            parameters: ["searchElement: any", "fromIndex?: number"],
+            returnType: "number",
+            summary: "Returns the index of the first occurrence of a value, or -1."
+        },
+        {
+            name: "Array.from",
+            aliases: ["Array.from"],
+            signature: "from(arrayLike: ArrayLike<any> | Iterable<any>): any[]",
+            parameters: ["arrayLike: ArrayLike<any> | Iterable<any>"],
+            returnType: "any[]",
+            summary: "Creates an array from an array-like or iterable object.",
+            signatures: [
+                {
+                    signature: "from(arrayLike: ArrayLike<any> | Iterable<any>): any[]",
+                    parameters: ["arrayLike: ArrayLike<any> | Iterable<any>"],
+                    returnType: "any[]",
+                    summary: "Creates an array from an array-like or iterable object."
+                },
+                {
+                    signature: "from(arrayLike: ArrayLike<any> | Iterable<any>, mapfn: (v: any, k: number) => any, thisArg?: any): any[]",
+                    parameters: ["arrayLike: ArrayLike<any> | Iterable<any>", "mapfn: (v: any, k: number) => any", "thisArg?: any"],
+                    returnType: "any[]",
+                    summary: "Creates an array from an array-like or iterable object, mapping every element."
+                }
+            ]
+        },
+        {
+            name: "String.prototype.replace",
+            aliases: ["String.prototype.replace", "replace"],
+            signature: "replace(searchValue: string | RegExp, replaceValue: string): string",
+            parameters: ["searchValue: string | RegExp", "replaceValue: string"],
+            returnType: "string",
+            summary: "Returns a new string with matched text replaced.",
+            signatures: [
+                {
+                    signature: "replace(searchValue: string | RegExp, replaceValue: string): string",
+                    parameters: ["searchValue: string | RegExp", "replaceValue: string"],
+                    returnType: "string",
+                    summary: "Returns a new string with matched text replaced by a string."
+                },
+                {
+                    signature: "replace(searchValue: string | RegExp, replacer: (substring: string, ...args: any[]) => string): string",
+                    parameters: ["searchValue: string | RegExp", "replacer: (substring: string, ...args: any[]) => string"],
+                    returnType: "string",
+                    summary: "Returns a new string with matched text replaced by the result of a function."
+                }
+            ]
+        },
+        {
+            name: "JSON.parse",
+            aliases: ["JSON.parse"],
+            signature: "parse(text: string, reviver?: (key: string, value: any) => any): any",
+            parameters: ["text: string", "reviver?: (key: string, value: any) => any"],
+            returnType: "any",
+            summary: "Converts a JSON string into an object."
+        },
+        {
+            name: "JSON.stringify",
+            aliases: ["JSON.stringify"],
+            signature: "stringify(value: any, replacer?: (key: string, value: any) => any, space?: string | number): string",
+            parameters: ["value: any", "replacer?: (key: string, value: any) => any", "space?: string | number"],
+            returnType: "string",
+            summary: "Converts a value to a JSON string.",
+            signatures: [
+                {
+                    signature: "stringify(value: any, replacer?: (key: string, value: any) => any, space?: string | number): string",
+                    parameters: ["value: any", "replacer?: (key: string, value: any) => any", "space?: string | number"],
+                    returnType: "string",
+                    summary: "Converts a value to a JSON string, transforming results with a replacer function."
+                },
+                {
+                    signature: "stringify(value: any, replacer?: (number | string)[] | null, space?: string | number): string",
+                    parameters: ["value: any", "replacer?: (number | string)[] | null", "space?: string | number"],
+                    returnType: "string",
+                    summary: "Converts a value to a JSON string, keeping only the listed properties."
+                }
+            ]
+        },
+        {
+            name: "Object.assign",
+            aliases: ["Object.assign"],
+            signature: "assign(target: any, ...sources: any[]): any",
+            parameters: ["target: any", "...sources: any[]"],
+            returnType: "any",
+            isVariadic: true,
+            summary: "Copies enumerable own properties from source objects to a target object."
+        },
+        {
+            name: "Object.keys",
+            aliases: ["Object.keys"],
+            signature: "keys(o: object): string[]",
+            parameters: ["o: object"],
+            returnType: "string[]",
+            summary: "Returns the names of the enumerable string properties of an object."
+        },
+        {
+            name: "setTimeout",
+            aliases: ["setTimeout"],
+            signature: "setTimeout(callback: Function, delay?: number, ...args: any[]): number",
+            parameters: ["callback: Function", "delay?: number", "...args: any[]"],
+            returnType: "number",
+            isVariadic: true,
+            summary: "Runs a callback after a delay in milliseconds and returns the timer id."
+        },
+        {
+            name: "setInterval",
+            aliases: ["setInterval"],
+            signature: "setInterval(callback: Function, delay?: number, ...args: any[]): number",
+            parameters: ["callback: Function", "delay?: number", "...args: any[]"],
+            returnType: "number",
+            isVariadic: true,
+            summary: "Runs a callback repeatedly with a fixed delay and returns the timer id."
+        },
+        {
+            name: "Math.max",
+            aliases: ["Math.max"],
+            signature: "max(...values: number[]): number",
+            parameters: ["...values: number[]"],
+            returnType: "number",
+            isVariadic: true,
+            summary: "Returns the largest of the given numbers."
+        },
+        {
+            name: "Math.min",
+            aliases: ["Math.min"],
+            signature: "min(...values: number[]): number",
+            parameters: ["...values: number[]"],
+            returnType: "number",
+            isVariadic: true,
+            summary: "Returns the smallest of the given numbers."
         }
     ];
+
+    function builtinOverloads(builtin) {
+        var entries = Array.isArray(builtin.signatures) && builtin.signatures.length ? builtin.signatures : [builtin];
+        return entries.map(function(entry) {
+            return {
+                caption: builtin.name,
+                signature: entry.signature,
+                parameters: (entry.parameters || []).slice(0),
+                returnType: entry.returnType || builtin.returnType || "",
+                docText: entry.summary || builtin.summary || "",
+                isVariadic: !!(entry.isVariadic || builtin.isVariadic)
+            };
+        });
+    }
+
+    // Pick the first overload that still has a slot for the active argument; otherwise the last.
+    function pickOverloadIndex(overloads, activeParameter) {
+        for (var i = 0; i < overloads.length; i++) {
+            if (overloads[i].isVariadic || overloads[i].parameters.length > activeParameter) {
+                return i;
+            }
+        }
+        return Math.max(0, overloads.length - 1);
+    }
 
     function normalizePosition(pos) {
         pos = pos || {};
@@ -258,15 +451,21 @@
         if (!builtin) {
             return null;
         }
-        var activeParameter = countActiveParameter(text, openIndex + 1, offset);
+        var activeParameter = Math.max(0, countActiveParameter(text, openIndex + 1, offset));
+        var overloads = builtinOverloads(builtin);
+        var activeSignature = pickOverloadIndex(overloads, activeParameter);
+        var active = overloads[activeSignature];
         return {
             caption: builtin.name,
             callee: callee,
-            signature: builtin.signature,
-            parameters: builtin.parameters.slice(0),
-            activeParameter: Math.min(activeParameter, Math.max(0, builtin.parameters.length - 1)),
-            returnType: builtin.returnType,
-            docText: builtin.summary
+            signature: active.signature,
+            parameters: active.parameters.slice(0),
+            activeParameter: activeParameter,
+            returnType: active.returnType,
+            docText: active.docText,
+            isVariadic: active.isVariadic,
+            signatures: overloads,
+            activeSignature: activeSignature
         };
     }
 
@@ -321,11 +520,22 @@
         };
     }
 
+    var AUTO_TRIGGERS = { cursor: true, typing: true, off: true };
+
+    function normalizeAutoTrigger(mode) {
+        mode = String(mode || "").toLowerCase();
+        return AUTO_TRIGGERS[mode] ? mode : "cursor";
+    }
+
     function createController(config) {
         config = config || {};
         var editor = config.editor || null;
         var session = config.session || (editor && editor.session) || null;
         var delayMs = Math.max(0, Number(config.delayMs) || DEFAULT_DELAY_MS);
+        var autoTrigger = normalizeAutoTrigger(config.autoTrigger);
+        var touchActive = false;
+        var touchScrolled = false;
+        var pending = false;
         var element = null;
         var headerElement = null;
         var captionElement = null;
@@ -387,11 +597,12 @@
         function createNavElement() {
             var nav = global.document.createElement("div");
             nav.className = "autojs6_signature_tooltip_nav";
-            nav.appendChild(createNavButton("‹", -1));
+            // Up = previous overload, down = next overload; shown only for 2+ signatures.
+            nav.appendChild(createNavButton("▴", -1));
             navCounterElement = global.document.createElement("span");
             navCounterElement.className = "autojs6_signature_tooltip_nav_counter";
             nav.appendChild(navCounterElement);
-            nav.appendChild(createNavButton("›", 1));
+            nav.appendChild(createNavButton("▾", 1));
             return nav;
         }
 
@@ -640,6 +851,7 @@
                 pos = normalizePosition(pos || (editor && editor.getCursorPosition && editor.getCursorPosition()));
                 var activeRequest = ++requestSerial;
                 var callbackInvoked = false;
+                pending = true;
                 function finish(error, help) {
                     callbackInvoked = true;
                     if (arguments.length === 1) {
@@ -649,6 +861,7 @@
                     if (activeRequest !== requestSerial || !attached) {
                         return false;
                     }
+                    pending = false;
                     var normalized = error ? null : normalizeSignatureHelp(help);
                     if (!normalized) {
                         hide();
@@ -724,14 +937,60 @@
                 name === "paste";
         }
 
+        function isTriggerCharacterExec(event) {
+            if (commandName(event) !== "insertstring") {
+                return false;
+            }
+            var text = commandText(event);
+            return text === "(" || text === "," || text.indexOf("(") >= 0;
+        }
+
+        // Auto policy: "cursor" shows whenever the caret is inside a call, "typing" only after a
+        // trigger character (the box still follows the caret while visible), "off" leaves
+        // everything to explicit triggers (showAtPosition with force).
+        function scheduleAuto(kind) {
+            if (autoTrigger === "off") {
+                return false;
+            }
+            if (autoTrigger === "typing" && kind !== "typing" && !visible) {
+                return false;
+            }
+            schedule();
+            return true;
+        }
+
+        function onCursorChange() {
+            scheduleAuto("cursor");
+        }
+
         function onAfterExec(event) {
             if (shouldScheduleAfterExec(event)) {
-                schedule();
+                scheduleAuto(isTriggerCharacterExec(event) ? "typing" : "cursor");
             }
+        }
+
+        function onScroll() {
+            if (touchActive) {
+                touchScrolled = true;
+            }
+            hide();
+        }
+
+        function setAutoTrigger(mode) {
+            autoTrigger = normalizeAutoTrigger(mode);
+            if (autoTrigger === "off") {
+                hide();
+            }
+            return autoTrigger;
+        }
+
+        function getAutoTrigger() {
+            return autoTrigger;
         }
 
         function hide() {
             requestSerial++;
+            pending = false;
             if (timer !== null) {
                 clearTimeout(timer);
                 timer = null;
@@ -753,21 +1012,45 @@
         }
 
         function hideFromEditorPointer(event) {
-            if (!isInsideTooltipEvent(event)) {
-                hide();
+            if (isInsideTooltipEvent(event)) {
+                return;
             }
+            if (event && event.type === "touchstart") {
+                touchActive = true;
+                touchScrolled = false;
+            }
+            hide();
+        }
+
+        // A tap that did not scroll re-evaluates the caret (tapping the same spot produces no
+        // changeCursor event); a scroll or fling leaves the box hidden.
+        function onTouchEnd(event) {
+            if (isInsideTooltipEvent(event)) {
+                return;
+            }
+            var scrolled = touchScrolled;
+            touchActive = false;
+            touchScrolled = false;
+            if (!scrolled) {
+                scheduleAuto("cursor");
+            }
+        }
+
+        function onTouchCancel() {
+            touchActive = false;
+            touchScrolled = false;
         }
 
         function attach() {
             if (attached || !editor || !editor.on) {
                 return;
             }
-            editor.selection.on("changeCursor", schedule);
-            editor.selection.on("changeSelection", schedule);
+            editor.selection.on("changeCursor", onCursorChange);
+            editor.selection.on("changeSelection", onCursorChange);
             if (session && session.on) {
-                session.on("change", schedule);
-                session.on("changeScrollTop", hide);
-                session.on("changeScrollLeft", hide);
+                session.on("change", onCursorChange);
+                session.on("changeScrollTop", onScroll);
+                session.on("changeScrollLeft", onScroll);
             }
             if (editor.commands && editor.commands.on) {
                 editor.commands.on("afterExec", onAfterExec);
@@ -775,6 +1058,8 @@
             if (editor.container && editor.container.addEventListener) {
                 editor.container.addEventListener("mousedown", hideFromEditorPointer);
                 editor.container.addEventListener("touchstart", hideFromEditorPointer);
+                editor.container.addEventListener("touchend", onTouchEnd);
+                editor.container.addEventListener("touchcancel", onTouchCancel);
                 editor.container.addEventListener("wheel", hideFromEditorPointer);
             }
             attached = true;
@@ -783,13 +1068,13 @@
         function detach() {
             hide();
             if (attached && editor && editor.selection) {
-                editor.selection.off("changeCursor", schedule);
-                editor.selection.off("changeSelection", schedule);
+                editor.selection.off("changeCursor", onCursorChange);
+                editor.selection.off("changeSelection", onCursorChange);
             }
             if (attached && session && session.off) {
-                session.off("change", schedule);
-                session.off("changeScrollTop", hide);
-                session.off("changeScrollLeft", hide);
+                session.off("change", onCursorChange);
+                session.off("changeScrollTop", onScroll);
+                session.off("changeScrollLeft", onScroll);
             }
             if (attached && editor && editor.commands) {
                 if (editor.commands.off) {
@@ -801,6 +1086,8 @@
             if (attached && editor && editor.container && editor.container.removeEventListener) {
                 editor.container.removeEventListener("mousedown", hideFromEditorPointer);
                 editor.container.removeEventListener("touchstart", hideFromEditorPointer);
+                editor.container.removeEventListener("touchend", onTouchEnd);
+                editor.container.removeEventListener("touchcancel", onTouchCancel);
                 editor.container.removeEventListener("wheel", hideFromEditorPointer);
             }
             attached = false;
@@ -827,12 +1114,18 @@
                 activeParameter: lastSignature ? lastSignature.activeParameter : -1,
                 signatureCount: lastHelp ? lastHelp.signatures.length : 0,
                 activeSignature: lastHelp ? selectedSignature : -1,
-                pinnedSignature: pinnedIndex >= 0
+                pinnedSignature: pinnedIndex >= 0,
+                autoTrigger: autoTrigger
             };
         }
 
         function isVisible() {
             return visible;
+        }
+
+        // True while an asynchronous provider (Python / Lua) has not answered yet.
+        function isPending() {
+            return pending;
         }
 
         function getSignatureCount() {
@@ -849,7 +1142,10 @@
             showAtPosition: showAtPosition,
             cycleSignature: cycleSignature,
             isVisible: isVisible,
+            isPending: isPending,
             getSignatureCount: getSignatureCount,
+            setAutoTrigger: setAutoTrigger,
+            getAutoTrigger: getAutoTrigger,
             getState: getState
         };
     }

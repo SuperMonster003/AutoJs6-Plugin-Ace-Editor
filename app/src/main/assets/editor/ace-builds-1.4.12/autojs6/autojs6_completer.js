@@ -302,6 +302,10 @@
             type: property.type || property.kind || (property.variable ? "variable" : "function"),
             doc: property.doc || property.summary || "",
             signature: property.signature,
+            // Declaration-backed overloads (first entry equals `signature`).
+            signatures: Array.isArray(property.signatures) && property.signatures.length > 1 ?
+                property.signatures.slice(0) :
+                undefined,
             caption: property.caption,
             qualifiedCaption: property.qualifiedCaption,
             meta: property.meta,
@@ -1129,11 +1133,33 @@
         if (!resolved || !resolved.item || !resolved.item.signature) {
             return null;
         }
-        var parsed = parseSignature(resolved.item.signature);
-        if (!parsed) {
+        // Declaration-backed overloads are listed in `signatures`; `signature` is the first one.
+        var rawSignatures = Array.isArray(resolved.item.signatures) && resolved.item.signatures.length ?
+            resolved.item.signatures :
+            [resolved.item.signature];
+        var docText = resolved.item.doc || resolved.item.summary || "";
+        var overloads = [];
+        for (var i = 0; i < rawSignatures.length; i++) {
+            var parsedEntry = parseSignature(rawSignatures[i]);
+            if (!parsedEntry) {
+                continue;
+            }
+            var lastParameter = String(parsedEntry.parameters[parsedEntry.parameters.length - 1] || "");
+            overloads.push({
+                caption: resolved.caption,
+                signature: parsedEntry.signature,
+                parameters: parsedEntry.parameters,
+                returnType: parsedEntry.returnType,
+                isVariadic: lastParameter.indexOf("...") === 0,
+                docText: docText
+            });
+        }
+        if (!overloads.length) {
             return null;
         }
-        var activeParameter = countActiveParameter(text, openIndex + 1, offset);
+        var activeParameter = Math.max(0, countActiveParameter(text, openIndex + 1, offset));
+        var activeSignature = pickOverloadIndex(overloads, activeParameter);
+        var parsed = overloads[activeSignature];
         return {
             caption: resolved.caption,
             callee: callee,
@@ -1141,8 +1167,21 @@
             parameters: parsed.parameters,
             activeParameter: Math.min(activeParameter, Math.max(0, parsed.parameters.length - 1)),
             returnType: parsed.returnType,
-            docText: resolved.item.doc || resolved.item.summary || ""
+            isVariadic: parsed.isVariadic,
+            docText: docText,
+            signatures: overloads,
+            activeSignature: activeSignature
         };
+    }
+
+    // Pick the first overload that still has a slot for the active argument; otherwise the last.
+    function pickOverloadIndex(overloads, activeParameter) {
+        for (var i = 0; i < overloads.length; i++) {
+            if (overloads[i].isVariadic || overloads[i].parameters.length > activeParameter) {
+                return i;
+            }
+        }
+        return Math.max(0, overloads.length - 1);
     }
 
     function languageIdForSession(session) {
