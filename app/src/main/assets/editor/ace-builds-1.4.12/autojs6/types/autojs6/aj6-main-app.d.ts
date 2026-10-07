@@ -8713,6 +8713,7 @@ declare namespace org {
 					public readonly onActivityResultDelegateMediator: __javaRoots.orgRoot.autojs.autojs.app.OnActivityResultDelegate.Mediator;
 					public constructor();
 					public emit(event: string, ...args: any[]): void;
+					public static execute(context: __javaRoots.androidRoot.content.Context, manager: __javaRoots.orgRoot.autojs.autojs.engine.ScriptEngineManager, task: __javaRoots.orgRoot.autojs.autojs.execution.ScriptExecutionTask): __javaRoots.orgRoot.autojs.autojs.execution.ScriptExecuteActivity.ActivityScriptExecution;
 					public finish(): void;
 					public getEmitter(): __javaRoots.orgRoot.autojs.autojs.core.eventloop.EventEmitter;
 					public getEventEmitter(): __javaRoots.orgRoot.autojs.autojs.core.eventloop.EventEmitter;
@@ -8721,7 +8722,6 @@ declare namespace org {
 					public onGenericMotionEvent(event: __javaRoots.androidRoot.view.MotionEvent): boolean;
 					public onKeyDown(keyCode: number, event: __javaRoots.androidRoot.view.KeyEvent): boolean;
 					public onOptionsItemSelected(item: __javaRoots.androidRoot.view.MenuItem): boolean;
-					public static start(context: __javaRoots.androidRoot.content.Context, execution: __javaRoots.orgRoot.autojs.autojs.execution.ScriptExecuteActivity.ActivityScriptExecution): boolean;
 				}
 				export interface ScriptExecuteActivity extends __javaRoots.orgRoot.autojs.autojs.app.OnActivityResultDelegate.DelegateHost {}
 				export namespace ScriptExecuteActivity {
