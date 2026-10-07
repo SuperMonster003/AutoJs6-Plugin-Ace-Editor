@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ### リリース履歴
 
 ******
+
+# v1.25.0
+
+###### 2026/10/07
+
+* `機能` AutoJs6 declarations 4.32.0: colors の OKLab/OKLCH 変換, コントラスト調整, 調和色, 色階, 派生配色, 夜間の対応色, 色覚特性のシミュレーション, 画像の主要色の抽出, oklab 検出アルゴリズムの補完, および colors.theme によるテーマカラー制御 (AutoJs6 6.8.0 が必要)
+* `機能` AutoJs6 declarations 4.32.0: terminal / $terminal のセッション, オープンと実行のオプション, 環境, プラグイン状態, エラー型の補完 (3-Shell Terminal プラグインが必要)
 
 # v1.23.0
 
@@ -187,12 +194,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ###### 2026/10/03
 
 * `機能` AutoJs6 declarations 4.30.0: Compose UI のノード, 状態, Modifier, テーマ, セッション, フローティングウィンドウの補完, コンポーネントのイベント引数と型付きエラーに対応 (対応するローカルホストと Compose UI プラグインが必要)
-
-# v1.21.0
-
-###### 2026/10/02
-
-* `改善` AutoJs6 declarations 4.29.0: セレクターに minDepth / maxDepth / minIndexInParent / maxIndexInParent を追加 (境界を含む, ホスト 6.8.0+ が必要), 欠けていた childCount / minChildCount / maxChildCount の宣言を補完
 
 ##### その他のリリース履歴
 

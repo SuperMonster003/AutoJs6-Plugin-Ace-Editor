@@ -1376,6 +1376,63 @@ function verifyComposeDeclarations(paths) {
     return result;
 }
 
+function verifyColorsAndTerminalDeclarations(paths) {
+    const context = createBrowserTypeScriptContext(paths);
+    const libraryTextByUri = typeScriptLibraryTextByUri(paths);
+    libraryTextByUri["file:///autojs6/types/generated/lib.autojs6.core.d.ts"] = readFileSync(paths.core, "utf8");
+    libraryTextByUri["file:///autojs6/types/lib.autojs6.extra.d.ts"] = readFileSync(paths.compatibility, "utf8");
+    const errors = [];
+    const service = context.AutoJsAceTsLanguageService.create({
+        documentUri: "file:///autojs6/editor/colors-terminal.ts",
+        libraryTextByUri,
+        notifyError: (message) => errors.push(String(message)),
+    });
+    const completions = [
+        ["colors.", ["toOklab", "oklab", "toOklch", "oklch", "ensureContrast", "harmony", "tones", "derive", "nightVariant", "simulate", "extract", "theme"]],
+        ["colors.theme.", ["get", "set", "reset", "libraries", "activate", "deactivate", "next", "state", "current"]],
+        ["terminal.", ["open", "exec", "sessions", "state", "npm"]],
+    ];
+    const validInput = [
+        "const lab: number[] = colors.toOklab('red'); const lch: number = colors.oklch(0.7, 0.1, 200, 0.5);",
+        "const triad: number[] = colors.harmony('#2196F3', 'triadic'); const accent: number = colors.derive('#2196F3').accent;",
+        "const distance: number = colors.distance('red', 'blue', 'oklab'); colors.simulate('red', 'deuteranopia');",
+        "colors.theme.set('#2196F3', { accent: '#FF9800' }); const groupId: number | null = colors.theme.current().groupId;",
+        "const session = terminal.open({ show: false }); session.write('echo hi\\n');",
+    ].join("\n");
+    const invalidInputs = [
+        ["harmony type", "colors.harmony('#2196F3', 'square');"],
+        ["deficiency", "colors.simulate('red', 'achromatopsia');"],
+        ["algorithm", "colors.distance('red', 'blue', 'lab');"],
+        ["theme option", "colors.theme.set('red', { primaryDark: 'black' });"],
+        ["theme state", "colors.theme.state();"],
+        ["terminal env", "terminal.open({ env: { TASK: 123 } });"],
+    ];
+    try {
+        // colors has more members than the completion limit, so each name is queried with a typed prefix.
+        for (const [source, expected] of completions) {
+            for (const name of expected) {
+                const typed = name.slice(0, 3);
+                const actual = completionNames(service, source + typed, typed);
+                assert(actual.includes(name), `Missing completion ${name} after ${source}${typed}`);
+            }
+        }
+        const validDiagnostics = service.getDiagnostics(sessionFor(validInput), validInput);
+        assert(Array.isArray(validDiagnostics) && validDiagnostics.length === 0,
+            `Colors/terminal rejected valid script inputs: ${(validDiagnostics || []).map((item) => item.text).join("; ")}`);
+        const diagnosticCodes = {};
+        for (const [label, source] of invalidInputs) {
+            const codes = service.getDiagnostics(sessionFor(source), source).map((item) => Number(item.raw));
+            assert(codes.length > 0, `Colors/terminal accepted ${label}`);
+            diagnosticCodes[label] = codes;
+        }
+        const state = service.getState();
+        assert(state.ready && errors.length === 0, `Colors/terminal service failed: ${state.reason}; ${errors.join("; ")}`);
+        return { completionCases: completions.length, validInputDiagnosticCount: 0, diagnosticCodes };
+    } finally {
+        service.dispose();
+    }
+}
+
 function verifyComposeTsxDeclarations(paths) {
     const context = createBrowserTypeScriptContext(paths);
     const baseLibraries = typeScriptLibraryTextByUri(paths);
@@ -3599,6 +3656,7 @@ function main() {
     const optionalGroups = verifyOptionalGroupCompletions(paths);
     const composeDeclarations = verifyComposeDeclarations(paths);
     const composeTsxDeclarations = verifyComposeTsxDeclarations(paths);
+    const colorsAndTerminalDeclarations = verifyColorsAndTerminalDeclarations(paths);
     const diagnosticScheduler = verifyDiagnosticScheduler(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const completerLanguageIsolation = verifyCompleterLanguageIsolation(paths);
@@ -3622,6 +3680,7 @@ function main() {
             optionalGroups,
             composeDeclarations,
             composeTsxDeclarations,
+            colorsAndTerminalDeclarations,
             diagnosticScheduler,
             completionRefresh,
             completerLanguageIsolation,

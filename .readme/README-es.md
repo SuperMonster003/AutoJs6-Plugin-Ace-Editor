@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -172,6 +172,13 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v1.25.0
+
+###### 2026/10/07
+
+* `Función` AutoJs6 declarations 4.32.0: autocompletado de la conversión OKLab/OKLCH, el ajuste de contraste, armonías, escalas tonales, colores derivados, variantes nocturnas, la simulación de deficiencias de la visión del color, los colores dominantes de una imagen y el algoritmo de detección oklab de colors, además del control del color del tema con colors.theme (requiere AutoJs6 6.8.0)
+* `Función` AutoJs6 declarations 4.32.0: autocompletado de sesiones de terminal / $terminal, opciones de apertura y ejecución, entorno, estado del plugin y tipos de error (requiere el plugin 3-Shell Terminal)
 
 # v1.23.0
 
@@ -187,12 +194,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/03
 
 * `Función` AutoJs6 declarations 4.30.0: autocompletado de nodos, estado, modificadores, temas, sesiones y ventanas flotantes de Compose UI, con parámetros de eventos y errores tipados (requiere un host local compatible y el plugin Compose UI)
-
-# v1.21.0
-
-###### 2026/10/02
-
-* `Mejora` AutoJs6 declarations 4.29.0: selectores minDepth / maxDepth / minIndexInParent / maxIndexInParent (inclusivos, requiere host 6.8.0+), más las declaraciones faltantes childCount / minChildCount / maxChildCount
 
 ##### Para ver más historial de versiones
 

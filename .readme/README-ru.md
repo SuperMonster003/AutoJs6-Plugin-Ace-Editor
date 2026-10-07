@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ### История выпусков
 
 ******
+
+# v1.25.0
+
+###### 2026/10/07
+
+* `Функция` AutoJs6 declarations 4.32.0: дополнение для преобразований OKLab/OKLCH, подбора контрастности, гармоничных цветов, тоновых шкал, производных цветов, ночных вариантов, имитации нарушений цветового зрения, основных цветов изображения и алгоритма обнаружения oklab в colors, а также управление цветом темы через colors.theme (нужен AutoJs6 6.8.0)
+* `Функция` AutoJs6 declarations 4.32.0: дополнение сеансов terminal / $terminal, параметров открытия и выполнения, окружения, состояния плагина и типов ошибок (нужен плагин 3-Shell Terminal)
 
 # v1.23.0
 
@@ -187,12 +194,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ###### 2026/10/03
 
 * `Функция` AutoJs6 declarations 4.30.0: дополнение узлов, состояния, модификаторов, тем, сеансов и плавающих окон Compose UI, с параметрами событий и типизированными ошибками (нужны совместимая локальная сборка хоста и плагин Compose UI)
-
-# v1.21.0
-
-###### 2026/10/02
-
-* `Улучшение` AutoJs6 declarations 4.29.0: селекторы minDepth / maxDepth / minIndexInParent / maxIndexInParent (включительно, требуется хост 6.8.0+), а также недостающие объявления childCount / minChildCount / maxChildCount
 
 ##### Подробнее об истории выпусков
 

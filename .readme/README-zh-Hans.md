@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ### 发行历史
 
 ******
+
+# v1.25.0
+
+###### 2026/10/07
+
+* `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 转换, 对比度调整, 和谐色, 色阶, 派生配色, 夜间对应色, 色觉缺陷模拟, 图像主要颜色提取与 oklab 检测算法补全, 以及 colors.theme 主题色控制 (需要 AutoJs6 6.8.0)
+* `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的会话, 打开与执行选项, 环境, 插件状态和错误类型补全 (需要 3-Shell Terminal 插件)
 
 # v1.23.0
 
@@ -187,12 +194,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ###### 2026/10/03
 
 * `新增` AutoJs6 declarations 4.30.0: Compose UI 的节点, 状态, Modifier, 主题, 会话与悬浮窗补全, 包含组件事件参数和类型化错误 (需要配套本地宿主及 Compose UI 插件)
-
-# v1.21.0
-
-###### 2026/10/02
-
-* `优化` AutoJs6 declarations 4.29.0: 选择器新增 minDepth / maxDepth / minIndexInParent / maxIndexInParent (含边界, 需要宿主 6.8.0+), 并补充缺失的 childCount / minChildCount / maxChildCount 声明
 
 ##### 更多发行历史可参阅
 

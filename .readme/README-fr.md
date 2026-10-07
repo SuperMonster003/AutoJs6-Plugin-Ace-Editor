@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,13 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.25.0
+
+###### 2026/10/07
+
+* `Fonctionnalité` AutoJs6 declarations 4.32.0: complétion des conversions OKLab/OKLCH, de l'ajustement du contraste, des harmonies, des gammes de tons, des couleurs dérivées, des variantes de nuit, de la simulation des déficiences de la vision des couleurs, des couleurs dominantes d'une image et de l'algorithme de détection oklab de colors, ainsi que du contrôle de la couleur du thème avec colors.theme (AutoJs6 6.8.0 requis)
+* `Fonctionnalité` AutoJs6 declarations 4.32.0: complétion des sessions terminal / $terminal, des options d'ouverture et d'exécution, de l'environnement, de l'état du plugin et des types d'erreur (plugin 3-Shell Terminal requis)
 
 # v1.23.0
 
@@ -187,12 +194,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/03
 
 * `Fonctionnalité` AutoJs6 declarations 4.30.0: complétion des noeuds, états, modificateurs, thèmes, sessions et fenêtres flottantes Compose UI, avec paramètres des événements et erreurs typées (hôte local compatible et plugin Compose UI requis)
-
-# v1.21.0
-
-###### 2026/10/02
-
-* `Amélioration` AutoJs6 declarations 4.29.0 : sélecteurs minDepth / maxDepth / minIndexInParent / maxIndexInParent (bornes incluses, hôte 6.8.0+ requis), plus les déclarations manquantes childCount / minChildCount / maxChildCount
 
 ##### Pour plus d'historique des versions
 

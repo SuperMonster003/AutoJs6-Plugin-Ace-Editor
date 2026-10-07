@@ -5,6 +5,13 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.25.0": {
+      "released_date": "2026/10/07",
+      "feature": [
+        "AutoJs6 declarations 4.32.0: completion for colors OKLab/OKLCH conversion, contrast adjustment, harmonies, tonal scales, derived colors, night variants, color vision deficiency simulation, dominant image colors and the oklab detection algorithm, plus colors.theme theme color control (requires AutoJs6 6.8.0)",
+        "AutoJs6 declarations 4.32.0: completion for terminal / $terminal sessions, open and exec options, environment, plugin state and error types (requires the 3-Shell Terminal plugin)"
+      ]
+    },
     "v1.23.0": {
       "released_date": "2026/10/05",
       "feature": [

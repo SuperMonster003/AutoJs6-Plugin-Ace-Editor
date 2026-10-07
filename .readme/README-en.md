@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.25.0
+
+###### 2026/10/07
+
+* `Feature` AutoJs6 declarations 4.32.0: completion for colors OKLab/OKLCH conversion, contrast adjustment, harmonies, tonal scales, derived colors, night variants, color vision deficiency simulation, dominant image colors and the oklab detection algorithm, plus colors.theme theme color control (requires AutoJs6 6.8.0)
+* `Feature` AutoJs6 declarations 4.32.0: completion for terminal / $terminal sessions, open and exec options, environment, plugin state and error types (requires the 3-Shell Terminal plugin)
 
 # v1.23.0
 
@@ -187,12 +194,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/03
 
 * `Feature` AutoJs6 declarations 4.30.0: completion for Compose UI nodes, state, modifiers, themes, sessions and floating windows, with component event parameters and typed errors (requires a matching local host and the Compose UI plugin)
-
-# v1.21.0
-
-###### 2026/10/02
-
-* `Improvement` AutoJs6 declarations 4.29.0: selector minDepth / maxDepth / minIndexInParent / maxIndexInParent (inclusive, host 6.8.0+ required), plus the missing childCount / minChildCount / maxChildCount declarations
 
 ##### Complete release history
 

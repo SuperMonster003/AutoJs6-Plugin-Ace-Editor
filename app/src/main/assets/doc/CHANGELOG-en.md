@@ -4,6 +4,13 @@
 
 ******
 
+# v1.25.0
+
+###### 2026/10/07
+
+* `Feature` AutoJs6 declarations 4.32.0: completion for colors OKLab/OKLCH conversion, contrast adjustment, harmonies, tonal scales, derived colors, night variants, color vision deficiency simulation, dominant image colors and the oklab detection algorithm, plus colors.theme theme color control (requires AutoJs6 6.8.0)
+* `Feature` AutoJs6 declarations 4.32.0: completion for terminal / $terminal sessions, open and exec options, environment, plugin state and error types (requires the 3-Shell Terminal plugin)
+
 # v1.23.0
 
 ###### 2026/10/05

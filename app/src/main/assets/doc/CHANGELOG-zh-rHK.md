@@ -4,6 +4,13 @@
 
 ******
 
+# v1.25.0
+
+###### 2026/10/07
+
+* `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 轉換, 對比度調整, 和諧色, 色階, 衍生配色, 夜間對應色, 色覺缺陷模擬, 圖像主要顏色提取與 oklab 檢測算法補全, 以及 colors.theme 主題色控制 (需要 AutoJs6 6.8.0)
+* `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的會話, 開啟與執行選項, 環境, 插件狀態和錯誤類型補全 (需要 3-Shell Terminal 插件)
+
 # v1.23.0
 
 ###### 2026/10/05

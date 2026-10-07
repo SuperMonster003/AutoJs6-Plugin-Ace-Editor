@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.25.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ### سجل الإصدارات
 
 ******
+
+# v1.25.0
+
+###### 2026/10/07
+
+* `ميزة` AutoJs6 declarations 4.32.0: إكمال تحويلات OKLab/OKLCH وضبط التباين والألوان المتناسقة والتدرجات اللونية والألوان المشتقة والمقابلات الليلية ومحاكاة قصور رؤية الألوان والألوان الرئيسية للصورة وخوارزمية الكشف oklab في colors, إضافة إلى التحكم في لون السمة عبر colors.theme (يتطلب AutoJs6 6.8.0)
+* `ميزة` AutoJs6 declarations 4.32.0: إكمال جلسات terminal / $terminal وخيارات الفتح والتنفيذ والبيئة وحالة الإضافة وأنواع الأخطاء (يتطلب إضافة 3-Shell Terminal)
 
 # v1.23.0
 
@@ -187,12 +194,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.23.0-u
 ###### 2026/10/03
 
 * `ميزة` AutoJs6 declarations 4.30.0: إكمال عقد Compose UI والحالة والمعدلات والسمات والجلسات والنوافذ العائمة, مع معاملات أحداث المكونات والأخطاء المحددة النوع (يتطلب إصدارا محليا متوافقا من المضيف وإضافة Compose UI)
-
-# v1.21.0
-
-###### 2026/10/02
-
-* `تحسين` AutoJs6 declarations 4.29.0: محددات minDepth / maxDepth / minIndexInParent / maxIndexInParent (شاملة للحدود, تتطلب المضيف 6.8.0+), بالإضافة إلى تصريحات childCount / minChildCount / maxChildCount المفقودة
 
 ##### لمزيد من سجل الإصدارات
 
