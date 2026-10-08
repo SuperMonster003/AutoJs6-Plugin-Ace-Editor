@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.30.0": {
+      "released_date": "2026/10/08",
+      "improvement": [
+        "Объявления TypeScript, автодополнение и проверка аргументов для compose.memo"
+      ]
+    },
     "v1.29.0": {
       "released_date": "2026/10/08",
       "improvement": [

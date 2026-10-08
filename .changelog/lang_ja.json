@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.30.0": {
+      "released_date": "2026/10/08",
+      "improvement": [
+        "compose.memo の TypeScript 宣言, 補完と引数チェック"
+      ]
+    },
     "v1.29.0": {
       "released_date": "2026/10/08",
       "improvement": [

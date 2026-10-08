@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-u
 ### 發行歷史
 
 ******
+
+# v1.30.0
+
+###### 2026/10/08
+
+* `優化` compose.memo 的 TypeScript 宣告, 自動完成及參數檢查
 
 # v1.29.0
 
@@ -185,14 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-u
 
 * `提示` 需要配套 AutoJs6 6.8.0 / 5321 主程式及支援對話方塊的 Compose UI 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請
 * `新增` autojs6-dts 4.34.0: compose.dialog 建立獨立對話方塊或底部彈層工作階段, 提供 cancelable/佈景主題選項, TSX 根節點和 AndroidView 內容的型別補全
-
-# v1.27.0
-
-###### 2026/10/07
-
-* `優化` 靜態索引與內建簽章支援重載方法: 從捆綁宣告收錄 146 個重載 (如 app.startActivity), lib.autojs6.d.ts 同步輸出全部重載宣告, 內建 ECMAScript 簽章增加 splice / replace / JSON.stringify / Array.from / Math.max 等
-* `優化` Python / Lua 參數提示保留伺服器回傳的全部簽章並支援切換; 智慧提示在非同步參數提示未回傳時不再誤彈補全
-* `優化` 懸停文件框支援觸控捲動與選取文字
 
 ##### 更多發行歷史可參閱
 

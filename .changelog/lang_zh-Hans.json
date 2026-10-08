@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.30.0": {
+      "released_date": "2026/10/08",
+      "improvement": [
+        "compose.memo 的 TypeScript 声明, 补全及参数检查"
+      ]
+    },
     "v1.29.0": {
       "released_date": "2026/10/08",
       "improvement": [

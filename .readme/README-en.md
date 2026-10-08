@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -172,6 +172,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v1.30.0
+
+###### 2026/10/08
+
+* `Improvement` TypeScript declarations, completion and argument checks for compose.memo
 
 # v1.29.0
 
@@ -185,14 +191,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 * `Hint` Requires the matching AutoJs6 6.8.0 / 5321 host and a Compose UI build with dialog support; TSX requires TypeScript Engine 0.6.6. Non-UI scripts need existing overlay permission, which this call does not request
 * `Feature` autojs6-dts 4.34.0: compose.dialog opens independent alert or bottom-sheet sessions with typed cancelable/theme options, TSX roots and AndroidView content
-
-# v1.27.0
-
-###### 2026/10/07
-
-* `Improvement` The static index and built-in signatures support overloaded methods: 146 overloads are collected from the bundled declarations (such as app.startActivity), lib.autojs6.d.ts emits every overload and the built-in ECMAScript signatures gain splice / replace / JSON.stringify / Array.from / Math.max and more
-* `Improvement` Python / Lua parameter hints keep every signature returned by the server and can be cycled; smart hints no longer fall back to completion while an asynchronous parameter hint is pending
-* `Improvement` The hover documentation box can be scrolled and selected on touch screens
 
 ##### Complete release history
 

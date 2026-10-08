@@ -160,7 +160,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -172,6 +172,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v1.30.0
+
+###### 2026/10/08
+
+* `Amélioration` Déclarations TypeScript, complétion et vérification des arguments pour compose.memo
 
 # v1.29.0
 
@@ -185,14 +191,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 * `Note` Nécessite l'hôte AutoJs6 6.8.0 / 5321 correspondant et une version de Compose UI prenant en charge les dialogues; TSX nécessite TypeScript Engine 0.6.6. Les scripts non UI doivent déjà disposer de l'autorisation de superposition, que cet appel ne demande pas
 * `Fonctionnalité` autojs6-dts 4.34.0: compose.dialog ouvre des sessions de dialogue ou de panneau inférieur indépendantes avec les options cancelable/thème typées, les racines TSX et le contenu AndroidView
-
-# v1.27.0
-
-###### 2026/10/07
-
-* `Amélioration` L'index statique et les signatures intégrées prennent en charge les méthodes surchargées: 146 surcharges sont collectées depuis les déclarations embarquées (par exemple app.startActivity), lib.autojs6.d.ts émet toutes les surcharges et les signatures ECMAScript intégrées gagnent splice / replace / JSON.stringify / Array.from / Math.max et d'autres
-* `Amélioration` Les indications de paramètres Python / Lua conservent toutes les signatures renvoyées par le serveur et peuvent être parcourues; les suggestions intelligentes ne retombent plus sur la complétion tant qu'une indication de paramètres asynchrone est en attente
-* `Amélioration` La boîte de documentation au survol peut être défilée et sélectionnée sur écran tactile
 
 ##### Pour plus d'historique des versions
 

@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-u
 ### سجل الإصدارات
 
 ******
+
+# v1.30.0
+
+###### 2026/10/08
+
+* `تحسين` تصريحات TypeScript والإكمال التلقائي وفحص الوسائط لـ compose.memo
 
 # v1.29.0
 
@@ -185,14 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-u
 
 * `تلميح` يتطلب مضيف AutoJs6 6.8.0 / 5321 المتوافق وإصدار Compose UI يدعم مربعات الحوار; ويتطلب TSX أيضا TypeScript Engine 0.6.6. تحتاج البرامج النصية غير UI إلى إذن تراكب ممنوح مسبقا, ولا يطلبه هذا الاستدعاء
 * `ميزة` autojs6-dts 4.34.0: يفتح compose.dialog جلسات مستقلة لمربعات الحوار أو اللوحات السفلية مع أنواع خيارات cancelable/السمة وجذور TSX ومحتوى AndroidView
-
-# v1.27.0
-
-###### 2026/10/07
-
-* `تحسين` الفهرس الثابت والتواقيع المضمنة تدعم الدوال متعددة التحميل: يجمع 146 تحميلا زائدا من التصريحات المضمنة (مثل app.startActivity), ويخرج lib.autojs6.d.ts جميع التحميلات الزائدة, وتضيف التواقيع المضمنة لـ ECMAScript ما مثل splice / replace / JSON.stringify / Array.from / Math.max
-* `تحسين` تلميحات المعاملات لـ Python / Lua تحتفظ بجميع التواقيع التي يعيدها الخادم ويمكن التبديل بينها; لا تعود التلميحات الذكية إلى الإكمال أثناء انتظار تلميح معاملات غير متزامن
-* `تحسين` صندوق توثيق التحويم يدعم التمرير وتحديد النص على الشاشات اللمسية
 
 ##### لمزيد من سجل الإصدارات
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v1.30.0
+
+###### 2026/10/08
+
+* `Amélioration` Déclarations TypeScript, complétion et vérification des arguments pour compose.memo
+
 # v1.29.0
 
 ###### 2026/10/08

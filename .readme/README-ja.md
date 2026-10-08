@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -172,6 +172,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-u
 ### リリース履歴
 
 ******
+
+# v1.30.0
+
+###### 2026/10/08
+
+* `改善` compose.memo の TypeScript 宣言, 補完と引数チェック
 
 # v1.29.0
 
@@ -185,14 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.29.0-u
 
 * `ヒント` 対応する AutoJs6 6.8.0 / 5321 ホストとダイアログ対応の Compose UI が必要. TSX には TypeScript Engine 0.6.6 も必要. 非 UI スクリプトでは事前のオーバーレイ権限が必要で, この呼び出しは権限を要求しません
 * `機能` autojs6-dts 4.34.0: compose.dialog で独立したダイアログまたはボトムシートのセッションを作成し, cancelable/テーマ設定, TSX ルートと AndroidView コンテンツの型補完を提供
-
-# v1.27.0
-
-###### 2026/10/07
-
-* `改善` 静的インデックスと組み込みシグネチャがオーバーロードに対応: 同梱宣言から 146 件のオーバーロード (app.startActivity など) を収録, lib.autojs6.d.ts も全オーバーロードを出力, 組み込み ECMAScript シグネチャに splice / replace / JSON.stringify / Array.from / Math.max などを追加
-* `改善` Python / Lua のパラメーターヒントがサーバーの返す全シグネチャを保持して切り替え可能に; 非同期のパラメーターヒント待機中はスマートヒントが補完へ切り替わらない
-* `改善` ホバードキュメントボックスがタッチ画面でのスクロールと文字選択に対応
 
 ##### その他のリリース履歴
 

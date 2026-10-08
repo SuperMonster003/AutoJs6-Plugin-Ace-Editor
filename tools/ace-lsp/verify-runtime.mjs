@@ -1284,6 +1284,10 @@ function verifyComposeDeclarations(paths) {
         ["empty scroll", "compose.LazyColumn().scrollTo({});", 2345],
         ["empty set", "compose.Text().set();", 2554],
         ["field callback", "compose.TextField({ onValueChange(value: number) {} });", 2345],
+        ["memo without deps", "compose.memo(() => compose.Text());", 2554],
+        ["memo scalar deps", "compose.memo(() => compose.Text(), 1);", 2345],
+        ["memo non-node result", "compose.memo(() => 'x', []);", 2322],
+        ["memo boolean key", "compose.memo(() => compose.Text(), [], { key: true });", 2322],
     ];
     const validInput = [
         "const field = compose.TextField({ onValueChange(text, selection, editSeq) {",
@@ -1295,6 +1299,8 @@ function verifyComposeDeclarations(paths) {
         "page.showSnackbar('saved', { duration: null, onAction: function () { this.close(); } });",
         "const image = images.read('/tmp/test.png'); if (image !== null) compose.Image({ src: image });",
         "compose.Text({ color: Color('blue') });",
+        "compose.mount(() => compose.Column({}, [1, 2].map((id) =>",
+        "  compose.memo(() => compose.Text({ key: String(id) }), [id], { key: id }))));",
     ].join("\n");
     const result = {};
     for (const mode of ["default", "optional"]) {
@@ -1324,6 +1330,7 @@ function verifyComposeDeclarations(paths) {
             const rootNames = completionNames(service, "compose.", "");
             assert(factories.every((name) => rootNames.includes(name)), `Compose ${mode} lost a node factory`);
             assert(!rootNames.includes("Snackbar"), `Compose ${mode} exposed Snackbar as a node factory`);
+            assert(rootNames.includes("memo"), `Compose ${mode} lost compose.memo completion`);
             const fieldNames = completionNames(service, "compose.TextField({ ", "");
             assert(
                 ["text", "onValueChange", "keyboardType", "label"].every((name) => fieldNames.includes(name)),
