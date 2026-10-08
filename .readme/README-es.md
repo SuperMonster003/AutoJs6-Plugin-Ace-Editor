@@ -160,7 +160,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -173,28 +173,24 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
-# v1.27.0
+# v1.30.0
+
+###### 2026/10/08
+
+* `Mejora` Declaraciones TypeScript, autocompletado y comprobación de argumentos para compose.memo
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `Mejora` Declaraciones TypeScript / TSX de propiedades, ranuras y eventos de componentes Compose UI V2
+
+# v1.28.0
 
 ###### 2026/10/07
 
-* `Mejora` El índice estático y las firmas integradas admiten métodos sobrecargados: se recopilan 146 sobrecargas de las declaraciones incluidas (como app.startActivity), lib.autojs6.d.ts emite todas las sobrecargas y las firmas ECMAScript integradas incorporan splice / replace / JSON.stringify / Array.from / Math.max y más
-* `Mejora` Las sugerencias de parámetros de Python / Lua conservan todas las firmas devueltas por el servidor y se pueden recorrer; las sugerencias inteligentes ya no recurren al autocompletado mientras hay una sugerencia de parámetros asíncrona pendiente
-* `Mejora` La caja de documentación emergente se puede desplazar y seleccionar en pantallas táctiles
-
-# v1.26.0
-
-###### 2026/10/07
-
-* `Función` Los ajustes "Sugerencias inteligentes" del anfitrión tienen efecto: activación del autocompletado, caracteres mínimos, retraso del autocompletado, activación de las sugerencias de parámetros y cambio de sobrecarga con las flechas se aplican de inmediato; el autocompletado en vivo ahora lo programa el plugin según estos ajustes (requiere un anfitrión AutoJs6 6.8.0)
-* `Mejora` Las sobrecargas se cambian con Alt+Arriba / Alt+Abajo en teclado físico (sin sugerencia de varias sobrecargas se conserva el movimiento de líneas predeterminado de Ace), las teclas Arriba y Abajo de la barra de teclas del anfitrión (se puede desactivar en los ajustes) y los botones arriba / abajo de la esquina superior derecha de la ventana de sugerencias
-* `Mejora` Las sugerencias de parámetros reaparecen tras tocar el área de edición (no tras desplazarse), y ESC oculta tanto las sugerencias de parámetros como la documentación del símbolo
-
-# v1.25.0
-
-###### 2026/10/07
-
-* `Función` AutoJs6 declarations 4.32.0: autocompletado de la conversión OKLab/OKLCH, el ajuste de contraste, armonías, escalas tonales, colores derivados, variantes nocturnas, la simulación de deficiencias de la visión del color, los colores dominantes de una imagen y el algoritmo de detección oklab de colors, además del control del color del tema con colors.theme (requiere AutoJs6 6.8.0)
-* `Función` AutoJs6 declarations 4.32.0: autocompletado de sesiones de terminal / $terminal, opciones de apertura y ejecución, entorno, estado del plugin y tipos de error (requiere el plugin 3-Shell Terminal)
+* `Aviso` Requiere el host AutoJs6 6.8.0 / 5321 correspondiente y una compilación de Compose UI con diálogos; TSX requiere TypeScript Engine 0.6.6. Los scripts sin UI necesitan permiso de superposición previo, que esta llamada no solicita
+* `Función` autojs6-dts 4.34.0: compose.dialog abre sesiones independientes de diálogo o panel inferior con opciones cancelable/tema tipadas, raíces TSX y contenido AndroidView
 
 ##### Para ver más historial de versiones
 

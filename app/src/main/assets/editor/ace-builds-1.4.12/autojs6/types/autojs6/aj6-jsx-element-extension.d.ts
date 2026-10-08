@@ -6,6 +6,10 @@ declare function __autojs6Tsx(type: unknown, props: unknown, ...children: unknow
 declare const __autojs6TsxFragment: object;
 
 declare namespace AutojsJsx {
+    /** Native groups may be absent; keep the callback argument object-shaped even for error-any. */
+    type NativeViewObject<T extends { value: unknown }> = object & { [K in keyof T['value']]: T['value'][K] };
+    type NativeView = NativeViewObject<{ value: UI.View }>;
+
     namespace AutojsValueMap {
         namespace R {
             /**
@@ -428,8 +432,8 @@ declare namespace AutojsJsx {
         nextFocusRight?: '@unsupported';
         /** @unsupported */
         nextFocusUp?: '@unsupported';
-        /** @unsupported */
-        onClick?: '@unsupported';
+        /** Classic XML TSX listener; receives the clicked NativeView and the native event emitter. */
+        onClick?: ((this: EventEmitter$, view: NativeView) => void) | null;
         requiresFadingEdge?: AutojsValueMap.DIRECTIONS;
         rotation?: AutojsValueMap.FLOAT;
         rotationX?: AutojsValueMap.FLOAT;
@@ -556,6 +560,11 @@ declare namespace AutojsJsx {
     }
 
     interface AutojsJsFrameLayout extends AutojsFrameLayout {}
+
+    /** An empty XML host; fill it with compose.attach after the layout is created. */
+    interface AutojsComposeContainer extends AutojsFrameLayout {
+        children?: never;
+    }
 
     interface AutojsImageView extends AutojsBaseView {
         adjustViewBounds?: AutojsValueMap.BOOLEAN;
@@ -975,6 +984,7 @@ declare namespace JSX {
     // different runtime values. Their JSX expressions retain the existing implicit any;
     // attributes and normal factory calls stay typed, and the runtime rejects mixed trees.
     interface IntrinsicElements {
+        compose?: AutojsJsx.AutojsComposeContainer;
         vertical?: AutojsJsx.AutojsJsLinearLayout;
         frame?: AutojsJsx.AutojsJsFrameLayout;
         linear?: AutojsJsx.AutojsJsLinearLayout;
@@ -1054,3 +1064,46 @@ declare namespace JSX {
     }
 }
 // </autojs6-compose-jsx:v1>
+
+// <autojs6-compose-interop-jsx:f2>
+// Generated from org.autojs.plugin.compose.api.interop.AndroidViewInteropV1; schema=1; contract=1; extension=1; feature=android-view-interop-v1; sha256=cbee120589a49e97f8bf5ea546b508f0a1f8b77b685e8affd8b03da67b838a37.
+declare namespace JSX {
+    interface IntrinsicElements {
+        "compose:AndroidView": Internal.ComposeProps<"AndroidView">;
+    }
+}
+// </autojs6-compose-interop-jsx:f2>
+
+// <autojs6-compose-jsx:v2>
+// Generated from org.autojs.plugin.compose.api.v2.ComposeUiV2.catalog; schema=1; contract=2; sha256=f46009f6ca2c69cfcbfcfa8f829ec678ffe81e647eb48812db6ee2b2f087f712.
+// Ordinary factories provide value-tag typing; these names never replace legacy XML tags.
+declare namespace JSX {
+    interface IntrinsicElements {
+        "compose:AssistChip": Internal.ComposeProps<"AssistChip">;
+        "compose:Badge": Internal.ComposeProps<"Badge">;
+        "compose:DatePicker": Internal.ComposeProps<"DatePicker">;
+        "compose:DropdownMenu": Internal.ComposeProps<"DropdownMenu">;
+        "compose:DropdownMenuItem": Internal.ComposeProps<"DropdownMenuItem">;
+        "compose:FilterChip": Internal.ComposeProps<"FilterChip">;
+        "compose:FloatingActionButton": Internal.ComposeProps<"FloatingActionButton">;
+        "compose:HorizontalPager": Internal.ComposeProps<"HorizontalPager">;
+        "compose:InputChip": Internal.ComposeProps<"InputChip">;
+        "compose:LazyVerticalGrid": Internal.ComposeProps<"LazyVerticalGrid">;
+        "compose:ModalBottomSheet": Internal.ComposeProps<"ModalBottomSheet">;
+        "compose:NavigationBar": Internal.ComposeProps<"NavigationBar">;
+        "compose:NavigationBarItem": Internal.ComposeProps<"NavigationBarItem">;
+        "compose:NavigationDrawer": Internal.ComposeProps<"NavigationDrawer">;
+        "compose:NavigationDrawerItem": Internal.ComposeProps<"NavigationDrawerItem">;
+        "compose:NavigationRail": Internal.ComposeProps<"NavigationRail">;
+        "compose:NavigationRailItem": Internal.ComposeProps<"NavigationRailItem">;
+        "compose:PullToRefresh": Internal.ComposeProps<"PullToRefresh">;
+        "compose:SearchBar": Internal.ComposeProps<"SearchBar">;
+        "compose:SegmentedButton": Internal.ComposeProps<"SegmentedButton">;
+        "compose:SegmentedButtonItem": Internal.ComposeProps<"SegmentedButtonItem">;
+        "compose:Tab": Internal.ComposeProps<"Tab">;
+        "compose:TabRow": Internal.ComposeProps<"TabRow">;
+        "compose:TimePicker": Internal.ComposeProps<"TimePicker">;
+        "compose:Tooltip": Internal.ComposeProps<"Tooltip">;
+    }
+}
+// </autojs6-compose-jsx:v2>

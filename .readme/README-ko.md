@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,28 +173,24 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-u
 
 ******
 
-# v1.27.0
+# v1.30.0
+
+###### 2026/10/08
+
+* `개선` compose.memo의 TypeScript 선언, 자동 완성 및 인수 검사
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `개선` Compose UI V2 구성요소의 TypeScript / TSX 속성, 슬롯 및 이벤트 선언
+
+# v1.28.0
 
 ###### 2026/10/07
 
-* `개선` 정적 인덱스와 내장 시그니처가 오버로드된 메서드를 지원: 번들 선언에서 146 개의 오버로드 (app.startActivity 등) 수집, lib.autojs6.d.ts 도 모든 오버로드를 출력, 내장 ECMAScript 시그니처에 splice / replace / JSON.stringify / Array.from / Math.max 등 추가
-* `개선` Python / Lua 매개 변수 힌트가 서버가 반환한 모든 시그니처를 유지하고 전환 가능; 비동기 매개 변수 힌트를 기다리는 동안 스마트 힌트가 완성으로 전환되지 않음
-* `개선` 호버 문서 상자가 터치 화면에서 스크롤과 텍스트 선택을 지원
-
-# v1.26.0
-
-###### 2026/10/07
-
-* `기능` 호스트 "스마트 힌트" 설정 적용: 자동 완성 트리거, 완성 최소 문자 수, 완성 지연, 매개 변수 힌트 트리거, 방향키 오버로드 전환 설정이 즉시 반영되며, 실시간 완성은 플러그인이 설정에 따라 예약 (AutoJs6 6.8.0 호스트 필요)
-* `개선` 오버로드 전환이 하드웨어 키보드 Alt+Up / Alt+Down (다중 오버로드 힌트가 없을 때는 Ace 기본 줄 이동 유지), 호스트 키보드 바의 위아래 키 (설정에서 끌 수 있음), 힌트 창 오른쪽 위의 위아래 버튼을 지원
-* `개선` 매개 변수 힌트가 편집 영역을 탭한 뒤 다시 표시되며 (스크롤 후에는 표시되지 않음), ESC 가 매개 변수 힌트와 심볼 문서를 함께 숨김
-
-# v1.25.0
-
-###### 2026/10/07
-
-* `기능` AutoJs6 declarations 4.32.0: colors의 OKLab/OKLCH 변환, 대비 조정, 조화색, 색조 단계, 파생 색상, 야간 대응색, 색각 이상 시뮬레이션, 이미지 주요 색상 추출, oklab 감지 알고리즘 자동 완성 및 colors.theme 테마 색상 제어 (AutoJs6 6.8.0 필요)
-* `기능` AutoJs6 declarations 4.32.0: terminal / $terminal 세션, 열기 및 실행 옵션, 환경, 플러그인 상태와 오류 형식 자동 완성 (3-Shell Terminal 플러그인 필요)
+* `힌트` 호환되는 AutoJs6 6.8.0 / 5321 호스트와 대화상자를 지원하는 Compose UI가 필요하며 TSX에는 TypeScript Engine 0.6.6도 필요. 비 UI 스크립트에는 기존 오버레이 권한이 필요하고 이 호출은 권한을 요청하지 않음
+* `기능` autojs6-dts 4.34.0: compose.dialog가 독립 대화상자 또는 하단 시트 세션을 열고 cancelable/테마 옵션, TSX 루트 및 AndroidView 콘텐츠의 타입 자동완성을 제공
 
 ##### 더 많은 릴리스 기록
 

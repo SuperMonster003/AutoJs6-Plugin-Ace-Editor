@@ -4,6 +4,25 @@
 
 ******
 
+# v1.30.0
+
+###### 2026/10/08
+
+* `Improvement` TypeScript declarations, completion and argument checks for compose.memo
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `Improvement` TypeScript / TSX properties, slots and event declarations for Compose UI V2 components
+
+# v1.28.0
+
+###### 2026/10/07
+
+* `Hint` Requires the matching AutoJs6 6.8.0 / 5321 host and a Compose UI build with dialog support; TSX requires TypeScript Engine 0.6.6. Non-UI scripts need existing overlay permission, which this call does not request
+* `Feature` autojs6-dts 4.34.0: compose.dialog opens independent alert or bottom-sheet sessions with typed cancelable/theme options, TSX roots and AndroidView content
+
 # v1.27.0
 
 ###### 2026/10/07
@@ -16,7 +35,9 @@
 
 ###### 2026/10/07
 
+* `Hint` Interop requires the matching AutoJs6 6.8.0 / 5320 host and a Compose UI build with the AndroidView extension; TSX also requires TypeScript Engine 0.6.5. Basic V1 rendering keeps the 5316 minimum
 * `Feature` Host "Smart hints" settings take effect: automatic completion trigger, minimum characters for completion, completion delay, parameter hints trigger and the arrow-key overload switch apply immediately; live completion is now scheduled by the plugin according to these settings (requires an AutoJs6 6.8.0 host)
+* `Feature` autojs6-dts 4.33.0: XML `<compose>` containers and compose.attach embed independent Compose sessions in UI pages or legacy floating windows; compose.AndroidView embeds an existing Android View or one returned by a synchronous factory
 * `Improvement` Overloads can be switched with the hardware Alt+Up / Alt+Down (Ace's default line moving is kept while no multi-overload hint is shown), the host keyboard bar's Up and Down keys (can be turned off in settings) and the up / down buttons at the top right of the hint window
 * `Improvement` Parameter hints reappear after tapping the editor (not after scrolling), and ESC hides both parameter hints and symbol documentation
 

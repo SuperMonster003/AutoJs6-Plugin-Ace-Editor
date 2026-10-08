@@ -13,3 +13,6 @@ app/src/main/res/mipmap*/ic_icon_studio_application*.xml text eol=lf
 
 # Icon Studio reproducible assets
 app/src/main/res/raw/keep_icon_studio_application.xml text eol=lf
+
+# Generated language indices are compared byte-for-byte with deterministic LF output.
+app/src/main/assets/editor/ace-builds-*/autojs6/indices/*.js text eol=lf

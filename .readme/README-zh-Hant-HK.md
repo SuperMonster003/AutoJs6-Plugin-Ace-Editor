@@ -160,7 +160,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -173,28 +173,24 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-u
 
 ******
 
-# v1.27.0
+# v1.30.0
+
+###### 2026/10/08
+
+* `優化` compose.memo 的 TypeScript 聲明, 自動完成及參數檢查
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `優化` Compose UI V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
+
+# v1.28.0
 
 ###### 2026/10/07
 
-* `優化` 靜態索引與內建簽章支援重載方法: 從捆綁宣告收錄 146 個重載 (如 app.startActivity), lib.autojs6.d.ts 同步輸出全部重載宣告, 內建 ECMAScript 簽章增加 splice / replace / JSON.stringify / Array.from / Math.max 等
-* `優化` Python / Lua 參數提示保留伺服器回傳的全部簽章並支援切換; 智慧提示在非同步參數提示未回傳時不再誤彈補全
-* `優化` 懸停文件框支援觸控捲動與選取文字
-
-# v1.26.0
-
-###### 2026/10/07
-
-* `新增` 宿主 "智慧提示" 設定生效: 自動補全觸發方式, 補全最少觸發字元數, 補全觸發延遲, 參數提示觸發方式與方向鍵切換重載開關, 修改後即時套用; 即時補全改由插件依設定排程 (需要 AutoJs6 6.8.0 宿主)
-* `優化` 重載切換支援硬件鍵盤 Alt+Up / Alt+Down (未顯示多重載參數提示時保持 Ace 預設的移動行), 宿主多功能鍵盤上下鍵 (可在設定中關閉) 及提示視窗右上角的上下按鈕
-* `優化` 參數提示在編輯區點按後恢復顯示 (捲動後不恢復), ESC 同時隱藏參數提示與符號文件
-
-# v1.25.0
-
-###### 2026/10/07
-
-* `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 轉換, 對比度調整, 和諧色, 色階, 衍生配色, 夜間對應色, 色覺缺陷模擬, 圖像主要顏色提取與 oklab 檢測算法補全, 以及 colors.theme 主題色控制 (需要 AutoJs6 6.8.0)
-* `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的會話, 開啟與執行選項, 環境, 插件狀態和錯誤類型補全 (需要 3-Shell Terminal 插件)
+* `提示` 需要配套 AutoJs6 6.8.0 / 5321 宿主及支援對話框的 Compose UI 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請
+* `新增` autojs6-dts 4.34.0: compose.dialog 建立獨立對話框或底部彈層工作階段, 提供 cancelable/主題選項, TSX 根節點和 AndroidView 內容的類型補全
 
 ##### 更多發行歷史可參閱
 

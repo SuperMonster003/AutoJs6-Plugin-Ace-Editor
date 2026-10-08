@@ -160,7 +160,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -173,28 +173,24 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.27.0-u
 
 ******
 
-# v1.27.0
+# v1.30.0
+
+###### 2026/10/08
+
+* `优化` compose.memo 的 TypeScript 声明, 补全及参数检查
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `优化` Compose UI V2 组件的 TypeScript / TSX 属性, 插槽和事件声明
+
+# v1.28.0
 
 ###### 2026/10/07
 
-* `优化` 静态索引与内置签名支持重载方法: 从捆绑声明收录 146 个重载 (如 app.startActivity), lib.autojs6.d.ts 同步输出全部重载声明, 内置 ECMAScript 签名增加 splice / replace / JSON.stringify / Array.from / Math.max 等
-* `优化` Python / Lua 参数提示保留服务器返回的全部签名并支持切换; 智能提示在异步参数提示未返回时不再误弹补全
-* `优化` 悬停文档框支持触屏滚动与选择文本
-
-# v1.26.0
-
-###### 2026/10/07
-
-* `新增` 宿主 "智能提示" 设置生效: 自动补全触发方式, 补全最少触发字符数, 补全触发延迟, 参数提示触发方式与方向键切换重载开关, 修改后即时应用; 实时补全改由插件按设置调度 (需要 AutoJs6 6.8.0 宿主)
-* `优化` 重载切换支持硬件键盘 Alt+Up / Alt+Down (未显示多重载参数提示时保持 Ace 默认的移动行), 宿主多功能键盘上下键 (可在设置中关闭) 及提示窗口右上角的上下按钮
-* `优化` 参数提示在编辑区点按后恢复显示 (滚动后不恢复), ESC 同时隐藏参数提示与符号文档
-
-# v1.25.0
-
-###### 2026/10/07
-
-* `新增` AutoJs6 declarations 4.32.0: colors 的 OKLab/OKLCH 转换, 对比度调整, 和谐色, 色阶, 派生配色, 夜间对应色, 色觉缺陷模拟, 图像主要颜色提取与 oklab 检测算法补全, 以及 colors.theme 主题色控制 (需要 AutoJs6 6.8.0)
-* `新增` AutoJs6 declarations 4.32.0: terminal / $terminal 的会话, 打开与执行选项, 环境, 插件状态和错误类型补全 (需要 3-Shell Terminal 插件)
+* `提示` 需要配套 AutoJs6 6.8.0 / 5321 宿主及支持对话框的 Compose UI 构建; TSX 另需 TypeScript Engine 0.6.6. 非 UI 脚本须预先具有悬浮窗权限, 此调用不会自动申请
+* `新增` autojs6-dts 4.34.0: compose.dialog 创建独立对话框或底部弹层会话, 提供 cancelable/主题选项, TSX 根节点和 AndroidView 内容的类型补全
 
 ##### 更多发行历史可参阅
 

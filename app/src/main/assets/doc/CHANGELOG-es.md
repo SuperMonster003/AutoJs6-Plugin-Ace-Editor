@@ -4,6 +4,25 @@
 
 ******
 
+# v1.30.0
+
+###### 2026/10/08
+
+* `Mejora` Declaraciones TypeScript, autocompletado y comprobación de argumentos para compose.memo
+
+# v1.29.0
+
+###### 2026/10/08
+
+* `Mejora` Declaraciones TypeScript / TSX de propiedades, ranuras y eventos de componentes Compose UI V2
+
+# v1.28.0
+
+###### 2026/10/07
+
+* `Aviso` Requiere el host AutoJs6 6.8.0 / 5321 correspondiente y una compilación de Compose UI con diálogos; TSX requiere TypeScript Engine 0.6.6. Los scripts sin UI necesitan permiso de superposición previo, que esta llamada no solicita
+* `Función` autojs6-dts 4.34.0: compose.dialog abre sesiones independientes de diálogo o panel inferior con opciones cancelable/tema tipadas, raíces TSX y contenido AndroidView
+
 # v1.27.0
 
 ###### 2026/10/07
@@ -16,7 +35,9 @@
 
 ###### 2026/10/07
 
+* `Aviso` La integración requiere AutoJs6 6.8.0 / 5320 y un build de Compose UI con la extensión AndroidView; TSX también requiere TypeScript Engine 0.6.5. El renderizado V1 básico mantiene el mínimo 5316
 * `Función` Los ajustes "Sugerencias inteligentes" del anfitrión tienen efecto: activación del autocompletado, caracteres mínimos, retraso del autocompletado, activación de las sugerencias de parámetros y cambio de sobrecarga con las flechas se aplican de inmediato; el autocompletado en vivo ahora lo programa el plugin según estos ajustes (requiere un anfitrión AutoJs6 6.8.0)
+* `Función` autojs6-dts 4.33.0: Los contenedores XML `<compose>` y compose.attach integran sesiones Compose independientes en páginas UI o ventanas flotantes existentes; compose.AndroidView muestra una View Android existente o devuelta por una fábrica síncrona
 * `Mejora` Las sobrecargas se cambian con Alt+Arriba / Alt+Abajo en teclado físico (sin sugerencia de varias sobrecargas se conserva el movimiento de líneas predeterminado de Ace), las teclas Arriba y Abajo de la barra de teclas del anfitrión (se puede desactivar en los ajustes) y los botones arriba / abajo de la esquina superior derecha de la ventana de sugerencias
 * `Mejora` Las sugerencias de parámetros reaparecen tras tocar el área de edición (no tras desplazarse), y ESC oculta tanto las sugerencias de parámetros como la documentación del símbolo
 
