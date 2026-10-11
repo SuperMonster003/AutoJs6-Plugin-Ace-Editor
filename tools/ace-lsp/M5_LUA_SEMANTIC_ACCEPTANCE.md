@@ -74,6 +74,14 @@ LuaLS runtime 为 273 个文件、1,912,876 字节，确定性 inventory SHA-256
 `manifest.json` 逐文件记录相对路径、字节数与哈希；提取逻辑拒绝绝对路径、盘符、反斜杠、
 空段、`.`、`..` 和清单外文件。
 
+2026-10-11 更正: 上述字节数与 inventory 取自开启 `core.autocrlf` 的 Windows 检出 (CRLF 行尾),
+而仓库 blob 为 LF, 因此 Linux/CI 构建的 APK 有 272 个文件与清单不符, 设备报告
+`LuaLS runtime size mismatch: bin/main.lua` 并停用 Lua 语义. 现在 runtime 与上游提交
+`b5e57c36` 的 blob 逐字节一致 (`bin/main.lua` 即上游以 CRLF 保存的 `make/bootstrap.lua`),
+`.gitattributes` 以 `-text` 固定 `app/src/main/assets/luals/**`: 273 个文件, 1,849,150 字节,
+inventory SHA-256 为 `8e404e5f0c04f375bd2c2ac861d45fd85a591adf6431a150ba70d49c65a094b5`.
+JVM 单元测试 `AceLuaLanguageServerRuntimeTest` 每次运行都逐文件核对清单.
+
 Provider、runtime、manifest、许可证与四个 ELF 共 8,283,431 字节（7.900 MiB），占
 8 MiB 单语言随包交付门的 98.75%，因此仍以完全离线组件随 universal APK 交付。ABI split
 会把当前单一插件安装物变成多工件，并破坏已验收的旧 x86 静态回退安装路径，本里程碑不启用。

@@ -535,6 +535,14 @@ tasks {
         options.encoding = "UTF-8"
     }
 
+    withType(Test::class.java).configureEach {
+        // AceLuaLanguageServerRuntimeTest compares the checked-out LuaLS assets with their
+        // manifest byte for byte, so asset or line-ending changes must rerun the unit tests.
+        inputs.dir(autoJs6LuaRuntimeDirectory)
+            .withPropertyName("autoJs6LuaRuntimeAssets")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+    }
+
     register<Copy>("appendDigestToReleasedFiles") {
         group = "distribution"
         dependsOn("assembleRelease", "verifySignedReleaseArtifacts")

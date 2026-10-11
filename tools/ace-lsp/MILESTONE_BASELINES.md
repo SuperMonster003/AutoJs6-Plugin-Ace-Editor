@@ -307,6 +307,11 @@ M5 新增项目维护的 Lua Provider、LuaLS 运行时、三种受支持 ABI �
 选择。运行时脚本可压缩，原生 ELF 以 `keepDebugSymbols` 防止 AGP 改写，APK 内字节必须与清单
 哈希一致。
 
+2026-10-11 更正: runtime 改为与上游 blob 逐字节一致后为 1,849,150 字节 (inventory
+`8e404e5f0c04f375bd2c2ac861d45fd85a591adf6431a150ba70d49c65a094b5`), `luals/manifest.json`
+为 48,996 字节 (`8c67b4e2a3c1c4fc1ab823ecd9659931f12a6c0fe6a07c311be7f63cd095a242`), 上表合计
+相应减少 63,731 字节. 原因见 M5 验收文档 3.2.
+
 ## M5 功能、延迟与生命周期
 
 六个受支持环境均返回 17 个 `string` 语义候选和 2 条预期诊断；hover、signature help、

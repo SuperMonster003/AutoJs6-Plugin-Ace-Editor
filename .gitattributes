@@ -16,3 +16,7 @@ app/src/main/res/raw/keep_icon_studio_application.xml text eol=lf
 
 # Generated language indices are compared byte-for-byte with deterministic LF output.
 app/src/main/assets/editor/ace-builds-*/autojs6/indices/*.js text eol=lf
+
+# Pinned LuaLS runtime assets are verified by size and SHA-256 at runtime (luals/manifest.json).
+# Keep the exact upstream bytes on every platform; core.autocrlf must not rewrite them.
+app/src/main/assets/luals/** -text

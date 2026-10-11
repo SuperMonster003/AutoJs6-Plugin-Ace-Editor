@@ -206,6 +206,14 @@ unsupported-ABI fallback, and restart lifecycle with:
 .\gradlew.bat :app:verifyAutoJs6LuaLanguageServer
 ```
 
+The runtime files are the exact blobs of the pinned upstream commit, and the
+device rejects any file whose size or SHA-256 differs from `manifest.json`.
+`.gitattributes` therefore marks `app/src/main/assets/luals/**` as `-text` so
+`core.autocrlf` cannot rewrite them, the build script clones with
+`core.autocrlf=false` and rejects staged files that differ from their upstream
+blobs, and the `AceLuaLanguageServerRuntimeTest` unit test compares the checked
+out files with the manifest on every platform.
+
 The provider supplies completion, hover, signature help, diagnostics, and
 definition through the M3 JSON-RPC/LSP core and Android stdio transport. The
 native command and environment are selected from an application-side allowlist;

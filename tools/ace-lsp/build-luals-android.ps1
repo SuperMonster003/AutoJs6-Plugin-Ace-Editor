@@ -49,7 +49,10 @@ New-Item -ItemType Directory -Force -Path $WorkRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
 
 if (-not (Test-Path -LiteralPath (Join-Path $SourceRoot ".git"))) {
-    & git clone --recursive --branch $lock.version $lock.repository $SourceRoot
+    # Keep the upstream bytes. The runtime assets copied below are hashed into luals/manifest.json,
+    # and a core.autocrlf checkout would record line endings that no other checkout reproduces.
+    & git -c core.autocrlf=false clone --config core.autocrlf=false --recursive `
+        --branch $lock.version $lock.repository $SourceRoot
     if ($LASTEXITCODE -ne 0) { throw "LuaLS clone failed." }
 }
 
@@ -291,6 +294,28 @@ Copy-Item -Path (Join-Path $SourceRoot "meta\template\*") `
     -Destination (Join-Path $runtimeOutput "meta\template") -Recurse -Force
 Copy-Item -LiteralPath (Join-Path $repositoryRoot "app\src\main\assets\luals\THIRD_PARTY_LICENSES.txt") `
     -Destination $assetOutput -Force
+
+# Every runtime file must be the exact blob of the pinned commit (bin/main.lua is make/bootstrap.lua).
+# This rejects a reused source checkout whose line endings were converted on Windows.
+$upstreamBlobs = @{}
+& git -C $SourceRoot ls-tree -r HEAD -- main.lua debugger.lua make/bootstrap.lua script locale/en-us meta/template |
+    ForEach-Object {
+        if ($_ -match '^\d+ blob ([0-9a-f]{40})\t(.+)$') { $upstreamBlobs[$Matches[2]] = $Matches[1] }
+    }
+if ($LASTEXITCODE -ne 0) { throw "Unable to list the pinned LuaLS runtime blobs." }
+$runtimeFiles = @(Get-ChildItem -LiteralPath $runtimeOutput -Recurse -File | Sort-Object FullName)
+$runtimeBlobs = @($runtimeFiles.FullName | & git -C $SourceRoot hash-object --no-filters --stdin-paths)
+if ($LASTEXITCODE -ne 0 -or $runtimeBlobs.Count -ne $runtimeFiles.Count) {
+    throw "Unable to hash the staged LuaLS runtime files."
+}
+for ($index = 0; $index -lt $runtimeFiles.Count; $index++) {
+    $relativePath = $runtimeFiles[$index].FullName.Substring($runtimeOutput.Length + 1).Replace('\', '/')
+    $upstreamPath = if ($relativePath -eq "bin/main.lua") { "make/bootstrap.lua" } else { $relativePath }
+    if ($upstreamBlobs[$upstreamPath] -ne $runtimeBlobs[$index]) {
+        throw "LuaLS runtime file $relativePath differs from $upstreamPath at $($lock.commit). " +
+            "Clone the source with core.autocrlf=false."
+    }
+}
 
 & node (Join-Path $scriptRoot "generate-luals-manifest.mjs") `
     --lock $lockPath `

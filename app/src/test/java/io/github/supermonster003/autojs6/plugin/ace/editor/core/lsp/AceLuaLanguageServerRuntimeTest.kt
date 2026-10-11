@@ -1,7 +1,10 @@
 package io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp
 
+import com.google.gson.JsonParser
 import java.io.File
 import java.nio.file.Files
+import java.security.MessageDigest
+import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -106,6 +109,56 @@ class AceLuaLanguageServerRuntimeTest {
             assertFalse(path, AceLuaLanguageServerRuntime.isSafeRuntimePath(path))
         }
     }
+
+    @Test
+    fun checkedOutRuntimeAssetsMatchTheManifestByteForByte() {
+        // The device refuses to extract a runtime file whose size or SHA-256 differs from the
+        // manifest, which leaves Lua without semantics. A manifest recorded from a core.autocrlf
+        // checkout once passed on Windows and failed on every Linux build.
+        val assetRoot = listOf(File("src/main/assets/luals"), File("app/src/main/assets/luals"))
+            .firstOrNull { File(it, "manifest.json").isFile }
+            ?: error("Bundled LuaLS assets are unavailable to unit tests")
+        val runtimeRoot = File(assetRoot, "runtime")
+        val runtime = JsonParser.parseString(File(assetRoot, "manifest.json").readText())
+            .asJsonObject.getAsJsonObject("runtime")
+        val entries = runtime.getAsJsonArray("files").map { it.asJsonObject }
+        val inventory = MessageDigest.getInstance("SHA-256").apply {
+            update("autojs6.luals.runtime.inventory.v1\n".toByteArray(Charsets.US_ASCII))
+        }
+        val mismatches = entries.mapNotNull { entry ->
+            val path = entry.get("path").asString
+            val bytes = entry.get("bytes").asLong
+            val sha256 = entry.get("sha256").asString
+            inventory.update("$path\u0000$bytes\u0000$sha256\n".toByteArray(Charsets.UTF_8))
+            val file = File(runtimeRoot, path)
+            val actual = if (file.isFile) file.readBytes() else null
+            when {
+                actual == null -> "$path is missing"
+                actual.size.toLong() != bytes || actual.sha256() != sha256 ->
+                    "$path has ${actual.size} bytes, manifest expects $bytes"
+                else -> null
+            }
+        }
+        val checkedOut = runtimeRoot.walkTopDown().filter(File::isFile)
+            .map { it.relativeTo(runtimeRoot).invariantSeparatorsPath }.toSet()
+
+        assertTrue(
+            "LuaLS runtime differs from luals/manifest.json (${mismatches.size} files, e.g. " +
+                "${mismatches.take(3)}). Keep the -text attribute and re-checkout the assets, or " +
+                "regenerate with node tools/ace-lsp/generate-luals-manifest.mjs.",
+            mismatches.isEmpty(),
+        )
+        assertEquals(entries.map { it.get("path").asString }.toSet(), checkedOut)
+        assertEquals(runtime.get("fileCount").asInt, entries.size)
+        assertEquals(runtime.get("bytes").asLong, entries.sumOf { it.get("bytes").asLong })
+        assertEquals(runtime.get("sha256").asString, inventory.digest().toLowerHex())
+    }
+
+    private fun ByteArray.sha256(): String =
+        MessageDigest.getInstance("SHA-256").digest(this).toLowerHex()
+
+    private fun ByteArray.toLowerHex(): String =
+        joinToString(separator = "") { "%02x".format(Locale.ROOT, it.toInt() and 0xff) }
 
     @Test
     fun resolvedRuntimeTargetsStayInsideTheExtractionRoot() {
