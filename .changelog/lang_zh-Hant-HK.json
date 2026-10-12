@@ -20,7 +20,7 @@
     "v1.29.0": {
       "released_date": "2026/10/08",
       "improvement": [
-        "Compose UI V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告"
+        "3-Block Compose V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告"
       ]
     },
     "v1.28.0": {
@@ -29,7 +29,7 @@
         "autojs6-dts 4.34.0: compose.dialog 建立獨立對話框或底部彈層工作階段, 提供 cancelable/主題選項, TSX 根節點和 AndroidView 內容的類型補全"
       ],
       "hint": [
-        "需要配套 AutoJs6 6.8.0 / 5321 宿主及支援對話框的 Compose UI 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請"
+        "需要配套 AutoJs6 6.8.0 / 5321 宿主及支援對話框的 3-Block Compose 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請"
       ]
     },
     "v1.27.0": {
@@ -51,7 +51,7 @@
         "參數提示在編輯區點按後恢復顯示 (捲動後不恢復), ESC 同時隱藏參數提示與符號文件"
       ],
       "hint": [
-        "互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主與支援 AndroidView 擴充的 Compose UI 建構; TSX 另需 TypeScript Engine 0.6.5. 基礎 V1 渲染最低宿主仍為 5316"
+        "互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主與支援 AndroidView 擴充的 3-Block Compose 建構; TSX 另需 TypeScript Engine 0.6.5. 基礎 V1 渲染最低宿主仍為 5316"
       ]
     },
     "v1.25.0": {
@@ -86,7 +86,7 @@
     "v1.22.0": {
       "released_date": "2026/10/03",
       "feature": [
-        "AutoJs6 declarations 4.30.0: Compose UI 的節點, 狀態, Modifier, 主題, 會話與懸浮窗補全, 包含組件事件參數和類型化錯誤 (需要配套本地宿主及 Compose UI 插件)"
+        "AutoJs6 declarations 4.30.0: 3-Block Compose 的節點, 狀態, Modifier, 主題, 會話與懸浮窗補全, 包含組件事件參數和類型化錯誤 (需要配套本地宿主及 3-Block Compose 插件)"
       ]
     },
     "v1.21.0": {

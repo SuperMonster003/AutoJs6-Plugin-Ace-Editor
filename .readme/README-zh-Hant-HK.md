@@ -189,7 +189,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-u
 
 ###### 2026/10/08
 
-* `優化` Compose UI V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
+* `優化` 3-Block Compose V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
 
 ##### 更多發行歷史可參閱
 

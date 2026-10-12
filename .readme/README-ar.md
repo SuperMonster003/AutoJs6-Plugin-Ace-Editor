@@ -189,7 +189,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-u
 
 ###### 2026/10/08
 
-* `تحسين` تعريفات TypeScript / TSX لخصائص وفتحات وأحداث مكونات Compose UI V2
+* `تحسين` تعريفات TypeScript / TSX لخصائص وفتحات وأحداث مكونات 3-Block Compose V2
 
 ##### لمزيد من سجل الإصدارات
 

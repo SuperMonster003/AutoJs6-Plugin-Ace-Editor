@@ -189,7 +189,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ###### 2026/10/08
 
-* `Improvement` TypeScript / TSX properties, slots and event declarations for Compose UI V2 components
+* `Improvement` TypeScript / TSX properties, slots and event declarations for 3-Block Compose V2 components
 
 ##### Complete release history
 

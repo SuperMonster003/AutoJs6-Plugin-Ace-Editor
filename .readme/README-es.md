@@ -189,7 +189,7 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ###### 2026/10/08
 
-* `Mejora` Declaraciones TypeScript / TSX de propiedades, ranuras y eventos de componentes Compose UI V2
+* `Mejora` Declaraciones TypeScript / TSX de propiedades, ranuras y eventos de componentes 3-Block Compose V2
 
 ##### Para ver más historial de versiones
 

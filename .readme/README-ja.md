@@ -189,7 +189,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-u
 
 ###### 2026/10/08
 
-* `改善` Compose UI V2 コンポーネントの TypeScript / TSX プロパティ, スロット, イベント宣言
+* `改善` 3-Block Compose V2 コンポーネントの TypeScript / TSX プロパティ, スロット, イベント宣言
 
 ##### その他のリリース履歴
 

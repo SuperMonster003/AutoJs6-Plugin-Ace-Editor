@@ -20,13 +20,13 @@
 
 ###### 2026/10/08
 
-* `Amélioration` Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants Compose UI V2
+* `Amélioration` Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants 3-Block Compose V2
 
 # v1.28.0
 
 ###### 2026/10/07
 
-* `Note` Nécessite l'hôte AutoJs6 6.8.0 / 5321 correspondant et une version de Compose UI prenant en charge les dialogues; TSX nécessite TypeScript Engine 0.6.6. Les scripts non UI doivent déjà disposer de l'autorisation de superposition, que cet appel ne demande pas
+* `Note` Nécessite l'hôte AutoJs6 6.8.0 / 5321 correspondant et une version de 3-Block Compose prenant en charge les dialogues; TSX nécessite TypeScript Engine 0.6.6. Les scripts non UI doivent déjà disposer de l'autorisation de superposition, que cet appel ne demande pas
 * `Fonctionnalité` autojs6-dts 4.34.0: compose.dialog ouvre des sessions de dialogue ou de panneau inférieur indépendantes avec les options cancelable/thème typées, les racines TSX et le contenu AndroidView
 
 # v1.27.0
@@ -41,7 +41,7 @@
 
 ###### 2026/10/07
 
-* `Note` Cette intégration nécessite AutoJs6 6.8.0 / 5320 et un build Compose UI avec extension AndroidView; TSX nécessite aussi TypeScript Engine 0.6.5. Le rendu V1 de base conserve le minimum 5316
+* `Note` Cette intégration nécessite AutoJs6 6.8.0 / 5320 et un build 3-Block Compose avec extension AndroidView; TSX nécessite aussi TypeScript Engine 0.6.5. Le rendu V1 de base conserve le minimum 5316
 * `Fonctionnalité` Les paramètres "Suggestions intelligentes" de l'hôte sont pris en compte: déclenchement de la complétion automatique, caractères minimum, délai de complétion, déclenchement des indications de paramètres et changement de surcharge avec les flèches s'appliquent immédiatement; la complétion en direct est désormais planifiée par le plugin selon ces paramètres (nécessite un hôte AutoJs6 6.8.0)
 * `Fonctionnalité` autojs6-dts 4.33.0: Les conteneurs XML `<compose>` et compose.attach intègrent des sessions Compose indépendantes dans les pages UI ou les fenêtres flottantes existantes; compose.AndroidView affiche une View Android existante ou renvoyée par une fabrique synchrone
 * `Amélioration` Les surcharges se changent avec Alt+Haut / Alt+Bas sur clavier physique (le déplacement de lignes par défaut d'Ace est conservé sans indication multi-surcharges), les touches Haut et Bas de la barre de touches de l'hôte (désactivable dans les paramètres) et les boutons haut / bas en haut à droite de la fenêtre d'indication
@@ -74,7 +74,7 @@
 
 ###### 2026/10/03
 
-* `Fonctionnalité` AutoJs6 declarations 4.30.0: complétion des noeuds, états, modificateurs, thèmes, sessions et fenêtres flottantes Compose UI, avec paramètres des événements et erreurs typées (hôte local compatible et plugin Compose UI requis)
+* `Fonctionnalité` AutoJs6 declarations 4.30.0: complétion des noeuds, états, modificateurs, thèmes, sessions et fenêtres flottantes 3-Block Compose, avec paramètres des événements et erreurs typées (hôte local compatible et plugin 3-Block Compose requis)
 
 # v1.21.0
 

@@ -189,7 +189,7 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ###### 2026/10/08
 
-* `Amélioration` Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants Compose UI V2
+* `Amélioration` Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants 3-Block Compose V2
 
 ##### Pour plus d'historique des versions
 

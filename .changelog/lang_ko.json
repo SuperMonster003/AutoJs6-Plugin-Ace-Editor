@@ -20,7 +20,7 @@
     "v1.29.0": {
       "released_date": "2026/10/08",
       "improvement": [
-        "Compose UI V2 구성요소의 TypeScript / TSX 속성, 슬롯 및 이벤트 선언"
+        "3-Block Compose V2 구성요소의 TypeScript / TSX 속성, 슬롯 및 이벤트 선언"
       ]
     },
     "v1.28.0": {
@@ -29,7 +29,7 @@
         "autojs6-dts 4.34.0: compose.dialog가 독립 대화상자 또는 하단 시트 세션을 열고 cancelable/테마 옵션, TSX 루트 및 AndroidView 콘텐츠의 타입 자동완성을 제공"
       ],
       "hint": [
-        "호환되는 AutoJs6 6.8.0 / 5321 호스트와 대화상자를 지원하는 Compose UI가 필요하며 TSX에는 TypeScript Engine 0.6.6도 필요. 비 UI 스크립트에는 기존 오버레이 권한이 필요하고 이 호출은 권한을 요청하지 않음"
+        "호환되는 AutoJs6 6.8.0 / 5321 호스트와 대화상자를 지원하는 3-Block Compose가 필요하며 TSX에는 TypeScript Engine 0.6.6도 필요. 비 UI 스크립트에는 기존 오버레이 권한이 필요하고 이 호출은 권한을 요청하지 않음"
       ]
     },
     "v1.27.0": {
@@ -51,7 +51,7 @@
         "매개 변수 힌트가 편집 영역을 탭한 뒤 다시 표시되며 (스크롤 후에는 표시되지 않음), ESC 가 매개 변수 힌트와 심볼 문서를 함께 숨김"
       ],
       "hint": [
-        "상호 운용에는 일치하는 AutoJs6 6.8.0 / 5320 호스트와 AndroidView 확장을 지원하는 Compose UI가 필요합니다. TSX에는 TypeScript Engine 0.6.5도 필요합니다. 기본 V1 렌더링의 최소 호스트는 계속 5316입니다"
+        "상호 운용에는 일치하는 AutoJs6 6.8.0 / 5320 호스트와 AndroidView 확장을 지원하는 3-Block Compose가 필요합니다. TSX에는 TypeScript Engine 0.6.5도 필요합니다. 기본 V1 렌더링의 최소 호스트는 계속 5316입니다"
       ]
     },
     "v1.25.0": {
@@ -86,7 +86,7 @@
     "v1.22.0": {
       "released_date": "2026/10/03",
       "feature": [
-        "AutoJs6 declarations 4.30.0: Compose UI 노드, 상태, Modifier, 테마, 세션과 플로팅 창 자동 완성, 컴포넌트 이벤트 매개변수와 형식화된 오류 포함 (호환되는 로컬 호스트와 Compose UI 플러그인 필요)"
+        "AutoJs6 declarations 4.30.0: 3-Block Compose 노드, 상태, Modifier, 테마, 세션과 플로팅 창 자동 완성, 컴포넌트 이벤트 매개변수와 형식화된 오류 포함 (호환되는 로컬 호스트와 3-Block Compose 플러그인 필요)"
       ]
     },
     "v1.21.0": {

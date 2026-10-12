@@ -20,13 +20,13 @@
 
 ###### 2026/10/08
 
-* `優化` Compose UI V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
+* `優化` 3-Block Compose V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
 
 # v1.28.0
 
 ###### 2026/10/07
 
-* `提示` 需要配套 AutoJs6 6.8.0 / 5321 宿主及支援對話框的 Compose UI 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請
+* `提示` 需要配套 AutoJs6 6.8.0 / 5321 宿主及支援對話框的 3-Block Compose 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請
 * `新增` autojs6-dts 4.34.0: compose.dialog 建立獨立對話框或底部彈層工作階段, 提供 cancelable/主題選項, TSX 根節點和 AndroidView 內容的類型補全
 
 # v1.27.0
@@ -41,7 +41,7 @@
 
 ###### 2026/10/07
 
-* `提示` 互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主與支援 AndroidView 擴充的 Compose UI 建構; TSX 另需 TypeScript Engine 0.6.5. 基礎 V1 渲染最低宿主仍為 5316
+* `提示` 互操作需要匹配的 AutoJs6 6.8.0 / 5320 宿主與支援 AndroidView 擴充的 3-Block Compose 建構; TSX 另需 TypeScript Engine 0.6.5. 基礎 V1 渲染最低宿主仍為 5316
 * `新增` 宿主 "智慧提示" 設定生效: 自動補全觸發方式, 補全最少觸發字元數, 補全觸發延遲, 參數提示觸發方式與方向鍵切換重載開關, 修改後即時套用; 即時補全改由插件依設定排程 (需要 AutoJs6 6.8.0 宿主)
 * `新增` autojs6-dts 4.33.0: XML `<compose>` 容器與 compose.attach 可在 UI 頁面或舊懸浮窗內嵌入獨立 Compose 工作階段; compose.AndroidView 可承載現有 Android View 或同步工廠傳回的 View
 * `優化` 重載切換支援硬件鍵盤 Alt+Up / Alt+Down (未顯示多重載參數提示時保持 Ace 預設的移動行), 宿主多功能鍵盤上下鍵 (可在設定中關閉) 及提示視窗右上角的上下按鈕
@@ -74,7 +74,7 @@
 
 ###### 2026/10/03
 
-* `新增` AutoJs6 declarations 4.30.0: Compose UI 的節點, 狀態, Modifier, 主題, 會話與懸浮窗補全, 包含組件事件參數和類型化錯誤 (需要配套本地宿主及 Compose UI 插件)
+* `新增` AutoJs6 declarations 4.30.0: 3-Block Compose 的節點, 狀態, Modifier, 主題, 會話與懸浮窗補全, 包含組件事件參數和類型化錯誤 (需要配套本地宿主及 3-Block Compose 插件)
 
 # v1.21.0
 

@@ -20,7 +20,7 @@
     "v1.29.0": {
       "released_date": "2026/10/08",
       "improvement": [
-        "Compose UI V2 コンポーネントの TypeScript / TSX プロパティ, スロット, イベント宣言"
+        "3-Block Compose V2 コンポーネントの TypeScript / TSX プロパティ, スロット, イベント宣言"
       ]
     },
     "v1.28.0": {
@@ -29,7 +29,7 @@
         "autojs6-dts 4.34.0: compose.dialog で独立したダイアログまたはボトムシートのセッションを作成し, cancelable/テーマ設定, TSX ルートと AndroidView コンテンツの型補完を提供"
       ],
       "hint": [
-        "対応する AutoJs6 6.8.0 / 5321 ホストとダイアログ対応の Compose UI が必要. TSX には TypeScript Engine 0.6.6 も必要. 非 UI スクリプトでは事前のオーバーレイ権限が必要で, この呼び出しは権限を要求しません"
+        "対応する AutoJs6 6.8.0 / 5321 ホストとダイアログ対応の 3-Block Compose が必要. TSX には TypeScript Engine 0.6.6 も必要. 非 UI スクリプトでは事前のオーバーレイ権限が必要で, この呼び出しは権限を要求しません"
       ]
     },
     "v1.27.0": {
@@ -51,7 +51,7 @@
         "パラメーターヒントは編集領域のタップ後に再表示され (スクロール後は再表示しない), ESC でパラメーターヒントとシンボルのドキュメントを同時に非表示"
       ],
       "hint": [
-        "相互運用には対応する AutoJs6 6.8.0 / 5320 ホストと AndroidView 拡張対応の Compose UI が必要です. TSX には TypeScript Engine 0.6.5 も必要です. 基本 V1 描画の最小ホストは引き続き 5316 です"
+        "相互運用には対応する AutoJs6 6.8.0 / 5320 ホストと AndroidView 拡張対応の 3-Block Compose が必要です. TSX には TypeScript Engine 0.6.5 も必要です. 基本 V1 描画の最小ホストは引き続き 5316 です"
       ]
     },
     "v1.25.0": {
@@ -86,7 +86,7 @@
     "v1.22.0": {
       "released_date": "2026/10/03",
       "feature": [
-        "AutoJs6 declarations 4.30.0: Compose UI のノード, 状態, Modifier, テーマ, セッション, フローティングウィンドウの補完, コンポーネントのイベント引数と型付きエラーに対応 (対応するローカルホストと Compose UI プラグインが必要)"
+        "AutoJs6 declarations 4.30.0: 3-Block Compose のノード, 状態, Modifier, テーマ, セッション, フローティングウィンドウの補完, コンポーネントのイベント引数と型付きエラーに対応 (対応するローカルホストと 3-Block Compose プラグインが必要)"
       ]
     },
     "v1.21.0": {

@@ -20,7 +20,7 @@
     "v1.29.0": {
       "released_date": "2026/10/08",
       "improvement": [
-        "Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants Compose UI V2"
+        "Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants 3-Block Compose V2"
       ]
     },
     "v1.28.0": {
@@ -29,7 +29,7 @@
         "autojs6-dts 4.34.0: compose.dialog ouvre des sessions de dialogue ou de panneau inférieur indépendantes avec les options cancelable/thème typées, les racines TSX et le contenu AndroidView"
       ],
       "hint": [
-        "Nécessite l'hôte AutoJs6 6.8.0 / 5321 correspondant et une version de Compose UI prenant en charge les dialogues; TSX nécessite TypeScript Engine 0.6.6. Les scripts non UI doivent déjà disposer de l'autorisation de superposition, que cet appel ne demande pas"
+        "Nécessite l'hôte AutoJs6 6.8.0 / 5321 correspondant et une version de 3-Block Compose prenant en charge les dialogues; TSX nécessite TypeScript Engine 0.6.6. Les scripts non UI doivent déjà disposer de l'autorisation de superposition, que cet appel ne demande pas"
       ]
     },
     "v1.27.0": {
@@ -51,7 +51,7 @@
         "Les indications de paramètres réapparaissent après un appui dans la zone d'édition (pas après un défilement), et ESC masque à la fois les indications de paramètres et la documentation du symbole"
       ],
       "hint": [
-        "Cette intégration nécessite AutoJs6 6.8.0 / 5320 et un build Compose UI avec extension AndroidView; TSX nécessite aussi TypeScript Engine 0.6.5. Le rendu V1 de base conserve le minimum 5316"
+        "Cette intégration nécessite AutoJs6 6.8.0 / 5320 et un build 3-Block Compose avec extension AndroidView; TSX nécessite aussi TypeScript Engine 0.6.5. Le rendu V1 de base conserve le minimum 5316"
       ]
     },
     "v1.25.0": {
@@ -86,7 +86,7 @@
     "v1.22.0": {
       "released_date": "2026/10/03",
       "feature": [
-        "AutoJs6 declarations 4.30.0: complétion des noeuds, états, modificateurs, thèmes, sessions et fenêtres flottantes Compose UI, avec paramètres des événements et erreurs typées (hôte local compatible et plugin Compose UI requis)"
+        "AutoJs6 declarations 4.30.0: complétion des noeuds, états, modificateurs, thèmes, sessions et fenêtres flottantes 3-Block Compose, avec paramètres des événements et erreurs typées (hôte local compatible et plugin 3-Block Compose requis)"
       ]
     },
     "v1.21.0": {
