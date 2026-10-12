@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v1.31.0": {
+      "released_date": "2026/10/12",
+      "improvement": [
+        "Объявления типов и автодополнение: device.getAndroidId принимает логический параметр useSystemId для чтения системного значения пользователя Android приложения через Shizuku/Root на Android 8.0+, вызывает исключение при ошибке доступа или чтения и игнорирует параметр на старых системах"
+      ]
+    },
     "v1.30.0": {
       "released_date": "2026/10/08",
       "improvement": [

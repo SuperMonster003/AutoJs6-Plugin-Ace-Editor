@@ -160,7 +160,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `Улучшение` Объявления типов и автодополнение: device.getAndroidId принимает логический параметр useSystemId для чтения системного значения пользователя Android приложения через Shizuku/Root на Android 8.0+, вызывает исключение при ошибке доступа или чтения и игнорирует параметр на старых системах
+
 # v1.30.0
 
 ###### 2026/10/08
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 ###### 2026/10/08
 
 * `Улучшение` Объявления TypeScript / TSX для свойств, слотов и событий компонентов Compose UI V2
-
-# v1.28.0
-
-###### 2026/10/07
-
-* `Подсказка` Требуются совместимый хост AutoJs6 6.8.0 / 5321 и сборка Compose UI с поддержкой диалогов; для TSX также нужен TypeScript Engine 0.6.6. Скриптам без UI заранее нужно разрешение наложения, этот вызов его не запрашивает
-* `Функция` autojs6-dts 4.34.0: compose.dialog открывает независимые сеансы диалога или нижней панели с типизированными параметрами cancelable/темы, корнями TSX и содержимым AndroidView
 
 ##### Подробнее об истории выпусков
 

@@ -160,7 +160,7 @@ Release ビルド:
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `改善` 型定義と補完: device.getAndroidId が useSystemId 真偽値引数に対応し, Android 8.0+ では Shizuku/Root を通じてアプリの Android ユーザーのシステム値を取得. 権限または読み取りの失敗時は例外を送出し, 旧システムでは引数を無視
+
 # v1.30.0
 
 ###### 2026/10/08
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 ###### 2026/10/08
 
 * `改善` Compose UI V2 コンポーネントの TypeScript / TSX プロパティ, スロット, イベント宣言
-
-# v1.28.0
-
-###### 2026/10/07
-
-* `ヒント` 対応する AutoJs6 6.8.0 / 5321 ホストとダイアログ対応の Compose UI が必要. TSX には TypeScript Engine 0.6.6 も必要. 非 UI スクリプトでは事前のオーバーレイ権限が必要で, この呼び出しは権限を要求しません
-* `機能` autojs6-dts 4.34.0: compose.dialog で独立したダイアログまたはボトムシートのセッションを作成し, cancelable/テーマ設定, TSX ルートと AndroidView コンテンツの型補完を提供
 
 ##### その他のリリース履歴
 

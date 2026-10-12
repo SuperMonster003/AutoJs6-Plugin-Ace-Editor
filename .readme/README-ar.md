@@ -160,7 +160,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `تحسين` تعريفات الأنواع والإكمال: تقبل device.getAndroidId المعامل المنطقي useSystemId لقراءة قيمة النظام لمستخدم Android الذي يشغل التطبيق عبر Shizuku/Root على Android 8.0+, وتطرح استثناء عند فشل الإذن أو القراءة, وتتجاهل المعامل على الأنظمة الأقدم
+
 # v1.30.0
 
 ###### 2026/10/08
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 ###### 2026/10/08
 
 * `تحسين` تعريفات TypeScript / TSX لخصائص وفتحات وأحداث مكونات Compose UI V2
-
-# v1.28.0
-
-###### 2026/10/07
-
-* `تلميح` يتطلب مضيف AutoJs6 6.8.0 / 5321 المتوافق وإصدار Compose UI يدعم مربعات الحوار; ويتطلب TSX أيضا TypeScript Engine 0.6.6. تحتاج البرامج النصية غير UI إلى إذن تراكب ممنوح مسبقا, ولا يطلبه هذا الاستدعاء
-* `ميزة` autojs6-dts 4.34.0: يفتح compose.dialog جلسات مستقلة لمربعات الحوار أو اللوحات السفلية مع أنواع خيارات cancelable/السمة وجذور TSX ومحتوى AndroidView
 
 ##### لمزيد من سجل الإصدارات
 

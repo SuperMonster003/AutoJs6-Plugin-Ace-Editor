@@ -160,7 +160,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `優化` 型別宣告與補全: device.getAndroidId 支援 useSystemId 布林參數, 在 Android 8.0+ 上透過 Shizuku/Root 取得執行應用所屬 Android 使用者的系統值, 權限或讀取失敗時擲出例外, 舊系統忽略此參數
+
 # v1.30.0
 
 ###### 2026/10/08
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 ###### 2026/10/08
 
 * `優化` Compose UI V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
-
-# v1.28.0
-
-###### 2026/10/07
-
-* `提示` 需要配套 AutoJs6 6.8.0 / 5321 主程式及支援對話方塊的 Compose UI 版本; TSX 另需 TypeScript Engine 0.6.6. 非 UI 指令碼須預先取得懸浮視窗權限, 此呼叫不會自動申請
-* `新增` autojs6-dts 4.34.0: compose.dialog 建立獨立對話方塊或底部彈層工作階段, 提供 cancelable/佈景主題選項, TSX 根節點和 AndroidView 內容的型別補全
 
 ##### 更多發行歷史可參閱
 

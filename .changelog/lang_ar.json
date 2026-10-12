@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v1.31.0": {
+      "released_date": "2026/10/12",
+      "improvement": [
+        "تعريفات الأنواع والإكمال: تقبل device.getAndroidId المعامل المنطقي useSystemId لقراءة قيمة النظام لمستخدم Android الذي يشغل التطبيق عبر Shizuku/Root على Android 8.0+, وتطرح استثناء عند فشل الإذن أو القراءة, وتتجاهل المعامل على الأنظمة الأقدم"
+      ]
+    },
     "v1.30.0": {
       "released_date": "2026/10/08",
       "improvement": [

@@ -160,7 +160,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -173,6 +173,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `Improvement` Type declarations and completion: device.getAndroidId accepts a useSystemId boolean to read the system value for the app's Android user through Shizuku/Root on Android 8.0+, throws on permission or read failure, and ignores the flag on older systems
+
 # v1.30.0
 
 ###### 2026/10/08
@@ -184,13 +190,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/08
 
 * `Improvement` TypeScript / TSX properties, slots and event declarations for Compose UI V2 components
-
-# v1.28.0
-
-###### 2026/10/07
-
-* `Hint` Requires the matching AutoJs6 6.8.0 / 5321 host and a Compose UI build with dialog support; TSX requires TypeScript Engine 0.6.6. Non-UI scripts need existing overlay permission, which this call does not request
-* `Feature` autojs6-dts 4.34.0: compose.dialog opens independent alert or bottom-sheet sessions with typed cancelable/theme options, TSX roots and AndroidView content
 
 ##### Complete release history
 

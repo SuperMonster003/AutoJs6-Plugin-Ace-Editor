@@ -4,6 +4,12 @@
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `Amélioration` Déclarations de types et complétion: device.getAndroidId accepte le booléen useSystemId pour lire la valeur système de l'utilisateur Android de l'application via Shizuku/Root sous Android 8.0+, lève une exception en cas d'échec d'autorisation ou de lecture et ignore ce paramètre sur les anciens systèmes
+
 # v1.30.0
 
 ###### 2026/10/08

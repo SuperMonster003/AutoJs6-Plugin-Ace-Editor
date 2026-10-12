@@ -4,6 +4,12 @@
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `Improvement` Type declarations and completion: device.getAndroidId accepts a useSystemId boolean to read the system value for the app's Android user through Shizuku/Root on Android 8.0+, throws on permission or read failure, and ignores the flag on older systems
+
 # v1.30.0
 
 ###### 2026/10/08

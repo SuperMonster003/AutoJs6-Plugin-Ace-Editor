@@ -160,7 +160,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +173,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 
 ******
 
+# v1.31.0
+
+###### 2026/10/12
+
+* `개선` 타입 선언 및 자동 완성: device.getAndroidId가 useSystemId 불리언 매개변수를 지원하며, Android 8.0+에서 Shizuku/Root로 앱이 실행되는 Android 사용자의 시스템 값을 읽음. 권한 또는 읽기 실패 시 예외를 발생시키고 이전 시스템에서는 매개변수를 무시
+
 # v1.30.0
 
 ###### 2026/10/08
@@ -184,13 +190,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.30.0-u
 ###### 2026/10/08
 
 * `개선` Compose UI V2 구성요소의 TypeScript / TSX 속성, 슬롯 및 이벤트 선언
-
-# v1.28.0
-
-###### 2026/10/07
-
-* `힌트` 호환되는 AutoJs6 6.8.0 / 5321 호스트와 대화상자를 지원하는 Compose UI가 필요하며 TSX에는 TypeScript Engine 0.6.6도 필요. 비 UI 스크립트에는 기존 오버레이 권한이 필요하고 이 호출은 권한을 요청하지 않음
-* `기능` autojs6-dts 4.34.0: compose.dialog가 독립 대화상자 또는 하단 시트 세션을 열고 cancelable/테마 옵션, TSX 루트 및 AndroidView 콘텐츠의 타입 자동완성을 제공
 
 ##### 더 많은 릴리스 기록
 
