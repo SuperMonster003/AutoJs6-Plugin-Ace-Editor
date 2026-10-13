@@ -125,6 +125,83 @@ function verifyCancellation() {
     check(!trace.some((entry) => entry[0] === "selection.selectWord" || entry[0] === "editor.startActionMode"), "a touch cancel did not stop the long press");
 }
 
+// Roadmap-Ace-1.44.0.md A5-3: Ace's custom scrollbar has no 1.4.12 counterpart, so the overlay is checked on its own.
+// The fake vertical scrollbar has a 500 px slide for 1800 px of scrollable content.
+function runCustomScrollbarScenario(enabled, steps) {
+    const env = createEnvironment();
+    env.editor.$toDestroy = [];
+    const { container } = env.elements;
+    const track = {
+        label: "scrollbar-v",
+        classList: new Set(["ace_sb-v"]),
+        parentNode: container,
+        getBoundingClientRect: () => ({ left: 388, top: 0, right: 400, bottom: 600, width: 12, height: 600 }),
+    };
+    env.elements.scrollbarTrack = track;
+    env.elements.scrollbarThumb = { label: "scrollbar-v-thumb", classList: new Set(), parentNode: track };
+    env.renderer.scrollBarV = {
+        element: track,
+        thumbTop: 0,
+        thumbHeight: 100,
+        scrollTopFromThumbTop: (thumbTop) => Math.max(0, Math.min(1800, Math.round((thumbTop * 1800) / 500))),
+        _emit(name, event) {
+            env.record("scrollbar." + name, event.data);
+        },
+    };
+    env.editor.getOption = (name) => (name === "customScrollbar" ? enabled : undefined);
+    loadOverlay(env)
+        .require("autojs6/mobile/touch_handler")
+        .addTouchListeners(container, env.editor, { isMagnifierEnabled: () => false });
+    return runTouchScenario(env, { name: "custom scrollbar", steps });
+}
+
+function verifyCustomScrollbar() {
+    const names = (trace, prefix) => trace.filter((entry) => String(entry[0]).startsWith(prefix));
+    const final = (trace) => trace.find((entry) => entry[0] === "final")[1];
+    const thumbDrag = runCustomScrollbarScenario(true, [
+        { down: [394, 50], target: "scrollbarThumb" },
+        { wait: 16 },
+        { move: [394, 100], target: "scrollbarThumb" },
+        { wait: 16 },
+        { move: [394, 150], target: "scrollbarThumb" },
+        { wait: 16 },
+        { up: [394, 150], target: "scrollbarThumb" },
+        { wait: 1000 },
+    ]);
+    check(
+        JSON.stringify(names(thumbDrag, "scrollbar.").map((entry) => entry[1])) === "[180,360]",
+        `thumb drag emitted ${JSON.stringify(names(thumbDrag, "scrollbar."))}`,
+    );
+    check(names(thumbDrag, "renderer.scrollTo").length === 0, "thumb drag scrolled the content directly or flung");
+    check(names(thumbDrag, "event.preventDefault").length === 3, "thumb drag did not prevent the touchstart and both moves");
+    check(
+        !thumbDrag.some((entry) => /^(selection\.|editor\.startActionMode$)/.test(String(entry[0]))),
+        "thumb drag changed the selection or started the action mode",
+    );
+    check(final(thumbDrag).pendingTimers === 0, "thumb drag left a long press or fling timer");
+
+    const trackTap = runCustomScrollbarScenario(true, [
+        { down: [394, 400], target: "scrollbarTrack" },
+        { wait: 50 },
+        { up: [394, 400], target: "scrollbarTrack" },
+    ]);
+    check(
+        JSON.stringify(names(trackTap, "scrollbar.").map((entry) => entry[1])) === "[1260]",
+        `track tap emitted ${JSON.stringify(names(trackTap, "scrollbar."))}`,
+    );
+    check(!trackTap.some((entry) => /^selection\./.test(String(entry[0]))), "track tap moved the cursor");
+
+    const disabled = runCustomScrollbarScenario(false, [
+        { down: [394, 400], target: "scrollbarThumb" },
+        { wait: 16 },
+        { move: [394, 300], target: "scrollbarThumb" },
+        { wait: 16 },
+        { up: [394, 300], target: "scrollbarThumb" },
+    ]);
+    check(names(disabled, "scrollbar.").length === 0, "the overlay dragged a scrollbar while customScrollbar is off");
+    check(names(disabled, "renderer.scrollTo").length > 0, "without customScrollbar the touch no longer scrolls the content");
+}
+
 function runVariant(kind, scenario) {
     const env = createEnvironment();
     env.editor.$toDestroy = [];
@@ -290,6 +367,7 @@ function main() {
     const compared = verifyTouchScenarios();
     verifyActionMode();
     verifyCancellation();
+    verifyCustomScrollbar();
     if (failures.length) {
         for (const failure of failures.slice(0, 20)) console.error(`FAIL ${failure}`);
         if (failures.length > 20) console.error(`... ${failures.length - 20} more`);

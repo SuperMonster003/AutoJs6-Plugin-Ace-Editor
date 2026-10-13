@@ -72,6 +72,19 @@ node tools/ace-mobile/extract-original-slices.mjs   # 仅在需要重新切片�
 - 放大镜: `magnifierEnabled` 默认 false 且无人设置, 仓库中也没有 `#magnifier` 样式; 代码用屏幕行去匹配按文档行编号的文本层单元格,
   有折叠或自动换行时会错位.
 
+## 覆盖层与 1.4.12 的有意差异 (A2 / A5)
+
+`verify-overlay.mjs` 把覆盖层 (`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/mobile/`) 与上面的原始片段放进同一假环境逐场景比对,
+以下差异是有意的, 校验脚本单独断言:
+
+- 补全弹窗标志: 覆盖层不检查从未赋值的 `editor.popup` (校验中唯一的预期差异 "B11").
+- 取消: 宿主的 `cancelAceMobileTouchInteraction(reason)` 只对 `dom_touchcancel`, `window_blur`, `pinch_zoom_begin`,
+  `pinch_action_mode` 生效 (清长按计时, 停惯性, 隐藏放大镜, 保留手势模式); 1.4.12 的触摸处理器收不到这些取消.
+- 自定义滚动条 (A5-3): 开启 Ace 的 `customScrollbar` 后, 落在滚动条上的单指触摸进入 "scrollbar" 模式: 按在滑块上拖动滑块,
+  按在轨道其他位置先让滑块中心跳到手指处; 不移动光标, 不触发长按与惯性, 抬起时与滚动结束一样调用
+  `startActionModeIfSelectionInView(false)`. Ace 的滚动条只监听鼠标事件, 而覆盖层阻止了 touchstart 的默认行为,
+  浏览器不会再合成鼠标事件, 所以由覆盖层代为拖动. 关闭该选项时行为与 1.4.12 相同.
+
 ## 来源与许可证 (A0-5)
 
 | 部分 | 来源 | 许可证 | 核实依据 |

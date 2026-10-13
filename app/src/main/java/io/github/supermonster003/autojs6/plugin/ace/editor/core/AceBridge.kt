@@ -123,6 +123,31 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun isHighlightIndentGuidesEnabled(): Boolean {
+        return editor.bridgeHighlightIndentGuidesEnabled()
+    }
+
+    @JavascriptInterface
+    fun isSvgGutterIconsEnabled(): Boolean {
+        return editor.bridgeSvgGutterIconsEnabled()
+    }
+
+    @JavascriptInterface
+    fun isCustomScrollbarEnabled(): Boolean {
+        return editor.bridgeCustomScrollbarEnabled()
+    }
+
+    @JavascriptInterface
+    fun isWhitespacesInSelectionEnabled(): Boolean {
+        return editor.bridgeWhitespacesInSelectionEnabled()
+    }
+
+    @JavascriptInterface
+    fun isTouchMagnifierEnabled(): Boolean {
+        return editor.bridgeTouchMagnifierEnabled()
+    }
+
+    @JavascriptInterface
     fun isBreakpointMarkersEnabled(): Boolean {
         return editor.bridgeBreakpointMarkersEnabled()
     }

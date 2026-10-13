@@ -70,13 +70,15 @@ body.ace-ready #editor {
     font-synthesis: none !important;
 }
 
-.ace_gutter-cell.ace_breakpoint {
+.ace_gutter-cell.ace_breakpoint,
+.ace_gutter-cell_svg-icons.ace_breakpoint {
     background:
         radial-gradient(circle at 7px center, #d32f2f 0, #d32f2f 5px, transparent 6px)
         no-repeat;
 }
 
-#editor.autojs6-hide-breakpoint-markers .ace_gutter-cell.ace_breakpoint {
+#editor.autojs6-hide-breakpoint-markers .ace_gutter-cell.ace_breakpoint,
+#editor.autojs6-hide-breakpoint-markers .ace_gutter-cell_svg-icons.ace_breakpoint {
     background: none !important;
 }
 
@@ -109,7 +111,8 @@ body.ace-ready #editor {
 }
 
 .ace_gutter,
-.ace_gutter-cell {
+.ace_gutter-cell,
+.ace_gutter-cell_svg-icons {
     -webkit-user-select: none;
     user-select: none;
 }

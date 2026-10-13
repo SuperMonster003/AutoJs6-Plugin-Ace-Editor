@@ -6,6 +6,8 @@
 //   - a second tap within 300 ms near the first one selects the word;
 //   - a 500 ms long press selects the word (or keeps a selection under the finger) and starts the ActionMode;
 //   - a touch near the cursor or selection anchor handle drags it; any other touch scrolls with a fling.
+// With Ace's customScrollbar option a touch on a scrollbar drags its thumb (Roadmap-Ace-1.44.0.md A5-3); the 1.4.12
+// build had no such scrollbar.
 // tools/ace-mobile/README.md documents the exact behavior (including the 1.4.12 quirks that are kept on purpose) and
 // tools/ace-mobile/verify-overlay.mjs replays the recorded touch scenarios against the 1.4.12 build.
 ace.define(
@@ -69,6 +71,8 @@ ace.define(
             // As in 1.4.12 the timer id is kept after clearTimeout; while it is set, moves back near the start of the
             // touch are ignored (see tools/ace-mobile/README.md).
             var longPressTimer = null;
+            // The custom scrollbar under the finger while mode is "scrollbar".
+            var scrollbarDrag = null;
 
             function isMagnifierEnabled() {
                 return typeof options.isMagnifierEnabled === "function" && !!options.isMagnifierEnabled();
@@ -98,6 +102,58 @@ ace.define(
                     target = target.parentNode;
                 }
                 return false;
+            }
+
+            function isInside(target, element) {
+                while (target) {
+                    if (target === element) {
+                        return true;
+                    }
+                    if (target === editor.container) {
+                        return false;
+                    }
+                    target = target.parentNode;
+                }
+                return false;
+            }
+
+            // Ace's custom scrollbars listen to mouse events, which the browser does not generate for touches whose
+            // touchstart was prevented, so the overlay drags their thumbs itself.
+            function customScrollbarAt(target) {
+                if (typeof editor.getOption !== "function" || editor.getOption("customScrollbar") !== true) {
+                    return null;
+                }
+                var bars = [renderer.scrollBarV, renderer.scrollBarH];
+                for (var i = 0; i < bars.length; i++) {
+                    if (bars[i] && bars[i].element && isInside(target, bars[i].element)) {
+                        return bars[i];
+                    }
+                }
+                return null;
+            }
+
+            function dragCustomScrollbar(clientX, clientY) {
+                var bar = scrollbarDrag.bar;
+                var thumbOffset = scrollbarDrag.vertical ? clientY - start.y : clientX - start.x;
+                var value = scrollbarDrag.vertical ?
+                    bar.scrollTopFromThumbTop(scrollbarDrag.thumbStart + thumbOffset) :
+                    bar.scrollLeftFromThumbLeft(scrollbarDrag.thumbStart + thumbOffset);
+                // The same event the scrollbar emits for mouse drags; the renderer applies it.
+                bar._emit("scroll", { data: value });
+            }
+
+            // A touch on the thumb drags it; a touch elsewhere on the track first centers the thumb under the finger.
+            function startCustomScrollbarDrag(bar, x, y) {
+                var vertical = bar === renderer.scrollBarV;
+                var thumbStart = vertical ? bar.thumbTop : bar.thumbLeft;
+                var thumbSize = vertical ? bar.thumbHeight : bar.thumbWidth;
+                var rect = bar.element.getBoundingClientRect();
+                var touchOffset = vertical ? y - rect.top : x - rect.left;
+                scrollbarDrag = { bar: bar, vertical: vertical, thumbStart: thumbStart };
+                if (touchOffset < thumbStart || touchOffset > thumbStart + thumbSize) {
+                    scrollbarDrag.thumbStart = touchOffset - thumbSize / 2;
+                    dragCustomScrollbar(x, y);
+                }
             }
 
             function scrollBounds() {
@@ -264,6 +320,19 @@ ace.define(
                 start.x = x;
                 start.y = y;
                 start.time = e.timeStamp;
+                var scrollbar = touches.length === 1 ? customScrollbarAt(e.target) : null;
+                if (scrollbar) {
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                    }
+                    maybeTap = false;
+                    mode = "scrollbar";
+                    startCustomScrollbarDrag(scrollbar, x, y);
+                    editor.finishActionMode();
+                    e.preventDefault();
+                    return;
+                }
+                scrollbarDrag = null;
                 start.scrollTop = renderer.getScrollTop();
                 start.scrollLeft = renderer.getScrollLeft();
                 lastMoveX = x;
@@ -290,6 +359,12 @@ ace.define(
                 hideMagnifier();
                 if (mode === "zoom") {
                     mode = "";
+                    return;
+                }
+                if (mode === "scrollbar") {
+                    mode = "";
+                    scrollbarDrag = null;
+                    editor.startActionModeIfSelectionInView(false);
                     return;
                 }
                 if (maybeTap && e.timeStamp - start.time < TAP_MAX_DURATION_MS) {
@@ -335,6 +410,13 @@ ace.define(
                 }
                 var x = (e.clientX = touches[0].clientX);
                 var y = (e.clientY = touches[0].clientY);
+                if (mode === "scrollbar") {
+                    if (scrollbarDrag) {
+                        dragCustomScrollbar(x, y);
+                    }
+                    e.preventDefault();
+                    return;
+                }
                 var nearStart = handleDistance(x - start.x, y - start.y) < NEAR_START_DISTANCE;
                 if (nearStart && mode === "scroll" && !hasScrolled) {
                     return;

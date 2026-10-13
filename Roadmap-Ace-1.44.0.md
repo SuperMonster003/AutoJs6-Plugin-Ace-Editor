@@ -501,16 +501,31 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [ ] **A5-1** `useSvgGutterIcons` (默认开): `editor.setOption("useSvgGutterIcons", enabled)`; A3-8 的断点样式已兼容两种类名;
       `isDiagnosticGutterCell` 同时识别 `ace_icon` 与 `ace_icon_svg`.
       —— 验收: 23046RP50C (3x 密度) 上注解图标边缘清晰, 断点红点位置不变.
+      进度 (2026-10-13): 初始值读 `isSvgGutterIconsEnabled` (缺省 true), `AutoJsAce.setSvgGutterIconsEnabled` 切换后 `updateFull`;
+      `autojs6.css` 的断点, 隐藏断点与禁止选中规则都加了 `.ace_gutter-cell_svg-icons`. 1.44.0 两种模式下注解类名都挂在单元格上
+      (svg 模式图标子节点另有 `ace_icon_svg ace_error`), `findGutterCell` 已识别两种单元格, `isDiagnosticGutterCell` 无需改动;
+      jsdom 中 svg 开 / 关两种模式的 gutter 点击 (断点切换, 注解图标, errorMarker) 结果一致. 待真机目视验收.
 - [ ] **A5-2** `highlightIndentGuides` (默认开, 且仅在 `displayIndentGuides` 开启时生效): `setIndentGuidesEnabled` (`:4731`)
       同时设置两项; 关闭缩进参考线时强制关闭高亮.
       —— 验收: 光标进入嵌套块时对应参考线高亮, 自动换行下不错位 (上游 #5621 修复).
+      进度 (2026-10-13): 初始值读 `isHighlightIndentGuidesEnabled` (缺省 true), 生效值为 "参考线开 且 高亮开";
+      `setIndentGuidesEnabled` / `setHighlightIndentGuidesEnabled` 两个入口都按该规则设置, jsdom 已核对四种组合. 待真机目视验收.
 - [ ] **A5-3** `customScrollbar` (默认开, 验证门 G-A5-3): `editor.setOption("customScrollbar", enabled)`; 复核触摸拖动滚动条,
       `installScrollChangeHooks` (`:2580`) 的 `scrollToX/Y` 包装仍被触发, 诊断标记在滚动条上的配色跟随 `applyThemePalette`.
       —— 验收: 滚动条上出现错误 / 警告标记, 手指拖动滚动条与惯性滚动互不干扰.
+      进度 (2026-10-13): 初始值读 `isCustomScrollbarEnabled` (缺省 true), 在 `setOptions` 之后单独设置; 滚动条标记画在 canvas 上,
+      取不到 2D 上下文时 (jsdom 即如此) 上游会在 `setOption` 中抛错, 因此出错时记 recoverableError 并退回原生滚动条, 不中断初始化.
+      上游滚动条只监听鼠标事件, 而覆盖层阻止 touchstart 默认行为后浏览器不再合成鼠标事件, 所以覆盖层新增 "scrollbar" 手势模式:
+      按在滑块上拖动滑块, 按在轨道上先让滑块中心跳到手指处, 通过滚动条自身的 `scroll` 事件滚动 (经 `session.setScrollTop` ->
+      `renderer.scrollToY`, `installScrollChangeHooks` 的包装照常触发); 不移动光标, 不长按, 不惯性. `verify-overlay.mjs` 新增
+      9 项断言 (共 491 项), jsdom 用真实 1.44.0 滚动条核对了拖动与轨道点击. 标记配色由上游按 `theme.isDark` 选择亮 / 暗两套,
+      主题调色板只有前景 / 背景两色, 不再另行覆盖. 待 G-A5-3 真机复核.
 - [ ] **G-A5-3** 8 台设备复核 customScrollbar 与覆盖层惯性滚动; 任一设备出现滚动条吞掉触摸或渲染错位 -> 默认改为关闭并记录.
 - [ ] **A5-4** `showWhitespacesInSelection` (默认开): 加载 `ext-whitespaces_in_selection.js` 后 `editor.setOption("showWhitespacesInSelection", enabled)`;
       暗色主题下空白符颜色复核.
       —— 验收: 选中含制表符与空格的文本时显示占位符号, 取消选区后消失.
+      进度 (2026-10-13): 初始值读 `isWhitespacesInSelectionEnabled` (缺省 true), 在 `setOptions` 之后单独设置 (选项由扩展注册);
+      jsdom 中选中含制表符与空格的两行后文本层出现 6 个占位节点. 待真机目视与暗色主题复核.
 
 ### 9.2 补全与智能提示
 
@@ -578,6 +593,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `key_$_ace_touch_magnifier_enabled` (false), `key_$_ace_upstream_completion_trigger` (由 G-A5-6 决定是否保留);
       `AceBridge.kt` 对应 getter; `AceEditorLspPreferencesTest` 风格的 JVM 测试覆盖默认值与读取.
       —— 验收: 不改宿主时插件按默认值运行; 修改宿主 SharedPreferences 后 `notifyDisplayPreferencesChanged` 立即生效.
+      进度 (2026-10-13): 视觉 4 项与放大镜已加入 `AceEditorDisplayPreferences` (键名与默认值同上, 另有 `DEFAULT_*` 常量),
+      `AceBridge.kt` 有对应 getter, `notifyDisplayPreferencesChanged` 依次调用 5 个 `AutoJsAce.set*Enabled`;
+      `AceEditorDisplayPreferencesTest` 覆盖缺省值, 读取与键名. 同名符号高亮, ghost text 与上游触发三个键随 A5-5 至 A5-8 加入.
 - [ ] **A7-2** 宿主侧 (AutoJs6 仓库, 单独提交): `app/src/main/res/xml/fragment_code_editor_settings.xml` 在 "缩进参考线" (`:82`)
       所在分组后增加视觉 4 项与放大镜开关, 在智能提示分组 (`:183`) 增加 ghost text 与同名符号高亮; `bools.xml` 默认值与 A7-1 一致;
       10 种语言 `strings.xml` 标题 / 摘要 / 长按说明 (ASCII 标点); 变更时调用 `EditorPluginSession.notifyDisplayPreferencesChanged`.

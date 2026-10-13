@@ -33,6 +33,9 @@
     var lineNumbersEnabled = true;
     var breakpointMarkersEnabled = true;
     var foldMarkersEnabled = true;
+    var indentGuidesEnabled = true;
+    // Ace 1.44.0 display options (Roadmap-Ace-1.44.0.md A5-1 to A5-4); the host exposes them in A7.
+    var highlightIndentGuidesEnabled = true;
     var foldRequestSerial = 0;
     var pendingFoldRequest = null;
     var gutterWidthMode = "dynamic";
@@ -4744,11 +4747,60 @@
     }
 
     function setIndentGuidesEnabled(enabled) {
-        editor.setOption("displayIndentGuides", !!enabled);
+        indentGuidesEnabled = !!enabled;
+        editor.setOption("displayIndentGuides", indentGuidesEnabled);
+        // The active guide highlight only makes sense while the guides are shown.
+        editor.setOption("highlightIndentGuides", indentGuidesEnabled && highlightIndentGuidesEnabled);
         if (editor.renderer && editor.renderer.updateText) {
             editor.renderer.updateText();
         }
         notifyStateChanged("indentGuidesChanged");
+    }
+
+    function setHighlightIndentGuidesEnabled(enabled) {
+        highlightIndentGuidesEnabled = !!enabled;
+        editor.setOption("highlightIndentGuides", indentGuidesEnabled && highlightIndentGuidesEnabled);
+        notifyStateChanged("highlightIndentGuidesChanged");
+    }
+
+    function setSvgGutterIconsEnabled(enabled) {
+        editor.setOption("useSvgGutterIcons", !!enabled);
+        // The gutter only rebuilds the cell class names on its next full update.
+        if (editor.renderer && typeof editor.renderer.updateFull === "function") {
+            editor.renderer.updateFull();
+        }
+        notifyStateChanged("svgGutterIconsChanged");
+    }
+
+    function applyCustomScrollbar(enabled) {
+        try {
+            editor.setOption("customScrollbar", !!enabled);
+        } catch (error) {
+            // The annotation decorator of the custom scrollbar draws on a canvas; without a 2D context
+            // the native scrollbars stay in place.
+            notifyRecoverableError("customScrollbar", error);
+            try {
+                editor.setOption("customScrollbar", false);
+            } catch (ignore) {
+                // Nothing else to restore.
+            }
+        }
+    }
+
+    function setCustomScrollbarEnabled(enabled) {
+        applyCustomScrollbar(enabled);
+        scheduleResize("custom_scrollbar_changed");
+        notifyStateChanged("customScrollbarChanged");
+    }
+
+    function setWhitespacesInSelectionEnabled(enabled) {
+        try {
+            editor.setOption("showWhitespacesInSelection", !!enabled);
+        } catch (error) {
+            // ext-whitespaces_in_selection.js registers the option; without it the selection keeps plain text.
+            notifyRecoverableError("showWhitespacesInSelection", error);
+        }
+        notifyStateChanged("whitespacesInSelectionChanged");
     }
 
     function setEditorContainerClass(className, enabled) {
@@ -5523,7 +5575,11 @@
         preferredWordWrapEnabled = wordWrapEnabled;
         var wordWrapIndentStyle = callBridgeString("getWordWrapIndentStyle", "continuation");
         var printMarginEnabled = callBridgeBoolean("isPrintMarginEnabled", false);
-        var indentGuidesEnabled = callBridgeBoolean("isIndentGuidesEnabled", true);
+        indentGuidesEnabled = callBridgeBoolean("isIndentGuidesEnabled", true);
+        highlightIndentGuidesEnabled = callBridgeBoolean("isHighlightIndentGuidesEnabled", true);
+        var svgGutterIconsEnabled = callBridgeBoolean("isSvgGutterIconsEnabled", true);
+        var customScrollbarEnabled = callBridgeBoolean("isCustomScrollbarEnabled", true);
+        var whitespacesInSelectionEnabled = callBridgeBoolean("isWhitespacesInSelectionEnabled", true);
         lineNumbersEnabled = callBridgeBoolean("isLineNumbersEnabled", true);
         breakpointMarkersEnabled = callBridgeBoolean("isBreakpointMarkersEnabled", true);
         foldMarkersEnabled = callBridgeBoolean("isFoldMarkersEnabled", true);
@@ -5559,6 +5615,8 @@
             enableSnippets: true,
             showPrintMargin: printMarginEnabled,
             displayIndentGuides: indentGuidesEnabled,
+            highlightIndentGuides: indentGuidesEnabled && highlightIndentGuidesEnabled,
+            useSvgGutterIcons: svgGutterIconsEnabled,
             showLineNumbers: lineNumbersEnabled,
             showFoldWidgets: foldMarkersEnabled,
             showGutter: hasVisibleGutterContent(),
@@ -5570,6 +5628,13 @@
             // The host shows the native selection toolbar; Ace's own touch menu would duplicate it.
             enableMobileMenu: false
         });
+        applyCustomScrollbar(customScrollbarEnabled);
+        try {
+            // Registered by ext-whitespaces_in_selection.js, so it is not part of setOptions above.
+            editor.setOption("showWhitespacesInSelection", whitespacesInSelectionEnabled);
+        } catch (error) {
+            notifyRecoverableError("showWhitespacesInSelection", error);
+        }
         if (editor.commands && typeof editor.commands.addCommand === "function") {
             editor.commands.addCommand({
                 name: "autojs6GoToDefinition",
@@ -5799,6 +5864,10 @@
             setLineNumbersEnabled: setLineNumbersEnabled,
             setPrintMarginEnabled: setPrintMarginEnabled,
             setIndentGuidesEnabled: setIndentGuidesEnabled,
+            setHighlightIndentGuidesEnabled: setHighlightIndentGuidesEnabled,
+            setSvgGutterIconsEnabled: setSvgGutterIconsEnabled,
+            setCustomScrollbarEnabled: setCustomScrollbarEnabled,
+            setWhitespacesInSelectionEnabled: setWhitespacesInSelectionEnabled,
             setTouchMagnifierEnabled: function(enabled) {
                 touchMagnifierEnabled = enabled === true || String(enabled).toLowerCase() === "true";
                 if (!touchMagnifierEnabled && mobileOverlay) {

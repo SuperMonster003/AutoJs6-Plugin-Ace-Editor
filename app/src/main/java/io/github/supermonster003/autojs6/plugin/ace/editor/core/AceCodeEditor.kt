@@ -921,6 +921,17 @@ class AceCodeEditor @JvmOverloads constructor(
         invokeAce("setLineNumbersEnabled", AceEditorDisplayPreferences.isLineNumbersEnabled(hostPreferences).toString())
         invokeAce("setPrintMarginEnabled", AceEditorDisplayPreferences.isPrintMarginEnabled(hostPreferences).toString())
         invokeAce("setIndentGuidesEnabled", AceEditorDisplayPreferences.isIndentGuidesEnabled(hostPreferences).toString())
+        invokeAce(
+            "setHighlightIndentGuidesEnabled",
+            AceEditorDisplayPreferences.isHighlightIndentGuidesEnabled(hostPreferences).toString(),
+        )
+        invokeAce("setSvgGutterIconsEnabled", AceEditorDisplayPreferences.isSvgGutterIconsEnabled(hostPreferences).toString())
+        invokeAce("setCustomScrollbarEnabled", AceEditorDisplayPreferences.isCustomScrollbarEnabled(hostPreferences).toString())
+        invokeAce(
+            "setWhitespacesInSelectionEnabled",
+            AceEditorDisplayPreferences.isWhitespacesInSelectionEnabled(hostPreferences).toString(),
+        )
+        invokeAce("setTouchMagnifierEnabled", AceEditorDisplayPreferences.isTouchMagnifierEnabled(hostPreferences).toString())
         invokeAce("setBreakpointMarkersEnabled", AceEditorDisplayPreferences.isBreakpointMarkersEnabled(hostPreferences).toString())
         invokeAce("setFoldMarkersEnabled", AceEditorDisplayPreferences.isFoldMarkersEnabled(hostPreferences).toString())
         invokeAce("setGutterWidthMode", quote(AceEditorDisplayPreferences.gutterWidthMode(hostPreferences)))
@@ -1979,6 +1990,26 @@ class AceCodeEditor @JvmOverloads constructor(
 
     internal fun bridgeIndentGuidesEnabled(): Boolean {
         return AceEditorDisplayPreferences.isIndentGuidesEnabled(hostPreferences)
+    }
+
+    internal fun bridgeHighlightIndentGuidesEnabled(): Boolean {
+        return AceEditorDisplayPreferences.isHighlightIndentGuidesEnabled(hostPreferences)
+    }
+
+    internal fun bridgeSvgGutterIconsEnabled(): Boolean {
+        return AceEditorDisplayPreferences.isSvgGutterIconsEnabled(hostPreferences)
+    }
+
+    internal fun bridgeCustomScrollbarEnabled(): Boolean {
+        return AceEditorDisplayPreferences.isCustomScrollbarEnabled(hostPreferences)
+    }
+
+    internal fun bridgeWhitespacesInSelectionEnabled(): Boolean {
+        return AceEditorDisplayPreferences.isWhitespacesInSelectionEnabled(hostPreferences)
+    }
+
+    internal fun bridgeTouchMagnifierEnabled(): Boolean {
+        return AceEditorDisplayPreferences.isTouchMagnifierEnabled(hostPreferences)
     }
 
     internal fun bridgeBreakpointMarkersEnabled(): Boolean {
