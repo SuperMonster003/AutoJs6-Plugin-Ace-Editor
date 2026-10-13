@@ -2,8 +2,8 @@
 //
 // While the cursor or the selection anchor is dragged, shows the screen rows around the drag position enlarged
 // above the finger. Written for AutoJs6 (the previous editor build had an unfinished magnifier that was never
-// enabled): rows are positioned by screen row (folds and soft wrap included), the selection is drawn here and the DOM
-// is created on first use. It is disabled unless the host enables it.
+// enabled): rows are positioned by screen row (folds and soft wrap included), the selection and the cursor are drawn
+// here and the DOM is created on first use. It is disabled unless the host enables it.
 ace.define("autojs6/mobile/magnifier", ["require", "exports", "module"], function(require, exports) {
     "use strict";
 
@@ -80,9 +80,20 @@ ace.define("autojs6/mobile/magnifier", ["require", "exports", "module"], functio
             clone.style.position = "absolute";
             clone.style.top = centerTop + rowOffset * lineHeight + "px";
             clone.style.left = "0";
+            // Ace contains each row (contain: strict on hidpi screens), which would clip the shifted clone to the
+            // content width; the clone keeps its natural width instead.
+            clone.style.right = "auto";
+            clone.style.contain = "none";
             clone.style.transform = "translateX(" + (unscaledWidth / 2 - cursorLeft) + "px)";
             this.content.appendChild(clone);
         }
+        // The dragged position sits in the middle of the content; `ace_cursor` takes the theme's cursor color.
+        var caret = (this.parent.ownerDocument || document).createElement("div");
+        caret.className = "autojs6-magnifier-cursor ace_cursor";
+        caret.style.top = centerTop + "px";
+        caret.style.height = lineHeight + "px";
+        caret.style.left = unscaledWidth / 2 + "px";
+        this.content.appendChild(caret);
 
         var left = clamp(point.x - parentRect.left - width / 2, EDGE_PX, parentRect.width - width - EDGE_PX);
         var top = point.y - parentRect.top - FINGER_GAP_PX - height;

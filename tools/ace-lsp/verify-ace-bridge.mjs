@@ -592,6 +592,37 @@ test("ActionMode calls reach the host", async () => {
     }
 });
 
+test("the drag magnifier clones rows unwrapped and without Ace's per-row containment", async () => {
+    const page = await openEditor({ host: { isTouchMagnifierEnabled: true } });
+    try {
+        const { editor, window } = page;
+        page.api.setText(Array.from({ length: 20 }, (_, row) => `line${row} alpha beta gamma delta epsilon zeta eta`).join("\n"));
+        render(page);
+        assert.ok(editor.container.classList.contains("ace_hidpi"), "the hidpi containment rules apply");
+        const { Magnifier } = window.ace.require("autojs6/mobile/magnifier");
+        const magnifier = new Magnifier(editor.container, editor);
+        magnifier.show({ row: 5, column: 30 }, { x: 200, y: 300 });
+        const clones = [...magnifier.content.children].filter((node) => node.classList.contains("ace_line"));
+        assert.deepEqual(clones.map((clone) => clone.textContent.split(" ")[0]), ["line4", "line5", "line6"]);
+        // Without white-space: pre the rows wrap inside the narrow content, and with Ace's containment the rows are
+        // clipped to the content width before they are shifted to center the cursor: the magnifier stays empty.
+        assert.equal(window.getComputedStyle(magnifier.content).whiteSpace, "pre");
+        for (const clone of clones) {
+            const style = window.getComputedStyle(clone);
+            assert.equal(style.contain, "none", clone.textContent);
+            assert.equal(style.right, "auto", clone.textContent);
+        }
+        // The cursor is drawn in the middle of the center row.
+        const carets = magnifier.content.querySelectorAll(".autojs6-magnifier-cursor.ace_cursor");
+        assert.equal(carets.length, 1);
+        assert.equal(carets[0].style.left, parseFloat(magnifier.content.style.width) / 2 + "px");
+        assert.equal(carets[0].style.top, clones[1].style.top);
+        magnifier.destroy();
+    } finally {
+        page.close();
+    }
+});
+
 test("Ace 1.44.0 display options follow the host preferences", async () => {
     const options = (editor) => ({
         displayIndentGuides: editor.getOption("displayIndentGuides"),

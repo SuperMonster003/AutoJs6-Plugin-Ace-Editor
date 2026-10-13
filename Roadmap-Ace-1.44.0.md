@@ -380,6 +380,12 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): 已重写 (按屏幕行定位克隆的文本层单元格, 折叠与自动换行下不错位; 选区自行绘制并沿用主题的 `ace_selection` 配色;
       放大 1.5 倍; 首次显示时才创建 DOM; 类名 `autojs6-magnifier*` 代替原 id). 开关 `setTouchMagnifierEnabled` 已加到 `AutoJsAce`,
       初始值读 `isTouchMagnifierEnabled` (Kotlin 侧在 A7-1 实现, 缺省 false). 真机验收待开关接通后进行.
+      真机验收 (2026-10-13, XQ-AT72, WebView 145): 首次在真机开启 (宿主设置露出前用写入宿主偏好的方式开启), 放大框为空白. 原因有二:
+      放大镜的内容层只带 `ace_text-layer` 类, 缺少 `.ace_layer` 提供的 `white-space: pre`, 克隆行在 160 px 宽的内容层内折行;
+      Ace 1.44.0 在高 DPI 屏上给每一行 `contain: strict`, 克隆行被裁在内容层宽度内, 平移到光标居中后几乎整行落在可见区域之外.
+      修复: 内容层补 `white-space: pre`, 克隆行设 `contain: none` 与 `right: auto`; 另在放大框中心画出光标竖线 (`ace_cursor`,
+      沿用主题的光标色), 否则看不出手指落在哪个字符上. 桥接执行式测试新增一例, 去掉任一修复的变异都会被检出; 真机拖拽时放大框
+      显示三行文字, 光标位置与编辑器一致. 其余目视项 (主题, 自动换行, 折叠, 旋转) 见手测指南 V10.
 - [x] **A2-7** 覆盖层与桥接层对接: `cancelAceMobileTouchInteraction` (`:1781`) 调用覆盖层的 `cancel()` 清理长按计时与惯性;
       `installTouchCursorSelectionGuard` (`:3770`) 与 `installImeTextInputSelectionWindow` (`:2890`) 不变;
       `global.AutoJsAce` 增加 `getMobileOverlayState()` 供诊断快照使用 (`AceDiagnostics` 增加字段 `mobileOverlay`).
