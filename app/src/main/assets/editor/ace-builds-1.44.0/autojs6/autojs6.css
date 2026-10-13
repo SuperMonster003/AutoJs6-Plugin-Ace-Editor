@@ -433,9 +433,34 @@ body.ace-theme-dark .ace_marker-layer .ace_selection {
     background: rgba(88, 166, 255, 0.42);
 }
 
+/* Other occurrences of the selected word get an outline only: a fill stacked with the selection and the same-symbol
+   highlight on the same word, and the selected word turned bright blue with hard-to-read text (maintainer, Gruvbox). */
 body.ace-theme-dark .ace_marker-layer .ace_selected-word {
-    background: rgba(88, 166, 255, 0.24);
+    background: transparent;
     border-color: rgba(125, 190, 255, 0.72);
+}
+
+/* Gruvbox, the default dark theme, uses its own palette: bg3 for the selection and faint aqua / yellow for word and
+   symbol highlights, so its foreground colors stay readable on every highlight. Its own selected-word style is an
+   8 px border. */
+body.ace-theme-dark .ace-gruvbox .ace_marker-layer .ace_selection {
+    background: #665c54;
+}
+
+body.ace-theme-dark .ace-gruvbox .ace_marker-layer .ace_selected-word {
+    border: 1px solid rgba(142, 192, 124, 0.7);
+    border-radius: 2px;
+    background: transparent;
+}
+
+body.ace-theme-dark .ace-gruvbox .ace_marker-layer .autojs6_symbol_highlight {
+    background: rgba(131, 165, 152, 0.18);
+    border-bottom-color: rgba(131, 165, 152, 0.65);
+}
+
+body.ace-theme-dark .ace-gruvbox .ace_marker-layer .autojs6_symbol_highlight_write {
+    background: rgba(250, 189, 47, 0.14);
+    border-bottom-color: rgba(250, 189, 47, 0.6);
 }
 
 .ace_marker-layer .ace_bracket {
