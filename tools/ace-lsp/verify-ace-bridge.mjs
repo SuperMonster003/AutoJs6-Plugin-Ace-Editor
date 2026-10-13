@@ -793,6 +793,61 @@ test("the inline completion preview is opt-in, hidden during IME composition and
     }
 });
 
+// Roadmap-Ace-1.44.0.md A5-6: the bridge keeps its own live / dot triggers (G-A5-6 found that Ace's upstream live
+// autocompletion closes an open popup after a dot instead of restarting member completion). These cells pin them.
+test("the bridge's completion triggers follow the smart hint options", async () => {
+    const words = ["alpha", "alphabet", "abc", "abcdef", "objMethod", "objField"];
+    const typing = async (options, steps) => {
+        const page = await openEditor({ layout: false, host: { getSmartHintOptions: JSON.stringify(options) } });
+        try {
+            const { editor } = page;
+            await sleep(300);
+            const requests = [];
+            editor.completers = [{
+                getCompletions(e, session, pos, prefix, callback) {
+                    const member = /\.\w*$/.test(session.getLine(pos.row).slice(0, pos.column));
+                    requests.push(member ? `member:${prefix}` : prefix);
+                    const items = member ? ["objMethod", "objField"] : words;
+                    callback(null, items.map((value, index) => ({ caption: value, value, score: 10 - index })));
+                },
+            }];
+            editor.focus();
+            const popup = () => {
+                const completer = editor.completer;
+                return completer && completer.popup && completer.popup.isOpen ? completer.popup.data.map((row) => row.caption).join("|") : "";
+            };
+            const observed = [];
+            for (const step of steps) {
+                if (step.type) for (const ch of step.type) editor.execCommand("insertstring", ch);
+                if (step.back) editor.execCommand("backspace");
+                if (step.wait) await sleep(step.wait);
+                observed.push(popup());
+            }
+            return { observed, requests };
+        } finally {
+            page.close();
+        }
+    };
+    const identifier = { completionTrigger: "identifier", completionMinChars: 1, completionDelayMs: 0 };
+    let result = await typing(identifier, [{ type: "a" }, { type: "b", wait: 50 }]);
+    // Ace filters fuzzily, so "ab" still matches alphabet.
+    assert.deepEqual(result.observed, ["alpha|alphabet|abc|abcdef", "abc|abcdef|alphabet"], "identifier, no delay");
+    result = await typing({ ...identifier, completionMinChars: 3 }, [{ type: "ab", wait: 50 }, { type: "c", wait: 50 }]);
+    assert.deepEqual(result.observed, ["", "abc|abcdef"], "minimum prefix of 3");
+    result = await typing({ ...identifier, completionDelayMs: 300 }, [{ type: "a", wait: 100 }, { wait: 300 }]);
+    assert.deepEqual(result.observed, ["", "alpha|alphabet|abc|abcdef"], "300 ms delay");
+    result = await typing(identifier, [{ type: "al", wait: 100 }, { type: ".", wait: 300 }, { type: "o", wait: 100 }]);
+    assert.deepEqual(result.observed, ["alpha|alphabet", "objMethod|objField", "objMethod|objField"], "member completion restarts after a dot");
+    assert.ok(result.requests.includes("member:"), "a member request after the dot");
+    result = await typing(identifier, [{ type: "a", wait: 100 }, { back: true, wait: 100 }]);
+    assert.deepEqual(result.observed, ["alpha|alphabet|abc|abcdef", ""], "backspace to an empty prefix closes the popup");
+    result = await typing({ ...identifier, completionTrigger: "dot" }, [{ type: "obj", wait: 300 }, { type: ".", wait: 300 }]);
+    assert.deepEqual(result.observed, ["", "objMethod|objField"], "dot mode opens only after a dot");
+    result = await typing({ ...identifier, completionTrigger: "off" }, [{ type: "obj", wait: 300 }, { type: ".", wait: 300 }]);
+    assert.deepEqual(result.observed, ["", ""], "off");
+    assert.deepEqual(result.requests, []);
+});
+
 test("the completion popup shows loading and empty states", async () => {
     const page = await openEditor({
         layout: false,

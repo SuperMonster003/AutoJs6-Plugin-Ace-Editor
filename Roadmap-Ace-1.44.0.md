@@ -561,13 +561,22 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       放在插件自己的 11 个 `strings.xml` (插件已有 10 语言资源), 随 `getSmartHintOptions` JSON 下发 (`completionLoadingText`,
       `completionEmptyText`), 缺省英文. jsdom 核对: 显式无候选显示 "无建议", 实时输入无候选不弹窗, 有候选照常弹出, 慢速 provider
       700 ms 时显示 "加载中...", 结果到达后替换. 待真机验收 (Python 冷启动).
-- [ ] **A5-6** 上游 triggerCharacters 替换自研点触发 (验证门 G-A5-6): 映射表
+- [x] **A5-6** 上游 triggerCharacters 替换自研点触发 (验证门 G-A5-6): 映射表
       identifier -> `enableLiveAutocompletion: true, liveAutocompletionThreshold: completionMinChars, liveAutocompletionDelay: completionDelayMs`;
       dot -> `enableLiveAutocompletion: true, liveAutocompletionThreshold: 1e9` 且仅靠 `triggerCharacters`;
       off -> `enableLiveAutocompletion: false`. 静态补全器与 LSP 补全器声明 `triggerCharacters` (JS/TS/Python/Java/Kotlin: `["."]`, Lua: `[".", ":"]`).
       先并行保留 `installMemberCompletionDotTrigger` (`:3737`) 与 `scheduleLiveCompletion` (`:4102`), 以开关 `useUpstreamTrigger` 切换.
       —— 验收: 行为对照表 (3 种触发 x 延迟 0/300 ms x 最小字符 1/3 x "点后重启" x "退格清空关闭") 两套机制逐格等价.
-- [ ] **G-A5-6** 对照表全部等价且 6 台真机 IME 下无重复弹窗 -> 删除自研触发代码; 否则保留自研触发, 删除映射代码并记录差异.
+- [x] **G-A5-6** 对照表全部等价且 6 台真机 IME 下无重复弹窗 -> 删除自研触发代码; 否则保留自研触发, 删除映射代码并记录差异.
+      结论 (2026-10-13): 不等价, 保留自研触发, 映射代码不进入产品 (只在对照实验中临时设置). 对照在 jsdom 中进行: 同一页面, 同一假
+      补全源 (声明 `triggerCharacters: ["."]`), 自研侧按智能提示选项运行, 上游侧把自研触发设为 off 后按映射表设置
+      `enableLiveAutocompletion / liveAutocompletionThreshold / liveAutocompletionDelay`; 矩阵为 3 种触发 x 延迟 0/300 ms x 最小字符
+      1/3 x 4 个场景 (连续输入标识符, 标识符后输入点, 点后重启, 退格清空关闭), 每步记录弹窗是否打开及前三个候选. 48 格中 11 格不同:
+      (1) identifier 模式下弹窗已打开时输入点, 上游在约 400 ms 内关闭弹窗且不再请求成员补全 (上游只在没有活动补全时处理 insertstring),
+      自研 30 ms 后重启并显示成员候选, 这是用户可见的退化, 共 6 格; (2) dot 模式与 identifier 最小 3 字符下, 上游在点后立即弹出,
+      自研在 30 ms 计时后弹出, 只是时序差异, 共 5 格. 另外上游实时补全把 `autoShown` 设为 true, 慢速 provider 的加载项 (A5-5) 不会出现.
+      因 (1) 不等价, 真机 IME 复核不再需要. 桥接执行式测试新增一例固定自研触发的行为 (标识符无延迟 / 最小 3 字符 / 300 ms 延迟,
+      点后重启成员补全, 退格到空前缀关闭, dot 模式只在点后弹出, off 不请求). `key_$_ace_upstream_completion_trigger` 因此不设立.
 - [ ] **A5-7** ghost text 内联预览 (默认关, 验证门 G-A5-7): `Autocomplete.for(editor).inlineEnabled = enabled`;
       组合输入 (`compositionStart` 信号) 期间隐藏; `acceptCompletionOrInsertTab` (`:3827`) 优先接受内联预览;
       `ESC` 处理 (`handleEscapeKey`, `:3971`) 同时清除 ghost text.
