@@ -1820,10 +1820,12 @@
         reason = String(reason || "touch_cancel");
         foldTapCandidate = null;
         try {
-            if (editor && editor.$mouseHandler) {
+            // A touch drag of the cursor holds the flag on purpose (setTouchHandleDragActive); the host also cancels
+            // when a single finger starts moving.
+            if (editor && editor.$mouseHandler && !touchHandleDragActive) {
                 editor.$mouseHandler.isMousePressed = false;
             }
-            if (editor && editor.renderer) {
+            if (editor && editor.renderer && !touchHandleDragActive) {
                 editor.renderer.$isMousePressed = false;
             }
         } catch (ignore) {
@@ -2356,13 +2358,52 @@
         });
     }
 
+    // A finger dragging the cursor or the selection anchor is handled like Ace's own mouse capture (captureMouse): the
+    // pressed flags keep the renderer from moving the hidden textarea to every new cursor position and the text input
+    // from reading its selection changes as soft keyboard arrow keys (detectArrowKeys). With the soft keyboard up the
+    // browser scrolled the moved, focused textarea into view, which shifted the editor under the finger and moved the
+    // dragged cursor back a column or two. The flags are cleared shortly after the lift, once the selectionchange of
+    // the last move has been handled, and the textarea then follows the cursor again.
+    var TOUCH_HANDLE_DRAG_RELEASE_MS = 50;
+    var touchHandleDragReleaseTimer = null;
+
     function setTouchHandleDragActive(active) {
         active = !!active;
         if (touchHandleDragActive === active) {
             return;
         }
         touchHandleDragActive = active;
-        if (!active && editor && session) {
+        var mouseHandler = editor && editor.$mouseHandler;
+        if (touchHandleDragReleaseTimer !== null) {
+            clearTimeout(touchHandleDragReleaseTimer);
+            touchHandleDragReleaseTimer = null;
+        }
+        var renderer = editor && editor.renderer;
+        if (active) {
+            if (mouseHandler) {
+                mouseHandler.isMousePressed = true;
+            }
+            if (renderer) {
+                renderer.$isMousePressed = true;
+            }
+            return;
+        }
+        touchHandleDragReleaseTimer = setTimeout(function() {
+            touchHandleDragReleaseTimer = null;
+            if (touchHandleDragActive) {
+                return;
+            }
+            if (mouseHandler) {
+                mouseHandler.isMousePressed = false;
+            }
+            if (renderer) {
+                renderer.$isMousePressed = false;
+                if (renderer.$keepTextAreaAtCursor && typeof renderer.$moveTextAreaToCursor === "function") {
+                    renderer.$moveTextAreaToCursor();
+                }
+            }
+        }, TOUCH_HANDLE_DRAG_RELEASE_MS);
+        if (editor && session) {
             scheduleSymbolHighlights();
         }
     }
@@ -3133,6 +3174,12 @@
         }
         var element = getImeTextInputElement();
         if (!element || document.activeElement !== element) {
+            return;
+        }
+        // While a finger drags the cursor, the textarea selection follows the cursor; reading that as an IME cursor
+        // move moved the dragged cursor one more column, which the next move took back (Roadmap-Ace-1.44.0.md A2-10).
+        if (touchHandleDragActive || touchHandleDragReleaseTimer !== null) {
+            syncImeTextInputSelectionWindow("touch_drag");
             return;
         }
         var value = String(element.value || "");

@@ -56,6 +56,10 @@ export const EXPECTED_DIFFERENCES = Object.freeze({
         "1.4.12 flung with the velocity from before the finger rested; a finger resting for more than 40 ms does not fling (A2-10)",
     "second tap after 301 ms is a single tap":
         "the second tap lands on the cursor the first one placed, which shows the insertion toolbar (A2-10)",
+    "drag returning near the start":
+        "1.4.12 kept the cleared long press timer id and ignored moves back near the start; the overlay follows them (A2-10)",
+    "B7 drag the anchor handle of a selection with the magnifier":
+        "the last move comes back near the start, which 1.4.12 ignored for the same reason (A2-10)",
 });
 
 // Entries that are allowed to differ in every scenario: DOM writes (the original created its never enabled magnifier
@@ -349,6 +353,29 @@ function verifyImprovements() {
     });
     check(JSON.stringify(entries(overflow, "session.setOption")) === JSON.stringify([["session.setOption", "wrap", true], ["session.setOption", "wrap", false]]), `overflow button taps set ${JSON.stringify(entries(overflow, "session.setOption"))}`);
     check(!has(overflow, "selection.moveToPosition") && !has(overflow, "autojs.showSoftInput"), "an overflow button tap moved the cursor");
+
+    // A drag or a scroll that comes back near its start keeps following the finger.
+    const returning = runOverlay(named("drag returning near the start"));
+    // The finger is 1.6 rows below the caret row (handle offset), so the cursor follows it to row 5.
+    check(cursorOf(returning) === JSON.stringify({ column: 11, row: 5 }), `a drag back near its start left the cursor at ${cursorOf(returning)}`);
+    const scrollBack = runOverlay({
+        setup: (env) => env.renderer.scrollTo(0, 400),
+        steps: [{ down: [200, 300] }, { wait: 16 }, { move: [200, 200] }, { wait: 16 }, { move: [200, 290] }, { wait: 60 }, { up: [200, 290] }, { wait: 300 }],
+    });
+    check(final(scrollBack).scrollTop === 410, `a scroll back near its start ended at ${final(scrollBack).scrollTop}`);
+
+    // C3: touches that move the cursor or the selection end an IME composition, as Ace does on mousedown; scrolls and
+    // gutter taps do not.
+    const composing = (env) => {
+        env.editor.textInput.inComposition = {};
+        env.editor.textInput.cancelComposition = () => env.record("textInput.cancelComposition");
+    };
+    const cancels = (scenario) => entries(runOverlay({ ...scenario, setup: (env) => { composing(env); if (scenario.setup) scenario.setup(env); } }), "textInput.cancelComposition").length;
+    check(cancels(named("B1 quick tap moves the cursor and shows the soft input")) === 1, "a tap did not end the composition");
+    check(cancels(named("B4 long press without selection selects a word")) === 1, "a long press did not end the composition");
+    check(cancels(named("B6 drag the cursor handle")) === 1, "a cursor drag did not end the composition once");
+    check(cancels(named("B9 fast swipe flings and restarts the action mode")) === 0, "a scroll ended the composition");
+    check(cancels(named("B2 gutter tap")) === 0, "a gutter tap ended the composition");
 
     // B3: a double tap puts the cursor on the end of the word nearer to the finger ("alpha" spans columns 6-11).
     const doubleTap = (column) => runOverlay({ steps: [{ down: at(5, column) }, { wait: 40 }, { up: at(5, column) }, { wait: 120 }, { down: at(5, column) }, { wait: 40 }, { up: at(5, column) }, { wait: 300 }] });

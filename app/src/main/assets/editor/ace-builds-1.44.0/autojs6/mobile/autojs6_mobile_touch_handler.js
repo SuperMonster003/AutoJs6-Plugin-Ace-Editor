@@ -108,8 +108,7 @@ ace.define(
             // Set by a move step longer than FLING_SLOP_PX, or when the touch stopped a running fling.
             this.flingReady = false;
             this.flingTimer = null;
-            // Deliberately not reset by clearTimeout: while it holds an id, moves that come back near the start of
-            // the touch are ignored (README "Behavior").
+            // Holds the id of a pending long press; while it does, small moves near the start of the touch are ignored.
             this.longPressTimer = null;
             this.scrollbarDrag = null;
             this.lastMoveTime = 0;
@@ -136,9 +135,12 @@ ace.define(
             }
         };
 
+        // 1.4.12 kept the id after clearing the timer, so moves that came back near the start of a drag or scroll were
+        // ignored for the rest of the touch: the cursor stopped and then jumped (A2-10).
         TouchGestures.prototype.clearLongPress = function() {
             if (this.longPressTimer) {
                 clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
             }
         };
 
@@ -215,6 +217,18 @@ ace.define(
             return this.origin.x > left && this.origin.x < right;
         };
 
+        // Ace ends an IME composition on mousedown (TextInput.onCompositionStart registers cancelComposition), but the
+        // overlay prevents the mouse events of touches. A composition the IME started by itself (Gboard marks the word
+        // at the cursor for its suggestions) then outlived every touch that moved the cursor: Ace stopped updating its
+        // hidden textarea and the next backspace replaced the new selection with the shortened word (A2-10, C3).
+        // Touches that move the cursor or the selection end the composition the same way; scrolls do not.
+        TouchGestures.prototype.endComposition = function() {
+            var textInput = this.editor.textInput;
+            if (textInput && textInput.inComposition && typeof textInput.cancelComposition === "function") {
+                textInput.cancelComposition();
+            }
+        };
+
         // True when neither side of the position is a visible character: an empty line, indentation or a run of
         // spaces. A long press there has no word to select.
         TouchGestures.prototype.isBlankAt = function(position) {
@@ -233,6 +247,7 @@ ace.define(
             this.longPressTimer = null;
             // A long press never ends as a tap.
             this.tapPossible = false;
+            this.endComposition();
             var onSelection = this.startedOnSelection();
             if (!onSelection && this.isBlankAt(this.origin.position)) {
                 this.editor.selection.moveToPosition(this.origin.position);
@@ -388,6 +403,9 @@ ace.define(
                 return;
             }
             this.handleDragging = active;
+            if (active) {
+                this.endComposition();
+            }
             if (typeof this.options.onHandleDrag === "function") {
                 this.options.onHandleDrag(active);
             }
@@ -585,6 +603,7 @@ ace.define(
                 this.renderer.scrollCursorIntoView();
                 return true;
             }
+            this.endComposition();
             var lifted = e.changedTouches[0];
             var previous = this.lastTap;
             var doubleTap = e.timeStamp - previous.time < DOUBLE_TAP_MS &&

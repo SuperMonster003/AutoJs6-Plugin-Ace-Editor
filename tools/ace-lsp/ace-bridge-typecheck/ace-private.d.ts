@@ -107,5 +107,7 @@ declare module "ace-builds-internal/virtual_renderer" {
         $gutterLayer: any;
         $padding: number;
         $isMousePressed: boolean;
+        $keepTextAreaAtCursor: boolean;
+        $moveTextAreaToCursor(): void;
     }
 }

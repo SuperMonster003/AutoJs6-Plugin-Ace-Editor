@@ -967,10 +967,17 @@ test("symbol highlights wait until a finger stops dragging the cursor", async ()
         await sleep(300);
         assert.notDeepEqual(plain(editor.getCursorPosition()), { row: 0, column: 7 }, "the finger drags the cursor");
         assert.deepEqual(requests, [], "no highlight request while the cursor rests under the finger");
+        // Ace must not read the hidden textarea's selection changes as arrow keys during the drag (detectArrowKeys).
+        assert.equal(editor.$mouseHandler.isMousePressed, true, "the drag holds Ace's pressed flag");
+        assert.equal(editor.renderer.$isMousePressed, true, "the hidden textarea stays put during the drag");
+        api.cancelTouchInteraction("single_finger_scroll");
+        assert.equal(editor.$mouseHandler.isMousePressed, true, "a host cancel at the start of a finger move keeps it");
         touchEvent(page, "touchmove", content, caret.left + 40, y);
         touchEvent(page, "touchend", content, caret.left + 40, y);
         await sleep(250);
         assert.deepEqual(requests, [plain(editor.getCursorPosition())], "one request for the final position");
+        assert.equal(editor.$mouseHandler.isMousePressed, false, "the flag is released after the lift");
+        assert.equal(editor.renderer.$isMousePressed, false, "the textarea follows the cursor again");
     } finally {
         page.close();
     }

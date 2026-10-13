@@ -664,7 +664,7 @@ export const TOUCH_SCENARIOS = [
         steps: [{ down: at(6, 5, 32) }, { wait: 16 }, { move: at(6, 2, 32) }, { wait: 16 }, { move: at(7, 3, 32) }, { wait: 16 }, { move: at(5, 9, 32) }, { up: at(5, 9, 32) }, { wait: 300 }],
     },
     {
-        name: "drag returning near the start is ignored while the long press timer id is kept",
+        name: "drag returning near the start",
         setup: (env) => env.selection.select(4, 10, 4, 10),
         steps: [{ down: at(4, 10, 32) }, { wait: 16 }, { move: at(6, 30, 32) }, { wait: 16 }, { move: at(4, 11, 32) }, { up: at(4, 11, 32) }],
     },
