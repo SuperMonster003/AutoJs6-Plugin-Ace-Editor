@@ -96,7 +96,11 @@ class AceEditorFontManager(
     private val resourceContext = pluginContext
     private val storageDirectory = storageDirectory.absoluteFile
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val networkClient = OkHttpClient()
+    // The network client, the catalog repository and the downloader are created on first use. Building them (OkHttp
+    // client, catalog public key, parsing the bundled catalog) took about 65 ms of every editor's creation on a Helio
+    // G85, and an editor with a built-in font needs none of them (Roadmap-Ace-1.44.0.md, manual test B18).
+    private val networkClientDelegate = lazy(LazyThreadSafetyMode.SYNCHRONIZED) { OkHttpClient() }
+    private val networkClient by networkClientDelegate
     private val refreshExecutor: ExecutorService = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "AceFontCatalog").apply { isDaemon = true }
     }
@@ -108,31 +112,35 @@ class AceEditorFontManager(
 
     val store = FontStore(this.storageDirectory)
 
-    private val repository: FontCatalogRepository = FontCatalogRepository(
-        directory = this.storageDirectory,
-        catalogUrl = CATALOG_URL,
-        signatureUrl = SIGNATURE_URL,
-        signatureVerifier = EcdsaP256CatalogSignatureVerifier(
-            publicKey = EcdsaP256CatalogSignatureVerifier.publicKeyFromDer(
-                resourceContext.resources.openRawResource(R.raw.ace_font_catalog_public_key_v1).use { it.readBytes() },
+    private val repository: FontCatalogRepository by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        FontCatalogRepository(
+            directory = this.storageDirectory,
+            catalogUrl = CATALOG_URL,
+            signatureUrl = SIGNATURE_URL,
+            signatureVerifier = EcdsaP256CatalogSignatureVerifier(
+                publicKey = EcdsaP256CatalogSignatureVerifier.publicKeyFromDer(
+                    resourceContext.resources.openRawResource(R.raw.ace_font_catalog_public_key_v1).use { it.readBytes() },
+                ),
+                signatureEncoding = EcdsaP256CatalogSignatureVerifier.SignatureEncoding.JSON_ENVELOPE,
+                expectedKeyId = CATALOG_KEY_ID,
             ),
-            signatureEncoding = EcdsaP256CatalogSignatureVerifier.SignatureEncoding.JSON_ENVELOPE,
-            expectedKeyId = CATALOG_KEY_ID,
-        ),
-        hostVersionCode = hostVersionCode.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt(),
-        bootstrapCatalogBytes = resourceContext.resources.openRawResource(R.raw.ace_font_catalog_v1)
-            .use { it.readBytes() },
-        fetcher = OkHttpFontCatalogFetcher(networkClient),
-    )
+            hostVersionCode = hostVersionCode.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt(),
+            bootstrapCatalogBytes = resourceContext.resources.openRawResource(R.raw.ace_font_catalog_v1)
+                .use { it.readBytes() },
+            fetcher = OkHttpFontCatalogFetcher(networkClient),
+        )
+    }
 
-    private val downloader = FontDownloader(
-        store = store,
-        source = io.github.supermonster003.autojs6.plugin.ace.editor.core.font.OkHttpFontDownloadSource(networkClient),
-        callbackExecutor = Executor { runnable -> mainHandler.post(runnable) },
-        commitValidator = { font ->
-            authorizedRemoteFont(font.id, font.artifact.sha256)
-        },
-    )
+    private val downloader by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        FontDownloader(
+            store = store,
+            source = io.github.supermonster003.autojs6.plugin.ace.editor.core.font.OkHttpFontDownloadSource(networkClient),
+            callbackExecutor = Executor { runnable -> mainHandler.post(runnable) },
+            commitValidator = { font ->
+                authorizedRemoteFont(font.id, font.artifact.sha256)
+            },
+        )
+    }
     private val retainedDownloadLock = Any()
     private val retainedDownloads = mutableMapOf<String, RetainedDownload>()
 
@@ -398,8 +406,10 @@ class AceEditorFontManager(
 
     fun close() {
         refreshExecutor.shutdownNow()
-        networkClient.dispatcher.executorService.shutdown()
-        networkClient.connectionPool.evictAll()
+        if (networkClientDelegate.isInitialized()) {
+            networkClient.dispatcher.executorService.shutdown()
+            networkClient.connectionPool.evictAll()
+        }
     }
 
     fun refreshAsync(callback: (Result<FontCatalog>) -> Unit): AceFontCatalogRefreshSubscription {
