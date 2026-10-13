@@ -4,19 +4,15 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 
+/**
+ * Source checks that tools/ace-lsp/verify-ace-bridge.mjs (Roadmap-Ace-1.44.0.md A6-3) does not execute: the Kotlin
+ * acknowledgement timeout and the long line safety mode, which A6-4 replaces. The history operations themselves are
+ * executed there.
+ */
 class AceHistoryOperationBridgeTest {
 
     private val bridgeSource by lazy {
         readAsset("autojs6_ace_bridge.js")
-    }
-
-    @Test
-    fun `history operations are exposed through the bridge`() {
-        assertTrue(bridgeSource.contains("replaceAllTextUndoably: replaceAllTextUndoably"))
-        assertTrue(bridgeSource.contains("addUndoableHistoryMarker: addUndoableHistoryMarker"))
-        assertTrue(bridgeSource.contains("markDirty: markDirty"))
-        assertTrue(bridgeSource.contains("refreshState: refreshState"))
-        assertTrue(bridgeSource.contains("dispatchStateChanged(\"hostRefresh\")"))
     }
 
     @Test
@@ -31,111 +27,12 @@ class AceHistoryOperationBridgeTest {
     }
 
     @Test
-    fun `metadata marker advances ace history without changing text`() {
-        assertTrue(bridgeSource.contains("function addUndoableHistoryMarker(token, beforeUnsafeLine, afterUnsafeLine)"))
-        assertTrue(bridgeSource.contains("undoManager.add({"))
-        assertTrue(bridgeSource.contains("lines: [\"\"]"))
-        assertTrue(bridgeSource.contains("autojs6HistoryToken"))
-
-        // Document.applyDelta returns early for an empty insert, so the marker delta never changes the text.
-        // The minified ace.js is pinned byte-for-byte to ace-builds 1.44.0 (Roadmap-Ace-1.44.0.md A6-3 replaces
-        // this source check with an executed test).
-        val aceSource = readAsset("../src-min-noconflict/ace.js")
-        assertTrue(
-            aceSource.contains(
-                "applyDelta=function(e,t){var n=e.action==\"insert\";" +
-                    "if(n?e.lines.length<=1&&!e.lines[0]:!o.comparePoints(e.start,e.end))return;",
-            ),
-        )
-    }
-
-    @Test
-    fun `undo and redo report tagged history operations`() {
-        assertTrue(bridgeSource.contains("session.undoChanges = function(group, dontSelect)"))
-        assertTrue(bridgeSource.contains("session.redoChanges = function(group, dontSelect)"))
-        assertTrue(bridgeSource.contains("scheduleHistoryState(group, \"undo\", targetUnsafeLine)"))
-        assertTrue(bridgeSource.contains("scheduleHistoryState(group, \"redo\", targetUnsafeLine)"))
-        assertTrue(bridgeSource.contains("\"historyOperation\""))
-        assertTrue(bridgeSource.contains("canUndo: !!(undoManager && undoManager.hasUndo"))
-        assertTrue(bridgeSource.contains("canRedo: !!(undoManager && undoManager.hasRedo"))
-    }
-
-    @Test
-    fun `history completion follows pending text and state notifications`() {
-        val flushTextIndex = bridgeSource.indexOf(
-            "flushTextChanged();",
-            startIndex = bridgeSource.indexOf("function scheduleHistoryState"),
-        )
-        val flushStateIndex = bridgeSource.indexOf("flushStateChanged();", startIndex = flushTextIndex)
-        val historyEventIndex = bridgeSource.indexOf("\"historyOperation\"", startIndex = flushStateIndex)
-
-        assertTrue(flushTextIndex >= 0)
-        assertTrue(flushStateIndex > flushTextIndex)
-        assertTrue(historyEventIndex > flushStateIndex)
-    }
-
-    @Test
     fun `unsafe whole document history keeps lightweight mode across navigation`() {
         assertTrue(bridgeSource.contains("group.autojs6HistoryToken &&"))
         assertTrue(
             bridgeSource.contains(
                 "group.autojs6LongLineSafetyBefore || group.autojs6LongLineSafetyAfter",
             ),
-        )
-    }
-
-    @Test
-    fun `whole document history restores the original line separator`() {
-        assertTrue(bridgeSource.contains("function captureDocumentNewLineState()"))
-        assertTrue(bridgeSource.contains("group.autojs6NewLineBefore ="))
-        assertTrue(bridgeSource.contains("group.autojs6NewLineAfter ="))
-        assertTrue(bridgeSource.contains("applyDocumentNewLineState(group && group.autojs6NewLineBefore)"))
-        assertTrue(bridgeSource.contains("applyDocumentNewLineState(group && group.autojs6NewLineAfter)"))
-    }
-
-    @Test
-    fun `dirty state follows the ace clean bookmark`() {
-        assertTrue(bridgeSource.contains("undoManager.markClean()"))
-        assertTrue(bridgeSource.contains("undoManager.isClean && undoManager.isClean()"))
-        assertTrue(bridgeSource.contains("dirty = !undoManager.isClean()"))
-    }
-
-    @Test
-    fun `whole document replacement publishes only its final cursor position`() {
-        val setTextStart = bridgeSource.indexOf("function setText(text, echoText, unsafeLine)")
-        val setTextDirtyStart =
-            bridgeSource.indexOf("function setTextDirty(text, echoText, unsafeLine)", setTextStart)
-        val nextFunctionStart = bridgeSource.indexOf("function cloneHistoryPosition", setTextDirtyStart)
-        val setTextSource = bridgeSource.substring(setTextStart, setTextDirtyStart)
-        val setTextDirtySource = bridgeSource.substring(setTextDirtyStart, nextFunctionStart)
-
-        assertTrue(bridgeSource.contains("var cursorNotifySuppressionDepth = 0"))
-        assertTrue(bridgeSource.contains("function beginCursorNotificationSuppression()"))
-        assertTrue(bridgeSource.contains("function endCursorNotificationSuppression()"))
-        assertTrue(bridgeSource.contains("if (cursorNotifySuppressionDepth > 0)"))
-
-        assertTrue(setTextSource.indexOf("beginCursorNotificationSuppression()") >= 0)
-        assertTrue(
-            setTextSource.indexOf("session.setValue(text || \"\")") >
-                setTextSource.indexOf("beginCursorNotificationSuppression()"),
-        )
-        assertTrue(
-            setTextSource.indexOf("endCursorNotificationSuppression()") >
-                setTextSource.indexOf("editor.moveCursorTo(0, 0)"),
-        )
-        assertTrue(
-            setTextSource.indexOf("notifyCursorChanged()") >
-                setTextSource.indexOf("endCursorNotificationSuppression()"),
-        )
-
-        assertTrue(setTextDirtySource.indexOf("beginCursorNotificationSuppression()") >= 0)
-        assertTrue(
-            setTextDirtySource.indexOf("endCursorNotificationSuppression()") >
-                setTextDirtySource.indexOf("session.setValue(text || \"\")"),
-        )
-        assertTrue(
-            setTextDirtySource.indexOf("notifyCursorChanged()") >
-                setTextDirtySource.indexOf("endCursorNotificationSuppression()"),
         )
     }
 

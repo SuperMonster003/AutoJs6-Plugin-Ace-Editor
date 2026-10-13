@@ -391,3 +391,19 @@ with:
 ```powershell
 .\gradlew.bat :app:verifyAutoJs6LspRuntime
 ```
+
+## Ace 1.44.0 distribution and bridge checks
+
+`ace-builds-lock.mjs` locks every file of `app/src/main/assets/editor/ace-builds-1.44.0/src-min-noconflict`
+(size and SHA-256, origin `upstream` or `project`) in `ace-builds-lock.json`; `--check --upstream` also compares the
+upstream files with the pinned npm tarball. `verify-ace-bridge.mjs` loads the real editor page (Ace, the mobile
+overlay and the bridge) in jsdom with a recording fake `window.autojs` and executes the bridge contract: start-up and
+runtime diagnostics, mode and worker routing, history markers and tagged undo / redo, folding, gutter taps, ActionMode
+calls, the Ace 1.44.0 display options, custom scrollbar drags and the completion popup states. jsdom is pinned by
+`ace-bridge-test/package-lock.json` and installed with `npm ci --ignore-scripts` under `build/ace-bridge-test/`
+(network access is needed once per lock change); `node_modules` is never committed. Both run as part of `check`:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceBridge
+node tools/ace-lsp/verify-ace-bridge.mjs --filter "history"
+```

@@ -392,6 +392,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (`a0-1.4.12-QV770340J7.jsonl`, `a2-1.44.0-QV710AF65F.jsonl`, `a2-1.44.0-QV770340J7.jsonl`); 两台 A0 记录都缺首个场景 "B1 quick tap"
       (首次注入失败, 与 G8441 的 A0 记录相同), A3 构建上该场景与其他设备一致. 已有自动比对的设备: G8441, 22120RN86C, XQ-AT72, XQ-DQ72;
       23046RP50C, OPD2413 与两台模拟器待补, 附录 B 的手动项待维护者执行.
+      补跑 (2026-10-13, A5 构建 90fd5a1, 含自定义滚动条等 A5 默认开启项): OPD2413 与 x86_64 API 36.1 16 KB 模拟器先用 A0 版 APK 补录
+      A0 记录 (`build/ace-perf/touch-a0-*.jsonl`), 再与 A5 构建逐场景比对; G8441, 23046RP50C 同样比对. 结果: 各设备上点击, 双击, 长按,
+      选区内长按, 光标 / 锚点拖拽, 行号栏点击与点击清选区全部一致; 差异只有惯性 / 慢速滚动的最终位置与 finishActionMode 调用次数
+      (同版本重复运行同样波动) 及双指场景的已知改进. 两处失败经查都与覆盖层无关: 模拟器的首个点击 "B1 quick tap" 在 A0 版上同样失败;
+      23046RP50C 某次运行软键盘未弹出, 可见行由 36 变为 57, 80 行的测试文档只剩 448 px 可滚, B9 惯性无处可去. 测试文档因此加长到
+      200 行 (`AceTouchInteractionDeviceTest.LINE_COUNT`), 加长后 23046RP50C 的 B9 惯性滚到 2848 px 并通过 (该设备另一次运行出现
+      小米上已知的首次注入失败, 重跑通过). 加长后 B9 / B10 的滚动距离不再受文档末尾截断, 与旧 A0 记录 (80 行) 的同项数值不可比,
+      比对时只看行为. 至此 8 台都有自动比对记录; 门仍待附录 B 手动项.
       ActionMode 工具条 (`AceSelectionToolbar`) 出现 / 消失时机一致; 旋转屏幕与软键盘弹出后拖拽仍准确.
       (降级路径: 若 `$toDestroy` 与 capture 兜底在某设备都无法阻止上游处理 -> 在本文件记录该 WebView 版本,
       并评估为该设备启用 "上游触摸处理 + 覆盖层只接管 ActionMode" 的降级模式; 仍不得改动官方文件.)
@@ -529,6 +537,10 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       9 项断言 (共 491 项), jsdom 用真实 1.44.0 滚动条核对了拖动与轨道点击. 标记配色由上游按 `theme.isDark` 选择亮 / 暗两套,
       主题调色板只有前景 / 背景两色, 不再另行覆盖. 待 G-A5-3 真机复核.
 - [ ] **G-A5-3** 8 台设备复核 customScrollbar 与覆盖层惯性滚动; 任一设备出现滚动条吞掉触摸或渲染错位 -> 默认改为关闭并记录.
+      进度 (2026-10-13): A5 构建 (自定义滚动条默认开) 在 G8441, 23046RP50C, OPD2413, x86_64 模拟器上跑了 G-A1 六个类与触摸用例,
+      惯性滚动, 打断惯性与拖拽均正常 (见 G-A2 补跑); XQ-AT72, XQ-DQ72 与 x86 API 27 模拟器尚未用 A5 构建复跑. jsdom 中发现上游滚动条
+      在首次渲染前没有滑块几何 (thumbTop 为 undefined), 覆盖层对这种滚动条不进入 "scrollbar" 模式, 按普通滚动处理 (离线校验 493 项).
+      滚动条标记的目视检查与手指拖动滑块的手感仍需真机人工确认.
 - [ ] **A5-4** `showWhitespacesInSelection` (默认开): 加载 `ext-whitespaces_in_selection.js` 后 `editor.setOption("showWhitespacesInSelection", enabled)`;
       暗色主题下空白符颜色复核.
       —— 验收: 选中含制表符与空格的文本时显示占位符号, 取消选区后消失.
@@ -586,12 +598,23 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       私有成员声明 (§2.3 列表); Gradle `typecheckAutoJs6AceBridge` 挂到 `check`; Node/TypeScript 的获取方式沿用 `build-python-worker.mjs`
       的固定版本策略 (不提交 node_modules).
       —— 验收: 首次全绿后, 人为引用一个不存在的 Ace 方法会使 `check` 失败.
-- [ ] **A6-3** 桥接层执行式测试: `tools/ace-lsp/verify-ace-bridge.mjs` 用 Node + jsdom (固定版本) 加载真实 ace.js, ext-language_tools,
+- [x] **A6-3** 桥接层执行式测试: `tools/ace-lsp/verify-ace-bridge.mjs` 用 Node + jsdom (固定版本) 加载真实 ace.js, ext-language_tools,
       覆盖层与桥接层, 提供假的 `window.autojs` 记录调用; 用例至少覆盖: 初始化与 `notifyReady`, `setText/getState`, mode 路由,
       `foldAll/unfoldAll`, 撤销标记 (替换 A1-5 的 `@Ignore`), gutter 事件分发 (A3-1 四种 target), 覆盖层卸载上游监听 (A2-5),
       ActionMode 状态机 (A2-3), 触发映射 (A5-6). Gradle `verifyAutoJs6AceBridge` 挂到 `check`; 相应的字符串断言型 JVM 测试
       (`AceHistoryOperationBridgeTest`, `AceLanguageRoutingBridgeTest` 中可执行化的部分) 迁移后删除.
       —— 验收: `check` 包含该任务且通过; `@Ignore` 清零.
+      结论 (2026-10-13): `tools/ace-lsp/verify-ace-bridge.mjs` 用 jsdom 26.1.0 (由 `tools/ace-lsp/ace-bridge-test/package-lock.json`
+      固定, 按锁文件哈希 `npm ci --ignore-scripts` 到 `build/ace-bridge-test/`, 不提交 node_modules) 加载真实入口页, 假 `autojs` 记录全部调用.
+      19 个用例: 启动与 `aceRuntime` 诊断, 覆盖层卸载上游监听与 ActionMode API, mode 路由 / 静态索引 / 只有 Lua 用 worker, 长行安全模式
+      切换与恢复, mode 补丁 (Kotlin 片段, Java 关键字), setText / setTextDirty 只发最终光标与 refreshState, 历史标记 (含空增量不改文本),
+      带标记的撤销 / 重做与回调顺序 (含换行符恢复), clean 书签与 dirty, 全部折叠 / 展开, 两种图标模式下的 gutter 点击, ActionMode 调用,
+      A5 显示选项, 选区空白符, 滚动条拖动, 无 canvas 时退回原生滚动条, 补全弹窗加载 / 空结果. jsdom 无布局, 需要渲染的用例先给容器固定
+      尺寸 (offset* 与 client* 都要, 桥接层的无参 `onResize` 读 client*). 三处变异 (实时补全显示空提示, 无参考线时仍高亮, 历史事件前不冲刷
+      文本回调) 均被检出. Gradle `verifyAutoJs6AceBridge` 已挂到 `check`. `AceHistoryOperationBridgeTest` 删去 7 个已执行化的源码断言
+      (保留 Kotlin 应答超时, 长行安全模式两项, 后者由 A6-4 处理), `AceLanguageRoutingBridgeTest` 删去 4 个, 保留 Kotlin 调用顺序检查;
+      A1-5 未引入 `@Ignore`, 现为 0. 触发映射 (A5-6) 的用例随 A5-6 加入. 注意 CI 只跑 `testDebugUnitTest`, 不跑 `check`, 被删的源码
+      断言在 CI 中不再有替代 (与 A6-1 相同的取舍, 本地 `check` 覆盖).
 - [ ] **A6-4** 超长行改用上游 MAX_LINE_LENGTH (验证门 G-A6-4): 安全模式下设置 `renderer.$textLayer.MAX_LINE_LENGTH = 4096`
       (与 `LONG_LINE_SAFETY_RENDER_LIMIT` 一致), 非安全模式恢复原型默认 10000; 删除 `installDocumentLongLineRenderGuard` (`:3164`)
       与 `$renderSimpleLine` 补丁; 保留 `applyDocumentAccessibilityLightweightMode`; 溢出按钮 (`ace_toggle_wrap`) 点击展开时的

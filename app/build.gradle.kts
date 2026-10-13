@@ -90,6 +90,17 @@ val verifyAutoJs6AceMobileOverlay = tasks.register<Exec>("verifyAutoJs6AceMobile
     executable(autoJs6NodeExecutable.get())
     args(verifier.asFile.absolutePath)
 }
+val verifyAutoJs6AceBridge = tasks.register<Exec>("verifyAutoJs6AceBridge") {
+    group = "verification"
+    description = "Runs the editor page with Ace 1.44.0, the mobile overlay and the bridge in a pinned jsdom (npm ci into build/)."
+    val verifier = rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-ace-bridge.mjs")
+    inputs.file(verifier)
+    inputs.dir(rootProject.layout.projectDirectory.dir("tools/ace-lsp/ace-bridge-test"))
+    inputs.dir(autoJs6EditorAssetsDirectory)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(verifier.asFile.absolutePath)
+}
 val verifyAutoJs6KotlinP2Plus = tasks.register<Exec>("verifyAutoJs6KotlinP2Plus") {
     group = "verification"
     description = "Verifies Kotlin P2+ type heuristics, safe calls, instance APIs, and Java/Android index reuse."
@@ -400,6 +411,7 @@ tasks.named("check") {
     dependsOn(
         verifyAutoJs6AceAssets,
         verifyAutoJs6AceMobileOverlay,
+        verifyAutoJs6AceBridge,
         verifyAutoJs6LspRuntime,
         verifyAutoJs6PythonWorker,
         verifyAutoJs6LuaLanguageServer,
