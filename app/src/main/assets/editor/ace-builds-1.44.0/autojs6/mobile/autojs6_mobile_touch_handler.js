@@ -227,7 +227,13 @@ ace.define(
         // composition ends without being read as input, then the textarea is refilled for the cursor. Ending it
         // through blur and focus (TextInput.cancelComposition) committed the composing text and deleted text instead.
         // Scrolls do not end compositions.
-        TouchGestures.prototype.endComposition = function() {
+        // A caller that changes the selection next passes `deferReset` and calls resetTextInput afterwards: refilling
+        // the textarea for the old cursor showed the IME that cursor, and Gboard marked the word under it as a new
+        // composition, which kept Ace from refilling the textarea for the new selection (resetSelection waits while a
+        // composition is open). A double tap then left the word selected in Ace and the caret inside the word in the
+        // textarea, and when that composition ended, Ace read the unchanged textarea as "delete the selection"
+        // (maintainer report after V5, 2026-10-14).
+        TouchGestures.prototype.endComposition = function(deferReset) {
             var textInput = this.editor.textInput;
             if (!textInput || !textInput.inComposition || typeof textInput.onCompositionEnd !== "function") {
                 return;
@@ -238,7 +244,16 @@ ace.define(
                 text.value = "";
             }
             textInput.onCompositionEnd();
-            if (typeof textInput.resetSelection === "function") {
+            if (!deferReset) {
+                this.resetTextInput();
+            }
+        };
+
+        // Refills Ace's textarea for the current selection now; Ace does it when the operation ends, a task later,
+        // and an IME reacting to the previous content in between composes the wrong range.
+        TouchGestures.prototype.resetTextInput = function() {
+            var textInput = this.editor.textInput;
+            if (textInput && typeof textInput.resetSelection === "function") {
                 textInput.resetSelection();
             }
         };
@@ -261,10 +276,11 @@ ace.define(
             this.longPressTimer = null;
             // A long press never ends as a tap.
             this.tapPossible = false;
-            this.endComposition();
+            this.endComposition(true);
             var onSelection = this.startedOnSelection();
             if (!onSelection && this.isBlankAt(this.origin.position)) {
                 this.editor.selection.moveToPosition(this.origin.position);
+                this.resetTextInput();
                 this.gesture = Gesture.CURSOR;
                 this.startInsertionActionMode();
                 if (typeof autojs !== "undefined") {
@@ -279,6 +295,7 @@ ace.define(
                 this.editor.selection.selectWord();
                 this.gesture = Gesture.CURSOR;
             }
+            this.resetTextInput();
             this.editor.startActionMode();
             if (typeof autojs !== "undefined") {
                 autojs.performLongPressFeedback();
@@ -617,7 +634,7 @@ ace.define(
                 this.renderer.scrollCursorIntoView();
                 return true;
             }
-            this.endComposition();
+            this.endComposition(true);
             var lifted = e.changedTouches[0];
             var previous = this.lastTap;
             var doubleTap = e.timeStamp - previous.time < DOUBLE_TAP_MS &&
@@ -625,6 +642,7 @@ ace.define(
             this.lastTap = { time: e.timeStamp, x: lifted.clientX, y: lifted.clientY };
             if (doubleTap) {
                 this.selectWord(this.origin.position);
+                this.resetTextInput();
                 e.preventDefault();
                 return true;
             }
@@ -634,6 +652,7 @@ ace.define(
             var onCursor = this.gesture === Gesture.CURSOR && selection.isEmpty() &&
                 cursor.row === position.row && cursor.column === position.column;
             selection.moveToPosition(position);
+            this.resetTextInput();
             this.renderer.scrollCursorIntoView();
             this.focusForTyping();
             if (onCursor) {

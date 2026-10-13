@@ -1161,6 +1161,78 @@ test("cursor moves end an IME composition that marks the word under the cursor",
     }
 });
 
+// Maintainer report after V5 (2026-10-14): a double tap selected a word while Gboard kept the word under the first
+// tap's caret open as a composition. The textarea still held that caret, and when the keyboard closed, the composition
+// ended without changes and Ace read the unchanged textarea as an empty insertion over the selection.
+test("an IME composition ending without changes keeps a selection made outside the textarea", async () => {
+    const page = await openAndroidEditor("const a = 1;\nfunction formatItem(item, index) {\n}");
+    try {
+        const { editor, window } = page;
+        const textarea = imeTextarea(page);
+        const Range = window.ace.require("ace/range").Range;
+        const text = editor.getValue();
+        editor.moveCursorTo(1, 29);
+        await sleep(20); // Ace updates its textarea when the operation ends
+        textarea.selectionChanged();
+        assert.equal(textarea.caret, 30);
+        textarea.markWord("index");
+        await sleep(10);
+        assert.ok(editor.textInput.inComposition, "Gboard's composition is open");
+        editor.selection.setRange(new Range(1, 26, 1, 31));
+        await sleep(20);
+        assert.equal(textarea.element.selectionEnd, 30, "Ace does not refill its textarea during a composition");
+        textarea.element.dispatchEvent(new window.CompositionEvent("compositionend", { data: "index", bubbles: true }));
+        assert.equal(editor.getValue(), text, "the selected word stays");
+        assert.equal(editor.getSelectedText(), "index", "and stays selected");
+        assert.equal(page.events("imeEmptyInputSkipped").length, 1);
+        // Real deletions still apply: the IME deletes the selection Ace put into the textarea.
+        await sleep(20);
+        textarea.selectionChanged();
+        assert.equal(textarea.element.selectionStart, 27);
+        assert.equal(textarea.element.selectionEnd, 32);
+        textarea.element.setRangeText("", 27, 32, "end");
+        textarea.element.dispatchEvent(new window.InputEvent("input", { inputType: "deleteContentBackward", bubbles: true }));
+        assert.equal(editor.session.getLine(1), "function formatItem(item, ) {");
+    } finally {
+        page.close();
+    }
+});
+
+test("a double tap during an IME composition puts the selected word into the textarea at once", async () => {
+    const page = await openAndroidEditor("const a = 1;\nfunction formatItem(item, index) {\n}");
+    try {
+        const { editor, window } = page;
+        const textarea = imeTextarea(page);
+        const text = editor.getValue();
+        render(page);
+        const content = window.document.querySelector(".ace_content");
+        const point = editor.renderer.$cursorLayer.getPixelPosition({ row: 1, column: 29 }, true);
+        const tap = () => {
+            touchEvent(page, "touchstart", content, point.left, point.top + 5);
+            touchEvent(page, "touchend", content, point.left, point.top + 5);
+        };
+        tap();
+        assert.deepEqual(plain(editor.getCursorPosition()), { row: 1, column: 29 });
+        await sleep(20);
+        textarea.selectionChanged();
+        textarea.markWord("index");
+        await sleep(10);
+        assert.ok(editor.textInput.inComposition, "Gboard composes the word under the caret");
+        tap();
+        assert.equal(editor.getSelectedText(), "index", "the second tap selects the word");
+        assert.ok(!editor.textInput.inComposition, "and ends the composition");
+        assert.equal(textarea.element.selectionStart, 27, "the textarea shows the selection before the IME reacts");
+        assert.equal(textarea.element.selectionEnd, 32);
+        // An IME that still composes the word and then closes changes nothing.
+        textarea.markWord("index");
+        textarea.element.dispatchEvent(new window.CompositionEvent("compositionend", { data: "index", bubbles: true }));
+        assert.equal(editor.getValue(), text);
+        assert.equal(editor.getSelectedText(), "index");
+    } finally {
+        page.close();
+    }
+});
+
 test("the IME panel's select all and start / end buttons run as editor actions", async () => {
     const page = await openAndroidEditor("abc\ndefg hij\nhi");
     try {

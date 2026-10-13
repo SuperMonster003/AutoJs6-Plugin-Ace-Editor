@@ -3520,12 +3520,29 @@
     // added a remove and an insert to the undo history, so undo stepped through invisible edits and selected
     // unexpected ranges (Roadmap-Ace-1.44.0.md A2-10, manual test C3). An unchanged replacement now only moves the
     // cursor and the selection to where Ace would have put them.
+    // Ace also reads its textarea when a composition ends (TextInput.onCompositionEnd -> onInput) and applies what it
+    // finds even when nothing changed. Nothing reaches Ace as an empty insertion, which replaces a selection: when the
+    // selection was made outside the textarea while the IME kept a composition open there (a double tap while Gboard
+    // composed the word under the caret), the selected text was deleted (maintainer report after V5, 2026-10-14). An
+    // empty insertion for an unchanged textarea now leaves the document and the selection alone, and the textarea is
+    // refilled for the selection once Ace has stored what it read (Ace refills it after no insertion).
     function installUnchangedCompositionGuard() {
         if (!editor || typeof editor.applyComposition !== "function" || editor.$autojs6UnchangedCompositionGuard) {
             return;
         }
         var applyComposition = editor.applyComposition;
         editor.applyComposition = function(text, composition) {
+            if (String(text) === "" && !this.selection.isEmpty() && isUnchangedImeTextInput(this.textInput)) {
+                var selected = this.getSelectionRange();
+                callBridge("notifyEvent", [
+                    "imeEmptyInputSkipped",
+                    JSON.stringify({ row: selected.start.row, column: selected.start.column })
+                ]);
+                Promise.resolve().then(function() {
+                    resetImeTextInputSelectionWindow("ime_empty_input");
+                });
+                return;
+            }
             var target = compositionTargetRange(this, composition);
             if (!target || target.isEmpty() || this.session.getTextRange(target) !== String(text)) {
                 return applyComposition.apply(this, arguments);
@@ -3543,6 +3560,13 @@
             ]);
         };
         editor.$autojs6UnchangedCompositionGuard = true;
+    }
+
+    // True while Ace sends input (TextInput.sendText) for a textarea whose value it has already read; Ace stores the
+    // value it read after sending.
+    function isUnchangedImeTextInput(textInput) {
+        var element = textInput && typeof textInput.getElement === "function" ? textInput.getElement() : null;
+        return !!element && textInput.sendingText === true && textInput.lastValue === element.value;
     }
 
     // The range Editor.applyComposition replaces (Ace 1.44.0): the selection, extended by the composition.
