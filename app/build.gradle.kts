@@ -68,6 +68,17 @@ val verifyAutoJs6LanguageIndices = tasks.register<Exec>("verifyAutoJs6LanguageIn
         "--check",
     )
 }
+val verifyAutoJs6AceAssets = tasks.register<Exec>("verifyAutoJs6AceAssets") {
+    group = "verification"
+    description = "Checks the bundled Ace distribution against tools/ace-lsp/ace-builds-lock.json."
+    val lockScript = rootProject.layout.projectDirectory.file("tools/ace-lsp/ace-builds-lock.mjs")
+    inputs.file(lockScript)
+    inputs.file(rootProject.layout.projectDirectory.file("tools/ace-lsp/ace-builds-lock.json"))
+    inputs.dir(aceDistributionAssetsDirectory)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(lockScript.asFile.absolutePath, "--check")
+}
 val verifyAutoJs6KotlinP2Plus = tasks.register<Exec>("verifyAutoJs6KotlinP2Plus") {
     group = "verification"
     description = "Verifies Kotlin P2+ type heuristics, safe calls, instance APIs, and Java/Android index reuse."
@@ -376,6 +387,7 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
 
 tasks.named("check") {
     dependsOn(
+        verifyAutoJs6AceAssets,
         verifyAutoJs6LspRuntime,
         verifyAutoJs6PythonWorker,
         verifyAutoJs6LuaLanguageServer,

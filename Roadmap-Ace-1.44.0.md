@@ -288,8 +288,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (旧 WebView 跑不了 TypeScript 6), 不属于回退. Lua worker 诊断注解由 `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua`
       覆盖并通过; 23046RP50C 上长按不出现 `ace_mobile-menu` (A1-6). 过程中发现并修复两处回退 (§2.4 第 12, 13 条):
       Java 关键字补全缺失 (新增 `autojs6/autojs6_mode_patches.js`), 以及 OPD2413 上图形内存增加约 80 MiB 导致 Python 语义冒烟的
-      300 MiB 门间歇失败 (`autojs6.css` 补回 1.4.12 的 `will-change: transform`). G8441, XQ-AT72, XQ-DQ72, 22120RN86C 当时被其他会话
-      占用, 待让出后补跑; 门在 8 台补齐前不勾选.
+      300 MiB 门间歇失败 (`autojs6.css` 补回 1.4.12 的 `will-change: transform`). 22120RN86C (WebView 111) 16/18: TypeScript 诊断
+      超过 2000 ms 被判超时, 以及 ECJ 用例等待超时; 同一设备上 A0 版同样失败这两项 (对比运行中 A0 失败 2 项, A1 失败 1 项), 属于该设备
+      既有的性能问题, 不是回退. G8441, XQ-AT72, XQ-DQ72 当时被其他会话占用, 待让出后补跑; 门在 8 台补齐前不勾选.
 
 ## 6. A2 · 移动端交互覆盖层移植
 
@@ -476,12 +477,17 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 
 ## 10. A6 · 工程与健壮性
 
-- [ ] **A6-1** Ace 资产清单与校验: `tools/ace-lsp/generate-ace-manifest.mjs` 生成
+- [x] **A6-1** Ace 资产清单与校验: `tools/ace-lsp/generate-ace-manifest.mjs` 生成
       `app/src/main/assets/editor/ace-builds-1.44.0/manifest.json` (schemaRevision, upstream {version, tarball, shasum, integrity},
       每个 `src-min-noconflict/**` 文件的 bytes / sha256 / origin ∈ {upstream, project}); Gradle `verifyAutoJs6AceAssets`
       (Exec, `tools/ace-lsp/verify-ace-assets.mjs`) 比对清单与工作区文件并挂到 `check`; `.gitattributes` 增加
       `app/src/main/assets/editor/ace-builds-*/src-min-noconflict/** -text`; JVM 守护测试断言这些文件不含 CRLF (按 LuaLS 先例).
       —— 验收: Windows 与 Linux 检出后 `verifyAutoJs6AceAssets` 都通过; 篡改任一字节后失败.
+      结论 (2026-10-13): 实现为单个脚本 `tools/ace-lsp/ace-builds-lock.mjs` (`--write` 生成, 默认 `--check` 离线比对,
+      `--check --upstream` 另与 npm tarball 逐文件比对), 清单写在 `tools/ace-lsp/ace-builds-lock.json` 而不是资产目录, 因为运行期
+      不读取它, 不必进入 APK. 清单含 76 个文件 (71 个 upstream, 5 个 project 并注明原因). CI 只跑 `testDebugUnitTest`, 不跑 `check`,
+      所以另加 JVM 测试 `AceDistributionLockTest` 按同一清单校验字节与 SHA-256 (尺寸不符时提示 CRLF). `.gitattributes` 的
+      `-text -whitespace` 已在 A1-1 加入. 本地篡改 `mode-tsx.js` 一个字节后脚本报错, 恢复后通过; Linux 检出未验证 (由 CI 的 JVM 测试覆盖).
 - [ ] **A6-2** ace.d.ts 类型检查接入 CI: `tools/ace-lsp/ace-bridge-typecheck/` 放 `tsconfig.json` (`allowJs`, `checkJs`, `noEmit`,
       `strict: false`, `types` 指向 A0-3 解压目录或固定的 `ace-builds` 声明副本), `autojs6/ace-private.d.ts` 补充桥接层使用的
       私有成员声明 (§2.3 列表); Gradle `typecheckAutoJs6AceBridge` 挂到 `check`; Node/TypeScript 的获取方式沿用 `build-python-worker.mjs`
