@@ -341,7 +341,7 @@ Java/Android 互操作；API 28/31/35 真机均通过 WebView 冒烟。完整证
 - Python venv / site-packages / 第三方包类型解析 (首版仅内置 + 标准库)。
 - Java Gradle/Maven 项目模型、多模块依赖、注解处理器。
 - Kotlin K2 完整分析、协程调试级语义、Java/Kotlin 混合工程模型。
-- Ace 大版本升级 (维持 1.4.12; 如 M0-3 tsx 结论要求, 单独立项评估)。
+- Ace 大版本升级 (维持 1.4.12; 如 M0-3 tsx 结论要求, 单独立项评估)。2.0.0 起已升级到 1.44.0, 见 `Roadmap-Ace-1.44.0.md`, TSX-HL-1 随之关闭。
 - JSON Schema 级校验与补全 (现有语法诊断保持)。
 
 ## 14. 风险与缓解

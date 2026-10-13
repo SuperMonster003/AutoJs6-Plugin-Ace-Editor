@@ -650,7 +650,8 @@
         var modeId = sessionModeId(activeSession);
         return modeId === "ace/mode/javascript" ||
             modeId === "ace/mode/jsx" ||
-            modeId === "ace/mode/typescript";
+            modeId === "ace/mode/typescript" ||
+            modeId === "ace/mode/tsx";
     }
 
     function jsonSyntaxDiagnostics(text) {

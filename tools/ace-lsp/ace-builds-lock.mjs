@@ -26,7 +26,6 @@ const DISTRIBUTION_DIRECTORY = "src-min-noconflict";
 
 // Files that intentionally differ from (or are absent in) the pinned tarball.
 const PROJECT_FILES = Object.freeze({
-    "src-min-noconflict/mode-kotlin.js": "Ace 1.4.12 Kotlin mode with AutoJs6 keyword and snippet patches (Roadmap-Ace-1.44.0.md A4-2)",
     "src-min-noconflict/snippets/kotlin.js": "AutoJs6 Kotlin snippets (upstream Kotlin snippets are empty)",
     "src-min-noconflict/snippets/python.js": "AutoJs6 Python 3 snippets (upstream still uses Python 2 syntax)",
     "src-min-noconflict/theme-visual_studio.js": "AutoJs6 theme, not part of any ace-builds release",

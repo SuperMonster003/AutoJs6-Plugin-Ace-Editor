@@ -107,6 +107,14 @@
     }
 
     var MODE_PATCHES = {
+        // The official Kotlin mode has no snippet file; AutoJs6 ships src-min-noconflict/snippets/kotlin.js.
+        // ext-language_tools loads snippets from mode.snippetFileId on changeMode, so this patch must run first.
+        "ace/mode/kotlin": function(mode) {
+            if (!mode.snippetFileId) {
+                mode.snippetFileId = "ace/snippets/kotlin";
+            }
+            return { snippetFileId: mode.snippetFileId };
+        },
         // Ace 1.44.0 moved the Java keywords from createKeywordMapper to a dedicated regular expression rule,
         // so Mode.getCompletions (the keyword completer) no longer offered them.
         "ace/mode/java": function(mode) {
@@ -130,7 +138,8 @@
         var apply = function() {
             patchMode(session.getMode());
         };
-        session.on("changeMode", apply);
+        // Registered with `capturing` so that it runs before the editor re-emits changeMode to ext-language_tools.
+        session.on("changeMode", apply, true);
         apply();
         return true;
     }

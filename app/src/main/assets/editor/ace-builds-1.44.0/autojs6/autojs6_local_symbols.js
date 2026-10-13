@@ -6,6 +6,7 @@
         "ace/mode/javascript": "javascript",
         "ace/mode/jsx": "javascript",
         "ace/mode/typescript": "typescript",
+        "ace/mode/tsx": "typescript",
         "ace/mode/python": "python",
         "ace/mode/lua": "lua",
         "ace/mode/java": "java",

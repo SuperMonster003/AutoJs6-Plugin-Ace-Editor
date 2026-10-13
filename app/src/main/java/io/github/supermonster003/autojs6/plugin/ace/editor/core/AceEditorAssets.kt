@@ -34,7 +34,6 @@ object AceEditorAssets {
         "$EDITOR_ASSET_ROOT/src-min-noconflict/worker-json.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/javascript.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/typescript.js",
-        "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/tsx.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/json.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/python.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/lua.js",

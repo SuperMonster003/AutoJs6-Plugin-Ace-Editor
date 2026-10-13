@@ -23,6 +23,7 @@ class AceLanguageRoutingBridgeTest {
         assertTrue(router.contains("return \"ace/mode/java\""))
         assertTrue(router.contains("return \"ace/mode/kotlin\""))
         assertTrue(router.contains("return \"ace/mode/typescript\""))
+        assertTrue(router.contains("return \"ace/mode/tsx\""))
         assertTrue(router.contains("return \"ace/mode/jsx\""))
         assertTrue(router.contains("return \"ace/mode/javascript\""))
         assertTrue(

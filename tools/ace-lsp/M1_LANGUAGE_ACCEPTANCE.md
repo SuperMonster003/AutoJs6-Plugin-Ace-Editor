@@ -103,3 +103,16 @@ adb -s <serial> shell am instrument -w -r `
 
 `verifyAutoJs6LspRuntime` 固定检查 snippet 数量下限和代表性 trigger：Python 18、
 Lua 6、Java 80、Kotlin 15；Python 还必须使用 Python 3 的 `except ... as ...` 语法。
+
+## 2.0.0 (Ace 1.44.0) 复核
+
+2026-10-13 换用 Ace 1.44.0 后 (Roadmap-Ace-1.44.0.md A4), 五个 verify 任务 (`verifyAutoJs6LanguageIndices`,
+`verifyAutoJs6LspRuntime`, `verifyAutoJs6PythonWorker`, `verifyAutoJs6LuaLanguageServer`, `verifyAutoJs6JavaSemanticRuntime`)
+与 `verifyAutoJs6KotlinP2Plus` 均通过. 变化:
+
+- `mode-kotlin.js` 改为官方 1.44.0 (关键字映射已由上游修正); 官方 mode 不设 `snippetFileId`, 由
+  `autojs6/autojs6_mode_patches.js` 在 mode 加载时指向项目维护的 `ace/snippets/kotlin` (15 个片段照常加载).
+- Java 关键字补全依赖同一补丁脚本: 1.44.0 的 Java mode 不再把关键字放进 `$keywordList`.
+- `.tsx` 改用官方 `ace/mode/tsx`.
+- Python 片段继续由项目维护: 上游 1.44.0 的 36 个片段仍含 Python 2 的 `except X, e` 写法; 项目版 18 个片段保持 Python 3 写法.
+- Lua, Java 片段使用上游 1.44.0 版本 (模块改为通过相对 ID 读取 `*.snippets` 文本).

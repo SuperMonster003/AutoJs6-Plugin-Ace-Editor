@@ -59,3 +59,11 @@ Java / Kotlin 主线。
 
 用例会输出 `AUTOJS6_ACE_TSX_BASELINE=` token 记录，并断言 TSX 至少仍保有
 TypeScript mode 的 `const`、`Button` 与 `<` 基线 token。
+
+## TSX-HL-1 由 2.0.0 关闭 (2026-10-13)
+
+Ace 1.44.0 自带 `ace/mode/tsx`, `.tsx` 改为路由到该 mode (Roadmap-Ace-1.44.0.md A4-1). 对同一样例
+`const view = <Button title={answer} />;`, JSX 元素得到 `meta.tag.punctuation.tag-open.xml`, `meta.tag.tag-name.xml`,
+`entity.other.attribute-name.xml` 等标签 token. tsx mode 继承 TypeScript mode 的 `ace/snippets/javascript` 片段;
+上游 `snippets/tsx.js` 只是空壳 (不定义模块), 没有打包. 设备用例 `documentPathSelectsModeAndIsolatesJavaScriptCompletions`
+已改为断言 tsx mode 与上述标签 token.

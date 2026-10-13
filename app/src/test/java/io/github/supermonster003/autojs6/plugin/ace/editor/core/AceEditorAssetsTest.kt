@@ -25,7 +25,6 @@ class AceEditorAssetsTest {
                     "$ASSET_ROOT/src-min-noconflict/mode-tsx.js",
                     "$ASSET_ROOT/src-min-noconflict/worker-json.js",
                     "$ASSET_ROOT/src-min-noconflict/ext-whitespaces_in_selection.js",
-                    "$ASSET_ROOT/src-min-noconflict/snippets/tsx.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-python.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-lua.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-java.js",

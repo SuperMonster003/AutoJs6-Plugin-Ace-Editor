@@ -194,7 +194,10 @@
         if (/\.(?:kt|kts)$/.test(clean)) {
             return "ace/mode/kotlin";
         }
-        if (/\.tsx$/.test(clean) || /\.(?:ts|mts|cts)$/.test(clean)) {
+        if (/\.tsx$/.test(clean)) {
+            return "ace/mode/tsx";
+        }
+        if (/\.(?:ts|mts|cts)$/.test(clean)) {
             return "ace/mode/typescript";
         }
         if (/\.jsx$/.test(clean)) {
@@ -220,7 +223,8 @@
         modeId = String(modeId || "");
         return modeId === "ace/mode/javascript" ||
             modeId === "ace/mode/jsx" ||
-            modeId === "ace/mode/typescript";
+            modeId === "ace/mode/typescript" ||
+            modeId === "ace/mode/tsx";
     }
 
     function isJavaScriptFamilySession(activeSession) {
@@ -232,7 +236,7 @@
         if (modeId === "ace/mode/javascript" || modeId === "ace/mode/jsx") {
             return "javascript";
         }
-        if (modeId === "ace/mode/typescript") {
+        if (modeId === "ace/mode/typescript" || modeId === "ace/mode/tsx") {
             return "typescript";
         }
         if (modeId === "ace/mode/python") {

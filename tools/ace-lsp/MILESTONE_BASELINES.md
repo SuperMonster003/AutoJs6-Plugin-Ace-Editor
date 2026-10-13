@@ -38,7 +38,7 @@ Python 3 与 Kotlin snippets 是项目维护资源，因为前者上游仍含 Py
 | `mode-lua.js` | 7,912 | `b043dc0ed0cb5e297894e29a6c233d9c65d4d27d599c48e58abb49dab035ccc2` | Ace 原样 |
 | `worker-lua.js` | 37,849 | `ed20a82b0c862bc2fd69300e80d6b328e28eb45b789ae506bda66360c063f097` | Ace 原样 |
 | `mode-java.js` | 23,848 | `0f1b185d94280e703afcce8b43c5309ab9d1f642fded8b8b77d5e51032c89eb8` | Ace 原样 |
-| `mode-kotlin.js` | 26,226 | `ca2ee755a51d64062b947dfc003f622c06e87941dd11b9e111716ca16da51296` | Ace 可读源码 + 兼容补丁 |
+| `mode-kotlin.js` | 26,226 | `ca2ee755a51d64062b947dfc003f622c06e87941dd11b9e111716ca16da51296` | Ace 可读源码 + 兼容补丁 (2.0.0 起改为官方 1.44.0, 见 `M1_LANGUAGE_ACCEPTANCE.md` 末节) |
 | `snippets/python.js` | 2,329 | `b9ade3ccf2077f1f0180ea11ca49c0c08d955d80766d29e5486c7849ead8c34c` | 项目维护 |
 | `snippets/lua.js` | 836 | `ffb5f57cd62c4dccffe179d72b53bde79e33b72a2a6fcd22dba9ed251f3458cd` | Ace 原样 |
 | `snippets/java.js` | 4,651 | `e15f4832c941f0bfd703e7067db677a6aabb1411e5817be91ac29428ba5f0ead` | Ace 原样 |

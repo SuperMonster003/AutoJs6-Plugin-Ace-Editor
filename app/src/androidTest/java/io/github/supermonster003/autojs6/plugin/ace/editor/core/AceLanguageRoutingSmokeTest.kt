@@ -35,7 +35,7 @@ class AceLanguageRoutingSmokeTest {
                 "/data/local/tmp/autojs6-routing.js" to "ace/mode/javascript",
                 "/data/local/tmp/autojs6-routing.JSX" to "ace/mode/jsx",
                 "/data/local/tmp/autojs6-routing.ts" to "ace/mode/typescript",
-                "/data/local/tmp/autojs6-routing.tsx?preview=1" to "ace/mode/typescript",
+                "/data/local/tmp/autojs6-routing.tsx?preview=1" to "ace/mode/tsx",
                 "/data/local/tmp/autojs6-routing.json" to "ace/mode/json",
                 "/data/local/tmp/autojs6-routing.py" to "ace/mode/python",
                 "/data/local/tmp/autojs6-routing.LUA#preview" to "ace/mode/lua",
@@ -50,14 +50,16 @@ class AceLanguageRoutingSmokeTest {
             }
 
             setDocumentPath(harness, "/data/local/tmp/autojs6-routing.tsx")
-            awaitMode(harness, "ace/mode/typescript")
+            awaitMode(harness, "ace/mode/tsx")
             setEditorText(harness, "const view = <Button title={answer} />;")
             val tsxTokens = tsxTokenSummary(harness)
+            // Ace 1.44.0 ships a TSX mode, so JSX elements get tag tokens (TSX-HL-1, Roadmap-Ace-1.44.0.md A4-1).
             assertTrue(
-                "TypeScript mode lost the TSX baseline tokens: $tsxTokens",
+                "TSX mode did not tokenize the JSX element: $tsxTokens",
                 tsxTokens.contains("\"type\":\"storage.type\",\"value\":\"const\"") &&
-                    tsxTokens.contains("\"type\":\"identifier\",\"value\":\"Button\"") &&
-                    tsxTokens.contains("\"type\":\"keyword.operator\",\"value\":\"<\""),
+                    tsxTokens.contains("\"type\":\"meta.tag.punctuation.tag-open.xml\",\"value\":\"<\"") &&
+                    tsxTokens.contains("\"type\":\"meta.tag.tag-name.xml\",\"value\":\"Button\"") &&
+                    tsxTokens.contains("\"type\":\"entity.other.attribute-name.xml\",\"value\":\"title\""),
             )
             println("AUTOJS6_ACE_TSX_BASELINE=$tsxTokens")
 

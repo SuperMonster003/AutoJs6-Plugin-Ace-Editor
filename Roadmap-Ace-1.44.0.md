@@ -183,7 +183,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 | A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 进行中 (剩 G-A1 设备门) |
 | A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 进行中 (离线等价已证, 待 G-A2 真机) |
 | A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 进行中 |
-| A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 未开始 |
+| A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 进行中 (A4-1 待设备, A4-3 暂缓) |
 | A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 未开始 |
 | A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 进行中 (A6-1 完成) |
 | A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 未开始 |
@@ -450,25 +450,41 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       "TSX-HL-1 由 2.0.0 关闭" 结论, `Roadmap.md` M0-3 结论行同步加注.
       —— 验收: 打开 `.tsx` 文档 `session.getMode().$id === "ace/mode/tsx"`, JSX 标签获得 tag/attribute token (截图留档);
       `documentPathSelectsModeAndIsolatesJavaScriptCompletions` 扩展 tsx 用例.
-- [ ] **A4-2** Kotlin 切官方: 用 1.44.0 `mode-kotlin.js` 替换项目版本; 复核官方 `createKeywordMapper` 是否让关键字补全器
+      进度 (2026-10-13): 路由, JS 家族判断, 语言 ID (tsx 归入 typescript), 补全器与本地符号的 mode 映射, LSP 客户端判断都已加入
+      `ace/mode/tsx`; worker 策略只对 lua 开启, tsx 自然关闭. jsdom 确认样例得到 tag-open / tag-name / attribute-name token;
+      设备用例已改为断言 tsx mode 与这些 token; `TSX_HIGHLIGHT_EVALUATION.md` 与 `Roadmap.md` 已加注 TSX-HL-1 关闭.
+      README 语言表留给 A8-6 (生成文件). 设备运行后勾选.
+- [x] **A4-2** Kotlin 切官方: 用 1.44.0 `mode-kotlin.js` 替换项目版本; 复核官方 `createKeywordMapper` 是否让关键字补全器
       得到非空列表 (`verifyAutoJs6KotlinP2Plus`). 官方 1.44.0 仍未设置 `snippetFileId` (已核查), 因此在运行期补丁脚本
       `autojs6/autojs6_mode_patches.js` (G-A1 时为 Java 关键字已建立) 中对 `ace/mode/kotlin` 设置 `snippetFileId = "ace/snippets/kotlin"`,
       不改官方文件; `MILESTONE_BASELINES.md` M1 表加注 "mode-kotlin 自 2.0.0 起为官方 1.44.0".
       —— 验收: `verifyAutoJs6KotlinP2Plus` 与 Kotlin 样例高亮截图通过; `grep "Ace 1.4.12 marks" src-min-noconflict/mode-kotlin.js` 无命中.
+      结论 (2026-10-13): 已换为官方文件 (锁文件中 origin 改为 upstream, 项目文件剩 4 个). jsdom 对比: 官方 mode 关键字补全 73 项
+      (含 fun / val / data / companion / suspend), 样例中 package / class / fun / return 等均为 keyword 类 token, 满足设备用例的高亮断言;
+      `snippetFileId` 由补丁脚本补为 `ace/snippets/kotlin`, 且补丁以 `capturing` 方式注册在 changeMode 最前面, 保证 ext-language_tools
+      加载片段时已生效 (jsdom 中 15 个 Kotlin 片段照常加载). `verifyAutoJs6KotlinP2Plus` 等 6 个 Node 任务与 JVM 测试通过.
 - [ ] **A4-3** JSON worker (验证门 G-A4-3): `shouldUseAceWorkerForMode` 对 json 返回 true, 保留 `JSON.parse` 诊断作为
       worker 不可用时的回退; 两者产生的注解去重 (以 worker 注解优先); `applyDocumentLongLineSafetyMode` 下关闭.
       —— 验收: JSON 文档输入错误 JSON 出现 worker 注解, 修正后消失; `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua`
       扩展 json 分支.
 - [ ] **G-A4-3** 在 8 台设备验证 worker-json 加载与注解; 任一设备失败则该设备回退 `JSON.parse` 路径且不报错.
       (降级路径: 失败设备比例 > 2/8 -> 默认关闭 json worker, 保留代码路径并记录结论.)
-- [ ] **A4-4** 其余 mode 复核: 1.44.0 的 `mode-python / lua / java / javascript / typescript / json / jsx` 生效后, 重跑
+      备注 (2026-10-13): 暂缓实施. 现状是 Lua 的 Ace worker 注解与 LSP 诊断都直接 `setAnnotations`, 后写者覆盖; JSON 若开 worker,
+      `validateDiagnosticRun` 的 `JSON.parse` 诊断会覆盖 worker 注解, 需要先给 LSP 客户端加 "worker 活动时以 worker 注解为准并同步到诊断状态"
+      的合并逻辑, 再上设备门.
+- [x] **A4-4** 其余 mode 复核: 1.44.0 的 `mode-python / lua / java / javascript / typescript / json / jsx` 生效后, 重跑
       `verifyAutoJs6LanguageIndices`, `verifyAutoJs6LspRuntime`, `verifyAutoJs6PythonWorker`, `verifyAutoJs6LuaLanguageServer`,
       `verifyAutoJs6JavaSemanticRuntime`; 比对上游 1.44.0 `snippets/python.js` 与项目版本, 结论 (继续项目维护 / 合并新增条目) 记录在
       `tools/ace-lsp/M1_LANGUAGE_ACCEPTANCE.md` 追加段.
       —— 验收: 5 个 verify 任务通过; 9-mode 矩阵 (README 与 `X4_SETTINGS_ACCEPTANCE.md`) 内容仍准确.
-- [ ] **A4-5** `snippets/tsx.js` (上游存在, A1-1 已复制) 登记到 `requiredAssetPaths`; 复核官方 `ace/mode/tsx` 的 `snippetFileId`
+      结论 (2026-10-13): 5 个 verify 任务与 `verifyAutoJs6KotlinP2Plus` 通过. 上游 1.44.0 的 36 个 Python 片段仍含 Python 2 写法,
+      继续使用项目维护的 18 个; 结论写入 `M1_LANGUAGE_ACCEPTANCE.md` 末节. 9-mode 矩阵不变 (tsx 仍归入 TypeScript 家族).
+- [x] **A4-5** `snippets/tsx.js` (上游存在, A1-1 已复制) 登记到 `requiredAssetPaths`; 复核官方 `ace/mode/tsx` 的 `snippetFileId`
       指向 (1.44.0 源码中 tsx mode 继承 typescript mode, 需运行期确认实际值), 若为空则在 A4-2 的补丁脚本中设置为 `ace/snippets/tsx`.
       —— 验收: tsx 文档中 TAB 展开 snippet; `verifyAutoJs6LspRuntime` 的 snippets 读取用例覆盖 tsx.
+      结论 (2026-10-13): 上游 `snippets/tsx.js` 只有一段 `ace.require` 包装, 不定义 `ace/snippets/tsx` 模块, 因此不打包 (已从资产,
+      `requiredAssetPaths` 与锁文件移除); 官方 tsx mode 的 `snippetFileId` 为 `ace/snippets/javascript` (jsdom 确认), tsx 文档使用
+      JavaScript 片段, 无需补丁.
 
 ## 9. A5 · 上游能力纳入
 
