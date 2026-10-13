@@ -483,3 +483,58 @@ debug 相对 M7 的 24,444,180 字节增加 195,910 字节（0.187 MiB）；rele
 分别为 1/1；API 28 的厂商 ART/JDWP 在 TestRunner 前 native abort，随后使用相同应用代码从
 正常 UI 入口核验矩阵、Kotlin P2+、4/4 开关和白名单说明通过。完整证据与门控定义见
 `X4_SETTINGS_ACCEPTANCE.md`。
+
+## A 系列: Ace 1.44.0 升级
+
+本节记录 `Roadmap-Ace-1.44.0.md` 各里程碑的性能与资产增量. 新内容使用 ASCII 标点.
+
+### A0 升级前基线
+
+2026-10-13 在分支 `ace-1.44.0` 创建时 (代码与 master f067e63 相同) 测量, 作为 G-A8 合并门的比较基准,
+取代 2026-08 的 M0 至 M2 数字. 安装的是 debug universal APK
+(`autojs6-plugin-ace-editor-v1.32.0-universal.apk`, 25,547,635 B, SHA-256
+`361e95bcb728a4802a8338f1a246ff9fc1d4d7794f3d84a8594f526475721e50`), androidTest APK SHA-256
+`be5e59488f02ebce0d4a9e292301d02c73c81ade9a77248e831ce80caec862b2`. 命令:
+
+```powershell
+.\tools\ace-lsp\measure-editor-performance.ps1 -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F
+```
+
+每台 3 个样本的中位数, 单位毫秒:
+
+| 设备 | Android / API | WebView provider | Activity -> 首次 draw | Activity -> ready | session -> ready | JS 首次静态补全 | Python 最大索引首次加载 |
+|---|---:|---|---:|---:|---:|---:|---:|
+| Xiaomi 23046RP50C | 15 / 35 | `com.google.android.webview@130.0.6723.86` | 572.0 | 932.2 | 698.3 | 1.3 | 6.3 |
+| Sony G8441 | 9 / 28 | `com.android.chrome@126.0.6478.186` | 825.4 | 1,091.6 | 918.1 | 2.8 | 13.9 |
+| Sony XQ-AT72 | 12 / 31 | `com.google.android.webview@145.0.7632.120` | 438.9 | 599.0 | 388.0 | 2.0 | 7.2 |
+
+逐次样本 (Activity -> 首次 draw / Activity -> ready / session -> ready):
+
+| 设备 | 第 1 轮 | 第 2 轮 | 第 3 轮 |
+|---|---|---|---|
+| Xiaomi 23046RP50C | 616.3 / 982.4 / 740.6 | 572.0 / 932.2 / 698.3 | 538.0 / 859.0 / 628.4 |
+| Sony G8441 | 898.2 / 1,184.5 / 1,001.4 | 786.3 / 1,029.2 / 869.9 | 825.4 / 1,091.6 / 918.1 |
+| Sony XQ-AT72 | 459.8 / 653.3 / 419.5 | 438.9 / 598.3 / 370.5 | 426.0 / 599.0 / 388.0 |
+
+与 M2 相比各项有升有降: 23046RP50C 的 session -> ready 为 698.3 (M2 543.6), G8441 的首次 draw 为 825.4 (M2 742.5),
+其余多数更快. 两次测量之间加入了语义运行时与设置项, WebView provider 未变; 这里不做归因, 只作为本次升级的起点.
+Python 索引 UTF-16 估算为 115,924 B. G-A8 用同一脚本, 同三台设备, 同 WebView provider 复测, 三项启动中位数相对本表
+不超过 +10%.
+
+### A0 单行 50 万字符基线 (G-A6-4 参照)
+
+`AceLongLineBaselineTest.recordsLongLineDocumentBaseline` 用 `setInitialText` 载入一行 500,000 字符的 JavaScript 风格文本,
+在 WebView 内用 `performance.now()` 测量强制重绘 (`editor.resize(true)`) 与横向滚动到 0 / 20,000 / 200,000 / 内容宽度后的重绘,
+再用 `replaceAllTextUndoably` 换成另一行 500,000 字符. 1.4.12 守卫版的结果 (单位毫秒):
+
+| 设备 | 样本 | 首次载入 | 强制重绘 | 滚动重绘最大值 | 替换回调 | 替换后可见 | 渲染字符数 | 内容宽度 px |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Sony G8441 (9 / API 28, Chrome 126) | 3 | 266 (263-270) | 10.4 | 11.6 | 118.5 (118.4-119.4) | 177.9 (177.6-178.9) | 4,099 | 70,210 |
+| Sony XQ-AT72 (12 / API 31, WebView 145) | 1 | 51.4 | 2.0 | 3.2 | 40.6 | 49.2 | 4,099 | 84,276 |
+
+三轮均处于长行安全模式 (`ace/mode/text`), 无 ANR. 渲染字符数 4,099 是桥接层守卫的 4,096 字符加省略标记. 运行方式:
+
+```powershell
+adb -s BH900ASK9E shell am instrument -w -r -e class io.github.supermonster003.autojs6.plugin.ace.editor.core.AceLongLineBaselineTest io.github.supermonster003.autojs6.plugin.ace.editor.test/androidx.test.runner.AndroidJUnitRunner
+adb -s BH900ASK9E logcat -d -v raw -s AutoJs6AcePerf:I
+```
