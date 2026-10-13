@@ -461,7 +461,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [x] **A3-9** Worker 策略复核: `shouldUseAceWorkerForMode` (`:267`) 维持 lua 开启; 确认 1.44.0 Blob worker 在
       `https://appassets.androidplatform.net` 源下 `importScripts` 成功 (G-A1 已验); JSON worker 交给 A4-3.
       —— 验收: `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua` 通过.
-      结论 (2026-10-13): 该用例属于 G-A1 的 `AceLuaSemanticSmokeTest`, 在 8 台设备上通过 (Blob worker 的 `importScripts` 正常);
+      结论 (2026-10-13): 该用例属于 G-A1 的 `AceLanguageRoutingSmokeTest`, 在 8 台设备上通过 (Blob worker 的 `importScripts` 正常);
       执行式测试断言只有 Lua 文档启用 Ace worker, 长行安全模式下关闭.
 - [x] **A3-10** 诊断快照与事件: `AceDiagnostics` 增加 `aceVersion` (读取 `ace.version`, 1.44.0 为 "1.44.0") 与 A2-7 的 `mobileOverlay`;
       `ACE_RUNTIME_REVISION` 已在 A1-3 更新.
