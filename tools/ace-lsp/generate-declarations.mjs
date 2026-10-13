@@ -519,6 +519,17 @@ function writeGeneratedAssets(
         fail(`Refusing to clean outside the output directory: ${legacyGeneratedDirectory}`);
     }
     rmSync(legacyGeneratedDirectory, { recursive: true, force: true });
+    // Generated assets of a previous Ace distribution root (for example editor/ace-builds-1.4.12) would otherwise
+    // stay in the incremental output directory and be packaged next to the current ones.
+    const editorOutputDirectory = resolve(outputDirectory, "editor");
+    const currentAceRoot = GENERATED_OUTPUT_ROOT.split("/")[1];
+    if (existsSync(editorOutputDirectory)) {
+        for (const entry of readdirSync(editorOutputDirectory)) {
+            if (/^ace-builds-/.test(entry) && entry !== currentAceRoot) {
+                rmSync(resolve(editorOutputDirectory, entry), { recursive: true, force: true });
+            }
+        }
+    }
 
     const stagingDirectory = `${generatedDirectory}.tmp`;
     rmSync(stagingDirectory, { recursive: true, force: true });
