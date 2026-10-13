@@ -99,6 +99,13 @@ declare module "ace-builds-internal/editor" {
     }
 }
 
+declare module "ace-builds-internal/keyboard/textinput" {
+    interface TextInput {
+        // Private Ace member the bridge relies on (ending an IME composition the way Ace does after a command).
+        onCompositionEnd(e?: any): void;
+    }
+}
+
 declare module "ace-builds-internal/virtual_renderer" {
     interface VirtualRenderer {
         // Public in Ace but missing from ace.d.ts.

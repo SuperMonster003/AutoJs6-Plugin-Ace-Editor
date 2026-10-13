@@ -148,7 +148,6 @@
     var TEXT_MUTATION_SELECTION_MENU_SUPPRESS_MS = 1200;
     var TOUCH_ANCHOR_MAX_AGE_MS = 2500;
     var FOLD_TAP_TOUCH_SLOP_SQUARED = 100;
-    var IME_TEXT_INPUT_SELECTION_MAX_DELTA = 64;
     var IME_TEXT_INPUT_PROGRAMMATIC_SELECTION_SUPPRESS_MS = 800;
     var FIRST_PAINT_STABLE_FRAME_COUNT = 3;
     var FIRST_PAINT_MAX_WAIT_MS = 1800;
@@ -3101,15 +3100,52 @@
         return true;
     }
 
+    // A textarea caret that does not match the cursor right after focusing or touching the editor comes from the browser,
+    // not from the IME. Caret changes after programmatic cursor moves need no window: the textarea then shows the cursor
+    // itself, which handleImeTextInputSelectionChange ignores, and suppressing them dropped the IME's next real move
+    // (Roadmap-Ace-1.44.0.md A2-10, manual test C4).
     function shouldSuppressImeTextInputSelectionAfterReset(reason) {
         reason = String(reason || "");
+        return reason === "touch_cursor" ||
+            reason === "init" ||
+            reason.indexOf("focus") >= 0;
+    }
+
+    // Cursor moves after which an IME composition no longer describes the text around the cursor.
+    function shouldEndImeCompositionOnReset(reason) {
+        reason = String(reason || "");
         return reason === "move_cursor" ||
+            reason === "ime_caret" ||
             reason === "select_range" ||
             reason === "jump_to" ||
             reason === "shortcut_insert" ||
-            reason === "touch_cursor" ||
-            reason === "init" ||
-            reason.indexOf("focus") >= 0;
+            reason === "selection_restore";
+    }
+
+    // Ends an IME composition the way Ace 1.44.0 does when a command moves the cursor (the Editor "beforeEndOperation"
+    // listener of TextInput). Ace expects a composition to start at the cursor and keeps its textarea unchanged while one
+    // is open, so after a move that Ace did not run as a command (bridge calls, IME caret moves), the next composition
+    // update replaced or moved text around the old position. Gboard marks the word under the cursor as a composition
+    // after every cursor move, so this happened on most moves (Roadmap-Ace-1.44.0.md A2-10, manual test C4).
+    function endImeComposition(reason) {
+        var textInput = editor && editor.textInput;
+        if (!textInput || !textInput.inComposition || typeof textInput.onCompositionEnd !== "function") {
+            return false;
+        }
+        var element = getImeTextInputElement();
+        textInput.lastValue = "";
+        if (element) {
+            element.value = "";
+        }
+        textInput.onCompositionEnd();
+        if (typeof textInput.resetSelection === "function") {
+            textInput.resetSelection();
+        }
+        callBridge("notifyEvent", [
+            "imeCompositionEnded",
+            JSON.stringify({ reason: String(reason || "") })
+        ]);
+        return true;
     }
 
     function clearImeTextInputSelectionSuppression() {
@@ -3137,7 +3173,9 @@
         suppressNextImeTextInputSelectionChange(reason);
         imeTextInputSelectionSyncing = true;
         try {
-            if (textInput && typeof textInput.resetSelection === "function") {
+            if (textInput && textInput.inComposition && shouldEndImeCompositionOnReset(reason)) {
+                endImeComposition(reason);
+            } else if (textInput && typeof textInput.resetSelection === "function") {
                 textInput.resetSelection();
             }
         } catch (error) {
@@ -3185,18 +3223,31 @@
         var value = String(element.value || "");
         var start = Math.max(0, Math.min(Number(element.selectionStart) || 0, value.length));
         var end = Math.max(0, Math.min(Number(element.selectionEnd) || 0, value.length));
-        if (
-            imeTextInputSelectionWindow.element !== element ||
-            imeTextInputSelectionWindow.start < 0 ||
-            imeTextInputSelectionWindow.value !== value ||
-            start !== end
-        ) {
+        var previous = imeTextInputSelectionWindow.element === element && imeTextInputSelectionWindow.value === value ?
+            imeTextInputSelectionWindow.start :
+            -1;
+        if (start !== end || start === previous && end === imeTextInputSelectionWindow.end) {
             syncImeTextInputSelectionWindow("selectionchange_sync");
             return;
         }
-        var previous = imeTextInputSelectionWindow.start;
-        var delta = start - previous;
-        if (delta === 0) {
+        // The caret is mapped to the document through the rows Ace copied into the textarea. Mapping its distance from
+        // the previous offset instead moved the cursor again for every caret change Ace made itself (each arrow key
+        // moved two columns), and crossed the newlines around the copied row as characters of the document
+        // (Roadmap-Ace-1.44.0.md A2-10, manual test C4).
+        var segments = imeTextInputSegments(value);
+        if (!segments) {
+            if (previous >= 0) {
+                callBridge("notifyEvent", [
+                    "imeTextInputSelectionDropped",
+                    JSON.stringify({ reason: "unknown_layout", previous: previous, start: start, length: value.length })
+                ]);
+            }
+            syncImeTextInputSelectionWindow("selectionchange_unmapped");
+            return;
+        }
+        var range = editor.getSelectionRange();
+        if (range.isEmpty() && start === imeTextInputOffset(segments, range.start)) {
+            // Ace or the bridge put the caret at the cursor.
             syncImeTextInputSelectionWindow("");
             return;
         }
@@ -3207,7 +3258,6 @@
                     reason: imeTextInputSelectionSuppressReason,
                     previous: previous,
                     start: start,
-                    delta: delta,
                     length: value.length
                 })
             ]);
@@ -3215,19 +3265,7 @@
             syncImeTextInputSelectionWindow("selectionchange_suppressed");
             return;
         }
-        if (Math.abs(delta) > IME_TEXT_INPUT_SELECTION_MAX_DELTA) {
-            callBridge("notifyEvent", [
-                "imeTextInputSelectionDropped",
-                JSON.stringify({
-                    previous: previous,
-                    start: start,
-                    delta: delta,
-                    length: value.length
-                })
-            ]);
-            syncImeTextInputSelectionWindow("selectionchange_large_delta");
-            return;
-        }
+        var target = imeTextInputPosition(segments, start, previous);
         var now = Date.now();
         if (now - lastImeTextInputSelectionNotifyAt >= 100) {
             lastImeTextInputSelectionNotifyAt = now;
@@ -3236,12 +3274,126 @@
                 JSON.stringify({
                     previous: previous,
                     start: start,
-                    delta: delta,
-                    length: value.length
+                    length: value.length,
+                    row: target.row,
+                    column: target.column
                 })
             ]);
         }
-        moveCursor(delta);
+        // Also when the target is the cursor itself (Gboard's ">|" at the line end): the caret then sits on a newline
+        // next to the row and is put back.
+        editor.clearSelection();
+        editor.moveCursorToPosition(target);
+        resetImeTextInputSelectionWindow("ime_caret");
+        scrollCursorIntoViewSafely("imeCaret");
+        notifyCursorChanged();
+        notifySelectionChanged();
+    }
+
+    // The rows Ace 1.44.0 copies into its textarea (TextInput.$resetSelection without extra lines), as segments
+    // { row, start, length } of the textarea value: the cursor row, behind a newline on mobile unless it is the first
+    // row, or the cursor row together with the row before / after it when the selection continues there; two newlines
+    // follow. Other values (rows over 400 characters, which Ace cuts or leaves out) give null.
+    function imeTextInputSegments(value) {
+        if (!editor || !session) {
+            return null;
+        }
+        var rows = [editor.getCursorPosition().row];
+        var textInput = editor.textInput;
+        if (textInput && typeof textInput.rowStart === "number" && textInput.rowStart !== rows[0]) {
+            rows.push(textInput.rowStart);
+        }
+        for (var i = 0; i < rows.length; i++) {
+            var segments = imeTextInputSegmentsOfRow(value, rows[i]);
+            if (segments) {
+                return segments;
+            }
+        }
+        return null;
+    }
+
+    function imeTextInputSegmentsOfRow(value, row) {
+        if (row < 0 || row >= session.getLength()) {
+            return null;
+        }
+        var line = getLine(row);
+        var leading = row > 0 && isAceMobile() ? 1 : 0;
+        if ((leading ? "\n" : "") + line + "\n\n" === value) {
+            return [{ row: row, start: leading, length: line.length }];
+        }
+        if (row > 0) {
+            var before = getLine(row - 1);
+            if (before + "\n" + line + "\n\n" === value) {
+                return [
+                    { row: row - 1, start: 0, length: before.length },
+                    { row: row, start: before.length + 1, length: line.length }
+                ];
+            }
+        }
+        if (row + 1 < session.getLength()) {
+            var after = getLine(row + 1);
+            if (line + "\n" + after + "\n\n" === value) {
+                return [
+                    { row: row, start: 0, length: line.length },
+                    { row: row + 1, start: line.length + 1, length: after.length }
+                ];
+            }
+        }
+        return null;
+    }
+
+    function isAceMobile() {
+        var useragent = global.ace && global.ace.require && global.ace.require("ace/lib/useragent");
+        return !!(useragent && useragent.isMobile);
+    }
+
+    // The textarea offset of a document position on one of the copied rows, or -1.
+    function imeTextInputOffset(segments, position) {
+        for (var i = 0; i < segments.length; i++) {
+            if (segments[i].row === position.row) {
+                return segments[i].start + Math.min(position.column, segments[i].length);
+            }
+        }
+        return -1;
+    }
+
+    // The document position of a textarea offset. Offsets outside the copied rows are the newlines around them: one step
+    // there from the start / end of the row continues on the neighbouring row (a space bar slide or a native caret move);
+    // a jump there is Gboard's "move to the start / end" (|< and >| in its text editing panel), which Gboard sends as the
+    // start / end of the textarea text and the editor takes as the start / end of the row.
+    function imeTextInputPosition(segments, offset, previous) {
+        for (var i = 0; i < segments.length; i++) {
+            var segment = segments[i];
+            if (offset >= segment.start && offset <= segment.start + segment.length) {
+                return { row: segment.row, column: offset - segment.start };
+            }
+        }
+        var first = segments[0];
+        var last = segments[segments.length - 1];
+        var step = previous >= 0 && Math.abs(offset - previous) === 1;
+        if (offset < first.start) {
+            return step && first.row > 0 ?
+                { row: first.row - 1, column: getLine(first.row - 1).length } :
+                { row: first.row, column: 0 };
+        }
+        return step && offset === last.start + last.length + 1 && last.row + 1 < session.getLength() ?
+            { row: last.row + 1, column: 0 } :
+            { row: last.row, column: last.length };
+    }
+
+    // Arrow, Home / End and Page keys while an IME composition is open (Gboard keeps the word under the cursor open as a
+    // composition, and its text editing panel sends real arrow keys): Ace ignores command keys during a composition, so
+    // the browser moved the textarea caret instead (Up / Down then moved within the row) and the next composition update
+    // moved the cursor again. The composition ends first, as when Ace runs a command, and Ace handles the key.
+    function handleImeTextInputKeyDown(event) {
+        var element = getImeTextInputElement();
+        if (!element || event.target !== element || !editor.textInput.inComposition) {
+            return;
+        }
+        var keyCode = Number(event.keyCode) || 0;
+        if (keyCode >= 33 && keyCode <= 40) {
+            endImeComposition("navigation_key");
+        }
     }
 
     // IME compositions that rewrite a word with itself (Gboard marks the word under a newly placed cursor as its
@@ -3298,9 +3450,11 @@
         }
         imeTextInputSelectionWindow.installed = true;
         document.addEventListener("selectionchange", handleImeTextInputSelectionChange, true);
+        document.addEventListener("keydown", handleImeTextInputKeyDown, true);
         if (editor && editor.on) {
             editor.on("destroy", function() {
                 document.removeEventListener("selectionchange", handleImeTextInputSelectionChange, true);
+                document.removeEventListener("keydown", handleImeTextInputKeyDown, true);
                 imeTextInputSelectionWindow.installed = false;
             });
         }
@@ -4716,6 +4870,35 @@
         jumpTo(position.row, 0);
     }
 
+    // Actions of the IME's text editing panel that Kotlin recognizes (AceImeEditingAction): "select all", and "move to
+    // the start / end" (Gboard's |< and >|), which extends the selection in Gboard's "Select" mode. Applied to the
+    // textarea they only reached the cursor row (Roadmap-Ace-1.44.0.md A2-10, manual test C4).
+    function runImeEditingAction(action, extend) {
+        if (!editor || !session) {
+            return false;
+        }
+        action = String(action || "");
+        if (action === "selectAll") {
+            editor.selectAll();
+        } else if (action === "lineStart" || action === "lineEnd") {
+            var lead = editor.selection.getCursor();
+            var column = action === "lineEnd" ? getLine(lead.row).length : 0;
+            if (extend) {
+                editor.selection.selectTo(lead.row, column);
+            } else {
+                editor.clearSelection();
+                editor.moveCursorTo(lead.row, column);
+            }
+            scrollCursorIntoViewSafely("imeEditingAction");
+        } else {
+            return false;
+        }
+        resetImeTextInputSelectionWindow("select_range");
+        notifyCursorChanged();
+        notifySelectionChanged();
+        return true;
+    }
+
     function jumpToLineEnd() {
         var position = editor.getCursorPosition();
         jumpTo(position.row, getLine(position.row).length);
@@ -4737,7 +4920,6 @@
             return;
         }
         if (Math.abs(delta) <= 64) {
-            suppressNextImeTextInputSelectionChange("move_cursor");
             var range = editor.getSelectionRange();
             var position = !range.isEmpty() ?
                 (delta < 0 ? range.start : range.end) :
@@ -4770,7 +4952,6 @@
         }
         var selection = getSelectionState();
         var next = Math.max(0, Math.min(selection.startOffset + delta, session.getValue().length));
-        suppressNextImeTextInputSelectionChange("move_cursor");
         selectRange(next, next);
         resetImeTextInputSelectionWindow("move_cursor");
     }
@@ -6343,6 +6524,7 @@
             jumpToNextLine: jumpToNextLine,
             jumpToPrevLine: jumpToPrevLine,
             moveCursor: moveCursor,
+            runImeEditingAction: runImeEditingAction,
             selectRange: selectRange,
             deleteLine: deleteLine,
             clear: clear,

@@ -28,6 +28,8 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.ExtractedText
+import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputConnectionWrapper
 import android.view.inputmethod.InputMethodManager
@@ -211,6 +213,9 @@ class AceCodeEditor @JvmOverloads constructor(
         },
         softKeyboardSelectionHandler = { offset, delta, source ->
             handleSoftKeyboardCursorSelection(offset, delta, source)
+        },
+        imeEditingActionHandler = { action, extend ->
+            handleImeEditingAction(action, extend)
         },
         imeTextMutationHandler = { reason ->
             suppressTextMutationSelectionMenu(reason)
@@ -2926,6 +2931,14 @@ class AceCodeEditor @JvmOverloads constructor(
         )
     }
 
+    private fun handleImeEditingAction(action: AceImeEditingAction, extend: Boolean) {
+        if (!isReady) {
+            return
+        }
+        eventHistory.record("ime_editing_action", "action=${action.bridgeName},extend=$extend")
+        invokeAce("runImeEditingAction", "${quote(action.bridgeName)}, $extend")
+    }
+
     private fun suppressTextMutationSelectionMenu(reason: String) {
         textMutationActionModeSuppressUntilUptimeMillis = maxOf(
             textMutationActionModeSuppressUntilUptimeMillis,
@@ -2953,6 +2966,7 @@ class AceCodeEditor @JvmOverloads constructor(
         context: Context,
         private val softKeyboardCursorKeyHandler: (Int, KeyEvent) -> Boolean,
         private val softKeyboardSelectionHandler: (Int, Int, String) -> Unit,
+        private val imeEditingActionHandler: (AceImeEditingAction, Boolean) -> Unit,
         private val imeTextMutationHandler: (String) -> Unit,
         private val allowHostActionModeStart: () -> Boolean,
         private val suppressHostActionModeStart: () -> Boolean,
@@ -2978,6 +2992,32 @@ class AceCodeEditor @JvmOverloads constructor(
             return object : InputConnectionWrapper(baseConnection, true) {
                 private var lastCollapsedSelection = -1
                 private var ignoreSelectionUntilUptimeMillis = 0L
+                private var extractedTextLength = -1
+                private var extractedTextUptimeMillis = 0L
+
+                override fun getExtractedText(request: ExtractedTextRequest?, flags: Int): ExtractedText? {
+                    val extracted = super.getExtractedText(request, flags)
+                    extractedTextLength = extracted?.text?.length ?: -1
+                    extractedTextUptimeMillis = SystemClock.uptimeMillis()
+                    return extracted
+                }
+
+                // The length of the text the IME read just before its current call, or -1 (AceImeEditingAction).
+                private fun takeFreshExtractedTextLength(): Int {
+                    val fresh = SystemClock.uptimeMillis() - extractedTextUptimeMillis <= IME_EDITING_ACTION_WINDOW_MS
+                    extractedTextUptimeMillis = 0L
+                    return if (fresh) extractedTextLength else -1
+                }
+
+                // Gboard's "Select all": selecting the textarea only selected the cursor row, or nothing while Gboard
+                // kept the word under the cursor open as a composition (Ace ignores textarea selections then).
+                override fun performContextMenuAction(id: Int): Boolean {
+                    if (id == android.R.id.selectAll) {
+                        imeEditingActionHandler(AceImeEditingAction.SelectAll, false)
+                        return true
+                    }
+                    return super.performContextMenuAction(id)
+                }
 
                 override fun commitText(text: CharSequence?, newCursorPosition: Int): Boolean {
                     markImeTextMutation("commitText")
@@ -3000,6 +3040,7 @@ class AceCodeEditor @JvmOverloads constructor(
                 }
 
                 override fun sendKeyEvent(event: KeyEvent): Boolean {
+                    extractedTextUptimeMillis = 0L
                     if (event.action == KeyEvent.ACTION_DOWN &&
                         (event.keyCode == KeyEvent.KEYCODE_DEL || event.keyCode == KeyEvent.KEYCODE_FORWARD_DEL)
                     ) {
@@ -3009,6 +3050,12 @@ class AceCodeEditor @JvmOverloads constructor(
                 }
 
                 override fun setSelection(start: Int, end: Int): Boolean {
+                    val lineBoundary = AceImeEditingAction.lineBoundary(start, end, takeFreshExtractedTextLength())
+                    if (lineBoundary != null) {
+                        lastCollapsedSelection = -1
+                        imeEditingActionHandler(lineBoundary, start != end)
+                        return true
+                    }
                     if (start == end && start >= 0) {
                         val previousSelection = lastCollapsedSelection
                         val delta = if (previousSelection >= 0) start - previousSelection else 0
@@ -3022,8 +3069,8 @@ class AceCodeEditor @JvmOverloads constructor(
                         softKeyboardSelectionHandler(start, delta, "InputConnection.setSelection.textarea")
                         // Gboard spacebar cursor mode reports offsets inside ACE's hidden
                         // textarea window. Let WebView update that local selection so the
-                        // bridge can map the local window delta back to the ACE caret, while
-                        // still consuming the call to avoid document-absolute fallback moves.
+                        // bridge can map the caret through the window back to the ACE cursor,
+                        // while still consuming the call to avoid document-absolute fallback moves.
                         return true
                     } else {
                         lastCollapsedSelection = -1
@@ -3773,6 +3820,7 @@ class AceCodeEditor @JvmOverloads constructor(
         private const val IME_REQUEST_COALESCE_MS = 150L
         private const val IME_TRANSITION_HEARTBEAT_SUSPEND_MS = 800L
         private const val IME_TEXT_INPUT_SELECTION_SUPPRESS_MS = 120L
+        private const val IME_EDITING_ACTION_WINDOW_MS = 50L
         private const val RESIZE_SETTLE_DELAY_MS = 120L
         private const val IME_HEIGHT_THRESHOLD_DP = 80f
         private const val ACTION_MODE_AFTER_TOUCH_DELAY_MS = 48L

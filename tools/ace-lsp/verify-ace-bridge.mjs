@@ -71,6 +71,10 @@ async function openEditor(options = {}) {
                 window.HTMLCanvasElement.prototype.getContext = () => new Proxy({}, { get: () => () => undefined });
             }
             window.autojs = host;
+            if (options.userAgent) {
+                // Read by Ace (useragent.isMobile) and the bridge (isAndroidUserAgent) while the page loads.
+                Object.defineProperty(window.navigator, "userAgent", { configurable: true, get: () => options.userAgent });
+            }
             if (typeof options.wrapLspClient === "function") {
                 // autojs6_lsp_client.js assigns window.AutoJsAceLspClient; wrap the client the bridge installs.
                 let runtime;
@@ -146,6 +150,58 @@ function mouseDown(page, target, x, y) {
     const event = new page.window.MouseEvent("mousedown", { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0 });
     target.dispatchEvent(event);
     return event;
+}
+
+const ANDROID_USER_AGENT =
+    "Mozilla/5.0 (Linux; Android 15; XQ-AT72) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36";
+
+// Ace's hidden textarea as an Android IME sees it. jsdom fires no selectionchange and moves no caret for keys, so the
+// helpers do what the browser would: the IME puts the caret somewhere, Ace handles a command key.
+function imeTextarea(page) {
+    const { window, editor } = page;
+    const element = editor.textInput.getElement();
+    const selectionChanged = () => window.document.dispatchEvent(new window.Event("selectionchange"));
+    return {
+        element,
+        get value() {
+            return element.value;
+        },
+        get caret() {
+            return element.selectionStart;
+        },
+        selectionChanged,
+        setCaret(offset) {
+            element.setSelectionRange(offset, offset);
+            selectionChanged();
+        },
+        key(keyCode, init = {}) {
+            for (const type of ["keydown", "keyup"]) {
+                const event = new window.KeyboardEvent(type, { bubbles: true, cancelable: true, ...init });
+                Object.defineProperty(event, "keyCode", { get: () => keyCode });
+                Object.defineProperty(event, "which", { get: () => keyCode });
+                element.dispatchEvent(event);
+            }
+            selectionChanged();
+        },
+        // Gboard marks the word under the cursor as a composition without changing it.
+        markWord(word) {
+            element.dispatchEvent(new window.CompositionEvent("compositionstart", { data: "", bubbles: true }));
+            element.dispatchEvent(new window.CompositionEvent("compositionupdate", { data: word, bubbles: true }));
+        },
+        compositionUpdate(word) {
+            element.dispatchEvent(new window.CompositionEvent("compositionupdate", { data: word, bubbles: true }));
+        },
+    };
+}
+
+async function openAndroidEditor(text) {
+    const page = await openEditor({ userAgent: ANDROID_USER_AGENT });
+    page.api.setText(text);
+    page.editor.focus();
+    // The bridge ignores a stray caret right after focusing (IME_TEXT_INPUT_PROGRAMMATIC_SELECTION_SUPPRESS_MS).
+    await sleep(900);
+    assert.equal(page.window.document.activeElement, page.editor.textInput.getElement(), "the textarea has the focus");
+    return page;
 }
 
 function gutterCell(page, row) {
@@ -962,6 +1018,178 @@ test("unchanged IME composition replacements leave the document and its history 
         editor.onTextInput("cope", { extendLeft: 4, extendRight: 0, restoreStart: 0, restoreEnd: 0 });
         assert.equal(editor.getValue(), "// third line to cope\nnext", "a real change still applies");
         assert.ok(undoDepth() > depth);
+    } finally {
+        page.close();
+    }
+});
+
+// Roadmap-Ace-1.44.0.md A2-10, manual test C4: Ace copies the cursor row into its textarea ("\n" + row + "\n\n" on
+// mobile). IME caret moves map through that copy; Ace's own caret updates are not IME moves.
+test("arrow keys handled by Ace move the cursor once on Android", async () => {
+    const page = await openAndroidEditor("abc\ndefg\nhi");
+    try {
+        const { editor } = page;
+        const textarea = imeTextarea(page);
+        editor.moveCursorTo(1, 0);
+        await sleep(20); // Ace updates its textarea when the operation ends
+        textarea.selectionChanged();
+        assert.equal(textarea.value, "\ndefg\n\n");
+        assert.equal(textarea.caret, 1);
+        textarea.key(39);
+        assert.deepEqual(plain(editor.getCursorPosition()), { row: 1, column: 1 }, "Right moves one column");
+        textarea.key(39);
+        assert.deepEqual(plain(editor.getCursorPosition()), { row: 1, column: 2 });
+        textarea.key(37);
+        assert.deepEqual(plain(editor.getCursorPosition()), { row: 1, column: 1 }, "Left moves one column");
+        assert.equal(textarea.caret, 2, "the textarea caret follows the cursor");
+        assert.deepEqual(page.events("imeTextInputSelection"), [], "Ace's own caret updates are no IME moves");
+    } finally {
+        page.close();
+    }
+});
+
+test("IME caret moves map through the row Ace copied into the textarea", async () => {
+    const page = await openAndroidEditor("abc\ndefg\nhi");
+    try {
+        const { editor } = page;
+        const textarea = imeTextarea(page);
+        const cursor = () => plain(editor.getCursorPosition());
+        editor.moveCursorTo(1, 1);
+        await sleep(20); // Ace updates its textarea when the operation ends
+        textarea.selectionChanged();
+        textarea.setCaret(4);
+        assert.deepEqual(cursor(), { row: 1, column: 3 }, "a move within the row");
+        textarea.setCaret(5);
+        assert.deepEqual(cursor(), { row: 1, column: 4 });
+        // A space bar slide continues over the newline after the row onto the next row ...
+        textarea.setCaret(6);
+        assert.deepEqual(cursor(), { row: 2, column: 0 }, "one step past the end of the row");
+        assert.equal(textarea.value, "\nhi\n\n");
+        assert.equal(textarea.caret, 1);
+        // ... and over the newline before the row back onto the previous row.
+        textarea.setCaret(0);
+        assert.deepEqual(cursor(), { row: 1, column: 4 }, "one step before the start of the row");
+        assert.equal(textarea.caret, 5);
+        // Gboard's |< and >| put the caret at the start / end of the textarea text.
+        editor.moveCursorTo(1, 2);
+        await sleep(20); // Ace updates its textarea when the operation ends
+        textarea.selectionChanged();
+        textarea.setCaret(0);
+        assert.deepEqual(cursor(), { row: 1, column: 0 }, "|< goes to the start of the row");
+        textarea.setCaret(textarea.value.length);
+        assert.deepEqual(cursor(), { row: 1, column: 4 }, ">| goes to the end of the row");
+        assert.equal(textarea.caret, 5);
+        textarea.setCaret(textarea.value.length);
+        assert.deepEqual(cursor(), { row: 1, column: 4 }, ">| at the end of the row keeps the cursor");
+        assert.equal(textarea.caret, 5, "and puts the caret back at the cursor");
+        // The first row has no newline in front of it.
+        editor.moveCursorTo(0, 2);
+        await sleep(20); // Ace updates its textarea when the operation ends
+        textarea.selectionChanged();
+        assert.equal(textarea.value, "abc\n\n");
+        textarea.setCaret(0);
+        assert.deepEqual(cursor(), { row: 0, column: 0 });
+        assert.ok(page.events("imeTextInputSelection").length > 0);
+        assert.deepEqual(page.events("imeTextInputSelectionDropped"), []);
+    } finally {
+        page.close();
+    }
+});
+
+test("an IME caret collapsing a selection lands where the IME put it", async () => {
+    const page = await openAndroidEditor("abc\ndefg\nhi");
+    try {
+        const { editor, window } = page;
+        const textarea = imeTextarea(page);
+        const Range = window.ace.require("ace/range").Range;
+        editor.selection.setRange(new Range(1, 0, 1, 3));
+        await sleep(20); // Ace updates its textarea when the operation ends
+        textarea.selectionChanged();
+        assert.equal(textarea.element.selectionStart, 1);
+        assert.equal(textarea.element.selectionEnd, 4);
+        assert.equal(editor.getSelectedText(), "def", "Ace's own textarea selection changes nothing");
+        // Gboard's "Select" mode ends with the caret at the end of the selection.
+        textarea.setCaret(4);
+        assert.deepEqual(plain(editor.getSelectionRange()), { start: { row: 1, column: 3 }, end: { row: 1, column: 3 } });
+    } finally {
+        page.close();
+    }
+});
+
+test("cursor moves end an IME composition that marks the word under the cursor", async () => {
+    const page = await openAndroidEditor("abc\ndefg hij\nhi");
+    try {
+        const { editor } = page;
+        const textarea = imeTextarea(page);
+        const cursor = () => plain(editor.getCursorPosition());
+        editor.moveCursorTo(1, 2);
+        await sleep(20); // Ace updates its textarea when the operation ends
+        textarea.selectionChanged();
+        textarea.markWord("defg");
+        await sleep(10);
+        assert.ok(editor.textInput.inComposition, "Gboard's composition is open");
+        // The IME moves the caret (a space bar slide), then updates its composition.
+        textarea.setCaret(5);
+        assert.deepEqual(cursor(), { row: 1, column: 4 });
+        assert.ok(!editor.textInput.inComposition, "the move ended the composition");
+        textarea.compositionUpdate("defg");
+        await sleep(80);
+        assert.deepEqual(cursor(), { row: 1, column: 4 }, "a later composition update does not move the cursor");
+        assert.equal(editor.getValue(), "abc\ndefg hij\nhi");
+        // Arrow keys during a composition: Ace ignores command keys while one is open.
+        textarea.markWord("defg");
+        await sleep(10);
+        assert.ok(editor.textInput.inComposition);
+        textarea.key(38);
+        assert.deepEqual(cursor(), { row: 0, column: 3 }, "Up goes to the previous row");
+        textarea.markWord("abc");
+        await sleep(10);
+        textarea.key(39);
+        await sleep(80);
+        assert.deepEqual(cursor(), { row: 1, column: 0 }, "Right moves once");
+        // Bridge moves (the host's cursor keys, symbol bar) end it as well.
+        textarea.markWord("defg");
+        await sleep(10);
+        page.api.moveCursor(2);
+        assert.ok(!editor.textInput.inComposition);
+        textarea.compositionUpdate("defg");
+        await sleep(80);
+        assert.deepEqual(cursor(), { row: 1, column: 2 });
+        assert.ok(page.events("imeCompositionEnded").length >= 3);
+    } finally {
+        page.close();
+    }
+});
+
+test("the IME panel's select all and start / end buttons run as editor actions", async () => {
+    const page = await openAndroidEditor("abc\ndefg hij\nhi");
+    try {
+        const { editor, api } = page;
+        const textarea = imeTextarea(page);
+        const selection = () => plain(editor.getSelectionRange());
+        editor.moveCursorTo(1, 2);
+        await sleep(20);
+        textarea.selectionChanged();
+        textarea.markWord("defg");
+        await sleep(10);
+        assert.ok(api.runImeEditingAction("lineEnd", false));
+        assert.deepEqual(plain(editor.getCursorPosition()), { row: 1, column: 8 }, ">| goes to the end of the row");
+        assert.ok(!editor.textInput.inComposition, "and ends Gboard's composition");
+        api.runImeEditingAction("lineStart", false);
+        assert.deepEqual(plain(editor.getCursorPosition()), { row: 1, column: 0 }, "|< at the start of the row stays");
+        editor.moveCursorTo(1, 4);
+        api.runImeEditingAction("lineEnd", true);
+        assert.deepEqual(selection(), { start: { row: 1, column: 4 }, end: { row: 1, column: 8 } }, "Select mode with >|");
+        editor.moveCursorTo(1, 4);
+        api.runImeEditingAction("lineStart", true);
+        assert.deepEqual(selection(), { start: { row: 1, column: 0 }, end: { row: 1, column: 4 } }, "Select mode with |<");
+        textarea.markWord("defg");
+        await sleep(10);
+        assert.ok(api.runImeEditingAction("selectAll", false));
+        assert.equal(editor.getSelectedText(), "abc\ndefg hij\nhi", "select all selects the document");
+        assert.ok(!editor.textInput.inComposition);
+        assert.equal(api.runImeEditingAction("unknown", false), false);
+        assert.equal(editor.getValue(), "abc\ndefg hij\nhi");
     } finally {
         page.close();
     }
