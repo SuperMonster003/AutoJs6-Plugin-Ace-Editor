@@ -499,6 +499,39 @@ for (const svgGutterIcons of [true, false]) {
     });
 }
 
+// Roadmap-Ace-1.44.0.md A3-1, A3-5: a finger on a gutter fold widget toggles the fold, a tap on a fold placeholder
+// expands it. jsdom has no layout, so the widget gets a rectangle and the scroller sits at the origin.
+test("touches toggle gutter fold widgets and expand fold placeholders", async () => {
+    const page = await openEditor();
+    try {
+        const { editor, window, api } = page;
+        const session = editor.session;
+        api.setText("function a() {\n  b();\n}\nfunction c() {\n  d();\n}\n");
+        await sleep(300);
+        render(page);
+        const widget = gutterCell(page, 0).querySelector(".ace_fold-widget");
+        assert.ok(widget, "fold widget on row 0");
+        widget.getBoundingClientRect = () => ({ left: 20, right: 31, top: 0, bottom: 20, width: 11, height: 20 });
+        page.clearCalls();
+        touchEvent(page, "touchstart", widget, 25, 10);
+        touchEvent(page, "touchend", widget, 25, 10);
+        assert.equal(session.getAllFolds().length, 1, "folded by the widget");
+        assert.deepEqual(page.events("gutterFoldToggled"), [{ row: 0 }]);
+        render(page);
+        const placeholder = window.document.querySelector(".ace_text-layer .ace_fold");
+        assert.ok(placeholder, "fold placeholder");
+        page.clearCalls();
+        const x = editor.renderer.$padding + 15 * 10;
+        touchEvent(page, "touchstart", placeholder, x, 10);
+        touchEvent(page, "touchend", placeholder, x, 10);
+        assert.equal(session.getAllFolds().length, 0, "expanded by a tap on the placeholder");
+        assert.equal(page.events("foldPlaceholderTouchExpanded").length, 1);
+        assert.equal(typeof editor.renderer.$padding, "number", "the bridge reads renderer.$padding as a number (A3-7)");
+    } finally {
+        page.close();
+    }
+});
+
 test("ActionMode calls reach the host", async () => {
     const page = await openEditor();
     try {

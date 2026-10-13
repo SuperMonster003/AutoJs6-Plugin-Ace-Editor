@@ -406,7 +406,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 
 ## 7. A3 · 桥接层适配与清理
 
-- [ ] **A3-1** gutter 事件按祖先单元格处理: `editor.on("guttermousedown")` (`:5634-5658`) 用
+- [x] **A3-1** gutter 事件按祖先单元格处理: `editor.on("guttermousedown")` (`:5634-5658`) 用
       `findAncestorWithClassToken(target, "ace_gutter-cell") || findAncestorWithClassToken(target, "ace_gutter-cell_svg-icons")`
       取单元格, 断点命中区改为 `cell.getBoundingClientRect().left + 24`; `isDiagnosticGutterCell` 同时识别 `span.ace_icon` 子节点;
       `isGutterFoldWidgetEvent` 直接接受 `target` 为 `ace_fold-widget` 的情况.
@@ -415,6 +415,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       诊断提示抑制, 折叠占位与三处折叠按钮判断都改为按祖先单元格计算, `isDiagnosticGutterCell` 增加 security / hint. 在 jsdom 中
       (手工设置字体度量与容器尺寸) 实测: 单元格与其子 span 为目标时切换断点, 错误行的 `ace_icon` 为目标时打开诊断标记而非断点.
       折叠按钮依赖布局, 待 A6-3 的执行式测试覆盖后勾选.
+      结论 (2026-10-13): A6-3 的执行式测试覆盖了四种 target: 单元格与其子 span 切换断点 (svg 图标开 / 关两种模式), 注解图标不切换断点,
+      手指按在折叠按钮上 (给按钮设定矩形) 折叠该行并发出 `gutterFoldToggled`; 去掉折叠按钮判断的变异会被检出.
 - [x] **A3-2** 删除 1.4.12 专属代码与注释: `:5443` `global.editor = editor` 的 1.4.12 兼容注释 (赋值本身保留: 性能,
       长行与触摸仪器测试以及其他模块通过 `window.editor` 访问编辑器, 只改注释说明用途); `:131-136` 注释改写 (MAX_LINE_LENGTH 语义见 A6-4);
       `:4678` 与 `:4783` 的 "ACE 1.4.x" 注释; `autojs6_lsp_core.js:144` 的版本字样; `README` 中 "Ace 1.4.12 的 TSX" 说明交给 A4-1.
@@ -428,15 +430,20 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): 代码复核结论为无需修改: 1.44.0 的 `$init` 仍返回 popup, `showDocTooltip` 仍使用 `this.tooltipNode`,
       上游只设置了 `pointerEvents` 与 `overscrollBehavior`, 与桥接层的样式不重复; `Autocomplete.for(editor)` 会给 `editor.completer`
       赋值, 且每次打开弹窗都重新 `setTheme`, 所以继续用 `editor.completer.popup` 即可, 不必主动创建. 真机滚动与主题验证随 G-A3 进行.
-- [ ] **A3-4** 历史操作钩子复核 (`installHistoryOperationHooks`, `:3469`): 对照 1.44.0 `UndoManager.add / undo / redo` 与
+- [x] **A3-4** 历史操作钩子复核 (`installHistoryOperationHooks`, `:3469`): 对照 1.44.0 `UndoManager.add / undo / redo` 与
       `EditSession.undoChanges(deltas, dontSelect)`, 确认 `addUndoableHistoryMarker` 的空 delta (`lines: [""]`) 仍被
       `UndoManager` 接受且不改文本; `markClean / isClean` 语义不变.
       —— 验收: `AceCodeFoldingSmokeTest` 与 `hostReplacementSucceedsWhileUserInputIsReadOnly` 通过; A6-3 增加撤销标记用例.
       进度 (2026-10-13): 两个用例在 G-A1 的 5 台设备上均通过; 1.44.0 `Document.applyDelta` 的空增量守卫与 1.4.12 相同. 撤销标记的执行式用例待 A6-3.
-- [ ] **A3-5** 折叠路径复核: `foldAll` 的 pending 机制 (`:4898`) 依赖 `changeMode` 事件与 `session.foldAll`; 1.44.0
+      结论 (2026-10-13): 两个设备用例在 8 台设备的 G-A1 运行中均通过; A6-3 执行了撤销标记 (不改文本, 修订号前进, 撤销后发出带标记的
+      historyOperation), 带标记的整篇替换撤销 / 重做 (含换行符恢复与回调顺序) 以及 clean 书签.
+- [x] **A3-5** 折叠路径复核: `foldAll` 的 pending 机制 (`:4898`) 依赖 `changeMode` 事件与 `session.foldAll`; 1.44.0
       `session.unfold(null, true)` 与 `$toggleFoldWidget(row, {children, all, siblings})` 行为对照; 折叠占位符点击
       (`installFoldPlaceholderClickCapture`, `:5411`) 的 `ace_fold` 类名不变.
       —— 验收: `wholeDocumentFoldingPreservesEditingStateAndWorksReadOnly` 通过; 触摸点击折叠占位符展开.
+      结论 (2026-10-13): `AceCodeFoldingSmokeTest` (含上述用例) 在 8 台设备的 G-A1 运行中通过; 执行式测试中全部折叠 / 展开正常,
+      在折叠占位符上 touchstart + touchend 经 `handleFoldPlaceholderTouch` 展开折叠并发出 `foldPlaceholderTouchExpanded`, 改掉 `ace_fold`
+      类名判断的变异会被检出. 1.44.0 的占位符类名仍为 `ace_fold`.
 - [ ] **A3-6** IME 路径复核: `getImeTextInputElement` / `resetImeTextInputSelectionWindow` 对接 1.44.0 `TextInput`
       (`getElement`, `resetSelection`), 复核 `onInput` 新增的 `isMobile` 重置条件是否与桥接层 `IME_TEXT_INPUT_PROGRAMMATIC_SELECTION_SUPPRESS_MS`
       窗口冲突; 需要时把 1.44.0 重置事件记入 `imeTextInputSelectionSuppressed` 事件的 reason.
@@ -445,13 +452,17 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `scrollToPosition` (`:4555`) 使用的 renderer 成员在 1.44.0 均存在; 复核 `renderer.$padding` 在 1.44.0 是否仍为数字
       (文本层 `$padding` 与 gutter `$padding` 对象不同, 桥接层只读 renderer 的).
       —— 验收: 双指缩放后焦点位置不漂移 (附录 B 第 13 项).
+      进度 (2026-10-13): 1.44.0 中 `renderer.$padding` 仍为数字 (执行式测试断言), 桥接层用到的 renderer 成员都在 A6-2 的类型检查中
+      (公开成员来自 ace.d.ts, `$padding` 等私有成员写入 `ace-private.d.ts`). 双指缩放焦点为附录 B 第 13 项手动检查.
 - [ ] **A3-8** CSS 类审计 (`autojs6.css`): `.ace_gutter-cell.ace_breakpoint` 增加 `.ace_gutter-cell_svg-icons.ace_breakpoint`;
       `.ace_doc-tooltip` / `.ace_tooltip` / `.error_widget` 的尺寸限制在 1.44.0 结构下复核; 新增 `.ace_inline_button.ace_toggle_wrap`
       (超长行溢出按钮) 的触摸友好尺寸; 暗色主题下 `ace_line-hover` (setSelectOnHover=false 时的悬停标记) 配色.
       —— 验收: 8 台设备截图抽查无明显错位; 暗色主题下弹窗与提示框可读.
-- [ ] **A3-9** Worker 策略复核: `shouldUseAceWorkerForMode` (`:267`) 维持 lua 开启; 确认 1.44.0 Blob worker 在
+- [x] **A3-9** Worker 策略复核: `shouldUseAceWorkerForMode` (`:267`) 维持 lua 开启; 确认 1.44.0 Blob worker 在
       `https://appassets.androidplatform.net` 源下 `importScripts` 成功 (G-A1 已验); JSON worker 交给 A4-3.
       —— 验收: `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua` 通过.
+      结论 (2026-10-13): 该用例属于 G-A1 的 `AceLuaSemanticSmokeTest`, 在 8 台设备上通过 (Blob worker 的 `importScripts` 正常);
+      执行式测试断言只有 Lua 文档启用 Ace worker, 长行安全模式下关闭.
 - [x] **A3-10** 诊断快照与事件: `AceDiagnostics` 增加 `aceVersion` (读取 `ace.version`, 1.44.0 为 "1.44.0") 与 A2-7 的 `mobileOverlay`;
       `ACE_RUNTIME_REVISION` 已在 A1-3 更新.
       —— 验收: `sessionDiagnosticsExposeExecutionAlignedTypeScriptProfiles` 扩展断言 `aceVersion == "1.44.0"`.
