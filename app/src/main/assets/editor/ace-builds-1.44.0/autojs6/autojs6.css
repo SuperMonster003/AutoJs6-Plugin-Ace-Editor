@@ -84,9 +84,12 @@ body.ace-ready #editor {
     padding-left: calc(1em + 3px);
 }
 
-#editor .ace_gutter-cell_svg-icons .ace_gutter_annotation.ace_icon_svg {
-    width: 1em;
+#editor .ace_gutter-cell_svg-icons .ace_gutter_annotation {
     margin-left: calc(-1em - 2px);
+}
+
+#editor .ace_gutter-cell_svg-icons .ace_gutter_annotation .ace_icon_svg {
+    width: 1em;
     -webkit-mask-size: 1em;
     mask-size: 1em;
 }

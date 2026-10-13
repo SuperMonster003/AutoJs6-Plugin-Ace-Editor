@@ -1688,6 +1688,37 @@ test("the completion popup has no touch handler of Ace's own", async () => {
     }
 });
 
+// Manual test V1: the SVG gutter icons follow the font size. The size rules must match the elements Ace renders: the
+// icon is the .ace_icon_svg inside .ace_gutter_annotation (a first version styled the wrapper and changed nothing).
+test("the SVG gutter icon size rules match Ace's icon elements", async () => {
+    const page = await openEditor({ host: { isSvgGutterIconsEnabled: true } });
+    try {
+        const { editor, window } = page;
+        page.api.setText("const a = (;\nconst b = 2;");
+        editor.session.setAnnotations([{ row: 0, column: 0, type: "error", text: "')' expected." }]);
+        render(page);
+        const icon = window.document.querySelector(".ace_gutter-cell_svg-icons .ace_gutter_annotation .ace_icon_svg");
+        assert.ok(icon, "Ace rendered an SVG annotation icon");
+        const rules = [];
+        // jsdom gives the sheets no href; Ace's own rules use none of the values checked below.
+        for (const sheet of window.document.styleSheets) {
+            for (const rule of sheet.cssRules) {
+                if (rule.style) rules.push(rule);
+            }
+        }
+        assert.ok(rules.length > 0, "the style sheets are loaded");
+        const matching = (element, property, value) => rules.filter((rule) =>
+            rule.style.getPropertyValue(property) === value && element.matches(rule.selectorText));
+        assert.equal(matching(icon, "width", "1em").length, 1, "an autojs6.css rule sizes the icon element");
+        assert.equal(matching(icon, "-webkit-mask-size", "1em").length, 1, "and its mask");
+        assert.equal(matching(icon.parentNode, "margin-left", "calc(-1em - 2px)").length, 1, "and offsets the annotation");
+        assert.equal(matching(icon.closest(".ace_gutter-cell_svg-icons"), "padding-left", "calc(1em + 3px)").length, 1,
+            "and widens the cell padding with the font");
+    } finally {
+        page.close();
+    }
+});
+
 // ---------------------------------------------------------------------------------------------------------------
 
 async function main() {
