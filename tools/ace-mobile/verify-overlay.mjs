@@ -102,6 +102,45 @@ function verifyTouchScenarios() {
     return compared;
 }
 
+// The host cancels at the start of every single finger scroll; the 1.4.12 handler never saw that, so the overlay must
+// ignore it. A touch cancel, in contrast, must stop a pending long press.
+function verifyCancellation() {
+    const nonTerminal = ["B6 drag the cursor handle", "B8 slow scroll drag does not fling", "B9 fast swipe flings and restarts the action mode"];
+    for (const name of nonTerminal) {
+        const scenario = TOUCH_SCENARIOS.find((candidate) => candidate.name === name);
+        check(!!scenario, `missing scenario ${name}`);
+        if (!scenario) continue;
+        const firstMove = scenario.steps.findIndex((step) => step.move);
+        const steps = scenario.steps.slice();
+        steps.splice(firstMove + 1, 0, { run: (env) => env.overlayController && env.overlayController.cancel("single_finger_scroll") });
+        const traces = ["original", "overlay"].map((kind) => runVariant(kind, { ...scenario, steps }));
+        const difference = firstDifference(traces[0], traces[1]);
+        check(!difference, `"${name}" with a single_finger_scroll cancel differs at #${difference && difference.index}: ${difference && difference.left} != ${difference && difference.right}`);
+    }
+    const longPress = {
+        name: "touch cancel stops a pending long press",
+        steps: [{ down: [184, 150] }, { wait: 200 }, { run: (env) => env.overlayController && env.overlayController.cancel("dom_touchcancel") }, { wait: 600 }],
+    };
+    const trace = runVariant("overlay", longPress);
+    check(!trace.some((entry) => entry[0] === "selection.selectWord" || entry[0] === "editor.startActionMode"), "a touch cancel did not stop the long press");
+}
+
+function runVariant(kind, scenario) {
+    const env = createEnvironment();
+    env.editor.$toDestroy = [];
+    if (scenario.setup) scenario.setup(env);
+    if (kind === "original") {
+        loadImplementation("original", env)
+            .require("ace/mouse/touch_handler")
+            .addTouchListeners(env.editor.container, env.editor, { $magnifierEnabled: false });
+    } else {
+        env.overlayController = loadOverlay(env)
+            .require("autojs6/mobile/touch_handler")
+            .addTouchListeners(env.editor.container, env.editor, { isMagnifierEnabled: () => false });
+    }
+    return comparableTrace(runTouchScenario(env, scenario));
+}
+
 function verifyScroller() {
     for (let round = 0; round < 120; round++) {
         const results = ["original", "overlay"].map((kind) => {
@@ -250,6 +289,7 @@ function main() {
     verifyVelocityTracker();
     const compared = verifyTouchScenarios();
     verifyActionMode();
+    verifyCancellation();
     if (failures.length) {
         for (const failure of failures.slice(0, 20)) console.error(`FAIL ${failure}`);
         if (failures.length > 20) console.error(`... ${failures.length - 20} more`);

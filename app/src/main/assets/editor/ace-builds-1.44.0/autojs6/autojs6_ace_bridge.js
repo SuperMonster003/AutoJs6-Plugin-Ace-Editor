@@ -1804,7 +1804,7 @@
         }
         try {
             if (mobileOverlay) {
-                mobileOverlay.cancel();
+                mobileOverlay.cancel(reason);
             }
         } catch (ignoreOverlay) {
             // The overlay only holds timers and the magnifier.
@@ -5790,7 +5790,7 @@
             setTouchMagnifierEnabled: function(enabled) {
                 touchMagnifierEnabled = enabled === true || String(enabled).toLowerCase() === "true";
                 if (!touchMagnifierEnabled && mobileOverlay) {
-                    mobileOverlay.cancel();
+                    mobileOverlay.hideMagnifier();
                 }
             },
             getMobileOverlayState: function() {

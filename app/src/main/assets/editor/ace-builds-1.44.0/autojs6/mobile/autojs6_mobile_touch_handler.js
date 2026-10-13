@@ -41,6 +41,10 @@ ace.define(
         var DOUBLE_TAP_MS = 300;
         var FLING_FRAME_MS = 2;
         var DRAG_LOOK_AHEAD_COLUMNS = 5;
+        // Cancellation reasons after which the current gesture cannot continue. The host also cancels at the start of
+        // every single finger scroll ("single_finger_scroll") and around fold placeholder taps; the 1.4.12 touch
+        // handler never saw those, so they are ignored here.
+        var TERMINAL_CANCEL_REASONS = ["dom_touchcancel", "window_blur", "pinch_zoom_begin", "pinch_action_mode"];
 
         // options.isMagnifierEnabled(): whether drags show the magnifier.
         // options.capture: register in the capture phase and stop propagation (fallback when Ace's own touch
@@ -393,8 +397,12 @@ ace.define(
             });
 
             return {
-                // Stops a pending long press, a fling and the magnifier (touch cancel, window blur, pinch).
-                cancel: function() {
+                // Stops a pending long press, a fling and the magnifier when the gesture ended outside the handler
+                // (touch cancel, window blur, pinch). The touch mode is kept, as remaining fingers may still move.
+                cancel: function(reason) {
+                    if (TERMINAL_CANCEL_REASONS.indexOf(String(reason)) < 0) {
+                        return false;
+                    }
                     if (longPressTimer) {
                         clearTimeout(longPressTimer);
                         longPressTimer = null;
@@ -402,8 +410,7 @@ ace.define(
                     stopFlingTimer();
                     scroller.abortAnimation();
                     hideMagnifier();
-                    maybeTap = false;
-                    mode = "";
+                    return true;
                 },
                 hideMagnifier: hideMagnifier,
                 isMagnifierCreated: function() {
@@ -495,6 +502,7 @@ ace.define(
 
         return {
             cancel: controller.cancel,
+            hideMagnifier: controller.hideMagnifier,
             getState: function() {
                 return {
                     installed: state.installed,

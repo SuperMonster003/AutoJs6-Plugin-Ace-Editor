@@ -290,7 +290,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       Java 关键字补全缺失 (新增 `autojs6/autojs6_mode_patches.js`), 以及 OPD2413 上图形内存增加约 80 MiB 导致 Python 语义冒烟的
       300 MiB 门间歇失败 (`autojs6.css` 补回 1.4.12 的 `will-change: transform`). 22120RN86C (WebView 111) 16/18: TypeScript 诊断
       超过 2000 ms 被判超时, 以及 ECJ 用例等待超时; 同一设备上 A0 版同样失败这两项 (对比运行中 A0 失败 2 项, A1 失败 1 项), 属于该设备
-      既有的性能问题, 不是回退. G8441, XQ-AT72, XQ-DQ72 当时被其他会话占用, 待让出后补跑; 门在 8 台补齐前不勾选.
+      既有的性能问题, 不是回退. G8441 (Chrome 126) 用 A2 构建补跑 18/18 通过. XQ-AT72, XQ-DQ72 当时被其他会话占用, 待让出后补跑;
+      门在 8 台补齐前不勾选.
 
 ## 6. A2 · 移动端交互覆盖层移植
 
@@ -352,7 +353,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `installTouchCursorSelectionGuard` (`:3770`) 与 `installImeTextInputSelectionWindow` (`:2890`) 不变;
       `global.AutoJsAce` 增加 `getMobileOverlayState()` 供诊断快照使用 (`AceDiagnostics` 增加字段 `mobileOverlay`).
       —— 验收: 诊断快照包含 `mobileOverlay: {installed, uninstalledUpstreamListeners, fallbackCapture, magnifier}`.
-      进度 (2026-10-13): `cancelAceMobileTouchInteraction` 已调用覆盖层的 `cancel()` (清长按计时, 停惯性, 隐藏放大镜);
+      进度 (2026-10-13): `cancelAceMobileTouchInteraction(reason)` 调用覆盖层的 `cancel(reason)`, 只对 `dom_touchcancel`,
+      `window_blur`, `pinch_zoom_begin`, `pinch_action_mode` 生效 (清长按计时, 停惯性, 隐藏放大镜, 保留手势模式); 宿主在单指滑动开始
+      与折叠占位点击时发出的取消被忽略, 因为 1.4.12 的触摸处理器从未收到过它们;
       `AutoJsAce.getMobileOverlayState()` 已提供. Kotlin 诊断快照字段与 A3-10 的 `aceVersion` 一起加.
 - [x] **A2-8** `autojs6.css`: 删除无用的 `.ace_mobile-menu` 规则 (三段 `body.*  .ace_mobile-menu` 与 `.ace_mobile-menu` 本体),
       新增 A2-6 样式; `autojs6_editor.html` 按顺序加载 5 个覆盖层脚本 (scroller -> velocity_tracker -> magnifier -> action_mode -> touch_handler);
@@ -376,6 +379,11 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [ ] **G-A2** 交互等价门: 8 台设备逐项执行附录 B, 每项与 A0-6 的 1.4.12 实测一致 (惯性手感允许主观 "接近");
       自动部分为在每台设备上运行 `AceTouchInteractionDeviceTest` 并与 `tools/ace-mobile/device-records/` 中同设备的 A0 记录逐场景比对
       (缺 A0 记录的设备先用 `build/ace-perf/apk-a0/` 中的 A0 版 APK 补录);
+      进度 (2026-10-13): G8441 上 A2 构建通过 `AceTouchInteractionDeviceTest`, 逐场景与 A0 记录一致 (记录在
+      `tools/ace-mobile/device-records/a2-1.44.0-BH900ASK9E.jsonl`), 只有两类差异: 惯性滚动的最终位置 (同一版本重复运行的波动同样大:
+      A0 两次 462 / 683, A2 两次 489 / 564), 以及双指场景不再在缩放中途触发长按 (见 A2-7 的取消语义, 属于改进). 首轮真机运行发现宿主在
+      每次单指滑动开始时都会发出 `single_finger_scroll` 取消, 覆盖层的 `cancel()` 因此改为只响应 touchcancel, 窗口失焦与双指开始,
+      且不清空手势模式, 离线校验新增了对应用例.
       ActionMode 工具条 (`AceSelectionToolbar`) 出现 / 消失时机一致; 旋转屏幕与软键盘弹出后拖拽仍准确.
       (降级路径: 若 `$toDestroy` 与 capture 兜底在某设备都无法阻止上游处理 -> 在本文件记录该 WebView 版本,
       并评估为该设备启用 "上游触摸处理 + 覆盖层只接管 ActionMode" 的降级模式; 仍不得改动官方文件.)

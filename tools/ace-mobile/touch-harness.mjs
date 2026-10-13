@@ -737,6 +737,8 @@ export function runTouchScenario(env, scenario) {
     for (const step of scenario.steps) {
         if (step.wait !== undefined) {
             env.clock.advance(step.wait);
+        } else if (step.run) {
+            step.run(env);
         } else if (step.down) {
             fingers = [step.down];
             dispatchTouch(env, "touchstart", fingers, [step.down], targetOf(step));
