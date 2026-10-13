@@ -15,6 +15,7 @@ Ace 1.44.0 升级前, AutoJs6 内置的是一份带移动端定制的 Ace 1.4.12
 | `touch-harness.mjs` | 无浏览器的确定性触摸仿真环境 (假时钟, 假 DOM, 假编辑器), 45 个手势场景与 5 个 ActionMode 场景 |
 | `verify-overlay.mjs` | 覆盖层与旧版的比对 (Gradle `verifyAutoJs6AceMobileOverlay`, 挂在 `check` 上) |
 | `device-records/` | 真机触摸用例 (`AceTouchInteractionDeviceTest`) 的逐场景记录: `a0-1.4.12-*` 为旧版, `a2-1.44.0-*` 为覆盖层 |
+| `manual/` | 手测文件生成器与新开关的切换脚本, 用法见 `docs/development/ace-1.44.0-manual-tests.md` |
 
 ```powershell
 node tools/ace-mobile/verify-overlay.mjs

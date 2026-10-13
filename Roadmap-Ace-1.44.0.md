@@ -440,6 +440,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       的每一行都是 JavaScript 错误, 行号栏中点落在诊断标记区, 点击打开了诊断提示 (桥接层既有行为); 旧版与此前构建在该机上 TS 不可用,
       只切换断点. B2 记录现在附带该行的诊断数 (`row3Diagnostics`). 设备记录已更新 (`a0-1.4.12-AVD_API_27`, `a2-1.44.0-AVD_API_27`,
       `a2-1.44.0-QV770340J7`, `a2-1.44.0-bek749scrwv4wo8h` 为重写后的构建).
+      补跑 (2026-10-13, A9 构建): x86_64 API 36.1 16 KB 模拟器 (WebView 134) 的触摸用例两轮都只有 "B1 quick tap" 失败 (首个注入的
+      触摸未到达 WebView, 调用轨迹为空), 与该模拟器的 A0 记录 (`build/ace-perf/touch-a0-emulator-5574.jsonl`) 及 A5 构建的两次记录相同,
+      属环境因素; 其余场景与旧版一致. 附录 B 手动项的逐项步骤, 期望与参照见 `docs/development/ace-1.44.0-manual-tests.md`.
       ActionMode 工具条 (`AceSelectionToolbar`) 出现 / 消失时机一致; 旋转屏幕与软键盘弹出后拖拽仍准确.
       (降级路径: 若 `$toDestroy` 与 capture 兜底在某设备都无法阻止上游处理 -> 在本文件记录该 WebView 版本,
       并评估为该设备启用 "上游触摸处理 + 覆盖层只接管 ActionMode" 的降级模式; 仍不得改动官方文件.)
@@ -520,6 +523,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (TS 项目诊断在冷启动预算下恢复), ECJ 用例单独运行通过; x86 API 27 模拟器 (Chrome 69) 全套 28 项第二轮中 26 项通过, 余下的
       符号高亮用例 (未识别 TS / Pyright 不可用) 已修正并在该机通过, 触摸用例的长按偶发失败单独两轮通过. 首轮该模拟器出现一次测试进程
       崩溃 (WebView 渲染进程被回收), 未复现. 8 台的 instrumentation 均已覆盖; 附录 C 为手动项, 待维护者统一手测.
+      补跑 (2026-10-13, A9 构建): x86_64 API 36.1 16 KB 模拟器全套 28 项中 27 项通过 (2 个编译器探针按设计跳过), 唯一失败为触摸用例的
+      B1 首次注入 (见 G-A2). 附录 C 的逐项步骤见 `docs/development/ace-1.44.0-manual-tests.md`.
 
 ## 8. A4 · 语言资源
 
@@ -798,6 +803,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       结果见 G-A3. 剩 XQ-DQ72 与两台模拟器.
       补跑 (2026-10-13): XQ-DQ72 与 x86 API 27 模拟器见 G-A3 补跑; x86_64 API 36.1 16 KB 模拟器此前已跑 G-A1 与触摸用例
       (A5 构建), 全套待该模拟器空出 (目前由 3-Maple Image 会话使用).
+      补跑 (2026-10-13): x86_64 API 36.1 16 KB 模拟器全套见 G-A3. 至此 8 台的全套都已运行; 未通过的只有该模拟器上触摸用例的首次注入
+      (旧版同样失败) 与此前记录的偶发项.
 - [x] **A8-3** 性能复测: 三台基线真机各 3 轮 `measure-editor-performance.ps1 -SkipBuild -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F`,
       与 A0-2 基线逐项比较; 另在 OPD2413 与 22120RN86C 各取 3 轮作为参考 (不设门).
       —— 验收: 三项中位数相对 A0-2 不超过 +10% (功能优先档); 超出则在 G-A8 决策.
@@ -807,6 +814,10 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [ ] **A8-4** 手测清单: 附录 B 在 8 台设备, 附录 C 在 6 台真机 (Gboard + 一款中文输入法; 模拟器用 AOSP 键盘跑附录 C 的 1-6 项);
       记录为 "通过 / P1 / P2 / P3", P1 必须为 0.
       —— 验收: 清单表进入发布文档.
+      进度 (2026-10-13): 逐项步骤, 期望, 1.4.12 参照与分级标准写在 `docs/development/ace-1.44.0-manual-tests.md` (附录 B 20 项,
+      附录 C 12 项, 视觉与补全 10 项); 测试文件由 `tools/ace-mobile/manual/generate-fixtures.mjs` 生成, 新开关在宿主露出前用其中的
+      `00-toggles.js` 切换 (写入宿主偏好, 重新打开文件生效). XQ-AT72 已就绪: 宿主换为含 Editor 契约 7 (宿主提交 515a92f2c1) 的构建,
+      此前上午的宿主只支持契约 6, 打开文件会静默退回原生编辑器. 待维护者手测.
 - [ ] **A8-5** 体积与对齐: 记录 release universal APK 与 5 个 ABI 变体大小, Ace 资产增量 (相对 1.32.0), `docs/16kb.md` 的
       16 KB 对齐检查通过, `verifySignedReleaseArtifacts` 通过.
       —— 验收: 数字写入发布文档与 `MILESTONE_BASELINES.md` "A 系列资产增量" 节.
@@ -875,6 +886,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 每项记录: 设备 / 1.4.12 实测 (A0-6) / 2.0.0 实测 / 结论. "自动" 列为 `AceTouchInteractionDeviceTest` 中的场景名, 原始记录在
 `tools/ace-mobile/device-records/a0-1.4.12-<serial>.jsonl` (G8441 = BH900ASK9E, 23046RP50C = 968e9f18, XQ-AT72 = QV710AF65F);
 离线逐调用比对见 `tools/ace-mobile/touch-harness.mjs`. "期望" 已按 A0-4 / A0-6 查明的 1.4.12 实际行为修正.
+逐项的操作步骤, 测试文件与分级标准见 `docs/development/ace-1.44.0-manual-tests.md`.
 
 | # | 操作 | 期望 (与 1.4.12 定制版一致) | 自动 | 1.4.12 实测 (A0-6, 2026-10-13, 三台) |
 |---|---|---|---|---|
@@ -900,6 +912,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 | 20 | 拖动后停住 200 ms 再抬手 (期间无触摸事件) | 仍按停住前的速度惯性 | pause before lifting (只记录) | 23046RP50C 408 -> 415, XQ-AT72 524 -> 540 (G8441 首轮未含该场景) |
 
 ## 附录 C · IME 手测清单 (G-A3, G-A5-7, A8-4)
+
+逐项的操作步骤与样例文本见 `docs/development/ace-1.44.0-manual-tests.md` 第 4 节.
 
 | # | 场景 | 期望 |
 |---|---|---|
