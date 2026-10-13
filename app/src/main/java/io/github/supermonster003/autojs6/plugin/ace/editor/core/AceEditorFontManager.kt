@@ -521,7 +521,7 @@ class AceEditorFontManager(
 
     companion object {
         private const val BUNDLED_IOSEVKA_ASSET_PATH =
-            "editor/ace-builds-1.4.12/fonts/iosevka/Iosevka-Regular.woff2"
+            "editor/ace-builds-1.44.0/fonts/iosevka/Iosevka-Regular.woff2"
         private const val CATALOG_KEY_ID = "p256-fc433f8ba81333f7"
         private const val CATALOG_URL =
             "https://raw.githubusercontent.com/SuperMonster003/AutoJs6-Shared-Assets/main/ace-fonts/catalogs/catalog-v1.json"

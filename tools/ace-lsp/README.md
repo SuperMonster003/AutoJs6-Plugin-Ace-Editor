@@ -2,7 +2,7 @@
 
 The source declarations remain under:
 
-`app/src/main/assets/editor/ace-builds-1.4.12/autojs6/types`
+`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/types`
 
 Generate the runtime bundles with:
 
@@ -74,7 +74,7 @@ Check that committed assets exactly match the generator without writing them:
 
 The lower-level CLI also supports `--out-dir <path>` and `--check`. The default
 output is
-`app/src/main/assets/editor/ace-builds-1.4.12/autojs6/indices/`. Language keys,
+`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/indices/`. Language keys,
 modules, members, aliases, and generated files are sorted before serialization,
 so identical generator input produces a byte-identical result.
 

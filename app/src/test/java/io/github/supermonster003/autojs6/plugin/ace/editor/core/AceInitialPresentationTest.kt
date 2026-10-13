@@ -10,8 +10,8 @@ class AceInitialPresentationTest {
     private val editorRoot by lazy {
         val workingDirectory = File(checkNotNull(System.getProperty("user.dir")))
         listOf(
-            File(workingDirectory, "app/src/main/assets/editor/ace-builds-1.4.12"),
-            File(workingDirectory, "src/main/assets/editor/ace-builds-1.4.12"),
+            File(workingDirectory, "app/src/main/assets/editor/ace-builds-1.44.0"),
+            File(workingDirectory, "src/main/assets/editor/ace-builds-1.44.0"),
         ).first(File::isDirectory)
     }
 

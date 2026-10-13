@@ -3693,9 +3693,9 @@ class AceCodeEditor @JvmOverloads constructor(
         private const val VIRTUAL_FONT_PATH = "/autojs6-fonts/"
         private const val APP_ASSET_ORIGIN = "https://appassets.androidplatform.net"
         private const val BOOLEAN_ACK_TIMEOUT_MS = 10_000L
-        private const val ASSET_URL_PREFIX = "$APP_ASSET_ORIGIN${APP_ASSET_PATH}editor/ace-builds-1.4.12/"
+        private const val ASSET_URL_PREFIX = "$APP_ASSET_ORIGIN${APP_ASSET_PATH}editor/ace-builds-1.44.0/"
         private const val EDITOR_URL = "${ASSET_URL_PREFIX}autojs6_editor.html"
-        private const val ACE_RUNTIME_REVISION = "ace-builds-1.4.12-autojs6"
+        private const val ACE_RUNTIME_REVISION = "ace-builds-1.44.0-autojs6"
         private const val DEFAULT_DARK_THEME = "ace/theme/tomorrow_night"
         private const val DEFAULT_LIGHT_THEME = "ace/theme/textmate"
         private const val FONT_ERROR_DIAGNOSTIC_LIMIT = 1_024

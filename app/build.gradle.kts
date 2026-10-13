@@ -17,14 +17,17 @@ val globalApplicationId = "io.github.supermonster003.autojs6.plugin.ace.editor"
 
 var isSignsValid = false
 
+// Ace distribution root inside the APK assets (Roadmap-Ace-1.44.0.md A1-3).
+val aceBuildsAssetRoot = "editor/ace-builds-1.44.0"
+
 val autoJs6LspDeclarationsDirectory = layout.projectDirectory.dir(
-    "src/main/assets/editor/ace-builds-1.4.12/autojs6/types",
+    "src/main/assets/$aceBuildsAssetRoot/autojs6/types",
 )
 val autoJs6TypeScriptDirectory = layout.projectDirectory.dir(
-    "src/main/assets/editor/ace-builds-1.4.12/autojs6/typescript",
+    "src/main/assets/$aceBuildsAssetRoot/autojs6/typescript",
 )
 val autoJs6EditorAssetsDirectory = layout.projectDirectory.dir(
-    "src/main/assets/editor/ace-builds-1.4.12/autojs6",
+    "src/main/assets/$aceBuildsAssetRoot/autojs6",
 )
 val autoJs6LanguageIndicesDirectory = autoJs6EditorAssetsDirectory.dir("indices")
 val autoJs6PythonWorkerDirectory = autoJs6EditorAssetsDirectory.dir("python")
@@ -32,7 +35,7 @@ val autoJs6LuaRuntimeDirectory = layout.projectDirectory.dir("src/main/assets/lu
 val autoJs6LuaJniDirectory = layout.projectDirectory.dir("src/main/jniLibs")
 val autoJs6JavaRuntimeDirectory = layout.projectDirectory.dir("src/main/assets/java/ecj")
 val aceDistributionAssetsDirectory = layout.projectDirectory.dir(
-    "src/main/assets/editor/ace-builds-1.4.12/src-min-noconflict",
+    "src/main/assets/$aceBuildsAssetRoot/src-min-noconflict",
 )
 val autoJs6NodeExecutable = providers.gradleProperty("autojs6.nodeExecutable").orElse("node")
 val autoJs6LanguageIndexGenerator = rootProject.layout.projectDirectory.file(
@@ -153,7 +156,7 @@ val verifyAutoJs6LuaLanguageServer = tasks.register<Exec>("verifyAutoJs6LuaLangu
     val client = autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js")
     val bridge = autoJs6EditorAssetsDirectory.file("autojs6_ace_bridge.js")
     val editorHtml = layout.projectDirectory.file(
-        "src/main/assets/editor/ace-builds-1.4.12/autojs6_editor.html",
+        "src/main/assets/$aceBuildsAssetRoot/autojs6_editor.html",
     )
     inputs.files(
         verifier,
@@ -212,7 +215,7 @@ val verifyAutoJs6JavaSemanticRuntime = tasks.register<Exec>("verifyAutoJs6JavaSe
         autoJs6JavaRuntimeDirectory.file("THIRD_PARTY_LICENSES.txt"),
         autoJs6EditorAssetsDirectory.file("autojs6_java_provider.js"),
         autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js"),
-        layout.projectDirectory.file("src/main/assets/editor/ace-builds-1.4.12/autojs6_editor.html"),
+        layout.projectDirectory.file("src/main/assets/$aceBuildsAssetRoot/autojs6_editor.html"),
         layout.projectDirectory.file(
             "src/main/java/io/github/supermonster003/autojs6/plugin/ace/editor/core/AceBridge.kt",
         ),
@@ -293,7 +296,7 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     val compatibility = autoJs6LspDeclarationsDirectory.file("lib.autojs6.extra.d.ts")
     fun generatedDeclaration(groupId: String) = generateAutoJs6LspDeclarations.flatMap { task ->
         task.outputDirectory.file(
-            "editor/ace-builds-1.4.12/autojs6/types/generated/lib.autojs6.$groupId.d.ts",
+            "$aceBuildsAssetRoot/autojs6/types/generated/lib.autojs6.$groupId.d.ts",
         )
     }
     val generatedCore = generatedDeclaration("core")

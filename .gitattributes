@@ -21,5 +21,9 @@ app/src/main/assets/editor/ace-builds-*/autojs6/indices/*.js text eol=lf
 # Keep the exact upstream bytes on every platform; core.autocrlf must not rewrite them.
 app/src/main/assets/luals/** -text
 
+# Ace assets are compared byte-for-byte with the pinned ace-builds tarball (Roadmap-Ace-1.44.0.md A6-1).
+app/src/main/assets/editor/ace-builds-*/src-min-noconflict/** -text -whitespace
+app/src/main/assets/editor/ace-builds-*/LICENSE -text
+
 # Byte-exact slices of the legacy customized ace.js; verify-reconstructed.mjs compares their SHA-256.
-tools/ace-mobile/reconstructed/original/*.min.js -text
+tools/ace-mobile/reconstructed/original/*.min.js -text -whitespace

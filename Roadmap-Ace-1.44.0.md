@@ -174,7 +174,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 | 里程碑 | 内容 | 风险 | 前置 | 状态 |
 |---|---|---|---|---|
 | A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 进行中 (剩 A0-6 设备实测) |
-| A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 未开始 |
+| A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 进行中 (剩 G-A1 设备门) |
 | A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 未开始 |
 | A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 未开始 |
 | A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 未开始 |
@@ -239,32 +239,38 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 
 ## 5. A1 · 官方资产替换与目录改名
 
-- [ ] **A1-1** 新建 `app/src/main/assets/editor/ace-builds-1.44.0/`, 从 A0-3 的解压目录按字节复制
+- [x] **A1-1** 新建 `app/src/main/assets/editor/ace-builds-1.44.0/`, 从 A0-3 的解压目录按字节复制
       `src-min-noconflict/` 下当前集合的同名文件 (ace.js, ext-language_tools, ext-searchbox, ext-beautify, 8 个 mode,
       worker-javascript, worker-lua, 48 个主题, snippets/{java,javascript,json,lua,typescript}.js) 以及新增的
       `mode-tsx.js`, `worker-json.js`, `ext-whitespaces_in_selection.js`, `snippets/tsx.js`; 复制上游 `LICENSE`.
       保留项目维护的 `snippets/python.js`, `snippets/kotlin.js`, `theme-visual_studio.js`, `theme-visual_studio_dark.js`;
       `mode-kotlin.js` 先沿用项目版本 (A4-2 再切换).
       —— 验收: 除保留项外, 每个文件 SHA-256 与 A0-3 解压目录一致 (A6-1 的清单生成器输出证明).
-- [ ] **A1-2** `git mv` 旧目录下 `autojs6/`, `autojs6_editor.html`, `fonts/` 到新目录, 删除旧目录; 不改动任何项目脚本内容.
+      结论 (2026-10-13): 70 个文件与 `build/ace-upstream/1.44.0` 逐字节一致 (含 4 个新增文件与上游 LICENSE, LICENSE 文本与 1.4.12 相同); 5 个保留项按 Git 对象原样 (LF) 恢复. 提前加入 `.gitattributes` 的 `src-min-noconflict/** -text` 与 `LICENSE -text` (A6-1 的一部分), 检出不再改写字节.
+- [x] **A1-2** `git mv` 旧目录下 `autojs6/`, `autojs6_editor.html`, `fonts/` 到新目录, 删除旧目录; 不改动任何项目脚本内容.
       —— 验收: `git status` 显示为 rename, 旧目录不存在.
-- [ ] **A1-3** 按附录 A 更新全部引用: `AceEditorAssets.kt:7`, `AceBridge.kt:325`, `AceCodeEditor.kt:3696/3698`
+      结论 (2026-10-13): 改为整目录 `git mv ace-builds-1.4.12 ace-builds-1.44.0`, 299 个文件全部识别为 rename, 项目脚本内容未改动.
+- [x] **A1-3** 按附录 A 更新全部引用: `AceEditorAssets.kt:7`, `AceBridge.kt:325`, `AceCodeEditor.kt:3696/3698`
       (`ACE_RUNTIME_REVISION` 改为 `ace-builds-1.44.0-autojs6`), `AceEditorFontManager.kt:524`,
       `app/build.gradle.kts:21/24/27/35/156/215/296`, `tools/ace-lsp/*.mjs` 12 处,
       JVM 测试 5 个文件, `THIRD_PARTY_NOTICES.md`, `tools/ace-lsp/README.md`, `Roadmap.md` 与 `MILESTONE_BASELINES.md`
       中的路径说明 (历史表格中的版本字样保留, 加注 "已于 2.0.0 迁移"). `ace_font_catalog_v1.json` 不改 (见 §2.4 第 9 条).
       —— 验收: `grep -rn "ace-builds-1.4.12"` 在仓库 (排除 `.git`, `build/`, `ace_font_catalog_v1.json`, 本文件 §2 与附录)
       无命中; `:app:testDebugUnitTest` 通过 (A1-5 修改后).
-- [ ] **A1-4** `autojs6_editor.html`: 在 ext-beautify 之后增加 `ext-whitespaces_in_selection.js`; 预留覆盖层脚本位置
+      结论 (2026-10-13): Gradle 提取 `aceBuildsAssetRoot`; Kotlin 4 处, JVM 测试 5 个文件, `tools/ace-lsp` 7 个脚本与 README, `THIRD_PARTY_NOTICES.md` (Ace 段改为 1.44.0 并写明 tarball, shasum, integrity 与 5 个项目维护文件), `Roadmap.md` 2 处已更新. `ACE_RUNTIME_REVISION` 为 `ace-builds-1.44.0-autojs6`. 剩余旧路径只在 `ace_font_catalog_v1.json` (按决策保留), `fetch-ace-upstream.mjs` (tarball 地址) 与 `tools/ace-mobile/` (重建源码的来源说明).
+- [x] **A1-4** `autojs6_editor.html`: 在 ext-beautify 之后增加 `ext-whitespaces_in_selection.js`; 预留覆盖层脚本位置
       (A2-2 插入, 位于 `autojs6_ace_bridge.js` 之前); 不改 viewport 与其他标签.
       —— 验收: 页面在桌面 Chrome 用 `file://` 打开能创建编辑器 (仅作冒烟, 不作为门).
-- [ ] **A1-5** 更新 `AceEditorAssets.requiredAssetPaths`: 新增 `mode-tsx.js`, `worker-json.js`,
+      结论 (2026-10-13): 已在 ext-beautify 之后加入 `ext-whitespaces_in_selection.js`. 内置浏览器不能打开 `file://`, 改用 jsdom 无头加载入口页冒烟: `ace.version` 为 1.44.0, 桥接层完成初始化并调用 `notifyReady`, 无脚本错误; `editor.$toDestroy` 中容器上的触摸相关监听正好是 contextmenu / touchstart / touchend / touchmove (印证 A2-5).
+- [x] **A1-5** 更新 `AceEditorAssets.requiredAssetPaths`: 新增 `mode-tsx.js`, `worker-json.js`,
       `ext-whitespaces_in_selection.js` (及 `snippets/tsx.js` 若存在); 同步 `AceEditorAssetsTest.kt`.
       `AceHistoryOperationBridgeTest.kt:40-42` 的两条压缩子串断言暂改为对 `UndoManager` 公开行为的注释说明并标记
       `@Ignore("A6-3 替换为执行式测试")`, 不得长期忽略.
       —— 验收: JVM 测试全绿; `@Ignore` 条目在 A6-3 关闭.
-- [ ] **A1-6** `editor.setOptions` (`autojs6_ace_bridge.js:5497`) 增加 `enableMobileMenu: false`; 其余选项不变.
+      结论 (2026-10-13): `requiredAssetPaths` 与 `AceEditorAssetsTest` 新增 4 项. 1.44.0 压缩产物中 `Document.applyDelta` 的空增量守卫与 1.4.12 写法相同, 所以 `AceHistoryOperationBridgeTest` 没有加 `@Ignore`, 而是把断言收紧为完整守卫语句 (文件已按字节固定), A6-3 再换成执行式测试. 1.44.0 的 snippets 模块改用相对 ID 读取文本, `verify-runtime.mjs` 的简化加载器已支持相对 ID. JVM 测试 172 项与 6 个 Node 校验任务通过.
+- [x] **A1-6** `editor.setOptions` (`autojs6_ace_bridge.js:5497`) 增加 `enableMobileMenu: false`; 其余选项不变.
       —— 验收: 长按不出现 `ace_mobile-menu` 元素 (此时上游触摸处理器仍在, 只验证菜单关闭).
+      结论 (2026-10-13): 已加入 `enableMobileMenu: false`, 无头冒烟中 `getOption("enableMobileMenu")` 为 false; 真机长按验证随 G-A1 进行.
 - [ ] **G-A1** 可启动门: debug APK 在 8 台设备上运行 `AceCodeEditorSmokeTest`, `AceLanguageRoutingSmokeTest`,
       `AceCodeFoldingSmokeTest`, `AcePythonSemanticSmokeTest`, `AceLuaSemanticSmokeTest`, `AceJavaSemanticSmokeTest`
       全部通过; Lua 文档出现 worker 诊断注解 (验证 Blob worker 加载); 手动打开 JS 文档可输入, 补全, 折叠.

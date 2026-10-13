@@ -37,9 +37,16 @@ class AceHistoryOperationBridgeTest {
         assertTrue(bridgeSource.contains("lines: [\"\"]"))
         assertTrue(bridgeSource.contains("autojs6HistoryToken"))
 
+        // Document.applyDelta returns early for an empty insert, so the marker delta never changes the text.
+        // The minified ace.js is pinned byte-for-byte to ace-builds 1.44.0 (Roadmap-Ace-1.44.0.md A6-3 replaces
+        // this source check with an executed test).
         val aceSource = readAsset("../src-min-noconflict/ace.js")
-        assertTrue(aceSource.contains("e.lines.length<=1&&!e.lines[0]"))
-        assertTrue(aceSource.contains("!o.comparePoints(e.start,e.end)"))
+        assertTrue(
+            aceSource.contains(
+                "applyDelta=function(e,t){var n=e.action==\"insert\";" +
+                    "if(n?e.lines.length<=1&&!e.lines[0]:!o.comparePoints(e.start,e.end))return;",
+            ),
+        )
     }
 
     @Test
@@ -171,8 +178,8 @@ class AceHistoryOperationBridgeTest {
     private fun readAsset(relativePath: String): String {
         val workingDirectory = File(checkNotNull(System.getProperty("user.dir")))
         val candidates = listOf(
-            File(workingDirectory, "app/src/main/assets/editor/ace-builds-1.4.12/autojs6/$relativePath"),
-            File(workingDirectory, "src/main/assets/editor/ace-builds-1.4.12/autojs6/$relativePath"),
+            File(workingDirectory, "app/src/main/assets/editor/ace-builds-1.44.0/autojs6/$relativePath"),
+            File(workingDirectory, "src/main/assets/editor/ace-builds-1.44.0/autojs6/$relativePath"),
         )
         // Assertions below match multi-line snippets with "\n"; a CRLF checkout must not break them.
         return checkNotNull(candidates.firstOrNull(File::isFile)) {

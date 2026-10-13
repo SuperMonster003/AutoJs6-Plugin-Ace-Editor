@@ -2,13 +2,14 @@
 
 AutoJs6 Ace Editor Plugin includes the components listed below. Copyright notices and license texts remain with the bundled assets. This file is informational and does not replace those license texts.
 
-## Ace 1.4.12
+## Ace 1.44.0
 
 - Project: [Ace](https://github.com/ajaxorg/ace)
 - Copyright: Ajax.org B.V. and Ace contributors
 - License: BSD 3-Clause
 - Use: Browser-based code editor runtime, modes, snippets, themes, workers, and extensions
-- Bundled license: [`app/src/main/assets/editor/ace-builds-1.4.12/LICENSE`](app/src/main/assets/editor/ace-builds-1.4.12/LICENSE)
+- Source: npm `ace-builds@1.44.0` (`https://registry.npmjs.org/ace-builds/-/ace-builds-1.44.0.tgz`, shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity `sha512-PFNMSYqFdEUkul2Ntud0HvA09AgY+F1ag0UYdpMH60wNI/qOA8cB8tlTgoALMEwIdUPJK2CjrIQ7OnbiSS/ugQ==`). Files under `src-min-noconflict/` are byte-identical to the tarball except the project-maintained `mode-kotlin.js`, `snippets/kotlin.js`, `snippets/python.js`, `theme-visual_studio.js` and `theme-visual_studio_dark.js`.
+- Bundled license: [`app/src/main/assets/editor/ace-builds-1.44.0/LICENSE`](app/src/main/assets/editor/ace-builds-1.44.0/LICENSE)
 
 ## TypeScript 6.0.3
 
@@ -16,8 +17,8 @@ AutoJs6 Ace Editor Plugin includes the components listed below. Copyright notice
 - Copyright: Microsoft Corporation and TypeScript contributors
 - License: Apache License 2.0
 - Use: Bundled language-service runtime used by JavaScript and TypeScript editing features
-- Bundled license: [`app/src/main/assets/editor/ace-builds-1.4.12/autojs6/typescript/LICENSE.txt`](app/src/main/assets/editor/ace-builds-1.4.12/autojs6/typescript/LICENSE.txt)
-- Bundled third-party notices: [`app/src/main/assets/editor/ace-builds-1.4.12/autojs6/typescript/ThirdPartyNoticeText.txt`](app/src/main/assets/editor/ace-builds-1.4.12/autojs6/typescript/ThirdPartyNoticeText.txt)
+- Bundled license: [`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/typescript/LICENSE.txt`](app/src/main/assets/editor/ace-builds-1.44.0/autojs6/typescript/LICENSE.txt)
+- Bundled third-party notices: [`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/typescript/ThirdPartyNoticeText.txt`](app/src/main/assets/editor/ace-builds-1.44.0/autojs6/typescript/ThirdPartyNoticeText.txt)
 
 TypeScript contains material attributed to additional projects and contributors. The bundled `ThirdPartyNoticeText.txt` is part of the distribution and must be retained with redistributed copies.
 
@@ -28,7 +29,7 @@ TypeScript contains material attributed to additional projects and contributors.
 - License: MIT
 - Stub source: [typeshed](https://github.com/python/typeshed/tree/289e5d3568961c8bcd33d01eef5b7ec5e1ad33ad), Apache License 2.0
 - Use: Bundled Python 3.12 semantic-analysis WebWorker and its selected standard-library stubs
-- Bundled license inventory: [`app/src/main/assets/editor/ace-builds-1.4.12/autojs6/python/THIRD_PARTY_LICENSES.txt`](app/src/main/assets/editor/ace-builds-1.4.12/autojs6/python/THIRD_PARTY_LICENSES.txt)
+- Bundled license inventory: [`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/python/THIRD_PARTY_LICENSES.txt`](app/src/main/assets/editor/ace-builds-1.44.0/autojs6/python/THIRD_PARTY_LICENSES.txt)
 
 The generated license inventory also retains the notices for the exact browser polyfills and VS Code
 language-server runtime packages incorporated into the Worker. Its byte count, SHA-256, component
@@ -70,7 +71,7 @@ are locked by the adjacent manifest and `tools/ace-lsp/build-ecj-classpath.ps1`.
 - Copyright: 2015-2026, Renzhi Li and Iosevka contributors
 - License: SIL Open Font License 1.1
 - Use: Default monospace editor Web font
-- Bundled license: [`app/src/main/assets/editor/ace-builds-1.4.12/fonts/iosevka/LICENSE.md`](app/src/main/assets/editor/ace-builds-1.4.12/fonts/iosevka/LICENSE.md)
+- Bundled license: [`app/src/main/assets/editor/ace-builds-1.44.0/fonts/iosevka/LICENSE.md`](app/src/main/assets/editor/ace-builds-1.44.0/fonts/iosevka/LICENSE.md)
 
 The font files may be embedded and redistributed under the OFL conditions. The font software and its license must remain together in redistributed copies.
 
@@ -105,7 +106,7 @@ generated index also embeds its language version, source revision, scope, and re
 - Project: [AutoJs6](https://github.com/SuperMonster003/AutoJs6)
 - License: Mozilla Public License 2.0
 - Use: AutoJs6 JavaScript type declarations and editor integration assets
-- Bundled declaration license: [`app/src/main/assets/editor/ace-builds-1.4.12/autojs6/types/autojs6/LICENSE`](app/src/main/assets/editor/ace-builds-1.4.12/autojs6/types/autojs6/LICENSE)
+- Bundled declaration license: [`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/types/autojs6/LICENSE`](app/src/main/assets/editor/ace-builds-1.44.0/autojs6/types/autojs6/LICENSE)
 - Repository license: [`LICENSE`](LICENSE)
 
 AutoJs6-specific bridge scripts, style sheets, declarations, and other project-authored editor assets are covered by the repository license unless a file carries a more specific notice.

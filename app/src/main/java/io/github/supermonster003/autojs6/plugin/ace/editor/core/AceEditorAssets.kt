@@ -4,7 +4,7 @@ import android.content.Context
 
 object AceEditorAssets {
 
-    private const val EDITOR_ASSET_ROOT = "editor/ace-builds-1.4.12"
+    private const val EDITOR_ASSET_ROOT = "editor/ace-builds-1.44.0"
 
     /**
      * Assets that must be packaged together for the ACE editor and its bundled
@@ -19,18 +19,22 @@ object AceEditorAssets {
         "$EDITOR_ASSET_ROOT/autojs6/autojs6.css",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/ace.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/ext-language_tools.js",
+        "$EDITOR_ASSET_ROOT/src-min-noconflict/ext-whitespaces_in_selection.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-javascript.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-typescript.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-json.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-jsx.js",
+        "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-tsx.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-python.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-lua.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-java.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/mode-kotlin.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/worker-javascript.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/worker-lua.js",
+        "$EDITOR_ASSET_ROOT/src-min-noconflict/worker-json.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/javascript.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/typescript.js",
+        "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/tsx.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/json.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/python.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/lua.js",

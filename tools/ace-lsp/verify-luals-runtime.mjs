@@ -26,32 +26,32 @@ function parseArguments(argv) {
     "manifest-generator": path.join(scriptDirectory, "generate-luals-manifest.mjs"),
     provider: path.join(
       repositoryRoot,
-      "app", "src", "main", "assets", "editor", "ace-builds-1.4.12",
+      "app", "src", "main", "assets", "editor", "ace-builds-1.44.0",
       "autojs6", "autojs6_lua_provider.js",
     ),
     "lsp-core": path.join(
       repositoryRoot,
-      "app", "src", "main", "assets", "editor", "ace-builds-1.4.12",
+      "app", "src", "main", "assets", "editor", "ace-builds-1.44.0",
       "autojs6", "autojs6_lsp_core.js",
     ),
     "lsp-transports": path.join(
       repositoryRoot,
-      "app", "src", "main", "assets", "editor", "ace-builds-1.4.12",
+      "app", "src", "main", "assets", "editor", "ace-builds-1.44.0",
       "autojs6", "autojs6_lsp_transports.js",
     ),
     client: path.join(
       repositoryRoot,
-      "app", "src", "main", "assets", "editor", "ace-builds-1.4.12",
+      "app", "src", "main", "assets", "editor", "ace-builds-1.44.0",
       "autojs6", "autojs6_lsp_client.js",
     ),
     bridge: path.join(
       repositoryRoot,
-      "app", "src", "main", "assets", "editor", "ace-builds-1.4.12",
+      "app", "src", "main", "assets", "editor", "ace-builds-1.44.0",
       "autojs6", "autojs6_ace_bridge.js",
     ),
     html: path.join(
       repositoryRoot,
-      "app", "src", "main", "assets", "editor", "ace-builds-1.4.12",
+      "app", "src", "main", "assets", "editor", "ace-builds-1.44.0",
       "autojs6_editor.html",
     ),
   };

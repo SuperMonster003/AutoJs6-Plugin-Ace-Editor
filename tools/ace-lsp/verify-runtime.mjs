@@ -2450,7 +2450,12 @@ function loadAceSnippetModule(fileName, language) {
         define(id, _dependencies, factory) {
             const exports = {};
             const module = { exports };
-            const localRequire = (requestedId) => modules.get(requestedId);
+            // Ace 1.44.0 snippet modules require their text module by a relative id ("./lua.snippets").
+            const localRequire = (requestedId) => modules.get(
+                requestedId.startsWith("./")
+                    ? id.split("/").slice(0, -1).concat(requestedId.slice(2)).join("/")
+                    : requestedId,
+            );
             factory(localRequire, exports, module);
             modules.set(id, module.exports);
         },

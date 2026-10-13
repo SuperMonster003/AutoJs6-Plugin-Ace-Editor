@@ -18,7 +18,7 @@ const DEFAULT_ASSET_DIR = path.join(
     "main",
     "assets",
     "editor",
-    "ace-builds-1.4.12",
+    "ace-builds-1.44.0",
     "autojs6",
     "python",
 );

@@ -100,8 +100,8 @@ class AceEditorThemeBridgeTest {
     private fun readAsset(relativePath: String): String {
         val workingDirectory = File(checkNotNull(System.getProperty("user.dir")))
         val candidates = listOf(
-            File(workingDirectory, "app/src/main/assets/editor/ace-builds-1.4.12/autojs6/$relativePath"),
-            File(workingDirectory, "src/main/assets/editor/ace-builds-1.4.12/autojs6/$relativePath"),
+            File(workingDirectory, "app/src/main/assets/editor/ace-builds-1.44.0/autojs6/$relativePath"),
+            File(workingDirectory, "src/main/assets/editor/ace-builds-1.44.0/autojs6/$relativePath"),
         )
         return checkNotNull(candidates.firstOrNull(File::isFile)) {
             "Unable to locate ACE asset: $relativePath"

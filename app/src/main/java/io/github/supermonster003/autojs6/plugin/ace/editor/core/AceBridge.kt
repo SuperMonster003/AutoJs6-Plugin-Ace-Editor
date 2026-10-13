@@ -322,7 +322,7 @@ class AceBridge(
     }
 
     private companion object {
-        const val EDITOR_ASSET_ROOT = "editor/ace-builds-1.4.12"
+        const val EDITOR_ASSET_ROOT = "editor/ace-builds-1.44.0"
         val GENERATED_DECLARATION_ASSETS = setOf(
             "autojs6/types/generated/manifest.json",
             "autojs6/types/generated/lib.autojs6.core.d.ts",

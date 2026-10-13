@@ -15,7 +15,7 @@ function assert(condition, message) {
 }
 
 function parseArguments(argv) {
-    const assetRoot = resolve("app/src/main/assets/editor/ace-builds-1.4.12/autojs6");
+    const assetRoot = resolve("app/src/main/assets/editor/ace-builds-1.44.0/autojs6");
     const result = {
         completer: resolve(assetRoot, "autojs6_completer.js"),
         localSymbols: resolve(assetRoot, "autojs6_local_symbols.js"),

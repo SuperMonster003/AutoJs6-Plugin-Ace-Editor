@@ -14,7 +14,7 @@ const repositoryRoot = rootArgumentIndex >= 0 ?
     path.resolve(process.argv[rootArgumentIndex + 1]) : defaultRepositoryRoot;
 
 const assetRoot = path.join(repositoryRoot, "app/src/main/assets");
-const editorRoot = path.join(assetRoot, "editor/ace-builds-1.4.12");
+const editorRoot = path.join(assetRoot, "editor/ace-builds-1.44.0");
 const javaAssetRoot = path.join(assetRoot, "java/ecj");
 const classpathFile = path.join(javaAssetRoot, "android-36-stubs.jar");
 const manifestFile = path.join(javaAssetRoot, "manifest.json");

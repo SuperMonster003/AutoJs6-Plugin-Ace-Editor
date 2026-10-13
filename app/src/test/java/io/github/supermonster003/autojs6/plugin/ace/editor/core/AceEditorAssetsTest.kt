@@ -22,6 +22,10 @@ class AceEditorAssetsTest {
                     "$ASSET_ROOT/src-min-noconflict/mode-typescript.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-json.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-jsx.js",
+                    "$ASSET_ROOT/src-min-noconflict/mode-tsx.js",
+                    "$ASSET_ROOT/src-min-noconflict/worker-json.js",
+                    "$ASSET_ROOT/src-min-noconflict/ext-whitespaces_in_selection.js",
+                    "$ASSET_ROOT/src-min-noconflict/snippets/tsx.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-python.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-lua.js",
                     "$ASSET_ROOT/src-min-noconflict/mode-java.js",
@@ -120,6 +124,6 @@ class AceEditorAssetsTest {
     }
 
     private companion object {
-        const val ASSET_ROOT = "editor/ace-builds-1.4.12"
+        const val ASSET_ROOT = "editor/ace-builds-1.44.0"
     }
 }

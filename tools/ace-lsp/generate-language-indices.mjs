@@ -27,7 +27,7 @@ function fail(message) {
 
 function parseArguments(argv) {
     const result = {
-        outDir: "app/src/main/assets/editor/ace-builds-1.4.12/autojs6/indices",
+        outDir: "app/src/main/assets/editor/ace-builds-1.44.0/autojs6/indices",
         check: false,
     };
     for (let i = 0; i < argv.length; i++) {

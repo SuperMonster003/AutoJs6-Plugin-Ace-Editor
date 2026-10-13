@@ -13,7 +13,7 @@ import {
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 const GENERATED_BY = "tools/ace-lsp/generate-declarations.mjs";
-const GENERATED_OUTPUT_ROOT = "editor/ace-builds-1.4.12/autojs6/types/generated";
+const GENERATED_OUTPUT_ROOT = "editor/ace-builds-1.44.0/autojs6/types/generated";
 const GENERATED_ASSET_ROOT = "autojs6/types/generated";
 const LEGACY_GENERATED_OUTPUT_ROOT = "autojs6/types/generated";
 const REFERENCE_DIRECTIVE_PATTERN =

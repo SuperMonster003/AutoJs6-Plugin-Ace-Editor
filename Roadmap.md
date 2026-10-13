@@ -19,7 +19,7 @@
 - Ace 固定 1.4.12; mode 硬编码为 JavaScript 且全局关闭 worker
   (`autojs6/autojs6_ace_bridge.js:4778-4779`), 超长行安全模式回退 text mode (`:2947`)。
 - 已打包的语言资源仅 `mode-javascript.js` / `worker-javascript.js` / `snippets/javascript.js`
-  (`app/src/main/assets/editor/ace-builds-1.4.12/src-min-noconflict/`)。
+  (`app/src/main/assets/editor/ace-builds-1.4.12/src-min-noconflict/`, 2.0.0 起改为 `ace-builds-1.44.0`, 见 `Roadmap-Ace-1.44.0.md`)。
 - 智能层现状: 内置 TypeScript 6.0.3 in-process 语言服务 (`autojs6_ts_language_service.js`) +
   AutoJs6 静态索引 completer (`autojs6_completer.js` + `autojs6_indices.js`, 约 385 全局 / 58 模块 / 4.2k 成员 / 9 snippets)。
 - Android 侧 `AceLspServerManager` 为 in-process 专用通道, **不是**通用 LSP JSON-RPC 客户端
@@ -403,7 +403,7 @@ Java/Android 互操作；API 28/31/35 真机均通过 WebView 冒烟。完整证
 
 | 文件 | 职责 |
 |---|---|
-| `app/src/main/assets/editor/ace-builds-1.4.12/autojs6/autojs6_ace_bridge.js` | Ace 初始化、mode 设置 (M0-1 主战场) |
+| `app/src/main/assets/editor/ace-builds-1.44.0/autojs6/autojs6_ace_bridge.js` | Ace 初始化、mode 设置 (M0-1 主战场) |
 | `.../autojs6/autojs6_completer.js` + `autojs6_indices.js` | 静态索引 completer (M0-5/M2-1) |
 | `.../autojs6/autojs6_local_symbols.js` | Python/Lua/Java/Kotlin 单文件符号提取器 (M2-2) |
 | `.../autojs6/indices/*.js` | 按语言懒加载的确定性标准库索引产物 (M2-3) |
