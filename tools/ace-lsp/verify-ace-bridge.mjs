@@ -1491,6 +1491,141 @@ test("the completion documentation stays off the popup on a narrow screen", asyn
     }
 });
 
+// Manual test C11: no floating box covers the cursor row. jsdom has no layout, so the boxes get sizes from their styles
+// (natural height, max-height) and the popup a fixed rectangle; rows are 20 px high from the top of the viewport.
+function mockFloatingBoxRects(window, heights) {
+    const original = window.HTMLElement.prototype.getBoundingClientRect;
+    window.HTMLElement.prototype.getBoundingClientRect = function() {
+        const key = this.id === "doc-tooltip" ? "doc" : [...this.classList].find((name) => heights[name]);
+        const natural = this.id === "doc-tooltip" ? heights.doc : heights[key];
+        if (!natural) return original.call(this);
+        if (this.style.display === "none") return { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
+        const px = (value) => (value === "" || value === undefined ? null : parseFloat(value));
+        const height = Math.min(px(this.style.maxHeight) || natural, natural);
+        const left = px(this.style.left) !== null ? px(this.style.left) : 0;
+        const right = px(this.style.right) !== null ? 400 - px(this.style.right) : left + 300;
+        const top = px(this.style.top) !== null ? px(this.style.top) : 700 - (px(this.style.bottom) || 0) - height;
+        return { left, right, top, bottom: top + height, width: right - left, height };
+    };
+    return () => {
+        window.HTMLElement.prototype.getBoundingClientRect = original;
+    };
+}
+
+const coversRow = (rect, row) => rect.height > 0 && rect.top < (row + 1) * 20 && rect.bottom > row * 20;
+const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+
+test("the completion documentation never covers the cursor row", async () => {
+    const page = await openEditor();
+    try {
+        const { editor, window } = page;
+        Object.defineProperty(window, "innerWidth", { configurable: true, value: 400 });
+        Object.defineProperty(window, "innerHeight", { configurable: true, value: 700 });
+        const restore = mockFloatingBoxRects(window, { doc: 200 });
+        page.api.setText(Array.from({ length: 30 }, (_, row) => `line${row} cons`).join("\n"));
+        editor.focus();
+        editor.completers = [{
+            getCompletions(e, s, p, prefix, callback) {
+                callback(null, [{ caption: "console", value: "console", score: 1, docText: "declare var console: Console;\n".repeat(20) }]);
+            },
+        }];
+        const completer = editor.completer;
+        const popupRect = { left: 4, right: 396, top: 0, bottom: 0, width: 392, height: 0 };
+        const show = (row, isTopdown, top, bottom) => {
+            editor.moveCursorTo(row, 11);
+            completer.showPopup(editor);
+            completer.popup.container.getBoundingClientRect = () => popupRect;
+            Object.assign(popupRect, { top, bottom, height: bottom - top });
+            completer.popup.isTopdown = isTopdown;
+            completer.showDocTooltip({ docText: "declare var console: Console;\n".repeat(20) });
+            const node = completer.tooltipNode;
+            return { rect: node.getBoundingClientRect(), display: node.style.display };
+        };
+        // The popup opens right below the cursor row and fills the screen below it (C11, first case).
+        const below = show(5, true, 120, 690);
+        assert.equal(below.display, "block");
+        assert.ok(!coversRow(below.rect, 5), `the documentation covers the cursor row ${JSON.stringify(below.rect)}`);
+        assert.ok(!overlaps(below.rect, popupRect), "and stays off the popup");
+        assert.ok(below.rect.bottom <= 100, "it moves above the cursor row");
+        // The popup opens right above the cursor row and reaches the top of the screen (C11, second case).
+        const above = show(5, false, 10, 100);
+        assert.equal(above.display, "block");
+        assert.ok(!coversRow(above.rect, 5), `the documentation covers the cursor row ${JSON.stringify(above.rect)}`);
+        assert.ok(!overlaps(above.rect, popupRect), "and stays off the popup");
+        assert.ok(above.rect.top >= 120, "it moves below the cursor row");
+        // No room on either side of the row: hidden rather than over the line.
+        assert.equal(show(0, true, 20, 690).display, "none");
+        // Signature help above the row: the documentation goes above it, not over it.
+        const signature = window.document.createElement("div");
+        signature.className = "autojs6_signature_tooltip";
+        const signatureRect = { left: 8, right: 300, top: 130, bottom: 156, width: 292, height: 26 };
+        signature.getBoundingClientRect = () => signatureRect;
+        window.document.body.appendChild(signature);
+        const stacked = show(8, true, 180, 690);
+        assert.equal(stacked.display, "block");
+        assert.ok(!coversRow(stacked.rect, 8), `the documentation covers the cursor row ${JSON.stringify(stacked.rect)}`);
+        assert.ok(!overlaps(stacked.rect, signatureRect), `the documentation covers the signature help ${JSON.stringify(stacked.rect)}`);
+        signature.remove();
+        completer.detach();
+        restore();
+    } finally {
+        page.close();
+    }
+});
+
+test("hover documentation and signature help keep clear of the cursor row", async () => {
+    const hover = { caption: "foo", docText: "function foo(a: number): void\n\nDoes foo." };
+    const help = { caption: "foo", signature: "foo(a: number): void", parameters: ["a: number"] };
+    const page = await openEditor({
+        wrapLspClient: (client) => {
+            client.getHover = () => hover;
+            client.getHoverAsync = (pos, callback) => {
+                callback(null, hover);
+                return null;
+            };
+            client.getSignatureHelp = () => help;
+            client.getSignatureHelpAsync = (pos, callback) => {
+                callback(null, help);
+                return null;
+            };
+            return client;
+        },
+    });
+    try {
+        const { editor, window, api } = page;
+        Object.defineProperty(window, "innerWidth", { configurable: true, value: 400 });
+        Object.defineProperty(window, "innerHeight", { configurable: true, value: 700 });
+        const restore = mockFloatingBoxRects(window, { autojs6_hover_tooltip: 120, autojs6_signature_tooltip: 60 });
+        api.setText(Array.from({ length: 30 }, (_, row) => `foo(${row});`).join("\n"));
+        await sleep(100);
+        const box = (name) => window.document.querySelector("." + name);
+        // The hover box opens 18 px below the top of the row, inside a 20 px row.
+        editor.moveCursorTo(5, 1);
+        assert.notEqual(api.triggerSymbolDocumentation("test"), "none");
+        const hoverRect = box("autojs6_hover_tooltip").getBoundingClientRect();
+        assert.ok(hoverRect.height > 0, "hover documentation shown");
+        assert.ok(!coversRow(hoverRect, 5), `the hover documentation covers the cursor row ${JSON.stringify(hoverRect)}`);
+        // A popup right below a row near the top leaves the signature help no room off the row and the popup.
+        editor.moveCursorTo(1, 4);
+        editor.completer = editor.completer || new (window.ace.require("ace/autocomplete").Autocomplete)();
+        const popupRect = { left: 4, right: 396, top: 40, bottom: 690, width: 392, height: 650 };
+        const popupContainer = window.document.createElement("div");
+        popupContainer.getBoundingClientRect = () => popupRect;
+        editor.completer.popup = { isOpen: true, isTopdown: true, container: popupContainer };
+        api.triggerSignatureHelp("test");
+        const signatureRect = box("autojs6_signature_tooltip").getBoundingClientRect();
+        assert.ok(!coversRow(signatureRect, 1), `the signature help covers the cursor row ${JSON.stringify(signatureRect)}`);
+        editor.completer.popup = null;
+        api.triggerSignatureHelp("test");
+        const freeRect = box("autojs6_signature_tooltip").getBoundingClientRect();
+        assert.ok(freeRect.height > 0, "with room the signature help is shown");
+        assert.ok(!coversRow(freeRect, 1), `the signature help covers the cursor row ${JSON.stringify(freeRect)}`);
+        restore();
+    } finally {
+        page.close();
+    }
+});
+
 // ---------------------------------------------------------------------------------------------------------------
 
 async function main() {

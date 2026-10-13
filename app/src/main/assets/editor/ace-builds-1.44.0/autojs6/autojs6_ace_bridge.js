@@ -2033,53 +2033,164 @@
             node.style.top = "";
             node.style.bottom = edge + "px";
         }
-        keepDocTooltipOffPopup(node, viewportHeight, edge);
+        keepDocTooltipClear(node, edge);
     }
 
     // Ace puts the documentation of the selected completion beside the popup. On a phone there is rarely room beside
-    // it, and the tooltip widened to the screen width above covered the popup (Roadmap-Ace-1.44.0.md A2-10). A
-    // tooltip that would overlap the popup moves above or below it, preferring the side away from the cursor as Ace
-    // does, and stays hidden when neither side has room for a few lines.
+    // it, and the tooltip widened to the screen width covered the popup (Roadmap-Ace-1.44.0.md A2-10, manual test B11).
+    // A tooltip that would overlap the popup, the cursor row or the signature help spans the screen width and moves to
+    // the far side of the popup, as Ace prefers, or else to the other side of the cursor row; it stays hidden when
+    // neither has room for a few lines. Moving it to the cursor side of the popup covered the line being typed
+    // (manual test C11).
     var DOC_TOOLTIP_MIN_HEIGHT_PX = 72;
 
-    function keepDocTooltipOffPopup(node, viewportHeight, edge) {
-        var popupElement = node.parentNode;
-        if (!popupElement || !popupElement.getBoundingClientRect) {
-            return;
-        }
-        var popupRect = popupElement.getBoundingClientRect();
-        var rect = node.getBoundingClientRect();
-        if (!(popupRect.width > 0 && popupRect.height > 0) ||
-            !(rect.left < popupRect.right && rect.right > popupRect.left &&
-                rect.top < popupRect.bottom && rect.bottom > popupRect.top)) {
-            return;
-        }
-        var gap = edge / 2;
-        var above = popupRect.top - gap - edge;
-        var below = viewportHeight - popupRect.bottom - gap - edge;
+    function keepDocTooltipClear(node, edge) {
         var completer = popupCompleter();
         var popup = completer && completer.popup;
-        // Ace's popup is "top down" when it opens below the cursor line.
-        var preferBelow = !popup || popup.isTopdown !== false;
-        var useBelow;
-        if ((preferBelow ? below : above) >= DOC_TOOLTIP_MIN_HEIGHT_PX) {
-            useBelow = preferBelow;
-        } else if ((preferBelow ? above : below) >= DOC_TOOLTIP_MIN_HEIGHT_PX) {
-            useBelow = !preferBelow;
-        } else {
-            node.style.display = "none";
-            return;
+        // Ace's popup is "top down" when it opens below the cursor row.
+        var popupBelowRow = !popup || popup.isTopdown !== false;
+        keepFloatingBoxClear(node, {
+            candidates: popupBelowRow ? ["belowPopup", "aboveRow"] : ["abovePopup", "belowRow"],
+            minHeight: DOC_TOOLTIP_MIN_HEIGHT_PX,
+            avoidSignatureHelp: true,
+            spanWidth: edge
+        });
+    }
+
+    // Floating boxes (the documentation of the selected completion, signature help, hover documentation) must not cover
+    // the cursor's screen row, and should not cover the completion popup, which Ace opens next to that row (manual test
+    // C11). A box overlapping one of them moves vertically to the first candidate place with room for all of it:
+    // "belowRow" / "aboveRow" next to the cursor row, "belowPopup" / "abovePopup" next to the popup, each past any
+    // other obstacle in the way. Without room for all of it, it takes the candidate with the most room when that holds
+    // minHeight (scrolling inside) and is hidden otherwise. With spanWidth it spans the screen width minus that margin.
+    var FLOATING_BOX_GAP_PX = 4;
+    var FLOATING_BOX_EDGE_PX = 8;
+    var FLOATING_BOX_MIN_HEIGHT_PX = 40;
+
+    function keepFloatingBoxClear(box, options) {
+        var rect = visibleElementRect(box);
+        if (!rect) {
+            return false;
         }
-        node.style.left = edge + "px";
-        node.style.right = edge + "px";
-        node.style.maxHeight = Math.floor(useBelow ? below : above) + "px";
-        if (useBelow) {
-            node.style.top = popupRect.bottom + gap + "px";
-            node.style.bottom = "";
-        } else {
-            node.style.top = "";
-            node.style.bottom = viewportHeight - popupRect.top + gap + "px";
+        options = options || {};
+        var doc = /** @type {HTMLElement} */ (document && document.documentElement || {});
+        var viewportWidth = Math.max(Number(global.innerWidth) || 0, Number(doc.clientWidth) || 0, 320);
+        var viewportHeight = Math.max(Number(global.innerHeight) || 0, Number(doc.clientHeight) || 0, 240);
+        var row = cursorRowRect();
+        var popupRect = completionPopupRect();
+        var obstacles = [row, popupRect];
+        if (options.avoidSignatureHelp) {
+            obstacles.push(visibleElementRect(document.querySelector(".autojs6_signature_tooltip")));
         }
+        obstacles = obstacles.filter(function(obstacle) {
+            return !!obstacle;
+        });
+        var overlapsObstacle = obstacles.some(function(obstacle) {
+            return rect.left < obstacle.right && rect.right > obstacle.left &&
+                rect.top < obstacle.bottom && rect.bottom > obstacle.top;
+        });
+        if (!overlapsObstacle) {
+            return true;
+        }
+        var left = rect.left;
+        var right = rect.right;
+        if (options.spanWidth !== undefined) {
+            left = options.spanWidth;
+            right = viewportWidth - options.spanWidth;
+        }
+        var blocking = obstacles.filter(function(obstacle) {
+            return left < obstacle.right && right > obstacle.left;
+        });
+        var height = rect.height;
+        var best = null;
+        var references = { belowRow: row, aboveRow: row, belowPopup: popupRect, abovePopup: popupRect };
+        var candidates = options.candidates || ["belowRow", "aboveRow", "belowPopup", "abovePopup"];
+        for (var i = 0; i < candidates.length; i++) {
+            var reference = references[candidates[i]];
+            if (!reference) {
+                continue;
+            }
+            var downward = candidates[i].indexOf("below") === 0;
+            var space = freeVerticalSpace(
+                downward ? reference.bottom + FLOATING_BOX_GAP_PX : reference.top - FLOATING_BOX_GAP_PX,
+                downward,
+                blocking,
+                viewportHeight
+            );
+            if (space.size >= height) {
+                best = space;
+                break;
+            }
+            if (!best || space.size > best.size) {
+                best = space;
+            }
+        }
+        var minHeight = Number(options.minHeight) || 0;
+        if (!best || best.size < Math.min(height, Math.max(minHeight, 1))) {
+            box.style.display = "none";
+            return false;
+        }
+        var placedHeight = Math.min(height, best.size);
+        if (options.spanWidth !== undefined) {
+            box.style.left = left + "px";
+            box.style.right = options.spanWidth + "px";
+        }
+        box.style.maxHeight = Math.floor(best.size) + "px";
+        box.style.top = Math.round(best.downward ? best.anchor : best.anchor - placedHeight) + "px";
+        box.style.bottom = "";
+        return true;
+    }
+
+    // The room from an anchor towards the bottom (downward) or the top of the viewport, after sliding the anchor past the
+    // obstacles it lies in.
+    function freeVerticalSpace(anchor, downward, obstacles, viewportHeight) {
+        var gap = FLOATING_BOX_GAP_PX;
+        for (var moved = true; moved;) {
+            moved = false;
+            for (var i = 0; i < obstacles.length; i++) {
+                if (anchor > obstacles[i].top - gap && anchor < obstacles[i].bottom + gap) {
+                    anchor = downward ? obstacles[i].bottom + gap : obstacles[i].top - gap;
+                    moved = true;
+                }
+            }
+        }
+        var limit = downward ? viewportHeight - FLOATING_BOX_EDGE_PX : FLOATING_BOX_EDGE_PX;
+        for (var j = 0; j < obstacles.length; j++) {
+            if (downward && obstacles[j].top - gap >= anchor) {
+                limit = Math.min(limit, obstacles[j].top - gap);
+            } else if (!downward && obstacles[j].bottom + gap <= anchor) {
+                limit = Math.max(limit, obstacles[j].bottom + gap);
+            }
+        }
+        return { anchor: anchor, downward: downward, size: Math.max(0, downward ? limit - anchor : anchor - limit) };
+    }
+
+    // The cursor's screen row across the viewport width, or null before the editor has rendered.
+    function cursorRowRect() {
+        var renderer = editor && editor.renderer;
+        var lineHeight = renderer ? Number(renderer.lineHeight) || 0 : 0;
+        if (!(lineHeight > 0) || typeof renderer.textToScreenCoordinates !== "function") {
+            return null;
+        }
+        var cursor = editor.getCursorPosition();
+        var point = renderer.textToScreenCoordinates(cursor.row, cursor.column);
+        var top = (Number(point && point.pageY) || 0) - (Number(global.pageYOffset) || 0);
+        return { left: -Infinity, right: Infinity, top: top, bottom: top + lineHeight };
+    }
+
+    function completionPopupRect() {
+        var completer = popupCompleter();
+        var popup = completer && completer.popup;
+        return popup && popup.isOpen ? visibleElementRect(popup.container) : null;
+    }
+
+    function visibleElementRect(element) {
+        if (!element || typeof element.getBoundingClientRect !== "function" ||
+            element.style && element.style.display === "none") {
+            return null;
+        }
+        var rect = element.getBoundingClientRect();
+        return rect && rect.width > 0 && rect.height > 0 ? rect : null;
     }
 
     function installDocTooltipTouchScroller(node) {
@@ -6717,6 +6828,9 @@
                 tooltipController = global.AutoJsAceTooltip.install({
                     editor: editor,
                     session: session,
+                    keepClear: function(box) {
+                        return keepFloatingBoxClear(box, { minHeight: FLOATING_BOX_MIN_HEIGHT_PX, avoidSignatureHelp: true });
+                    },
                     getHover: function(pos, callback) {
                         if (lspClient && typeof callback === "function" &&
                             typeof lspClient.getHoverAsync === "function") {
@@ -6743,6 +6857,9 @@
                 signatureHelpController = global.AutoJsAceSignatureHelp.install({
                     editor: editor,
                     session: session,
+                    keepClear: function(box) {
+                        return keepFloatingBoxClear(box, { minHeight: FLOATING_BOX_MIN_HEIGHT_PX });
+                    },
                     getSignatureHelp: function(pos, callback) {
                         if (lspClient && typeof callback === "function" &&
                             typeof lspClient.getSignatureHelpAsync === "function") {

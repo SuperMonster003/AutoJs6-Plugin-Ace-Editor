@@ -762,6 +762,10 @@
             }
             box.style.left = Math.round(left) + "px";
             box.style.top = Math.round(top) + "px";
+            // The bridge moves the box off the cursor row (the fallbacks above can land on it) (manual test C11).
+            if (typeof config.keepClear === "function") {
+                config.keepClear(box);
+            }
         }
 
         function activeParameterIndex(entry, activeParameter) {

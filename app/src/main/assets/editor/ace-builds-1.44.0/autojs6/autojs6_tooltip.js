@@ -192,6 +192,7 @@
 
         function positionElement(point) {
             var box = ensureElement();
+            box.style.maxHeight = "";
             var viewport = viewportSize();
             var width = box.offsetWidth || 320;
             var height = box.offsetHeight || 120;
@@ -207,6 +208,11 @@
             }
             box.style.left = Math.round(left) + "px";
             box.style.top = Math.round(top) + "px";
+            // 18 px below the top of the row lies inside a taller row; the bridge moves the box off the cursor row and the
+            // completion popup (manual test C11).
+            if (typeof config.keepClear === "function") {
+                config.keepClear(box);
+            }
         }
 
         function screenPointFor(pos) {
