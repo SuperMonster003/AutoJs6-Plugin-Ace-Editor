@@ -413,6 +413,36 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): contextmenu 实例覆盖与 touchscroll 隐藏行号栏提示已实现 (jsdom 确认覆盖生效). 修饰键结论: 不移植. 宿主与插件都不
       发送独立的修饰键事件 (快捷面板直接执行命令), 实体键盘的组合键自带 metaState, 只有少数只发独立修饰键的第三方软键盘受影响.
       默认处理器与 focusEditor: 按计划不移植. 执行式测试待 A6-3.
+- [ ] **A2-10** 手测后的交互改进 (2026-10-13 新增, 维护者首轮手测 XQ-AT72 后决定): 1.4.12 的五处既有表现全部改进,
+      另修手测发现的缺陷. 行为规格见 `tools/ace-mobile/README.md` 中标 "(A2-10)" 的各条.
+      1. 慢点: 长按触发前抬起且未移动即为点击 (1.4.12 只认 100 ms 内抬起), 长按之后抬手不再算点击.
+      2. 静止后抬手: 抬手前手指静止超过 40 ms (无 touchmove) 不惯性, 取 Android VelocityTracker 的 "指针已停止" 时间;
+         1.4.12 沿用静止前的速度 (B8 停住后又滚十几像素, B20).
+      3. 粘贴菜单: 点在光标上 (无选区, 点击位置即光标位置) 或空白处长按 (两侧都不是可见字符) 请求插入点工具条, 走独立的
+         宿主接口 `startInsertionActionMode`; Kotlin 侧对该请求显示工具条的可用项 (粘贴, 全选, 更多中的行操作), 拖动光标
+         结束后的 `startActionMode(false)` 仍不显示. 输入或下一次触摸时关闭.
+      4. 行号栏: 首轮手测 B2 (a) 发现软键盘收起时点行号会弹出键盘并跳回光标所在行. 原因是 Ace 1.44.0 在行号栏 mousedown 上
+         注册了 focusEditor, 而覆盖层不处理行号栏触摸, 浏览器合成的鼠标事件让编辑器获得焦点 (1.4.12 在移动端不注册它).
+         现在覆盖层处理行号栏触摸并阻止合成鼠标事件: 拖动滚动, 点击交给桥接层 `handleGutterTap`, 有诊断的行上点诊断图标
+         (6 px 余量) 打开诊断标记, 其余位置切换断点 (原先诊断行的左侧 24 px 只能打开诊断, 无法设断点); 外接鼠标同样可以
+         在诊断行的图标旁设断点. 光标不动, 不弹键盘.
+      5. 超长行截断按钮: 手指点击与鼠标一样切换自动换行 (不参与双击判断). 模拟器 (x86_64, WebView 134) 上对 12 万字符行
+         切换为一个 86 ms 的长任务, 折出约 3000 行; 真机耗时待测.
+      6. 滚动条自动隐藏 (维护者新提出): 新键 `key_$_ace_scrollbar_auto_hide_enabled` (缺省开, A7-1 / A7-2 一并露出);
+         纵向 / 横向滚动条只在沿该方向滚动时显示, 最后一次滚动 2 s 后淡出, 手指按住滑块时不隐藏; 隐藏的滚动条不接收触摸.
+      7. 首轮手测 B3: 双击后光标总在单词末尾. 1.4.12 的本意是落在离手指近的一端, 判断却写成 "手指在单词之前"; 已按本意修正.
+      8. 首轮手测 B6 (放大镜开启): 光标竖线偏约半个字符 (放大镜多加了文本层的内边距, Ace 用外边距偏移整个文本层) 已修正;
+         拖过标识符前卡顿一下: 光标在标识符上停留 150 ms 就会请求同名符号高亮, TypeScript 服务在页面主线程上运行. 现在覆盖层
+         报告拖拽开始 / 结束 (`onHandleDrag`), 拖拽期间不请求高亮, 抬手后按最终位置请求一次.
+      9. 首轮手测 B11: 窄屏上补全的文档提示被拉满屏宽, 盖住了补全弹窗. 现在与弹窗重叠时移到弹窗下方 (弹窗在光标上方时为
+         上方), 两侧都不足 72 px 时不显示.
+      —— 验收: `verify-overlay.mjs` 中 7 个场景登记为有意差异并说明原因, 新行为各有单独断言 (共 536 项), 9 处单点变异
+      全部检出; 桥接执行式测试新增行号栏触摸, 拖拽暂停高亮, 插入点工具条, 截断按钮, 文档提示位置, 滚动条自动隐藏 (共 30 例),
+      变异检出; `AceTouchInteractionDeviceTest` 改为断言新行为 (慢点移动光标, 停住不惯性, 行号栏点击不动光标不弹键盘,
+      新增 "点在光标上") ; 维护者在 XQ-AT72 上复测.
+      进度 (2026-10-13): 已实现. x86_64 API 36.1 16 KB 模拟器上触摸用例除既有的 B1 首次注入外全部通过; 用 DevTools 驱动
+      触摸核对了放大镜光标竖线与编辑器光标对齐, 拖拽中停在标识符上 600 ms 无高亮, 抬手后出现. 真机复测待维护者.
+
 - [ ] **G-A2** 交互等价门: 8 台设备逐项执行附录 B, 每项与 A0-6 的 1.4.12 实测一致 (惯性手感允许主观 "接近");
       自动部分为在每台设备上运行 `AceTouchInteractionDeviceTest` 并与 `tools/ace-mobile/device-records/` 中同设备的 A0 记录逐场景比对
       (缺 A0 记录的设备先用 `build/ace-perf/apk-a0/` 中的 A0 版 APK 补录);
@@ -443,6 +473,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       补跑 (2026-10-13, A9 构建): x86_64 API 36.1 16 KB 模拟器 (WebView 134) 的触摸用例两轮都只有 "B1 quick tap" 失败 (首个注入的
       触摸未到达 WebView, 调用轨迹为空), 与该模拟器的 A0 记录 (`build/ace-perf/touch-a0-emulator-5574.jsonl`) 及 A5 构建的两次记录相同,
       属环境因素; 其余场景与旧版一致. 附录 B 手动项的逐项步骤, 期望与参照见 `docs/development/ace-1.44.0-manual-tests.md`.
+      手测首轮 (2026-10-13, 维护者, XQ-AT72): B1, B2 (b)(c), B4, B5, B7-B10 正常; B2 (a) 行号栏点击弹出键盘并跳视图, B3 光标
+      总在末尾, B6 放大镜光标偏移与拖拽卡顿, B11 文档提示遮挡补全弹窗, 以及维护者要求改进的五处 1.4.12 旧表现, 均在 A2-10
+      处理, 待复测. B11 中另发现宿主设置页暗色主题下对话框 "更多" 菜单不可读, 属宿主通用组件, 另立任务.
       ActionMode 工具条 (`AceSelectionToolbar`) 出现 / 消失时机一致; 旋转屏幕与软键盘弹出后拖拽仍准确.
       (降级路径: 若 `$toDestroy` 与 capture 兜底在某设备都无法阻止上游处理 -> 在本文件记录该 WebView 版本,
       并评估为该设备启用 "上游触摸处理 + 覆盖层只接管 ActionMode" 的降级模式; 仍不得改动官方文件.)
@@ -773,7 +806,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `key_$_ace_svg_gutter_icons_enabled` (true), `key_$_ace_highlight_indent_guides_enabled` (true),
       `key_$_ace_custom_scrollbar_enabled` (true), `key_$_ace_whitespaces_in_selection_enabled` (true),
       `key_$_ace_symbol_highlight_enabled` (true), `key_$_ace_inline_completion_preview_enabled` (false),
-      `key_$_ace_touch_magnifier_enabled` (false), `key_$_ace_upstream_completion_trigger` (由 G-A5-6 决定是否保留);
+      `key_$_ace_touch_magnifier_enabled` (false), `key_$_ace_upstream_completion_trigger` (由 G-A5-6 决定是否保留),
+      `key_$_ace_scrollbar_auto_hide_enabled` (true, A2-10 新增);
       `AceBridge.kt` 对应 getter; `AceEditorLspPreferencesTest` 风格的 JVM 测试覆盖默认值与读取.
       —— 验收: 不改宿主时插件按默认值运行; 修改宿主 SharedPreferences 后 `notifyDisplayPreferencesChanged` 立即生效.
       进度 (2026-10-13): 视觉 4 项与放大镜已加入 `AceEditorDisplayPreferences` (键名与默认值同上, 另有 `DEFAULT_*` 常量),
@@ -782,7 +816,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       同名符号高亮键已随 A5-8 加入 `AceEditorSmartHintPreferences` (经 `getSmartHintOptions` JSON 下发, 宿主改动后由
       `notifyDisplayPreferencesChanged` 中的 `setSmartHintOptions` 重新应用).
 - [ ] **A7-2** 宿主侧 (AutoJs6 仓库, 单独提交): `app/src/main/res/xml/fragment_code_editor_settings.xml` 在 "缩进参考线" (`:82`)
-      所在分组后增加视觉 4 项与放大镜开关, 在智能提示分组 (`:183`) 增加 ghost text 与同名符号高亮; `bools.xml` 默认值与 A7-1 一致;
+      所在分组后增加视觉 4 项, 滚动条自动隐藏 (A2-10) 与放大镜开关, 在智能提示分组 (`:183`) 增加 ghost text 与同名符号高亮;
+      `bools.xml` 默认值与 A7-1 一致;
       10 种语言 `strings.xml` 标题 / 摘要 / 长按说明 (ASCII 标点); 变更时调用 `EditorPluginSession.notifyDisplayPreferencesChanged`.
       —— 验收: 宿主设置页可见并可切换, 切换后编辑器无需重启即生效; 宿主 `AceEditorPluginHostDeviceTest` 通过.
 - [ ] **A7-3** `requiresHostVersion` 保持不变 (仅偏好键, 老宿主按默认值); README "功能" 段补充新开关说明 (10 语言经生成器).
