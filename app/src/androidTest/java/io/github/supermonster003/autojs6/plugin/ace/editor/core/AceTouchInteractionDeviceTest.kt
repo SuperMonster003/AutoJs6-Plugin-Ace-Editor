@@ -656,7 +656,9 @@ class AceTouchInteractionDeviceTest {
     private companion object {
         const val LOG_TAG = "AutoJs6AceTouch"
         const val LOG_PREFIX = "AUTOJS6_ACE_TOUCH_INTERACTION="
-        const val LINE_COUNT = 80
+        // Long enough that flings never reach the end, even when the soft keyboard stays hidden and the editor
+        // shows twice as many rows (the A0 records used 80 lines, which left a hidden-keyboard phone almost no room).
+        const val LINE_COUNT = 200
         const val SETTLE_MS = 700L
         const val RESET_MS = 700L
         const val IME_HIDE_TIMEOUT_MS = 3_000L

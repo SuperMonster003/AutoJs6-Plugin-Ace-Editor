@@ -125,8 +125,13 @@ ace.define(
                 }
                 var bars = [renderer.scrollBarV, renderer.scrollBarH];
                 for (var i = 0; i < bars.length; i++) {
-                    if (bars[i] && bars[i].element && isInside(target, bars[i].element)) {
-                        return bars[i];
+                    var bar = bars[i];
+                    if (bar && bar.element && isInside(target, bar.element)) {
+                        // A scrollbar that has not been rendered yet has no thumb geometry; scroll normally then.
+                        var vertical = bar === renderer.scrollBarV;
+                        var thumbStart = vertical ? bar.thumbTop : bar.thumbLeft;
+                        var thumbSize = vertical ? bar.thumbHeight : bar.thumbWidth;
+                        return isFinite(thumbStart) && isFinite(thumbSize) ? bar : null;
                     }
                 }
                 return null;

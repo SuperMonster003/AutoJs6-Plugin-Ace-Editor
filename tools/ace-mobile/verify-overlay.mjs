@@ -127,7 +127,7 @@ function verifyCancellation() {
 
 // Roadmap-Ace-1.44.0.md A5-3: Ace's custom scrollbar has no 1.4.12 counterpart, so the overlay is checked on its own.
 // The fake vertical scrollbar has a 500 px slide for 1800 px of scrollable content.
-function runCustomScrollbarScenario(enabled, steps) {
+function runCustomScrollbarScenario(enabled, steps, barOverrides = {}) {
     const env = createEnvironment();
     env.editor.$toDestroy = [];
     const { container } = env.elements;
@@ -147,6 +147,7 @@ function runCustomScrollbarScenario(enabled, steps) {
         _emit(name, event) {
             env.record("scrollbar." + name, event.data);
         },
+        ...barOverrides,
     };
     env.editor.getOption = (name) => (name === "customScrollbar" ? enabled : undefined);
     loadOverlay(env)
@@ -200,6 +201,21 @@ function verifyCustomScrollbar() {
     ]);
     check(names(disabled, "scrollbar.").length === 0, "the overlay dragged a scrollbar while customScrollbar is off");
     check(names(disabled, "renderer.scrollTo").length > 0, "without customScrollbar the touch no longer scrolls the content");
+
+    // Before its first render the scrollbar has no thumb geometry (thumbTop undefined, thumbHeight NaN).
+    const unrendered = runCustomScrollbarScenario(
+        true,
+        [
+            { down: [394, 400], target: "scrollbarThumb" },
+            { wait: 16 },
+            { move: [394, 300], target: "scrollbarThumb" },
+            { wait: 16 },
+            { up: [394, 300], target: "scrollbarThumb" },
+        ],
+        { thumbTop: undefined, thumbHeight: NaN },
+    );
+    check(names(unrendered, "scrollbar.").length === 0, "the overlay dragged a scrollbar without thumb geometry");
+    check(names(unrendered, "renderer.scrollTo").length > 0, "a touch on an unrendered scrollbar no longer scrolls the content");
 }
 
 function runVariant(kind, scenario) {
