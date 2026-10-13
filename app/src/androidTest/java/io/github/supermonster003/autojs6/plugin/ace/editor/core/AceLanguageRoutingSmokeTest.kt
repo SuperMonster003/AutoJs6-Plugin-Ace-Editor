@@ -590,6 +590,38 @@ class AceLanguageRoutingSmokeTest {
         }
     }
 
+    // Roadmap-Ace-1.44.0.md A5-8: occurrences of the symbol under the cursor are drawn by the language services.
+    @Test
+    fun symbolHighlightsMarkOccurrencesInTypeScriptAndPython() {
+        val harness = launchEditor("/data/local/tmp/autojs6-highlight.ts")
+        try {
+            setDocumentPath(harness, "/data/local/tmp/autojs6-highlight.ts")
+            assertEquals("ace/mode/typescript", awaitMode(harness, "ace/mode/typescript"))
+            setEditorText(harness, "const value = 1;\nconst doubled = value + value;\n")
+            val typeScript = awaitSymbolHighlights(harness, row = 0, column = 8, expected = 3)
+            println("AUTOJS6_ACE_SYMBOL_HIGHLIGHT_TS=$typeScript")
+            // Devices whose TypeScript service exceeds the operation budget fall back to static assistance
+            // (semanticServiceSuppressed); highlights need the service, so only the fallback state is checked there.
+            val lspState = JSONObject(evaluateString(harness, "JSON.stringify(window.AutoJsAce.getLspState() || {})"))
+            if (lspState.optBoolean("semanticServiceSuppressed")) {
+                println("AUTOJS6_ACE_SYMBOL_HIGHLIGHT_TS_SKIPPED=${lspState.optString("semanticServiceReason")}")
+                assertEquals("Highlights without a TypeScript service: $typeScript", 0, typeScript.getInt("count"))
+            } else {
+                assertEquals("TypeScript highlights: $typeScript", 3, typeScript.getInt("count"))
+                assertEquals("TypeScript write highlights: $typeScript", 1, typeScript.getInt("writes"))
+            }
+
+            setDocumentPath(harness, "/data/local/tmp/autojs6-highlight.py")
+            assertEquals("ace/mode/python", awaitMode(harness, "ace/mode/python"))
+            setEditorText(harness, "def greet(name):\n    return name.upper()\n")
+            val python = awaitSymbolHighlights(harness, row = 0, column = 11, expected = 2)
+            println("AUTOJS6_ACE_SYMBOL_HIGHLIGHT_PY=$python")
+            assertEquals("Python highlights: $python", 2, python.getInt("count"))
+        } finally {
+            harness.close()
+        }
+    }
+
     @Test
     fun aceWorkerFeasibilityProbeReachesARecordedConclusion() {
         val harness = launchEditor("/data/local/tmp/autojs6-worker.js")
@@ -982,6 +1014,37 @@ class AceLanguageRoutingSmokeTest {
                 return state
             }
             Thread.sleep(100)
+        }
+        return state
+    }
+
+    // Moves the cursor off and back onto (row, column) until the drawn highlights reach the expected count; the
+    // language service may still be warming up when the first request is made.
+    private fun awaitSymbolHighlights(harness: EditorHarness, row: Int, column: Int, expected: Int): JSONObject {
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(45)
+        var state = JSONObject()
+        while (System.nanoTime() < deadline) {
+            evaluateRaw(
+                harness,
+                "window.editor.clearSelection(); window.editor.navigateFileEnd(); " +
+                    "window.editor.moveCursorTo($row, $column); true",
+            )
+            Thread.sleep(1_000)
+            state = evaluateJsonString(
+                harness,
+                """
+                (function() {
+                    window.editor.renderer.updateFull(true);
+                    var layer = document.querySelector(".ace_marker-layer");
+                    var drawn = layer ? layer.querySelectorAll(".autojs6_symbol_highlight") : [];
+                    var writes = layer ? layer.querySelectorAll(".autojs6_symbol_highlight_write") : [];
+                    return JSON.stringify({ count: drawn.length, writes: writes.length });
+                })()
+                """.trimIndent(),
+            )
+            if (state.optInt("count") >= expected) {
+                return state
+            }
         }
         return state
     }
