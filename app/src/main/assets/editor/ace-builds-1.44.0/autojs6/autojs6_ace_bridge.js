@@ -64,6 +64,9 @@
     var symbolHighlightGroup = null;
     var symbolHighlightTimer = null;
     var symbolHighlightSerial = 0;
+    // At most one highlight request is in flight; a cursor move meanwhile is served when it returns.
+    var symbolHighlightInFlight = false;
+    var symbolHighlightPendingPosition = null;
     var fontMetricsRefreshTimer = null;
     var fontMetricsRefreshFrameScheduled = false;
     var fontMetricsReadySerial = 0;
@@ -2199,11 +2202,14 @@
     // occurrences reported by the language service are drawn with Ace's MarkerGroup (from ext-language_tools).
     // Edits, selections, mode changes and the long line safety mode clear them. Read-only documents highlight too.
     var SYMBOL_HIGHLIGHT_DELAY_MS = 150;
+    // A provider that never answers must not block later highlight requests.
+    var SYMBOL_HIGHLIGHT_TIMEOUT_MS = 5000;
     var SYMBOL_HIGHLIGHT_CLASS = "autojs6_symbol_highlight";
     var SYMBOL_IDENTIFIER_CHAR = /[A-Za-z0-9_$\u00C0-\uFFFF]/;
 
     function clearSymbolHighlights() {
         symbolHighlightSerial++;
+        symbolHighlightPendingPosition = null;
         if (symbolHighlightTimer !== null) {
             clearTimeout(symbolHighlightTimer);
             symbolHighlightTimer = null;
@@ -2255,19 +2261,45 @@
         if (!isCursorOnIdentifier(pos)) {
             return;
         }
-        var serial = symbolHighlightSerial;
         symbolHighlightTimer = setTimeout(function() {
             symbolHighlightTimer = null;
-            if (!lspClient || typeof lspClient.getDocumentHighlightsAsync !== "function") {
+            requestSymbolHighlights(pos);
+        }, SYMBOL_HIGHLIGHT_DELAY_MS);
+    }
+
+    function requestSymbolHighlights(pos) {
+        if (!lspClient || typeof lspClient.getDocumentHighlightsAsync !== "function") {
+            return;
+        }
+        if (symbolHighlightInFlight) {
+            symbolHighlightPendingPosition = pos;
+            return;
+        }
+        var serial = symbolHighlightSerial;
+        symbolHighlightInFlight = true;
+        var finished = false;
+        var timeout = setTimeout(function() {
+            if (!finished) {
+                finished = true;
+                symbolHighlightInFlight = false;
+            }
+        }, SYMBOL_HIGHLIGHT_TIMEOUT_MS);
+        lspClient.getDocumentHighlightsAsync(pos, function(error, highlights) {
+            if (finished) {
                 return;
             }
-            lspClient.getDocumentHighlightsAsync(pos, function(error, highlights) {
-                if (serial !== symbolHighlightSerial || error || !Array.isArray(highlights) || !highlights.length) {
-                    return;
-                }
+            finished = true;
+            clearTimeout(timeout);
+            symbolHighlightInFlight = false;
+            var pending = symbolHighlightPendingPosition;
+            symbolHighlightPendingPosition = null;
+            if (serial === symbolHighlightSerial && !error && Array.isArray(highlights) && highlights.length) {
                 drawSymbolHighlights(highlights);
-            });
-        }, SYMBOL_HIGHLIGHT_DELAY_MS);
+            } else if (pending && serial !== symbolHighlightSerial) {
+                // The cursor moved while waiting; ask again for the latest position.
+                requestSymbolHighlights(pending);
+            }
+        });
     }
 
     function installSymbolHighlights() {

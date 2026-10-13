@@ -795,6 +795,43 @@ test("symbol highlights follow the cursor and clear on edits and selections", as
     }
 });
 
+test("a slow highlight provider gets one request at a time", async () => {
+    const requests = [];
+    const pending = [];
+    const page = await openEditor({
+        wrapLspClient: (client) => {
+            client.getDocumentHighlightsAsync = (pos, callback) => {
+                requests.push(plain(pos));
+                pending.push(callback);
+                return null;
+            };
+            return client;
+        },
+    });
+    try {
+        const { editor, api } = page;
+        api.setText("const value = 1;\nvalue + 2;\nconst other = value;\n");
+        await sleep(300);
+        // Answer what setText triggered (the cursor starts on an identifier).
+        while (pending.length) pending.shift()(null, []);
+        requests.length = 0;
+        editor.moveCursorTo(0, 8);
+        await sleep(200);
+        editor.moveCursorTo(1, 2);
+        await sleep(200);
+        editor.moveCursorTo(2, 8);
+        await sleep(200);
+        assert.deepEqual(requests, [{ row: 0, column: 8 }], "one request while the first is pending");
+        pending.shift()(null, [{ start: { row: 0, column: 6 }, end: { row: 0, column: 11 }, kind: "write" }]);
+        assert.deepEqual(requests, [{ row: 0, column: 8 }, { row: 2, column: 8 }], "then the latest cursor position");
+        render(page);
+        assert.equal(page.window.document.querySelectorAll(".ace_marker-layer .autojs6_symbol_highlight").length, 0,
+            "the stale answer is not drawn");
+    } finally {
+        page.close();
+    }
+});
+
 test("the inline completion preview is opt-in, hidden during IME composition and accepted with TAB", async () => {
     const ghost = (page) => {
         render(page);

@@ -3120,6 +3120,8 @@
         // Occurrences of the symbol at pos in this document (Roadmap-Ace-1.44.0.md A5-8): the TypeScript service
         // answers synchronously, Pyright and LuaLS through textDocument/documentHighlight; other documents get [].
         // Items: { start: { row, column }, end: { row, column }, kind: "text" | "read" | "write" }.
+        // Highlights are best effort: they never count towards the slow-operation circuit. A highlight that waits
+        // behind a cold Pyright analysis on a slow device would otherwise switch the semantic service off.
         function getDocumentHighlightsAsync(pos, callback) {
             callback = typeof callback === "function" ? callback : noop;
             try {
@@ -3141,7 +3143,8 @@
                     return provider.getDocumentHighlights(session, normalized, text, function(error, highlights) {
                         recordSemanticOperation(
                             startedAt,
-                            pythonDocument ? "python-document-highlight" : "lua-document-highlight"
+                            pythonDocument ? "python-document-highlight" : "lua-document-highlight",
+                            false
                         );
                         callback(error || null, Array.isArray(highlights) ? highlights : []);
                     });
@@ -3157,7 +3160,7 @@
                 }
                 var tsStartedAt = Date.now();
                 var result = service.getDocumentHighlights(session, normalized, text);
-                recordSemanticOperation(tsStartedAt, "document-highlight");
+                recordSemanticOperation(tsStartedAt, "document-highlight", false);
                 callback(null, Array.isArray(result) ? result : []);
             } catch (error) {
                 notify(config, "ACE LSP document highlight failed: " + error, error);

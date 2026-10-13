@@ -629,6 +629,11 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       的三处高亮及种类; `verifyAutoJs6PythonWorker` 断言真实 Pyright 对参数 `name` 的两处高亮, 以及 provider 与客户端两层规范化;
       `verifyAutoJs6LuaLanguageServer` 在协议替身上断言往返与种类映射; 桥接执行式测试新增一例 (延迟, 编辑 / 选区清除, 标识符外不请求,
       只读, 关闭开关). 待真机目视验收 (亮 / 暗主题配色).
+      修复 (2026-10-13): 5 台真机全套回归中 22120RN86C (WebView 111) 的 `AcePythonSemanticSmokeTest` 失败 (补全为空), 旧构建通过; 换回旧
+      Pyright worker 仍失败, 关闭符号高亮则通过. 原因: 冷启动时 documentHighlight 请求排在 Pyright 首次分析之后, 耗时超过 1000 ms 的慢操作
+      阈值, 两次即触发 `recordSemanticOperation` 的熔断, 语义服务被关闭, 之后的补全直接返回空. 现在高亮请求不计入熔断 (尽力而为),
+      桥接层同一时间只保留一个在途高亮请求 (光标在等待期间移动时, 返回后按最新位置补发一次; 5 s 无回调则释放), 执行式测试新增一例.
+      修复后该机 Python 用例两轮通过.
 
 ## 10. A6 · 工程与健壮性
 
