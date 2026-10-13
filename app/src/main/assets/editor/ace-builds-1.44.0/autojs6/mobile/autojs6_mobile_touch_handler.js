@@ -605,4 +605,4 @@ ace.define(
         install: install,
         removeUpstreamTouchListeners: removeUpstreamTouchListeners
     };
-})(typeof window !== "undefined" ? window : this);
+})(/** @type {Window} */ (typeof window !== "undefined" ? window : this));

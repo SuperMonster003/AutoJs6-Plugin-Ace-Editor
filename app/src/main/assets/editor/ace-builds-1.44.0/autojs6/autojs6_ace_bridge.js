@@ -2,8 +2,12 @@
     "use strict";
 
     var bridge = global.autojs || {};
+    // Typed for tools/ace-lsp/typecheck-ace-bridge.mjs (Roadmap-Ace-1.44.0.md A6-2).
+    /** @type {import("ace-builds").Ace.Editor} */
     var editor = null;
+    /** @type {import("ace-builds").Ace.EditSession} */
     var session = null;
+    /** @type {typeof import("ace-builds-internal/range").Range} */
     var Range = null;
     var staticCompleter = null;
     var lspCompletionCompleter = null;
@@ -147,7 +151,7 @@
     // whole line as one token, so lines of a wrongly decoded file longer than the
     // trigger are clipped harder here (Roadmap-Ace-1.44.0.md A6-4 evaluates relying
     // on MAX_LINE_LENGTH alone).
-    var LONG_LINE_SAFETY_RENDER_TRIGGER = 16 * 1024;
+    // Characters rendered per line in the long line safety mode (Roadmap-Ace-1.44.0.md A6-4).
     var LONG_LINE_SAFETY_RENDER_LIMIT = 4096;
     var BUNDLED_FONT_LOAD_PROBE = '14px "Iosevka"';
     var INSTALLED_FONT_URL_PREFIX = "https://appassets.androidplatform.net/autojs6-fonts/";
@@ -509,8 +513,14 @@
         }
     }
 
+    // The bridge only ever uses Ace's popup Autocomplete (Autocomplete.for), never InlineAutocomplete.
+    function popupCompleter() {
+        return /** @type {import("ace-builds").Ace.Autocomplete} */ (editor && editor.completer);
+    }
+
     function refreshAutocompletePopupTheme(theme) {
-        var popup = editor && editor.completer && editor.completer.popup;
+        var completer = popupCompleter();
+        var popup = completer && completer.popup;
         if (!popup || typeof popup.setTheme !== "function") {
             return;
         }
@@ -1673,10 +1683,9 @@
             }
         }
         try {
-            if (document && document.activeElement && document.activeElement !== document.body &&
-                typeof document.activeElement.blur === "function"
-            ) {
-                document.activeElement.blur();
+            var activeElement = /** @type {HTMLElement} */ (document && document.activeElement);
+            if (activeElement && activeElement !== document.body && typeof activeElement.blur === "function") {
+                activeElement.blur();
             }
         } catch (ignore2) {
             // Best-effort IME suppression.
@@ -1991,7 +2000,7 @@
         if (!node || !node.getBoundingClientRect) {
             return;
         }
-        var doc = document && document.documentElement || {};
+        var doc = /** @type {HTMLElement} */ (document && document.documentElement || {});
         var viewportWidth = Math.max(Number(global.innerWidth) || 0, Number(doc.clientWidth) || 0, 320);
         var viewportHeight = Math.max(Number(global.innerHeight) || 0, Number(doc.clientHeight) || 0, 240);
         var edge = 8;
@@ -2085,7 +2094,7 @@
         }
         var nodes = document.querySelectorAll(".ace_tooltip");
         for (var i = 0; i < nodes.length; i += 1) {
-            nodes[i].style.display = "none";
+            /** @type {HTMLElement} */ (nodes[i]).style.display = "none";
         }
     }
 
@@ -2145,7 +2154,7 @@
     }
 
     function applyInlineCompletionPreview(enabled) {
-        var completer = editor && editor.completer;
+        var completer = popupCompleter();
         if (!completer) {
             return false;
         }
@@ -3363,50 +3372,19 @@
         notifyStateChanged("debugLineChanged");
     }
 
-    function installDocumentLongLineRenderGuard() {
+    // Ace 1.44.0 stops rendering a line after textLayer.MAX_LINE_LENGTH characters (prototype default 10000) and
+    // appends its overflow button (ace_toggle_wrap). The long line safety mode lowers the limit for this editor;
+    // leaving it removes the instance value so that the prototype default applies again.
+    function applyLongLineRenderLimit(enabled) {
         var textLayer = editor && editor.renderer && editor.renderer.$textLayer;
-        if (!textLayer || textLayer.__autojs6LongLineRenderGuardInstalled ||
-            typeof textLayer.$renderSimpleLine !== "function") {
+        if (!textLayer) {
             return;
         }
-        textLayer.__autojs6LongLineRenderGuardInstalled = true;
-        var originalRenderSimpleLine = textLayer.$renderSimpleLine;
-        textLayer.$renderSimpleLine = function(parent, tokens) {
-            if (!documentLongLineSafetyMode || !tokens || !tokens.length) {
-                return originalRenderSimpleLine.call(this, parent, tokens);
-            }
-
-            var observedLength = 0;
-            for (var index = 0; index < tokens.length; index++) {
-                observedLength += String(tokens[index] && tokens[index].value || "").length;
-                if (observedLength > LONG_LINE_SAFETY_RENDER_TRIGGER) {
-                    break;
-                }
-            }
-            if (observedLength <= LONG_LINE_SAFETY_RENDER_TRIGGER) {
-                return originalRenderSimpleLine.call(this, parent, tokens);
-            }
-
-            var remaining = LONG_LINE_SAFETY_RENDER_LIMIT;
-            var clippedTokens = [];
-            for (var tokenIndex = 0; tokenIndex < tokens.length && remaining > 0; tokenIndex++) {
-                var token = tokens[tokenIndex] || {};
-                var value = String(token.value || "");
-                var clippedValue = value.slice(0, remaining);
-                if (clippedValue) {
-                    clippedTokens.push({
-                        type: token.type || "text",
-                        value: clippedValue
-                    });
-                    remaining -= clippedValue.length;
-                }
-            }
-            originalRenderSimpleLine.call(this, parent, clippedTokens);
-            var indicator = this.dom.createElement("span");
-            indicator.className = "ace_keyword autojs6_long_line_truncated";
-            indicator.textContent = "...";
-            parent.appendChild(indicator);
-        };
+        if (enabled) {
+            textLayer.MAX_LINE_LENGTH = LONG_LINE_SAFETY_RENDER_LIMIT;
+        } else if (Object.prototype.hasOwnProperty.call(textLayer, "MAX_LINE_LENGTH")) {
+            delete textLayer.MAX_LINE_LENGTH;
+        }
     }
 
     function applyDocumentAccessibilityLightweightMode(enabled) {
@@ -3448,6 +3426,7 @@
         }
         session.$autojs6LongLineSafetyMode = enabled;
         applyDocumentAccessibilityLightweightMode(enabled);
+        applyLongLineRenderLimit(enabled);
         if (!changed) {
             return;
         }
@@ -3547,7 +3526,7 @@
         if (typeof document.setNewLineMode === "function" &&
             typeof document.getNewLineMode === "function" &&
             document.getNewLineMode() !== mode) {
-            document.setNewLineMode(mode);
+            document.setNewLineMode(/** @type {import("ace-builds").Ace.NewLineMode} */ (mode));
         } else if (autoNewLineChanged && typeof document._signal === "function") {
             document._signal("changeNewLineMode");
         }
@@ -3729,7 +3708,7 @@
             }, 0);
         }
 
-        session.undoChanges = function(group, dontSelect) {
+        session.undoChanges = /** @param {any} group */ function(group, dontSelect) {
             var targetUnsafeLine = historySafetyTarget(group, "undo");
             if (documentLongLineSafetyMode || targetUnsafeLine) {
                 applyDocumentLongLineSafetyMode(true);
@@ -3739,7 +3718,7 @@
             scheduleHistoryState(group, "undo", targetUnsafeLine);
             return result;
         };
-        session.redoChanges = function(group, dontSelect) {
+        session.redoChanges = /** @param {any} group */ function(group, dontSelect) {
             var targetUnsafeLine = historySafetyTarget(group, "redo");
             if (documentLongLineSafetyMode || targetUnsafeLine) {
                 applyDocumentLongLineSafetyMode(true);
@@ -3859,7 +3838,7 @@
     }
 
     function isCompletionPopupOpen() {
-        var completer = editor && editor.completer;
+        var completer = popupCompleter();
         var popup = completer && completer.popup;
         return !!(completer && completer.activated && popup && popup.isOpen);
     }
@@ -4009,7 +3988,7 @@
     function moveCompletionSelectionOrCursor(delta) {
         delta = Number(delta) || 0;
         if (isCompletionPopupOpen() && editor.completer.goTo) {
-            editor.completer.goTo(delta < 0 ? "up" : "down");
+            popupCompleter().goTo(delta < 0 ? "up" : "down");
             notifyStateChanged("completionSelectionChanged");
             return true;
         }
@@ -4030,7 +4009,8 @@
     function acceptCompletionOrInsertTab() {
         if (isCompletionPopupOpen() && editor.completer.insertMatch) {
             return runTextMutation("acceptCompletion", function() {
-                var accepted = editor.completer.insertMatch();
+                // Without data Ace inserts the selected popup row.
+                var accepted = popupCompleter().insertMatch(undefined);
                 notifyTextChanged();
                 notifyCursorChanged();
                 return accepted !== false;
@@ -4918,7 +4898,7 @@
             return;
         }
         var originalUpdateGutterWidth = gutterLayer.$updateGutterWidth;
-        gutterLayer.$updateGutterWidth = function(config) {
+        gutterLayer.$updateGutterWidth = /** @this {any} */ function(config) {
             var sessionForGutter = this.session;
             if (gutterWidthMode === "dynamic" && sessionForGutter && sessionForGutter.$useWrapMode) {
                 var originalUseWrapMode = sessionForGutter.$useWrapMode;
@@ -5759,7 +5739,6 @@
         if (global.AutoJsAceModePatches) {
             global.AutoJsAceModePatches.install(editor);
         }
-        installDocumentLongLineRenderGuard();
         installHistoryOperationHooks();
         installCompletionPopupTouchScrollPatch();
         installCompletionPopupStates();

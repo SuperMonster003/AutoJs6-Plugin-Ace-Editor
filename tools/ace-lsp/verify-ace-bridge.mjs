@@ -6,23 +6,18 @@
 //
 // The real editor page (autojs6_editor.html with the pinned ace-builds 1.44.0 files, the mobile overlay and the bridge)
 // runs in jsdom with a fake `window.autojs` that records every host call. jsdom is pinned by
-// tools/ace-lsp/ace-bridge-test/package-lock.json and installed with `npm ci` under build/ace-bridge-test/<lock hash>;
-// node_modules is never committed. jsdom has no layout engine, so tests that need rendered rows give the editor a fixed
+// tools/ace-lsp/ace-bridge-test/package-lock.json and installed by ace-bridge-test/dependencies.mjs under
+// build/ace-bridge-test/<lock hash>; node_modules is never committed. jsdom has no layout engine, so tests that need rendered rows give the editor a fixed
 // size and character metrics first (layoutEditor).
 
 import assert from "node:assert/strict";
-import crypto from "node:crypto";
-import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import { spawnSync } from "node:child_process";
-import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
+import { loadAceBridgeTestDependencies } from "./ace-bridge-test/dependencies.mjs";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPOSITORY_ROOT = path.resolve(SCRIPT_DIR, "..", "..");
-const DEPENDENCY_DIR = path.join(SCRIPT_DIR, "ace-bridge-test");
-const CACHE_ROOT = path.join(REPOSITORY_ROOT, "build", "ace-bridge-test");
 const EDITOR_ROOT = path.join(REPOSITORY_ROOT, "app", "src", "main", "assets", "editor", "ace-builds-1.44.0");
 const EDITOR_PAGE = path.join(EDITOR_ROOT, "autojs6_editor.html");
 const READY_TIMEOUT_MS = 15000;
@@ -34,43 +29,6 @@ function sleep(ms) {
 // Copies a value out of the jsdom realm so that node:assert compares structure, not prototypes.
 function plain(value) {
     return JSON.parse(JSON.stringify(value));
-}
-
-function run(command, args, cwd) {
-    const result = spawnSync(command, args, { cwd, encoding: "utf8", shell: false, stdio: ["ignore", "pipe", "pipe"] });
-    if (result.error) throw result.error;
-    if (result.status !== 0) {
-        throw new Error(`${command} ${args.join(" ")} exited with status ${result.status}\n${result.stdout}\n${result.stderr}`);
-    }
-}
-
-function runNpm(args, cwd) {
-    if (process.platform === "win32") {
-        const npmCli = path.join(path.dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js");
-        if (fs.existsSync(npmCli)) {
-            run(process.execPath, [npmCli, ...args], cwd);
-            return;
-        }
-    }
-    run("npm", args, cwd);
-}
-
-// Installs the locked dependencies once per lock file content and returns a require() rooted there.
-function loadDependencies() {
-    const lock = fs.readFileSync(path.join(DEPENDENCY_DIR, "package-lock.json"));
-    const manifest = fs.readFileSync(path.join(DEPENDENCY_DIR, "package.json"));
-    const hash = crypto.createHash("sha256").update(manifest).update(lock).digest("hex").slice(0, 16);
-    const installDir = path.join(CACHE_ROOT, hash);
-    const marker = path.join(installDir, "node_modules", "jsdom", "package.json");
-    if (!fs.existsSync(marker)) {
-        fs.rmSync(installDir, { recursive: true, force: true });
-        fs.mkdirSync(installDir, { recursive: true });
-        fs.writeFileSync(path.join(installDir, "package.json"), manifest);
-        fs.writeFileSync(path.join(installDir, "package-lock.json"), lock);
-        console.log(`[ace bridge] installing pinned jsdom into ${path.relative(REPOSITORY_ROOT, installDir)}`);
-        runNpm(["ci", "--ignore-scripts", "--no-audit", "--no-fund"], installDir);
-    }
-    return createRequire(path.join(installDir, "package.json"));
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -324,6 +282,37 @@ test("the long line safety mode switches to plain text and restores the routed m
         await sleep(30);
         assert.equal(page.editor.session.getMode().$id, "ace/mode/lua");
         assert.equal(page.editor.session.getUseWorker(), true);
+    } finally {
+        page.close();
+    }
+});
+
+test("the long line safety mode renders 4096 characters and Ace's overflow button", async () => {
+    const page = await openEditor();
+    try {
+        const { editor, window, api } = page;
+        const textLayer = editor.renderer.$textLayer;
+        const firstLine = () => {
+            render(page);
+            return window.document.querySelector(".ace_text-layer .ace_line");
+        };
+        api.setText("x".repeat(200000), false, true);
+        await sleep(100);
+        assert.equal(textLayer.MAX_LINE_LENGTH, 4096);
+        let line = firstLine();
+        const button = line.querySelector(".ace_inline_button.ace_toggle_wrap");
+        assert.ok(button, "overflow button");
+        assert.equal(line.textContent.length - button.textContent.length, 4096, "rendered characters");
+        assert.equal(window.document.querySelector(".ace_text-layer").getAttribute("aria-hidden"), "true");
+        api.setText("y".repeat(12000), false, false);
+        await sleep(100);
+        assert.equal(Object.prototype.hasOwnProperty.call(textLayer, "MAX_LINE_LENGTH"), false, "the prototype default applies again");
+        assert.equal(textLayer.MAX_LINE_LENGTH, 10000);
+        line = firstLine();
+        const normalButton = line.querySelector(".ace_toggle_wrap");
+        assert.ok(normalButton, "Ace truncates lines over 10000 characters outside the safety mode as well");
+        assert.equal(line.textContent.length - normalButton.textContent.length, 10000);
+        assert.equal(window.document.querySelector(".ace_text-layer").getAttribute("aria-hidden"), null);
     } finally {
         page.close();
     }
@@ -902,7 +891,7 @@ async function main() {
         else if (argv[index] === "--install-only") installOnly = true;
         else throw new Error(`Unknown argument: ${argv[index]}`);
     }
-    const requireDependency = loadDependencies();
+    const requireDependency = loadAceBridgeTestDependencies();
     ({ JSDOM, VirtualConsole } = requireDependency("jsdom"));
     if (installOnly) return;
     const selected = tests.filter((entry) => entry.name.includes(filter));

@@ -6,8 +6,8 @@ import java.io.File
 
 /**
  * Source checks that tools/ace-lsp/verify-ace-bridge.mjs (Roadmap-Ace-1.44.0.md A6-3) does not execute: the Kotlin
- * acknowledgement timeout and the long line safety mode, which A6-4 replaces. The history operations themselves are
- * executed there.
+ * acknowledgement timeout and the long line safety mode wiring. The history operations and the long line render limit
+ * (A6-4) are executed there.
  */
 class AceHistoryOperationBridgeTest {
 
@@ -59,17 +59,6 @@ class AceHistoryOperationBridgeTest {
         val lspSource = readAsset("autojs6_lsp_client.js")
         assertTrue(lspSource.contains("target.\$autojs6LongLineSafetyMode"))
         assertTrue(lspSource.contains("\"line-too-long\""))
-    }
-
-    @Test
-    fun `lightweight mode bounds pathological first token rendering`() {
-        assertTrue(bridgeSource.contains("LONG_LINE_SAFETY_RENDER_TRIGGER = 16 * 1024"))
-        assertTrue(bridgeSource.contains("LONG_LINE_SAFETY_RENDER_LIMIT = 4096"))
-        assertTrue(bridgeSource.contains("function installDocumentLongLineRenderGuard()"))
-        assertTrue(bridgeSource.contains("textLayer.\$renderSimpleLine = function(parent, tokens)"))
-        assertTrue(bridgeSource.contains("observedLength > LONG_LINE_SAFETY_RENDER_TRIGGER"))
-        assertTrue(bridgeSource.contains("value.slice(0, remaining)"))
-        assertTrue(bridgeSource.contains("autojs6_long_line_truncated"))
     }
 
     private fun readAsset(relativePath: String): String {

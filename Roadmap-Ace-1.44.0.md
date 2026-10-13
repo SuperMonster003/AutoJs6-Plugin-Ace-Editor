@@ -629,6 +629,18 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       私有成员声明 (§2.3 列表); Gradle `typecheckAutoJs6AceBridge` 挂到 `check`; Node/TypeScript 的获取方式沿用 `build-python-worker.mjs`
       的固定版本策略 (不提交 node_modules).
       —— 验收: 首次全绿后, 人为引用一个不存在的 Ace 方法会使 `check` 失败.
+      结论 (2026-10-13): 实现为 `tools/ace-lsp/typecheck-ace-bridge.mjs` (TypeScript 编译器 API, 不另放 tsconfig.json): TypeScript 6.0.3
+      与 jsdom 一起由 `tools/ace-lsp/ace-bridge-test/package-lock.json` 固定, 安装逻辑抽到 `ace-bridge-test/dependencies.mjs` 供两个脚本
+      共用; 声明取自 `fetch-ace-upstream.mjs` 解压的固定 tarball (`ace.d.ts` 及其引用); 私有声明放在
+      `tools/ace-lsp/ace-bridge-typecheck/ace-private.d.ts` 而不是资产目录 (不进 APK). 检查 7 个直接驱动 Ace 的脚本 (桥接层, mode 补丁,
+      5 个覆盖层脚本). JS 中 `var editor = null` 只在同一函数的控制流里按赋值推断, 其他函数里仍是 any, 因此给桥接层顶层的
+      `editor / session / Range` 加了 JSDoc 类型; `editor.completer` 在声明中是 `Autocomplete | InlineAutocomplete`, 桥接层只用前者,
+      新增 `popupCompleter()` 统一转换. 首轮 37 + 9 个错误的处理: 页面全局对象, 覆盖层 `ace.define` 内 require 的模块 ID, 上游声明缺少的
+      `onResize`, `guttermousedown / click` 事件, `showWhitespacesInSelection` 选项, 以及桥接层有意使用的私有成员 (`$textLayer`,
+      `$gutterLayer`, `$padding`, `$isMousePressed`, `$mouseHandler`, `onCompositionStart/End`, `$toggleFoldWidget`, `Document.$autoNewLine /
+      _signal` 等) 写入私有声明; DOM 收窄, 历史分组上的扩展字段, `setNewLineMode` 参数与 `insertMatch(undefined)` 用 JSDoc 转换或显式参数,
+      不改变行为. 变异验证: 把 `updateFull()` 改成 `updateFul()`, 把 `setTabSize` 改成 `setTabSizeX` 均报错. Gradle `typecheckAutoJs6AceBridge`
+      已挂到 `check`; CI 只跑 `testDebugUnitTest`, 与 A6-1 / A6-3 相同, 由本地 `check` 覆盖.
 - [x] **A6-3** 桥接层执行式测试: `tools/ace-lsp/verify-ace-bridge.mjs` 用 Node + jsdom (固定版本) 加载真实 ace.js, ext-language_tools,
       覆盖层与桥接层, 提供假的 `window.autojs` 记录调用; 用例至少覆盖: 初始化与 `notifyReady`, `setText/getState`, mode 路由,
       `foldAll/unfoldAll`, 撤销标记 (替换 A1-5 的 `@Ignore`), gutter 事件分发 (A3-1 四种 target), 覆盖层卸载上游监听 (A2-5),
@@ -646,13 +658,28 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (保留 Kotlin 应答超时, 长行安全模式两项, 后者由 A6-4 处理), `AceLanguageRoutingBridgeTest` 删去 4 个, 保留 Kotlin 调用顺序检查;
       A1-5 未引入 `@Ignore`, 现为 0. 触发映射 (A5-6) 的用例随 A5-6 加入. 注意 CI 只跑 `testDebugUnitTest`, 不跑 `check`, 被删的源码
       断言在 CI 中不再有替代 (与 A6-1 相同的取舍, 本地 `check` 覆盖).
-- [ ] **A6-4** 超长行改用上游 MAX_LINE_LENGTH (验证门 G-A6-4): 安全模式下设置 `renderer.$textLayer.MAX_LINE_LENGTH = 4096`
+- [x] **A6-4** 超长行改用上游 MAX_LINE_LENGTH (验证门 G-A6-4): 安全模式下设置 `renderer.$textLayer.MAX_LINE_LENGTH = 4096`
       (与 `LONG_LINE_SAFETY_RENDER_LIMIT` 一致), 非安全模式恢复原型默认 10000; 删除 `installDocumentLongLineRenderGuard` (`:3164`)
       与 `$renderSimpleLine` 补丁; 保留 `applyDocumentAccessibilityLightweightMode`; 溢出按钮 (`ace_toggle_wrap`) 点击展开时的
       性能由 Ace 自身负责, 桥接层不再截断.
       —— 验收: `AceEditorTextLoadPolicy.ACE_UNSAFE_LINE_LENGTH` 不变; 执行式测试断言安全模式下文本层只渲染 4096 字符加按钮.
 - [ ] **G-A6-4** G8441 上加载 50 万字符单行样例: 首次渲染与滚动不触发 ANR, 替换文档耗时不劣于 1.4.12 守卫版 (A0 期间先测一次留档);
       不达标 -> 恢复守卫并记录.
+      A6-4 实现 (2026-10-13): `applyLongLineRenderLimit` 在安全模式下设置 `textLayer.MAX_LINE_LENGTH = 4096`, 退出时删除实例属性回到原型
+      默认 10000; `installDocumentLongLineRenderGuard` 与 `$renderSimpleLine` 补丁及 16 KiB 触发阈值已删除, `applyDocumentAccessibilityLightweightMode`
+      保留. 行为差异: 截断提示由 "..." 变为上游按钮 "<click to see more...>" (`ace_toggle_wrap`), 安全模式下所有超过 4096 字符的行都截断
+      (旧守卫只截断超过 16 KiB 的行). 触摸下覆盖层阻止了合成鼠标事件, 按钮点击无效 (不会切换自动换行); 外接鼠标点击会切换换行,
+      上游的换行渲染同样在 MAX_LINE_LENGTH 处截断. 执行式测试新增一例 (安全模式 4096 字符加按钮, 退出后 10000 字符加按钮, aria-hidden 切换),
+      `AceHistoryOperationBridgeTest` 删去对旧守卫源码的断言.
+      测量 (2026-10-13, G8441, Chrome 126, 50 万字符单行, 每版 3 轮; A0 数据见 `build/ace-perf/a0-long-line.log`):
+      | 构建 | 首次加载 ms | 全量渲染 ms | 滚动渲染最大 ms | 渲染字符 | 替换回调 ms | 替换可见 ms |
+      |---|---|---|---|---|---|---|
+      | A0 1.4.12 守卫版 | 263-270 | 10.3-10.4 | 11.4-11.6 | 4099 | 118-119 | 178-179 |
+      | A5 1.44.0 + 自研守卫 | 269-275 | 11.3-11.7 | 13.1-13.4 | 4099 | 139-141 | 206-209 |
+      | A6 1.44.0 + MAX_LINE_LENGTH | 269-276 | 11.7-12.0 | 13.6-14.0 | 4118 | 141-155 | 209-242 |
+      结论: 无 ANR; 与带自研守卫的 1.44.0 构建相比 MAX_LINE_LENGTH 方案基本持平 (渲染差 1 ms 以内, A6 的首轮替换偏慢, 其余两轮
+      141-147 / 209-214). 相对 1.4.12 替换慢约 20% (约 25-30 ms) 来自 Ace 1.44.0 本身, 恢复守卫不能改善 (A5 同样慢), 因此未按字面恢复守卫.
+      按门的字面要求为不达标; 是否接受该差异 (计入 A8-3 / G-A8 的性能评估) 由维护者确认, 确认前不勾选.
 
 ## 11. A7 · 宿主设置联动 (跨仓库: AutoJs6)
 

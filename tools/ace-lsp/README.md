@@ -400,11 +400,15 @@ with:
 upstream files with the pinned npm tarball. `verify-ace-bridge.mjs` loads the real editor page (Ace, the mobile
 overlay and the bridge) in jsdom with a recording fake `window.autojs` and executes the bridge contract: start-up and
 runtime diagnostics, mode and worker routing, history markers and tagged undo / redo, folding, gutter taps, ActionMode
-calls, the Ace 1.44.0 display options, custom scrollbar drags and the completion popup states. jsdom is pinned by
-`ace-bridge-test/package-lock.json` and installed with `npm ci --ignore-scripts` under `build/ace-bridge-test/`
-(network access is needed once per lock change); `node_modules` is never committed. Both run as part of `check`:
+calls, the Ace 1.44.0 display options, custom scrollbar drags and the completion popup states.
+`typecheck-ace-bridge.mjs` checks the bridge and mobile overlay scripts with TypeScript (`allowJs`, `checkJs`,
+strict off) against the `ace.d.ts` of the pinned tarball; members Ace does not declare but the bridge uses are listed
+in `ace-bridge-typecheck/ace-private.d.ts`, so a call to an Ace method that does not exist fails the check. jsdom and
+TypeScript are pinned by `ace-bridge-test/package-lock.json` and installed with `npm ci --ignore-scripts` under
+`build/ace-bridge-test/` (network access is needed once per lock change); `node_modules` is never committed. All
+three run as part of `check`:
 
 ```powershell
-.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceBridge
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceBridge :app:typecheckAutoJs6AceBridge
 node tools/ace-lsp/verify-ace-bridge.mjs --filter "history"
 ```

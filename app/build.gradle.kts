@@ -101,6 +101,17 @@ val verifyAutoJs6AceBridge = tasks.register<Exec>("verifyAutoJs6AceBridge") {
     executable(autoJs6NodeExecutable.get())
     args(verifier.asFile.absolutePath)
 }
+val typecheckAutoJs6AceBridge = tasks.register<Exec>("typecheckAutoJs6AceBridge") {
+    group = "verification"
+    description = "Type checks the bridge and mobile overlay scripts against the ace.d.ts of ace-builds 1.44.0 (pinned TypeScript)."
+    val checker = rootProject.layout.projectDirectory.file("tools/ace-lsp/typecheck-ace-bridge.mjs")
+    inputs.file(checker)
+    inputs.dir(rootProject.layout.projectDirectory.dir("tools/ace-lsp/ace-bridge-typecheck"))
+    inputs.dir(autoJs6EditorAssetsDirectory)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(checker.asFile.absolutePath)
+}
 val verifyAutoJs6KotlinP2Plus = tasks.register<Exec>("verifyAutoJs6KotlinP2Plus") {
     group = "verification"
     description = "Verifies Kotlin P2+ type heuristics, safe calls, instance APIs, and Java/Android index reuse."
@@ -412,6 +423,7 @@ tasks.named("check") {
         verifyAutoJs6AceAssets,
         verifyAutoJs6AceMobileOverlay,
         verifyAutoJs6AceBridge,
+        typecheckAutoJs6AceBridge,
         verifyAutoJs6LspRuntime,
         verifyAutoJs6PythonWorker,
         verifyAutoJs6LuaLanguageServer,

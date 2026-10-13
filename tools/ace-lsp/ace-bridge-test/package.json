@@ -1,9 +1,10 @@
 {
   "name": "autojs6-ace-bridge-test",
   "private": true,
-  "description": "Pinned dependencies of tools/ace-lsp/verify-ace-bridge.mjs (Roadmap-Ace-1.44.0.md A6-3); node_modules is installed under build/ and never committed.",
+  "description": "Pinned dependencies of tools/ace-lsp/verify-ace-bridge.mjs and typecheck-ace-bridge.mjs (Roadmap-Ace-1.44.0.md A6-2, A6-3); node_modules is installed under build/ and never committed.",
   "license": "UNLICENSED",
   "dependencies": {
-    "jsdom": "26.1.0"
+    "jsdom": "26.1.0",
+    "typescript": "6.0.3"
   }
 }
