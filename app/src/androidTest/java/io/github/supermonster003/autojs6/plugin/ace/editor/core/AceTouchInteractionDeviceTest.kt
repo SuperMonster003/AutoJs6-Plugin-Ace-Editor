@@ -31,7 +31,8 @@ import org.junit.runner.RunWith
  *
  * Every scenario logs one structured record (tag AutoJs6AceTouch) with the JavaScript selection, scroll offsets and
  * ActionMode calls plus the host side soft input and selection toolbar state. The assertions encode the touch behavior
- * of the Ace 1.4.12 Auto.js build; they are checked after all scenarios ran so one failure does not hide the others.
+ * of the Ace 1.4.12 Auto.js build with the changes of Roadmap-Ace-1.44.0.md A2-10 (slow taps, resting fingers, gutter
+ * taps, the insertion toolbar); they are checked after all scenarios ran so one failure does not hide the others.
  */
 @RunWith(AndroidJUnit4::class)
 class AceTouchInteractionDeviceTest {
@@ -84,11 +85,13 @@ class AceTouchInteractionDeviceTest {
                 expect(p, p.softInputRequestedSinceStart(), "soft input should be requested")
             }
             runScenario(probe, "slow tap") { p ->
+                // A2-10: 1.4.12 ignored taps held longer than 100 ms; every tap lifted before the long press counts.
                 p.setSelection(1, 3, 1, 3)
                 val target = p.point(3, 12)
                 tap(target, holdMs = 250)
                 settle()
-                expect(p, p.state().cursorIs(1, 3), "a tap held for 250 ms should not move the cursor")
+                expect(p, p.state().cursorIs(3, 12), "a tap held for 250 ms should move the cursor to 3:12")
+                expect(p, p.softInputRequestedSinceStart(), "soft input should be requested")
             }
             runScenario(probe, "B3 double tap") { p ->
                 val target = p.point(4, 14)
@@ -150,12 +153,13 @@ class AceTouchInteractionDeviceTest {
                 val later = p.state().scrollTop
                 p.note("scrollTopAfterRelease", released)
                 p.note("scrollTopLater", later)
-                // Whether the rest still flings depends on the WebView reporting stationary touch moves, so the
-                // distance is recorded for the per-device comparison only.
                 expect(p, released > 0, "content should scroll with the finger")
+                // A2-10: a finger resting before the lift does not fling (1.4.12 flung on some devices).
+                expect(p, later - released < p.lineHeightCss(), "a rested drag should not fling ($released -> $later)")
             }
             runScenario(probe, "pause before lifting") { p ->
-                // Recorded only: no move events during the pause, so 1.4.12 still uses the velocity before it.
+                // No move events during the pause: 1.4.12 still flung with the velocity before it, the overlay
+                // treats a finger resting for more than 40 ms as stopped (A2-10).
                 p.scrollTo(0)
                 val start = p.point(p.lowerRow(), 20)
                 val end = Point(start.x, start.y - p.swipeRows() * p.lineHeightPx())
@@ -163,8 +167,10 @@ class AceTouchInteractionDeviceTest {
                 SystemClock.sleep(100)
                 val released = p.state().scrollTop
                 SystemClock.sleep(900)
+                val later = p.state().scrollTop
                 p.note("scrollTopAfterRelease", released)
-                p.note("scrollTopLater", p.state().scrollTop)
+                p.note("scrollTopLater", later)
+                expect(p, later - released < p.lineHeightCss(), "a paused drag should not fling ($released -> $later)")
             }
             runScenario(probe, "B9 fling") { p ->
                 p.scrollTo(0)
@@ -195,14 +201,28 @@ class AceTouchInteractionDeviceTest {
                 expect(p, kotlin.math.abs(later - stopped) < 1.0, "touching should stop the fling ($stopped -> $later)")
             }
             runScenario(probe, "B2 gutter tap") { p ->
-                // Recorded only: the 1.4.12 handler skips gutter touches on touchstart but still runs touchend with
-                // the mode of the previous gesture, and the gutter mouse events go to the bridge. When row 3 carries a
-                // diagnostic, a tap in the marker area opens it and moves the cursor to the row start; whether it does
-                // depends on the language service (the plain text rows are JavaScript errors), so it is recorded.
+                // A2-10: the overlay passes gutter taps to the bridge without focusing the editor. The middle of the
+                // cell toggles the breakpoint, also on rows with diagnostics (whose icon sits at the left edge).
                 p.setSelection(1, 1, 1, 1)
                 p.note("row3Diagnostics", p.annotationCount(3))
                 tap(p.gutterPoint(3), holdMs = 40)
                 settle()
+                val state = p.state()
+                p.note("row3Breakpoint", p.hasBreakpoint(3))
+                expect(p, p.hasBreakpoint(3), "a gutter tap should toggle the breakpoint of row 3")
+                expect(p, state.cursorIs(1, 1), "a gutter tap should not move the cursor, got ${state.cursor}")
+                expect(p, !p.softInputRequestedSinceStart(), "a gutter tap should not ask for the soft keyboard")
+                p.clearBreakpoint(3)
+            }
+            runScenario(probe, "tap on the cursor") { p ->
+                // A2-10: a tap on the cursor shows the insertion toolbar (paste, select all).
+                p.setSelection(9, 4, 9, 4)
+                tap(p.point(9, 4), holdMs = 40)
+                settle()
+                val state = p.state()
+                expect(p, state.cursorIs(9, 4) && state.empty, "the cursor should stay at 9:4, got ${state.cursor}")
+                expect(p, state.traceContains("startInsertionActionMode"), "a tap on the cursor should ask for the insertion toolbar")
+                expect(p, p.selectionToolbarActive(), "the insertion toolbar should be shown")
             }
             runScenario(probe, "B15 tap clears the selection") { p ->
                 p.setSelection(6, 6, 6, 20)
@@ -393,7 +413,7 @@ class AceTouchInteractionDeviceTest {
                     var editor = window.editor;
                     var trace = [];
                     window.__autojs6TouchProbeDocument = editor.getSession().getValue();
-                    ["startActionMode", "startActionModeIfSelectionInView", "finishActionMode"].forEach(function(name) {
+                    ["startActionMode", "startActionModeIfSelectionInView", "startInsertionActionMode", "finishActionMode"].forEach(function(name) {
                         var original = editor[name];
                         if (typeof original !== "function") return;
                         editor[name] = function() {
@@ -545,6 +565,12 @@ class AceTouchInteractionDeviceTest {
         fun swipeRows(): Int = (visibleRows() / 2).coerceAtLeast(2)
 
         fun visibleRowsNow(): Int = visibleRows()
+
+        fun hasBreakpoint(row: Int): Boolean = evaluate("!!window.editor.getSession().getBreakpoints()[$row]") == "true"
+
+        fun clearBreakpoint(row: Int) {
+            evaluate("window.editor.getSession().clearBreakpoint($row), true")
+        }
 
         fun annotationCount(row: Int): Int = evaluate(
             "(window.editor.getSession().getAnnotations() || [])" +

@@ -1,14 +1,21 @@
 // Touch interactions of the AutoJs6 mobile overlay (Roadmap-Ace-1.44.0.md A2-4, A2-5, A2-9; rewritten for A0-5).
 //
 // Ace 1.44.0 is used unmodified. The installer at the end of this file removes Ace's own touch listeners from the
-// editor container; TouchGestures then implements the touch behavior AutoJs6 users know, as specified in
-// tools/ace-mobile/README.md ("Behavior"):
-//   - a tap lifted within 100 ms moves the cursor and asks the host for the soft keyboard;
+// editor container; TouchGestures then implements the touch behavior specified in tools/ace-mobile/README.md
+// ("Behavior"):
+//   - a tap (lifted before the long press, without moving) moves the cursor and asks the host for the soft keyboard;
+//     a tap on the cursor itself also shows the insertion toolbar (paste);
 //   - a second tap within 300 ms near the first one selects the word;
-//   - a 500 ms long press selects the word (or keeps a selection under the finger) and starts the ActionMode;
-//   - a touch near the cursor or selection anchor handle drags it; any other touch scrolls and may fling;
-//   - with Ace's customScrollbar option a touch on a scrollbar drags its thumb (A5-3).
-// tools/ace-mobile/verify-overlay.mjs replays the recorded touch scenarios against the previous editor build.
+//   - a 500 ms long press selects the word (or keeps a selection under the finger) and starts the ActionMode; on
+//     blank space it places the cursor and shows the insertion toolbar;
+//   - a touch near the cursor or selection anchor handle drags it; any other touch scrolls and may fling, unless the
+//     finger rested before it was lifted;
+//   - a touch on the gutter scrolls like the text; a tap there is passed to the host (breakpoints, diagnostics)
+//     without focusing the editor;
+//   - a tap on Ace's long line overflow button toggles soft wrap, as a mouse click does;
+//   - with Ace's customScrollbar option a touch on a visible scrollbar drags its thumb (A5-3).
+// tools/ace-mobile/verify-overlay.mjs replays the recorded touch scenarios against the previous editor build; the
+// intended differences are listed there.
 ace.define(
     "autojs6/mobile/touch_handler",
     [
@@ -33,8 +40,9 @@ ace.define(
         var Magnifier = require("autojs6/mobile/magnifier").Magnifier;
 
         var LONG_PRESS_MS = 500;
-        var TAP_MAX_MS = 100;
         var DOUBLE_TAP_MS = 300;
+        // Android's VelocityTracker assumes that a pointer without movement for this long has stopped.
+        var POINTER_STOPPED_MS = 40;
         var FLING_FRAME_MS = 2;
         var FLING_MIN_VELOCITY = 50; // px/s
         var FLING_SLOP_PX = 8;
@@ -104,6 +112,11 @@ ace.define(
             // the touch are ignored (README "Behavior").
             this.longPressTimer = null;
             this.scrollbarDrag = null;
+            this.lastMoveTime = 0;
+            this.handleDragging = false;
+            this.gutterTouch = false;
+            // Set when this touch showed the insertion toolbar; the touch then asks for no other toolbar.
+            this.insertionRequested = false;
         }
 
         TouchGestures.prototype.magnifierEnabled = function() {
@@ -202,9 +215,35 @@ ace.define(
             return this.origin.x > left && this.origin.x < right;
         };
 
+        // True when neither side of the position is a visible character: an empty line, indentation or a run of
+        // spaces. A long press there has no word to select.
+        TouchGestures.prototype.isBlankAt = function(position) {
+            var line = this.editor.session.getLine(position.row) || "";
+            return !/\S/.test(line.charAt(position.column - 1) + line.charAt(position.column));
+        };
+
+        TouchGestures.prototype.startInsertionActionMode = function() {
+            this.insertionRequested = true;
+            if (typeof this.editor.startInsertionActionMode === "function") {
+                this.editor.startInsertionActionMode();
+            }
+        };
+
         TouchGestures.prototype.onLongPress = function() {
             this.longPressTimer = null;
-            if (this.startedOnSelection()) {
+            // A long press never ends as a tap.
+            this.tapPossible = false;
+            var onSelection = this.startedOnSelection();
+            if (!onSelection && this.isBlankAt(this.origin.position)) {
+                this.editor.selection.moveToPosition(this.origin.position);
+                this.gesture = Gesture.CURSOR;
+                this.startInsertionActionMode();
+                if (typeof autojs !== "undefined") {
+                    autojs.performLongPressFeedback();
+                }
+                return;
+            }
+            if (onSelection) {
                 this.gesture = Gesture.LONG_TAP;
             } else {
                 this.editor.selection.moveToPosition(this.origin.position);
@@ -230,14 +269,16 @@ ace.define(
             }
         };
 
-        // Selects the word at position with the cursor on the side the finger is closer to.
+        // Selects the word at position with the cursor on the side the finger is closer to. (1.4.12 meant to do the
+        // same but compared the finger with the whole word, which always contains it, and so always ended at the end.)
         TouchGestures.prototype.selectWord = function(position) {
             var selection = this.editor.selection;
             var word = selection.getWordRange(position.row, position.column);
-            var fingerBeforeWord = word.comparePoint(position) === -1;
-            var anchor = fingerBeforeWord ? word.end : word.start;
+            var nearerStart = position.row === word.start.row && position.row === word.end.row &&
+                position.column - word.start.column < word.end.column - position.column;
+            var anchor = nearerStart ? word.end : word.start;
             selection.setSelectionAnchor(anchor.row, anchor.column);
-            selection.selectToPosition(fingerBeforeWord ? word.start : word.end);
+            selection.selectToPosition(nearerStart ? word.start : word.end);
             this.renderer.scrollCursorIntoView();
             this.editor.startActionModeIfSelectionInView(true);
         };
@@ -249,11 +290,14 @@ ace.define(
             }
         };
 
-        // Starts a fling along the dominant axis; returns false when the finger was too slow.
-        TouchGestures.prototype.fling = function() {
+        // Starts a fling along the dominant axis; returns false when the finger was too slow or rested before it was
+        // lifted at `liftTime`. WebView sends no touchmove for a resting finger, so the samples of the velocity tracker
+        // would still describe the movement before the rest.
+        TouchGestures.prototype.fling = function(liftTime) {
             var self = this;
             self.stopFlingTimer();
-            if (!self.flingReady || !self.velocity.computeVelocity(1000)) {
+            if (!self.flingReady || liftTime - self.lastMoveTime > POINTER_STOPPED_MS ||
+                !self.velocity.computeVelocity(1000)) {
                 return false;
             }
             var vx = self.velocity.velocityX;
@@ -282,8 +326,9 @@ ace.define(
         };
 
         // Ace's custom scrollbars listen to mouse events, which the browser does not synthesize for touches whose
-        // touchstart was prevented, so the overlay drags their thumbs. A scrollbar that has not been rendered yet
-        // has no thumb geometry; touches on it scroll normally.
+        // touchstart was prevented, so the overlay drags their thumbs. A scrollbar that has not been rendered yet has
+        // no thumb geometry, and one the host has hidden (options.isScrollbarHidden) cannot be grabbed; touches on
+        // them scroll normally.
         TouchGestures.prototype.scrollbarUnder = function(target) {
             if (typeof this.editor.getOption !== "function" || this.editor.getOption("customScrollbar") !== true) {
                 return null;
@@ -295,6 +340,9 @@ ace.define(
                     continue;
                 }
                 var vertical = bar === this.renderer.scrollBarV;
+                if (typeof this.options.isScrollbarHidden === "function" && this.options.isScrollbarHidden(vertical)) {
+                    return null;
+                }
                 var thumbStart = vertical ? bar.thumbTop : bar.thumbLeft;
                 var thumbSize = vertical ? bar.thumbHeight : bar.thumbWidth;
                 return isFinite(thumbStart) && isFinite(thumbSize) ? bar : null;
@@ -309,6 +357,7 @@ ace.define(
             var track = bar.element.getBoundingClientRect();
             var along = vertical ? y - track.top : x - track.left;
             this.scrollbarDrag = { bar: bar, vertical: vertical, thumbStart: thumbStart };
+            this.notifyScrollbarDrag(true);
             if (along < thumbStart || along > thumbStart + thumbSize) {
                 // A touch on the track first centers the thumb under the finger.
                 this.scrollbarDrag.thumbStart = along - thumbSize / 2;
@@ -326,10 +375,25 @@ ace.define(
             drag.bar._emit("scroll", { data: value });
         };
 
-        TouchGestures.prototype.onTouchStart = function(e) {
-            if (this.isInGutter(e.target)) {
+        TouchGestures.prototype.notifyScrollbarDrag = function(active) {
+            if (typeof this.options.onScrollbarDrag === "function") {
+                this.options.onScrollbarDrag(active);
+            }
+        };
+
+        // Tells the host when a finger starts and stops dragging the cursor or the selection anchor, so that work
+        // following every cursor change (symbol highlights) can wait for the final position.
+        TouchGestures.prototype.setHandleDragging = function(active) {
+            if (this.handleDragging === active) {
                 return;
             }
+            this.handleDragging = active;
+            if (typeof this.options.onHandleDrag === "function") {
+                this.options.onHandleDrag(active);
+            }
+        };
+
+        TouchGestures.prototype.onTouchStart = function(e) {
             var touches = e.touches;
             var x = (e.clientX = touches[0].clientX);
             var y = (e.clientY = touches[0].clientY);
@@ -342,8 +406,13 @@ ace.define(
             this.origin.x = x;
             this.origin.y = y;
             this.origin.time = e.timeStamp;
+            this.lastMoveTime = e.timeStamp;
+            this.insertionRequested = false;
+            // The gutter scrolls like the text but never drags a handle or long-presses. Preventing its touchstart also
+            // keeps the browser from synthesizing the mouse events on which Ace focuses the editor.
+            this.gutterTouch = this.isInGutter(e.target);
 
-            var bar = touches.length === 1 ? this.scrollbarUnder(e.target) : null;
+            var bar = touches.length === 1 && !this.gutterTouch ? this.scrollbarUnder(e.target) : null;
             if (bar) {
                 this.clearLongPress();
                 this.tapPossible = false;
@@ -363,9 +432,14 @@ ace.define(
             this.origin.position = new MouseEvent(e, this.editor).getDocumentPosition();
             this.velocity.addMovement(x, y, e.timeStamp);
             this.gesture = this.classify(e);
+            if (this.gutterTouch && (this.gesture === Gesture.CURSOR || this.gesture === Gesture.ANCHOR)) {
+                this.gesture = Gesture.SCROLL;
+            }
             this.clearLongPress();
             if (this.gesture !== Gesture.ZOOM && touches.length === 1) {
-                this.longPressTimer = setTimeout(this.onLongPress.bind(this), LONG_PRESS_MS);
+                if (!this.gutterTouch) {
+                    this.longPressTimer = setTimeout(this.onLongPress.bind(this), LONG_PRESS_MS);
+                }
                 this.tapPossible = true;
             }
             this.editor.finishActionMode();
@@ -386,6 +460,7 @@ ace.define(
             }
             var x = (e.clientX = touches[0].clientX);
             var y = (e.clientY = touches[0].clientY);
+            this.lastMoveTime = e.timeStamp;
             if (this.gesture === Gesture.SCROLLBAR) {
                 if (this.scrollbarDrag) {
                     this.dragScrollbar(x, y);
@@ -430,6 +505,9 @@ ace.define(
         TouchGestures.prototype.dragWithFinger = function(e, x, y) {
             var position = new MouseEvent(e, this.editor).getDocumentPosition();
             var draggingHandle = this.gesture === Gesture.CURSOR || this.gesture === Gesture.ANCHOR;
+            if (draggingHandle) {
+                this.setHandleDragging(true);
+            }
             if (this.gesture === Gesture.CURSOR) {
                 this.editor.selection.moveCursorToPosition(position);
             } else if (this.gesture === Gesture.ANCHOR) {
@@ -450,6 +528,7 @@ ace.define(
         TouchGestures.prototype.onTouchEnd = function(e) {
             this.clearLongPress();
             this.hideMagnifier();
+            this.setHandleDragging(false);
             if (this.gesture === Gesture.ZOOM) {
                 this.gesture = Gesture.NONE;
                 return;
@@ -457,18 +536,19 @@ ace.define(
             if (this.gesture === Gesture.SCROLLBAR) {
                 this.gesture = Gesture.NONE;
                 this.scrollbarDrag = null;
+                this.notifyScrollbarDrag(false);
                 this.editor.startActionModeIfSelectionInView(false);
                 return;
             }
-            if (this.tapPossible && e.timeStamp - this.origin.time < TAP_MAX_MS && this.handleTap(e)) {
+            if (this.tapPossible && this.handleTap(e)) {
                 return;
             }
-            // The gesture is not reset here: a touch that starts in the gutter is ignored on touchstart and ends
-            // with the gesture of the previous touch (README "Behavior").
             switch (this.gesture) {
                 case Gesture.CURSOR:
                     if (this.editor.selection.getRange().isEmpty()) {
-                        this.editor.startActionMode(false);
+                        if (!this.insertionRequested) {
+                            this.editor.startActionMode(false);
+                        }
                     } else {
                         this.editor.startActionModeIfSelectionInView(true);
                     }
@@ -477,16 +557,34 @@ ace.define(
                     this.editor.startActionModeIfSelectionInView(true);
                     return;
                 case Gesture.SCROLL:
-                    if (!this.fling()) {
+                    if (!this.fling(e.timeStamp)) {
                         this.editor.startActionModeIfSelectionInView(false);
                     }
                     return;
             }
         };
 
-        // A quick tap places the cursor; a second quick tap near the first selects the word. Returns true when the
-        // touch was a double tap and nothing else has to happen.
+        // A tap places the cursor (a tap on the cursor also shows the insertion toolbar); a second tap near the first
+        // selects the word. Taps on the gutter and on Ace's overflow button act on those. Returns true when nothing
+        // else has to happen.
         TouchGestures.prototype.handleTap = function(e) {
+            if (this.gutterTouch) {
+                this.lastTap = { time: 0, x: 0, y: 0 };
+                // As in the text, a touch held for the long press time is no tap.
+                if (e.timeStamp - this.origin.time < LONG_PRESS_MS && typeof this.options.onGutterTap === "function") {
+                    this.options.onGutterTap(e.target, this.origin.x, this.origin.y);
+                }
+                this.editor.startActionModeIfSelectionInView(false);
+                return true;
+            }
+            if (e.target && dom.hasCssClass(e.target, "ace_toggle_wrap")) {
+                // What Ace does for a click on the button (ace/mouse/fold_handler); button taps form no double tap.
+                this.lastTap = { time: 0, x: 0, y: 0 };
+                var session = this.editor.session;
+                session.setOption("wrap", !session.getUseWrapMode());
+                this.renderer.scrollCursorIntoView();
+                return true;
+            }
             var lifted = e.changedTouches[0];
             var previous = this.lastTap;
             var doubleTap = e.timeStamp - previous.time < DOUBLE_TAP_MS &&
@@ -497,9 +595,17 @@ ace.define(
                 e.preventDefault();
                 return true;
             }
-            this.editor.selection.moveToPosition(this.origin.position);
+            var selection = this.editor.selection;
+            var cursor = selection.cursor;
+            var position = this.origin.position;
+            var onCursor = this.gesture === Gesture.CURSOR && selection.isEmpty() &&
+                cursor.row === position.row && cursor.column === position.column;
+            selection.moveToPosition(position);
             this.renderer.scrollCursorIntoView();
             this.focusForTyping();
+            if (onCursor) {
+                this.startInsertionActionMode();
+            }
             return false;
         };
 
@@ -516,6 +622,11 @@ ace.define(
             this.stopFlingTimer();
             this.scroller.abortAnimation();
             this.hideMagnifier();
+            this.setHandleDragging(false);
+            if (this.scrollbarDrag) {
+                this.scrollbarDrag = null;
+                this.notifyScrollbarDrag(false);
+            }
             return true;
         };
 
@@ -533,6 +644,10 @@ ace.define(
         }
 
         // options.isMagnifierEnabled(): whether handle drags show the magnifier.
+        // options.onGutterTap(target, clientX, clientY): a tap on the gutter (breakpoints, diagnostics).
+        // options.isScrollbarHidden(vertical): whether the host has hidden a scrollbar, which then cannot be grabbed.
+        // options.onScrollbarDrag(active): a finger starts or stops dragging a scrollbar thumb.
+        // options.onHandleDrag(active): a finger starts or stops dragging the cursor or the selection anchor.
         // options.capture: listen in the capture phase and stop propagation (fallback when Ace's own touch listeners
         // could not be removed).
         exports.addTouchListeners = function(container, editor, options) {
@@ -592,7 +707,8 @@ ace.define(
     }
 
     // Installs the overlay right after ace.edit(). options.isMagnifierEnabled(): host setting;
-    // options.onRecoverableError(scope, error): reports the capture fallback.
+    // options.onRecoverableError(scope, error): reports the capture fallback; options.onGutterTap,
+    // options.isScrollbarHidden, options.onScrollbarDrag and options.onHandleDrag are passed to the touch listeners.
     function install(editor, options) {
         options = options || {};
         var state = {
@@ -643,7 +759,11 @@ ace.define(
             editor,
             {
                 capture: state.fallbackCapture,
-                isMagnifierEnabled: options.isMagnifierEnabled
+                isMagnifierEnabled: options.isMagnifierEnabled,
+                onGutterTap: options.onGutterTap,
+                isScrollbarHidden: options.isScrollbarHidden,
+                onScrollbarDrag: options.onScrollbarDrag,
+                onHandleDrag: options.onHandleDrag
             }
         );
         state.installed = true;

@@ -24,6 +24,7 @@ import {
     firstDifference,
     plain,
     runTouchScenario,
+    touchPoint as at,
 } from "./touch-harness.mjs";
 import { legacyActionModeFragments, legacyGetClientPosition, loadLegacyTouchStack } from "./legacy-oracle.mjs";
 
@@ -38,10 +39,23 @@ const OVERLAY_FILES = [
     "autojs6_mobile_touch_handler.js",
 ];
 
-// Scenario name -> reason. These scenarios run against both implementations but their traces are expected to differ.
+// Scenario name -> reason. These scenarios run against both implementations but their traces are expected to differ;
+// verifyImprovements checks what the overlay does instead.
 export const EXPECTED_DIFFERENCES = Object.freeze({
     "B11 completion popup flag skips touches":
         "editor.popup is never assigned at runtime; the overlay does not check it (Roadmap-Ace-1.44.0.md A2-4)",
+    "B19 slow tap (250 ms)":
+        "1.4.12 only took touches lifted within 100 ms as taps; every tap lifted before the long press moves the cursor (A2-10)",
+    "tap lasting 110 ms":
+        "the same slow tap at the old 100 ms limit (A2-10)",
+    "B2 gutter tap":
+        "1.4.12 ignored gutter touches, leaving them to the mouse events Ace focuses the editor on; the overlay passes the tap to the host (A2-10)",
+    "gutter tap after a scroll":
+        "1.4.12 ended a gutter touch with the gesture of the previous touch; the overlay handles it as a gutter tap (A2-10)",
+    "B8 slow scroll drag resting before the lift":
+        "1.4.12 flung with the velocity from before the finger rested; a finger resting for more than 40 ms does not fling (A2-10)",
+    "second tap after 301 ms is a single tap":
+        "the second tap lands on the cursor the first one placed, which shows the insertion toolbar (A2-10)",
 });
 
 // Entries that are allowed to differ in every scenario: DOM writes (the original created its never enabled magnifier
@@ -108,7 +122,7 @@ function verifyTouchScenarios() {
 // The host cancels at the start of every single finger scroll; the 1.4.12 handler never saw that, so the overlay must
 // ignore it. A touch cancel, in contrast, must stop a pending long press.
 function verifyCancellation() {
-    const nonTerminal = ["B6 drag the cursor handle", "B8 slow scroll drag does not fling", "B9 fast swipe flings and restarts the action mode"];
+    const nonTerminal = ["B6 drag the cursor handle", "B8 slow scroll drag resting before the lift", "B9 fast swipe flings and restarts the action mode"];
     for (const name of nonTerminal) {
         const scenario = TOUCH_SCENARIOS.find((candidate) => candidate.name === name);
         check(!!scenario, `missing scenario ${name}`);
@@ -116,7 +130,10 @@ function verifyCancellation() {
         const firstMove = scenario.steps.findIndex((step) => step.move);
         const steps = scenario.steps.slice();
         steps.splice(firstMove + 1, 0, { run: (env) => env.overlayController && env.overlayController.cancel("single_finger_scroll") });
-        const traces = ["original", "overlay"].map((kind) => runVariant(kind, { ...scenario, steps }));
+        // The cancel must not change anything: compare with 1.4.12 or, for an intended difference, with the overlay
+        // without the cancel.
+        const reference = EXPECTED_DIFFERENCES[name] ? runVariant("overlay", scenario) : runVariant("original", { ...scenario, steps });
+        const traces = [reference, runVariant("overlay", { ...scenario, steps })];
         const difference = firstDifference(traces[0], traces[1]);
         check(!difference, `"${name}" with a single_finger_scroll cancel differs at #${difference && difference.index}: ${difference && difference.left} != ${difference && difference.right}`);
     }
@@ -130,7 +147,7 @@ function verifyCancellation() {
 
 // Roadmap-Ace-1.44.0.md A5-3: Ace's custom scrollbar has no 1.4.12 counterpart, so the overlay is checked on its own.
 // The fake vertical scrollbar has a 500 px slide for 1800 px of scrollable content.
-function runCustomScrollbarScenario(enabled, steps, barOverrides = {}) {
+function runCustomScrollbarScenario(enabled, steps, barOverrides = {}, options = () => ({})) {
     const env = createEnvironment();
     env.editor.$toDestroy = [];
     const { container } = env.elements;
@@ -155,7 +172,7 @@ function runCustomScrollbarScenario(enabled, steps, barOverrides = {}) {
     env.editor.getOption = (name) => (name === "customScrollbar" ? enabled : undefined);
     loadOverlay(env)
         .require("autojs6/mobile/touch_handler")
-        .addTouchListeners(container, env.editor, { isMagnifierEnabled: () => false });
+        .addTouchListeners(container, env.editor, { isMagnifierEnabled: () => false, ...options(env) });
     return runTouchScenario(env, { name: "custom scrollbar", steps });
 }
 
@@ -219,6 +236,158 @@ function verifyCustomScrollbar() {
     );
     check(names(unrendered, "scrollbar.").length === 0, "the overlay dragged a scrollbar without thumb geometry");
     check(names(unrendered, "renderer.scrollTo").length > 0, "a touch on an unrendered scrollbar no longer scrolls the content");
+
+    // A2-10: a scrollbar the host has hidden cannot be grabbed; a drag of a visible one is reported to the host.
+    const dragSteps = [
+        { down: [394, 50], target: "scrollbarThumb" },
+        { wait: 16 },
+        { move: [394, 100], target: "scrollbarThumb" },
+        { wait: 16 },
+        { up: [394, 100], target: "scrollbarThumb" },
+    ];
+    const hidden = runCustomScrollbarScenario(true, dragSteps, {}, (env) => ({
+        isScrollbarHidden: (vertical) => {
+            env.record("host.isScrollbarHidden", vertical);
+            return true;
+        },
+    }));
+    check(names(hidden, "scrollbar.").length === 0, "the overlay dragged a hidden scrollbar");
+    check(names(hidden, "renderer.scrollTo").length > 0, "a touch on a hidden scrollbar does not scroll the content");
+    const reported = runCustomScrollbarScenario(true, dragSteps, {}, (env) => ({
+        isScrollbarHidden: () => false,
+        onScrollbarDrag: (active) => env.record("host.onScrollbarDrag", active),
+    }));
+    check(
+        JSON.stringify(names(reported, "host.onScrollbarDrag").map((entry) => entry[1])) === "[true,false]",
+        `scrollbar drag reported ${JSON.stringify(names(reported, "host.onScrollbarDrag"))}`,
+    );
+}
+
+// Roadmap-Ace-1.44.0.md A2-10: the behavior that intentionally differs from 1.4.12, checked on the overlay alone.
+function runOverlay(scenario, options = () => ({})) {
+    const env = createEnvironment();
+    env.editor.$toDestroy = [];
+    if (scenario.setup) scenario.setup(env);
+    env.overlayController = loadOverlay(env)
+        .require("autojs6/mobile/touch_handler")
+        .addTouchListeners(env.editor.container, env.editor, { isMagnifierEnabled: () => false, ...options(env) });
+    return comparableTrace(runTouchScenario(env, scenario));
+}
+
+function verifyImprovements() {
+    const named = (name) => TOUCH_SCENARIOS.find((scenario) => scenario.name === name);
+    const entries = (trace, name) => trace.filter((entry) => entry[0] === name);
+    const has = (trace, name) => entries(trace, name).length > 0;
+    const final = (trace) => trace.find((entry) => entry[0] === "final")[1];
+    const cursorOf = (trace) => JSON.stringify(final(trace).cursor);
+    const afterLift = (trace) => trace.slice(trace.findIndex((entry) => entry[0] === "dispatch" && entry[1] === "touchend"));
+
+    // B19: a tap lifted before the long press moves the cursor and asks for the soft input, however slow it was.
+    for (const name of ["B19 slow tap (250 ms)", "tap lasting 110 ms"]) {
+        const trace = runOverlay(named(name));
+        check(cursorOf(trace) === JSON.stringify({ column: 12, row: 6 }), `${name}: cursor ${cursorOf(trace)}`);
+        check(has(trace, "autojs.showSoftInput"), `${name}: no soft input`);
+    }
+
+    // B8 / B20: a finger that rests for more than 40 ms before the lift does not fling; one lifted while moving does.
+    const restingDrag = (rest) => ({
+        setup: (env) => env.renderer.scrollTo(0, 400),
+        steps: [{ down: [200, 300] }, { wait: 20 }, { move: [200, 280] }, { wait: 20 }, { move: [200, 250] }, { wait: 20 }, { move: [200, 210] }, { wait: rest }, { up: [200, 210] }, { wait: 300 }],
+    });
+    const flung = runOverlay(restingDrag(40));
+    check(has(afterLift(flung), "renderer.scrollTo"), "a finger lifted 40 ms after its last move did not fling");
+    const rested = runOverlay(restingDrag(41));
+    check(!has(afterLift(rested), "renderer.scrollTo"), "a finger resting 41 ms before the lift flung");
+    check(has(afterLift(rested), "editor.startActionModeIfSelectionInView"), "a rested drag did not restart the toolbar");
+    const restedLong = runOverlay(named("B8 slow scroll drag resting before the lift"));
+    check(!has(afterLift(restedLong), "renderer.scrollTo"), "B8: the drag resting 150 ms flung");
+
+    // A tap on the cursor shows the insertion toolbar instead of the empty selection request; a tap beside it does not.
+    const onCursor = runOverlay({ setup: (env) => env.selection.select(12, 7, 12, 7), steps: [{ down: at(12, 7) }, { wait: 40 }, { up: at(12, 7) }, { wait: 300 }] });
+    check(entries(onCursor, "editor.startInsertionActionMode").length === 1, "a tap on the cursor did not show the insertion toolbar");
+    check(!has(onCursor, "editor.startActionMode"), "a tap on the cursor also asked for the selection toolbar");
+    check(cursorOf(onCursor) === JSON.stringify({ column: 7, row: 12 }), `a tap on the cursor moved it to ${cursorOf(onCursor)}`);
+    check(has(onCursor, "autojs.showSoftInput"), "a tap on the cursor did not ask for the soft input");
+    const besideCursor = runOverlay({ setup: (env) => env.selection.select(12, 7, 12, 7), steps: [{ down: at(12, 9) }, { wait: 40 }, { up: at(12, 9) }, { wait: 300 }] });
+    check(!has(besideCursor, "editor.startInsertionActionMode"), "a tap beside the cursor showed the insertion toolbar");
+    const secondTap = runOverlay(named("second tap after 301 ms is a single tap"));
+    check(entries(secondTap, "editor.startInsertionActionMode").length === 1, "a second tap on the placed cursor did not show the insertion toolbar");
+
+    // A long press on blank space (row 1 ends with a space) places the cursor and shows the insertion toolbar.
+    const blank = runOverlay({ steps: [{ down: at(1, 70) }, { wait: 600 }, { up: at(1, 70) }, { wait: 300 }] });
+    check(cursorOf(blank) === JSON.stringify({ column: 65, row: 1 }), `a long press on blank space moved the cursor to ${cursorOf(blank)}`);
+    check(final(blank).empty === true, "a long press on blank space selected text");
+    check(!has(blank, "selection.selectWord"), "a long press on blank space selected a word");
+    check(entries(blank, "editor.startInsertionActionMode").length === 1, "a long press on blank space did not show the insertion toolbar");
+    check(has(blank, "autojs.performLongPressFeedback"), "a long press on blank space gave no feedback");
+    check(!has(afterLift(blank), "editor.startActionMode"), "the lift after a long press on blank space asked for the selection toolbar");
+    check(!has(afterLift(blank), "selection.moveToPosition"), "the lift after a long press moved the cursor as a tap");
+
+    // B2: a gutter tap goes to the host without focusing the editor or moving the cursor; a gutter drag scrolls.
+    const gutterHost = (env) => ({ onGutterTap: (target, x, y) => env.record("host.onGutterTap", target.label, x, y) });
+    const gutterTap = runOverlay(named("B2 gutter tap"), gutterHost);
+    check(JSON.stringify(entries(gutterTap, "host.onGutterTap")) === JSON.stringify([["host.onGutterTap", "gutter-cell", 10, 30]]), `gutter tap reported ${JSON.stringify(entries(gutterTap, "host.onGutterTap"))}`);
+    check(JSON.stringify(entries(gutterTap, "event.preventDefault")) === JSON.stringify([["event.preventDefault", "touchstart"]]), "the gutter touchstart was not prevented");
+    for (const name of ["editor.focus", "autojs.showSoftInput", "selection.moveToPosition", "editor.startActionMode"]) {
+        check(!has(gutterTap, name), `a gutter tap called ${name}`);
+    }
+    const gutterHold = runOverlay({ steps: [{ down: [10, 30], target: "gutterCell" }, { wait: 600 }, { up: [10, 30], target: "gutterCell" }, { wait: 300 }] }, gutterHost);
+    check(!has(gutterHold, "host.onGutterTap") && !has(gutterHold, "selection.selectWord"), "a held gutter touch acted as a tap or a long press");
+    const gutterDrag = runOverlay({
+        setup: (env) => env.renderer.scrollTo(0, 400),
+        steps: [{ down: [10, 300], target: "gutterCell" }, { wait: 16 }, { move: [10, 260], target: "gutterCell" }, { wait: 16 }, { move: [10, 200], target: "gutterCell" }, { wait: 16 }, { up: [10, 200], target: "gutterCell" }, { wait: 300 }],
+    }, gutterHost);
+    check(has(gutterDrag, "renderer.scrollTo") && final(gutterDrag).scrollTop > 400, "a gutter drag did not scroll");
+    check(!has(gutterDrag, "host.onGutterTap") && !has(gutterDrag, "selection.moveCursorToPosition"), "a gutter drag tapped or dragged the cursor");
+    const gutterAfterScroll = runOverlay(named("gutter tap after a scroll"), gutterHost);
+    check(entries(gutterAfterScroll, "host.onGutterTap").length === 1, "a gutter tap after a scroll was not reported");
+
+    // B18: a tap on Ace's overflow button toggles soft wrap like a mouse click and does not move the cursor.
+    const overflow = runOverlay({
+        steps: [{ down: at(3, 20), target: "overflowButton" }, { wait: 40 }, { up: at(3, 20), target: "overflowButton" }, { wait: 400 },
+            { down: at(3, 20), target: "overflowButton" }, { wait: 40 }, { up: at(3, 20), target: "overflowButton" }, { wait: 400 }],
+    });
+    check(JSON.stringify(entries(overflow, "session.setOption")) === JSON.stringify([["session.setOption", "wrap", true], ["session.setOption", "wrap", false]]), `overflow button taps set ${JSON.stringify(entries(overflow, "session.setOption"))}`);
+    check(!has(overflow, "selection.moveToPosition") && !has(overflow, "autojs.showSoftInput"), "an overflow button tap moved the cursor");
+
+    // B3: a double tap puts the cursor on the end of the word nearer to the finger ("alpha" spans columns 6-11).
+    const doubleTap = (column) => runOverlay({ steps: [{ down: at(5, column) }, { wait: 40 }, { up: at(5, column) }, { wait: 120 }, { down: at(5, column) }, { wait: 40 }, { up: at(5, column) }, { wait: 300 }] });
+    const nearStart = final(doubleTap(7));
+    check(JSON.stringify([nearStart.anchor, nearStart.cursor]) === JSON.stringify([{ column: 11, row: 5 }, { column: 6, row: 5 }]), `a double tap near the word start selected ${JSON.stringify([nearStart.anchor, nearStart.cursor])}`);
+    const nearEnd = final(doubleTap(10));
+    check(JSON.stringify([nearEnd.anchor, nearEnd.cursor]) === JSON.stringify([{ column: 6, row: 5 }, { column: 11, row: 5 }]), `a double tap near the word end selected ${JSON.stringify([nearEnd.anchor, nearEnd.cursor])}`);
+
+    // Handle drags are reported to the host (symbol highlights wait for the final position); scrolls are not.
+    const dragHost = (env) => ({ onHandleDrag: (active) => env.record("host.onHandleDrag", active) });
+    const handleDrag = runOverlay(named("B6 drag the cursor handle"), dragHost);
+    check(JSON.stringify(entries(handleDrag, "host.onHandleDrag").map((entry) => entry[1])) === "[true,false]", `cursor drag reported ${JSON.stringify(entries(handleDrag, "host.onHandleDrag"))}`);
+    const anchorDrag = runOverlay(named("B7 drag the anchor handle of a selection with the magnifier"), dragHost);
+    check(JSON.stringify(entries(anchorDrag, "host.onHandleDrag").map((entry) => entry[1])) === "[true,false]", `anchor drag reported ${JSON.stringify(entries(anchorDrag, "host.onHandleDrag"))}`);
+    const scrollDrag = runOverlay(named("B9 fast swipe flings and restarts the action mode"), dragHost);
+    check(!has(scrollDrag, "host.onHandleDrag"), "a scroll was reported as a handle drag");
+
+    // The insertion toolbar is its own host request; typing closes it like the selection toolbar.
+    const env = createEnvironment();
+    const ActionMode = loadOverlay(env).require("autojs6/mobile/action_mode");
+    const editor = createActionModeEditor(env, {
+        definePrototypeMethods() {},
+        installConstructorListeners() {
+            ActionMode.install(this);
+        },
+    });
+    env.selection.select(3, 4, 3, 4);
+    editor.startActionModeIfSelectionInView(false);
+    editor.startInsertionActionMode();
+    env.record("actionMode", editor.actionMode);
+    env.clock.advance(300);
+    editor.emit("change");
+    env.record("actionMode", editor.actionMode);
+    editor.emit("change");
+    const calls = env.trace.filter((entry) => /^(autojs\.|actionMode)/.test(entry[0])).map((entry) => entry[0] + (entry[0] === "actionMode" ? ":" + entry[1] : ""));
+    check(
+        JSON.stringify(calls) === JSON.stringify(["autojs.startInsertionActionMode", "actionMode:insertionActionMode", "autojs.finishActionMode", "actionMode:"]),
+        `insertion toolbar calls ${JSON.stringify(calls)}`,
+    );
 }
 
 function runVariant(kind, scenario) {
@@ -383,6 +552,7 @@ function main() {
     verifyActionMode();
     verifyCancellation();
     verifyCustomScrollbar();
+    verifyImprovements();
     if (failures.length) {
         for (const failure of failures.slice(0, 20)) console.error(`FAIL ${failure}`);
         if (failures.length > 20) console.error(`... ${failures.length - 20} more`);

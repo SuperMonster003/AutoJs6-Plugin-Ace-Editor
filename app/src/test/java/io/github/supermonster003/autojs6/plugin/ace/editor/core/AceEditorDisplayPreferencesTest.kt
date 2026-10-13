@@ -16,6 +16,7 @@ class AceEditorDisplayPreferencesTest {
         assertTrue(AceEditorDisplayPreferences.isCustomScrollbarEnabled(preferences))
         assertTrue(AceEditorDisplayPreferences.isWhitespacesInSelectionEnabled(preferences))
         assertFalse(AceEditorDisplayPreferences.isTouchMagnifierEnabled(preferences))
+        assertTrue(AceEditorDisplayPreferences.isScrollbarAutoHideEnabled(preferences))
     }
 
     @Test
@@ -26,6 +27,7 @@ class AceEditorDisplayPreferencesTest {
             AceEditorDisplayPreferences.KEY_ACE_CUSTOM_SCROLLBAR_ENABLED to false,
             AceEditorDisplayPreferences.KEY_ACE_WHITESPACES_IN_SELECTION_ENABLED to false,
             AceEditorDisplayPreferences.KEY_ACE_TOUCH_MAGNIFIER_ENABLED to true,
+            AceEditorDisplayPreferences.KEY_ACE_SCROLLBAR_AUTO_HIDE_ENABLED to false,
         )
 
         assertFalse(AceEditorDisplayPreferences.isSvgGutterIconsEnabled(preferences))
@@ -33,6 +35,7 @@ class AceEditorDisplayPreferencesTest {
         assertFalse(AceEditorDisplayPreferences.isCustomScrollbarEnabled(preferences))
         assertFalse(AceEditorDisplayPreferences.isWhitespacesInSelectionEnabled(preferences))
         assertTrue(AceEditorDisplayPreferences.isTouchMagnifierEnabled(preferences))
+        assertFalse(AceEditorDisplayPreferences.isScrollbarAutoHideEnabled(preferences))
     }
 
     @Test
@@ -44,6 +47,7 @@ class AceEditorDisplayPreferencesTest {
                 "key_\$_ace_custom_scrollbar_enabled",
                 "key_\$_ace_whitespaces_in_selection_enabled",
                 "key_\$_ace_touch_magnifier_enabled",
+                "key_\$_ace_scrollbar_auto_hide_enabled",
             ),
             listOf(
                 AceEditorDisplayPreferences.KEY_ACE_SVG_GUTTER_ICONS_ENABLED,
@@ -51,6 +55,7 @@ class AceEditorDisplayPreferencesTest {
                 AceEditorDisplayPreferences.KEY_ACE_CUSTOM_SCROLLBAR_ENABLED,
                 AceEditorDisplayPreferences.KEY_ACE_WHITESPACES_IN_SELECTION_ENABLED,
                 AceEditorDisplayPreferences.KEY_ACE_TOUCH_MAGNIFIER_ENABLED,
+                AceEditorDisplayPreferences.KEY_ACE_SCROLLBAR_AUTO_HIDE_ENABLED,
             ),
         )
     }

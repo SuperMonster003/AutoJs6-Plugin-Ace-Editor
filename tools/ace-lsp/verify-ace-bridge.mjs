@@ -313,6 +313,20 @@ test("the long line safety mode renders 4096 characters and Ace's overflow butto
         assert.ok(normalButton, "Ace truncates lines over 10000 characters outside the safety mode as well");
         assert.equal(line.textContent.length - normalButton.textContent.length, 10000);
         assert.equal(window.document.querySelector(".ace_text-layer").getAttribute("aria-hidden"), null);
+        // A2-10: a finger tap on the button toggles soft wrap, as a mouse click does; the cursor stays.
+        const cursor = plain(editor.getCursorPosition());
+        const tapButton = (button) => {
+            touchEvent(page, "touchstart", button, 10, 10);
+            touchEvent(page, "touchend", button, 10, 10);
+        };
+        tapButton(normalButton);
+        assert.equal(editor.session.getUseWrapMode(), true, "a tap on the overflow button turns soft wrap on");
+        render(page);
+        const hideButton = window.document.querySelector(".ace_text-layer .ace_toggle_wrap");
+        assert.ok(hideButton, "the wrapped line ends with Ace's hide button");
+        tapButton(hideButton);
+        assert.equal(editor.session.getUseWrapMode(), false, "a second tap turns soft wrap off");
+        assert.deepEqual(plain(editor.getCursorPosition()), cursor, "the cursor stays");
     } finally {
         page.close();
     }
@@ -532,12 +546,59 @@ for (const svgGutterIcons of [true, false]) {
             assert.ok(icon, "annotation icon");
             mouseDown(page, icon, 5, 2 * 20 + 5);
             assert.ok(!session.getBreakpoints()[2], "the annotation icon does not toggle a breakpoint");
+            render(page);
+            mouseDown(page, gutterCell(page, 2), 5, 2 * 20 + 5);
+            assert.equal(session.getBreakpoints()[2], "ace_breakpoint", "beside the icon a row with diagnostics takes a breakpoint");
             assert.ok(window.document.querySelector(".ace_gutter-cell_svg-icons, .ace_gutter-cell"));
         } finally {
             page.close();
         }
     });
 }
+
+// Roadmap-Ace-1.44.0.md A2-10: the mobile overlay passes gutter taps to the bridge; the editor is not focused (no
+// soft keyboard, no scroll to the cursor) and the cursor stays.
+test("finger taps on the gutter toggle breakpoints without focusing the editor", async () => {
+    const page = await openEditor();
+    try {
+        const { editor } = page;
+        const session = editor.session;
+        page.api.setText(Array.from({ length: 12 }, (_, row) => `line${row} value`).join("\n"));
+        session.setAnnotations([{ row: 2, column: 0, text: "boom", type: "error" }]);
+        render(page);
+        await sleep(100);
+        editor.blur();
+        editor.moveCursorTo(9, 3);
+        page.clearCalls();
+        const tap = (target, x, y) => {
+            const start = touchEvent(page, "touchstart", target, x, y);
+            touchEvent(page, "touchend", target, x, y);
+            return start;
+        };
+        const start = tap(gutterCell(page, 4), 20, 4 * 20 + 5);
+        assert.equal(start.defaultPrevented, true, "the gutter touchstart is prevented (no synthesized mouse events)");
+        assert.equal(session.getBreakpoints()[4], "ace_breakpoint", "a tap on the line number toggles the breakpoint");
+        tap(gutterCell(page, 4), 30, 4 * 20 + 5);
+        assert.ok(!session.getBreakpoints()[4], "a second tap clears it");
+        tap(gutterCell(page, 2), 30, 2 * 20 + 5);
+        assert.equal(session.getBreakpoints()[2], "ace_breakpoint", "a row with diagnostics takes a breakpoint beside its icon");
+        render(page);
+        const icon = gutterCell(page, 2).querySelector(".ace_gutter_annotation");
+        assert.ok(icon, "annotation icon");
+        tap(icon, 8, 2 * 20 + 5);
+        assert.equal(session.getBreakpoints()[2], "ace_breakpoint", "the icon does not toggle the breakpoint");
+        assert.deepEqual(page.events("gutterTapDiagnostic"), [{ row: 2 }], "the icon opens the diagnostic marker");
+        assert.equal(editor.isFocused(), false, "the editor stays unfocused");
+        assert.ok(!page.names().includes("showSoftInput"), "no soft keyboard");
+        // The diagnostic marker needs the cursor on its row; plain gutter taps leave it alone.
+        assert.deepEqual(page.events("gutterTapBreakpoint"), [{ row: 4 }, { row: 4 }, { row: 2 }]);
+        page.api.setBreakpointMarkersEnabled(false);
+        tap(gutterCell(page, 6), 20, 6 * 20 + 5);
+        assert.ok(!session.getBreakpoints()[6], "no breakpoints while the host hides them");
+    } finally {
+        page.close();
+    }
+});
 
 // Roadmap-Ace-1.44.0.md A3-1, A3-5: a finger on a gutter fold widget toggles the fold, a tap on a fold placeholder
 // expands it. jsdom has no layout, so the widget gets a rectangle and the scroller sits at the origin.
@@ -587,6 +648,20 @@ test("ActionMode calls reach the host", async () => {
         editor.finishActionMode();
         assert.ok(page.names().includes("finishActionMode"));
         assert.equal(editor.actionMode, "");
+        // A2-10: a tap on the cursor asks for the insertion toolbar (paste), typing closes it.
+        editor.clearSelection();
+        editor.moveCursorTo(0, 3);
+        render(page);
+        const caret = editor.renderer.$cursorLayer.getPixelPosition(editor.getCursorPosition(), true);
+        const content = page.window.document.querySelector(".ace_content");
+        page.clearCalls();
+        touchEvent(page, "touchstart", content, caret.left, caret.top + 5);
+        touchEvent(page, "touchend", content, caret.left, caret.top + 5);
+        assert.deepEqual(page.names().filter((name) => /ActionMode$/.test(name)), ["startInsertionActionMode"]);
+        assert.equal(editor.actionMode, "insertionActionMode");
+        editor.insert("x");
+        assert.equal(editor.actionMode, "");
+        assert.ok(page.names().includes("finishActionMode"), "typing closes the insertion toolbar");
     } finally {
         page.close();
     }
@@ -716,6 +791,24 @@ test("a finger drags the custom scrollbar thumb", async () => {
         assert.ok(Number.isFinite(bar.thumbTop) && bar.thumbHeight > 0, "the scrollbar has been laid out");
         assert.ok(bar.element.classList.contains("ace_sb-v"), "custom vertical scrollbar");
         bar.element.getBoundingClientRect = () => ({ left: 388, top: 0, right: 400, bottom: 600, width: 12, height: 600 });
+        // A2-10: the scrollbars hide 2 s after the last scroll; a hidden one cannot be grabbed.
+        const classes = editor.container.classList;
+        await sleep(2100);
+        assert.ok(classes.contains("autojs6-scrollbar-auto-hide"), "auto hide is on by default");
+        assert.ok(!classes.contains("autojs6-scrollbar-v-shown"), "the vertical scrollbar is hidden");
+        const before = editor.session.getScrollTop();
+        const hiddenStart = touchEvent(page, "touchstart", bar.inner, 394, 5);
+        assert.equal(hiddenStart.defaultPrevented, true);
+        touchEvent(page, "touchmove", bar.inner, 394, 105);
+        touchEvent(page, "touchend", bar.inner, 394, 105);
+        assert.equal(editor.session.getScrollTop(), Math.max(0, before - 100), "a touch on a hidden scrollbar scrolls the text");
+        editor.session.setScrollLeft(30);
+        assert.ok(classes.contains("autojs6-scrollbar-h-shown") && !classes.contains("autojs6-scrollbar-v-shown"),
+            "a horizontal scroll shows only the horizontal scrollbar");
+        editor.session.setScrollLeft(0);
+        editor.session.setScrollTop(1);
+        editor.session.setScrollTop(0);
+        assert.ok(classes.contains("autojs6-scrollbar-v-shown"), "a vertical scroll shows the vertical scrollbar");
         const cursor = editor.getCursorPosition();
         const start = touchEvent(page, "touchstart", bar.inner, 394, 5);
         assert.equal(start.defaultPrevented, true);
@@ -732,8 +825,28 @@ test("a finger drags the custom scrollbar thumb", async () => {
             editor.session.getScrollTop() > expected,
             `a tap low on the track jumps down (${editor.session.getScrollTop()}, thumb ${bar.thumbTop} + ${bar.thumbHeight})`,
         );
+        // A finger resting on the thumb keeps it visible past the delay.
+        touchEvent(page, "touchstart", bar.inner, 394, 500);
+        await sleep(2300);
+        assert.ok(classes.contains("autojs6-scrollbar-v-shown"), "the scrollbar hid under the finger");
+        touchEvent(page, "touchend", bar.inner, 394, 500);
+        await sleep(2300);
+        assert.ok(!classes.contains("autojs6-scrollbar-v-shown"), "the scrollbar stayed after the drag");
+        page.api.setScrollbarAutoHideEnabled(false);
+        assert.ok(!classes.contains("autojs6-scrollbar-auto-hide"), "the host switched auto hide off");
+        const top = editor.session.getScrollTop();
+        touchEvent(page, "touchstart", bar.inner, 394, 5);
+        touchEvent(page, "touchmove", bar.inner, 394, 55);
+        touchEvent(page, "touchend", bar.inner, 394, 55);
+        assert.notEqual(editor.session.getScrollTop(), top, "without auto hide the thumb can be dragged at any time");
     } finally {
         page.close();
+    }
+    const alwaysShown = await openEditor({ host: { isScrollbarAutoHideEnabled: false } });
+    try {
+        assert.ok(!alwaysShown.editor.container.classList.contains("autojs6-scrollbar-auto-hide"));
+    } finally {
+        alwaysShown.close();
     }
 });
 
@@ -823,6 +936,43 @@ test("symbol highlights follow the cursor and clear on edits and selections", as
         assert.deepEqual(requests, [], "the host switched symbol highlights off");
     } finally {
         disabled.close();
+    }
+});
+
+test("symbol highlights wait until a finger stops dragging the cursor", async () => {
+    const requests = [];
+    const page = await openEditor({
+        wrapLspClient: (client) => {
+            client.getDocumentHighlightsAsync = (pos, callback) => {
+                requests.push(plain(pos));
+                callback(null, []);
+                return null;
+            };
+            return client;
+        },
+    });
+    try {
+        const { editor, window, api } = page;
+        api.setText("const value = 1;\nvalue + another;\n");
+        await sleep(300);
+        editor.moveCursorTo(0, 7);
+        render(page);
+        await sleep(250);
+        requests.length = 0;
+        const content = window.document.querySelector(".ace_content");
+        const caret = editor.renderer.$cursorLayer.getPixelPosition(editor.getCursorPosition(), true);
+        const y = caret.top + 15;
+        touchEvent(page, "touchstart", content, caret.left, y);
+        touchEvent(page, "touchmove", content, caret.left + 30, y);
+        await sleep(300);
+        assert.notDeepEqual(plain(editor.getCursorPosition()), { row: 0, column: 7 }, "the finger drags the cursor");
+        assert.deepEqual(requests, [], "no highlight request while the cursor rests under the finger");
+        touchEvent(page, "touchmove", content, caret.left + 40, y);
+        touchEvent(page, "touchend", content, caret.left + 40, y);
+        await sleep(250);
+        assert.deepEqual(requests, [plain(editor.getCursorPosition())], "one request for the final position");
+    } finally {
+        page.close();
     }
 });
 
@@ -1016,6 +1166,63 @@ test("the completion popup shows loading and empty states", async () => {
         await sleep(100);
         assert.deepEqual(plain(rows()), ["zzqxwAlpha"]);
         completer.detach();
+    } finally {
+        page.close();
+    }
+});
+
+// Roadmap-Ace-1.44.0.md A2-10: on a narrow screen the documentation tooltip must not cover the completion popup.
+// jsdom has no layout: the popup gets a rectangle and the tooltip one derived from its inline position.
+test("the completion documentation stays off the popup on a narrow screen", async () => {
+    const page = await openEditor({ layout: false });
+    try {
+        const { editor, window } = page;
+        Object.defineProperty(window, "innerWidth", { configurable: true, value: 400 });
+        Object.defineProperty(window, "innerHeight", { configurable: true, value: 700 });
+        const original = window.HTMLElement.prototype.getBoundingClientRect;
+        window.HTMLElement.prototype.getBoundingClientRect = function() {
+            if (this.id !== "doc-tooltip") return original.call(this);
+            const style = this.style;
+            const px = (value) => (value === "" ? null : parseFloat(value));
+            const height = Math.min(px(style.maxHeight) || 200, 200);
+            const left = px(style.left) !== null ? px(style.left) : 0;
+            const right = px(style.right) !== null ? 400 - px(style.right) : left + 600;
+            const top = px(style.top) !== null ? px(style.top) : 700 - (px(style.bottom) || 0) - height;
+            return { left, right, top, bottom: top + height, width: right - left, height };
+        };
+        page.api.setText("cons");
+        editor.navigateFileEnd();
+        editor.focus();
+        editor.completers = [{
+            getCompletions(e, s, p, prefix, callback) {
+                callback(null, [{ caption: "console", value: "console", score: 1, docText: "declare var console: Console;\n".repeat(20) }]);
+            },
+        }];
+        const completer = editor.completer;
+        completer.showPopup(editor);
+        await sleep(100);
+        assert.ok(completer.popup && completer.popup.isOpen, "popup open");
+        const popupRect = { left: 4, right: 396, top: 120, bottom: 320, width: 392, height: 200 };
+        completer.popup.container.getBoundingClientRect = () => popupRect;
+        const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        const show = (isTopdown) => {
+            completer.popup.isTopdown = isTopdown;
+            completer.showDocTooltip({ docText: "declare var console: Console;\n".repeat(20) });
+            const node = completer.tooltipNode;
+            return { node, rect: node.getBoundingClientRect(), display: node.style.display };
+        };
+        const below = show(true);
+        assert.equal(below.display, "block");
+        assert.ok(!overlaps(below.rect, popupRect), `the tooltip covers the popup ${JSON.stringify(below.rect)}`);
+        assert.ok(below.rect.top >= popupRect.bottom, "a popup below the cursor gets its documentation below it");
+        const above = show(false);
+        assert.ok(!overlaps(above.rect, popupRect), `the tooltip covers the popup ${JSON.stringify(above.rect)}`);
+        assert.ok(above.rect.bottom <= popupRect.top, "a popup above the cursor gets its documentation above it");
+        popupRect.top = 20;
+        popupRect.bottom = 680;
+        assert.equal(show(true).display, "none", "without room the documentation is not shown over the popup");
+        completer.detach();
+        window.HTMLElement.prototype.getBoundingClientRect = original;
     } finally {
         page.close();
     }

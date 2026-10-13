@@ -115,6 +115,11 @@
     // Touch behavior of the Ace 1.4.12 Auto.js build on top of Ace 1.44.0 (autojs6/mobile/).
     var mobileOverlay = null;
     var touchMagnifierEnabled = false;
+    // A finger drags the cursor or the selection anchor (reported by the overlay).
+    var touchHandleDragActive = false;
+    var scrollbarAutoHideEnabled = true;
+    var scrollbarDragActive = false;
+    var scrollbarHideTimers = { v: null, h: null };
     var gutterFoldClickSuppressUntil = 0;
     var imeTextInputSelectionWindow = {
         installed: false,
@@ -2027,6 +2032,53 @@
             node.style.top = "";
             node.style.bottom = edge + "px";
         }
+        keepDocTooltipOffPopup(node, viewportHeight, edge);
+    }
+
+    // Ace puts the documentation of the selected completion beside the popup. On a phone there is rarely room beside
+    // it, and the tooltip widened to the screen width above covered the popup (Roadmap-Ace-1.44.0.md A2-10). A
+    // tooltip that would overlap the popup moves above or below it, preferring the side away from the cursor as Ace
+    // does, and stays hidden when neither side has room for a few lines.
+    var DOC_TOOLTIP_MIN_HEIGHT_PX = 72;
+
+    function keepDocTooltipOffPopup(node, viewportHeight, edge) {
+        var popupElement = node.parentNode;
+        if (!popupElement || !popupElement.getBoundingClientRect) {
+            return;
+        }
+        var popupRect = popupElement.getBoundingClientRect();
+        var rect = node.getBoundingClientRect();
+        if (!(popupRect.width > 0 && popupRect.height > 0) ||
+            !(rect.left < popupRect.right && rect.right > popupRect.left &&
+                rect.top < popupRect.bottom && rect.bottom > popupRect.top)) {
+            return;
+        }
+        var gap = edge / 2;
+        var above = popupRect.top - gap - edge;
+        var below = viewportHeight - popupRect.bottom - gap - edge;
+        var completer = popupCompleter();
+        var popup = completer && completer.popup;
+        // Ace's popup is "top down" when it opens below the cursor line.
+        var preferBelow = !popup || popup.isTopdown !== false;
+        var useBelow;
+        if ((preferBelow ? below : above) >= DOC_TOOLTIP_MIN_HEIGHT_PX) {
+            useBelow = preferBelow;
+        } else if ((preferBelow ? above : below) >= DOC_TOOLTIP_MIN_HEIGHT_PX) {
+            useBelow = !preferBelow;
+        } else {
+            node.style.display = "none";
+            return;
+        }
+        node.style.left = edge + "px";
+        node.style.right = edge + "px";
+        node.style.maxHeight = Math.floor(useBelow ? below : above) + "px";
+        if (useBelow) {
+            node.style.top = popupRect.bottom + gap + "px";
+            node.style.bottom = "";
+        } else {
+            node.style.top = "";
+            node.style.bottom = viewportHeight - popupRect.top + gap + "px";
+        }
     }
 
     function installDocTooltipTouchScroller(node) {
@@ -2253,8 +2305,10 @@
 
     function scheduleSymbolHighlights() {
         clearSymbolHighlights();
+        // While a finger drags the cursor, a highlight request (the TypeScript service runs on this thread) would
+        // stall the drag whenever the cursor rests on an identifier; the final position is asked for on release.
         if (!editor || !session || documentLongLineSafetyMode || !currentSmartHintOptions().symbolHighlight ||
-            !editor.selection.isEmpty()) {
+            touchHandleDragActive || !editor.selection.isEmpty()) {
             return;
         }
         var pos = editor.getCursorPosition();
@@ -2300,6 +2354,17 @@
                 requestSymbolHighlights(pending);
             }
         });
+    }
+
+    function setTouchHandleDragActive(active) {
+        active = !!active;
+        if (touchHandleDragActive === active) {
+            return;
+        }
+        touchHandleDragActive = active;
+        if (!active && editor && session) {
+            scheduleSymbolHighlights();
+        }
     }
 
     function installSymbolHighlights() {
@@ -5014,6 +5079,83 @@
         notifyStateChanged("customScrollbarChanged");
     }
 
+    // Auto hiding scrollbars (Roadmap-Ace-1.44.0.md A2-10): a scrollbar stays hidden until the content scrolls along
+    // its axis and hides again SCROLLBAR_AUTO_HIDE_DELAY_MS after the last scroll, unless a finger still drags its
+    // thumb. The classes on the editor container drive autojs6.css; the mobile overlay does not grab a hidden bar.
+    var SCROLLBAR_AUTO_HIDE_DELAY_MS = 2000;
+
+    function scrollbarShownClass(axis) {
+        return "autojs6-scrollbar-" + axis + "-shown";
+    }
+
+    function isScrollbarHidden(vertical) {
+        if (!scrollbarAutoHideEnabled || !editor || !editor.container) {
+            return false;
+        }
+        return !hasClassToken(editor.container, scrollbarShownClass(vertical ? "v" : "h"));
+    }
+
+    function hideScrollbarLater(axis) {
+        if (scrollbarHideTimers[axis] !== null) {
+            clearTimeout(scrollbarHideTimers[axis]);
+        }
+        scrollbarHideTimers[axis] = setTimeout(function() {
+            scrollbarHideTimers[axis] = null;
+            if (scrollbarDragActive) {
+                hideScrollbarLater(axis);
+                return;
+            }
+            if (editor && editor.container && editor.container.classList) {
+                editor.container.classList.remove(scrollbarShownClass(axis));
+            }
+        }, SCROLLBAR_AUTO_HIDE_DELAY_MS);
+    }
+
+    function revealScrollbar(axis) {
+        if (!scrollbarAutoHideEnabled || !editor || !editor.container || !editor.container.classList) {
+            return;
+        }
+        editor.container.classList.add(scrollbarShownClass(axis));
+        hideScrollbarLater(axis);
+    }
+
+    function setScrollbarDragActive(active) {
+        scrollbarDragActive = !!active;
+    }
+
+    function applyScrollbarAutoHide(enabled) {
+        scrollbarAutoHideEnabled = !!enabled;
+        if (!editor || !editor.container || !editor.container.classList) {
+            return;
+        }
+        ["v", "h"].forEach(function(axis) {
+            if (scrollbarHideTimers[axis] !== null) {
+                clearTimeout(scrollbarHideTimers[axis]);
+                scrollbarHideTimers[axis] = null;
+            }
+            editor.container.classList.remove(scrollbarShownClass(axis));
+        });
+        if (scrollbarAutoHideEnabled) {
+            editor.container.classList.add("autojs6-scrollbar-auto-hide");
+        } else {
+            editor.container.classList.remove("autojs6-scrollbar-auto-hide");
+        }
+    }
+
+    function setScrollbarAutoHideEnabled(enabled) {
+        applyScrollbarAutoHide(enabled === true || String(enabled).toLowerCase() === "true");
+        notifyStateChanged("scrollbarAutoHideChanged");
+    }
+
+    function installScrollbarAutoHide() {
+        session.on("changeScrollTop", function() {
+            revealScrollbar("v");
+        });
+        session.on("changeScrollLeft", function() {
+            revealScrollbar("h");
+        });
+    }
+
     function setWhitespacesInSelectionEnabled(enabled) {
         try {
             editor.setOption("showWhitespacesInSelection", !!enabled);
@@ -5428,22 +5570,57 @@
         return false;
     }
 
-    function isDiagnosticGutterMarkerEvent(target, aceEvent) {
-        if (!target || !target.getBoundingClientRect) {
-            return false;
-        }
-        var position = aceEvent && typeof aceEvent.getDocumentPosition === "function" ?
-            aceEvent.getDocumentPosition() :
-            null;
-        if (!isDiagnosticGutterCell(target) && !rowHasDiagnosticAnnotation(position && position.row)) {
-            return false;
-        }
-        var point = clientPointFromDomEvent(aceEvent && aceEvent.domEvent || aceEvent);
-        var clientX = Number(point && point.clientX);
-        if (!isFinite(clientX)) {
+    // True when the point is on the annotation icon of a gutter cell (svg icons: a child element; png icons: the
+    // child that reserves the icon space). `slop` widens the icon for fingers.
+    function isGutterAnnotationIconAt(cell, target, clientX, clientY, slop) {
+        if (findAncestorWithClassToken(target, "ace_gutter_annotation", cell && cell.parentNode)) {
             return true;
         }
-        return clientX <= target.getBoundingClientRect().left + 24;
+        var icon = cell && cell.querySelector && cell.querySelector(".ace_gutter_annotation");
+        if (!icon || !icon.getBoundingClientRect) {
+            return false;
+        }
+        var rect = icon.getBoundingClientRect();
+        if (!(rect.width > 0 && rect.height > 0)) {
+            return false;
+        }
+        return clientX >= rect.left - slop && clientX <= rect.right + slop &&
+            clientY >= rect.top - slop && clientY <= rect.bottom + slop;
+    }
+
+    // A tap of the mobile overlay on the gutter (Roadmap-Ace-1.44.0.md A2-10). The overlay keeps the browser from
+    // synthesizing mouse events, so the editor is not focused (no soft keyboard, no scroll to the cursor) and Ace's
+    // own gutter handler does not move the cursor. On a row with diagnostics a tap on the annotation icon opens the
+    // diagnostic marker; any other tap on the cell toggles the breakpoint. Fold widgets are handled on touchstart
+    // (toggleGutterFoldFromDomEvent).
+    var GUTTER_ICON_TOUCH_SLOP_PX = 6;
+
+    function handleGutterTap(target, clientX, clientY) {
+        var cell = findGutterCell(target);
+        if (!cell || !editor || !session) {
+            return false;
+        }
+        var position = positionFromDomEvent({ clientX: clientX, clientY: clientY });
+        if (!position) {
+            return false;
+        }
+        var row = position.row;
+        if ((isDiagnosticGutterCell(cell) || rowHasDiagnosticAnnotation(row)) &&
+            isGutterAnnotationIconAt(cell, target, clientX, clientY, GUTTER_ICON_TOUCH_SLOP_PX)) {
+            toggleDiagnosticMarkerFromGutterEvent({
+                getDocumentPosition: function() {
+                    return { row: row, column: 0 };
+                }
+            });
+            callBridge("notifyEvent", ["gutterTapDiagnostic", JSON.stringify({ row: row })]);
+            return true;
+        }
+        if (!breakpointMarkersEnabled) {
+            return false;
+        }
+        toggleBreakpoint(row);
+        callBridge("notifyEvent", ["gutterTapBreakpoint", JSON.stringify({ row: row })]);
+        return true;
     }
 
     function getDiagnosticWidgetAtRow(row) {
@@ -5764,7 +5941,11 @@
                 isMagnifierEnabled: function() {
                     return touchMagnifierEnabled;
                 },
-                onRecoverableError: notifyRecoverableError
+                onRecoverableError: notifyRecoverableError,
+                onGutterTap: handleGutterTap,
+                isScrollbarHidden: isScrollbarHidden,
+                onScrollbarDrag: setScrollbarDragActive,
+                onHandleDrag: setTouchHandleDragActive
             });
         }
         // Instrumentation tests and diagnostics reach the editor through `window.editor`.
@@ -5801,6 +5982,7 @@
         highlightIndentGuidesEnabled = callBridgeBoolean("isHighlightIndentGuidesEnabled", true);
         var svgGutterIconsEnabled = callBridgeBoolean("isSvgGutterIconsEnabled", true);
         var customScrollbarEnabled = callBridgeBoolean("isCustomScrollbarEnabled", true);
+        var initialScrollbarAutoHideEnabled = callBridgeBoolean("isScrollbarAutoHideEnabled", true);
         var whitespacesInSelectionEnabled = callBridgeBoolean("isWhitespacesInSelectionEnabled", true);
         lineNumbersEnabled = callBridgeBoolean("isLineNumbersEnabled", true);
         breakpointMarkersEnabled = callBridgeBoolean("isBreakpointMarkersEnabled", true);
@@ -5851,6 +6033,8 @@
             enableMobileMenu: false
         });
         applyCustomScrollbar(customScrollbarEnabled);
+        applyScrollbarAutoHide(initialScrollbarAutoHideEnabled);
+        installScrollbarAutoHide();
         try {
             // Registered by ext-whitespaces_in_selection.js, so it is not part of setOptions above.
             editor.setOption("showWhitespacesInSelection", whitespacesInSelectionEnabled);
@@ -5988,7 +6172,10 @@
                 }
                 return;
             }
-            if (isDiagnosticGutterMarkerEvent(target, event)) {
+            // A mouse click on the annotation icon opens the diagnostic marker; next to it the breakpoint area still
+            // toggles breakpoints, also on rows with diagnostics.
+            if ((isDiagnosticGutterCell(target) || rowHasDiagnosticAnnotation(event.getDocumentPosition().row)) &&
+                isGutterAnnotationIconAt(target, event.domEvent.target, event.clientX, event.clientY, 0)) {
                 toggleDiagnosticMarkerFromGutterEvent(event);
                 event.stop();
                 return;
@@ -6089,6 +6276,7 @@
             setHighlightIndentGuidesEnabled: setHighlightIndentGuidesEnabled,
             setSvgGutterIconsEnabled: setSvgGutterIconsEnabled,
             setCustomScrollbarEnabled: setCustomScrollbarEnabled,
+            setScrollbarAutoHideEnabled: setScrollbarAutoHideEnabled,
             setWhitespacesInSelectionEnabled: setWhitespacesInSelectionEnabled,
             setTouchMagnifierEnabled: function(enabled) {
                 touchMagnifierEnabled = enabled === true || String(enabled).toLowerCase() === "true";

@@ -59,7 +59,9 @@ ace.define("autojs6/mobile/magnifier", ["require", "exports", "module"], functio
 
         var screenPosition = session.documentToScreenPosition(position);
         var centerTop = (VISIBLE_ROWS - 1) / 2 * lineHeight;
-        var cursorLeft = renderer.$padding + screenPosition.column * config.characterWidth;
+        // Relative to the start of the text: Ace offsets the whole text layer by its padding (a margin), so a row
+        // element and its clone start at the first character.
+        var cursorLeft = screenPosition.column * config.characterWidth;
         var unscaledWidth = width / SCALE;
 
         this.content.innerHTML = "";
@@ -128,7 +130,7 @@ ace.define("autojs6/mobile/magnifier", ["require", "exports", "module"], functio
             highlight.className = "autojs6-magnifier-selection ace_selection";
             highlight.style.top = centerTop + offset * config.lineHeight + "px";
             highlight.style.height = config.lineHeight + "px";
-            highlight.style.left = editor.renderer.$padding + startColumn * config.characterWidth + "px";
+            highlight.style.left = startColumn * config.characterWidth + "px";
             highlight.style.width = Math.max(1, endColumn - startColumn) * config.characterWidth + "px";
             highlight.style.transform = "translateX(" + translateX + "px)";
             this.content.appendChild(highlight);

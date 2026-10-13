@@ -243,12 +243,14 @@ export function createEnvironment(options = {}) {
     const textLayer = new FakeElement(env, "text-layer", ["ace_text-layer"]);
     const textarea = new FakeElement(env, "textarea", ["ace_text-input"]);
     const selectionMarker = new FakeElement(env, "selection-marker", ["ace_selection"]);
-    for (const [parent, child] of [[container, gutter], [gutter, gutterCell], [container, scrollerElement], [scrollerElement, textLayer], [container, textarea]]) {
+    // Ace's long line overflow button (Text.$renderOverflowMessage).
+    const overflowButton = new FakeElement(env, "overflow-button", ["ace_inline_button", "ace_keyword", "ace_toggle_wrap"]);
+    for (const [parent, child] of [[container, gutter], [gutter, gutterCell], [container, scrollerElement], [scrollerElement, textLayer], [textLayer, overflowButton], [container, textarea]]) {
         child.parentNode = parent;
         parent.children.push(child);
     }
     scrollerElement.rect = { ...SCROLLER_RECT };
-    env.elements = { container, gutter, gutterCell, scrollerElement, textLayer, textarea };
+    env.elements = { container, gutter, gutterCell, scrollerElement, textLayer, overflowButton, textarea };
 
     const lineElements = new Map();
     const lineCell = (row) => {
@@ -384,12 +386,20 @@ export function createEnvironment(options = {}) {
     };
 
     let focused = false;
+    let wrap = false;
     const editor = {
         container,
         renderer,
         selection,
         session: {
             selection,
+            getUseWrapMode() {
+                return wrap;
+            },
+            setOption(name, value) {
+                env.record("session.setOption", name, value);
+                if (name === "wrap") wrap = !!value;
+            },
             documentToScreenPosition(position) {
                 return { row: position.row, column: position.column };
             },
@@ -424,6 +434,10 @@ export function createEnvironment(options = {}) {
         },
         startActionModeIfSelectionInView(selectAll) {
             env.record("editor.startActionModeIfSelectionInView", selectAll);
+        },
+        // Added by the overlay's ActionMode module; the 1.4.12 build had no insertion toolbar.
+        startInsertionActionMode() {
+            env.record("editor.startInsertionActionMode");
         },
         finishActionMode() {
             env.record("editor.finishActionMode");
@@ -469,6 +483,9 @@ export function createEnvironment(options = {}) {
         },
         startActionMode(left, top, right, bottom, hasSelection, selectAll) {
             env.record("autojs.startActionMode", left, top, right, bottom, hasSelection, selectAll);
+        },
+        startInsertionActionMode(left, top, right, bottom) {
+            env.record("autojs.startInsertionActionMode", left, top, right, bottom);
         },
         finishActionMode() {
             env.record("autojs.finishActionMode");
@@ -610,10 +627,10 @@ const at = (row, column, dy = 10) => [SCROLLER_RECT.left + TEXT_PADDING + column
 export const TOUCH_SCENARIOS = [
     { name: "B1 quick tap moves the cursor and shows the soft input", steps: [{ down: at(3, 8) }, { wait: 50 }, { up: at(3, 8) }, { wait: 400 }] },
     { name: "B1 tap while the window is blurred", setup: (env) => env.setDocumentHasFocus(false), steps: [{ down: at(4, 2) }, { wait: 30 }, { up: at(4, 2) }] },
-    { name: "slow tap (100-500 ms) does not move the cursor", steps: [{ down: at(6, 12) }, { wait: 250 }, { up: at(6, 12) }, { wait: 300 }] },
-    { name: "B2 gutter touch is ignored", steps: [{ down: [10, 30], target: "gutterCell" }, { wait: 40 }, { up: [10, 30], target: "gutterCell" }] },
+    { name: "B19 slow tap (250 ms)", steps: [{ down: at(6, 12) }, { wait: 250 }, { up: at(6, 12) }, { wait: 300 }] },
+    { name: "B2 gutter tap", steps: [{ down: [10, 30], target: "gutterCell" }, { wait: 40 }, { up: [10, 30], target: "gutterCell" }] },
     {
-        name: "gutter touch after a scroll reuses the previous mode on touchend",
+        name: "gutter tap after a scroll",
         steps: [{ down: [200, 300] }, { wait: 20 }, { move: [200, 260] }, { wait: 150 }, { up: [200, 260] }, { wait: 300 }, { down: [10, 30], target: "gutterCell" }, { wait: 40 }, { up: [10, 30], target: "gutterCell" }, { wait: 300 }],
     },
     { name: "B3 double tap selects a word", steps: [{ down: at(5, 9) }, { wait: 40 }, { up: at(5, 9) }, { wait: 120 }, { down: at(5, 10) }, { wait: 40 }, { up: at(5, 10) }, { wait: 300 }] },
@@ -653,7 +670,7 @@ export const TOUCH_SCENARIOS = [
     },
     { name: "B8 small move stays within the slop", steps: [{ down: at(20, 20) }, { wait: 30 }, { move: at(20, 21) }, { wait: 30 }, { up: at(20, 21) }, { wait: 300 }] },
     {
-        name: "B8 slow scroll drag does not fling",
+        name: "B8 slow scroll drag resting before the lift",
         setup: (env) => env.renderer.scrollTo(0, 400),
         steps: [{ down: [200, 300] }, { wait: 20 }, { move: [200, 296] }, { wait: 20 }, { move: [200, 290] }, { wait: 20 }, { move: [200, 284] }, { wait: 20 }, { move: [200, 278] }, { wait: 150 }, { up: [200, 278] }, { wait: 300 }],
     },
@@ -690,7 +707,7 @@ export const TOUCH_SCENARIOS = [
     },
     { name: "three fingers do nothing", steps: [{ down3: [at(3, 3), at(6, 6), at(9, 9)] }, { wait: 30 }, { up: at(3, 3) }, { wait: 600 }] },
     // Boundary scenarios: each one pins a constant or a comparison of the original handler.
-    { name: "tap lasting 110 ms is a slow tap", steps: [{ down: at(6, 12) }, { wait: 110 }, { up: at(6, 12) }, { wait: 300 }] },
+    { name: "tap lasting 110 ms", steps: [{ down: at(6, 12) }, { wait: 110 }, { up: at(6, 12) }, { wait: 300 }] },
     { name: "tap lasting 99 ms is a tap", steps: [{ down: at(6, 12) }, { wait: 99 }, { up: at(6, 12) }, { wait: 300 }] },
     { name: "second tap after 299 ms is a double tap", steps: [{ down: at(5, 9) }, { wait: 40 }, { up: at(5, 9) }, { wait: 259 }, { down: at(5, 9) }, { wait: 40 }, { up: at(5, 9) }] },
     { name: "second tap after 301 ms is a single tap", steps: [{ down: at(5, 9) }, { wait: 40 }, { up: at(5, 9) }, { wait: 261 }, { down: at(5, 9) }, { wait: 40 }, { up: at(5, 9) }] },
@@ -894,4 +911,4 @@ export const ACTION_MODE_SCENARIOS = [
     },
 ];
 
-export { plain };
+export { plain, at as touchPoint };

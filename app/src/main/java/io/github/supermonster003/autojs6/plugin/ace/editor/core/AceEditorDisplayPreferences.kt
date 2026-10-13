@@ -21,12 +21,15 @@ object AceEditorDisplayPreferences {
     const val KEY_ACE_CUSTOM_SCROLLBAR_ENABLED = "key_\$_ace_custom_scrollbar_enabled"
     const val KEY_ACE_WHITESPACES_IN_SELECTION_ENABLED = "key_\$_ace_whitespaces_in_selection_enabled"
     const val KEY_ACE_TOUCH_MAGNIFIER_ENABLED = "key_\$_ace_touch_magnifier_enabled"
+    // Roadmap-Ace-1.44.0.md A2-10: scrollbars appear while the content scrolls and hide afterwards.
+    const val KEY_ACE_SCROLLBAR_AUTO_HIDE_ENABLED = "key_\$_ace_scrollbar_auto_hide_enabled"
 
     const val DEFAULT_SVG_GUTTER_ICONS_ENABLED = true
     const val DEFAULT_HIGHLIGHT_INDENT_GUIDES_ENABLED = true
     const val DEFAULT_CUSTOM_SCROLLBAR_ENABLED = true
     const val DEFAULT_WHITESPACES_IN_SELECTION_ENABLED = true
     const val DEFAULT_TOUCH_MAGNIFIER_ENABLED = false
+    const val DEFAULT_SCROLLBAR_AUTO_HIDE_ENABLED = true
 
     const val GUTTER_WIDTH_MODE_DYNAMIC = "dynamic"
     const val WORD_WRAP_INDENT_STYLE_CONTINUATION = "continuation"
@@ -79,4 +82,7 @@ object AceEditorDisplayPreferences {
 
     fun isTouchMagnifierEnabled(preferences: SharedPreferences) =
         preferences.getBoolean(KEY_ACE_TOUCH_MAGNIFIER_ENABLED, DEFAULT_TOUCH_MAGNIFIER_ENABLED)
+
+    fun isScrollbarAutoHideEnabled(preferences: SharedPreferences) =
+        preferences.getBoolean(KEY_ACE_SCROLLBAR_AUTO_HIDE_ENABLED, DEFAULT_SCROLLBAR_AUTO_HIDE_ENABLED)
 }

@@ -50,6 +50,8 @@ internal class AceSelectionToolbar(
     )
 
     data class State(
+        /** No selection: the main row only shows the actions that apply (paste, select all). */
+        val insertion: Boolean = false,
         val canCopy: Boolean,
         val canPaste: Boolean,
         val canSelectAll: Boolean,
@@ -184,7 +186,7 @@ internal class AceSelectionToolbar(
             val availableWidth = availableWidthPx()
             val more = moreView().also(::measureNaturalWidth)
             var occupiedWidth = more.measuredWidth
-            mainItems.forEach { item ->
+            mainItems.filter { item -> !state.insertion || item.enabled(state) }.forEach { item ->
                 val itemView = actionView(item, state, overflow = false).also(::measureNaturalWidth)
                 if (occupiedWidth + itemView.measuredWidth <= availableWidth) {
                     content.addView(itemView)

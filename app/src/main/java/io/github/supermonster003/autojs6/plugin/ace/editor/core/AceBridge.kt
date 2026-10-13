@@ -148,6 +148,11 @@ class AceBridge(
     }
 
     @JavascriptInterface
+    fun isScrollbarAutoHideEnabled(): Boolean {
+        return editor.bridgeScrollbarAutoHideEnabled()
+    }
+
+    @JavascriptInterface
     fun isBreakpointMarkersEnabled(): Boolean {
         return editor.bridgeBreakpointMarkersEnabled()
     }
@@ -242,6 +247,12 @@ class AceBridge(
         selectAll: Boolean,
     ) {
         editor.startActionMode(left, top, right, bottom, hasSelection, selectAll)
+    }
+
+    /** The insertion toolbar (paste, select all) at the cursor, without a selection (Roadmap-Ace-1.44.0.md A2-10). */
+    @JavascriptInterface
+    fun startInsertionActionMode(left: Double, top: Double, right: Double, bottom: Double) {
+        editor.startActionMode(left, top, right, bottom, hasSelection = false, selectAll = false, insertion = true)
     }
 
     @JavascriptInterface

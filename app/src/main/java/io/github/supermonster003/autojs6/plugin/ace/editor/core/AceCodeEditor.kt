@@ -932,6 +932,10 @@ class AceCodeEditor @JvmOverloads constructor(
             AceEditorDisplayPreferences.isWhitespacesInSelectionEnabled(hostPreferences).toString(),
         )
         invokeAce("setTouchMagnifierEnabled", AceEditorDisplayPreferences.isTouchMagnifierEnabled(hostPreferences).toString())
+        invokeAce(
+            "setScrollbarAutoHideEnabled",
+            AceEditorDisplayPreferences.isScrollbarAutoHideEnabled(hostPreferences).toString(),
+        )
         invokeAce("setBreakpointMarkersEnabled", AceEditorDisplayPreferences.isBreakpointMarkersEnabled(hostPreferences).toString())
         invokeAce("setFoldMarkersEnabled", AceEditorDisplayPreferences.isFoldMarkersEnabled(hostPreferences).toString())
         invokeAce("setGutterWidthMode", quote(AceEditorDisplayPreferences.gutterWidthMode(hostPreferences)))
@@ -2024,6 +2028,10 @@ class AceCodeEditor @JvmOverloads constructor(
         return AceEditorDisplayPreferences.isTouchMagnifierEnabled(hostPreferences)
     }
 
+    internal fun bridgeScrollbarAutoHideEnabled(): Boolean {
+        return AceEditorDisplayPreferences.isScrollbarAutoHideEnabled(hostPreferences)
+    }
+
     internal fun bridgeBreakpointMarkersEnabled(): Boolean {
         return AceEditorDisplayPreferences.isBreakpointMarkersEnabled(hostPreferences)
     }
@@ -2220,6 +2228,7 @@ class AceCodeEditor @JvmOverloads constructor(
         bottom: Double,
         hasSelection: Boolean,
         selectAll: Boolean,
+        insertion: Boolean = false,
     ) {
         postToMain {
             val request = SelectionActionModeRequest(
@@ -2229,6 +2238,7 @@ class AceCodeEditor @JvmOverloads constructor(
                 bottom = bottom,
                 hasSelection = hasSelection,
                 selectAll = selectAll,
+                insertion = insertion,
             )
             if (isPinchSelectionActionModeSuppressed()) {
                 pendingSelectionActionModeRequest = null
@@ -2283,7 +2293,9 @@ class AceCodeEditor @JvmOverloads constructor(
 
     private fun startSelectionActionMode(request: SelectionActionModeRequest) {
         updateSelectionActionModeRect(request.left, request.top, request.right, request.bottom)
-        if (!request.hasSelection || selectedTextSnapshot.isEmpty()) {
+        // Requests without a selection (after a cursor drag) show nothing; the insertion toolbar is asked for
+        // explicitly (a tap on the cursor, a long press on blank space).
+        if (!request.insertion && (!request.hasSelection || selectedTextSnapshot.isEmpty())) {
             finishSelectionActionMode()
             return
         }
@@ -2363,6 +2375,7 @@ class AceCodeEditor @JvmOverloads constructor(
     private fun selectionActionToolbarState(): AceSelectionToolbar.State {
         val lsp = lspServerManager.snapshot()
         return AceSelectionToolbar.State(
+            insertion = selectedTextSnapshot.isEmpty(),
             canCopy = selectedTextSnapshot.isNotEmpty(),
             canPaste = !readOnly && clipboardText().isNotEmpty(),
             canSelectAll = textSnapshot.isNotEmpty(),
@@ -3739,6 +3752,7 @@ class AceCodeEditor @JvmOverloads constructor(
         val bottom: Double,
         val hasSelection: Boolean,
         val selectAll: Boolean,
+        val insertion: Boolean = false,
     )
 
     companion object {

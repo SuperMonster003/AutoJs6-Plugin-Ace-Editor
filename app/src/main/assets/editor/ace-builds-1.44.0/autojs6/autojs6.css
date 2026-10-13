@@ -117,6 +117,27 @@ body.ace-ready #editor {
     user-select: none;
 }
 
+/* Auto hiding scrollbars (autojs6_ace_bridge.js revealScrollbar): custom (ace_sb-*) and native (ace_scrollbar-*)
+   scrollbars appear while the content scrolls along their axis and fade out afterwards. A hidden scrollbar lets
+   touches through to the text. */
+#editor.autojs6-scrollbar-auto-hide > .ace_sb-v,
+#editor.autojs6-scrollbar-auto-hide > .ace_sb-h,
+#editor.autojs6-scrollbar-auto-hide > .ace_scrollbar-v,
+#editor.autojs6-scrollbar-auto-hide > .ace_scrollbar-h {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-out;
+}
+
+#editor.autojs6-scrollbar-auto-hide.autojs6-scrollbar-v-shown > .ace_sb-v,
+#editor.autojs6-scrollbar-auto-hide.autojs6-scrollbar-v-shown > .ace_scrollbar-v,
+#editor.autojs6-scrollbar-auto-hide.autojs6-scrollbar-h-shown > .ace_sb-h,
+#editor.autojs6-scrollbar-auto-hide.autojs6-scrollbar-h-shown > .ace_scrollbar-h {
+    opacity: 1;
+    pointer-events: auto;
+    transition-duration: 0.1s;
+}
+
 /* Drag magnifier of the mobile overlay (autojs6/mobile/autojs6_mobile_magnifier.js). */
 .autojs6-magnifier {
     position: absolute;

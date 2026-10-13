@@ -8,6 +8,7 @@ var KEYS = [
     ["key_$_ace_inline_completion_preview_enabled", "补全 ghost text 预览 (默认关)", false],
     ["key_$_ace_symbol_highlight_enabled", "同名符号高亮 (默认开)", true],
     ["key_$_ace_custom_scrollbar_enabled", "自定义滚动条 (默认开)", true],
+    ["key_$_ace_scrollbar_auto_hide_enabled", "滚动条自动隐藏 (默认开)", true],
     ["key_$_ace_svg_gutter_icons_enabled", "SVG 行号栏图标 (默认开)", true],
     ["key_$_ace_highlight_indent_guides_enabled", "缩进参考线高亮 (默认开)", true],
     ["key_$_ace_whitespaces_in_selection_enabled", "选区内显示空白符 (默认开)", true],

@@ -2,10 +2,12 @@
 //
 // The host (AceBridge.kt, global `autojs`) shows its own selection toolbar. This module gives the editor the calls
 // the touch handler and the host use, with the behavior documented in tools/ace-mobile/README.md:
-//   editor.actionMode                        "", "selectionActionMode" or "noSelectionActionMode"
+//   editor.actionMode                        "", "selectionActionMode", "noSelectionActionMode" or
+//                                            "insertionActionMode"
 //   editor.startActionMode()                 asks the host for the toolbar now
 //   editor.startActionModeIfSelectionInView(selectAll)
 //                                            200 ms later, if the selection is not empty
+//   editor.startInsertionActionMode()        asks the host for the insertion toolbar (paste) at the cursor
 //   editor.$nativeStartActionMode(rect, hasSelection, selectAll)
 //   editor.finishActionMode()                asks the host to hide the toolbar
 //   editor.renderer.getClientPosition(position)
@@ -16,6 +18,9 @@ ace.define("autojs6/mobile/action_mode", ["require", "exports", "module"], funct
     var MODE_NONE = "";
     var MODE_SELECTION = "selectionActionMode";
     var MODE_NO_SELECTION = "noSelectionActionMode";
+    // Roadmap-Ace-1.44.0.md A2-10. The host never shows a toolbar for MODE_NO_SELECTION, which the touch handler asks
+    // for after every cursor drag; the insertion toolbar is a separate request.
+    var MODE_INSERTION = "insertionActionMode";
     var DEFERRED_START_MS = 200;
 
     // Viewport coordinates of the top left corner of a document position; `this` is the renderer.
@@ -62,6 +67,16 @@ ace.define("autojs6/mobile/action_mode", ["require", "exports", "module"], funct
     ActionModeController.prototype.show = function(band, hasSelection, selectAll) {
         this.editor.actionMode = hasSelection ? MODE_SELECTION : MODE_NO_SELECTION;
         this.host.startActionMode(band.left, band.top, band.right, band.bottom, hasSelection, selectAll);
+    };
+
+    ActionModeController.prototype.startInsertion = function() {
+        this.cancelDeferredStart();
+        if (typeof this.host.startInsertionActionMode !== "function") {
+            return;
+        }
+        var band = this.selectionBand();
+        this.editor.actionMode = MODE_INSERTION;
+        this.host.startInsertionActionMode(band.left, band.top, band.right, band.bottom);
     };
 
     ActionModeController.prototype.startNow = function() {
@@ -112,6 +127,9 @@ ace.define("autojs6/mobile/action_mode", ["require", "exports", "module"], funct
         editor.startActionMode = function() {
             controller.startNow();
         };
+        editor.startInsertionActionMode = function() {
+            controller.startInsertion();
+        };
         editor.$nativeStartActionMode = function(band, hasSelection, selectAll) {
             controller.show(band, hasSelection, selectAll);
         };
@@ -119,10 +137,13 @@ ace.define("autojs6/mobile/action_mode", ["require", "exports", "module"], funct
             controller.finish();
         };
 
-        // Typing while the paste toolbar (no selection) is up asks the host to close it; the state stays as it was.
+        // Typing while a toolbar without selection is up asks the host to close it; for MODE_NO_SELECTION the state
+        // stays as it was (the 1.4.12 behavior), the insertion toolbar is over.
         editor.on("change", function() {
             if (editor.actionMode === MODE_NO_SELECTION) {
                 host.finishActionMode();
+            } else if (editor.actionMode === MODE_INSERTION) {
+                editor.finishActionMode();
             }
         });
 
@@ -145,4 +166,5 @@ ace.define("autojs6/mobile/action_mode", ["require", "exports", "module"], funct
     exports.getClientPosition = getClientPosition;
     exports.SELECTION_ACTION_MODE = MODE_SELECTION;
     exports.NO_SELECTION_ACTION_MODE = MODE_NO_SELECTION;
+    exports.INSERTION_ACTION_MODE = MODE_INSERTION;
 });
