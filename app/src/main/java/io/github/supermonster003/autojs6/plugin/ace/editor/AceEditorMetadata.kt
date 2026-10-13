@@ -5,13 +5,14 @@ internal object AceEditorMetadata {
     const val PLUGIN_ID = "ace-editor"
     const val ENGINE = "editor"
     const val VARIANT = "ace"
-    const val CONTRACT_VERSION = 6
-    const val REQUIRED_HOST_VERSION_CODE = 5276
+    const val CONTRACT_VERSION = 7
+    const val REQUIRED_HOST_VERSION_CODE = 5352
     const val CAPABILITY_CONTRACT_VERSION = "contractVersion"
 
     val CAPABILITIES = listOf(
         "breakpoints",
         "codeActions",
+        "codeFolding",
         "embeddedView",
         "definitionNavigation",
         "fonts",

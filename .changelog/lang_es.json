@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v1.32.0": {
+      "released_date": "2026/10/13",
+      "feature": [
+        "El menú Editar > Plegado > Desplegar todo / Plegar todo actúa sobre todos los bloques de código, incluidos los pliegues anidados y los documentos de solo lectura, conservando el texto, la selección y el historial de deshacer"
+      ]
+    },
     "v1.31.0": {
       "released_date": "2026/10/12",
       "improvement": [

@@ -805,6 +805,11 @@ class AceCodeEditor @JvmOverloads constructor(
         invokeAce("beautify")
     }
 
+    // Folding changes presentation only and remains available in read-only mode.
+    fun foldAll() = invokeAce("foldAll")
+
+    fun unfoldAll() = invokeAce("unfoldAll")
+
     fun replaceSelection(text: String?) {
         if (!canMutateText("replaceSelection")) {
             return

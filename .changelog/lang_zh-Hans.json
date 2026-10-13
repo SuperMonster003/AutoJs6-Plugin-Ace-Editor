@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.32.0": {
+      "released_date": "2026/10/13",
+      "feature": [
+        "编辑器支持 \"编辑 > 折叠 > 全部展开/全部折叠\", 对整个文档的代码块生效, 支持嵌套折叠和只读文档, 保持文本, 选区及撤销历史不变"
+      ]
+    },
     "v1.31.0": {
       "released_date": "2026/10/12",
       "improvement": [

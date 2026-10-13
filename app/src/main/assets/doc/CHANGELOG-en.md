@@ -4,6 +4,12 @@
 
 ******
 
+# v1.32.0
+
+###### 2026/10/13
+
+* `Feature` The editor supports Edit > Folding > Unfold all / Fold all for every code block, including nested folds and read-only documents, while preserving text, selection and undo history
+
 # v1.31.0
 
 ###### 2026/10/12

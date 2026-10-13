@@ -224,6 +224,10 @@ class AceEditorPluginSession internal constructor(
         if (canMutateText()) editor.beautify()
     }
 
+    override fun foldAll() = editor.foldAll()
+
+    override fun unfoldAll() = editor.unfoldAll()
+
     override fun undo() {
         if (redoUndoEnabled && canMutateText()) editor.undo()
     }

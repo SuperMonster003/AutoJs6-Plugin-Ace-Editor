@@ -51,8 +51,9 @@ AutoJs6 Ace Editor 플러그인은 Ace WebView 런타임, JavaScript 브리지, 
 ******
 
 - 플러그인 ID `ace-editor`, 엔진 `editor`, 변형 `ace`를 제공하며 `org.autojs.plugin.INFO` 및 `org.autojs.plugin.EDITOR`를 통한 검색을 지원합니다.
-- Editor API 계약 5를 사용하며 AutoJs6 빌드 5276 이상 및 Android API 24 이상이 필요합니다.
+- Editor API 계약 7를 사용하며 AutoJs6 빌드 5352 이상 및 Android API 24 이상이 필요합니다.
 - 텍스트 편집, 실행 취소/다시 실행, 검색 및 바꾸기, 정규식 및 단어 단위 검색, 커서 및 선택 영역 탐색, 줄 작업, 중단점, 주석 전환 및 코드 서식을 지원합니다.
+- 편집기의 "편집 > 접기 > 모두 펼치기/모두 접기"로 문서 전체의 코드 블록을 제어하며, 중첩된 접기와 읽기 전용 문서를 지원하고 텍스트, 선택 영역 및 실행 취소 기록을 유지.
 - JavaScript/TypeScript 언어 서비스와 AutoJs6 타입 선언이 포함되어 있으며 자동 완성, hover, diagnostics 및 signature help를 제공합니다. JSON에는 syntax diagnostics만 제공합니다.
 - 필요할 때 생성되는 Pyright 1.1.413 WebWorker로 Python 3.12 의미 분석을 내장하여 타입 기반 자동 완성, hover, signature help, 진단 및 정의 이동을 제공합니다. 호환되지 않는 구형 WebView는 조용히 P2를 유지합니다.
 - 기기 내 LuaLS 3.18.2 동반 프로세스로 완전 오프라인 Lua 의미 기능을 내장하여 arm64-v8a, armeabi-v7a 및 x86_64에서 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화합니다. 지원되지 않는 ABI와 runtime 실패 시 조용히 P2를 유지합니다.
@@ -160,7 +161,7 @@ Release 빌드:
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.32.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -173,6 +174,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-u
 
 ******
 
+# v1.32.0
+
+###### 2026/10/13
+
+* `기능` 편집기의 "편집 > 접기 > 모두 펼치기/모두 접기"로 문서 전체의 코드 블록을 제어하며, 중첩된 접기와 읽기 전용 문서를 지원하고 텍스트, 선택 영역 및 실행 취소 기록을 유지
+
 # v1.31.0
 
 ###### 2026/10/12
@@ -184,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-u
 ###### 2026/10/08
 
 * `개선` compose.memo의 TypeScript 선언, 자동 완성 및 인수 검사
-
-# v1.29.0
-
-###### 2026/10/08
-
-* `개선` 3-Block Compose V2 구성요소의 TypeScript / TSX 속성, 슬롯 및 이벤트 선언
 
 ##### 더 많은 릴리스 기록
 

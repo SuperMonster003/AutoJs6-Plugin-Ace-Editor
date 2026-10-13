@@ -4,6 +4,12 @@
 
 ******
 
+# v1.32.0
+
+###### 2026/10/13
+
+* `Función` El menú Editar > Plegado > Desplegar todo / Plegar todo actúa sobre todos los bloques de código, incluidos los pliegues anidados y los documentos de solo lectura, conservando el texto, la selección y el historial de deshacer
+
 # v1.31.0
 
 ###### 2026/10/12

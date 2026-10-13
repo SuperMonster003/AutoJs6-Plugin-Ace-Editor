@@ -8,8 +8,9 @@ import org.junit.Test
 class AceEditorMetadataTest {
 
     @Test
-    fun runtimeMetadataAdvertisesProjectRenameContract() {
+    fun runtimeMetadataAdvertisesFoldingAndProjectRenameContract() {
         assertEquals(EditorPluginContract.VERSION, AceEditorMetadata.CONTRACT_VERSION)
+        assertTrue("codeFolding" in AceEditorMetadata.CAPABILITIES)
         assertTrue("projectRename" in AceEditorMetadata.CAPABILITIES)
     }
 }

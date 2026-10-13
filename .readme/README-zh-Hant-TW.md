@@ -51,8 +51,9 @@ AutoJs6 Ace Editor Plugin 將 Ace WebView 執行階段, JavaScript bridge, 輸�
 ******
 
 - 提供外掛 ID `ace-editor`, 引擎 `editor` 和變體 `ace`, 供宿主透過 `org.autojs.plugin.INFO` 與 `org.autojs.plugin.EDITOR` 元件發現外掛.
-- 使用 Editor API 契約 5, 需要 AutoJs6 組建 5276 及以上和 Android API 24 及以上.
+- 使用 Editor API 契約 7, 需要 AutoJs6 組建 5352 及以上和 Android API 24 及以上.
 - 支援文字編輯, 復原/重做, 尋找與取代, 規則運算式與全字詞搜尋, 游標/選取範圍導覽, 行操作, 中斷點, 註解切換和程式碼格式化.
+- 編輯器支援 "編輯 > 摺疊 > 全部展開/全部摺疊", 對整份文件的程式碼區塊生效, 支援巢狀摺疊和唯讀文件, 保持文字, 選取範圍及復原記錄不變.
 - 內建 JavaScript/TypeScript 語言服務和 AutoJs6 型別宣告, 提供 completion, hover, diagnostics 和 signature help; JSON 僅提供語法診斷.
 - 透過依需求建立的 Pyright 1.1.413 WebWorker 內建 Python 3.12 語意分析: 型別補全, hover, signature help, 診斷和定義跳轉; 不相容的舊 WebView 會靜默保留 P2.
 - 透過裝置內 LuaLS 3.18.2 伴生程序內建完全離線的 Lua 語意: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 不支援的 ABI 與執行失敗會靜默保留 P2.
@@ -160,7 +161,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.32.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -173,6 +174,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-u
 
 ******
 
+# v1.32.0
+
+###### 2026/10/13
+
+* `新增` 編輯器支援 "編輯 > 摺疊 > 全部展開/全部摺疊", 對整份文件的程式碼區塊生效, 支援巢狀摺疊和唯讀文件, 保持文字, 選取範圍及復原記錄不變
+
 # v1.31.0
 
 ###### 2026/10/12
@@ -184,12 +191,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-u
 ###### 2026/10/08
 
 * `優化` compose.memo 的 TypeScript 宣告, 自動完成及參數檢查
-
-# v1.29.0
-
-###### 2026/10/08
-
-* `優化` 3-Block Compose V2 元件的 TypeScript / TSX 屬性, 插槽和事件宣告
 
 ##### 更多發行歷史可參閱
 

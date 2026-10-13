@@ -51,8 +51,9 @@ Le plugin AutoJs6 Ace Editor sépare du fichier APK hôte le runtime Ace WebView
 ******
 
 - Fournit l'ID de plugin `ace-editor`, le moteur `editor` et la variante `ace`, avec découverte via `org.autojs.plugin.INFO` et `org.autojs.plugin.EDITOR`.
-- Utilise le contrat 5 de Editor API et nécessite AutoJs6 build 5276 ou ultérieur et Android API 24 ou ultérieur.
+- Utilise le contrat 7 de Editor API et nécessite AutoJs6 build 5352 ou ultérieur et Android API 24 ou ultérieur.
 - Prend en charge l'édition de texte, l'annulation et le rétablissement, la recherche et le remplacement, la recherche par expression régulière et par mot entier, la navigation du curseur et de la sélection, les opérations sur les lignes, les points d'arrêt, l'activation et la désactivation des commentaires et le formatage du code.
+- Le menu Edition > Pliage > Tout déplier / Tout replier agit sur tous les blocs de code, y compris les plis imbriqués et les documents en lecture seule, sans modifier le texte, la sélection ni l'historique d'annulation.
 - Inclut des services de langage JavaScript/TypeScript et des déclarations de types AutoJs6 avec complétion, informations au survol, diagnostics et aide à la signature, tandis que le service JSON fournit uniquement des diagnostics syntaxiques.
 - Ajoute l'analyse sémantique Python 3.12 via un WebWorker Pyright 1.1.413 chargé à la demande : complétion typée, survol, aide à la signature, diagnostics et définition ; les anciens WebView incompatibles conservent silencieusement P2.
 - Ajoute la sémantique Lua entièrement hors ligne via un processus compagnon LuaLS 3.18.2 sur l'appareil : complétion, survol, aide à la signature, diagnostics et définition sont activés par défaut sur arm64-v8a, armeabi-v7a et x86_64 ; les ABI non pris en charge et les pannes du runtime conservent silencieusement P2.
@@ -160,7 +161,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.32.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -173,6 +174,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v1.32.0
+
+###### 2026/10/13
+
+* `Fonctionnalité` Le menu Edition > Pliage > Tout déplier / Tout replier agit sur tous les blocs de code, y compris les plis imbriqués et les documents en lecture seule, sans modifier le texte, la sélection ni l'historique d'annulation
+
 # v1.31.0
 
 ###### 2026/10/12
@@ -184,12 +191,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/08
 
 * `Amélioration` Déclarations TypeScript, complétion et vérification des arguments pour compose.memo
-
-# v1.29.0
-
-###### 2026/10/08
-
-* `Amélioration` Déclarations TypeScript / TSX des propriétés, emplacements et événements des composants 3-Block Compose V2
 
 ##### Pour plus d'historique des versions
 

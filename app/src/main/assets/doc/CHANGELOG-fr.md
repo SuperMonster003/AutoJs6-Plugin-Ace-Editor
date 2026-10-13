@@ -4,6 +4,12 @@
 
 ******
 
+# v1.32.0
+
+###### 2026/10/13
+
+* `Fonctionnalité` Le menu Edition > Pliage > Tout déplier / Tout replier agit sur tous les blocs de code, y compris les plis imbriqués et les documents en lecture seule, sans modifier le texte, la sélection ni l'historique d'annulation
+
 # v1.31.0
 
 ###### 2026/10/12

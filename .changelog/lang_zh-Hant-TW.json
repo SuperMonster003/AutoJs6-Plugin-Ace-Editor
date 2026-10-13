@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v1.32.0": {
+      "released_date": "2026/10/13",
+      "feature": [
+        "編輯器支援 \"編輯 > 摺疊 > 全部展開/全部摺疊\", 對整份文件的程式碼區塊生效, 支援巢狀摺疊和唯讀文件, 保持文字, 選取範圍及復原記錄不變"
+      ]
+    },
     "v1.31.0": {
       "released_date": "2026/10/12",
       "improvement": [

@@ -51,8 +51,9 @@ The AutoJs6 Ace Editor Plugin separates the Ace WebView runtime, JavaScript brid
 ******
 
 - Provides plugin ID `ace-editor`, engine `editor`, and variant `ace`, with discovery through `org.autojs.plugin.INFO` and `org.autojs.plugin.EDITOR`.
-- Uses Editor API contract 5 and requires AutoJs6 build 5276 or later and Android API 24 or later.
+- Uses Editor API contract 7 and requires AutoJs6 build 5352 or later and Android API 24 or later.
 - Supports text editing, undo/redo, search and replace, regex and whole-word search, cursor and selection navigation, line operations, breakpoints, comment toggling, and code formatting.
+- The editor supports Edit > Folding > Unfold all / Fold all for every code block, including nested folds and read-only documents, while preserving text, selection and undo history.
 - Includes JavaScript/TypeScript language services and AutoJs6 type declarations with completion, hover, diagnostics, and signature help; JSON files receive syntax diagnostics.
 - Adds bundled Python 3.12 semantic analysis through a lazy Pyright 1.1.413 WebWorker: type-aware completion, hover, signature help, diagnostics, and definition; unsupported older WebViews silently retain P2.
 - Adds fully offline Lua semantics through an on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64; unsupported ABIs and runtime failures silently retain P2.
@@ -160,7 +161,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.32.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -173,6 +174,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v1.32.0
+
+###### 2026/10/13
+
+* `Feature` The editor supports Edit > Folding > Unfold all / Fold all for every code block, including nested folds and read-only documents, while preserving text, selection and undo history
+
 # v1.31.0
 
 ###### 2026/10/12
@@ -184,12 +191,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/08
 
 * `Improvement` TypeScript declarations, completion and argument checks for compose.memo
-
-# v1.29.0
-
-###### 2026/10/08
-
-* `Improvement` TypeScript / TSX properties, slots and event declarations for 3-Block Compose V2 components
 
 ##### Complete release history
 

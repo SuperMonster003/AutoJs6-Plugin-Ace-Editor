@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v1.32.0": {
+      "released_date": "2026/10/13",
+      "feature": [
+        "The editor supports Edit > Folding > Unfold all / Fold all for every code block, including nested folds and read-only documents, while preserving text, selection and undo history"
+      ]
+    },
     "v1.31.0": {
       "released_date": "2026/10/12",
       "improvement": [

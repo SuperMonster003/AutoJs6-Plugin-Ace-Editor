@@ -33,6 +33,8 @@
     var lineNumbersEnabled = true;
     var breakpointMarkersEnabled = true;
     var foldMarkersEnabled = true;
+    var foldRequestSerial = 0;
+    var pendingFoldRequest = null;
     var gutterWidthMode = "dynamic";
     var debugMarker = null;
     var storedReplacement = "";
@@ -289,7 +291,11 @@
     }
 
     function setDocumentPath(path) {
-        documentPath = String(path || "file:///autojs6/current.js");
+        var nextPath = String(path || "file:///autojs6/current.js");
+        if (nextPath !== documentPath) {
+            cancelPendingFoldRequest();
+        }
+        documentPath = nextPath;
         return applyDocumentAceMode();
     }
 
@@ -4810,6 +4816,8 @@
         var scrollLeft = currentScrollLeft();
         var scrollTop = currentScrollTop();
         var selectionRange = editor && editor.getSelectionRange && editor.getSelectionRange();
+        var selectionBackwards = editor && editor.selection &&
+            editor.selection.isBackwards && editor.selection.isBackwards();
         if (selectionRange && selectionRange.clone) {
             selectionRange = selectionRange.clone();
         }
@@ -4820,7 +4828,7 @@
         }
         if (selectionRange && editor && editor.selection && editor.selection.setRange) {
             try {
-                editor.selection.setRange(selectionRange, false);
+                editor.selection.setRange(selectionRange, !!selectionBackwards);
             } catch (ignore) {
                 // Selection preservation is best-effort; scroll preservation is the primary goal.
             }
@@ -4846,6 +4854,83 @@
         }, 768);
         notifyStateChanged(reason);
         return true;
+    }
+
+    function cancelPendingFoldRequest() {
+        foldRequestSerial += 1;
+        pendingFoldRequest = null;
+    }
+
+    function expectedFoldMode() {
+        return documentLongLineSafetyMode ? "ace/mode/text" : documentAceMode;
+    }
+
+    function applyFoldAll() {
+        return runPreservingScroll("allFolded", function() {
+            try {
+                // Session APIs always cover the document, regardless of the current selection.
+                session.foldAll();
+                return true;
+            } catch (error) {
+                notifyRecoverableError("foldAll", error);
+                return false;
+            }
+        });
+    }
+
+    function flushPendingFoldRequest() {
+        var request = pendingFoldRequest;
+        if (!request) {
+            return;
+        }
+        if (request.serial !== foldRequestSerial || request.session !== session ||
+            request.path !== documentPath || request.mode !== expectedFoldMode()) {
+            pendingFoldRequest = null;
+            return;
+        }
+        if (aceModeId(session) !== request.mode) {
+            return;
+        }
+        pendingFoldRequest = null;
+        applyFoldAll();
+    }
+
+    function foldAll() {
+        cancelPendingFoldRequest();
+        if (!session || typeof session.foldAll !== "function") {
+            return false;
+        }
+        var targetMode = expectedFoldMode();
+        if (aceModeId(session) !== targetMode) {
+            // Ace loads modes asynchronously after the editor's ready event. Keep the user's
+            // request until folding rules exist; a later unfold or document switch cancels it.
+            pendingFoldRequest = {
+                serial: foldRequestSerial,
+                session: session,
+                path: documentPath,
+                mode: targetMode
+            };
+            return true;
+        }
+        return applyFoldAll();
+    }
+
+    function unfoldAll() {
+        cancelPendingFoldRequest();
+        if (!session || typeof session.unfold !== "function") {
+            return false;
+        }
+        return runPreservingScroll("allUnfolded", function() {
+            try {
+                // expandFolds / unfold(null, false) would restore nested folds. Removing the
+                // document's fold trees opens every level, including manually nested folds.
+                session.unfold(null, true);
+                return true;
+            } catch (error) {
+                notifyRecoverableError("unfoldAll", error);
+                return false;
+            }
+        });
     }
 
     function expandFoldAt(row, column) {
@@ -5530,6 +5615,7 @@
 
         session.on("changeScrollTop", notifyScrollChanged);
         session.on("changeScrollLeft", notifyScrollChanged);
+        session.on("changeMode", flushPendingFoldRequest);
         installScrollChangeHooks();
         installCursorRevealSuppression();
 
@@ -5541,6 +5627,7 @@
         });
         document.addEventListener("visibilitychange", handleDocumentVisibilityChanged);
         global.addEventListener("pagehide", function() {
+            cancelPendingFoldRequest();
             suppressSelectionActionModeMenu("page_hidden");
         });
 
@@ -5632,6 +5719,8 @@
             clear: clear,
             toggleComment: toggleComment,
             beautify: beautify,
+            foldAll: foldAll,
+            unfoldAll: unfoldAll,
             replaceSelection: replaceSelection,
             replaceAll: replaceAll,
             setReplacement: function(value) { storedReplacement = value || ""; },
