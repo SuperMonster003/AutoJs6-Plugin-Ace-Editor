@@ -15,6 +15,7 @@ object AceEditorSmartHintPreferences {
     const val KEY_SIGNATURE_TRIGGER = "key_\$_ace_smart_hint_signature_trigger"
     const val KEY_ARROW_OVERLOAD_CYCLING = "key_\$_ace_smart_hint_arrow_overload_cycling"
     const val KEY_SYMBOL_HIGHLIGHT = "key_\$_ace_symbol_highlight_enabled"
+    const val KEY_INLINE_COMPLETION_PREVIEW = "key_\$_ace_inline_completion_preview_enabled"
 
     const val COMPLETION_TRIGGER_IDENTIFIER = "identifier"
     const val COMPLETION_TRIGGER_DOT = "dot"
@@ -29,6 +30,7 @@ object AceEditorSmartHintPreferences {
     const val DEFAULT_SIGNATURE_TRIGGER = SIGNATURE_TRIGGER_CURSOR
     const val DEFAULT_ARROW_OVERLOAD_CYCLING = true
     const val DEFAULT_SYMBOL_HIGHLIGHT = true
+    const val DEFAULT_INLINE_COMPLETION_PREVIEW = false
 
     private val COMPLETION_TRIGGERS = setOf(COMPLETION_TRIGGER_IDENTIFIER, COMPLETION_TRIGGER_DOT, COMPLETION_TRIGGER_OFF)
     private val SIGNATURE_TRIGGERS = setOf(SIGNATURE_TRIGGER_CURSOR, SIGNATURE_TRIGGER_TYPING, SIGNATURE_TRIGGER_OFF)
@@ -69,6 +71,9 @@ object AceEditorSmartHintPreferences {
     fun isSymbolHighlightEnabled(preferences: SharedPreferences): Boolean =
         preferences.getBoolean(KEY_SYMBOL_HIGHLIGHT, DEFAULT_SYMBOL_HIGHLIGHT)
 
+    fun isInlineCompletionPreviewEnabled(preferences: SharedPreferences): Boolean =
+        preferences.getBoolean(KEY_INLINE_COMPLETION_PREVIEW, DEFAULT_INLINE_COMPLETION_PREVIEW)
+
     fun optionsJson(
         preferences: SharedPreferences,
         popupTexts: CompletionPopupTexts? = null,
@@ -79,6 +84,7 @@ object AceEditorSmartHintPreferences {
         .put("signatureTrigger", signatureTrigger(preferences))
         .put("arrowOverloadCycling", isArrowOverloadCyclingEnabled(preferences))
         .put("symbolHighlight", isSymbolHighlightEnabled(preferences))
+        .put("inlineCompletionPreview", isInlineCompletionPreviewEnabled(preferences))
         .apply {
             popupTexts?.let {
                 put("completionLoadingText", it.loading)

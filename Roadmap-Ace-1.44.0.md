@@ -572,6 +572,13 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       组合输入 (`compositionStart` 信号) 期间隐藏; `acceptCompletionOrInsertTab` (`:3827`) 优先接受内联预览;
       `ESC` 处理 (`handleEscapeKey`, `:3971`) 同时清除 ghost text.
       —— 验收: 开启后首选候选以灰色预览显示, TAB 接受, 输入继续时预览更新.
+      进度 (2026-10-13): 开关为智能提示 JSON 的 `inlineCompletionPreview` (Kotlin 键 `key_$_ace_inline_completion_preview_enabled`,
+      缺省 false), `applySmartHintOptions` 设置 `editor.completer.inlineEnabled`, 关闭时立即移除 ghost text. IME 组合输入期间
+      (包装 `editor.onCompositionStart / onCompositionEnd`) 隐藏 ghost text, 并让 `$updateGhostText` 在组合中不重绘; TAB 走既有的
+      `acceptCompletionOrInsertTab -> insertMatch`, 接受的就是被预览的行; ESC 经 `completer.detach()` 移除预览. 桥接执行式测试新增一例
+      (缺省关闭, 开启后出现 `ace_ghost_text` 且不改文本, 组合中隐藏且不重绘, 组合结束恢复, TAB 接受, ESC 移除, 宿主关闭),
+      去掉组合守卫的变异会被检出. jsdom 中新文档的 mode 异步加载会重新分词并冲掉 ghost token, 测试在 setText 后等 300 ms; 真机上
+      mode 早已加载, 但输入后立即弹出补全的时序仍需 G-A5-7 复核. `AceEditorSmartHintPreferencesTest` 覆盖两个新键的缺省值与读取.
 - [ ] **G-A5-7** 6 台真机 Gboard + 中文输入法下开启 ghost text 输入 200 字符样例, 无重复字符 / 光标跳动 -> 维持默认关闭但开关可用;
       出现缺陷 -> 开关隐藏 (宿主不露出), 代码保留并记录.
 - [ ] **A5-8** MarkerGroup 同名符号高亮 (默认开): `autojs6_lsp_client.js` 增加 `getDocumentHighlights(pos)` (TS 服务用

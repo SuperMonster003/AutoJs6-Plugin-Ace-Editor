@@ -54,6 +54,8 @@
     var smartHintOptions = null;
     // True while the last completion request came from Ctrl-Space or the TAB long press (see installCompletionPopupStates).
     var explicitCompletionRequested = false;
+    // True between an IME compositionstart and compositionend (see installCompletionPopupStates).
+    var imeCompositionActive = false;
     // Same-symbol highlights (see installSymbolHighlights).
     var symbolHighlightGroup = null;
     var symbolHighlightTimer = null;
@@ -2119,11 +2121,67 @@
             completer.emptyMessage = function() {
                 return explicitCompletionRequested ? currentSmartHintOptions().completionEmptyText : "";
             };
+            installInlineCompletionPreviewGuards(completer);
+            applyInlineCompletionPreview(currentSmartHintOptions().inlineCompletionPreview);
             return true;
         } catch (error) {
             notifyRecoverableError("completionPopupStates", error);
             return false;
         }
+    }
+
+    // Inline completion preview (Roadmap-Ace-1.44.0.md A5-7, host option, default off): the selected popup row is
+    // previewed as ghost text after the cursor. TAB accepts it like the popup row (acceptCompletionOrInsertTab) and
+    // ESC detaches the popup, which removes it. During an IME composition the ghost text would sit where the
+    // composition text is drawn, so it is hidden until compositionend.
+    function hideInlineCompletionPreview() {
+        var completer = editor && editor.completer;
+        if (completer && completer.inlineRenderer && typeof completer.inlineRenderer.hide === "function") {
+            completer.inlineRenderer.hide();
+        }
+        if (editor && typeof editor.removeGhostText === "function") {
+            editor.removeGhostText();
+        }
+    }
+
+    function applyInlineCompletionPreview(enabled) {
+        var completer = editor && editor.completer;
+        if (!completer) {
+            return false;
+        }
+        completer.inlineEnabled = !!enabled;
+        if (!enabled) {
+            hideInlineCompletionPreview();
+        }
+        return completer.inlineEnabled;
+    }
+
+    function installInlineCompletionPreviewGuards(completer) {
+        if (completer.$autojs6InlinePreviewGuarded) {
+            return;
+        }
+        completer.$autojs6InlinePreviewGuarded = true;
+        var updateGhostText = completer.$updateGhostText;
+        if (typeof updateGhostText === "function") {
+            completer.$updateGhostText = function() {
+                if (imeCompositionActive) {
+                    hideInlineCompletionPreview();
+                    return;
+                }
+                return updateGhostText.apply(this, arguments);
+            };
+        }
+        var compositionStart = editor.onCompositionStart;
+        var compositionEnd = editor.onCompositionEnd;
+        editor.onCompositionStart = function() {
+            imeCompositionActive = true;
+            hideInlineCompletionPreview();
+            return compositionStart.apply(this, arguments);
+        };
+        editor.onCompositionEnd = function() {
+            imeCompositionActive = false;
+            return compositionEnd.apply(this, arguments);
+        };
     }
 
     // Same-symbol highlights (Roadmap-Ace-1.44.0.md A5-8): 150 ms after the cursor settles on an identifier, the
@@ -4161,6 +4219,7 @@
             signatureTrigger: "cursor",
             arrowOverloadCycling: true,
             symbolHighlight: true,
+            inlineCompletionPreview: false,
             completionLoadingText: "Loading...",
             completionEmptyText: "No suggestions"
         };
@@ -4198,6 +4257,8 @@
             symbolHighlight: source.symbolHighlight === null || typeof source.symbolHighlight === "undefined" ?
                 defaults.symbolHighlight :
                 source.symbolHighlight === true || String(source.symbolHighlight).toLowerCase() === "true",
+            inlineCompletionPreview: source.inlineCompletionPreview === true ||
+                String(source.inlineCompletionPreview).toLowerCase() === "true",
             completionLoadingText: normalizePopupText(source.completionLoadingText, defaults.completionLoadingText),
             completionEmptyText: normalizePopupText(source.completionEmptyText, defaults.completionEmptyText)
         };
@@ -4223,6 +4284,7 @@
         if (!smartHintOptions.symbolHighlight) {
             clearSymbolHighlights();
         }
+        applyInlineCompletionPreview(smartHintOptions.inlineCompletionPreview);
         notifyStateChanged("smartHintOptionsChanged");
         return smartHintOptions;
     }

@@ -733,6 +733,66 @@ test("symbol highlights follow the cursor and clear on edits and selections", as
     }
 });
 
+test("the inline completion preview is opt-in, hidden during IME composition and accepted with TAB", async () => {
+    const ghost = (page) => {
+        render(page);
+        return page.window.document.querySelectorAll(".ace_ghost_text").length;
+    };
+    const candidates = [{ caption: "zzqxAlpha", value: "zzqxAlpha", score: 2 }, { caption: "zzqxBeta", value: "zzqxBeta", score: 1 }];
+    const off = await openEditor();
+    try {
+        assert.equal(off.editor.completer.inlineEnabled, false, "off by default");
+        off.api.setText("zzqx");
+        // The mode tokenizer of a fresh document would otherwise replace the ghost token.
+        await sleep(300);
+        off.editor.navigateFileEnd();
+        off.editor.completers = [{ getCompletions(e, s, p, prefix, callback) { callback(null, candidates); } }];
+        off.api.triggerSmartHint("test");
+        await sleep(150);
+        assert.equal(ghost(off), 0);
+        off.editor.completer.detach();
+    } finally {
+        off.close();
+    }
+    const page = await openEditor({ host: { getSmartHintOptions: JSON.stringify({ inlineCompletionPreview: true }) } });
+    try {
+        const { editor, api } = page;
+        assert.equal(editor.completer.inlineEnabled, true);
+        api.setText("zzqx");
+        // The mode tokenizer of a fresh document would otherwise replace the ghost token.
+        await sleep(300);
+        editor.navigateFileEnd();
+        editor.completers = [{ getCompletions(e, s, p, prefix, callback) { callback(null, candidates); } }];
+        api.triggerSmartHint("test");
+        await sleep(150);
+        assert.ok(ghost(page) > 0, "ghost text for the selected row");
+        assert.equal(api.getText(), "zzqx", "the preview does not change the document");
+        editor.onCompositionStart({});
+        assert.equal(ghost(page), 0, "hidden while composing");
+        editor.completer.$updateGhostText(editor.completer.popup.getData(0));
+        assert.equal(ghost(page), 0, "not redrawn while composing");
+        editor.onCompositionEnd();
+        editor.completer.$updateGhostText(editor.completer.popup.getData(0));
+        assert.ok(ghost(page) > 0, "shown again after the composition");
+        api.acceptCompletionOrInsertTab();
+        assert.equal(api.getText(), "zzqxAlpha", "TAB accepts the previewed row");
+        assert.equal(ghost(page), 0);
+        api.setText("zzqx");
+        // The mode tokenizer of a fresh document would otherwise replace the ghost token.
+        await sleep(300);
+        editor.navigateFileEnd();
+        api.triggerSmartHint("test");
+        await sleep(150);
+        assert.ok(ghost(page) > 0);
+        api.handleEscapeKey();
+        assert.equal(ghost(page), 0, "ESC removes the preview");
+        api.setSmartHintOptions(JSON.stringify({ inlineCompletionPreview: false }));
+        assert.equal(editor.completer.inlineEnabled, false, "the host switched the preview off");
+    } finally {
+        page.close();
+    }
+});
+
 test("the completion popup shows loading and empty states", async () => {
     const page = await openEditor({
         layout: false,
