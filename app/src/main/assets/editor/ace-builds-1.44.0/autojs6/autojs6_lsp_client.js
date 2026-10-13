@@ -2062,6 +2062,58 @@
             };
         }
 
+        // JSON documents use Ace's json worker when the bridge enables it (Roadmap-Ace-1.44.0.md A4-3). Its annotations
+        // replace the JSON.parse diagnostics once the current worker has answered at least once; until then, and on
+        // devices where the worker cannot start, JSON.parse stays the source.
+        var jsonWorker = null;
+        var jsonWorkerAnswered = false;
+
+        function onJsonWorkerAnnotate(worker, event) {
+            if (destroyed || worker !== jsonWorker || session.$worker !== worker ||
+                !isJsonDocumentUri(state.documentUri)) {
+                return;
+            }
+            jsonWorkerAnswered = true;
+            var annotations = (event && Array.isArray(event.data) ? event.data : []).map(function(item) {
+                return annotation(item.row, item.column, item.text, item.type || "error", "json-worker");
+            });
+            var run = createDiagnosticRun("json-worker");
+            setSessionAnnotations(annotations, run, Date.now());
+        }
+
+        function trackJsonWorker() {
+            var worker = session && session.$worker || null;
+            if (worker === jsonWorker) {
+                return;
+            }
+            jsonWorker = worker;
+            jsonWorkerAnswered = false;
+            if (worker && typeof worker.on === "function") {
+                worker.on("annotate", function(event) {
+                    onJsonWorkerAnnotate(worker, event);
+                });
+            }
+        }
+
+        function installJsonWorkerTracking() {
+            if (!session || typeof session.$startWorker !== "function" || session.$autojs6JsonWorkerTracked) {
+                return;
+            }
+            session.$autojs6JsonWorkerTracked = true;
+            var startWorker = session.$startWorker;
+            session.$startWorker = function() {
+                var result = startWorker.apply(this, arguments);
+                trackJsonWorker();
+                return result;
+            };
+            trackJsonWorker();
+        }
+
+        function isJsonWorkerAuthoritative() {
+            return !!(jsonWorker && jsonWorkerAnswered && session && session.$worker === jsonWorker &&
+                session.getUseWorker && session.getUseWorker());
+        }
+
         function validateDiagnosticRun(run) {
             if (!diagnosticRunIsCurrent(run)) {
                 return getDiagnostics();
@@ -2077,6 +2129,10 @@
                 if (!updateSemanticState(session, text.length)) {
                     clearDiagnostics();
                     return [];
+                }
+                if (isJsonWorkerAuthoritative()) {
+                    // The worker publishes its own annotations after each change.
+                    return getDiagnostics();
                 }
                 setSessionAnnotations(jsonSyntaxDiagnostics(text), run, diagnosticStartedAt);
                 return getDiagnostics();
@@ -2246,6 +2302,7 @@
                 return;
             }
             session.on("change", onSessionChange);
+            installJsonWorkerTracking();
             attached = true;
             scheduleDiagnostics(reason || "attach", delayMs);
         }

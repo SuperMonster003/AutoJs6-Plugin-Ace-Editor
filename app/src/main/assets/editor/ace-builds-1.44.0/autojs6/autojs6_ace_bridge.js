@@ -287,8 +287,10 @@
         return supportsStaticIndexMode(aceModeId(activeSession));
     }
 
+    // Lua and JSON use Ace's syntax workers (JSON since Roadmap-Ace-1.44.0.md A4-3; the LSP client prefers the
+    // json worker's annotations over its JSON.parse fallback once the worker answers).
     function shouldUseAceWorkerForMode(modeId) {
-        return modeId === "ace/mode/lua";
+        return modeId === "ace/mode/lua" || modeId === "ace/mode/json";
     }
 
     function applyDocumentWorkerPolicy(modeId) {

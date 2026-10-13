@@ -257,10 +257,10 @@ test("document paths route to Ace modes, deny by default", async () => {
     }
 });
 
-test("only Lua documents use an Ace worker", async () => {
+test("only Lua and JSON documents use an Ace worker", async () => {
     const page = await openEditor({ layout: false });
     try {
-        for (const [file, worker] of [["a.lua", true], ["a.js", false], ["a.json", false], ["a.py", false], ["a.ts", false]]) {
+        for (const [file, worker] of [["a.lua", true], ["a.js", false], ["a.json", true], ["a.py", false], ["a.ts", false]]) {
             page.api.setDocumentPath(`/sdcard/Scripts/${file}`);
             await sleep(30);
             assert.equal(page.editor.session.getUseWorker(), worker, file);
@@ -313,6 +313,46 @@ test("the long line safety mode renders 4096 characters and Ace's overflow butto
         assert.ok(normalButton, "Ace truncates lines over 10000 characters outside the safety mode as well");
         assert.equal(line.textContent.length - normalButton.textContent.length, 10000);
         assert.equal(window.document.querySelector(".ace_text-layer").getAttribute("aria-hidden"), null);
+    } finally {
+        page.close();
+    }
+});
+
+// Roadmap-Ace-1.44.0.md A4-3: JSON.parse diagnostics until the json worker answers, then the worker's annotations.
+// jsdom has no Worker, so Ace creates a WorkerClient around a worker that never answers; the test makes it answer by
+// emitting "annotate" on the WorkerClient, as a real worker message would.
+test("JSON documents prefer the json worker's annotations once it answers", async () => {
+    const documentUri = "file:///sdcard/Scripts/config.json";
+    const page = await openEditor({
+        layout: false,
+        host: { getLspOptions: JSON.stringify({ enabled: true, rootUri: "file:///sdcard/Scripts", documentUri }) },
+    });
+    try {
+        const { editor, api } = page;
+        const session = editor.session;
+        const annotations = () => plain(session.getAnnotations()).map((item) => `${item.row}:${item.column}:${item.raw || ""}`);
+        api.setDocumentPath("/sdcard/Scripts/config.json");
+        api.refreshLsp("test");
+        await sleep(100);
+        assert.equal(session.getMode().$id, "ace/mode/json");
+        assert.ok(session.$worker, "a WorkerClient for the json worker");
+        api.setText('{\n  "a": 1,\n}\n');
+        session.insert({ row: 0, column: 1 }, " ");
+        await sleep(700);
+        assert.equal(annotations().length, 1, "JSON.parse diagnostics before the worker answers");
+        assert.ok(annotations()[0].endsWith(":json-syntax"));
+        page.clearCalls();
+        session.$worker._emit("annotate", { data: [{ row: 2, column: 0, text: "Unexpected '}'", type: "error" }] });
+        assert.deepEqual(annotations(), ["2:0:json-worker"], "the worker's annotation replaces JSON.parse");
+        assert.equal(plain(api.getLspDiagnostics()).length, 1, "the diagnostics state follows the worker");
+        session.insert({ row: 1, column: 0 }, " ");
+        await sleep(700);
+        assert.deepEqual(annotations(), ["2:0:json-worker"], "JSON.parse no longer overwrites the worker");
+        session.$worker._emit("annotate", { data: [] });
+        assert.deepEqual(annotations(), [], "fixed JSON clears the worker annotation");
+        api.setText("x".repeat(70000), false, true);
+        await sleep(100);
+        assert.equal(session.getUseWorker(), false, "no worker in the long line safety mode");
     } finally {
         page.close();
     }

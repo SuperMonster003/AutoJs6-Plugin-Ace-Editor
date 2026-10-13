@@ -498,6 +498,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       worker 不可用时的回退; 两者产生的注解去重 (以 worker 注解优先); `applyDocumentLongLineSafetyMode` 下关闭.
       —— 验收: JSON 文档输入错误 JSON 出现 worker 注解, 修正后消失; `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua`
       扩展 json 分支.
+      进度 (2026-10-13): `shouldUseAceWorkerForMode` 对 json 返回 true. 合并逻辑放在 LSP 客户端: 包装 `session.$startWorker` 跟踪当前
+      WorkerClient 并监听其 `annotate`; 当前 worker 应答过至少一次后, 其注解 (raw 为 `json-worker`) 经 `setSessionAnnotations` 成为诊断
+      状态并通知宿主, 之后的诊断轮次不再发布 `JSON.parse` 结果; worker 尚未应答, 换了新 worker, 或 worker 无法启动 (Ace 在没有
+      `Worker` 时创建永不应答的替身) 时继续使用 `JSON.parse` 诊断, 因此不会出现两套注解互相覆盖或失去诊断. 长行安全模式下 worker
+      关闭 (沿用 `applyDocumentWorkerPolicy`). 执行式测试新增一例 (应答前为 json-syntax, 应答后为 json-worker 且宿主诊断状态同步, 再次编辑
+      不被 JSON.parse 覆盖, 修正后清空, 安全模式关闭 worker), 去掉 worker 优先判断的变异会被检出; 设备用例
+      `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua` 增加 json 分支 (断言策略开启且有注解, 打印 worker 是否应答), 待 G-A4-3 上设备.
+      Lua 的 worker 注解与 LuaLS 诊断仍是后写者覆盖 (不在本项范围).
 - [ ] **G-A4-3** 在 8 台设备验证 worker-json 加载与注解; 任一设备失败则该设备回退 `JSON.parse` 路径且不报错.
       (降级路径: 失败设备比例 > 2/8 -> 默认关闭 json worker, 保留代码路径并记录结论.)
       备注 (2026-10-13): 暂缓实施. 现状是 Lua 的 Ace worker 注解与 LSP 诊断都直接 `setAnnotations`, 后写者覆盖; JSON 若开 worker,

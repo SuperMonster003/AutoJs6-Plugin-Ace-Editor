@@ -69,6 +69,10 @@ declare module "ace-builds-internal/edit_session" {
         // Long line safety mode flag that the bridge sets for the LSP client (autojs6_lsp_client.js).
         $autojs6LongLineSafetyMode?: boolean;
         __autojs6HistoryOperationHooksInstalled?: boolean;
+        $autojs6JsonWorkerTracked?: boolean;
+        // Private Ace members the LSP client relies on (json worker annotations).
+        $worker: any;
+        $startWorker(): void;
         // Private Ace members the bridge relies on (fold placeholder taps).
         $toggleFoldWidget(row: number, options: any): any;
     }

@@ -558,6 +558,19 @@ class AceLanguageRoutingSmokeTest {
                 workerState.getJSONArray("annotations").length() > 0,
             )
 
+            // Roadmap-Ace-1.44.0.md A4-3 / G-A4-3: JSON uses Ace's json worker; until it answers (or where it cannot
+            // start) the LSP client keeps its JSON.parse diagnostics, so the document has an annotation either way.
+            setDocumentPath(harness, "/data/local/tmp/autojs6-m1.json")
+            assertEquals("ace/mode/json", awaitMode(harness, "ace/mode/json"))
+            setEditorText(harness, "{\n  \"answer\": 42,\n}\n")
+            val jsonState = awaitJsonWorkerAnnotation(harness)
+            println("AUTOJS6_ACE_JSON_WORKER=$jsonState")
+            assertTrue("JSON worker policy was not enabled: $jsonState", jsonState.getBoolean("useWorker"))
+            assertTrue(
+                "Invalid JSON did not produce an annotation: $jsonState",
+                jsonState.getJSONArray("annotations").length() > 0,
+            )
+
             setDocumentPath(harness, "/data/local/tmp/autojs6-m1.py")
             assertEquals("ace/mode/python", awaitMode(harness, "ace/mode/python"))
             assertTrue(
@@ -966,6 +979,34 @@ class AceLanguageRoutingSmokeTest {
             if (state.optBoolean("workerCreated") &&
                 state.optJSONArray("annotations")?.length()?.let { it > 0 } == true
             ) {
+                return state
+            }
+            Thread.sleep(100)
+        }
+        return state
+    }
+
+    // Waits for the json worker's annotation (raw "json-worker"); falls back to whatever annotations exist after 12 s.
+    private fun awaitJsonWorkerAnnotation(harness: EditorHarness): JSONObject {
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(12)
+        var state = JSONObject()
+        while (System.nanoTime() < deadline) {
+            state = evaluateJsonString(
+                harness,
+                """
+                (function() {
+                    var activeSession = window.editor.getSession();
+                    var annotations = activeSession.getAnnotations() || [];
+                    return JSON.stringify({
+                        useWorker: activeSession.getUseWorker(),
+                        workerCreated: !!activeSession.${'$'}worker,
+                        workerAnswered: annotations.some(function(item) { return item.raw === "json-worker"; }),
+                        annotations: annotations
+                    });
+                })()
+                """.trimIndent(),
+            )
+            if (state.optBoolean("workerAnswered")) {
                 return state
             }
             Thread.sleep(100)
