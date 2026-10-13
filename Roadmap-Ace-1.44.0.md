@@ -541,6 +541,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (文案经 `getSmartHintOptions` JSON 由宿主本地化下发, 缺省英文), `setSelectOnHover = false` (断言默认值), `stickySelectionDelay`
       保持 500; 慢速 provider (Pyright / LuaLS) 首包前显示加载项.
       —— 验收: Python 文档冷启动首次补全看到加载态; 无候选时看到提示而不是空弹窗; 指尖滑过候选不改变选中项.
+      进度 (2026-10-13): `installCompletionPopupStates` 在初始化时对 `Autocomplete.for(editor)` 设置 `showLoadingState = true`,
+      `stickySelectionDelay = 500`, `setSelectOnHover = false`; 加载项文案通过覆盖 `Autocomplete.completionsForLoading` (可配置的静态属性)
+      替换, 不调用 `config.setMessages` (它会整体替换消息表, 其余键会逐条告警). 上游只在非 autoShown 时显示空结果提示, 而桥接层的
+      实时补全也走 `startAutocomplete` (autoShown 为 false), 因此 `emptyMessage` 只在 Ctrl-Space / TAB 长按 (`startSmartHintCompletion`)
+      之后返回文案, 实时补全与点后补全返回空串, 无候选时照旧关闭. 两条文案 `text_completion_loading` / `text_completion_no_suggestions`
+      放在插件自己的 11 个 `strings.xml` (插件已有 10 语言资源), 随 `getSmartHintOptions` JSON 下发 (`completionLoadingText`,
+      `completionEmptyText`), 缺省英文. jsdom 核对: 显式无候选显示 "无建议", 实时输入无候选不弹窗, 有候选照常弹出, 慢速 provider
+      700 ms 时显示 "加载中...", 结果到达后替换. 待真机验收 (Python 冷启动).
 - [ ] **A5-6** 上游 triggerCharacters 替换自研点触发 (验证门 G-A5-6): 映射表
       identifier -> `enableLiveAutocompletion: true, liveAutocompletionThreshold: completionMinChars, liveAutocompletionDelay: completionDelayMs`;
       dot -> `enableLiveAutocompletion: true, liveAutocompletionThreshold: 1e9` 且仅靠 `triggerCharacters`;

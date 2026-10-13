@@ -60,11 +60,26 @@ object AceEditorSmartHintPreferences {
     fun isArrowOverloadCyclingEnabled(preferences: SharedPreferences): Boolean =
         preferences.getBoolean(KEY_ARROW_OVERLOAD_CYCLING, DEFAULT_ARROW_OVERLOAD_CYCLING)
 
-    fun optionsJson(preferences: SharedPreferences): String = JSONObject()
+    /**
+     * [popupTexts] are the plugin's localized captions of the completion popup states
+     * (Roadmap-Ace-1.44.0.md A5-5); the bridge falls back to English without them.
+     */
+    fun optionsJson(
+        preferences: SharedPreferences,
+        popupTexts: CompletionPopupTexts? = null,
+    ): String = JSONObject()
         .put("completionTrigger", completionTrigger(preferences))
         .put("completionMinChars", completionMinChars(preferences))
         .put("completionDelayMs", completionDelayMs(preferences))
         .put("signatureTrigger", signatureTrigger(preferences))
         .put("arrowOverloadCycling", isArrowOverloadCyclingEnabled(preferences))
+        .apply {
+            popupTexts?.let {
+                put("completionLoadingText", it.loading)
+                put("completionEmptyText", it.noSuggestions)
+            }
+        }
         .toString()
+
+    data class CompletionPopupTexts(val loading: String, val noSuggestions: String)
 }

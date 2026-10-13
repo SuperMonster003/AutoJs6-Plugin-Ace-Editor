@@ -937,7 +937,7 @@ class AceCodeEditor @JvmOverloads constructor(
         invokeAce("setGutterWidthMode", quote(AceEditorDisplayPreferences.gutterWidthMode(hostPreferences)))
         invokeAce("setFontLigaturesEnabled", AceEditorDisplayPreferences.isFontLigaturesEnabled(hostPreferences).toString())
         invokeAce("setFontStylesEnabled", AceEditorDisplayPreferences.isFontStylesEnabled(hostPreferences).toString())
-        invokeAce("setSmartHintOptions", quote(AceEditorSmartHintPreferences.optionsJson(hostPreferences)))
+        invokeAce("setSmartHintOptions", quote(smartHintOptionsJson()))
     }
 
     private fun applyPinchToZoomStrategy() {
@@ -1969,7 +1969,17 @@ class AceCodeEditor @JvmOverloads constructor(
     }
 
     internal fun bridgeSmartHintOptions(): String {
-        return AceEditorSmartHintPreferences.optionsJson(hostPreferences)
+        return smartHintOptionsJson()
+    }
+
+    private fun smartHintOptionsJson(): String {
+        return AceEditorSmartHintPreferences.optionsJson(
+            hostPreferences,
+            AceEditorSmartHintPreferences.CompletionPopupTexts(
+                loading = pluginContext.getString(R.string.text_completion_loading),
+                noSuggestions = pluginContext.getString(R.string.text_completion_no_suggestions),
+            ),
+        )
     }
 
     internal fun bridgeWordWrapEnabled(): Boolean {

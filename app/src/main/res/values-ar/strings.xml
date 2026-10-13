@@ -6,6 +6,8 @@
     <string name="error_typescript_project_rename_stale">تغير المشروع أو المستند النشط. شغّل إعادة التسمية مرة أخرى.</string>
     <string name="plugin_description">محرر أكواد Ace مضمن مع خدمات لغوية</string>
     <string name="plugin_instruction">ثبت المكون الإضافي, ثم اختر Ace كمحرر البرامج النصية في AutoJs6.</string>
+    <string name="text_completion_loading">جارٍ التحميل...</string>
+    <string name="text_completion_no_suggestions">لا توجد اقتراحات</string>
     <string name="text_copy_line">نسخ السطر</string>
     <string name="text_delete_line">حذف السطر</string>
     <string name="text_go_to_definition">الانتقال إلى التعريف</string>

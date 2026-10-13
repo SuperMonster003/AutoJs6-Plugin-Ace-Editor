@@ -52,6 +52,8 @@
     var memberCompletionRestartTimer = null;
     var liveCompletionTimer = null;
     var smartHintOptions = null;
+    // True while the last completion request came from Ctrl-Space or the TAB long press (see installCompletionPopupStates).
+    var explicitCompletionRequested = false;
     var fontMetricsRefreshTimer = null;
     var fontMetricsRefreshFrameScheduled = false;
     var fontMetricsReadySerial = 0;
@@ -2088,6 +2090,38 @@
         setTimeout(hideAceTooltipNodes, 240);
     }
 
+    // Popup states of the Ace 1.44.0 autocomplete (Roadmap-Ace-1.44.0.md A5-5): a loading row when the providers
+    // have not answered within stickySelectionDelay, and a "no suggestions" row for explicit requests only, so that
+    // live completion does not open an empty popup on every keystroke.
+    function installCompletionPopupStates() {
+        try {
+            var autocomplete = global.ace && global.ace.require && global.ace.require("ace/autocomplete");
+            var Autocomplete = autocomplete && autocomplete.Autocomplete;
+            if (!Autocomplete || typeof Autocomplete["for"] !== "function") {
+                return false;
+            }
+            Object.defineProperty(Autocomplete, "completionsForLoading", {
+                configurable: true,
+                enumerable: false,
+                get: function() {
+                    return [{ caption: currentSmartHintOptions().completionLoadingText, value: "" }];
+                }
+            });
+            var completer = Autocomplete["for"](editor);
+            completer.showLoadingState = true;
+            completer.stickySelectionDelay = 500;
+            // A finger sliding over the list must not change the selected row.
+            completer.setSelectOnHover = false;
+            completer.emptyMessage = function() {
+                return explicitCompletionRequested ? currentSmartHintOptions().completionEmptyText : "";
+            };
+            return true;
+        } catch (error) {
+            notifyRecoverableError("completionPopupStates", error);
+            return false;
+        }
+    }
+
     function installCompletionPopupTouchScrollPatch() {
         try {
             if (!global.ace || typeof global.ace.require !== "function") {
@@ -3739,6 +3773,7 @@
             editor.completer.detach();
         }
         if (editor.execCommand) {
+            explicitCompletionRequested = false;
             editor.execCommand("startAutocomplete");
             notifyStateChanged("memberCompletionRestarted");
         }
@@ -4032,8 +4067,15 @@
             completionMinChars: 1,
             completionDelayMs: 0,
             signatureTrigger: "cursor",
-            arrowOverloadCycling: true
+            arrowOverloadCycling: true,
+            completionLoadingText: "Loading...",
+            completionEmptyText: "No suggestions"
         };
+    }
+
+    function normalizePopupText(value, fallback) {
+        var text = typeof value === "string" ? value.trim() : "";
+        return text || fallback;
     }
 
     function normalizeSmartHintOptions(raw) {
@@ -4059,7 +4101,9 @@
             signatureTrigger: SMART_HINT_SIGNATURE_TRIGGERS[signatureTrigger] ? signatureTrigger : defaults.signatureTrigger,
             arrowOverloadCycling: cycling === null || typeof cycling === "undefined" ?
                 defaults.arrowOverloadCycling :
-                cycling === true || String(cycling).toLowerCase() === "true"
+                cycling === true || String(cycling).toLowerCase() === "true",
+            completionLoadingText: normalizePopupText(source.completionLoadingText, defaults.completionLoadingText),
+            completionEmptyText: normalizePopupText(source.completionEmptyText, defaults.completionEmptyText)
         };
     }
 
@@ -4105,6 +4149,7 @@
 
     function startLiveCompletionIfEligible() {
         liveCompletionTimer = null;
+        explicitCompletionRequested = false;
         var options = currentSmartHintOptions();
         if (!editor || typeof editor.execCommand !== "function" || documentLongLineSafetyMode ||
             isReadOnly() || isCompletionPopupOpen() || options.completionTrigger !== "identifier") {
@@ -4178,6 +4223,7 @@
         if (editor.completer && typeof editor.completer.detach === "function") {
             editor.completer.detach();
         }
+        explicitCompletionRequested = true;
         editor.execCommand("startAutocomplete");
         return true;
     }
@@ -5555,6 +5601,7 @@
         installDocumentLongLineRenderGuard();
         installHistoryOperationHooks();
         installCompletionPopupTouchScrollPatch();
+        installCompletionPopupStates();
         installAceBuiltInPinchZoomSuppression();
         if (document && document.body && document.body.classList) {
             document.body.classList.add("autojs6-host-selection-action-mode");

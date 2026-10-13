@@ -6,6 +6,8 @@
     <string name="error_typescript_project_rename_stale">プロジェクトまたは現在のドキュメントが変更されました. 名前変更をもう一度実行してください.</string>
     <string name="plugin_description">言語サービスを備えた組み込み Ace コードエディター</string>
     <string name="plugin_instruction">プラグインをインストールし, AutoJs6 でスクリプトエディターとして Ace を選択します.</string>
+    <string name="text_completion_loading">読み込み中...</string>
+    <string name="text_completion_no_suggestions">候補なし</string>
     <string name="text_copy_line">行をコピー</string>
     <string name="text_delete_line">行を削除</string>
     <string name="text_go_to_definition">定義へ移動</string>
