@@ -3471,6 +3471,34 @@ function verifyLspProtocolCore(paths) {
             resolvedCompletion.result.docHTML === "Resolved docs",
         "completionItem/resolve result was not normalized",
     );
+    // Manual test V5: items keep the server's sortText order (string order, as LSP clients sort); Pyright's
+    // "09.9999.greet" is no number and LuaLS sends numbers as strings.
+    const ranked = context.AutoJsAceLspCore.normalizeCompletionResult({
+        items: [
+            { label: "__annotations__", sortText: "11.9999.__annotations__" },
+            { label: "greet", sortText: "09.9999.greet" },
+            { label: "name", sortText: "09.9999.name" },
+            { label: "count", sortText: "09.9999.count" },
+            { label: "zzz" },
+        ],
+    }).items;
+    const rankedOrder = [...ranked].sort((x, y) => y.score - x.score).map((item) => item.caption);
+    assert(
+        JSON.stringify(rankedOrder) === JSON.stringify(["count", "greet", "name", "__annotations__", "zzz"]),
+        `LSP completion scores do not follow sortText: ${JSON.stringify(ranked.map((item) => [item.caption, item.score]))}`,
+    );
+    assert(
+        ranked.every((item) => item.score > 1000 && item.score < 1001),
+        `LSP completion scores left the 1000-1001 band: ${JSON.stringify(ranked.map((item) => item.score))}`,
+    );
+    const numeric = context.AutoJsAceLspCore.normalizeCompletionResult([
+        { label: "second", sortText: "0002" },
+        { label: "first", sortText: "0001" },
+    ]);
+    assert(
+        numeric.items[1].score > numeric.items[0].score,
+        `numeric sortText ranked the first item last: ${JSON.stringify(numeric.items.map((item) => [item.caption, item.score]))}`,
+    );
 
     function roundTrip(invoke, result) {
         let callbackResult = null;

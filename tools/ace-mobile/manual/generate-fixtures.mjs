@@ -144,8 +144,8 @@ class Greeter:
         return "Hello, " + self.name + punctuation
 
 
-def make_greeters(names):
-    greeters = []
+def make_greeters(names) -> list[Greeter]:
+    greeters: list[Greeter] = []
     for name in names:
         greeters.append(Greeter(name))
     return greeters

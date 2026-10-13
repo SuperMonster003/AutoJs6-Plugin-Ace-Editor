@@ -1987,6 +1987,13 @@
         popup.container.style.overflowX = "auto";
         popup.container.style.overflowY = "hidden";
         popup.container.style.maxWidth = "calc(100vw - 16px)";
+        // The popup is an Ace editor with Ace's own touch handler: a finger pressed near the selected row dragged the
+        // selection along (its "cursor" mode), a long press selected the row under it, and other drags scrolled the
+        // popup a second time. Without it a tap still selects and inserts the row through the browser's emulated mouse
+        // events, and a drag only scrolls (manual test V5 (d)).
+        if (global.AutoJsAceMobile && typeof global.AutoJsAceMobile.removeUpstreamTouchListeners === "function") {
+            global.AutoJsAceMobile.removeUpstreamTouchListeners(popup);
+        }
         installTouchDragScroller(popup.container, function(dx, dy) {
             var scrolled = false;
             var beforeLeft = popup.container.scrollLeft;
@@ -4339,16 +4346,8 @@
         return /(?:[A-Za-z_$][A-Za-z0-9_$]*|\]|\)|\}|"|'|`)\.$/.test(line);
     }
 
-    function isSingleInsertedText(delta, text) {
-        if (!delta || delta.action !== "insert") {
-            return false;
-        }
-        if (typeof delta.text === "string") {
-            return delta.text === text;
-        }
-        return Array.isArray(delta.lines) &&
-            delta.lines.length === 1 &&
-            delta.lines[0] === text;
+    function isSingleLineInsertion(delta) {
+        return !!(delta && delta.action === "insert" && Array.isArray(delta.lines) && delta.lines.length === 1);
     }
 
     function restartMemberCompletionAfterDot() {
@@ -4375,6 +4374,23 @@
         memberCompletionRestartTimer = global.setTimeout(restartMemberCompletionAfterDot, 30);
     }
 
+    // Input that ends with a dot. Gboard often commits more than the dot: the word it keeps open as a composition with
+    // the dot ("g2" becomes "g2."), or the dot in place of the space it added after a word ("greeter " becomes
+    // "greeter."), so checking for exactly "." missed the member completion (manual test V5).
+    // restartMemberCompletionAfterDot still checks that the dot follows a member expression.
+    function isMemberDotInput(text) {
+        text = String(text || "");
+        return text.length > 0 && text.charAt(text.length - 1) === ".";
+    }
+
+    function scheduleMemberCompletionForInput(text) {
+        if (!isMemberDotInput(text) || currentSmartHintOptions().completionTrigger === "off") {
+            return false;
+        }
+        scheduleMemberCompletionAfterDot();
+        return true;
+    }
+
     function installMemberCompletionDotTrigger() {
         if (!editor || !editor.commands || !editor.commands.on || editor.$autojs6MemberCompletionDotTriggerInstalled) {
             return;
@@ -4383,12 +4399,9 @@
             if (!event || !event.command) {
                 return;
             }
-            var options = currentSmartHintOptions();
             if (event.command.name === "insertstring") {
-                if (commandInsertedText(event) === ".") {
-                    if (options.completionTrigger !== "off") {
-                        scheduleMemberCompletionAfterDot();
-                    }
+                if (isMemberDotInput(commandInsertedText(event))) {
+                    scheduleMemberCompletionForInput(commandInsertedText(event));
                     return;
                 }
                 // Replaces Ace's live autocompletion so the trigger mode, minimum prefix
@@ -6517,10 +6530,9 @@
             if (suppressChange) {
                 return;
             }
-            if (isSingleInsertedText(delta, ".")) {
-                if (currentSmartHintOptions().completionTrigger !== "off") {
-                    scheduleMemberCompletionAfterDot();
-                }
+            // Also sees composition input, which Ace applies outside commands.exec ("afterExec").
+            if (isSingleLineInsertion(delta) && isMemberDotInput(delta.lines[0])) {
+                scheduleMemberCompletionForInput(delta.lines[0]);
             } else {
                 scheduleLspCompletionRefresh();
             }

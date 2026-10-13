@@ -77,6 +77,20 @@ body.ace-ready #editor {
         no-repeat;
 }
 
+/* Ace draws the SVG gutter icons 12 px wide at any font size, small and thin next to 16 px text (manual test V1). They
+   follow the gutter font size instead, inside a left padding that grows with it (19 px, Ace's padding, at 16 px). Ace
+   reads this padding when it sizes the gutter. */
+#editor .ace_gutter-cell_svg-icons {
+    padding-left: calc(1em + 3px);
+}
+
+#editor .ace_gutter-cell_svg-icons .ace_gutter_annotation.ace_icon_svg {
+    width: 1em;
+    margin-left: calc(-1em - 2px);
+    -webkit-mask-size: 1em;
+    mask-size: 1em;
+}
+
 #editor.autojs6-hide-breakpoint-markers .ace_gutter-cell.ace_breakpoint,
 #editor.autojs6-hide-breakpoint-markers .ace_gutter-cell_svg-icons.ace_breakpoint {
     background: none !important;

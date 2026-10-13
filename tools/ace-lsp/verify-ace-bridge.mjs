@@ -1626,6 +1626,68 @@ test("hover documentation and signature help keep clear of the cursor row", asyn
     }
 });
 
+// Manual test V5 (a): Gboard commits more than the dot ("g2" -> "g2.", "greeter " -> "greeter."), through
+// insertstring or through a composition, which Ace applies outside commands.exec.
+test("a dot committed together with other text opens the member completion", async () => {
+    const page = await openEditor();
+    try {
+        const { editor } = page;
+        const requests = [];
+        page.api.setText("g2\ngreeter ");
+        editor.focus();
+        editor.completers = [{
+            getCompletions(e, s, pos, prefix, callback) {
+                requests.push(plain(pos));
+                callback(null, [{ caption: "greet", value: "greet", score: 1 }]);
+            },
+        }];
+        editor.moveCursorTo(0, 2);
+        editor.execCommand("insertstring", "g2.");
+        await sleep(150);
+        assert.ok(requests.some((pos) => pos.row === 0), `insertstring "g2." did not request completions ${JSON.stringify(requests)}`);
+        editor.completer.detach();
+        requests.length = 0;
+        // Gboard replaces the word and the space it added with the word and the dot.
+        editor.moveCursorTo(1, 8);
+        editor.onTextInput("greeter.", { extendLeft: 8, extendRight: 0, restoreStart: 0, restoreEnd: 0 });
+        assert.equal(editor.session.getLine(1), "greeter.");
+        await sleep(150);
+        assert.ok(requests.some((pos) => pos.row === 1), `the composition "." did not request completions ${JSON.stringify(requests)}`);
+        editor.completer.detach();
+    } finally {
+        page.close();
+    }
+});
+
+// Manual test V5 (d): the completion popup is an Ace editor; Ace's own touch handler moved its selection along with a
+// dragging finger.
+test("the completion popup has no touch handler of Ace's own", async () => {
+    const page = await openEditor();
+    try {
+        const { editor } = page;
+        page.api.setText("cons");
+        editor.navigateFileEnd();
+        editor.focus();
+        editor.completers = [{
+            getCompletions(e, s, p, prefix, callback) {
+                callback(null, ["console", "const", "constructor"].map((value, index) => ({ caption: value, value, score: 3 - index })));
+            },
+        }];
+        editor.completer.showPopup(editor);
+        await sleep(100);
+        const popup = editor.completer.popup;
+        assert.ok(popup && popup.isOpen, "popup open");
+        const remaining = (popup.$toDestroy || [])
+            .filter((listener) => listener.elem === popup.container)
+            .map((listener) => listener.type)
+            .filter((type) => ["touchstart", "touchmove", "touchend", "contextmenu"].includes(type));
+        assert.equal(remaining.length, 0, `Ace's touch listeners remain on the popup: ${remaining.join(", ")}`);
+        editor.completer.detach();
+    } finally {
+        page.close();
+    }
+});
+
 // ---------------------------------------------------------------------------------------------------------------
 
 async function main() {

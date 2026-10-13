@@ -160,7 +160,7 @@
             caption: String(item.label || insertText || ""),
             value: String(insertText || item.label || ""),
             meta: String(item.detail || item.kind || "LSP"),
-            score: Number(item.sortText) || 1000,
+            score: LSP_COMPLETION_SCORE,
             docHTML: item.documentation && typeof item.documentation === "object" ?
                 String(item.documentation.value || "") : String(item.documentation || ""),
             autojs6Lsp: true,
@@ -179,13 +179,38 @@
         return normalized;
     }
 
+    // Completion items rank above the other completers' words by this score; the fraction added by
+    // normalizeCompletionResult keeps the server's order among them.
+    var LSP_COMPLETION_SCORE = 1000;
+
+    // LSP clients order completion items by sortText, or else by label, compared as strings. The score came from
+    // Number(sortText): Pyright's "09.9999.greet" is no number, so Ace sorted its members alphabetically with
+    // "__annotations__" first, and numeric sortText ("0001") ranked the first items last (manual test V5). The rank now
+    // adds a fraction below 1, so a closer prefix match (Ace subtracts whole points) still comes first.
     function normalizeCompletionResult(result) {
         var items = Array.isArray(result) ? result :
             result && Array.isArray(result.items) ? result.items : [];
+        var normalized = items.map(normalizeCompletionItem);
+        var order = normalized.map(function(_item, index) {
+            return index;
+        });
+        order.sort(function(a, b) {
+            var keyA = completionSortKey(items[a]);
+            var keyB = completionSortKey(items[b]);
+            return keyA < keyB ? -1 : keyA > keyB ? 1 : a - b;
+        });
+        order.forEach(function(index, rank) {
+            normalized[index].score = LSP_COMPLETION_SCORE + (order.length - rank) / (order.length + 1);
+        });
         return {
             isIncomplete: !!(result && !Array.isArray(result) && result.isIncomplete),
-            items: items.map(normalizeCompletionItem)
+            items: normalized
         };
+    }
+
+    function completionSortKey(item) {
+        item = item || {};
+        return String(item.sortText != null ? item.sortText : item.label != null ? item.label : "");
     }
 
     function responseError(code, message, data) {
