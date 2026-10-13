@@ -57,6 +57,13 @@ class AceCodeEditorSmokeTest {
         return value.get().orEmpty()
     }
 
+    // Non-empty when the WebView cannot run TypeScript 6 (for example Chrome 69 on API 27); the editor then uses its
+    // documented static and JSHint fallback, so project diagnostics and project rename are not available.
+    private fun typeScriptRuntimeUnsupportedReason(
+        scenario: ActivityScenario<AceEditorTestActivity>,
+        session: org.autojs.plugin.editor.api.EditorPluginSession,
+    ): String = JSONObject(runtimeDiagnostics(scenario, session)).optString("tsRuntimeCompatibilityReason")
+
     @Test
     fun requiredAceAssetsArePackaged() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -523,6 +530,14 @@ class AceCodeEditorSmokeTest {
                 if ("2307" !in diagnosticCodes) Thread.sleep(100)
             }
 
+            val unsupportedReason = typeScriptRuntimeUnsupportedReason(scenario, session.get())
+            if (unsupportedReason.isNotEmpty()) {
+                println("AUTOJS6_ACE_TYPESCRIPT_FALLBACK=$unsupportedReason")
+                val runtime = JSONObject(runtimeDiagnostics(scenario, session.get()))
+                assertEquals("ace-jshint", runtime.getString("diagnosticProvider"))
+                assertFalse("2307" in diagnosticCodes)
+                return
+            }
             assertEquals(
                 "Live diagnostics should contain exactly one unresolved import: $diagnosticCodes; " +
                     runtimeDiagnostics(scenario, session.get()),
@@ -710,6 +725,13 @@ class AceCodeEditorSmokeTest {
                 assertTrue("ACE rename evaluation timed out", evaluated.await(5, TimeUnit.SECONDS))
                 renameInvoked = result.get() == "true"
                 if (!renameInvoked) Thread.sleep(100)
+            }
+            val unsupportedReason = typeScriptRuntimeUnsupportedReason(scenario, session.get())
+            if (unsupportedReason.isNotEmpty()) {
+                println("AUTOJS6_ACE_TYPESCRIPT_FALLBACK=$unsupportedReason")
+                assertFalse("Project rename needs the TypeScript service", renameInvoked)
+                assertEquals("No rename request reached the host", 1L, projectRenameRequested.count)
+                return
             }
             assertTrue("ACE did not produce a project rename candidate", renameInvoked)
 

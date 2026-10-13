@@ -3137,22 +3137,47 @@ function verifySemanticProviderFramework(paths) {
         now: () => fakeNow,
         operationTimeoutMs: 100,
     });
+    let hoverCost = 0;
     timeoutHost.setProvider({
         id: "slow-provider",
         capabilities: ["hover"],
         getHover() {
-            fakeNow = 101;
-            return { value: "too late" };
+            fakeNow += hoverCost;
+            return { value: "hover" };
         },
         dispose() {},
     });
     const timeoutFallback = { value: "static hover" };
+    // The first operation of a provider gets the cold start budget (3 x 100 ms), later ones 100 ms.
+    hoverCost = 250;
+    const coldResult = timeoutHost.invoke("hover", [], timeoutFallback);
+    assert(
+        coldResult?.value === "hover" && timeoutHost.getState().coldStartOperationTimeoutMs === 300 &&
+            timeoutHost.getState().timeoutCount === 0,
+        `A cold first operation within 300 ms tripped the timeout: ${JSON.stringify(timeoutHost.getState())}`,
+    );
+    hoverCost = 101;
     const timeoutResult = timeoutHost.invoke("hover", [], timeoutFallback);
     assert(
         timeoutResult === timeoutFallback &&
             timeoutHost.getState().lastFailureKind === "timeout" &&
             timeoutHost.getState().timeoutCount === 1,
         "Slow SemanticProvider operation did not trip the timeout fallback",
+    );
+    const coldHost = runtime.createProviderHost({ now: () => fakeNow, operationTimeoutMs: 100 });
+    coldHost.setProvider({
+        id: "very-slow-provider",
+        capabilities: ["hover"],
+        getHover() {
+            fakeNow += 301;
+            return { value: "too late" };
+        },
+        dispose() {},
+    });
+    assert(
+        coldHost.invoke("hover", [], timeoutFallback) === timeoutFallback &&
+            coldHost.getState().lastFailureKind === "timeout",
+        "A cold first operation over the cold start budget did not trip the timeout fallback",
     );
 
     let serviceDisposeCount = 0;

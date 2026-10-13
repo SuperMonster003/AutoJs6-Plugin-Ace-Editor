@@ -277,7 +277,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [x] **A1-6** `editor.setOptions` (`autojs6_ace_bridge.js:5497`) 增加 `enableMobileMenu: false`; 其余选项不变.
       —— 验收: 长按不出现 `ace_mobile-menu` 元素 (此时上游触摸处理器仍在, 只验证菜单关闭).
       结论 (2026-10-13): 已加入 `enableMobileMenu: false`, 无头冒烟中 `getOption("enableMobileMenu")` 为 false; 真机长按验证随 G-A1 进行.
-- [ ] **G-A1** 可启动门: debug APK 在 8 台设备上运行 `AceCodeEditorSmokeTest`, `AceLanguageRoutingSmokeTest`,
+- [x] **G-A1** 可启动门: debug APK 在 8 台设备上运行 `AceCodeEditorSmokeTest`, `AceLanguageRoutingSmokeTest`,
       `AceCodeFoldingSmokeTest`, `AcePythonSemanticSmokeTest`, `AceLuaSemanticSmokeTest`, `AceJavaSemanticSmokeTest`
       全部通过; Lua 文档出现 worker 诊断注解 (验证 Blob worker 加载); 手动打开 JS 文档可输入, 补全, 折叠.
       此阶段移动端手感与 1.4.12 不一致属预期 (上游触摸处理器临时生效), 不计为失败.
@@ -295,6 +295,20 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       补跑 (2026-10-13, A3 构建 639934b): XQ-AT72 (WebView 145) 与 XQ-DQ72 (WebView 153) 六个类加触摸用例均 20/20 通过.
       8 台已全部运行; 未通过的只有 x86 API 27 模拟器与 22120RN86C 各 2 项, 两者在 A0 版上同样失败 (见上), 按 "不属于回退" 判定.
       是否据此勾选本门由维护者确认.
+      结论 (2026-10-13): 维护者确认两台的既有失败按 "非本次升级造成" 处理, 门通过. 逐项查明并处理如下:
+      1. x86 API 27 模拟器 (Chrome 69): `projectRenamePublishesExactThreeFileTransactionWithoutWriting` 与
+         `validatedProjectSnapshotPublishesLiveUnresolvedImportDiagnostic` 依赖 TypeScript 6, 而 Chrome 69 不支持其语法 (可选链等),
+         编辑器按设计退回静态补全与 JSHint (`tsLoader.compatibilityReason` 非空). 这是用例没有识别按设计的回退, 不是产品缺陷.
+         `lspRuntimeState` 新增 `tsRuntimeCompatibilityReason`, 两个用例在其非空时改为断言回退状态 (诊断来自 ace-jshint, 不产生改名请求);
+         符号高亮用例同样识别 TS 与 Pyright worker 不受支持的 WebView. 修改后该模拟器上这几项通过.
+      2. 22120RN86C (WebView 111) 的 TypeScript 项目诊断: 冷启动后的第一次诊断要建立 TypeScript 程序, 实测 2.25 s, 超过语义宿主
+         2000 ms 的单次操作预算, 服务被判失败并整场退回静态补全. 改为每个 provider 的第一次操作使用 3 倍预算 (6000 ms), 之后仍为
+         2000 ms (`autojs6_semantic_provider.js`, `verify-runtime.mjs` 增加冷启动预算断言). 修改后该用例在该机通过, 该机的
+         TS 补全, 诊断与同名高亮也随之可用. 预算只决定超时后是否放弃服务, 冷启动那次仍会阻塞主线程约 2 s.
+      3. 22120RN86C 的 `bundledEcjPublishesExactDiagnosticsAndReleasesWithEditor`: 单独运行通过 (A9 构建), 只在全套连续运行中偶发
+         30 s 内拿不到 ECJ 诊断. 用例超时时现在会附带 Java 服务状态 (错误码, 耗时, 内存熔断), 以便下次出现时直接归因; 产品代码未改.
+      另外: G8441 也出现过一次同一 ECJ 用例超时, 重跑通过. API 27 模拟器首轮全套中测试进程崩溃过一次 (WebView 渲染进程在
+      2 GB 内存的模拟器上被回收), 第二轮未复现; 该模拟器全套中 B4 长按偶发失败, 单独两轮通过.
 
 ## 6. A2 · 移动端交互覆盖层移植
 

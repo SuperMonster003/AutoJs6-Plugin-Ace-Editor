@@ -600,11 +600,15 @@ class AceLanguageRoutingSmokeTest {
             setEditorText(harness, "const value = 1;\nconst doubled = value + value;\n")
             val typeScript = awaitSymbolHighlights(harness, row = 0, column = 8, expected = 3)
             println("AUTOJS6_ACE_SYMBOL_HIGHLIGHT_TS=$typeScript")
-            // Devices whose TypeScript service exceeds the operation budget fall back to static assistance
-            // (semanticServiceSuppressed); highlights need the service, so only the fallback state is checked there.
+            // Highlights need the TypeScript service. Without it (a WebView that cannot run TypeScript 6, or a service
+            // that exceeded its operation budget and fell back to static assistance) only the fallback is checked.
             val lspState = JSONObject(evaluateString(harness, "JSON.stringify(window.AutoJsAce.getLspState() || {})"))
-            if (lspState.optBoolean("semanticServiceSuppressed")) {
-                println("AUTOJS6_ACE_SYMBOL_HIGHLIGHT_TS_SKIPPED=${lspState.optString("semanticServiceReason")}")
+            val runtimeUnsupported = lspState.optJSONObject("tsLoader")?.optString("compatibilityReason").orEmpty()
+            if (lspState.optBoolean("semanticServiceSuppressed") || runtimeUnsupported.isNotEmpty()) {
+                println(
+                    "AUTOJS6_ACE_SYMBOL_HIGHLIGHT_TS_SKIPPED=" +
+                        runtimeUnsupported.ifEmpty { lspState.optString("semanticServiceReason") },
+                )
                 assertEquals("Highlights without a TypeScript service: $typeScript", 0, typeScript.getInt("count"))
             } else {
                 assertEquals("TypeScript highlights: $typeScript", 3, typeScript.getInt("count"))
@@ -614,9 +618,14 @@ class AceLanguageRoutingSmokeTest {
             setDocumentPath(harness, "/data/local/tmp/autojs6-highlight.py")
             assertEquals("ace/mode/python", awaitMode(harness, "ace/mode/python"))
             setEditorText(harness, "def greet(name):\n    return name.upper()\n")
-            val python = awaitSymbolHighlights(harness, row = 0, column = 11, expected = 2)
+            // The Pyright worker needs ES2022 syntax; older WebViews use the static Python index without highlights.
+            val pythonSupported = evaluateString(
+                harness,
+                "String(!!(window.AutoJsAcePythonProvider && window.AutoJsAcePythonProvider.isSupported()))",
+            ) == "true"
+            val python = awaitSymbolHighlights(harness, row = 0, column = 11, expected = if (pythonSupported) 2 else 1)
             println("AUTOJS6_ACE_SYMBOL_HIGHLIGHT_PY=$python")
-            assertEquals("Python highlights: $python", 2, python.getInt("count"))
+            assertEquals("Python highlights: $python", if (pythonSupported) 2 else 0, python.getInt("count"))
         } finally {
             harness.close()
         }

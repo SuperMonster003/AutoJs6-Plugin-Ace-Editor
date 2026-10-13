@@ -196,8 +196,11 @@ class AceTouchInteractionDeviceTest {
             }
             runScenario(probe, "B2 gutter tap") { p ->
                 // Recorded only: the 1.4.12 handler skips gutter touches on touchstart but still runs touchend with
-                // the mode of the previous gesture, and the gutter mouse events go to the bridge.
+                // the mode of the previous gesture, and the gutter mouse events go to the bridge. When row 3 carries a
+                // diagnostic, a tap in the marker area opens it and moves the cursor to the row start; whether it does
+                // depends on the language service (the plain text rows are JavaScript errors), so it is recorded.
                 p.setSelection(1, 1, 1, 1)
+                p.note("row3Diagnostics", p.annotationCount(3))
                 tap(p.gutterPoint(3), holdMs = 40)
                 settle()
             }
@@ -542,6 +545,11 @@ class AceTouchInteractionDeviceTest {
         fun swipeRows(): Int = (visibleRows() / 2).coerceAtLeast(2)
 
         fun visibleRowsNow(): Int = visibleRows()
+
+        fun annotationCount(row: Int): Int = evaluate(
+            "(window.editor.getSession().getAnnotations() || [])" +
+                ".filter(function(item) { return item.row === $row; }).length",
+        ).toInt()
 
         private fun visibleRows(): Int = evaluate("window.__autojs6TouchProbe.visibleRows()").toInt()
 

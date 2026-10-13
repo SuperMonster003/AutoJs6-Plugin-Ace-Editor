@@ -98,7 +98,7 @@ class AceJavaSemanticSmokeTest {
             )
 
             setText(scenario, session, SYNTAX_ERROR_SOURCE)
-            val syntaxAnnotations = awaitJsonArray(30) {
+            val syntaxAnnotations = awaitJsonArray(30, { javaServiceState(scenario, session) }) {
                 evaluateJsonArray(
                     scenario,
                     session,
@@ -127,7 +127,7 @@ class AceJavaSemanticSmokeTest {
             assertEquals("local-index", stateAfterSyntax.getString("hoverProvider"))
 
             setText(scenario, session, UNRESOLVED_SYMBOL_SOURCE)
-            val unresolvedAnnotations = awaitJsonArray(30) {
+            val unresolvedAnnotations = awaitJsonArray(30, { javaServiceState(scenario, session) }) {
                 val state = evaluateJson(
                     scenario,
                     session,
@@ -275,7 +275,11 @@ class AceJavaSemanticSmokeTest {
         throw AssertionError("Timed out waiting for JSON probe: $last")
     }
 
-    private fun awaitJsonArray(timeoutSeconds: Long, probe: () -> JSONArray?): JSONArray {
+    private fun awaitJsonArray(
+        timeoutSeconds: Long,
+        context: () -> String = { "" },
+        probe: () -> JSONArray?,
+    ): JSONArray {
         val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(timeoutSeconds)
         var last = JSONArray()
         while (System.nanoTime() < deadline) {
@@ -283,8 +287,20 @@ class AceJavaSemanticSmokeTest {
             Thread.sleep(50)
         }
         runCatching { probe() }.getOrNull()?.let { last = it }
-        throw AssertionError("Timed out waiting for JSON-array probe: $last")
+        val detail = runCatching { context() }.getOrDefault("")
+        throw AssertionError("Timed out waiting for JSON-array probe: $last; $detail")
     }
+
+    // The editor's view of the ECJ runtime (state, last error code, durations, memory circuit) for failure messages.
+    private fun javaServiceState(
+        scenario: ActivityScenario<AceEditorTestActivity>,
+        session: AtomicReference<EditorPluginSession>,
+    ): String = evaluateString(
+        scenario,
+        session,
+        "JSON.stringify(((window.AutoJsAce && window.AutoJsAce.getLspState && " +
+            "window.AutoJsAce.getLspState()) || {}).javaService || {})",
+    )
 
     private fun awaitString(timeoutSeconds: Long, probe: () -> String?): String {
         val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(timeoutSeconds)

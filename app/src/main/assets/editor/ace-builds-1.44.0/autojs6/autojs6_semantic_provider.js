@@ -12,6 +12,10 @@
         "dispose"
     ];
     var DEFAULT_OPERATION_TIMEOUT_MS = 2000;
+    // The first operation of a provider also builds its program (TypeScript parses and binds the libraries), so it
+    // gets a longer budget than the later ones. A slower phone otherwise lost the TypeScript service on the very first
+    // diagnostics run (Roadmap-Ace-1.44.0.md G-A1, 22120RN86C: 2.25 s cold).
+    var COLD_START_TIMEOUT_FACTOR = 3;
     var DEFAULT_DOCUMENT_WORD_LIMIT = 100;
 
     function noop() {
@@ -124,6 +128,18 @@
             config.operationTimeoutMs,
             DEFAULT_OPERATION_TIMEOUT_MS
         );
+        var coldStartTimeoutMs = positiveInteger(
+            config.coldStartOperationTimeoutMs,
+            timeoutMs * COLD_START_TIMEOUT_FACTOR
+        );
+        var coldStartPending = false;
+
+        // Budget of the next operation: the cold start budget once per provider, then the normal one.
+        function takeOperationBudget() {
+            var budget = coldStartPending ? coldStartTimeoutMs : timeoutMs;
+            coldStartPending = false;
+            return budget;
+        }
 
         function snapshot() {
             return {
@@ -132,6 +148,7 @@
                 healthy: !!provider && healthy && !disposed,
                 capabilities: providerCapabilities(provider),
                 operationTimeoutMs: timeoutMs,
+                coldStartOperationTimeoutMs: coldStartTimeoutMs,
                 successCount: successCount,
                 failureCount: failureCount,
                 timeoutCount: timeoutCount,
@@ -224,6 +241,7 @@
             provider = nextProvider || null;
             disposed = false;
             healthy = !!provider;
+            coldStartPending = !!provider;
             status = provider ? "ready" : "absent";
             lastFailure = "";
             lastFailureKind = "";
@@ -255,14 +273,15 @@
             if (typeof method !== "function") {
                 return fallbackValue(fallback, "capability-unavailable");
             }
+            var budget = takeOperationBudget();
             var startedAt = nowFrom(config);
             try {
                 var result = method.apply(provider, copyArray(args));
                 var durationMs = Math.max(0, nowFrom(config) - startedAt);
-                if (durationMs > timeoutMs) {
+                if (durationMs > budget) {
                     fail(
                         capability,
-                        new Error("operation exceeded " + timeoutMs + " ms"),
+                        new Error("operation exceeded " + budget + " ms"),
                         durationMs,
                         "timeout"
                     );
@@ -322,6 +341,7 @@
                     layer: provider ? "provider-unhealthy" : "provider-absent"
                 };
             }
+            var budget = takeOperationBudget();
             var startedAt = nowFrom(config);
             var settled = false;
             var timer = timerSet(config, function() {
@@ -331,12 +351,12 @@
                 settled = true;
                 fail(
                     "completion",
-                    new Error("operation exceeded " + timeoutMs + " ms"),
+                    new Error("operation exceeded " + budget + " ms"),
                     nowFrom(config) - startedAt,
                     "timeout"
                 );
                 runCompletionFallbacks(fallbacks, callback, 0);
-            }, timeoutMs);
+            }, budget);
 
             function finish(error, items) {
                 if (settled || requestSerial !== operationSerial) {
@@ -345,10 +365,10 @@
                 settled = true;
                 timerClear(config, timer);
                 var durationMs = Math.max(0, nowFrom(config) - startedAt);
-                if (error || durationMs > timeoutMs) {
+                if (error || durationMs > budget) {
                     fail(
                         "completion",
-                        error || new Error("operation exceeded " + timeoutMs + " ms"),
+                        error || new Error("operation exceeded " + budget + " ms"),
                         durationMs,
                         error ? "exception" : "timeout"
                     );

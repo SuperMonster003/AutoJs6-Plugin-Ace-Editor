@@ -1914,6 +1914,8 @@ class AceCodeEditor @JvmOverloads constructor(
             put("tsServiceDisposeCount", state.optLong("tsServiceDisposeCount", 0L))
             put("tsLoaderState", loader?.optString("state", "unknown") ?: "unknown")
             put("tsLoaderAttempts", loader?.optInt("attempts", 0) ?: 0)
+            // Non-empty when the WebView cannot run TypeScript 6 and the editor uses its static fallback.
+            put("tsRuntimeCompatibilityReason", loader?.optString("compatibilityReason", "") ?: "")
             put("tsReady", service?.optBoolean("ready", false) ?: false)
             put("tsVersion", service?.optString("version", "") ?: "")
             put("tsExpectedVersion", service?.optString("expectedVersion", "") ?: "")
