@@ -57,7 +57,8 @@ class AceEditorThemeBridgeTest {
 
         assertFalse(autocompleteRule.contains("--autojs6-theme-background"))
         assertFalse(autocompleteRule.contains("--autojs6-theme-foreground"))
-        assertTrue(javaScript.contains("var popup = editor && editor.completer && editor.completer.popup"))
+        assertTrue(javaScript.contains("var completer = popupCompleter();"))
+        assertTrue(javaScript.contains("var popup = completer && completer.popup;"))
         assertTrue(javaScript.contains("popup.setTheme(theme)"))
     }
 

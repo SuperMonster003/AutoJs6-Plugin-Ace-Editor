@@ -418,6 +418,17 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     }
 }
 
+// Several JVM tests read the bridge scripts and the Ace distribution from src/main/assets at run time; declare them
+// so that editing an asset reruns the tests instead of reporting them up to date.
+tasks.withType<Test>().configureEach {
+    inputs.dir(layout.projectDirectory.dir("src/main/assets/$aceBuildsAssetRoot"))
+        .withPropertyName("aceEditorAssets")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file(rootProject.layout.projectDirectory.file("tools/ace-lsp/ace-builds-lock.json"))
+        .withPropertyName("aceBuildsLock")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
 tasks.named("check") {
     dependsOn(
         verifyAutoJs6AceAssets,
