@@ -43,6 +43,8 @@ object AceDiagnostics {
             largeFilePolicy = largeFilePolicy,
             textMirrorRevision = null,
             jsRevision = null,
+            aceVersion = null,
+            mobileOverlay = null,
             lastReadyAtUptimeMillis = null,
             lastFirstPaintAtUptimeMillis = null,
             lastStateAtUptimeMillis = null,
@@ -122,6 +124,8 @@ object AceDiagnostics {
             appendLine("largeFilePolicy=${snapshot.largeFilePolicy}")
             appendLine("textMirrorRevision=${snapshot.textMirrorRevision?.toString().orUnknown()}")
             appendLine("jsRevision=${snapshot.jsRevision.orUnknown()}")
+            appendLine("aceVersion=${snapshot.aceVersion.orUnknown()}")
+            appendLine("mobileOverlay=${snapshot.mobileOverlay.orUnknown()}")
             appendLine("lastReadyAtUptimeMillis=${snapshot.lastReadyAtUptimeMillis?.toString().orUnknown()}")
             appendLine("lastFirstPaintAtUptimeMillis=${snapshot.lastFirstPaintAtUptimeMillis?.toString().orUnknown()}")
             appendLine("lastThemeAppliedAtUptimeMillis=${snapshot.lastThemeAppliedAtUptimeMillis?.toString().orUnknown()}")

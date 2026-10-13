@@ -32,6 +32,8 @@ data class AceDiagnosticsSnapshot(
     val largeFilePolicy: String,
     val textMirrorRevision: Long?,
     val jsRevision: String?,
+    val aceVersion: String?,
+    val mobileOverlay: String?,
     val lastReadyAtUptimeMillis: Long?,
     val lastFirstPaintAtUptimeMillis: Long?,
     val lastStateAtUptimeMillis: Long?,

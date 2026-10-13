@@ -5457,6 +5457,14 @@
         editor.container.addEventListener("click", expandFoldFromDomEvent, true);
     }
 
+    // Diagnostics: the loaded Ace version and the mobile overlay state (Roadmap-Ace-1.44.0.md A2-7, A3-10).
+    function aceRuntimeState() {
+        return {
+            aceVersion: String(global.ace && global.ace.version || ""),
+            mobileOverlay: mobileOverlay ? mobileOverlay.getState() : null
+        };
+    }
+
     function initEditor() {
         if (!global.ace) {
             notifyFatalError({
@@ -6007,6 +6015,7 @@
         var json = fullStateJson();
         callBridge("notifyReady", [json]);
         callBridge("notifyEvent", ["ready", json]);
+        callBridge("notifyEvent", ["aceRuntime", JSON.stringify(aceRuntimeState())]);
         scheduleResize("init");
         focusEditor("init");
     }

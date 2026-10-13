@@ -182,6 +182,8 @@ class AceCodeEditor @JvmOverloads constructor(
     )
     @Volatile
     private var lspRuntimeState: String? = null
+    private var aceVersion: String? = null
+    private var aceMobileOverlayState: String? = null
     private val healthMonitor = AceRuntimeHealthMonitor(mainHandler) { failure ->
         notifyFallbackRequired(failure)
     }
@@ -389,6 +391,8 @@ class AceCodeEditor @JvmOverloads constructor(
             largeFilePolicy = largeFilePolicy,
             textMirrorRevision = textMirrorRevision,
             jsRevision = ACE_RUNTIME_REVISION,
+            aceVersion = aceVersion,
+            mobileOverlay = aceMobileOverlayState,
             lastReadyAtUptimeMillis = healthMonitor.lastReadyAtUptimeMillis.takeIf { it > 0L },
             lastFirstPaintAtUptimeMillis = lastFirstPaintAtUptimeMillis.takeIf { it > 0L },
             lastStateAtUptimeMillis = healthMonitor.lastStateAtUptimeMillis.takeIf { it > 0L },
@@ -1262,6 +1266,7 @@ class AceCodeEditor @JvmOverloads constructor(
                 "changeDelta" -> handleChangeDelta(payloadJson)
                 "historyOperation" -> handleHistoryOperation(payloadJson)
                 "lspStateChanged" -> handleLspStateChanged(payloadJson)
+                "aceRuntime" -> handleAceRuntime(payloadJson)
             }
             listener?.onEvent(name, payloadJson)
         }
@@ -1828,6 +1833,12 @@ class AceCodeEditor @JvmOverloads constructor(
         } ?: currentState()
         listener?.onStateChanged(state)
         listener?.onHistoryOperation(token, undo)
+    }
+
+    private fun handleAceRuntime(payloadJson: String?) {
+        val runtime = runCatching { JSONObject(payloadJson.orEmpty()) }.getOrNull() ?: return
+        aceVersion = runtime.optString("aceVersion").takeIf { it.isNotEmpty() }
+        aceMobileOverlayState = runtime.optJSONObject("mobileOverlay")?.toString()
     }
 
     private fun handleLspStateChanged(payloadJson: String?) {

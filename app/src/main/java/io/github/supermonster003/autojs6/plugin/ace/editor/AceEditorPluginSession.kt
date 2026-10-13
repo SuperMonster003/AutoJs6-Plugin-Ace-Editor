@@ -857,6 +857,8 @@ private fun AceDiagnosticsSnapshot.toBundle(): Bundle = Bundle().apply {
     putString("largeFilePolicy", largeFilePolicy)
     putLongOrNull("textMirrorRevision", textMirrorRevision)
     putString("jsRevision", jsRevision)
+    putString("aceVersion", aceVersion)
+    putString("mobileOverlay", mobileOverlay)
     putLongOrNull("lastReadyAtUptimeMillis", lastReadyAtUptimeMillis)
     putLongOrNull("lastFirstPaintAtUptimeMillis", lastFirstPaintAtUptimeMillis)
     putLongOrNull("lastThemeAppliedAtUptimeMillis", lastThemeAppliedAtUptimeMillis)

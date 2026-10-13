@@ -151,6 +151,64 @@ class AceCodeEditorSmokeTest {
     }
 
     @Test
+    fun sessionDiagnosticsReportAceRuntimeAndMobileOverlay() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = instrumentation.targetContext
+        val ready = CountDownLatch(1)
+        val session = AtomicReference<org.autojs.plugin.editor.api.EditorPluginSession>()
+        val scenario = ActivityScenario.launch(AceEditorTestActivity::class.java)
+
+        scenario.onActivity { activity ->
+            session.set(
+                AceEditorPluginEntrypoint().createSession(
+                    hostContext = activity,
+                    pluginContext = context,
+                    config = EditorPluginSessionConfig(
+                        hostPackageName = context.packageName,
+                        hostVersionName = "instrumentation",
+                        hostVersionCode = 5276L,
+                        storageDirectoryPath =
+                            File(context.cacheDir, "ace-editor-runtime-diagnostics-fonts").absolutePath,
+                    ),
+                    callback = object : EditorPluginCallback {
+                        override fun onReady(state: EditorPluginState) {
+                            ready.countDown()
+                        }
+                    },
+                ),
+            )
+            activity.setContentView(session.get().view)
+        }
+
+        try {
+            assertTrue("ACE diagnostics session should become ready", ready.await(10, TimeUnit.SECONDS))
+            // The aceRuntime event follows notifyReady, so poll until it has been handled.
+            val deadline = System.currentTimeMillis() + 5_000L
+            var aceVersion: String? = null
+            var mobileOverlay: String? = null
+            while (aceVersion == null && System.currentTimeMillis() < deadline) {
+                scenario.onActivity {
+                    val diagnostics = session.get().createDiagnosticsSnapshot(null, "auto").values
+                    aceVersion = diagnostics.getString("aceVersion")
+                    mobileOverlay = diagnostics.getString("mobileOverlay")
+                }
+                if (aceVersion == null) Thread.sleep(50L)
+            }
+            assertEquals("1.44.0", aceVersion)
+            val overlay = JSONObject(requireNotNull(mobileOverlay) { "mobileOverlay is missing" })
+            assertTrue(overlay.getBoolean("installed"))
+            assertEquals(4, overlay.getInt("uninstalledUpstreamListeners"))
+            assertFalse(overlay.getBoolean("fallbackCapture"))
+            assertFalse(overlay.getBoolean("magnifier"))
+        } finally {
+            scenario.onActivity {
+                session.getAndSet(null)?.destroy()
+            }
+            scenario.close()
+        }
+    }
+
+    @Test
     fun sessionDiagnosticsExposeExecutionAlignedTypeScriptProfiles() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext

@@ -349,14 +349,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): 已重写 (按屏幕行定位克隆的文本层单元格, 折叠与自动换行下不错位; 选区自行绘制并沿用主题的 `ace_selection` 配色;
       放大 1.5 倍; 首次显示时才创建 DOM; 类名 `autojs6-magnifier*` 代替原 id). 开关 `setTouchMagnifierEnabled` 已加到 `AutoJsAce`,
       初始值读 `isTouchMagnifierEnabled` (Kotlin 侧在 A7-1 实现, 缺省 false). 真机验收待开关接通后进行.
-- [ ] **A2-7** 覆盖层与桥接层对接: `cancelAceMobileTouchInteraction` (`:1781`) 调用覆盖层的 `cancel()` 清理长按计时与惯性;
+- [x] **A2-7** 覆盖层与桥接层对接: `cancelAceMobileTouchInteraction` (`:1781`) 调用覆盖层的 `cancel()` 清理长按计时与惯性;
       `installTouchCursorSelectionGuard` (`:3770`) 与 `installImeTextInputSelectionWindow` (`:2890`) 不变;
       `global.AutoJsAce` 增加 `getMobileOverlayState()` 供诊断快照使用 (`AceDiagnostics` 增加字段 `mobileOverlay`).
       —— 验收: 诊断快照包含 `mobileOverlay: {installed, uninstalledUpstreamListeners, fallbackCapture, magnifier}`.
       进度 (2026-10-13): `cancelAceMobileTouchInteraction(reason)` 调用覆盖层的 `cancel(reason)`, 只对 `dom_touchcancel`,
       `window_blur`, `pinch_zoom_begin`, `pinch_action_mode` 生效 (清长按计时, 停惯性, 隐藏放大镜, 保留手势模式); 宿主在单指滑动开始
       与折叠占位点击时发出的取消被忽略, 因为 1.4.12 的触摸处理器从未收到过它们;
-      `AutoJsAce.getMobileOverlayState()` 已提供. Kotlin 诊断快照字段与 A3-10 的 `aceVersion` 一起加.
+      `AutoJsAce.getMobileOverlayState()` 已提供. Kotlin 诊断快照字段与 A3-10 的 `aceVersion` 一起加入 (见 A3-10).
 - [x] **A2-8** `autojs6.css`: 删除无用的 `.ace_mobile-menu` 规则 (三段 `body.*  .ace_mobile-menu` 与 `.ace_mobile-menu` 本体),
       新增 A2-6 样式; `autojs6_editor.html` 按顺序加载 5 个覆盖层脚本 (scroller -> velocity_tracker -> magnifier -> action_mode -> touch_handler);
       `AceEditorAssets.requiredAssetPaths` 登记 5 个文件.
@@ -436,15 +436,19 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [ ] **A3-9** Worker 策略复核: `shouldUseAceWorkerForMode` (`:267`) 维持 lua 开启; 确认 1.44.0 Blob worker 在
       `https://appassets.androidplatform.net` 源下 `importScripts` 成功 (G-A1 已验); JSON worker 交给 A4-3.
       —— 验收: `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua` 通过.
-- [ ] **A3-10** 诊断快照与事件: `AceDiagnostics` 增加 `aceVersion` (读取 `ace.version`, 1.44.0 为 "1.44.0") 与 A2-7 的 `mobileOverlay`;
+- [x] **A3-10** 诊断快照与事件: `AceDiagnostics` 增加 `aceVersion` (读取 `ace.version`, 1.44.0 为 "1.44.0") 与 A2-7 的 `mobileOverlay`;
       `ACE_RUNTIME_REVISION` 已在 A1-3 更新.
       —— 验收: `sessionDiagnosticsExposeExecutionAlignedTypeScriptProfiles` 扩展断言 `aceVersion == "1.44.0"`.
       备注 (2026-10-13): 与 A2-7 的 `mobileOverlay` 一起改诊断快照 (JS 状态, Kotlin 字段, Bundle 键), 避免两次变更诊断契约.
+      完成 (2026-10-13): 桥接层在 `notifyReady` 之后发出 `aceRuntime` 事件 (`{aceVersion, mobileOverlay}`), `AceCodeEditor` 记录后写入
+      `AceDiagnosticsSnapshot.aceVersion` / `mobileOverlay` (JSON 文本), Bundle 键与诊断文本同名. 原定扩展的用例不等待就绪, 因此改为新增
+      `sessionDiagnosticsReportAceRuntimeAndMobileOverlay` (就绪后轮询事件), 断言 "1.44.0", 已安装, 卸下 4 个上游监听器, 未退回捕获阶段,
+      放大镜关闭; G8441 通过.
 - [ ] **G-A3** 桥接门: JVM 测试全绿 (无 `@Ignore` 新增), 8 台设备全部 instrumentation 用例通过, 附录 C 在 6 台真机通过.
 
 ## 8. A4 · 语言资源
 
-- [ ] **A4-1** TSX 官方 mode: `resolveAceMode` (`:176`) 把 `.tsx` 路由到 `ace/mode/tsx`; `autojs6_completer.js:1200` 附近的
+- [x] **A4-1** TSX 官方 mode: `resolveAceMode` (`:176`) 把 `.tsx` 路由到 `ace/mode/tsx`; `autojs6_completer.js:1200` 附近的
       `MODE_LANGUAGES` 与 `autojs6_lsp_client.js:636` 的 mode 映射增加 `ace/mode/tsx -> typescript 家族`; `applyDocumentWorkerPolicy`
       对 tsx 关闭 worker; README 语言表 TSX 语法由 "部分" 改为 "支持"; 在 `tools/ace-lsp/TSX_HIGHLIGHT_EVALUATION.md` 末尾追加
       "TSX-HL-1 由 2.0.0 关闭" 结论, `Roadmap.md` M0-3 结论行同步加注.
@@ -453,7 +457,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): 路由, JS 家族判断, 语言 ID (tsx 归入 typescript), 补全器与本地符号的 mode 映射, LSP 客户端判断都已加入
       `ace/mode/tsx`; worker 策略只对 lua 开启, tsx 自然关闭. jsdom 确认样例得到 tag-open / tag-name / attribute-name token;
       设备用例已改为断言 tsx mode 与这些 token; `TSX_HIGHLIGHT_EVALUATION.md` 与 `Roadmap.md` 已加注 TSX-HL-1 关闭.
-      README 语言表留给 A8-6 (生成文件). 设备运行后勾选.
+      README 语言表留给 A8-6 (生成文件). G8441 上 `AceLanguageRoutingSmokeTest` 等 15 项通过 (2026-10-13).
 - [x] **A4-2** Kotlin 切官方: 用 1.44.0 `mode-kotlin.js` 替换项目版本; 复核官方 `createKeywordMapper` 是否让关键字补全器
       得到非空列表 (`verifyAutoJs6KotlinP2Plus`). 官方 1.44.0 仍未设置 `snippetFileId` (已核查), 因此在运行期补丁脚本
       `autojs6/autojs6_mode_patches.js` (G-A1 时为 Java 关键字已建立) 中对 `ace/mode/kotlin` 设置 `snippetFileId = "ace/snippets/kotlin"`,
