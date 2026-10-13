@@ -367,10 +367,26 @@ function verifyImprovements() {
     // C3: touches that move the cursor or the selection end an IME composition, as Ace does on mousedown; scrolls and
     // gutter taps do not.
     const composing = (env) => {
-        env.editor.textInput.inComposition = {};
-        env.editor.textInput.cancelComposition = () => env.record("textInput.cancelComposition");
+        const textInput = env.editor.textInput;
+        textInput.inComposition = {};
+        textInput.lastValue = "line5 word";
+        env.elements.textarea.value = textInput.lastValue;
+        textInput.cancelComposition = () => env.record("textInput.cancelComposition");
+        textInput.onCompositionEnd = (event) => {
+            env.record("textInput.onCompositionEnd", event === undefined ? "no event" : "event", textInput.lastValue, env.elements.textarea.value);
+            textInput.inComposition = false;
+        };
+        textInput.resetSelection = () => env.record("textInput.resetSelection", !!textInput.inComposition);
     };
-    const cancels = (scenario) => entries(runOverlay({ ...scenario, setup: (env) => { composing(env); if (scenario.setup) scenario.setup(env); } }), "textInput.cancelComposition").length;
+    const cancels = (scenario) => {
+        const trace = runOverlay({ ...scenario, setup: (env) => { composing(env); if (scenario.setup) scenario.setup(env); } });
+        check(!has(trace, "textInput.cancelComposition"), `${scenario.name}: ended the composition through blur and focus`);
+        const ends = entries(trace, "textInput.onCompositionEnd");
+        check(ends.every((entry) => JSON.stringify(entry.slice(1)) === JSON.stringify(["no event", "", ""])), `${scenario.name}: ended the composition with ${JSON.stringify(ends)}`);
+        const resets = entries(trace, "textInput.resetSelection");
+        check(resets.length === ends.length && resets.every((entry) => entry[1] === false), `${scenario.name}: the textarea was not refilled after the composition ended`);
+        return ends.length;
+    };
     check(cancels(named("B1 quick tap moves the cursor and shows the soft input")) === 1, "a tap did not end the composition");
     check(cancels(named("B4 long press without selection selects a word")) === 1, "a long press did not end the composition");
     check(cancels(named("B6 drag the cursor handle")) === 1, "a cursor drag did not end the composition once");

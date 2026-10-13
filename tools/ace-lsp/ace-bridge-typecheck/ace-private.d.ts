@@ -95,6 +95,7 @@ declare module "ace-builds-internal/editor" {
         // Installation flags of bridge hooks.
         $autojs6TouchCursorSelectionGuardInstalled?: boolean;
         $autojs6MemberCompletionDotTriggerInstalled?: boolean;
+        $autojs6UnchangedCompositionGuard?: boolean;
     }
 }
 

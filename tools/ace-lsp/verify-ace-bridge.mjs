@@ -939,6 +939,34 @@ test("symbol highlights follow the cursor and clear on edits and selections", as
     }
 });
 
+// Roadmap-Ace-1.44.0.md A2-10, manual test C3: IME compositions that rewrite a word with itself must not add
+// invisible edits to the undo history; real changes still apply.
+test("unchanged IME composition replacements leave the document and its history alone", async () => {
+    const page = await openEditor({ layout: false });
+    try {
+        const { editor, api } = page;
+        api.setText("// third line to copy\nnext");
+        await sleep(100);
+        const undoDepth = () => (editor.session.getUndoManager().$undoStack || []).length;
+        editor.moveCursorTo(0, 21);
+        const depth = undoDepth();
+        editor.onTextInput("copy", { extendLeft: 4, extendRight: 0, restoreStart: 0, restoreEnd: 0 });
+        assert.equal(editor.getValue(), "// third line to copy\nnext");
+        assert.equal(undoDepth(), depth, "no history entry for an unchanged word");
+        assert.deepEqual(plain(editor.getCursorPosition()), { row: 0, column: 21 });
+        editor.selection.setRange({ start: { row: 0, column: 17 }, end: { row: 0, column: 21 } });
+        editor.onTextInput("copy", { extendLeft: 0, extendRight: 0, restoreStart: 0, restoreEnd: 0 });
+        assert.equal(undoDepth(), depth, "no history entry for a selection replaced by itself");
+        assert.deepEqual(plain(editor.getSelectionRange()), { start: { row: 0, column: 21 }, end: { row: 0, column: 21 } });
+        assert.ok(page.events("imeUnchangedCompositionSkipped").length >= 2);
+        editor.onTextInput("cope", { extendLeft: 4, extendRight: 0, restoreStart: 0, restoreEnd: 0 });
+        assert.equal(editor.getValue(), "// third line to cope\nnext", "a real change still applies");
+        assert.ok(undoDepth() > depth);
+    } finally {
+        page.close();
+    }
+});
+
 test("symbol highlights wait until a finger stops dragging the cursor", async () => {
     const requests = [];
     const page = await openEditor({

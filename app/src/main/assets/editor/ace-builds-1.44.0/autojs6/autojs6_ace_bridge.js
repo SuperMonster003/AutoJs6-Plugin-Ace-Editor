@@ -3244,6 +3244,54 @@
         moveCursor(delta);
     }
 
+    // IME compositions that rewrite a word with itself (Gboard marks the word under a newly placed cursor as its
+    // composition) reach Ace as "replace these characters around the cursor with the same text"
+    // (Editor.applyComposition). Ace performed the replacement anyway: the text stayed the same but every such update
+    // added a remove and an insert to the undo history, so undo stepped through invisible edits and selected
+    // unexpected ranges (Roadmap-Ace-1.44.0.md A2-10, manual test C3). An unchanged replacement now only moves the
+    // cursor and the selection to where Ace would have put them.
+    function installUnchangedCompositionGuard() {
+        if (!editor || typeof editor.applyComposition !== "function" || editor.$autojs6UnchangedCompositionGuard) {
+            return;
+        }
+        var applyComposition = editor.applyComposition;
+        editor.applyComposition = function(text, composition) {
+            var target = compositionTargetRange(this, composition);
+            if (!target || target.isEmpty() || this.session.getTextRange(target) !== String(text)) {
+                return applyComposition.apply(this, arguments);
+            }
+            var end = target.end;
+            var range = new Range(end.row, end.column, end.row, end.column);
+            if (composition && (composition.restoreStart || composition.restoreEnd)) {
+                range.start.column -= composition.restoreStart;
+                range.end.column -= composition.restoreEnd;
+            }
+            this.selection.setRange(range);
+            callBridge("notifyEvent", [
+                "imeUnchangedCompositionSkipped",
+                JSON.stringify({ row: end.row, column: end.column, length: String(text).length })
+            ]);
+        };
+        editor.$autojs6UnchangedCompositionGuard = true;
+    }
+
+    // The range Editor.applyComposition replaces (Ace 1.44.0): the selection, extended by the composition.
+    function compositionTargetRange(target, composition) {
+        if (!composition || !target.selection || target.selection.rangeCount > 1) {
+            return null;
+        }
+        var range = target.selection.getRange();
+        if (composition.extendLeft || composition.extendRight) {
+            range.start.column -= composition.extendLeft;
+            range.end.column += composition.extendRight;
+            if (range.start.column < 0) {
+                range.start.row--;
+                range.start.column += target.session.getLine(range.start.row).length + 1;
+            }
+        }
+        return range;
+    }
+
     function installImeTextInputSelectionWindow() {
         if (!isAndroidUserAgent() || imeTextInputSelectionWindow.installed) {
             return;
@@ -6199,6 +6247,7 @@
         editor.selection.on("changeCursor", notifyCursorChanged);
         editor.selection.on("changeSelection", notifySelectionChanged);
         installImeTextInputSelectionWindow();
+        installUnchangedCompositionGuard();
         global.addEventListener("resize", function() {
             scheduleResize("window_resize");
         });

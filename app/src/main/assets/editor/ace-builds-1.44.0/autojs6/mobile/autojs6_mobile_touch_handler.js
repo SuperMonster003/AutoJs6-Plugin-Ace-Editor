@@ -217,15 +217,29 @@ ace.define(
             return this.origin.x > left && this.origin.x < right;
         };
 
-        // Ace ends an IME composition on mousedown (TextInput.onCompositionStart registers cancelComposition), but the
-        // overlay prevents the mouse events of touches. A composition the IME started by itself (Gboard marks the word
-        // at the cursor for its suggestions) then outlived every touch that moved the cursor: Ace stopped updating its
-        // hidden textarea and the next backspace replaced the new selection with the shortened word (A2-10, C3).
-        // Touches that move the cursor or the selection end the composition the same way; scrolls do not.
+        // Gboard turns the word under a newly placed cursor into a composition (setComposingRegion) to offer its
+        // suggestions; Ace's text input assumes compositions start at the cursor. Ace ends a composition on mousedown,
+        // which touches do not produce here, so such a composition outlived every touch that moved the cursor: Ace
+        // stopped updating its hidden textarea, and later IME edits were applied to the wrong range (a backspace
+        // replaced a selection with the shortened word, text vanished on a tap; A2-10, manual test C3).
+        // Touches that move the cursor or the selection end the composition the way Ace does when a command moves
+        // the cursor during a composition (TextInput, beforeEndOperation): the textarea content is dropped and the
+        // composition ends without being read as input, then the textarea is refilled for the cursor. Ending it
+        // through blur and focus (TextInput.cancelComposition) committed the composing text and deleted text instead.
+        // Scrolls do not end compositions.
         TouchGestures.prototype.endComposition = function() {
             var textInput = this.editor.textInput;
-            if (textInput && textInput.inComposition && typeof textInput.cancelComposition === "function") {
-                textInput.cancelComposition();
+            if (!textInput || !textInput.inComposition || typeof textInput.onCompositionEnd !== "function") {
+                return;
+            }
+            var text = typeof textInput.getElement === "function" ? textInput.getElement() : null;
+            textInput.lastValue = "";
+            if (text) {
+                text.value = "";
+            }
+            textInput.onCompositionEnd();
+            if (typeof textInput.resetSelection === "function") {
+                textInput.resetSelection();
             }
         };
 
