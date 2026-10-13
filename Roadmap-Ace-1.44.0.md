@@ -133,6 +133,12 @@
     `snippetFileId` 关联需复核; 项目维护的 `snippets/kotlin.js` 继续使用.
 11. **主题**: 当前 48 个主题已是新格式, 1.44.0 同名文件仅行尾差异; `theme-textmate.js` 在 1.44.0 缩为 616 B
     (内容并入 ace.js). 宿主主题列表 48 项在 1.44.0 全部存在.
+12. **Java 关键字补全** (G-A1 发现): 1.44.0 的 Java 高亮规则把关键字从 `createKeywordMapper` 移到单独的正则规则,
+    `Mode.getCompletions` 只剩 this, 常量与语言类, `public` 等关键字不再出现在关键字补全中. `autojs6/autojs6_mode_patches.js`
+    在 mode 加载后从高亮规则提取关键字并补回 `$keywordList`, 不改官方文件.
+13. **高分屏图层** (G-A1 发现): 1.44.0 去掉了 `.ace_hidpi` 下文本层, 行号层, 内容层与行号栏的 `will-change: transform`.
+    OPD2413 (2400x3392) 上编辑器进程的 EGL 图形内存由约 128 MiB 增至 208 MiB, 23046RP50C 只增约 4 MiB.
+    `autojs6.css` 补回该规则后与 1.4.12 一致. A5-3 (customScrollbar) 等改动图层结构的项目需在 OPD2413 复测内存.
 
 ### 2.5 体积与收益
 
@@ -277,6 +283,13 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       此阶段移动端手感与 1.4.12 不一致属预期 (上游触摸处理器临时生效), 不计为失败.
       (降级路径: 某设备上 ace.js 抛语法/运行错误 -> 记录 WebView 版本, 评估是否需要 `fixoldbrowsers` 级 polyfill,
       不得改动上游文件, 只能在 `autojs6/` 增加前置 polyfill 脚本.)
+      进度 (2026-10-13): 23046RP50C (WebView 130), OPD2413 (ColorOS, WebView 136) 与 x86_64 API 37.1 16 KB 模拟器 (WebView 149)
+      均 18/18 通过; x86 API 27 模拟器 (Chrome 69) 16/18, 失败的 2 项依赖 TypeScript 语言服务, A0 版在同一模拟器上同样失败
+      (旧 WebView 跑不了 TypeScript 6), 不属于回退. Lua worker 诊断注解由 `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua`
+      覆盖并通过; 23046RP50C 上长按不出现 `ace_mobile-menu` (A1-6). 过程中发现并修复两处回退 (§2.4 第 12, 13 条):
+      Java 关键字补全缺失 (新增 `autojs6/autojs6_mode_patches.js`), 以及 OPD2413 上图形内存增加约 80 MiB 导致 Python 语义冒烟的
+      300 MiB 门间歇失败 (`autojs6.css` 补回 1.4.12 的 `will-change: transform`). G8441, XQ-AT72, XQ-DQ72, 22120RN86C 当时被其他会话
+      占用, 待让出后补跑; 门在 8 台补齐前不勾选.
 
 ## 6. A2 · 移动端交互覆盖层移植
 
@@ -350,7 +363,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       取单元格, 断点命中区改为 `cell.getBoundingClientRect().left + 24`; `isDiagnosticGutterCell` 同时识别 `span.ace_icon` 子节点;
       `isGutterFoldWidgetEvent` 直接接受 `target` 为 `ace_fold-widget` 的情况.
       —— 验收: 执行式测试分别以单元格, 文本节点父级, 注解图标, 折叠按钮为 target 触发事件, 断点 / 诊断 / 折叠各命中一次.
-- [ ] **A3-2** 删除 1.4.12 专属代码与注释: `:5443` `global.editor = editor`; `:131-136` 注释改写 (MAX_LINE_LENGTH 语义见 A6-4);
+- [ ] **A3-2** 删除 1.4.12 专属代码与注释: `:5443` `global.editor = editor` 的 1.4.12 兼容注释 (赋值本身保留: 性能,
+      长行与触摸仪器测试以及其他模块通过 `window.editor` 访问编辑器, 只改注释说明用途); `:131-136` 注释改写 (MAX_LINE_LENGTH 语义见 A6-4);
       `:4678` 与 `:4783` 的 "ACE 1.4.x" 注释; `autojs6_lsp_core.js:144` 的版本字样; `README` 中 "Ace 1.4.12 的 TSX" 说明交给 A4-1.
       —— 验收: `grep -n "1\.4\.12\|1\.4\.x" autojs6/*.js` 无命中.
 - [ ] **A3-3** 补全弹窗补丁复核 (`installCompletionPopupTouchScrollPatch`, `:2073`): 确认 `$init` 仍返回 popup, `showDocTooltip`
@@ -394,8 +408,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       —— 验收: 打开 `.tsx` 文档 `session.getMode().$id === "ace/mode/tsx"`, JSX 标签获得 tag/attribute token (截图留档);
       `documentPathSelectsModeAndIsolatesJavaScriptCompletions` 扩展 tsx 用例.
 - [ ] **A4-2** Kotlin 切官方: 用 1.44.0 `mode-kotlin.js` 替换项目版本; 复核官方 `createKeywordMapper` 是否让关键字补全器
-      得到非空列表 (`verifyAutoJs6KotlinP2Plus`). 官方 1.44.0 仍未设置 `snippetFileId` (已核查), 因此新建运行期补丁脚本
-      `autojs6/autojs6_mode_patches.js`, 在 `changeMode` 时对 `ace/mode/kotlin` 设置 `snippetFileId = "ace/snippets/kotlin"`,
+      得到非空列表 (`verifyAutoJs6KotlinP2Plus`). 官方 1.44.0 仍未设置 `snippetFileId` (已核查), 因此在运行期补丁脚本
+      `autojs6/autojs6_mode_patches.js` (G-A1 时为 Java 关键字已建立) 中对 `ace/mode/kotlin` 设置 `snippetFileId = "ace/snippets/kotlin"`,
       不改官方文件; `MILESTONE_BASELINES.md` M1 表加注 "mode-kotlin 自 2.0.0 起为官方 1.44.0".
       —— 验收: `verifyAutoJs6KotlinP2Plus` 与 Kotlin 样例高亮截图通过; `grep "Ace 1.4.12 marks" src-min-noconflict/mode-kotlin.js` 无命中.
 - [ ] **A4-3** JSON worker (验证门 G-A4-3): `shouldUseAceWorkerForMode` 对 json 返回 true, 保留 `JSON.parse` 诊断作为

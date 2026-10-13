@@ -40,6 +40,7 @@ object AceEditorAssets {
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/lua.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/java.js",
         "$EDITOR_ASSET_ROOT/src-min-noconflict/snippets/kotlin.js",
+        "$EDITOR_ASSET_ROOT/autojs6/autojs6_mode_patches.js",
         "$EDITOR_ASSET_ROOT/autojs6/autojs_indices.js",
         "$EDITOR_ASSET_ROOT/autojs6/autojs6_indices.js",
         "$EDITOR_ASSET_ROOT/autojs6/autojs6_local_symbols.js",

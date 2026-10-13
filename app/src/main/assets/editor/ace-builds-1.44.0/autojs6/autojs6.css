@@ -406,3 +406,15 @@ body.ace-theme-dark .autojs6_hover_tooltip_content code {
 body.ace-theme-dark .autojs6_hover_tooltip_content pre {
     background: #111827;
 }
+
+/*
+ * Ace 1.44.0 dropped `will-change: transform` from these hidpi layers (1.4.12 had it). Without the promotion
+ * the WebView keeps much larger graphics buffers on big high-density screens: on a 2400x3392 tablet the EGL
+ * memory of the editor grew from about 128 MiB to 208 MiB. Restoring the 1.4.12 rule brings it back.
+ */
+.ace_hidpi .ace_text-layer,
+.ace_hidpi .ace_gutter-layer,
+.ace_hidpi .ace_content,
+.ace_hidpi .ace_gutter {
+    will-change: transform;
+}

@@ -107,6 +107,7 @@ class AceTouchInteractionDeviceTest {
                 expect(p, !state.empty && WORD.matches(state.selectedText), "long press should select a word, got '${state.selectedText}'")
                 expect(p, state.traceContains("startActionMode"), "long press should start the action mode")
                 expect(p, p.selectionToolbarActive(), "selection toolbar should be shown")
+                expect(p, !state.json.getBoolean("mobileMenuVisible"), "Ace's own mobile menu should stay hidden")
             }
             runScenario(probe, "B5 long press inside selection") { p ->
                 p.setSelection(6, 6, 6, 20)
@@ -425,6 +426,10 @@ class AceTouchInteractionDeviceTest {
                                 scrollTop: editor.renderer.getScrollTop(),
                                 scrollLeft: editor.renderer.getScrollLeft(),
                                 fontSize: editor.getFontSize(),
+                                mobileMenuVisible: Array.prototype.some.call(
+                                    document.querySelectorAll(".ace_mobile-menu"),
+                                    function(menu) { return menu.style.display !== "none"; }
+                                ),
                                 trace: trace.slice()
                             });
                         },

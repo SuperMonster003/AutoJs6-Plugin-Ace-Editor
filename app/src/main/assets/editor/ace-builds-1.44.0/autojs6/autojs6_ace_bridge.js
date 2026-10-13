@@ -5443,6 +5443,9 @@
         // ACE 1.4.12 ext-language_tools references a global `editor` in insertMatch().
         global.editor = editor;
         session = editor.getSession();
+        if (global.AutoJsAceModePatches) {
+            global.AutoJsAceModePatches.install(editor);
+        }
         installDocumentLongLineRenderGuard();
         installHistoryOperationHooks();
         installCompletionPopupTouchScrollPatch();
