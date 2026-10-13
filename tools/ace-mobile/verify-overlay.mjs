@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 // Verifies that the AutoJs6 mobile overlay (app/src/main/assets/editor/ace-builds-1.44.0/autojs6/mobile) behaves like
-// the Ace 1.4.12 Auto.js build (tools/ace-mobile/reconstructed/original), Roadmap-Ace-1.44.0.md A2:
+// the editor build AutoJs6 shipped before (Ace 1.4.12 Auto.js build, loaded by legacy-oracle.mjs from Git history),
+// Roadmap-Ace-1.44.0.md A2 and A0-5:
 //   - scroller and velocity tracker produce identical numbers for generated inputs;
 //   - the touch handler produces identical call traces for every scenario of touch-harness.mjs, except for the
 //     differences listed in EXPECTED_DIFFERENCES;
@@ -13,16 +14,18 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import vm from "node:vm";
 import { fileURLToPath } from "node:url";
-import { TOUCH_SCENARIOS, createEnvironment, firstDifference, plain, runTouchScenario } from "./touch-harness.mjs";
 import {
     ACTION_MODE_SCENARIOS,
+    TOUCH_SCENARIOS,
     createActionModeEditor,
+    createEnvironment,
     createRandom,
-    editorFragmentSet,
-    loadImplementation,
-} from "./verify-reconstructed.mjs";
+    firstDifference,
+    plain,
+    runTouchScenario,
+} from "./touch-harness.mjs";
+import { legacyActionModeFragments, legacyGetClientPosition, loadLegacyTouchStack } from "./legacy-oracle.mjs";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPOSITORY_ROOT = path.resolve(SCRIPT_DIR, "..", "..");
@@ -81,7 +84,7 @@ function verifyTouchScenarios() {
             env.editor.$toDestroy = [];
             if (scenario.setup) scenario.setup(env);
             if (kind === "original") {
-                loadImplementation("original", env)
+                loadLegacyTouchStack(env)
                     .require("ace/mouse/touch_handler")
                     .addTouchListeners(env.editor.container, env.editor, { $magnifierEnabled: !!scenario.magnifierEnabled });
             } else {
@@ -223,7 +226,7 @@ function runVariant(kind, scenario) {
     env.editor.$toDestroy = [];
     if (scenario.setup) scenario.setup(env);
     if (kind === "original") {
-        loadImplementation("original", env)
+        loadLegacyTouchStack(env)
             .require("ace/mouse/touch_handler")
             .addTouchListeners(env.editor.container, env.editor, { $magnifierEnabled: false });
     } else {
@@ -243,7 +246,7 @@ function verifyScroller() {
             let fling;
             let step;
             if (kind === "original") {
-                const { Scroller } = loadImplementation("original", env).require("ace/mouse/scroller.js");
+                const { Scroller } = loadLegacyTouchStack(env).require("ace/mouse/scroller.js");
                 const scroller = Scroller.createDefault();
                 fling = (x, y, vx, vy) => scroller.fling(x, y, vx, vy, 0, 800, 0, 4000);
                 step = () => [scroller.computeScrollOffset(), scroller.getCurrX(), scroller.getCurrY(), scroller.isFinished()];
@@ -287,7 +290,7 @@ function verifyVelocityTracker() {
             let add;
             let read;
             if (kind === "original") {
-                const { VelocityTracker } = loadImplementation("original", env).require("ace/mouse/velocity-tracker.js");
+                const { VelocityTracker } = loadLegacyTouchStack(env).require("ace/mouse/velocity-tracker.js");
                 tracker = new VelocityTracker();
                 add = (x, y, t) => tracker.addMovement({ x, y }, t);
                 read = () => [tracker.getXVelocity(), tracker.getYVelocity()];
@@ -328,7 +331,7 @@ function verifyActionMode() {
                 const env = createEnvironment({ hostBridge });
                 let fragments;
                 if (kind === "original") {
-                    fragments = editorFragmentSet("original", env);
+                    fragments = legacyActionModeFragments(env);
                 } else {
                     const ActionMode = loadOverlay(env).require("autojs6/mobile/action_mode");
                     fragments = {
@@ -355,11 +358,7 @@ function verifyGetClientPosition() {
         const env = createEnvironment();
         let getClientPosition;
         if (kind === "original") {
-            const holder = {};
-            const file = "virtual_renderer-get-client-position.min.js";
-            const code = fs.readFileSync(path.join(SCRIPT_DIR, "reconstructed", "original", file), "latin1");
-            vm.runInContext(`(function () {"use strict";${code}})`, env.context, { filename: file }).call(holder);
-            getClientPosition = holder.getClientPosition;
+            getClientPosition = legacyGetClientPosition(env);
         } else {
             getClientPosition = loadOverlay(env).require("autojs6/mobile/action_mode").getClientPosition;
         }

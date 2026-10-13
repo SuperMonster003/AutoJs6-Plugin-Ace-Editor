@@ -622,6 +622,12 @@ export const TOUCH_SCENARIOS = [
     { name: "B5 long press inside a single line selection", setup: (env) => env.selection.select(8, 6, 8, 20), steps: [{ down: at(8, 12) }, { wait: 600 }, { up: at(8, 12) }, { wait: 300 }] },
     { name: "B5 long press inside a multi line selection", setup: (env) => env.selection.select(8, 30, 12, 4), steps: [{ down: at(10, 50) }, { wait: 600 }, { up: at(10, 50) }, { wait: 300 }] },
     { name: "long press then drag the selected word", steps: [{ down: at(7, 14) }, { wait: 600 }, { move: at(7, 20) }, { wait: 16 }, { move: at(8, 26) }, { wait: 16 }, { up: at(8, 26) }, { wait: 300 }] },
+    // Both handles are in reach; the nearer one (here the anchor, 10 px to the left of the cursor) is dragged.
+    {
+        name: "both handles in reach drags the nearer one",
+        setup: (env) => env.selection.select(5, 10, 5, 11),
+        steps: [{ down: at(5, 10, 15) }, { wait: 50 }, { move: at(6, 4, 15) }, { wait: 16 }, { move: at(7, 3, 15) }, { up: at(7, 3, 15) }, { wait: 300 }],
+    },
     { name: "long press inside selection then drag", setup: (env) => env.selection.select(8, 6, 8, 20), steps: [{ down: at(8, 12) }, { wait: 600 }, { move: at(9, 30) }, { up: at(9, 30) }, { wait: 300 }] },
     {
         name: "B6 drag the cursor handle",
@@ -786,5 +792,106 @@ export function firstDifference(left, right) {
     }
     return null;
 }
+
+
+// Seeded pseudo random numbers (mulberry32) for generated inputs.
+export function createRandom(seed) {
+    let state = seed >>> 0;
+    return () => {
+        state = (state + 0x6d2b79f5) >>> 0;
+        let t = state;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+// A minimal editor for the ActionMode scenarios. `fragments` installs the implementation under test:
+// definePrototypeMethods() runs with the prototype as `this`, installConstructorListeners() with the editor.
+export function createActionModeEditor(env, fragments) {
+    const listeners = {};
+    const prototype = {
+        on(name, listener) {
+            (listeners[name] || (listeners[name] = [])).push(listener);
+        },
+        emit(name, data) {
+            for (const listener of [...(listeners[name] || [])]) listener(data, this);
+        },
+    };
+    fragments.definePrototypeMethods.call(prototype);
+    const editor = Object.create(prototype);
+    editor.selection = env.selection;
+    editor.renderer = env.renderer;
+    editor.session = { selection: env.selection };
+    env.context.editor = editor;
+    fragments.installConstructorListeners.call(editor);
+    return editor;
+}
+
+export function emitSelection(env, name) {
+    for (const listener of [...(env.selection.listeners[name] || [])]) listener();
+}
+
+export const ACTION_MODE_SCENARIOS = [
+    (env, editor) => {
+        editor.startActionMode();
+        editor.emit("change");
+        editor.emit("change");
+        editor.finishActionMode();
+        editor.finishActionMode();
+    },
+    (env, editor) => {
+        env.selection.select(2, 1, 4, 6);
+        editor.startActionMode(false);
+        env.record("actionMode", editor.actionMode);
+        editor.emit("change");
+        env.selection.select(2, 1, 2, 1);
+        emitSelection(env, "changeSelection");
+        editor.finishActionMode();
+    },
+    (env, editor) => {
+        env.selection.select(5, 1, 5, 9);
+        editor.startActionModeIfSelectionInView(true);
+        env.clock.advance(150);
+        editor.startActionModeIfSelectionInView(false);
+        env.clock.advance(250);
+        env.record("actionMode", editor.actionMode);
+        env.renderer.scrollTo(0, 2013);
+        editor.startActionModeIfSelectionInView(true);
+        env.clock.advance(250);
+        editor.startActionModeIfSelectionInView(true);
+        editor.finishActionMode();
+        env.clock.advance(250);
+        editor.startActionModeIfSelectionInView(false);
+        env.clock.advance(199);
+        env.record("actionMode", editor.actionMode);
+        env.clock.advance(2);
+        env.record("actionMode", editor.actionMode);
+    },
+    (env, editor) => {
+        env.selection.select(1, 1, 1, 1);
+        editor.startActionModeIfSelectionInView(true);
+        env.clock.advance(250);
+        env.elements.scrollerElement.rect = { left: 40, top: 0, right: 400, bottom: 0, width: 360, height: 0 };
+        env.selection.select(0, 0, 0, 0);
+        editor.startActionMode();
+        env.selection.select(0, 0, 0, 3);
+        editor.startActionModeIfSelectionInView(false);
+        env.clock.advance(250);
+    },
+    (env, editor) => {
+        const oldSession = { selection: env.selection };
+        const otherSelection = { listeners: {}, on: env.selection.on, off: env.selection.off };
+        editor.emit("changeSession", { session: { selection: env.selection } });
+        env.selection.select(3, 3, 3, 8);
+        editor.startActionMode();
+        emitSelection(env, "changeSelection");
+        env.selection.select(3, 3, 3, 3);
+        emitSelection(env, "changeSelection");
+        env.record("actionMode", editor.actionMode);
+        editor.emit("changeSession", { oldSession, session: { selection: env.selection } });
+        env.record("listeners", (env.selection.listeners.changeSelection || []).length, Object.keys(otherSelection.listeners).length);
+    },
+];
 
 export { plain };

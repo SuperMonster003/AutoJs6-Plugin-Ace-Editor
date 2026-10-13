@@ -227,6 +227,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       3176 项检查全部一致 (43 个触摸场景的完整调用轨迹, 5 个 ActionMode 场景, 纯算法模块数千组输入); 对重建源码做 41 处
       单点变异全部被检出. 复核中修正的描述: 速度跟踪恒为一阶拟合, "选区在视口内" 判断恒为真, 轻点须 100 ms 内抬起,
       changeSelection 监听从未生效, `editor.popup` 从未赋值; 完整清单见 `tools/ace-mobile/README.md`.
+      后续 (2026-10-13, A0-5 决定之后): 可读重建与原始片段都已从工作区删除 (Git 历史中仍在); 片段的偏移与哈希移到
+      `tools/ace-mobile/legacy-slices.json`, 校验时由 `legacy-oracle.mjs` 从 Git 对象 f067e63 切出, `verify-reconstructed.mjs` 与
+      `extract-original-slices.mjs` 一并删除. 上文的行为结论保留在 `tools/ace-mobile/README.md` "行为规格".
 - [x] **A0-5** 核实并记录定制模块的来源与许可证 (Auto.js 定制; `scroller.js` 为 AOSP `OverScroller` 样条算法移植;
       `regression.js` 疑似 regression-js), 结论写入 `THIRD_PARTY_NOTICES.md` 草稿段 (A8-7 正式提交).
       —— 验收: 每个模块有 "来源 / 许可证 / 核实依据" 三栏, 无法核实的明确标注 "未核实, 按项目许可证分发".
@@ -236,6 +239,17 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (AutoJs6 `docs/dev/autojs-pro-9-feature-comparison.md` 记录 Pro 9 编辑器为 Ace 1.4.12 且有 "选区放大镜"), 而 Auto.js Pro
       是闭源软件, 未找到授权说明, 因此这里没有按 "按项目许可证分发" 标注. **待维护者决定**: A2 是按原计划移植重建源码,
       还是只依据 `tools/ace-mobile/README.md` 的行为描述与 `touch-harness.mjs` 场景重新实现 (等价性仍用同一组场景校验).
+      决定与实施 (2026-10-13): 维护者选择自行重写, 避免抄录闭源代码. 覆盖层 5 个脚本已按 `tools/ace-mobile/README.md` 的
+      "行为规格" 重新编写: 惯性改为直接依据 AOSP `android.widget.Scroller` 的样条 fling 编写 (Apache-2.0); 速度跟踪按行为规格重写,
+      最小二乘求解沿用 regression-js 2.0 的高斯消元 (MIT) 以保证舍入逐位一致; 触摸处理改为原型式的手势识别器 (`TouchGestures`,
+      `HandleGeometry`), ActionMode 改为控制器对象; 放大镜与安装器原本就是 AutoJs6 自己的实现. 工作区不再保存旧版代码的抄录:
+      `tools/ace-mobile/reconstructed/` (8 个可读重建与 19 个原始片段) 删除, 只保留偏移与哈希 (`legacy-slices.json`), 校验时由
+      `legacy-oracle.mjs` 从 Git 历史读取旧 `ace.js` 切片后与覆盖层做行为比对. 比对结果: 45 个手势场景 (新增 "两个手柄都在可及范围
+      时拖动较近者") 中 44 个调用轨迹完全一致, 1 个为既有的有意差异, 惯性 120 组与速度 200 组逐值一致, ActionMode 5 个场景一致,
+      共 494 项; 对重写后的触摸处理做 14 处单点变异全部被检出. 真机: XQ-DQ72 全套 28/28 通过, 22120RN86C 与 x86 API 27 模拟器的
+      触摸用例与旧版逐场景一致 (差异见 G-A2). `THIRD_PARTY_NOTICES.md` 新增 "AutoJs6 Mobile Touch Overlay" 段, 覆盖层目录随附
+      `THIRD_PARTY_NOTICES.txt` (AOSP Apache-2.0 声明与 regression-js MIT 全文). Git 历史中的旧 `ace.js` 是插件曾分发的版本,
+      未改写历史.
 - [ ] **A0-6** 在两台设备 (G8441, 23046RP50C) 上按附录 B 逐项记录当前 1.4.12 行为 (文字记录, 必要时录屏), 作为 G-A2 的参照.
       —— 验收: 附录 B 每行填有 "1.4.12 实测" 一列.
       进度 (2026-10-13): 新增 `AceTouchInteractionDeviceTest` (UiAutomation 注入真实触摸, 记录 JS 选区 / 滚动 / ActionMode 调用
@@ -414,6 +428,12 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       200 行 (`AceTouchInteractionDeviceTest.LINE_COUNT`), 加长后 23046RP50C 的 B9 惯性滚到 2848 px 并通过 (该设备另一次运行出现
       小米上已知的首次注入失败, 重跑通过). 加长后 B9 / B10 的滚动距离不再受文档末尾截断, 与旧 A0 记录 (80 行) 的同项数值不可比,
       比对时只看行为. 至此 8 台都有自动比对记录; 门仍待附录 B 手动项.
+      补跑 (2026-10-13, A0-5 重写后的 A9 构建): XQ-DQ72 与 22120RN86C 逐场景与旧版一致; x86 API 27 模拟器 (Chrome 69) 先用旧版 APK 补录
+      记录, 再与 A9 比对, 一致. 差异只有已知类别 (滚动距离, finishActionMode 次数, 双指改进) 与两处环境因素: 22120RN86C 的首个点击 /
+      双击偶发注入失败 (重跑一致); 22120RN86C 的 B2 行号栏点击把光标移到该行行首, 原因是该机 TS 服务在 G-A1 修复后首次可用, 测试文档
+      的每一行都是 JavaScript 错误, 行号栏中点落在诊断标记区, 点击打开了诊断提示 (桥接层既有行为); 旧版与此前构建在该机上 TS 不可用,
+      只切换断点. B2 记录现在附带该行的诊断数 (`row3Diagnostics`). 设备记录已更新 (`a0-1.4.12-AVD_API_27`, `a2-1.44.0-AVD_API_27`,
+      `a2-1.44.0-QV770340J7`, `a2-1.44.0-bek749scrwv4wo8h` 为重写后的构建).
       ActionMode 工具条 (`AceSelectionToolbar`) 出现 / 消失时机一致; 旋转屏幕与软键盘弹出后拖拽仍准确.
       (降级路径: 若 `$toDestroy` 与 capture 兜底在某设备都无法阻止上游处理 -> 在本文件记录该 WebView 版本,
       并评估为该设备启用 "上游触摸处理 + 覆盖层只接管 ActionMode" 的降级模式; 仍不得改动官方文件.)
@@ -490,6 +510,10 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       其中 2 个 JDT / Kotlin 编译器探针按设计在 ART 上跳过): G8441, 23046RP50C, OPD2413, XQ-AT72 全部通过; 22120RN86C 只剩
       TypeScript 诊断超过 2000 ms 与 ECJ 等待超时两项, 与该机 A0 版的既有失败相同 (见 G-A1). 首轮全套在 22120RN86C 上发现并修复了
       A5-8 符号高亮引起的 Python 补全回退 (见 A5-8 修复). XQ-DQ72 当时未连接, 模拟器未跑; 附录 C 为手动项. 门待补齐后由维护者确认.
+      补跑 (2026-10-13, A9 构建, 含 A0-5 重写与 G-A1 修复): XQ-DQ72 全套 28/28 通过; 22120RN86C 的 `AceCodeEditorSmokeTest` 全部通过
+      (TS 项目诊断在冷启动预算下恢复), ECJ 用例单独运行通过; x86 API 27 模拟器 (Chrome 69) 全套 28 项第二轮中 26 项通过, 余下的
+      符号高亮用例 (未识别 TS / Pyright 不可用) 已修正并在该机通过, 触摸用例的长按偶发失败单独两轮通过. 首轮该模拟器出现一次测试进程
+      崩溃 (WebView 渲染进程被回收), 未复现. 8 台的 instrumentation 均已覆盖; 附录 C 为手动项, 待维护者统一手测.
 
 ## 8. A4 · 语言资源
 
@@ -532,6 +556,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): 设备用例的 json 分支在 G8441 (Chrome 126), 23046RP50C (WebView 130), OPD2413 (WebView 136), XQ-AT72 (WebView 145)
       上通过, 且 4 台的 json worker 都已应答 (`workerAnswered: true`, 注解 raw 为 `json-worker`); 22120RN86C 的全套运行中该用例通过.
       XQ-DQ72 与模拟器待补.
+      补跑 (2026-10-13, A9 构建): XQ-DQ72 (WebView 153) 的 json 分支通过; x86 API 27 模拟器 (Chrome 69) 的 `AceLanguageRoutingSmokeTest`
+      json 分支在第二轮全套中通过 (首轮在此前崩溃未跑到; 注解来自 worker 或 `JSON.parse` 回退均可). 6 台真机加模拟器均无报错.
 - [x] **A4-4** 其余 mode 复核: 1.44.0 的 `mode-python / lua / java / javascript / typescript / json / jsx` 生效后, 重跑
       `verifyAutoJs6LanguageIndices`, `verifyAutoJs6LspRuntime`, `verifyAutoJs6PythonWorker`, `verifyAutoJs6LuaLanguageServer`,
       `verifyAutoJs6JavaSemanticRuntime`; 比对上游 1.44.0 `snippets/python.js` 与项目版本, 结论 (继续项目维护 / 合并新增条目) 记录在
@@ -583,6 +609,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       滚动条标记的目视检查与手指拖动滑块的手感仍需真机人工确认.
       进度 (2026-10-13, A7 / A7b 构建): XQ-AT72 与 22120RN86C 的全套运行中触摸用例 (含惯性与打断惯性) 通过, 至此 6 台真机中除
       XQ-DQ72 外都已用自定义滚动条默认开启的构建跑过触摸用例, 未出现滚动条吞掉触摸.
+      补跑 (2026-10-13, A9 构建): XQ-DQ72 与 x86 API 27 模拟器的触摸用例 (含惯性与打断惯性) 通过; 8 台的自动部分已齐, 滚动条标记的
+      目视检查与手指拖动滑块的手感留给维护者统一手测.
 - [ ] **A5-4** `showWhitespacesInSelection` (默认开): 加载 `ext-whitespaces_in_selection.js` 后 `editor.setOption("showWhitespacesInSelection", enabled)`;
       暗色主题下空白符颜色复核.
       —— 验收: 选中含制表符与空格的文本时显示占位符号, 取消选区后消失.
@@ -762,6 +790,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       —— 验收: 8/8 设备全部用例通过, 结果表进入发布文档.
       进度 (2026-10-13): 用 adb 直接 `am instrument` 跑全套 (与 `connectedDebugAndroidTest` 相同的用例集, 可逐台并行且不清 logcat):
       结果见 G-A3. 剩 XQ-DQ72 与两台模拟器.
+      补跑 (2026-10-13): XQ-DQ72 与 x86 API 27 模拟器见 G-A3 补跑; x86_64 API 36.1 16 KB 模拟器此前已跑 G-A1 与触摸用例
+      (A5 构建), 全套待该模拟器空出 (目前由 3-Maple Image 会话使用).
 - [x] **A8-3** 性能复测: 三台基线真机各 3 轮 `measure-editor-performance.ps1 -SkipBuild -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F`,
       与 A0-2 基线逐项比较; 另在 OPD2413 与 22120RN86C 各取 3 轮作为参考 (不设门).
       —— 验收: 三项中位数相对 A0-2 不超过 +10% (功能优先档); 超出则在 G-A8 决策.

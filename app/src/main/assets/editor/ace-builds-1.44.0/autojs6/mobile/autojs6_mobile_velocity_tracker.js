@@ -1,77 +1,73 @@
-// Touch velocity estimation of the AutoJs6 mobile overlay (Roadmap-Ace-1.44.0.md A2-2).
+// Touch velocity estimation of the AutoJs6 mobile overlay (Roadmap-Ace-1.44.0.md A2-2, rewritten for A0-5).
 //
-// A first-order least squares fit over the samples of the last 100 ms. The normal equations are solved the way
-// regression-js 2.0 (Tom Alexander, MIT) solves polynomial fits and the slope is rounded to 0.01 px/ms, as in the
-// Ace 1.4.12 Auto.js build, so that flings keep the same velocities (tools/ace-mobile verifies this).
+// Velocity is the slope of a least squares line through the samples of the last 100 ms, rounded to 0.01 px/ms.
+// The normal equations are solved by Gaussian elimination with partial pivoting as in regression-js 2.0
+// (Tom Alexander, MIT License, see THIRD_PARTY_NOTICES.md), so the rounded slopes are reproducible bit for bit.
 ace.define("autojs6/mobile/velocity_tracker", ["require", "exports", "module"], function(require, exports) {
     "use strict";
 
-    var HORIZON_MS = 100;
-    var PRECISION = 2;
+    var WINDOW_MS = 100;
+    var SLOPE_DECIMALS = 2;
 
-    function round(value) {
-        var factor = Math.pow(10, PRECISION);
-        return Math.round(value * factor) / factor;
-    }
-
-    // Gaussian elimination with column pivoting on the column-major normal equations (regression-js 2.0).
-    function solve(matrix, order) {
-        var n = matrix.length - 1;
-        var coefficients = [order];
-        for (var i = 0; i < n; i++) {
-            var pivot = i;
-            for (var j = i + 1; j < n; j++) {
-                if (Math.abs(matrix[i][j]) > Math.abs(matrix[i][pivot])) {
-                    pivot = j;
+    // Solves the augmented system stored column by column (columns[k][row]); columns.length - 1 unknowns.
+    function solveColumns(columns) {
+        var size = columns.length - 1;
+        for (var pivotColumn = 0; pivotColumn < size; pivotColumn++) {
+            var best = pivotColumn;
+            for (var row = pivotColumn + 1; row < size; row++) {
+                if (Math.abs(columns[pivotColumn][row]) > Math.abs(columns[pivotColumn][best])) {
+                    best = row;
                 }
             }
-            for (var k = i; k < n + 1; k++) {
-                var swap = matrix[k][i];
-                matrix[k][i] = matrix[k][pivot];
-                matrix[k][pivot] = swap;
+            for (var column = pivotColumn; column <= size; column++) {
+                var kept = columns[column][pivotColumn];
+                columns[column][pivotColumn] = columns[column][best];
+                columns[column][best] = kept;
             }
-            for (var row = i + 1; row < n; row++) {
-                for (var column = n; column >= i; column--) {
-                    matrix[column][row] -= (matrix[column][i] * matrix[i][row]) / matrix[i][i];
+            for (var lower = pivotColumn + 1; lower < size; lower++) {
+                for (var eliminated = size; eliminated >= pivotColumn; eliminated--) {
+                    columns[eliminated][lower] -=
+                        (columns[eliminated][pivotColumn] * columns[pivotColumn][lower]) / columns[pivotColumn][pivotColumn];
                 }
             }
         }
-        for (var back = n - 1; back >= 0; back--) {
-            var total = 0;
-            for (var next = back + 1; next < n; next++) {
-                total += matrix[next][back] * coefficients[next];
+        var unknowns = [];
+        for (var index = size - 1; index >= 0; index--) {
+            var known = 0;
+            for (var later = index + 1; later < size; later++) {
+                known += columns[later][index] * unknowns[later];
             }
-            coefficients[back] = (matrix[n][back] - total) / matrix[back][back];
+            unknowns[index] = (columns[size][index] - known) / columns[index][index];
         }
-        return coefficients;
+        return unknowns;
     }
 
-    // Slope (px/ms) of the line through [relativeTimeMs, position] samples.
-    function slope(samples) {
-        if (samples.length < 2) {
+    // Least squares line value = intercept + slope * time through [time, value] points; returns the rounded slope.
+    function fittedSlope(points) {
+        if (points.length < 2) {
             return 0;
         }
-        var terms = 2;
-        var matrix = [];
+        var columns = [];
         var rightHandSide = [];
-        for (var i = 0; i < terms; i++) {
-            var weighted = 0;
-            for (var s = 0; s < samples.length; s++) {
-                weighted += Math.pow(samples[s][0], i) * samples[s][1];
+        for (var power = 0; power < 2; power++) {
+            var weightedValues = 0;
+            for (var p = 0; p < points.length; p++) {
+                weightedValues += Math.pow(points[p][0], power) * points[p][1];
             }
-            rightHandSide.push(weighted);
+            rightHandSide.push(weightedValues);
             var column = [];
-            for (var j = 0; j < terms; j++) {
-                var powerSum = 0;
-                for (var p = 0; p < samples.length; p++) {
-                    powerSum += Math.pow(samples[p][0], i + j);
+            for (var other = 0; other < 2; other++) {
+                var momentSum = 0;
+                for (var q = 0; q < points.length; q++) {
+                    momentSum += Math.pow(points[q][0], power + other);
                 }
-                column.push(powerSum);
+                column.push(momentSum);
             }
-            matrix.push(column);
+            columns.push(column);
         }
-        matrix.push(rightHandSide);
-        return round(solve(matrix, terms)[1]);
+        columns.push(rightHandSide);
+        var scale = Math.pow(10, SLOPE_DECIMALS);
+        return Math.round(solveColumns(columns)[1] * scale) / scale;
     }
 
     function VelocityTracker() {
@@ -79,36 +75,38 @@ ace.define("autojs6/mobile/velocity_tracker", ["require", "exports", "module"], 
     }
 
     VelocityTracker.prototype.clear = function() {
-        this.points = [];
+        this.samples = [];
         this.velocityX = 0;
         this.velocityY = 0;
     };
 
     VelocityTracker.prototype.addMovement = function(x, y, timeStamp) {
-        this.points.push({ x: x, y: y, timeStamp: timeStamp });
+        this.samples.push({ x: x, y: y, time: timeStamp });
     };
 
-    // Velocity in px per `units` ms, negated so that it points in the direction the scroll offset has to move.
+    // Computes velocityX / velocityY in px per `units` ms. They point against the finger: the direction in which
+    // the scroll offset has to move. Returns false when fewer than two samples exist.
     VelocityTracker.prototype.computeVelocity = function(units) {
-        if (this.points.length < 2) {
-            this.velocityX = 0;
-            this.velocityY = 0;
+        this.velocityX = 0;
+        this.velocityY = 0;
+        if (this.samples.length < 2) {
             return false;
         }
-        var newest = this.points[this.points.length - 1];
-        var xSamples = [];
-        var ySamples = [];
-        for (var i = this.points.length - 1; i >= 0; i--) {
-            var point = this.points[i];
-            var age = newest.timeStamp - point.timeStamp;
-            if (age > HORIZON_MS) {
+        var latest = this.samples[this.samples.length - 1].time;
+        var horizontal = [];
+        var vertical = [];
+        // Newest first; time is measured backwards from the latest sample (0, -8, -16, ...).
+        for (var index = this.samples.length - 1; index >= 0; index--) {
+            var sample = this.samples[index];
+            var age = latest - sample.time;
+            if (age > WINDOW_MS) {
                 break;
             }
-            xSamples.push([-age, point.x]);
-            ySamples.push([-age, point.y]);
+            horizontal.push([-age, sample.x]);
+            vertical.push([-age, sample.y]);
         }
-        this.velocityX = -slope(xSamples) * units;
-        this.velocityY = -slope(ySamples) * units;
+        this.velocityX = -fittedSlope(horizontal) * units;
+        this.velocityY = -fittedSlope(vertical) * units;
         return true;
     };
 

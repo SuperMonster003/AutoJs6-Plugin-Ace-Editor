@@ -1,9 +1,9 @@
 // Drag magnifier of the AutoJs6 mobile overlay (Roadmap-Ace-1.44.0.md A2-6).
 //
 // While the cursor or the selection anchor is dragged, shows the screen rows around the drag position enlarged
-// above the finger. The Ace 1.4.12 Auto.js build shipped an unfinished version that was never enabled; this one
-// positions rows by screen row (folds and soft wrap included), highlights the selection itself and creates its DOM
-// on first use. It is disabled unless the host enables it.
+// above the finger. Written for AutoJs6 (the previous editor build had an unfinished magnifier that was never
+// enabled): rows are positioned by screen row (folds and soft wrap included), the selection is drawn here and the DOM
+// is created on first use. It is disabled unless the host enables it.
 ace.define("autojs6/mobile/magnifier", ["require", "exports", "module"], function(require, exports) {
     "use strict";
 

@@ -8,8 +8,17 @@ AutoJs6 Ace Editor Plugin includes the components listed below. Copyright notice
 - Copyright: Ajax.org B.V. and Ace contributors
 - License: BSD 3-Clause
 - Use: Browser-based code editor runtime, modes, snippets, themes, workers, and extensions
-- Source: npm `ace-builds@1.44.0` (`https://registry.npmjs.org/ace-builds/-/ace-builds-1.44.0.tgz`, shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity `sha512-PFNMSYqFdEUkul2Ntud0HvA09AgY+F1ag0UYdpMH60wNI/qOA8cB8tlTgoALMEwIdUPJK2CjrIQ7OnbiSS/ugQ==`). Files under `src-min-noconflict/` are byte-identical to the tarball except the project-maintained `mode-kotlin.js`, `snippets/kotlin.js`, `snippets/python.js`, `theme-visual_studio.js` and `theme-visual_studio_dark.js`.
+- Source: npm `ace-builds@1.44.0` (`https://registry.npmjs.org/ace-builds/-/ace-builds-1.44.0.tgz`, shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity `sha512-PFNMSYqFdEUkul2Ntud0HvA09AgY+F1ag0UYdpMH60wNI/qOA8cB8tlTgoALMEwIdUPJK2CjrIQ7OnbiSS/ugQ==`). Files under `src-min-noconflict/` are byte-identical to the tarball except the project-maintained `snippets/kotlin.js`, `snippets/python.js`, `theme-visual_studio.js` and `theme-visual_studio_dark.js` (see `tools/ace-lsp/ace-builds-lock.json`).
 - Bundled license: [`app/src/main/assets/editor/ace-builds-1.44.0/LICENSE`](app/src/main/assets/editor/ace-builds-1.44.0/LICENSE)
+
+## AutoJs6 Mobile Touch Overlay
+
+- Files: `app/src/main/assets/editor/ace-builds-1.44.0/autojs6/mobile/`
+- Use: touch gestures, fling, selection toolbar state and drag magnifier on top of the unmodified Ace 1.44.0
+- Origin: written for AutoJs6 from the behavior specification in `tools/ace-mobile/README.md`. The editor build shipped before Ace 1.44.0 carried mobile customizations of unverified, likely closed-source origin; the overlay does not copy them, and the repository keeps no copy of them outside Git history.
+- The fling interpolation in `autojs6_mobile_scroller.js` follows `android.widget.Scroller` of the Android Open Source Project (Copyright (C) 2006 The Android Open Source Project, Apache License 2.0).
+- The least squares solver in `autojs6_mobile_velocity_tracker.js` follows regression-js 2.0 (Copyright (c) Tom Alexander, MIT License).
+- Bundled notices: [`app/src/main/assets/editor/ace-builds-1.44.0/autojs6/mobile/THIRD_PARTY_NOTICES.txt`](app/src/main/assets/editor/ace-builds-1.44.0/autojs6/mobile/THIRD_PARTY_NOTICES.txt)
 
 ## TypeScript 6.0.3
 

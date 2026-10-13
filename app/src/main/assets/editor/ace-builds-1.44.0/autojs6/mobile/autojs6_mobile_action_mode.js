@@ -1,126 +1,148 @@
-// Native ActionMode state of the AutoJs6 mobile overlay (Roadmap-Ace-1.44.0.md A2-3).
+// Native ActionMode state of the AutoJs6 mobile overlay (Roadmap-Ace-1.44.0.md A2-3, rewritten for A0-5).
 //
-// Restores the editor API of the Ace 1.4.12 Auto.js build that the touch handler and the host rely on:
-// editor.startActionMode(), startActionModeIfSelectionInView(selectAll), $nativeStartActionMode(...),
-// finishActionMode(), editor.actionMode and renderer.getClientPosition(position). The host bridge object is the
-// global `autojs` (AceBridge.kt). Behavior notes, including the ones that look unintended, are documented in
-// tools/ace-mobile/README.md and kept on purpose so that the host sees the same calls as before.
+// The host (AceBridge.kt, global `autojs`) shows its own selection toolbar. This module gives the editor the calls
+// the touch handler and the host use, with the behavior documented in tools/ace-mobile/README.md:
+//   editor.actionMode                        "", "selectionActionMode" or "noSelectionActionMode"
+//   editor.startActionMode()                 asks the host for the toolbar now
+//   editor.startActionModeIfSelectionInView(selectAll)
+//                                            200 ms later, if the selection is not empty
+//   editor.$nativeStartActionMode(rect, hasSelection, selectAll)
+//   editor.finishActionMode()                asks the host to hide the toolbar
+//   editor.renderer.getClientPosition(position)
+// Without the host object nothing is installed.
 ace.define("autojs6/mobile/action_mode", ["require", "exports", "module"], function(require, exports) {
     "use strict";
 
-    var SELECTION_ACTION_MODE = "selectionActionMode";
-    var NO_SELECTION_ACTION_MODE = "noSelectionActionMode";
-    var START_IF_IN_VIEW_DELAY_MS = 200;
+    var MODE_NONE = "";
+    var MODE_SELECTION = "selectionActionMode";
+    var MODE_NO_SELECTION = "noSelectionActionMode";
+    var DEFERRED_START_MS = 200;
 
-    function hostBridge() {
-        return typeof autojs !== "undefined" ? autojs : null;
-    }
-
-    // Client (viewport) coordinates of the top left corner of a document position.
+    // Viewport coordinates of the top left corner of a document position; `this` is the renderer.
     function getClientPosition(position) {
-        var pixel = this.$cursorLayer.getPixelPosition(position, true);
-        var scrollerRect = this.scroller.getBoundingClientRect();
+        var layerPoint = this.$cursorLayer.getPixelPosition(position, true);
+        var viewport = this.scroller.getBoundingClientRect();
         return {
-            x: pixel.left + scrollerRect.left - this.scrollLeft,
-            y: pixel.top + scrollerRect.top - this.layerConfig.offset
+            x: viewport.left + layerPoint.left - this.scrollLeft,
+            y: viewport.top + layerPoint.top - this.layerConfig.offset
         };
     }
 
-    exports.install = function(editor) {
-        var bridge = hostBridge();
-        if (!bridge) {
-            return false;
+    function ActionModeController(editor, host) {
+        this.editor = editor;
+        this.host = host;
+        this.deferredStart = null;
+    }
+
+    ActionModeController.prototype.cancelDeferredStart = function() {
+        if (this.deferredStart) {
+            clearTimeout(this.deferredStart);
+            this.deferredStart = null;
         }
-        var startIfInViewTimer = null;
+    };
 
-        function clearStartIfInViewTimer() {
-            if (startIfInViewTimer) {
-                clearTimeout(startIfInViewTimer);
-                startIfInViewTimer = null;
-            }
-        }
-
-        // The selection rectangle as fractions of the scroller height (left 0, right 1). The host treats it as an
-        // invalid pixel rectangle and anchors the toolbar at the last text touch instead (AceCodeEditor.kt).
-        function normalizedSelectionRect() {
-            var selection = editor.selection;
-            var cursor = selection.cursor;
-            var anchor = selection.isEmpty() ? cursor : selection.anchor;
-            var height = editor.renderer.scroller.getBoundingClientRect().height;
-            var cursorPosition = editor.renderer.getClientPosition(cursor);
-            var anchorPosition = editor.renderer.getClientPosition(anchor);
-            return {
-                left: 0,
-                top: Math.min(cursorPosition.y, anchorPosition.y) / height,
-                right: 1,
-                bottom: Math.max(cursorPosition.y, anchorPosition.y) / height
-            };
-        }
-
-        editor.renderer.getClientPosition = getClientPosition;
-        editor.actionMode = "";
-
-        // Despite its name the 1.4.12 check accepts every finite rectangle, so the ActionMode starts whenever the
-        // selection is not empty (only a zero-height scroller, which yields NaN, prevents it).
-        editor.startActionModeIfSelectionInView = function(selectAll) {
-            clearStartIfInViewTimer();
-            startIfInViewTimer = setTimeout(function() {
-                startIfInViewTimer = null;
-                if (editor.selection.getRange().isEmpty()) {
-                    return;
-                }
-                var rect = normalizedSelectionRect();
-                if (!isNaN(rect.top) || (rect.bottom >= 0 && rect.bottom <= 1)) {
-                    editor.$nativeStartActionMode(rect, true, selectAll);
-                }
-            }, START_IF_IN_VIEW_DELAY_MS);
+    // The selection span as fractions of the scroller height between left 0 and right 1. The host does not use
+    // these as pixels: it anchors the toolbar at the last touch instead (AceCodeEditor.kt).
+    ActionModeController.prototype.selectionBand = function() {
+        var selection = this.editor.selection;
+        var renderer = this.editor.renderer;
+        var lead = selection.cursor;
+        var tail = selection.isEmpty() ? lead : selection.anchor;
+        var viewportHeight = renderer.scroller.getBoundingClientRect().height;
+        var leadY = renderer.getClientPosition(lead).y;
+        var tailY = renderer.getClientPosition(tail).y;
+        return {
+            left: 0,
+            top: Math.min(leadY, tailY) / viewportHeight,
+            right: 1,
+            bottom: Math.max(leadY, tailY) / viewportHeight
         };
+    };
 
-        editor.startActionMode = function() {
-            clearStartIfInViewTimer();
-            var rect = normalizedSelectionRect();
-            editor.$nativeStartActionMode(rect, !editor.selection.getRange().isEmpty(), false);
-        };
+    ActionModeController.prototype.show = function(band, hasSelection, selectAll) {
+        this.editor.actionMode = hasSelection ? MODE_SELECTION : MODE_NO_SELECTION;
+        this.host.startActionMode(band.left, band.top, band.right, band.bottom, hasSelection, selectAll);
+    };
 
-        editor.$nativeStartActionMode = function(rect, hasSelection, selectAll) {
-            editor.actionMode = hasSelection ? SELECTION_ACTION_MODE : NO_SELECTION_ACTION_MODE;
-            bridge.startActionMode(rect.left, rect.top, rect.right, rect.bottom, hasSelection, selectAll);
-        };
+    ActionModeController.prototype.startNow = function() {
+        this.cancelDeferredStart();
+        var hasSelection = !this.editor.selection.getRange().isEmpty();
+        this.editor.$nativeStartActionMode(this.selectionBand(), hasSelection, false);
+    };
 
-        editor.finishActionMode = function() {
-            clearStartIfInViewTimer();
-            if (!editor.actionMode) {
+    // Kept as the editor touch behavior has it: any band that is a number passes the "in view" test, so the
+    // toolbar appears for every non-empty selection unless the scroller has no height.
+    ActionModeController.prototype.startLater = function(selectAll) {
+        var controller = this;
+        controller.cancelDeferredStart();
+        controller.deferredStart = setTimeout(function() {
+            controller.deferredStart = null;
+            if (controller.editor.selection.getRange().isEmpty()) {
                 return;
             }
-            editor.actionMode = "";
-            bridge.finishActionMode();
+            var band = controller.selectionBand();
+            var inView = !isNaN(band.top) || (band.bottom >= 0 && band.bottom <= 1);
+            if (inView) {
+                controller.editor.$nativeStartActionMode(band, true, selectAll);
+            }
+        }, DEFERRED_START_MS);
+    };
+
+    ActionModeController.prototype.finish = function() {
+        this.cancelDeferredStart();
+        if (this.editor.actionMode === MODE_NONE) {
+            return;
+        }
+        this.editor.actionMode = MODE_NONE;
+        this.host.finishActionMode();
+    };
+
+    exports.install = function(editor) {
+        var host = typeof autojs !== "undefined" ? autojs : null;
+        if (!host) {
+            return false;
+        }
+        var controller = new ActionModeController(editor, host);
+
+        editor.renderer.getClientPosition = getClientPosition;
+        editor.actionMode = MODE_NONE;
+        editor.startActionModeIfSelectionInView = function(selectAll) {
+            controller.startLater(selectAll);
+        };
+        editor.startActionMode = function() {
+            controller.startNow();
+        };
+        editor.$nativeStartActionMode = function(band, hasSelection, selectAll) {
+            controller.show(band, hasSelection, selectAll);
+        };
+        editor.finishActionMode = function() {
+            controller.finish();
         };
 
-        // As in 1.4.12: typing while the no-selection ActionMode is shown asks the host to finish it, without
-        // clearing the state.
+        // Typing while the paste toolbar (no selection) is up asks the host to close it; the state stays as it was.
         editor.on("change", function() {
-            if (editor.actionMode === NO_SELECTION_ACTION_MODE) {
-                bridge.finishActionMode();
+            if (editor.actionMode === MODE_NO_SELECTION) {
+                host.finishActionMode();
             }
         });
 
-        // As in 1.4.12 the selection listener follows session changes only; the session that exists when the
-        // overlay is installed is not observed.
-        var onChangeSelection = function() {
-            if (editor.actionMode === SELECTION_ACTION_MODE && editor.selection.getRange().isEmpty()) {
+        // A selection toolbar closes when its selection becomes empty. Like the editor touch behavior it replaces,
+        // this follows the selections of sessions set later; the session present at installation is not observed.
+        var closeWhenSelectionEmpties = function() {
+            if (editor.actionMode === MODE_SELECTION && editor.selection.getRange().isEmpty()) {
                 editor.finishActionMode();
             }
         };
-        editor.on("changeSession", function(e) {
-            if (e.oldSession) {
-                e.oldSession.selection.off("changeSelection", onChangeSelection);
+        editor.on("changeSession", function(event) {
+            if (event.oldSession) {
+                event.oldSession.selection.off("changeSelection", closeWhenSelectionEmpties);
             }
-            e.session.selection.on("changeSelection", onChangeSelection);
+            event.session.selection.on("changeSelection", closeWhenSelectionEmpties);
         });
         return true;
     };
 
     exports.getClientPosition = getClientPosition;
-    exports.SELECTION_ACTION_MODE = SELECTION_ACTION_MODE;
-    exports.NO_SELECTION_ACTION_MODE = NO_SELECTION_ACTION_MODE;
+    exports.SELECTION_ACTION_MODE = MODE_SELECTION;
+    exports.NO_SELECTION_ACTION_MODE = MODE_NO_SELECTION;
 });
