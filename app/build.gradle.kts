@@ -79,6 +79,17 @@ val verifyAutoJs6AceAssets = tasks.register<Exec>("verifyAutoJs6AceAssets") {
     executable(autoJs6NodeExecutable.get())
     args(lockScript.asFile.absolutePath, "--check")
 }
+val verifyAutoJs6AceMobileOverlay = tasks.register<Exec>("verifyAutoJs6AceMobileOverlay") {
+    group = "verification"
+    description = "Replays the recorded touch scenarios against the mobile overlay and the Ace 1.4.12 Auto.js build."
+    val verifier = rootProject.layout.projectDirectory.file("tools/ace-mobile/verify-overlay.mjs")
+    inputs.file(verifier)
+    inputs.dir(rootProject.layout.projectDirectory.dir("tools/ace-mobile"))
+    inputs.dir(autoJs6EditorAssetsDirectory.dir("mobile"))
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args(verifier.asFile.absolutePath)
+}
 val verifyAutoJs6KotlinP2Plus = tasks.register<Exec>("verifyAutoJs6KotlinP2Plus") {
     group = "verification"
     description = "Verifies Kotlin P2+ type heuristics, safe calls, instance APIs, and Java/Android index reuse."
@@ -388,6 +399,7 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
 tasks.named("check") {
     dependsOn(
         verifyAutoJs6AceAssets,
+        verifyAutoJs6AceMobileOverlay,
         verifyAutoJs6LspRuntime,
         verifyAutoJs6PythonWorker,
         verifyAutoJs6LuaLanguageServer,

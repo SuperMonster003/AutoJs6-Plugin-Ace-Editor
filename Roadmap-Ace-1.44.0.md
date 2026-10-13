@@ -181,11 +181,11 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 |---|---|---|---|---|
 | A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 进行中 (剩 A0-6 设备实测) |
 | A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 进行中 (剩 G-A1 设备门) |
-| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 未开始 |
-| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 未开始 |
+| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 进行中 (离线等价已证, 待 G-A2 真机) |
+| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 进行中 |
 | A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 未开始 |
 | A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 未开始 |
-| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 未开始 |
+| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 进行中 (A6-1 完成) |
 | A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 未开始 |
 | A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 未开始 |
 | X | 横切约束 | -- | 全程 | 持续 |
@@ -299,15 +299,19 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 在 `initEditor()` 中紧接 `global.ace.edit("editor")` 之后安装 (早于其他 `install*` 调用, 保持与 1.4.12 一致的监听器相对顺序:
 覆盖层监听器为 bubble 阶段, 桥接层的双指缩放抑制仍为 capture 阶段并先执行).
 
-- [ ] **A2-1** `autojs6/mobile/autojs6_mobile_scroller.js`: 从 A0-4 重建的 `scroller.js` 整理为可读模块
+- [x] **A2-1** `autojs6/mobile/autojs6_mobile_scroller.js`: 从 A0-4 重建的 `scroller.js` 整理为可读模块
       (`createDefault`, `fling`, `computeScrollOffset`, `abortAnimation`, `isFinished`, `getCurrX/Y`, `getCurrVelocity`),
       保留摩擦 0.015, `mPpi 440`, 样条表 100 段等常量.
       —— 验收: Node 单测 (A6-3 框架) 用固定输入比对 `fling -> computeScrollOffset` 序列与重建源一致.
-- [ ] **A2-2** `autojs6/mobile/autojs6_mobile_velocity_tracker.js`: 合并 `regression.js` 与 `velocity-tracker.js`
+      结论 (2026-10-13): `autojs6/mobile/autojs6_mobile_scroller.js`, 只保留 fling 路径 (1.4.12 的飞轮加速与速度字段从未生效);
+      `tools/ace-mobile/verify-overlay.mjs` 用 120 组随机 fling (含运行中再次 fling 与中途终止) 与 1.4.12 原始片段逐帧比对, 结果一致.
+- [x] **A2-2** `autojs6/mobile/autojs6_mobile_velocity_tracker.js`: 合并 `regression.js` 与 `velocity-tracker.js`
       (100 ms 窗口, 一阶最小二乘, 斜率按 0.01 px/ms 四舍五入, `computeVelocity(1000)` 返回取反后的 px/s; A0-4 已确认 1.4.12
       实际恒为一阶, 只保留一阶路径即可等价); 去掉 `Math.signum` 全局 polyfill, 改为模块内函数.
       —— 验收: 单测覆盖 2 点 / 3 点 / 超窗口点被丢弃三种情况; 与 `tools/ace-mobile` 原始片段在同一组随机序列上结果一致.
-- [ ] **A2-3** `autojs6/mobile/autojs6_mobile_action_mode.js`: 以 mixin 方式给 `editor` 增加 `actionMode`,
+      结论 (2026-10-13): 一阶拟合沿用 regression-js 2.0 (MIT) 的求解与 0.01 精度; 300 组随机序列 (含 Chrome 小数时间戳, 1 至 15 点,
+      含超出 100 ms 窗口的点) 与原始片段结果一致.
+- [x] **A2-3** `autojs6/mobile/autojs6_mobile_action_mode.js`: 以 mixin 方式给 `editor` 增加 `actionMode`,
       `startActionMode()`, `startActionModeIfSelectionInView(selectAll)` (200 ms 延迟; 1.4.12 的视口判断恒为真, 等价实现是
       "选区非空且滚动区域高度非 0"), `$nativeStartActionMode(rect, hasSelection, selectAll)`, `finishActionMode()`, 以及与 1.4.12
       相同的 change 监听 (无选区模式下调用 `autojs.finishActionMode()`); 1.4.12 挂在 changeSession 上的 changeSelection 监听
@@ -316,6 +320,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       调用 `global.autojs.startActionMode(left, top, right, bottom, hasSelection, selectAll)` 与 `finishActionMode()`,
       签名与 `AceBridge.kt:211-225` 一致; 桥接层 `:1531` 与 `:2475` 的既有调用保持不变.
       —— 验收: `tools/ace-mobile/verify-reconstructed.mjs` 的 5 个 ActionMode 场景对覆盖层实现产生相同调用轨迹.
+      结论 (2026-10-13): `autojs6/mobile/autojs6_mobile_action_mode.js`. 实现时改为保留 changeSession 上的 changeSelection 监听
+      (与 1.4.12 一样, 首个会话不受影响, 将来若调用 `setSession` 也保持同样行为), 5 个场景在有无 `autojs` 两种情况下调用轨迹一致.
 - [ ] **A2-4** `autojs6/mobile/autojs6_mobile_touch_handler.js`: 重建 §2.2 描述的全部单指行为 (单击 / 双击 / 长按 /
       光标与锚点拖拽 / 滚动 / 惯性 / 惯性后 ActionMode / `touchscroll` 事件 / gutter 与弹窗跳过 / `preventDefault`).
       双指: 只做 "取消长按计时并 `finishActionMode`", 缩放交给桥接层 `suppressAceBuiltInPinchZoom` (`:2121`), 删除 body zoom 路径.
@@ -323,24 +329,38 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       点击编辑器失效, 属于行为变化). `autojs.showSoftInput()` / `autojs.performLongPressFeedback()` 调用保持原位置.
       —— 验收: `touch-harness.mjs` 全部场景 (双指场景除外, 因 body zoom 被移除) 与原始片段产生相同调用轨迹; 附录 B 第 1-12 项
       在 2 台设备上通过 (完整 8 台在 G-A2).
+      进度 (2026-10-13): `autojs6/mobile/autojs6_mobile_touch_handler.js` 已完成; 43 个场景与 1.4.12 调用轨迹一致 (比较时忽略 DOM 写入
+      与 `renderer.onResize`, 即旧版的放大镜 DOM 与 body zoom), 唯一的预期差异是 `editor.popup` 场景. 对覆盖层做 28 处单点变异全部被检出.
+      真机部分随 G-A2 进行.
 - [ ] **A2-5** 卸载上游触摸处理: 安装时遍历 `editor.$toDestroy`, 移除 `elem === editor.container` 且 `type` 属于
       `touchstart / touchmove / touchend / contextmenu` 的 4 个 `EventListener` (调用其 `destroy()` 并从数组删除);
       断言移除数量为 4, 否则启用兜底: 在 container 上以 capture 注册同名事件并 `stopImmediatePropagation`,
       同时 `notifyRecoverableError("mobileOverlay", ...)` 上报. 两种路径都要把 `editor.$mouseHandler.isMousePressed` 复位.
       —— 验收: 执行式测试断言移除后 `editor.$toDestroy` 中不再有 container 触摸监听; 真机上长按不出现上游行为 (无 `ace_mobile-menu`, 无上游双击选行).
+      进度 (2026-10-13): 安装入口 `AutoJsAceMobile.install` 在 `ace.edit` 之后立即执行; jsdom 加载完整页面确认移除了 4 个上游监听
+      (contextmenu, touchstart, touchend, touchmove), 未启用兜底, 容器上只剩覆盖层自己的 3 个触摸监听. 兜底模式为覆盖层改在 capture 阶段
+      处理并 `stopPropagation` (不用 `stopImmediatePropagation`, 以免挡住桥接层同在 capture 阶段的双指缩放监听). 真机部分随 G-A2.
 - [ ] **A2-6** `autojs6/mobile/autojs6_mobile_magnifier.js` + CSS: 重建 `Magnifier`, 在 `autojs6.css` 新增
       `#magnifier` / `#magnifier-content` / `#magnifier-progress` 样式 (圆角容器, 当前行放大约 1.5 倍, 跟随主题调色板变量),
       用 `options.magnifierEnabled` 控制 (来源 A7 的宿主开关, 默认关闭), 在 touchend / touchcancel / 双指 / 页面隐藏时隐藏;
       `zoom` 固定为 1 (不再依赖 body zoom).
       —— 验收: 开启后拖拽光标出现放大镜且内容与当前行一致, 关闭后无 DOM 残留; 8 台设备无遮挡软键盘的情况.
+      进度 (2026-10-13): 已重写 (按屏幕行定位克隆的文本层单元格, 折叠与自动换行下不错位; 选区自行绘制并沿用主题的 `ace_selection` 配色;
+      放大 1.5 倍; 首次显示时才创建 DOM; 类名 `autojs6-magnifier*` 代替原 id). 开关 `setTouchMagnifierEnabled` 已加到 `AutoJsAce`,
+      初始值读 `isTouchMagnifierEnabled` (Kotlin 侧在 A7-1 实现, 缺省 false). 真机验收待开关接通后进行.
 - [ ] **A2-7** 覆盖层与桥接层对接: `cancelAceMobileTouchInteraction` (`:1781`) 调用覆盖层的 `cancel()` 清理长按计时与惯性;
       `installTouchCursorSelectionGuard` (`:3770`) 与 `installImeTextInputSelectionWindow` (`:2890`) 不变;
       `global.AutoJsAce` 增加 `getMobileOverlayState()` 供诊断快照使用 (`AceDiagnostics` 增加字段 `mobileOverlay`).
       —— 验收: 诊断快照包含 `mobileOverlay: {installed, uninstalledUpstreamListeners, fallbackCapture, magnifier}`.
-- [ ] **A2-8** `autojs6.css`: 删除无用的 `.ace_mobile-menu` 规则 (三段 `body.*  .ace_mobile-menu` 与 `.ace_mobile-menu` 本体),
+      进度 (2026-10-13): `cancelAceMobileTouchInteraction` 已调用覆盖层的 `cancel()` (清长按计时, 停惯性, 隐藏放大镜);
+      `AutoJsAce.getMobileOverlayState()` 已提供. Kotlin 诊断快照字段与 A3-10 的 `aceVersion` 一起加.
+- [x] **A2-8** `autojs6.css`: 删除无用的 `.ace_mobile-menu` 规则 (三段 `body.*  .ace_mobile-menu` 与 `.ace_mobile-menu` 本体),
       新增 A2-6 样式; `autojs6_editor.html` 按顺序加载 5 个覆盖层脚本 (scroller -> velocity_tracker -> magnifier -> action_mode -> touch_handler);
       `AceEditorAssets.requiredAssetPaths` 登记 5 个文件.
       —— 验收: `AceEditorAssetsTest` 与 `requiredAceAssetsArePackaged` 通过.
+      结论 (2026-10-13): 4 段 `.ace_mobile-menu` 规则已换成放大镜样式; HTML 在 `autojs6_mode_patches.js` 之后按顺序加载 5 个覆盖层脚本;
+      `requiredAssetPaths` 登记 5 个文件; JVM 测试通过, `requiredAceAssetsArePackaged` 随 G-A2 的设备运行验证. 另新增 Gradle 任务
+      `verifyAutoJs6AceMobileOverlay` (挂在 `check` 上, 约 2 秒).
 - [ ] **A2-9** A0-4 补充的小定制在 1.44.0 下的处理:
       textinput 的 contextmenu 用实例覆盖 `editor.textInput.onContextMenu = function (e) { e.preventDefault(); }`
       (1.44.0 的 `$onContextMenu` 经 `host.textInput.onContextMenu` 动态调用, 覆盖即生效); 行号栏提示在覆盖层发出 `touchscroll`
@@ -350,6 +370,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (覆盖层在 touchstart 上 `preventDefault`, 浏览器不再合成鼠标事件, 触摸行为不变, 外接鼠标与触控笔鼠标模式恢复可用);
       默认字体栈不可观察, 不移植.
       —— 验收: 执行式测试覆盖 contextmenu 与 touchscroll 两项; 修饰键与默认处理器的结论写在本条下.
+      进度 (2026-10-13): contextmenu 实例覆盖与 touchscroll 隐藏行号栏提示已实现 (jsdom 确认覆盖生效). 修饰键结论: 不移植. 宿主与插件都不
+      发送独立的修饰键事件 (快捷面板直接执行命令), 实体键盘的组合键自带 metaState, 只有少数只发独立修饰键的第三方软键盘受影响.
+      默认处理器与 focusEditor: 按计划不移植. 执行式测试待 A6-3.
 - [ ] **G-A2** 交互等价门: 8 台设备逐项执行附录 B, 每项与 A0-6 的 1.4.12 实测一致 (惯性手感允许主观 "接近");
       自动部分为在每台设备上运行 `AceTouchInteractionDeviceTest` 并与 `tools/ace-mobile/device-records/` 中同设备的 A0 记录逐场景比对
       (缺 A0 记录的设备先用 `build/ace-perf/apk-a0/` 中的 A0 版 APK 补录);

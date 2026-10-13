@@ -15,7 +15,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import vm from "node:vm";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
     TOUCH_SCENARIOS,
     createEnvironment,
@@ -42,7 +42,7 @@ function sha256(content) {
     return crypto.createHash("sha256").update(content).digest("hex");
 }
 
-function readOriginal(file) {
+export function readOriginal(file) {
     return fs.readFileSync(path.join(ORIGINAL_DIR, file), "latin1");
 }
 
@@ -83,7 +83,7 @@ function verifyManifest(aceJsPath) {
 }
 
 // Loads one implementation set into a fresh environment.
-function loadImplementation(kind, env) {
+export function loadImplementation(kind, env) {
     const runtime = env.createAceRuntime();
     if (kind === "original") {
         runtime.evaluate(readOriginal("babel-helpers.min.js"), "babel-helpers.min.js");
@@ -98,7 +98,7 @@ function loadImplementation(kind, env) {
     return runtime;
 }
 
-function createRandom(seed) {
+export function createRandom(seed) {
     let state = seed >>> 0;
     return () => {
         state = (state + 0x6d2b79f5) >>> 0;
@@ -257,7 +257,7 @@ function verifyMagnifierDirect() {
     check(!difference, `magnifier direct differs at #${difference && difference.index}: ${difference && difference.left} != ${difference && difference.right}`);
 }
 
-function editorFragmentSet(kind, env) {
+export function editorFragmentSet(kind, env) {
     const runtime = env.createAceRuntime();
     if (kind === "original") {
         // The fragments ran inside the strict "ace/editor" factory where `w` and `E` hold the mode names.
@@ -279,11 +279,11 @@ function editorFragmentSet(kind, env) {
     return runtime.require("autojs6-reconstructed/editor_action_mode");
 }
 
-function evaluateInContext(env, code, filename) {
+export function evaluateInContext(env, code, filename) {
     return vm.runInContext(code, env.context, { filename });
 }
 
-function createActionModeEditor(env, fragments) {
+export function createActionModeEditor(env, fragments) {
     const listeners = {};
     const prototype = {
         on(name, listener) {
@@ -303,11 +303,11 @@ function createActionModeEditor(env, fragments) {
     return editor;
 }
 
-function emitSelection(env, name) {
+export function emitSelection(env, name) {
     for (const listener of [...(env.selection.listeners[name] || [])]) listener();
 }
 
-const ACTION_MODE_SCENARIOS = [
+export const ACTION_MODE_SCENARIOS = [
     (env, editor) => {
         editor.startActionMode();
         editor.emit("change");
@@ -331,7 +331,7 @@ const ACTION_MODE_SCENARIOS = [
         editor.startActionModeIfSelectionInView(false);
         env.clock.advance(250);
         env.record("actionMode", editor.actionMode);
-        env.renderer.scrollTo(0, 2000);
+        env.renderer.scrollTo(0, 2013);
         editor.startActionModeIfSelectionInView(true);
         env.clock.advance(250);
         editor.startActionModeIfSelectionInView(true);
@@ -434,4 +434,6 @@ function main() {
     console.log(`[ace mobile reconstruction] ${checks} checks passed (${TOUCH_SCENARIOS.length} touch scenarios, ${ACTION_MODE_SCENARIOS.length} action mode scenarios)`);
 }
 
-main();
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+    main();
+}

@@ -261,6 +261,7 @@ export function createEnvironment(options = {}) {
     const renderer = {
         scrollTop: 0,
         scrollLeft: 0,
+        $padding: TEXT_PADDING,
         gutterWidth: SCROLLER_RECT.left,
         $size: { scrollerWidth: SCROLLER_RECT.width, scrollerHeight: SCROLLER_RECT.height },
         scroller: scrollerElement,
@@ -391,6 +392,12 @@ export function createEnvironment(options = {}) {
             selection,
             documentToScreenPosition(position) {
                 return { row: position.row, column: position.column };
+            },
+            documentToScreenRow(row) {
+                return row;
+            },
+            getScreenLastRowColumn(screenRow) {
+                return (LINES[screenRow] || "").length;
             },
             getLine(row) {
                 return LINES[row] || "";

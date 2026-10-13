@@ -94,6 +94,9 @@
     var bridgePinchImeElementWasReadOnly = false;
     var programmaticScrollUntil = 0;
     var foldTapCandidate = null;
+    // Touch behavior of the Ace 1.4.12 Auto.js build on top of Ace 1.44.0 (autojs6/mobile/).
+    var mobileOverlay = null;
+    var touchMagnifierEnabled = false;
     var gutterFoldClickSuppressUntil = 0;
     var imeTextInputSelectionWindow = {
         installed: false,
@@ -1798,6 +1801,13 @@
             }
         } catch (ignore2) {
             // Completion is transient UI; keep touch cancellation non-fatal.
+        }
+        try {
+            if (mobileOverlay) {
+                mobileOverlay.cancel();
+            }
+        } catch (ignoreOverlay) {
+            // The overlay only holds timers and the magnifier.
         }
         try {
             if (tooltipController) {
@@ -5462,6 +5472,16 @@
 
         Range = global.ace.require("ace/range").Range;
         editor = global.ace.edit("editor");
+        // Before any other listener: the overlay replaces Ace's own touch listeners on the container.
+        touchMagnifierEnabled = callBridgeBoolean("isTouchMagnifierEnabled", false);
+        if (global.AutoJsAceMobile) {
+            mobileOverlay = global.AutoJsAceMobile.install(editor, {
+                isMagnifierEnabled: function() {
+                    return touchMagnifierEnabled;
+                },
+                onRecoverableError: notifyRecoverableError
+            });
+        }
         // Instrumentation tests and diagnostics reach the editor through `window.editor`.
         global.editor = editor;
         session = editor.getSession();
@@ -5767,6 +5787,20 @@
             setLineNumbersEnabled: setLineNumbersEnabled,
             setPrintMarginEnabled: setPrintMarginEnabled,
             setIndentGuidesEnabled: setIndentGuidesEnabled,
+            setTouchMagnifierEnabled: function(enabled) {
+                touchMagnifierEnabled = enabled === true || String(enabled).toLowerCase() === "true";
+                if (!touchMagnifierEnabled && mobileOverlay) {
+                    mobileOverlay.cancel();
+                }
+            },
+            getMobileOverlayState: function() {
+                return mobileOverlay ? mobileOverlay.getState() : {
+                    installed: false,
+                    uninstalledUpstreamListeners: 0,
+                    fallbackCapture: false,
+                    magnifier: false
+                };
+            },
             setBreakpointMarkersEnabled: setBreakpointMarkersEnabled,
             setFoldMarkersEnabled: setFoldMarkersEnabled,
             setGutterWidthMode: setGutterWidthMode,
