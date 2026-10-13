@@ -179,15 +179,15 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 
 | 里程碑 | 内容 | 风险 | 前置 | 状态 |
 |---|---|---|---|---|
-| A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 进行中 (剩 A0-6 设备实测) |
-| A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 进行中 (剩 G-A1 设备门) |
-| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 进行中 (离线等价已证, 待 G-A2 真机) |
-| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 进行中 |
-| A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 进行中 (A4-1 待设备, A4-3 暂缓) |
-| A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 未开始 |
-| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 进行中 (A6-1 完成) |
-| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 未开始 |
-| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 未开始 |
+| A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 进行中 (剩 A0-6 手动项与来源决策) |
+| A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 待确认 (G-A1 8 台已跑, 两台的既有失败待维护者判定) |
+| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 进行中 (8 台自动比对已齐, 剩附录 B 手动项与放大镜真机验收) |
+| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 进行中 (剩 A3-3 / A3-6 / A3-7 / A3-8 的真机与手动项) |
+| A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 进行中 (A4-3 已实现, G-A4-3 剩 XQ-DQ72 与模拟器) |
+| A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 进行中 (8 项插件侧已实现, A5-6 按门保留自研触发; 剩真机目视与 IME 门) |
+| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 基本完成 (G-A6-4 待维护者确认替换耗时差异) |
+| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 进行中 (A7-1 插件侧完成; A7-2 宿主改动待合并时机确认) |
+| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-3 通过; A8-1 / A8-2 已跑, 文档与版本在合并时) |
 | X | 横切约束 | -- | 全程 | 持续 |
 
 推进顺序: A0 -> A1 -> (A2 与 A3 可并行, A2 优先) -> A4 -> A5 -> A6 -> A7 -> A8. A6-1 (清单与校验) 可在 A1 完成后提前做,
@@ -472,6 +472,10 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `sessionDiagnosticsReportAceRuntimeAndMobileOverlay` (就绪后轮询事件), 断言 "1.44.0", 已安装, 卸下 4 个上游监听器, 未退回捕获阶段,
       放大镜关闭; G8441 通过.
 - [ ] **G-A3** 桥接门: JVM 测试全绿 (无 `@Ignore` 新增), 8 台设备全部 instrumentation 用例通过, 附录 C 在 6 台真机通过.
+      进度 (2026-10-13): JVM 测试 35 个类全部通过 (`--rerun`), `@Ignore` 为 0. 全套 instrumentation (A7 / A7b 构建, 27 至 28 个用例,
+      其中 2 个 JDT / Kotlin 编译器探针按设计在 ART 上跳过): G8441, 23046RP50C, OPD2413, XQ-AT72 全部通过; 22120RN86C 只剩
+      TypeScript 诊断超过 2000 ms 与 ECJ 等待超时两项, 与该机 A0 版的既有失败相同 (见 G-A1). 首轮全套在 22120RN86C 上发现并修复了
+      A5-8 符号高亮引起的 Python 补全回退 (见 A5-8 修复). XQ-DQ72 当时未连接, 模拟器未跑; 附录 C 为手动项. 门待补齐后由维护者确认.
 
 ## 8. A4 · 语言资源
 
@@ -511,6 +515,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       备注 (2026-10-13): 暂缓实施. 现状是 Lua 的 Ace worker 注解与 LSP 诊断都直接 `setAnnotations`, 后写者覆盖; JSON 若开 worker,
       `validateDiagnosticRun` 的 `JSON.parse` 诊断会覆盖 worker 注解, 需要先给 LSP 客户端加 "worker 活动时以 worker 注解为准并同步到诊断状态"
       的合并逻辑, 再上设备门.
+      进度 (2026-10-13): 设备用例的 json 分支在 G8441 (Chrome 126), 23046RP50C (WebView 130), OPD2413 (WebView 136), XQ-AT72 (WebView 145)
+      上通过, 且 4 台的 json worker 都已应答 (`workerAnswered: true`, 注解 raw 为 `json-worker`); 22120RN86C 的全套运行中该用例通过.
+      XQ-DQ72 与模拟器待补.
 - [x] **A4-4** 其余 mode 复核: 1.44.0 的 `mode-python / lua / java / javascript / typescript / json / jsx` 生效后, 重跑
       `verifyAutoJs6LanguageIndices`, `verifyAutoJs6LspRuntime`, `verifyAutoJs6PythonWorker`, `verifyAutoJs6LuaLanguageServer`,
       `verifyAutoJs6JavaSemanticRuntime`; 比对上游 1.44.0 `snippets/python.js` 与项目版本, 结论 (继续项目维护 / 合并新增条目) 记录在
@@ -560,6 +567,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       惯性滚动, 打断惯性与拖拽均正常 (见 G-A2 补跑); XQ-AT72, XQ-DQ72 与 x86 API 27 模拟器尚未用 A5 构建复跑. jsdom 中发现上游滚动条
       在首次渲染前没有滑块几何 (thumbTop 为 undefined), 覆盖层对这种滚动条不进入 "scrollbar" 模式, 按普通滚动处理 (离线校验 493 项).
       滚动条标记的目视检查与手指拖动滑块的手感仍需真机人工确认.
+      进度 (2026-10-13, A7 / A7b 构建): XQ-AT72 与 22120RN86C 的全套运行中触摸用例 (含惯性与打断惯性) 通过, 至此 6 台真机中除
+      XQ-DQ72 外都已用自定义滚动条默认开启的构建跑过触摸用例, 未出现滚动条吞掉触摸.
 - [ ] **A5-4** `showWhitespacesInSelection` (默认开): 加载 `ext-whitespaces_in_selection.js` 后 `editor.setOption("showWhitespacesInSelection", enabled)`;
       暗色主题下空白符颜色复核.
       —— 验收: 选中含制表符与空格的文本时显示占位符号, 取消选区后消失.
@@ -731,13 +740,20 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [ ] **A8-1** JVM 与静态门: `:app:testDebugUnitTest :app:lintDebug :app:check` 全绿; `py D:/idea-projects/prepush_check.py AutoJs6-Plugin-Ace-Editor`
       通过 (见 `COMMON_AGENTS.md` "推送前检查").
       —— 验收: 命令输出留存在 `docs/development/release-2.0.0.md` 草稿.
+      进度 (2026-10-13, HEAD 6899bc3): `:app:check` (含 lint 与全部 verify / typecheck 任务) 通过; `prepush_check.py --lint` 6/6 通过
+      (VERSION_BUILD=225 与提交数一致). 发布文档草稿在合并时随 A8-8 写入.
 - [ ] **A8-2** 8 台设备 instrumentation: 对每个 serial 设置 `ANDROID_SERIAL` 运行 `:app:connectedDebugAndroidTest`
       (63751f63, 968e9f18, BH900ASK9E, QV710AF65F, QV770340J7, bek749scrwv4wo8h, emulator-5554, emulator-5556); 失败用例逐一归因,
       与 `MILESTONE_BASELINES.md` 已记录的系统级偶发 (G8441 `ADB-JDWP` SIGSEGV) 区分.
       —— 验收: 8/8 设备全部用例通过, 结果表进入发布文档.
-- [ ] **A8-3** 性能复测: 三台基线真机各 3 轮 `measure-editor-performance.ps1 -SkipBuild -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F`,
+      进度 (2026-10-13): 用 adb 直接 `am instrument` 跑全套 (与 `connectedDebugAndroidTest` 相同的用例集, 可逐台并行且不清 logcat):
+      结果见 G-A3. 剩 XQ-DQ72 与两台模拟器.
+- [x] **A8-3** 性能复测: 三台基线真机各 3 轮 `measure-editor-performance.ps1 -SkipBuild -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F`,
       与 A0-2 基线逐项比较; 另在 OPD2413 与 22120RN86C 各取 3 轮作为参考 (不设门).
       —— 验收: 三项中位数相对 A0-2 不超过 +10% (功能优先档); 超出则在 G-A8 决策.
+      结论 (2026-10-13): 三台基线机各 3 轮, WebView provider 与 A0 相同. 三项启动中位数相对 A0: 23046RP50C -6.0% / -5.5% / -7.7%,
+      G8441 +3.9% / +4.7% / -4.4%, XQ-AT72 -1.5% / +0.5% / +0.7%, 均在 +10% 内; 明细见 `tools/ace-lsp/MILESTONE_BASELINES.md`
+      "A8-3 启动性能复测". OPD2413 与 22120RN86C 的参考测量未做.
 - [ ] **A8-4** 手测清单: 附录 B 在 8 台设备, 附录 C 在 6 台真机 (Gboard + 一款中文输入法; 模拟器用 AOSP 键盘跑附录 C 的 1-6 项);
       记录为 "通过 / P1 / P2 / P3", P1 必须为 0.
       —— 验收: 清单表进入发布文档.
