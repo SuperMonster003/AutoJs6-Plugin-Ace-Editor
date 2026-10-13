@@ -128,10 +128,11 @@
     var FIRST_PAINT_MAX_WAIT_MS = 1800;
     var BUNDLED_FONT_LOAD_TIMEOUT_MS = 5000;
     var FONT_LOAD_TIMEOUT_MS = 30000;
-    // ACE 1.4.12 does not apply Text.MAX_LINE_LENGTH to the first token in an
-    // unwrapped line. Text mode emits the whole line as that first token, so a
-    // wrongly decoded file can otherwise create hundreds of thousands of DOM
-    // nodes and monopolize Android WebView during a whole-document Redo.
+    // Ace truncates a rendered line at Text.MAX_LINE_LENGTH (10000) and appends an
+    // expand button, which renders the whole line on demand. Text mode emits the
+    // whole line as one token, so lines of a wrongly decoded file longer than the
+    // trigger are clipped harder here (Roadmap-Ace-1.44.0.md A6-4 evaluates relying
+    // on MAX_LINE_LENGTH alone).
     var LONG_LINE_SAFETY_RENDER_TRIGGER = 16 * 1024;
     var LONG_LINE_SAFETY_RENDER_LIMIT = 4096;
     var BUNDLED_FONT_LOAD_PROBE = '14px "Iosevka"';
@@ -4675,7 +4676,7 @@
         try {
             editor.setOption("indentedSoftWrap", style !== "classic");
         } catch (ignore) {
-            // ACE 1.4.12 supports this option; keep the bridge tolerant for asset swaps.
+            // Keep the bridge tolerant of Ace builds without this option.
         }
         scheduleResize("word_wrap_indent_style_changed");
         notifyStateChanged("wordWrapIndentStyleChanged");
@@ -4780,7 +4781,7 @@
         try {
             editor.setOption("showFoldWidgets", foldMarkersEnabled);
         } catch (ignore) {
-            // ACE 1.4.x also honors the CSS fallback below.
+            // The CSS fallback below hides the widgets as well.
         }
         setEditorContainerClass("autojs6-hide-fold-markers", !foldMarkersEnabled);
         applyGutterOptions("fold_markers_changed");
@@ -5083,6 +5084,19 @@
         return null;
     }
 
+    // Ace 1.44.0 renders the annotation icon, the fold widget and custom widgets as children of the gutter cell, whose
+    // class is "ace_gutter-cell" or "ace_gutter-cell_svg-icons" (useSvgGutterIcons). Gutter events may target any of them.
+    function findGutterCell(target) {
+        var stopAt = editor && editor.container;
+        while (target && target !== stopAt) {
+            if (hasClassToken(target, "ace_gutter-cell") || hasClassToken(target, "ace_gutter-cell_svg-icons")) {
+                return target;
+            }
+            target = target.parentNode;
+        }
+        return null;
+    }
+
     function isPointInsideElement(element, clientX, clientY) {
         if (!element || !element.getBoundingClientRect) {
             return false;
@@ -5092,11 +5106,12 @@
             clientY >= rect.top && clientY <= rect.bottom;
     }
 
-    function isGutterFoldWidgetEvent(target, domEvent) {
+    function isGutterFoldWidgetEvent(target, domEvent, gutterCell) {
         var point = clientPointFromDomEvent(domEvent);
         var foldWidget = findAncestorWithClassToken(target, "ace_fold-widget", editor && editor.container);
-        if (!foldWidget && target && target.querySelector) {
-            foldWidget = target.querySelector(".ace_fold-widget");
+        var scope = gutterCell || target;
+        if (!foldWidget && scope && scope.querySelector) {
+            foldWidget = scope.querySelector(".ace_fold-widget");
         }
         return !!foldWidget && isPointInsideElement(
             foldWidget,
@@ -5108,7 +5123,9 @@
     function isDiagnosticGutterCell(target) {
         return hasClassToken(target, "ace_error") ||
             hasClassToken(target, "ace_warning") ||
-            hasClassToken(target, "ace_info");
+            hasClassToken(target, "ace_info") ||
+            hasClassToken(target, "ace_security") ||
+            hasClassToken(target, "ace_hint");
     }
 
     function rowHasDiagnosticAnnotation(row) {
@@ -5222,7 +5239,7 @@
 
     function isDiagnosticGutterDomEvent(domEvent) {
         var target = domEvent && domEvent.target;
-        var gutterCell = findAncestorWithClassToken(target, "ace_gutter-cell", editor && editor.container);
+        var gutterCell = findGutterCell(target);
         return !!gutterCell && isDiagnosticGutterCell(gutterCell);
     }
 
@@ -5243,7 +5260,9 @@
 
     function isFoldPlaceholderTarget(target) {
         while (target && target !== editor.container) {
-            if (hasClassToken(target, "ace_gutter-cell") || hasClassToken(target, "ace_fold-widget")) {
+            if (hasClassToken(target, "ace_gutter-cell") ||
+                hasClassToken(target, "ace_gutter-cell_svg-icons") ||
+                hasClassToken(target, "ace_fold-widget")) {
                 return false;
             }
             if (hasClassToken(target, "ace_fold")) {
@@ -5378,7 +5397,9 @@
     }
 
     function toggleGutterFoldFromDomEvent(event) {
-        if (!foldMarkersEnabled || !editor || !session || !isGutterFoldWidgetEvent(event && event.target, event)) {
+        var target = event && event.target;
+        if (!foldMarkersEnabled || !editor || !session ||
+            !isGutterFoldWidgetEvent(target, event, findGutterCell(target))) {
             return false;
         }
         var position = positionFromDomEvent(event);
@@ -5401,7 +5422,8 @@
         if (Date.now() > gutterFoldClickSuppressUntil) {
             return false;
         }
-        if (!isGutterFoldWidgetEvent(event && event.target, event)) {
+        var target = event && event.target;
+        if (!isGutterFoldWidgetEvent(target, event, findGutterCell(target))) {
             return false;
         }
         stopFoldPlaceholderClick(event);
@@ -5440,7 +5462,7 @@
 
         Range = global.ace.require("ace/range").Range;
         editor = global.ace.edit("editor");
-        // ACE 1.4.12 ext-language_tools references a global `editor` in insertMatch().
+        // Instrumentation tests and diagnostics reach the editor through `window.editor`.
         global.editor = editor;
         session = editor.getSession();
         if (global.AutoJsAceModePatches) {
@@ -5637,11 +5659,11 @@
         });
 
         editor.on("guttermousedown", function(event) {
-            var target = event.domEvent.target;
-            if (!target || target.className.indexOf("ace_gutter-cell") === -1) {
+            var target = findGutterCell(event.domEvent.target);
+            if (!target) {
                 return;
             }
-            if (foldMarkersEnabled && isGutterFoldWidgetEvent(target, event.domEvent)) {
+            if (foldMarkersEnabled && isGutterFoldWidgetEvent(event.domEvent.target, event.domEvent, target)) {
                 if (toggleFoldWidgetAt(event.getDocumentPosition().row, event.domEvent)) {
                     event.stop();
                 }

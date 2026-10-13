@@ -364,18 +364,28 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       取单元格, 断点命中区改为 `cell.getBoundingClientRect().left + 24`; `isDiagnosticGutterCell` 同时识别 `span.ace_icon` 子节点;
       `isGutterFoldWidgetEvent` 直接接受 `target` 为 `ace_fold-widget` 的情况.
       —— 验收: 执行式测试分别以单元格, 文本节点父级, 注解图标, 折叠按钮为 target 触发事件, 断点 / 诊断 / 折叠各命中一次.
-- [ ] **A3-2** 删除 1.4.12 专属代码与注释: `:5443` `global.editor = editor` 的 1.4.12 兼容注释 (赋值本身保留: 性能,
+      进度 (2026-10-13): 新增 `findGutterCell` (识别 `ace_gutter-cell` 与 `ace_gutter-cell_svg-icons`), `guttermousedown`,
+      诊断提示抑制, 折叠占位与三处折叠按钮判断都改为按祖先单元格计算, `isDiagnosticGutterCell` 增加 security / hint. 在 jsdom 中
+      (手工设置字体度量与容器尺寸) 实测: 单元格与其子 span 为目标时切换断点, 错误行的 `ace_icon` 为目标时打开诊断标记而非断点.
+      折叠按钮依赖布局, 待 A6-3 的执行式测试覆盖后勾选.
+- [x] **A3-2** 删除 1.4.12 专属代码与注释: `:5443` `global.editor = editor` 的 1.4.12 兼容注释 (赋值本身保留: 性能,
       长行与触摸仪器测试以及其他模块通过 `window.editor` 访问编辑器, 只改注释说明用途); `:131-136` 注释改写 (MAX_LINE_LENGTH 语义见 A6-4);
       `:4678` 与 `:4783` 的 "ACE 1.4.x" 注释; `autojs6_lsp_core.js:144` 的版本字样; `README` 中 "Ace 1.4.12 的 TSX" 说明交给 A4-1.
       —— 验收: `grep -n "1\.4\.12\|1\.4\.x" autojs6/*.js` 无命中.
+      结论 (2026-10-13): 已改写 5 处注释 (超长行守卫, 两处选项容错, `window.editor` 用途, LSP choice 占位). 1.44.0 对首个 token
+      也按 `MAX_LINE_LENGTH` 截断并加展开按钮, 桥接层的 16K 守卫对更长的行仍然生效, §2.4 第 5 条 "实际已失效" 的说法不准确, A6-4 再评估.
 - [ ] **A3-3** 补全弹窗补丁复核 (`installCompletionPopupTouchScrollPatch`, `:2073`): 确认 `$init` 仍返回 popup, `showDocTooltip`
       仍在 `this.tooltipNode` 上工作; 上游已设置 `pointerEvents` 与 `overscrollBehavior`, 保留触摸滚动器但去掉重复样式赋值;
       `refreshAutocompletePopupTheme` (`:493`) 改为通过 `Autocomplete.for(editor).popup` 获取弹窗 (弹窗可能尚未创建时跳过).
       —— 验收: 真机上弹窗可手指滚动, 文档提示可滚动, 主题切换后弹窗配色随之变化.
+      进度 (2026-10-13): 代码复核结论为无需修改: 1.44.0 的 `$init` 仍返回 popup, `showDocTooltip` 仍使用 `this.tooltipNode`,
+      上游只设置了 `pointerEvents` 与 `overscrollBehavior`, 与桥接层的样式不重复; `Autocomplete.for(editor)` 会给 `editor.completer`
+      赋值, 且每次打开弹窗都重新 `setTheme`, 所以继续用 `editor.completer.popup` 即可, 不必主动创建. 真机滚动与主题验证随 G-A3 进行.
 - [ ] **A3-4** 历史操作钩子复核 (`installHistoryOperationHooks`, `:3469`): 对照 1.44.0 `UndoManager.add / undo / redo` 与
       `EditSession.undoChanges(deltas, dontSelect)`, 确认 `addUndoableHistoryMarker` 的空 delta (`lines: [""]`) 仍被
       `UndoManager` 接受且不改文本; `markClean / isClean` 语义不变.
       —— 验收: `AceCodeFoldingSmokeTest` 与 `hostReplacementSucceedsWhileUserInputIsReadOnly` 通过; A6-3 增加撤销标记用例.
+      进度 (2026-10-13): 两个用例在 G-A1 的 5 台设备上均通过; 1.44.0 `Document.applyDelta` 的空增量守卫与 1.4.12 相同. 撤销标记的执行式用例待 A6-3.
 - [ ] **A3-5** 折叠路径复核: `foldAll` 的 pending 机制 (`:4898`) 依赖 `changeMode` 事件与 `session.foldAll`; 1.44.0
       `session.unfold(null, true)` 与 `$toggleFoldWidget(row, {children, all, siblings})` 行为对照; 折叠占位符点击
       (`installFoldPlaceholderClickCapture`, `:5411`) 的 `ace_fold` 类名不变.
@@ -398,6 +408,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 - [ ] **A3-10** 诊断快照与事件: `AceDiagnostics` 增加 `aceVersion` (读取 `ace.version`, 1.44.0 为 "1.44.0") 与 A2-7 的 `mobileOverlay`;
       `ACE_RUNTIME_REVISION` 已在 A1-3 更新.
       —— 验收: `sessionDiagnosticsExposeExecutionAlignedTypeScriptProfiles` 扩展断言 `aceVersion == "1.44.0"`.
+      备注 (2026-10-13): 与 A2-7 的 `mobileOverlay` 一起改诊断快照 (JS 状态, Kotlin 字段, Bundle 键), 避免两次变更诊断契约.
 - [ ] **G-A3** 桥接门: JVM 测试全绿 (无 `@Ignore` 新增), 8 台设备全部 instrumentation 用例通过, 附录 C 在 6 台真机通过.
 
 ## 8. A4 · 语言资源

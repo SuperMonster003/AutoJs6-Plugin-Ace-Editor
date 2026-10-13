@@ -141,8 +141,8 @@
 
     function convertSnippetText(value) {
         value = String(value || "");
-        // LSP and Ace share the common $1/${1:default}/$0 syntax. Ace 1.4.12
-        // does not understand LSP choice placeholders, so keep their first choice.
+        // LSP and Ace share the common $1/${1:default}/$0 syntax. Ace snippets have
+        // no LSP choice placeholders, so keep their first choice.
         return value.replace(/\$\{(\d+)\|([^}]*)\|\}/g, function(_match, index, choices) {
             var first = String(choices || "").split(",")[0] || "";
             return "${" + index + ":" + first + "}";
