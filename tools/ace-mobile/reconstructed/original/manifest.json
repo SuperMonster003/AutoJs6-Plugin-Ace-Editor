@@ -1,0 +1,150 @@
+{
+  "source": {
+    "path": "app/src/main/assets/editor/ace-builds-1.4.12/src-min-noconflict/ace.js",
+    "commit": "f067e63f49061d97e872337e7125b5e5445f874e",
+    "bytes": 382291,
+    "sha256": "709c4ae24c9d797b33ffe4917ce5f6d7e719404c2bc04af8a3f090c9b95ad79a",
+    "lineEndings": "LF (Git blob)"
+  },
+  "slices": [
+    {
+      "file": "babel-helpers.min.js",
+      "module": "(prelude)",
+      "offset": 0,
+      "length": 1869,
+      "note": "global Babel helpers used by ace/mouse/regression.js",
+      "sha256": "cbe70eaba8c0bf4318ac2e1af859f8ac115aad5403d36ce3c095264d6b80e8bb"
+    },
+    {
+      "file": "regression.min.js",
+      "module": "ace/mouse/regression.js",
+      "offset": 45215,
+      "length": 3993,
+      "sha256": "cc3cf72654e24ded451f9754ac57e664551ad506553f07a1903c954c7893fae5"
+    },
+    {
+      "file": "velocity-tracker.min.js",
+      "module": "ace/mouse/velocity-tracker.js",
+      "offset": 49209,
+      "length": 1214,
+      "note": "includes the trailing Math.signum polyfill expression",
+      "sha256": "5184295cf70c3df34c2dbcb47a1730f5671e6eaf33316269429e9488a6004e16"
+    },
+    {
+      "file": "scroller.min.js",
+      "module": "ace/mouse/scroller.js",
+      "offset": 50424,
+      "length": 3450,
+      "sha256": "5643afec49039e0e2e9347b7952d0cdb9809c6c5345d4607555a156f99d78513"
+    },
+    {
+      "file": "magnifier.min.js",
+      "module": "ace/mouse/magnifier.js",
+      "offset": 53875,
+      "length": 3877,
+      "sha256": "3f32c8cbbc7805ee2df758666923a5253388a1197f3e64f2704c161f423e1f9c"
+    },
+    {
+      "file": "touch_handler.min.js",
+      "module": "ace/mouse/touch_handler",
+      "offset": 57753,
+      "length": 5739,
+      "sha256": "925353b203215977ea8b5d7300ac326b05fc32a272d58ef5d1bb650418c97402"
+    },
+    {
+      "file": "editor-constructor.min.js",
+      "module": "ace/editor",
+      "offset": 212553,
+      "length": 384,
+      "note": "Editor constructor tail; `this` is the editor, `w`/`E` are the action mode names",
+      "sha256": "666e51be082298045f69db36e182e818022c99ad425bef66e61031e0d9f1df22"
+    },
+    {
+      "file": "editor-prototype.min.js",
+      "module": "ace/editor",
+      "offset": 249437,
+      "length": 1039,
+      "note": "Editor.prototype tail; `this` is Editor.prototype, `w`/`E` are the action mode names",
+      "sha256": "208a1924a0f16b6781474d7066a95790b1f1f802179918f4613809bd96e44d0f"
+    },
+    {
+      "file": "editor-action-mode-names.min.js",
+      "module": "ace/editor",
+      "offset": 211621,
+      "length": 49,
+      "sha256": "f7732303bd7a0933d5d7e11d9833e2bb45e9f3c2f10699177885add7ee5c1271"
+    },
+    {
+      "file": "virtual_renderer-get-client-position.min.js",
+      "module": "ace/virtual_renderer",
+      "offset": 329378,
+      "length": 208,
+      "sha256": "125b0670c8af7d905c672185207abf6b22b2be42e5b0a371135802e916703ad6"
+    },
+    {
+      "file": "mouse_handler-magnifier-option.min.js",
+      "module": "ace/mouse/mouse_handler",
+      "offset": 74825,
+      "length": 34,
+      "sha256": "0c6e08625b558de1e5311f464d91123ad95fc1ad61a8f9e94d9f3d021bb169c7"
+    },
+    {
+      "file": "mouse_handler-touch-listeners-call.min.js",
+      "module": "ace/mouse/mouse_handler",
+      "offset": 71868,
+      "length": 21,
+      "note": "passes the MouseHandler as third argument",
+      "sha256": "28edd2516ad3ee7ac41d67bf6c1a08a91be6d90765ca8cd8ac9b169ebb72069b"
+    },
+    {
+      "file": "mouse_handler-mobile-focus.min.js",
+      "module": "ace/mouse/mouse_handler",
+      "offset": 72217,
+      "length": 79,
+      "sha256": "b6f39f6177d86d51de943dac75a72714a83ffe53da871eb924527015e9b3269f"
+    },
+    {
+      "file": "default_handlers-mobile.min.js",
+      "module": "ace/mouse/default_handlers",
+      "offset": 29434,
+      "length": 250,
+      "sha256": "53c2cb88bd6aba9ec06788531c1095677435280fe2fc415b3adc130f8357a9ca"
+    },
+    {
+      "file": "textinput-context-menu.min.js",
+      "module": "ace/keyboard/textinput",
+      "offset": 28364,
+      "length": 50,
+      "sha256": "28d1ec5d7e4246d50046ff7329d76b7f9ee6725182dd71e6f3848263fbd2444c"
+    },
+    {
+      "file": "default_gutter_handler-touchscroll-on.min.js",
+      "module": "ace/mouse/default_gutter_handler",
+      "offset": 36250,
+      "length": 21,
+      "sha256": "03240cf6413a7ca2c3af777aaf8774f9a9946fd33c1dac78be54c922379ad1a1"
+    },
+    {
+      "file": "default_gutter_handler-touchscroll-off.min.js",
+      "module": "ace/mouse/default_gutter_handler",
+      "offset": 36535,
+      "length": 22,
+      "sha256": "0f9f7d31791996122fa92fd27194e6e5d3fde2ece5869a8c48527961567559e0"
+    },
+    {
+      "file": "event-modifier-hash.min.js",
+      "module": "ace/lib/event",
+      "offset": 13700,
+      "length": 154,
+      "note": "`s` is the pressedKeys map maintained by addCommandKeyListener",
+      "sha256": "98e5ad7d09fc0a41485b7bec964483996b53389d0f4638c48246d29e40b48315"
+    },
+    {
+      "file": "virtual_renderer-font-stack.min.js",
+      "module": "ace/virtual_renderer",
+      "offset": 297613,
+      "length": 105,
+      "sha256": "c95fbc41788300d3e6ec55dee4295e8ce4cae132f40eeb6faf6c54a4c5f83a69"
+    }
+  ]
+}
