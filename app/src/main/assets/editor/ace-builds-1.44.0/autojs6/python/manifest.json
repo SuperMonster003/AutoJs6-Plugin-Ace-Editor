@@ -182,8 +182,8 @@
     "nullish-coalescing"
   ],
   "workerFile": "autojs6-python-worker.js",
-  "workerBytes": 4994085,
-  "workerSha256": "78a1d2a7030c9884c63dee203563c43046849cec38d05d9f609f595aa8b4cf7b",
+  "workerBytes": 4996365,
+  "workerSha256": "7cdff37fd4517df94182139b1a9b72d01e88d26f8f2013ef0505f7ff7e839b6d",
   "thirdPartyLicenses": {
     "file": "THIRD_PARTY_LICENSES.txt",
     "bytes": 31705,

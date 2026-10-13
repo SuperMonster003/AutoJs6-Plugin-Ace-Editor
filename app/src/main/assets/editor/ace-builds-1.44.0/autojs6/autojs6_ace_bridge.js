@@ -54,6 +54,10 @@
     var smartHintOptions = null;
     // True while the last completion request came from Ctrl-Space or the TAB long press (see installCompletionPopupStates).
     var explicitCompletionRequested = false;
+    // Same-symbol highlights (see installSymbolHighlights).
+    var symbolHighlightGroup = null;
+    var symbolHighlightTimer = null;
+    var symbolHighlightSerial = 0;
     var fontMetricsRefreshTimer = null;
     var fontMetricsRefreshFrameScheduled = false;
     var fontMetricsReadySerial = 0;
@@ -2122,6 +2126,94 @@
         }
     }
 
+    // Same-symbol highlights (Roadmap-Ace-1.44.0.md A5-8): 150 ms after the cursor settles on an identifier, the
+    // occurrences reported by the language service are drawn with Ace's MarkerGroup (from ext-language_tools).
+    // Edits, selections, mode changes and the long line safety mode clear them. Read-only documents highlight too.
+    var SYMBOL_HIGHLIGHT_DELAY_MS = 150;
+    var SYMBOL_HIGHLIGHT_CLASS = "autojs6_symbol_highlight";
+    var SYMBOL_IDENTIFIER_CHAR = /[A-Za-z0-9_$\u00C0-\uFFFF]/;
+
+    function clearSymbolHighlights() {
+        symbolHighlightSerial++;
+        if (symbolHighlightTimer !== null) {
+            clearTimeout(symbolHighlightTimer);
+            symbolHighlightTimer = null;
+        }
+        if (symbolHighlightGroup && symbolHighlightGroup.markers && symbolHighlightGroup.markers.length) {
+            symbolHighlightGroup.setMarkers([]);
+        }
+    }
+
+    function isCursorOnIdentifier(pos) {
+        var line = String(session.getLine(pos.row) || "");
+        return SYMBOL_IDENTIFIER_CHAR.test(line.charAt(pos.column)) ||
+            SYMBOL_IDENTIFIER_CHAR.test(line.charAt(pos.column - 1));
+    }
+
+    function ensureSymbolHighlightGroup() {
+        if (!symbolHighlightGroup) {
+            var markerGroup = global.ace.require("ace/marker_group");
+            if (!markerGroup || typeof markerGroup.MarkerGroup !== "function") {
+                return null;
+            }
+            symbolHighlightGroup = new markerGroup.MarkerGroup(session);
+        }
+        return symbolHighlightGroup;
+    }
+
+    function drawSymbolHighlights(highlights) {
+        var group = ensureSymbolHighlightGroup();
+        if (!group) {
+            return;
+        }
+        group.setMarkers(highlights.map(function(item) {
+            return {
+                range: new Range(item.start.row, item.start.column, item.end.row, item.end.column),
+                className: item.kind === "write" ?
+                    SYMBOL_HIGHLIGHT_CLASS + " " + SYMBOL_HIGHLIGHT_CLASS + "_write" :
+                    SYMBOL_HIGHLIGHT_CLASS
+            };
+        }));
+    }
+
+    function scheduleSymbolHighlights() {
+        clearSymbolHighlights();
+        if (!editor || !session || documentLongLineSafetyMode || !currentSmartHintOptions().symbolHighlight ||
+            !editor.selection.isEmpty()) {
+            return;
+        }
+        var pos = editor.getCursorPosition();
+        if (!isCursorOnIdentifier(pos)) {
+            return;
+        }
+        var serial = symbolHighlightSerial;
+        symbolHighlightTimer = setTimeout(function() {
+            symbolHighlightTimer = null;
+            if (!lspClient || typeof lspClient.getDocumentHighlightsAsync !== "function") {
+                return;
+            }
+            lspClient.getDocumentHighlightsAsync(pos, function(error, highlights) {
+                if (serial !== symbolHighlightSerial || error || !Array.isArray(highlights) || !highlights.length) {
+                    return;
+                }
+                drawSymbolHighlights(highlights);
+            });
+        }, SYMBOL_HIGHLIGHT_DELAY_MS);
+    }
+
+    function installSymbolHighlights() {
+        try {
+            editor.selection.on("changeCursor", scheduleSymbolHighlights);
+            editor.selection.on("changeSelection", scheduleSymbolHighlights);
+            session.on("change", clearSymbolHighlights);
+            session.on("changeMode", clearSymbolHighlights);
+            return true;
+        } catch (error) {
+            notifyRecoverableError("symbolHighlights", error);
+            return false;
+        }
+    }
+
     function installCompletionPopupTouchScrollPatch() {
         try {
             if (!global.ace || typeof global.ace.require !== "function") {
@@ -4068,6 +4160,7 @@
             completionDelayMs: 0,
             signatureTrigger: "cursor",
             arrowOverloadCycling: true,
+            symbolHighlight: true,
             completionLoadingText: "Loading...",
             completionEmptyText: "No suggestions"
         };
@@ -4102,6 +4195,9 @@
             arrowOverloadCycling: cycling === null || typeof cycling === "undefined" ?
                 defaults.arrowOverloadCycling :
                 cycling === true || String(cycling).toLowerCase() === "true",
+            symbolHighlight: source.symbolHighlight === null || typeof source.symbolHighlight === "undefined" ?
+                defaults.symbolHighlight :
+                source.symbolHighlight === true || String(source.symbolHighlight).toLowerCase() === "true",
             completionLoadingText: normalizePopupText(source.completionLoadingText, defaults.completionLoadingText),
             completionEmptyText: normalizePopupText(source.completionEmptyText, defaults.completionEmptyText)
         };
@@ -4123,6 +4219,9 @@
         }
         if (signatureHelpController && typeof signatureHelpController.setAutoTrigger === "function") {
             signatureHelpController.setAutoTrigger(smartHintOptions.signatureTrigger);
+        }
+        if (!smartHintOptions.symbolHighlight) {
+            clearSymbolHighlights();
         }
         notifyStateChanged("smartHintOptionsChanged");
         return smartHintOptions;
@@ -5602,6 +5701,7 @@
         installHistoryOperationHooks();
         installCompletionPopupTouchScrollPatch();
         installCompletionPopupStates();
+        installSymbolHighlights();
         installAceBuiltInPinchZoomSuppression();
         if (document && document.body && document.body.classList) {
             document.body.classList.add("autojs6-host-selection-action-mode");

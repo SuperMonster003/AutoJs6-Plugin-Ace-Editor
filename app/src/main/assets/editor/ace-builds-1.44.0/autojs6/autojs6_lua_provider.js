@@ -634,6 +634,18 @@
                     callback(error, normalized);
                 });
             },
+            getDocumentHighlights: function(_session, pos, text, callback) {
+                if (typeof callback !== "function") {
+                    return null;
+                }
+                documentText = String(text == null ? documentText : text);
+                timedRequest("documentHighlight", function(done) {
+                    client.documentHighlight(documentUri, lspPosition(pos), done);
+                }, function(error, result) {
+                    var core = global.AutoJsAceLspCore;
+                    callback(error, error || !core ? [] : core.normalizeDocumentHighlights(result));
+                });
+            },
             getDiagnostics: function(_session, text) {
                 documentText = String(text == null ? documentText : text);
                 ensureDocument(documentText);

@@ -565,6 +565,7 @@
                         hover: {},
                         signatureHelp: {},
                         definition: {},
+                        documentHighlight: {},
                         rename: {},
                         codeAction: {}
                     }
@@ -705,6 +706,10 @@
 
         function definition(uri, position, callback) {
             return textDocumentRequest("textDocument/definition", uri, position, {}, callback);
+        }
+
+        function documentHighlight(uri, position, callback) {
+            return textDocumentRequest("textDocument/documentHighlight", uri, position, {}, callback);
         }
 
         function rename(uri, position, newName, callback) {
@@ -881,6 +886,7 @@
             hover: hover,
             signatureHelp: signatureHelp,
             definition: definition,
+            documentHighlight: documentHighlight,
             rename: rename,
             codeAction: codeAction,
             applyWorkspaceEdit: applyWorkspaceEdit,
@@ -888,6 +894,25 @@
                 return isSafeDocumentUri(uri, rootUri);
             }
         };
+    }
+
+    // textDocument/documentHighlight result -> [{ start: { row, column }, end: { row, column }, kind }] with kind
+    // "text", "read" or "write" (Roadmap-Ace-1.44.0.md A5-8). LSP characters and Ace columns are both UTF-16 units.
+    function normalizeDocumentHighlights(result) {
+        if (!Array.isArray(result)) {
+            return [];
+        }
+        return result.filter(function(item) {
+            return item && item.range && item.range.start;
+        }).map(function(item) {
+            var start = item.range.start;
+            var end = item.range.end || start;
+            return {
+                start: { row: Math.max(0, Number(start.line) || 0), column: Math.max(0, Number(start.character) || 0) },
+                end: { row: Math.max(0, Number(end.line) || 0), column: Math.max(0, Number(end.character) || 0) },
+                kind: item.kind === 3 ? "write" : item.kind === 2 ? "read" : "text"
+            };
+        });
     }
 
     global.AutoJsAceLspCore = {
@@ -899,6 +924,7 @@
         normalizeCompletionResult: normalizeCompletionResult,
         convertSnippetText: convertSnippetText,
         applyContentChange: applyContentChange,
-        acePosition: acePosition
+        acePosition: acePosition,
+        normalizeDocumentHighlights: normalizeDocumentHighlights
     };
 })(window);

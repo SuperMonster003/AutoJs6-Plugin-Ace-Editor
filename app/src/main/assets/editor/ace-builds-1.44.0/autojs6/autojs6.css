@@ -424,3 +424,26 @@ body.ace-theme-dark .autojs6_hover_tooltip_content pre {
 .ace_hidpi .ace_gutter {
     will-change: transform;
 }
+
+/* Same-symbol highlights (autojs6_ace_bridge.js installSymbolHighlights, Roadmap-Ace-1.44.0.md A5-8). */
+.ace_marker-layer .autojs6_symbol_highlight {
+    position: absolute;
+    box-sizing: border-box;
+    background: rgba(66, 133, 244, 0.14);
+    border-bottom: 1px solid rgba(66, 133, 244, 0.45);
+}
+
+.ace_marker-layer .autojs6_symbol_highlight_write {
+    background: rgba(230, 145, 56, 0.18);
+    border-bottom-color: rgba(230, 145, 56, 0.55);
+}
+
+.ace_dark .ace_marker-layer .autojs6_symbol_highlight {
+    background: rgba(138, 180, 248, 0.18);
+    border-bottom-color: rgba(138, 180, 248, 0.50);
+}
+
+.ace_dark .ace_marker-layer .autojs6_symbol_highlight_write {
+    background: rgba(255, 183, 77, 0.20);
+    border-bottom-color: rgba(255, 183, 77, 0.55);
+}

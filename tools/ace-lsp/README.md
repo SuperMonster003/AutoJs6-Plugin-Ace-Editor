@@ -131,10 +131,11 @@ typeshed commit `289e5d3568961c8bcd33d01eef5b7ec5e1ad33ad`: builtins, the select
 standard-library roots, and their top-level import closure. It deliberately
 contains no third-party stubs or project/venv resolver.
 
-The provider supplies completion, hover, signature help, diagnostics, and
-definition through the M3 JSON-RPC/LSP core and WebWorker transport. The
-semantic asset set is 4.822 MiB, below the 8 MiB optional-delivery threshold,
-so it is committed and works fully offline. `python/manifest.json` pins all
+The provider supplies completion, hover, signature help, diagnostics,
+definition and document highlights through the M3 JSON-RPC/LSP core and
+WebWorker transport. The semantic asset set is 4.826 MiB (4.822 MiB at M4;
+the Ace 1.44.0 document highlights added 2 KiB), below the 8 MiB
+optional-delivery threshold, so it is committed and works fully offline. `python/manifest.json` pins all
 input versions and hashes; `python/THIRD_PARTY_LICENSES.txt` contains the 14
 redistributed runtime components.
 

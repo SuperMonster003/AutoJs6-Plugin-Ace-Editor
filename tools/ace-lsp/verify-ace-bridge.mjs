@@ -113,6 +113,20 @@ async function openEditor(options = {}) {
                 window.HTMLCanvasElement.prototype.getContext = () => new Proxy({}, { get: () => () => undefined });
             }
             window.autojs = host;
+            if (typeof options.wrapLspClient === "function") {
+                // autojs6_lsp_client.js assigns window.AutoJsAceLspClient; wrap the client the bridge installs.
+                let runtime;
+                Object.defineProperty(window, "AutoJsAceLspClient", {
+                    configurable: true,
+                    get: () => runtime,
+                    set: (value) => {
+                        runtime = {
+                            ...value,
+                            install: (...args) => options.wrapLspClient(value.install(...args)),
+                        };
+                    },
+                });
+            }
         },
     });
     const deadline = Date.now() + READY_TIMEOUT_MS;
@@ -638,6 +652,84 @@ test("the custom scrollbar falls back to native scrollbars without a canvas cont
         assert.ok(page.window.AutoJsAce, "initialization completed");
     } finally {
         page.close();
+    }
+});
+
+test("symbol highlights follow the cursor and clear on edits and selections", async () => {
+    const requests = [];
+    const highlights = [
+        { start: { row: 0, column: 6 }, end: { row: 0, column: 11 }, kind: "write" },
+        { start: { row: 1, column: 0 }, end: { row: 1, column: 5 }, kind: "read" },
+    ];
+    const page = await openEditor({
+        wrapLspClient: (client) => {
+            client.getDocumentHighlightsAsync = (pos, callback) => {
+                requests.push(plain(pos));
+                callback(null, highlights);
+                return null;
+            };
+            return client;
+        },
+    });
+    try {
+        const { editor, window, api } = page;
+        const drawn = (className = "autojs6_symbol_highlight") => {
+            render(page);
+            return window.document.querySelectorAll(`.ace_marker-layer .${className}`).length;
+        };
+        api.setText("const value = 1;\nvalue + 2;\n");
+        await sleep(300);
+        requests.length = 0;
+        editor.moveCursorTo(0, 8);
+        assert.equal(drawn(), 0, "nothing before the 150 ms delay");
+        await sleep(250);
+        assert.deepEqual(requests, [{ row: 0, column: 8 }]);
+        assert.equal(drawn(), 2);
+        assert.equal(drawn("autojs6_symbol_highlight_write"), 1);
+        editor.session.insert({ row: 1, column: 10 }, " ");
+        assert.equal(drawn(), 0, "an edit clears the highlights");
+        await sleep(250);
+        editor.selection.setRange({ start: { row: 0, column: 6 }, end: { row: 0, column: 11 } });
+        assert.equal(drawn(), 0, "a selection clears the highlights");
+        await sleep(250);
+        assert.equal(drawn(), 0, "no highlights while a selection exists");
+        requests.length = 0;
+        editor.moveCursorTo(0, 5);
+        editor.clearSelection();
+        editor.moveCursorTo(0, 13);
+        await sleep(250);
+        assert.deepEqual(requests, [], "no request off an identifier");
+        api.setReadOnly(true);
+        editor.moveCursorTo(1, 2);
+        await sleep(250);
+        assert.equal(drawn(), 2, "read-only documents highlight too");
+        api.setReadOnly(false);
+        // Switching the option off clears the drawn highlights.
+        page.api.setSmartHintOptions(JSON.stringify({ symbolHighlight: false }));
+        assert.equal(drawn(), 0, "switching the option off clears the highlights");
+    } finally {
+        page.close();
+    }
+    const disabled = await openEditor({
+        host: { getSmartHintOptions: JSON.stringify({ symbolHighlight: false }) },
+        wrapLspClient: (client) => {
+            client.getDocumentHighlightsAsync = (pos, callback) => {
+                requests.push(plain(pos));
+                callback(null, highlights);
+                return null;
+            };
+            return client;
+        },
+    });
+    try {
+        disabled.api.setText("const value = 1;\nvalue + 2;\n");
+        await sleep(300);
+        requests.length = 0;
+        disabled.editor.moveCursorTo(0, 8);
+        await sleep(250);
+        assert.deepEqual(requests, [], "the host switched symbol highlights off");
+    } finally {
+        disabled.close();
     }
 });
 

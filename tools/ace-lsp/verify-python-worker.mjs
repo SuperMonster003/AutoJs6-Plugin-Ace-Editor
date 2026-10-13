@@ -186,6 +186,7 @@ for (let run = 0; run < 8; run += 1) {
 const hover = request("textDocument/hover", { line: 2, character: 10 });
 const signature = request("textDocument/signatureHelp", { line: 7, character: 6 });
 const definition = request("textDocument/definition", { line: 7, character: 2 });
+const documentHighlight = request("textDocument/documentHighlight", { line: 2, character: 10 });
 const status = request("autojs6/status", null);
 const shutdownId = ++requestId;
 const shutdown = send({ jsonrpc: "2.0", id: shutdownId, method: "shutdown", params: {} });
@@ -212,6 +213,14 @@ assert(memory.rss < MAX_RESIDENT_BYTES, "Python Worker verification process exce
 assert(completionLabels.includes("exists"), "pathlib.Path completion is missing exists");
 assert(completionLabels.includes("read_text"), "pathlib.Path completion is missing read_text");
 assert(/name:\s*str/.test(hoverText), "Parameter hover does not expose name: str");
+// Roadmap-Ace-1.44.0.md A5-8: the parameter `name` and its use in the body.
+const highlightStarts = (documentHighlight.response?.result || [])
+    .map((item) => `${item.range.start.line}:${item.range.start.character}-${item.range.end.character}`)
+    .sort();
+assert(
+    JSON.stringify(highlightStarts) === JSON.stringify(["2:10-14", "3:11-15"]),
+    `Pyright document highlights for name are wrong: ${JSON.stringify(documentHighlight.response)}`,
+);
 assert(/name:\s*str/.test(signatureText), "Signature help does not expose name: str");
 assert(diagnosticMessages.some((message) => /missing_name.*not defined/i.test(message)), "Undefined-name diagnostic is missing");
 assert(diagnosticMessages.some((message) => /expected|unclosed|syntax/i.test(message)), "Syntax diagnostic is missing");
@@ -344,11 +353,19 @@ async function verifyProviderIntegration() {
     const providerDefinition = await waitFor((done) =>
         provider.getDefinition(null, { row: 7, column: 2 }, code, done)
     );
+    const providerHighlights = await waitFor((done) =>
+        provider.getDocumentHighlights(null, { row: 2, column: 10 }, code, done)
+    );
     assert(providerCompletions.some((item) => item.caption === "exists"), "PythonProvider lost exists completion");
     assert(providerCompletions.some((item) => item.caption === "read_text"), "PythonProvider lost read_text completion");
     assert(/name:\s*str/.test(providerHover?.docText || ""), "PythonProvider hover normalization failed");
     assert(/name:\s*str/.test(providerSignature?.signature || ""), "PythonProvider signature normalization failed");
     assert(providerDefinition?.uri === uri && providerDefinition.line === 2, "PythonProvider definition normalization failed");
+    assert(
+        JSON.stringify((providerHighlights || []).map((item) => [item.start.row, item.start.column, item.end.column]).sort()) ===
+            JSON.stringify([[2, 10, 14], [3, 11, 15]]),
+        `PythonProvider document highlight normalization failed: ${JSON.stringify(providerHighlights)}`,
+    );
     assert(publishedDiagnostics.some((item) => /missing_name.*not defined/i.test(item.text)), "PythonProvider diagnostics were not published");
     const readyState = provider.getState();
     provider.dispose();
@@ -427,12 +444,16 @@ async function verifyProviderIntegration() {
     const clientDefinition = await waitFor((done) =>
         client.getDefinitionAsync({ row: 7, column: 2 }, done)
     );
+    const clientHighlights = await waitFor((done) =>
+        client.getDocumentHighlightsAsync({ row: 2, column: 10 }, done)
+    );
     await new Promise((resolvePromise) => setTimeout(resolvePromise, 0));
     const clientState = client.getState();
     assert(clientCompletions.some((item) => item.caption === "exists"), "LSP client did not route Python completion");
     assert(/name:\s*str/.test(clientHover?.docText || ""), "LSP client did not route Python hover");
     assert(/name:\s*str/.test(clientSignature?.signature || ""), "LSP client did not route Python signature help");
     assert(clientDefinition?.uri === uri && clientDefinition.line === 2, "LSP client did not route Python definition");
+    assert((clientHighlights || []).length === 2, `LSP client did not route Python document highlights: ${JSON.stringify(clientHighlights)}`);
     assert(sessionAnnotations.some((item) => /missing_name.*not defined/i.test(item.text)), "LSP client did not publish Python diagnostics");
     assert(clientState.localServiceReady, "LSP client did not report its Python service ready");
     assert(clientState.completionProvider === "python-pyright-worker", "LSP client provider state is incorrect");

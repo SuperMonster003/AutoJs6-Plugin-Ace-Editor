@@ -460,6 +460,10 @@
             getHover: function(session, pos, documentText) {
                 return delegate("getHover", [session, pos, documentText], null);
             },
+            // Not a host-visible capability: the bridge uses it for symbol highlights only.
+            getDocumentHighlights: function(session, pos, documentText) {
+                return delegate("getDocumentHighlights", [session, pos, documentText], []);
+            },
             getSignatureHelp: function(session, pos, documentText) {
                 return delegate("getSignatureHelp", [session, pos, documentText], null);
             },

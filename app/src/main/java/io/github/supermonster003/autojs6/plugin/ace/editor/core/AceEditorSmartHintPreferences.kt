@@ -14,6 +14,7 @@ object AceEditorSmartHintPreferences {
     const val KEY_COMPLETION_DELAY = "key_\$_ace_smart_hint_completion_delay"
     const val KEY_SIGNATURE_TRIGGER = "key_\$_ace_smart_hint_signature_trigger"
     const val KEY_ARROW_OVERLOAD_CYCLING = "key_\$_ace_smart_hint_arrow_overload_cycling"
+    const val KEY_SYMBOL_HIGHLIGHT = "key_\$_ace_symbol_highlight_enabled"
 
     const val COMPLETION_TRIGGER_IDENTIFIER = "identifier"
     const val COMPLETION_TRIGGER_DOT = "dot"
@@ -27,6 +28,7 @@ object AceEditorSmartHintPreferences {
     const val DEFAULT_COMPLETION_DELAY_MS = 0
     const val DEFAULT_SIGNATURE_TRIGGER = SIGNATURE_TRIGGER_CURSOR
     const val DEFAULT_ARROW_OVERLOAD_CYCLING = true
+    const val DEFAULT_SYMBOL_HIGHLIGHT = true
 
     private val COMPLETION_TRIGGERS = setOf(COMPLETION_TRIGGER_IDENTIFIER, COMPLETION_TRIGGER_DOT, COMPLETION_TRIGGER_OFF)
     private val SIGNATURE_TRIGGERS = setOf(SIGNATURE_TRIGGER_CURSOR, SIGNATURE_TRIGGER_TYPING, SIGNATURE_TRIGGER_OFF)
@@ -64,6 +66,9 @@ object AceEditorSmartHintPreferences {
      * [popupTexts] are the plugin's localized captions of the completion popup states
      * (Roadmap-Ace-1.44.0.md A5-5); the bridge falls back to English without them.
      */
+    fun isSymbolHighlightEnabled(preferences: SharedPreferences): Boolean =
+        preferences.getBoolean(KEY_SYMBOL_HIGHLIGHT, DEFAULT_SYMBOL_HIGHLIGHT)
+
     fun optionsJson(
         preferences: SharedPreferences,
         popupTexts: CompletionPopupTexts? = null,
@@ -73,6 +78,7 @@ object AceEditorSmartHintPreferences {
         .put("completionDelayMs", completionDelayMs(preferences))
         .put("signatureTrigger", signatureTrigger(preferences))
         .put("arrowOverloadCycling", isArrowOverloadCyclingEnabled(preferences))
+        .put("symbolHighlight", isSymbolHighlightEnabled(preferences))
         .apply {
             popupTexts?.let {
                 put("completionLoadingText", it.loading)

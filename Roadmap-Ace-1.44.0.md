@@ -579,6 +579,21 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       防抖 150 ms 后用 `ace.require("ace/marker_group").MarkerGroup` (随 ext-language_tools 提供) 绘制 `autojs6_symbol_highlight`
       标记, 选区变化或文档变更时清除; 超长行安全模式与只读无关 (只读也高亮); `autojs6.css` 增加亮/暗两套底色.
       —— 验收: JS/TS/Python/Lua 文档中光标落在标识符上时所有引用高亮, 移开后清除; `verifyAutoJs6LspRuntime` 增加 documentHighlight 用例.
+      进度 (2026-10-13): LSP 核心声明 `documentHighlight` 客户端能力并增加 `textDocument/documentHighlight` 请求与结果规范化
+      (`AutoJsAceLspCore.normalizeDocumentHighlights`, LSP kind 3 / 2 / 缺省 -> write / read / text); Python 与 Lua provider 增加
+      `getDocumentHighlights`, TS 语言服务用 `getDocumentHighlights` (definition 与 writtenReference 记为 write), 经 TypeScript provider
+      包装转发; LSP 客户端 `getDocumentHighlightsAsync` 按文档类型分发, JSON 与其他文档返回空. 未把它登记为宿主可见能力
+      (`semanticCapabilities` 与 Kotlin 侧能力表不变). 打包的 Pyright worker 原本不处理该请求 (返回 -32601), 已在
+      `tools/ace-lsp/python-worker/autojs6-python-worker.ts` 用 Pyright 自带的 `DocumentHighlightProvider` 增加处理并按固定提交重建:
+      重建结果只有 worker 与 manifest 两个文件变化 (worker 增加 2280 字节), 语义资产合计 4.826 MiB (M4 时 4.822 MiB).
+      注意: 新检出的 Pyright 树需要先在 `packages/pyright-internal` 执行 `npm ci --ignore-scripts`, 否则构建脚本在许可证汇总时找不到
+      `vscode-jsonrpc` (根目录的 lerna postinstall 被 `--ignore-scripts` 跳过), 本次以 `--pyright-dir` 离线源码模式完成.
+      桥接层 `installSymbolHighlights`: 光标停在标识符上 150 ms 后请求, 用 `ace/marker_group` 的 MarkerGroup 画 `autojs6_symbol_highlight`
+      (写入处另加 `_write`), 文档变更, 换 mode, 非空选区, 长行安全模式与关闭开关时清除, 只读也高亮; 开关为智能提示 JSON 的
+      `symbolHighlight` (Kotlin 键 `key_$_ace_symbol_highlight_enabled`, 缺省 true). 校验: `verifyAutoJs6LspRuntime` 断言 TS 对 `value`
+      的三处高亮及种类; `verifyAutoJs6PythonWorker` 断言真实 Pyright 对参数 `name` 的两处高亮, 以及 provider 与客户端两层规范化;
+      `verifyAutoJs6LuaLanguageServer` 在协议替身上断言往返与种类映射; 桥接执行式测试新增一例 (延迟, 编辑 / 选区清除, 标识符外不请求,
+      只读, 关闭开关). 待真机目视验收 (亮 / 暗主题配色).
 
 ## 10. A6 · 工程与健壮性
 
@@ -635,6 +650,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): 视觉 4 项与放大镜已加入 `AceEditorDisplayPreferences` (键名与默认值同上, 另有 `DEFAULT_*` 常量),
       `AceBridge.kt` 有对应 getter, `notifyDisplayPreferencesChanged` 依次调用 5 个 `AutoJsAce.set*Enabled`;
       `AceEditorDisplayPreferencesTest` 覆盖缺省值, 读取与键名. 同名符号高亮, ghost text 与上游触发三个键随 A5-5 至 A5-8 加入.
+      同名符号高亮键已随 A5-8 加入 `AceEditorSmartHintPreferences` (经 `getSmartHintOptions` JSON 下发, 宿主改动后由
+      `notifyDisplayPreferencesChanged` 中的 `setSmartHintOptions` 重新应用).
 - [ ] **A7-2** 宿主侧 (AutoJs6 仓库, 单独提交): `app/src/main/res/xml/fragment_code_editor_settings.xml` 在 "缩进参考线" (`:82`)
       所在分组后增加视觉 4 项与放大镜开关, 在智能提示分组 (`:183`) 增加 ghost text 与同名符号高亮; `bools.xml` 默认值与 A7-1 一致;
       10 种语言 `strings.xml` 标题 / 摘要 / 长按说明 (ASCII 标点); 变更时调用 `EditorPluginSession.notifyDisplayPreferencesChanged`.

@@ -1097,6 +1097,39 @@
             }
         }
 
+        // Occurrences of the symbol at pos in the current file (Roadmap-Ace-1.44.0.md A5-8), in the shape of
+        // AutoJsAceLspCore.normalizeDocumentHighlights.
+        function getDocumentHighlights(session, pos, documentText) {
+            try {
+                if (!syncSession(session, documentText)) {
+                    return [];
+                }
+                var offset = positionToIndex(session, pos);
+                var groups = service.getDocumentHighlights(currentFile, offset, [currentFile]) || [];
+                var highlights = [];
+                groups.forEach(function(group) {
+                    if (!group || group.fileName !== currentFile) {
+                        return;
+                    }
+                    (group.highlightSpans || []).forEach(function(span) {
+                        var textSpan = span && span.textSpan;
+                        if (!textSpan) {
+                            return;
+                        }
+                        highlights.push({
+                            start: positionFromIndex(currentText, textSpan.start),
+                            end: positionFromIndex(currentText, textSpan.start + textSpan.length),
+                            kind: span.kind === "writtenReference" || span.kind === "definition" ? "write" : "read"
+                        });
+                    });
+                });
+                return highlights;
+            } catch (error) {
+                notify(config, "ACE TS document highlight failed: " + error, error);
+                return [];
+            }
+        }
+
         function signatureHelpItemToEntry(item) {
             var separator = partsToString(item.separatorDisplayParts) || ", ";
             var parameters = (item.parameters || []).map(function(parameter) {
@@ -1620,6 +1653,7 @@
             updateProjectSnapshot: updateProjectSnapshot,
             getCompletions: getCompletions,
             getHover: getHover,
+            getDocumentHighlights: getDocumentHighlights,
             getSignatureHelp: getSignatureHelp,
             getDefinition: getDefinition,
             getRename: getRename,

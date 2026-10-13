@@ -502,6 +502,12 @@ function verifyDependencyTypeLayer(paths) {
             { row: 4, column: "const value".length },
             source,
         );
+        // Roadmap-Ace-1.44.0.md A5-8: occurrences of `value` (declaration, then two reads).
+        const valueHighlights = service.getDocumentHighlights(
+            session,
+            { row: 4, column: "const val".length },
+            source,
+        );
         let projectCompletions = [];
         service.getCompletions(
             session,
@@ -588,6 +594,14 @@ function verifyDependencyTypeLayer(paths) {
         assert(
             String(hover?.docText || "").includes("Dayjs"),
             `${profile} hover did not infer dayjs() as Dayjs: ${JSON.stringify(hover)}`,
+        );
+        assert(
+            JSON.stringify(valueHighlights) === JSON.stringify([
+                { start: { row: 4, column: 6 }, end: { row: 4, column: 11 }, kind: "write" },
+                { start: { row: 5, column: 0 }, end: { row: 5, column: 5 }, kind: "read" },
+                { start: { row: 7, column: 22 }, end: { row: 7, column: 27 }, kind: "read" },
+            ]),
+            `${profile} document highlights for value are wrong: ${JSON.stringify(valueHighlights)}`,
         );
         assert(
             projectCompletions.some((item) => item.caption === "projectHelper") &&

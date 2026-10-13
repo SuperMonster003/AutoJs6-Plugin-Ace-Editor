@@ -12,6 +12,7 @@ import { Uri } from 'pyright-internal/common/uri/uri';
 import { UriEx } from 'pyright-internal/common/uri/uriUtils';
 import { CompletionOptions, CompletionProvider } from 'pyright-internal/languageService/completionProvider';
 import { DefinitionFilter, DefinitionProvider } from 'pyright-internal/languageService/definitionProvider';
+import { DocumentHighlightProvider } from 'pyright-internal/languageService/documentHighlightProvider';
 import { HoverProvider } from 'pyright-internal/languageService/hoverProvider';
 import { SignatureHelpProvider } from 'pyright-internal/languageService/signatureHelpProvider';
 import { convertFromPyrightDiagnostic } from 'pyright-internal/typeServer/diagnosticUtils';
@@ -235,6 +236,19 @@ class PythonEngine {
         }));
     }
 
+    // Occurrences of the symbol at position in the same file (Roadmap-Ace-1.44.0.md A5-8).
+    documentHighlight(externalUri: string, position: Position) {
+        this.analyze();
+        return (
+            new DocumentHighlightProvider(
+                this.service.test_program,
+                this.uri(externalUri),
+                position,
+                CancellationToken.None
+            ).getDocumentHighlight() || []
+        );
+    }
+
     publishDiagnostics(externalUri: string) {
         this.analyze();
         const target = this.uri(externalUri);
@@ -303,6 +317,7 @@ workerScope.addEventListener('message', (event: MessageEvent<JsonRpcMessage>) =>
                     hoverProvider: true,
                     signatureHelpProvider: { triggerCharacters: ['(', ','] },
                     definitionProvider: true,
+                    documentHighlightProvider: true,
                 },
                 serverInfo: {
                     name: 'AutoJs6 Pyright Worker',
@@ -354,6 +369,11 @@ workerScope.addEventListener('message', (event: MessageEvent<JsonRpcMessage>) =>
         if (method === 'textDocument/definition' && message.id !== undefined) {
             const request = requestTextDocument(message.params);
             response(message.id, ensureEngine().definition(request.uri, request.position));
+            return;
+        }
+        if (method === 'textDocument/documentHighlight' && message.id !== undefined) {
+            const request = requestTextDocument(message.params);
+            response(message.id, ensureEngine().documentHighlight(request.uri, request.position));
             return;
         }
         if (method === 'autojs6/status' && message.id !== undefined) {

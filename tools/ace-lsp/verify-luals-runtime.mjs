@@ -445,8 +445,19 @@ function verifyProviderProtocol(paths) {
               hoverProvider: true,
               signatureHelpProvider: { triggerCharacters: ["(", ","] },
               definitionProvider: true,
+              documentHighlightProvider: true,
             },
           },
+        });
+      } else if (message.id != null && message.method === "textDocument/documentHighlight") {
+        deliver({
+          jsonrpc: "2.0",
+          id: message.id,
+          result: [
+            { range: { start: { line: 1, character: 6 }, end: { line: 1, character: 10 } }, kind: 3 },
+            { range: { start: { line: 2, character: 2 }, end: { line: 2, character: 6 } }, kind: 2 },
+            { range: { start: { line: 3, character: 0 }, end: { line: 3, character: 4 } } },
+          ],
         });
       } else if (message.id != null && message.method === "textDocument/completion") {
         deliver({
@@ -560,6 +571,9 @@ function verifyProviderProtocol(paths) {
   let definition = null;
   provider.getDefinition(null, { row: 1, column: 8 }, documentText,
     (error, result) => { definition = { error, result }; });
+  let highlights = null;
+  provider.getDocumentHighlights(null, { row: 1, column: 8 }, documentText,
+    (error, result) => { highlights = { error, result }; });
   assert(!completion?.error && completion.result?.[0]?.caption === "upper" &&
     completion.result[0].autojs6Lua === true,
   `Lua completion did not round-trip: ${JSON.stringify(completion)}`);
@@ -569,6 +583,12 @@ function verifyProviderProtocol(paths) {
     signature.result.activeParameter === 0, "Lua signature help did not round-trip");
   assert(!definition?.error && definition.result?.uri === documentUri &&
     definition.result.line === 1, "Lua definition did not round-trip");
+  // Roadmap-Ace-1.44.0.md A5-8: LSP kinds 3 / 2 / absent map to write / read / text.
+  assert(!highlights?.error && JSON.stringify(highlights.result) === JSON.stringify([
+    { start: { row: 1, column: 6 }, end: { row: 1, column: 10 }, kind: "write" },
+    { start: { row: 2, column: 2 }, end: { row: 2, column: 6 }, kind: "read" },
+    { start: { row: 3, column: 0 }, end: { row: 3, column: 4 }, kind: "text" },
+  ]), `Lua document highlights did not round-trip: ${JSON.stringify(highlights)}`);
 
   deliver({
     jsonrpc: "2.0",

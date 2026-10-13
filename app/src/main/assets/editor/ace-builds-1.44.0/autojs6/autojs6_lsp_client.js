@@ -3060,6 +3060,55 @@
             });
         }
 
+        // Occurrences of the symbol at pos in this document (Roadmap-Ace-1.44.0.md A5-8): the TypeScript service
+        // answers synchronously, Pyright and LuaLS through textDocument/documentHighlight; other documents get [].
+        // Items: { start: { row, column }, end: { row, column }, kind: "text" | "read" | "write" }.
+        function getDocumentHighlightsAsync(pos, callback) {
+            callback = typeof callback === "function" ? callback : noop;
+            try {
+                var text = textFromSession(session);
+                var normalized = normalizePosition(pos);
+                var pythonDocument = isPythonDocumentUri(state.documentUri);
+                var luaDocument = isLuaDocumentUri(state.documentUri);
+                if (!updateSemanticState(session, text.length)) {
+                    callback(null, []);
+                    return null;
+                }
+                if (pythonDocument || luaDocument) {
+                    var provider = pythonDocument ? getPythonService() : getLuaService();
+                    if (!provider || typeof provider.getDocumentHighlights !== "function") {
+                        callback(null, []);
+                        return null;
+                    }
+                    var startedAt = Date.now();
+                    return provider.getDocumentHighlights(session, normalized, text, function(error, highlights) {
+                        recordSemanticOperation(
+                            startedAt,
+                            pythonDocument ? "python-document-highlight" : "lua-document-highlight"
+                        );
+                        callback(error || null, Array.isArray(highlights) ? highlights : []);
+                    });
+                }
+                if (isJsonDocumentUri(state.documentUri) || !isJavaScriptFamilyDocument(session)) {
+                    callback(null, []);
+                    return null;
+                }
+                var service = getTsService();
+                if (!service || typeof service.getDocumentHighlights !== "function" || semanticCircuitOpen) {
+                    callback(null, []);
+                    return null;
+                }
+                var tsStartedAt = Date.now();
+                var result = service.getDocumentHighlights(session, normalized, text);
+                recordSemanticOperation(tsStartedAt, "document-highlight");
+                callback(null, Array.isArray(result) ? result : []);
+            } catch (error) {
+                notify(config, "ACE LSP document highlight failed: " + error, error);
+                callback(error, []);
+            }
+            return null;
+        }
+
         function getRename(pos) {
             try {
                 var text = textFromSession(session);
@@ -3161,6 +3210,7 @@
             getSignatureHelpAsync: getSignatureHelpAsync,
             getDefinition: getDefinition,
             getDefinitionAsync: getDefinitionAsync,
+            getDocumentHighlightsAsync: getDocumentHighlightsAsync,
             getRename: getRename,
             getCodeActions: getCodeActions,
             getDiagnostics: getDiagnostics,
