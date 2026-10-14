@@ -459,7 +459,8 @@ class AceManualCoverageDeviceTest {
 
         val COMPLETION_DOCUMENT = (1..30).joinToString(" ", prefix = "var words = \"", postfix = "\";\n") { "alpha$it" }
 
-        // Below the first rows: on edge-to-edge tablets they lie under the status bar, which takes their touches.
+        // Kept below the first rows, which lay under the status bar of edge-to-edge devices before AceEditorTestActivity
+        // applied the system bar insets.
         val LONG_LINE_DOCUMENT = (0 until 6).joinToString("") { "// line $it\n" } +
             "var data = \"" + "x".repeat(120_000) + "\";\nvar after = 1;\n"
 

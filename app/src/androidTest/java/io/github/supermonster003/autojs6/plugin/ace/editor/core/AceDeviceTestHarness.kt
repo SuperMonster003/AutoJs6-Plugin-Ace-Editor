@@ -273,17 +273,15 @@ internal class AceDeviceTestHarness private constructor(
     fun cssToScreen(x: Double, y: Double): Point =
         toScreen(JSONObject().put("x", x).put("y", y).put("dpr", evaluate("window.devicePixelRatio").toDouble()))
 
-    fun tap(point: Point, holdMs: Long = 40L) {
-        val downTime = SystemClock.uptimeMillis()
-        inject(downTime, downTime, MotionEvent.ACTION_DOWN, point)
-        SystemClock.sleep(holdMs)
-        inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, point)
+    fun tap(point: Point, holdMs: Long = 40L, timeline: TouchTimeline = TouchTimeline()) {
+        inject(timeline.downTime, timeline.at(0), MotionEvent.ACTION_DOWN, point, timeline)
+        inject(timeline.downTime, timeline.at(holdMs), MotionEvent.ACTION_UP, point, timeline)
     }
 
     fun doubleTap(point: Point) {
-        tap(point, holdMs = 30L)
-        SystemClock.sleep(60)
-        tap(point, holdMs = 30L)
+        val firstTap = TouchTimeline()
+        tap(point, holdMs = 30L, firstTap)
+        tap(point, holdMs = 30L, TouchTimeline(firstTap.timeAt(90)))
     }
 
     // Well past the 500 ms of the overlay: a busy page runs its timer late (seen on a 22120RN86C).
@@ -315,22 +313,27 @@ internal class AceDeviceTestHarness private constructor(
         holdBeforeUpMs: Long = 0L,
         beforeUp: (() -> Unit)? = null,
     ) {
-        val downTime = SystemClock.uptimeMillis()
-        inject(downTime, downTime, MotionEvent.ACTION_DOWN, start)
-        if (holdBeforeMoveMs > 0) SystemClock.sleep(holdBeforeMoveMs)
+        val timeline = TouchTimeline()
+        val downTime = timeline.downTime
+        inject(downTime, timeline.at(0), MotionEvent.ACTION_DOWN, start, timeline)
+        var offset = holdBeforeMoveMs
         for (step in 1..steps) {
-            SystemClock.sleep(stepMs)
+            offset += stepMs
             val fraction = step.toFloat() / steps
             inject(
-                downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_MOVE,
-                Point(start.x + (end.x - start.x) * fraction, start.y + (end.y - start.y) * fraction),
+                downTime, timeline.at(offset), MotionEvent.ACTION_MOVE,
+                Point(start.x + (end.x - start.x) * fraction, start.y + (end.y - start.y) * fraction), timeline,
             )
         }
-        if (holdBeforeUpMs > 0) SystemClock.sleep(holdBeforeUpMs)
+        val upTime = timeline.at(offset + holdBeforeUpMs)
         try {
             beforeUp?.invoke()
         } finally {
-            inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, end)
+            // A callback keeps the finger resting until it returns.
+            inject(
+                downTime, if (beforeUp == null) upTime else SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, end,
+                timeline,
+            )
         }
     }
 
@@ -373,8 +376,9 @@ internal class AceDeviceTestHarness private constructor(
 
     /**
      * Injects a touch that is cancelled right away. The first touch injected into a freshly started activity sometimes
-     * never reaches the WebView (seen on emulators and Xiaomi devices, also with AceTouchInteractionDeviceTest); a
-     * cancelled touch costs nothing and leaves the editor unchanged.
+     * never reached the WebView on Xiaomi devices; a cancelled touch costs nothing and leaves the editor unchanged.
+     * The losses on API 35+ emulators (B1 of AceTouchInteractionDeviceTest) were taps under the status bar, which
+     * AceEditorTestActivity now keeps the editor clear of.
      */
     fun warmUpTouchInjection() {
         val point = point(1, 3)
@@ -405,18 +409,25 @@ internal class AceDeviceTestHarness private constructor(
         SystemClock.sleep(600)
     }
 
-    private fun inject(downTime: Long, eventTime: Long, action: Int, point: Point) {
+    private fun inject(
+        downTime: Long,
+        eventTime: Long,
+        action: Int,
+        point: Point,
+        timeline: TouchTimeline? = null,
+    ) {
         var attempt = 0
         var injected: Boolean
+        var injectedAt = eventTime
         do {
-            val event = MotionEvent.obtain(
-                downTime, if (attempt == 0) eventTime else SystemClock.uptimeMillis(), action, point.x, point.y, 0,
-            )
+            if (attempt > 0) injectedAt = SystemClock.uptimeMillis()
+            val event = MotionEvent.obtain(downTime, injectedAt, action, point.x, point.y, 0)
             event.source = InputDevice.SOURCE_TOUCHSCREEN
             injected = instrumentation.uiAutomation.injectInputEvent(event, true)
             event.recycle()
             if (!injected) SystemClock.sleep(250)
         } while (!injected && attempt++ < INJECTION_RETRIES)
+        timeline?.delayBy(injectedAt - eventTime)
         assertTrue("Touch injection failed at (${point.x}, ${point.y})", injected)
     }
 

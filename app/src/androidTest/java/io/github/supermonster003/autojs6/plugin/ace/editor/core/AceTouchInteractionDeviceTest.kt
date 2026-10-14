@@ -7,6 +7,8 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -76,6 +78,7 @@ class AceTouchInteractionDeviceTest {
             probe.install()
             assertTrue("The editor should show at least $MIN_VISIBLE_ROWS rows", probe.visibleRowsNow() >= MIN_VISIBLE_ROWS)
             probe.awaitWindowFocus()
+            warmUpTouchInjection(probe.point(1, 3))
 
             runScenario(probe, "B1 quick tap") { p ->
                 val target = p.point(2, 10)
@@ -96,9 +99,9 @@ class AceTouchInteractionDeviceTest {
             }
             runScenario(probe, "B3 double tap") { p ->
                 val target = p.point(4, 14)
-                tap(target, holdMs = 40)
-                SystemClock.sleep(120)
-                tap(target, holdMs = 40)
+                val firstTap = TouchTimeline()
+                tap(target, holdMs = 40, firstTap)
+                tap(target, holdMs = 40, TouchTimeline(firstTap.timeAt(160)))
                 settle()
                 val state = p.state()
                 expect(p, !state.empty && WORD.matches(state.selectedText), "double tap should select a word, got '${state.selectedText}'")
@@ -280,11 +283,9 @@ class AceTouchInteractionDeviceTest {
 
     private fun settle() = SystemClock.sleep(SETTLE_MS)
 
-    private fun tap(point: Point, holdMs: Long) {
-        val downTime = SystemClock.uptimeMillis()
-        inject(downTime, downTime, MotionEvent.ACTION_DOWN, point)
-        SystemClock.sleep(holdMs)
-        inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, point)
+    private fun tap(point: Point, holdMs: Long, timeline: TouchTimeline = TouchTimeline()) {
+        inject(timeline.downTime, timeline.at(0), MotionEvent.ACTION_DOWN, point, timeline)
+        inject(timeline.downTime, timeline.at(holdMs), MotionEvent.ACTION_UP, point, timeline)
     }
 
     private fun drag(
@@ -296,22 +297,23 @@ class AceTouchInteractionDeviceTest {
         holdBeforeUpMs: Long = 0,
         stationaryTailMs: Long = 0,
     ) {
-        val downTime = SystemClock.uptimeMillis()
-        inject(downTime, downTime, MotionEvent.ACTION_DOWN, start)
-        if (holdBeforeMoveMs > 0) SystemClock.sleep(holdBeforeMoveMs)
+        val timeline = TouchTimeline()
+        val downTime = timeline.downTime
+        inject(downTime, timeline.at(0), MotionEvent.ACTION_DOWN, start, timeline)
+        var offset = holdBeforeMoveMs
         for (step in 1..steps) {
-            SystemClock.sleep(stepMs)
+            offset += stepMs
             val fraction = step.toFloat() / steps
             val point = Point(start.x + (end.x - start.x) * fraction, start.y + (end.y - start.y) * fraction)
-            inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_MOVE, point)
+            inject(downTime, timeline.at(offset), MotionEvent.ACTION_MOVE, point, timeline)
         }
-        val tailEnd = SystemClock.uptimeMillis() + stationaryTailMs
-        while (SystemClock.uptimeMillis() < tailEnd) {
-            SystemClock.sleep(16)
-            inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_MOVE, end)
+        // The touchscreen keeps reporting a resting finger about once per frame.
+        val tailEnd = offset + stationaryTailMs
+        while (offset + 16 <= tailEnd) {
+            offset += 16
+            inject(downTime, timeline.at(offset), MotionEvent.ACTION_MOVE, end, timeline)
         }
-        if (holdBeforeUpMs > 0) SystemClock.sleep(holdBeforeUpMs)
-        inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, end)
+        inject(downTime, timeline.at(offset + holdBeforeUpMs), MotionEvent.ACTION_UP, end, timeline)
     }
 
     private fun pinch(center: Point, startSpread: Float, endSpread: Float) {
@@ -351,19 +353,46 @@ class AceTouchInteractionDeviceTest {
         send(MotionEvent.ACTION_UP, 1, endSpread)
     }
 
-    private fun inject(downTime: Long, eventTime: Long, action: Int, point: Point) {
+    /**
+     * Injects a touch that is cancelled right away, as AceDeviceTestHarness does. On a 23046RP50C the system refused
+     * every injection for more than two seconds after the test activity of a freshly installed build started, so B1
+     * failed with "Touch injection failed"; the cancelled touch absorbs that and leaves the editor unchanged.
+     */
+    private fun warmUpTouchInjection(point: Point) {
+        val downTime = SystemClock.uptimeMillis()
+        try {
+            inject(downTime, downTime, MotionEvent.ACTION_DOWN, point)
+            SystemClock.sleep(30)
+            inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, point)
+        } catch (error: AssertionError) {
+            // Best effort: the scenarios' own touches still have to arrive.
+            Log.i(LOG_TAG, "Warm-up touch injection was refused: ${error.message}")
+        }
+        SystemClock.sleep(200)
+    }
+
+    private fun inject(
+        downTime: Long,
+        eventTime: Long,
+        action: Int,
+        point: Point,
+        timeline: TouchTimeline? = null,
+    ) {
         val event = MotionEvent.obtain(downTime, eventTime, action, point.x, point.y, 0)
         event.source = InputDevice.SOURCE_TOUCHSCREEN
         var injected = instrumentation.uiAutomation.injectInputEvent(event, true)
         event.recycle()
         var attempt = 0
+        var injectedAt = eventTime
         while (!injected && attempt++ < INJECTION_RETRIES) {
             SystemClock.sleep(200)
-            val retry = MotionEvent.obtain(downTime, SystemClock.uptimeMillis(), action, point.x, point.y, 0)
+            injectedAt = SystemClock.uptimeMillis()
+            val retry = MotionEvent.obtain(downTime, injectedAt, action, point.x, point.y, 0)
             retry.source = InputDevice.SOURCE_TOUCHSCREEN
             injected = instrumentation.uiAutomation.injectInputEvent(retry, true)
             retry.recycle()
         }
+        timeline?.delayBy(injectedAt - eventTime)
         assertTrue("Touch injection failed at (${point.x}, ${point.y})", injected)
     }
 
@@ -527,11 +556,12 @@ class AceTouchInteractionDeviceTest {
                     .hideSoftInputFromWindow(editor.webView.windowToken, 0)
             }
             val deadline = SystemClock.uptimeMillis() + IME_HIDE_TIMEOUT_MS
-            while (webViewHeight() < baselineHeight && SystemClock.uptimeMillis() < deadline) {
+            while (keyboardShown() && SystemClock.uptimeMillis() < deadline) {
                 SystemClock.sleep(50)
             }
-            if (webViewHeight() < baselineHeight) {
-                failures += "$currentName: the soft keyboard did not hide (height ${webViewHeight()} < $baselineHeight)"
+            if (keyboardShown()) {
+                failures += "$currentName: the soft keyboard did not hide " +
+                    "(height ${webViewHeight()} of $baselineHeight, keyboard insets visible: ${imeVisible()})"
             }
             if (evaluate("window.__autojs6TouchProbe.restoreDocument()") == "true") {
                 failures += "$currentName: the document was modified and had to be restored"
@@ -583,6 +613,20 @@ class AceTouchInteractionDeviceTest {
         ).toInt()
 
         private fun visibleRows(): Int = evaluate("window.__autojs6TouchProbe.visibleRows()").toInt()
+
+        // On API 35 the edge-to-edge window no longer shrinks for the keyboard, so the height alone misses it.
+        private fun keyboardShown(): Boolean = webViewHeight() < baselineHeight || imeVisible()
+
+        // Root insets report the keyboard reliably from API 30 on; older versions guess from the visible frame.
+        private fun imeVisible(): Boolean {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
+            val visible = AtomicReference(false)
+            scenario.onActivity {
+                val insets = ViewCompat.getRootWindowInsets((session.get().view as AceCodeEditor).webView)
+                visible.set(insets?.isVisible(WindowInsetsCompat.Type.ime()) == true)
+            }
+            return visible.get()
+        }
 
         private fun webViewHeight(): Int {
             val height = AtomicReference(0)

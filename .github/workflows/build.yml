@@ -75,3 +75,15 @@ jobs:
           profile: pixel_7
           disable-animations: true
           script: bash ./gradlew --max-workers=2 -Pautojs.gradle.build.number.auto.increment.enabled=false -Pautojs.gradle.build.time.update.enabled=false :app:connectedDebugAndroidTest --stacktrace
+
+      # The touch test logs one record per scenario, failed ones included; AGP keeps each test's logcat with the results.
+      - name: Upload instrumentation results
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ace-editor-instrumentation-results
+          path: |
+            app/build/outputs/androidTest-results/connected/
+            app/build/reports/androidTests/connected/
+          if-no-files-found: ignore
+          retention-days: 7

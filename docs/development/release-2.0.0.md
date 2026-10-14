@@ -42,7 +42,9 @@ Chinese entries and the host's settings labels. README and changelog Markdown fi
   design) passed on all eight devices after attribution: the six phones, an x86 API 27 emulator (WebView 69) and an
   x86_64 API 36.1 16 KB emulator (WebView 134, started with 6 GB of memory), where only the first injected tap is lost
   as it has been since the 1.4.12 baseline. The rerun fixed the tooltip font size on WebView before 79 and three test
-  harness problems (see Roadmap A8-2).
+  harness problems (see Roadmap A8-2). Found after the release: the tap landed on the status bar, which Android 15
+  and later draw over the edge-to-edge test activity (shown on the API 35 emulator of the GitHub workflow). With the
+  device tests keeping the editor clear of the system bars, B1 also passes on the API 36.1 emulator.
   The device tests added on 2026-10-14 cover manual checks (`AceManualCoverageDeviceTest`, 10 tests) and
   replay the input connection calls of Gboard, Baidu and Sogou (`AceImeReplayDeviceTest`, 12 tests, 13 with the
   Ctrl+A case added later):
@@ -125,6 +127,9 @@ Since the branch measurement at `710f323`, the ten-language 2.0.0 changelog pack
   writes LF, `.python/tests/test_packaged_asset_line_endings.py` checks the rules and the working copy, and
   `verifyAutoJs6TextAssetLineEndings` stops a release build before it packages CRLF. An existing Windows checkout
   keeps the CRLF files Git wrote earlier: delete them and run `git checkout -- <path>...` once.
+- Found after the release: when a Java, Lua or Python diagnostics request answered during the 450 ms debounce of a
+  later edit, the client dropped the validation of that edit, so its diagnostics were missing until the next edit
+  (seen as ECJ smoke test timeouts on slow emulators). Fixed in 2.0.1.
 - The plugin's debug instrumentation APK cannot run against the R8 release; release validation uses the host's
   `AceEditorPluginHostDeviceTest` and `CompanionReleaseSmokeTest` instead, as for 1.13.1.
 
