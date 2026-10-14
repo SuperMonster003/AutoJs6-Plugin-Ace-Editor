@@ -122,6 +122,7 @@ internal class AceDeviceTestHarness private constructor(
     fun moveCursorTo(row: Int, column: Int) {
         evaluate("window.editor.clearSelection(), window.editor.moveCursorTo($row, $column), true")
         SystemClock.sleep(100)
+        awaitTextInputSync()
     }
 
     fun select(anchorRow: Int, anchorColumn: Int, cursorRow: Int, cursorColumn: Int) {
@@ -130,6 +131,21 @@ internal class AceDeviceTestHarness private constructor(
                 "window.editor.selection.selectToPosition({ row: $cursorRow, column: $cursorColumn }), true",
         )
         SystemClock.sleep(100)
+        awaitTextInputSync()
+    }
+
+    /**
+     * Waits until Ace's hidden textarea holds the cursor row again after a programmatic move, as it does long before a
+     * person can press the next key. An IME call that arrives earlier works on the previous row's text (seen once on
+     * an API 27 emulator with WebView 69, where the sync takes longer than 100 ms).
+     */
+    fun awaitTextInputSync() {
+        waitFor(1_000L) {
+            evaluateBoolean(
+                "(function() { var t = document.querySelector('textarea.ace_text-input'); var e = window.editor; " +
+                    "return !t || t.value.indexOf(e.session.getLine(e.getCursorPosition().row)) >= 0; })()",
+            )
+        }
     }
 
     /** Runs [action] on the editor through its bridge API (`window.AutoJsAce`). */
