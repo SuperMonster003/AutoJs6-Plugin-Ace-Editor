@@ -165,7 +165,8 @@ object AceEditorLspPreferences {
         LanguageSupport(
             id = "tsx",
             fileTypes = listOf(".tsx"),
-            syntax = SyntaxSupport.PARTIAL,
+            // Ace 1.44.0 has an official tsx mode; Ace 1.4.12 highlighted TSX with the TypeScript mode.
+            syntax = SyntaxSupport.FULL,
             keywordCompletion = true,
             snippets = true,
             localCompletion = LocalCompletionSupport.SUPPORTED,
