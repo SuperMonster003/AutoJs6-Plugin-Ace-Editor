@@ -418,6 +418,74 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     }
 }
 
+// An APK carries the working copy's bytes. A Windows checkout with core.autocrlf=true once rewrote 227 text assets to
+// CRLF for a 2.0.0 release build, and the bundled font catalog's SHA-256 is compared with the signed remote catalog.
+// .gitattributes now checks these files out as LF; this task keeps a release build from packaging CRLF anyway.
+val verifyAutoJs6TextAssetLineEndings = tasks.register("verifyAutoJs6TextAssetLineEndings") {
+    group = "verification"
+    description = "Checks that packaged text assets and raw resources use LF line endings."
+    dependsOn(generateAutoJs6LspDeclarations)
+    val sourceAssets = layout.projectDirectory.dir("src/main/assets").asFile
+    val rawResources = layout.projectDirectory.dir("src/main/res/raw").asFile
+    val generatedAssets = generateAutoJs6LspDeclarations.flatMap { task -> task.outputDirectory }
+    inputs.files(sourceAssets, rawResources, generatedAssets)
+        .withPropertyName("packagedFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    val repositoryRoot = rootProject.layout.projectDirectory.asFile
+    val report = layout.buildDirectory.file("reports/text-asset-line-endings.txt")
+    outputs.file(report)
+    doLast {
+        // Returns whether a text file contains CRLF, or null for a file that Git's text=auto keeps as binary
+        // (convert.c, gather_stats and convert_is_binary: a NUL, a lone CR, or more than one non-printable byte per
+        // 128 printable ones; BS, HT, FF and ESC count as printable).
+        fun ByteArray.textCrLf(): Boolean? {
+            var crlf = 0
+            var printable = 0
+            var nonPrintable = 0
+            var index = 0
+            while (index < size) {
+                val byte = this[index].toInt() and 0xFF
+                when {
+                    byte == 0x0D -> if (index + 1 < size && this[index + 1].toInt() == 0x0A) {
+                        crlf++
+                        index++
+                    } else {
+                        return null
+                    }
+                    byte == 0x0A -> Unit
+                    byte == 0x00 -> return null
+                    byte == 0x7F || byte < 0x20 && byte != 0x08 && byte != 0x09 && byte != 0x0C && byte != 0x1B ->
+                        nonPrintable++
+                    else -> printable++
+                }
+                index++
+            }
+            if (isNotEmpty() && last().toInt() == 0x1A) nonPrintable--
+            return if ((printable shr 7) < nonPrintable) null else crlf > 0
+        }
+        // LuaLS keeps its exact upstream bytes, including one CRLF script; luals/manifest.json pins every file.
+        val pinnedBytes = sourceAssets.resolve("luals")
+        var textFileCount = 0
+        val crlfFiles = listOf(sourceAssets, rawResources, generatedAssets.get().asFile)
+            .filter(File::isDirectory)
+            .flatMap { root -> root.walkTopDown().onEnter { it != pinnedBytes }.filter(File::isFile).toList() }
+            .filter { file ->
+                val crlf = file.readBytes().textCrLf() ?: return@filter false
+                textFileCount++
+                crlf
+            }
+            .map { it.relativeTo(repositoryRoot).invariantSeparatorsPath }
+            .sorted()
+        check(crlfFiles.isEmpty()) {
+            "${crlfFiles.size} packaged text files contain CRLF. In an existing checkout, Git keeps CRLF files " +
+                "it wrote before .gitattributes pinned LF: delete the listed files and run " +
+                "\"git checkout -- <path>...\" from the repository root (this drops local edits).\n" +
+                crlfFiles.joinToString("\n")
+        }
+        report.get().asFile.apply { parentFile.mkdirs() }.writeText("$textFileCount text files use LF line endings\n")
+    }
+}
+
 // Several JVM tests read the bridge scripts and the Ace distribution from src/main/assets at run time; declare them
 // so that editing an asset reruns the tests instead of reporting them up to date.
 tasks.withType<Test>().configureEach {
@@ -440,8 +508,12 @@ tasks.named("check") {
         verifyAutoJs6LuaLanguageServer,
         verifyAutoJs6JavaSemanticRuntime,
         verifyAutoJs6KotlinP2Plus,
+        verifyAutoJs6TextAssetLineEndings,
     )
 }
+
+// Release packaging stops before it merges a CRLF text asset into an APK.
+tasks.matching { it.name == "mergeReleaseAssets" }.configureEach { dependsOn(verifyAutoJs6TextAssetLineEndings) }
 
 android {
     namespace = globalApplicationId

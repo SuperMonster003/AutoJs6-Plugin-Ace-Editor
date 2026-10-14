@@ -117,10 +117,14 @@ Since the branch measurement at `710f323`, the ten-language 2.0.0 changelog pack
   This is environmental, and the emulator was not counted.
 - On WebView 69, an IME edit that arrives within about 100 ms of a programmatic cursor move can work on the
   previous row's text, because the hidden textarea has not caught up yet. A person's next key comes much later.
-- Release builds on Windows package text assets with the line endings of the working copy. With
-  `core.autocrlf=true`, every file a checkout rewrites becomes CRLF (the published 1.13.1 contains 136 such assets;
-  both line endings work at runtime). No repository rule pins these assets to LF yet, so a release build should check
-  `git ls-files --eol -- app/src/main/assets` first.
+- Release builds on Windows packaged text assets with the line endings of the working copy. With
+  `core.autocrlf=true`, every file a checkout rewrites became CRLF. The published 1.13.1 contains 136 such assets
+  outside `luals/`, where both line endings work at runtime; its LuaLS runtime was CRLF as well and matched a manifest
+  recorded from those bytes, until `luals/** -text` (`abb4cfa`) pinned the upstream bytes. At the 2.0.0 release no
+  rule pinned the other assets to LF. Since then, `.gitattributes` checks them out as LF, the ECJ manifest generator
+  writes LF, `.python/tests/test_packaged_asset_line_endings.py` checks the rules and the working copy, and
+  `verifyAutoJs6TextAssetLineEndings` stops a release build before it packages CRLF. An existing Windows checkout
+  keeps the CRLF files Git wrote earlier: delete them and run `git checkout -- <path>...` once.
 - The plugin's debug instrumentation APK cannot run against the R8 release; release validation uses the host's
   `AceEditorPluginHostDeviceTest` and `CompanionReleaseSmokeTest` instead, as for 1.13.1.
 

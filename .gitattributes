@@ -1,3 +1,11 @@
+# Packaged text assets keep LF on every checkout. The APK carries the working copy's bytes, and a Windows checkout
+# with core.autocrlf=true rewrote 227 of these files to CRLF for a discarded 2.0.0 release build; the bundled font
+# catalog's SHA-256 is also compared with the signed remote catalog. Binary files stay as they are (text=auto).
+# Keep these rules first: the later rules for specific paths override them, and -text keeps manifest-pinned bytes.
+# .python/tests/test_packaged_asset_line_endings.py and verifyAutoJs6TextAssetLineEndings check the result.
+app/src/main/assets/** text=auto eol=lf
+app/src/main/res/raw/** text=auto eol=lf
+
 # Icon Studio reproducible assets
 .icons/assets/** binary
 .icons/recipe.json text eol=lf

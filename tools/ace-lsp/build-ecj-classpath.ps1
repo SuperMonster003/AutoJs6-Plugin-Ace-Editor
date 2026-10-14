@@ -222,7 +222,8 @@ $manifest = [ordered]@{
     uncompressedClassBytes = $facts.uncompressedClassBytes
     generator = "tools/ace-lsp/build-ecj-classpath.ps1"
 }
-$manifestJson = ($manifest | ConvertTo-Json -Depth 4) + [Environment]::NewLine
+# LF on every platform: the manifest is a packaged asset, and .gitattributes pins packaged text assets to LF.
+$manifestJson = (($manifest | ConvertTo-Json -Depth 4) -replace "`r`n", "`n") + "`n"
 [System.IO.File]::WriteAllText($manifestFile, $manifestJson, [System.Text.UTF8Encoding]::new($false))
 
 Write-Output (
