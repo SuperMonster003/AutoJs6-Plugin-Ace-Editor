@@ -96,6 +96,8 @@ declare module "ace-builds-internal/editor" {
         $autojs6TouchCursorSelectionGuardInstalled?: boolean;
         $autojs6MemberCompletionDotTriggerInstalled?: boolean;
         $autojs6UnchangedCompositionGuard?: boolean;
+        // Set by ext-whitespaces_in_selection.js while showWhitespacesInSelection is on.
+        $boundChangeSelectionForWhitespace?: () => void;
     }
 }
 

@@ -5704,7 +5704,16 @@
 
     function setWhitespacesInSelectionEnabled(enabled) {
         try {
+            var wasEnabled = !!editor.getOption("showWhitespacesInSelection");
             editor.setOption("showWhitespacesInSelection", !!enabled);
+            // Ace marks the selection only when it next changes and draws text markers after a render, so turning
+            // the host switch on left a selection made before plain (found while checking the switch on a 22120RN86C).
+            if (!!enabled !== wasEnabled) {
+                if (enabled && typeof editor.$boundChangeSelectionForWhitespace === "function") {
+                    editor.$boundChangeSelectionForWhitespace();
+                }
+                editor.renderer.updateFull();
+            }
         } catch (error) {
             // ext-whitespaces_in_selection.js registers the option; without it the selection keeps plain text.
             notifyRecoverableError("showWhitespacesInSelection", error);

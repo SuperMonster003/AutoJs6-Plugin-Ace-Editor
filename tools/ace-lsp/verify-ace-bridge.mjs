@@ -849,6 +849,15 @@ test("whitespace markers appear inside the selection only", async () => {
         await sleep(50);
         render(page);
         assert.equal(markers(), 0, "markers removed with the selection");
+        // The host switch applies to a selection that is already there; Ace itself only marks the next selection.
+        editor.selection.setRange({ start: { row: 1, column: 0 }, end: { row: 2, column: 12 } });
+        await sleep(50);
+        page.api.setWhitespacesInSelectionEnabled(false);
+        render(page);
+        assert.equal(markers(), 0, "switched off");
+        page.api.setWhitespacesInSelectionEnabled(true);
+        render(page);
+        assert.ok(markers() > 0, "switched on again under the same selection");
     } finally {
         page.close();
     }
