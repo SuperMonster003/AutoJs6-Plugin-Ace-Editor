@@ -241,7 +241,7 @@
 
 ###### 2026/09/13
 
-* `Correctif` Compatibilité Android 7 corrigée pour les chemins Lua, les instantanés des dépendances TypeScript et l’arrêt des tests du serveur de langage
+* `Correctif` Compatibilité Android 7 corrigée pour les chemins Lua, les instantanés des dépendances TypeScript et l'arrêt des tests du serveur de langage
 * `Correctif` Supprimer les fichiers temporaires des polices en échec et libérer leurs verrous avant de notifier les abonnés
 * `Amélioration` Vérification de la signature complète, des APK attendus et de la reproductibilité de la documentation
 * `Amélioration` Choisissez un APK adapté à votre ABI ou le paquet universal. La sémantique Lua fonctionne sur arm64-v8a, armeabi-v7a et x86_64; x86 conserve l'éditeur et la complétion statique.
@@ -364,7 +364,7 @@
 
 ###### 2026/08/26
 
-* `Fonctionnalité` Intègre les déclarations unifiées des cibles IA d’AutoJs6 : `ai.catalog`, routage exact par `target`, cibles locales et en ligne, métadonnées complètes des réponses et sessions, sortie de raisonnement et erreurs stables sans repli ; supprime toutes les anciennes API et tous les alias non publiés du catalogue IA
+* `Fonctionnalité` Intègre les déclarations unifiées des cibles IA d'AutoJs6 : `ai.catalog`, routage exact par `target`, cibles locales et en ligne, métadonnées complètes des réponses et sessions, sortie de raisonnement et erreurs stables sans repli ; supprime toutes les anciennes API et tous les alias non publiés du catalogue IA
 
 # v1.1.11
 
