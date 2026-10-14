@@ -92,7 +92,7 @@ class AceInitialPresentationTest {
             .substringAfter("fun isAvailable(context: Context)")
             .substringBefore("fun isSupported(context: Context)")
         val preparationSource = runtimeSource
-            .substringAfter("private fun prepare(context: Context)")
+            .substringAfter("private fun prepare(context: Context, storage: AceRuntimeStorage)")
             .substringBefore("private fun readManifest(context: Context)")
 
         assertTrue(editorSource.contains("AceLuaLanguageServerRuntime.isAvailable(pluginContext)"))

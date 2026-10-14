@@ -41,11 +41,11 @@ internal object AceJavaClasspathRuntime {
         }
     }.isSuccess
 
-    fun ensureInstalled(context: Context): File = synchronized(installLock) {
-        val applicationContext = context.applicationContext ?: context
-        readManifest(applicationContext)
+    /** Reads the classpath from the plugin [context] and installs it in the process's [storage]. */
+    fun ensureInstalled(context: Context, storage: AceRuntimeStorage): File = synchronized(installLock) {
+        readManifest(context)
         val installDirectory = File(
-            applicationContext.filesDir,
+            storage.filesDirectory,
             "ace-java/ecj-$ECJ_VERSION",
         )
         check(installDirectory.isDirectory || installDirectory.mkdirs()) {
@@ -70,7 +70,7 @@ internal object AceJavaClasspathRuntime {
             check(temporary.delete()) { "Could not clear stale Java classpath temporary file" }
         }
         try {
-            applicationContext.assets.open(CLASSPATH_ASSET).use { input ->
+            context.assets.open(CLASSPATH_ASSET).use { input ->
                 temporary.outputStream().buffered().use { output -> input.copyTo(output) }
             }
             check(isValidInstalledClasspath(temporary)) {

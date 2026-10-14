@@ -60,6 +60,7 @@ import io.github.supermonster003.autojs6.plugin.ace.editor.core.health.AceRuntim
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceJavaSemanticRuntime
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLuaLanguageServerRuntime
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceLspServerManager
+import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceRuntimeStorage
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceStdioLspProcessRegistry
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceStdioLspProcessTransport
 import io.github.supermonster003.autojs6.plugin.ace.editor.core.lsp.AceTypeScriptCodeAction
@@ -129,8 +130,11 @@ class AceCodeEditor @JvmOverloads constructor(
         resources.displayMetrics.density * SINGLE_TOUCH_SCROLL_CANCEL_SLOP_DP,
     ).coerceAtLeast(1f)
     private val eventHistory = AceRuntimeEventHistory()
+    // The plugin context names the plugin package (assets, native library); files go to the process's own storage.
+    private val runtimeStorage = AceRuntimeStorage.of(hostContext)
     private val javaSemanticRuntime = AceJavaSemanticRuntime(
         context = pluginContext,
+        storage = runtimeStorage,
         listener = AceJavaSemanticRuntime.Listener(::dispatchJavaDiagnostics),
     )
     private val lspServerManager = AceLspServerManager(
@@ -146,7 +150,7 @@ class AceCodeEditor @JvmOverloads constructor(
     private val stdioLspProcessRegistry = AceStdioLspProcessRegistry(
         dynamicSpecs = mapOf(
             AceLuaLanguageServerRuntime.PROVIDER_ID to {
-                AceLuaLanguageServerRuntime.serverSpec(pluginContext)
+                AceLuaLanguageServerRuntime.serverSpec(pluginContext, runtimeStorage)
             },
         ),
         listener = object : AceStdioLspProcessRegistry.Listener {

@@ -16,6 +16,9 @@ import org.json.JSONObject
  * with executable permissions. Lua sources are copied from an immutable, hashed asset inventory to
  * a private directory. Neither a web page nor a bridge caller can choose a command, argument, or
  * environment variable.
+ *
+ * The plugin context supplies the plugin's assets and native library directory; [AceRuntimeStorage]
+ * supplies the private directories of the process that runs the editor.
  */
 internal object AceLuaLanguageServerRuntime {
 
@@ -43,24 +46,24 @@ internal object AceLuaLanguageServerRuntime {
      */
     fun isAvailable(context: Context): Boolean = runCatching {
         hasInstalledNativeRuntime(
-            nativeLibraryDirectory = File(context.applicationContext.applicationInfo.nativeLibraryDir),
+            nativeLibraryDirectory = File(context.applicationInfo.nativeLibraryDir),
             supportedAbis = Build.SUPPORTED_ABIS.asList(),
         )
     }.getOrDefault(false)
 
     fun isSupported(context: Context): Boolean = runCatching {
-        val manifest = readManifest(context.applicationContext)
-        val nativeLibrary = resolveNativeLibrary(context.applicationContext, manifest)
+        val manifest = readManifest(context)
+        val nativeLibrary = resolveNativeLibrary(context, manifest)
         verifyNativeLibrary(nativeLibrary, manifest.nativeLibraries.getValue(nativeLibrary.abi))
         true
     }.getOrDefault(false)
 
-    fun serverSpec(context: Context): AceStdioLspServerSpec {
-        val applicationContext = context.applicationContext
-        val prepared = cachedPreparation?.takeIf { it.packageName == applicationContext.packageName }
+    fun serverSpec(context: Context, storage: AceRuntimeStorage): AceStdioLspServerSpec {
+        val packageName = context.packageName
+        val prepared = cachedPreparation?.takeIf { it.packageName == packageName && it.storage == storage }
             ?: synchronized(preparationLock) {
-                cachedPreparation?.takeIf { it.packageName == applicationContext.packageName }
-                    ?: prepare(applicationContext).also { cachedPreparation = it }
+                cachedPreparation?.takeIf { it.packageName == packageName && it.storage == storage }
+                    ?: prepare(context, storage).also { cachedPreparation = it }
             }
         return AceStdioLspServerSpec(
             id = PROVIDER_ID,
@@ -84,14 +87,14 @@ internal object AceLuaLanguageServerRuntime {
         )
     }
 
-    private fun prepare(context: Context): Preparation {
+    private fun prepare(context: Context, storage: AceRuntimeStorage): Preparation {
         val manifest = readManifest(context)
         require(manifest.version == VERSION) {
             "Unexpected bundled LuaLS version: ${manifest.version}"
         }
         val nativeLibrary = resolveNativeLibrary(context, manifest)
         verifyNativeLibrary(nativeLibrary, manifest.nativeLibraries.getValue(nativeLibrary.abi))
-        val runtimeParent = File(context.noBackupFilesDir, "autojs6-luals")
+        val runtimeParent = File(storage.noBackupDirectory, "autojs6-luals")
         require(runtimeParent.mkdirs() || runtimeParent.isDirectory) {
             "Unable to create LuaLS private runtime directory"
         }
@@ -99,15 +102,16 @@ internal object AceLuaLanguageServerRuntime {
             runtimeParent,
             "runtime-${manifest.version}-${manifest.runtimeSha256.take(16)}",
         )
-        ensureRuntimeExtracted(context, runtimeRoot, manifest)
+        ensureRuntimeExtracted(context, runtimeRoot, manifest, storage.noBackupDirectory)
 
-        val stateRoot = File(context.cacheDir, "autojs6-luals/state-${manifest.version}")
+        val stateRoot = File(storage.cacheDirectory, "autojs6-luals/state-${manifest.version}")
         val logRoot = File(stateRoot, "log")
         val metaRoot = File(stateRoot, "meta")
         require(logRoot.mkdirs() || logRoot.isDirectory) { "Unable to create LuaLS log directory" }
         require(metaRoot.mkdirs() || metaRoot.isDirectory) { "Unable to create LuaLS meta directory" }
         return Preparation(
             packageName = context.packageName,
+            storage = storage,
             nativeLibrary = nativeLibrary.file,
             runtimeRoot = runtimeRoot,
             logRoot = logRoot,
@@ -213,6 +217,7 @@ internal object AceLuaLanguageServerRuntime {
         context: Context,
         runtimeRoot: File,
         manifest: RuntimeManifest,
+        privateRoot: File,
     ) {
         val marker = File(runtimeRoot, MARKER_FILE)
         if (
@@ -228,7 +233,7 @@ internal object AceLuaLanguageServerRuntime {
         }
 
         if (runtimeRoot.exists()) {
-            require(isPrivateRuntimeDirectory(runtimeRoot, context.noBackupFilesDir)) {
+            require(isPrivateRuntimeDirectory(runtimeRoot, privateRoot)) {
                 "Refusing to replace LuaLS runtime outside private storage"
             }
             require(runtimeRoot.deleteRecursively()) { "Unable to replace incomplete LuaLS runtime" }
@@ -347,6 +352,7 @@ internal object AceLuaLanguageServerRuntime {
 
     private data class Preparation(
         val packageName: String,
+        val storage: AceRuntimeStorage,
         val nativeLibrary: File,
         val runtimeRoot: File,
         val logRoot: File,

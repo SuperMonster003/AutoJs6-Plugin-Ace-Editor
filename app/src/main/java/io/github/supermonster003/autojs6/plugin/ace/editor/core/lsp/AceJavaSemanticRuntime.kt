@@ -21,9 +21,10 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 internal class AceJavaSemanticRuntime(
     context: Context,
+    storage: AceRuntimeStorage,
     private val listener: Listener,
     private val engine: AceJavaDiagnosticEngine = AceEcjDiagnosticCompiler {
-        AceJavaClasspathRuntime.ensureInstalled(context)
+        AceJavaClasspathRuntime.ensureInstalled(context, storage)
     },
     private val runtimeMemory: Runtime = Runtime.getRuntime(),
 ) : AutoCloseable {
@@ -32,7 +33,7 @@ internal class AceJavaSemanticRuntime(
         fun onResponse(responseJson: String)
     }
 
-    private val applicationContext = context.applicationContext ?: context
+    private val pluginContext = context
     private val closed = AtomicBoolean(false)
     private val stateLock = Any()
     private val executor = ScheduledThreadPoolExecutor(1) { runnable ->
@@ -68,7 +69,7 @@ internal class AceJavaSemanticRuntime(
     private var lastPssDeltaKb = 0L
     private var lastErrorCode = ""
 
-    fun isSupported(): Boolean = !closed.get() && AceJavaClasspathRuntime.isSupported(applicationContext)
+    fun isSupported(): Boolean = !closed.get() && AceJavaClasspathRuntime.isSupported(pluginContext)
 
     /** Accepts a JSON request and returns immediately; completion arrives through [Listener]. */
     fun requestDiagnostics(requestJson: String): String {

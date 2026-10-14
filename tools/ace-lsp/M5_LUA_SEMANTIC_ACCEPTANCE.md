@@ -101,6 +101,10 @@ LuaLS 与源码文件哈希完全相同。
 SHA-256。运行时资产提取到应用私有 `noBackupFilesDir`，先写临时文件、逐文件校验，再原子
 发布版本目录。任何缺失、损坏或不支持 ABI 都在创建进程前静默进入 P2。
 
+补充 (2026-10-14, Roadmap-Ace-1.44.0.md A2-10 第 18 项)：上文的私有目录指运行编辑器的进程自己的目录
+(`AceRuntimeStorage`)。宿主在自己的进程中运行插件时，插件包上下文没有 applicationContext，其数据目录
+也不可写；此前 LuaLS 因此在宿主中总被判为不可用。插件上下文只用于读取资产与原生库目录。
+
 JavaScript 只能提交不透明 Provider ID `lua-luals`。固定的可执行文件、参数、工作目录和环境
 由 Kotlin 注册表选择，不能从 WebView 注入命令或任意环境变量。
 

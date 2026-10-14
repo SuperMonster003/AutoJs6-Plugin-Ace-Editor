@@ -509,7 +509,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
          计算中改变时重新计算布局配置. 修复后同样操作 10 轮弹出键盘均正常.
          (V6) 高亮代码无缺陷: Python 的写入处由 Pyright 判定 (参数不算写入), 测试文件里的写入恰在常放光标的声明行, 已补
          一处 `greeters += ...`; Lua 的同名高亮需要 LuaLS, 而 LuaLS 在宿主进程中因插件包上下文没有 applicationContext 而
-         判为不可用 (master 即如此), 维护者看到的是 Ace 自带的同词方框, 另立任务处理.
+         判为不可用 (master 即如此), 维护者看到的是 Ace 自带的同词方框, 见第 18 项.
+      18. 宿主进程中的语言运行时 (V6 排查中发现, master 即如此): 宿主在自己的进程中运行插件, 传入的插件上下文是另一个应用的
+         包上下文, 没有 applicationContext, 其数据目录属于插件的用户 ID, 宿主进程无权写入. LuaLS 经 applicationContext
+         判断可用性, 结果总是不可用; Java 语义诊断把 ECJ 类路径装到插件包的 filesDir, 失败后报 compiler-failure. 设备测试
+         在插件自己的进程中运行, 两者都通过, 掩盖了问题. 现在插件上下文只提供资产与原生库目录, 运行时文件写入运行编辑器
+         的进程自己的私有目录 (`AceRuntimeStorage`, 宿主进程中即宿主的 files / no_backup / cache). 新增设备测试
+         `AceRuntimeStorageDeviceTest` 用无 applicationContext 且禁止使用自身数据目录的包上下文验证两者. 在 XQ-AT72 的宿主中
+         核对: LuaLS 就绪 (初始化约 0.2 s), `counter` 的 5 处高亮中第 2, 5 行为写入; Java 文件给出 ECJ 诊断.
       —— 验收: `verify-overlay.mjs` 中 7 个场景登记为有意差异并说明原因, 新行为各有单独断言 (共 536 项), 9 处单点变异
       全部检出; 桥接执行式测试新增行号栏触摸, 拖拽暂停高亮, 插入点工具条, 截断按钮, 文档提示位置, 滚动条自动隐藏, 不变的组合
       更新, 以及以 Android UA 运行的方向键, 输入法光标换算, 收起选区, 组合结束与面板操作 (共 36 例), 变异检出 (第 11 项的 6 处
