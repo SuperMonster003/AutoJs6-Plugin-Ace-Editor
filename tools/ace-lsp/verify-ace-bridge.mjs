@@ -1388,6 +1388,69 @@ test("rows rendered after a scrollbar toggles under soft wrap match the scroll p
     }
 });
 
+// A finger scrolling the completion popup made the host cancel the touch interaction ("single_finger_scroll"), which
+// closed the popup it was scrolling. Touches that start in the text still close it.
+test("the host's scroll cancel keeps a completion popup the finger is scrolling", async () => {
+    const page = await openEditor();
+    try {
+        const { editor, window, api } = page;
+        api.setText("var words = 'alpha1 alpha2 alpha3';\n");
+        await sleep(300);
+        editor.navigateFileEnd();
+        editor.completers = [{ getCompletions(e, s, p, prefix, callback) { callback(null, [1, 2, 3].map((n) => ({ caption: `alpha${n}`, value: `alpha${n}` }))); } }];
+        editor.insert("al");
+        api.triggerSmartHint("test");
+        await sleep(150);
+        const popup = editor.completer.popup;
+        assert.ok(popup && popup.isOpen, "the popup is open");
+        const row = popup.renderer.content;
+        touchEvent(page, "touchstart", row, 20, 20);
+        api.cancelTouchInteraction("single_finger_scroll");
+        assert.ok(popup.isOpen, "a scroll that started on the popup keeps it open");
+        touchEvent(page, "touchend", row, 20, 5);
+        const content = window.document.querySelector("#editor .ace_content");
+        touchEvent(page, "touchstart", content, 20, 200);
+        api.cancelTouchInteraction("single_finger_scroll");
+        assert.ok(!popup.isOpen, "a scroll that started in the text closes it");
+    } finally {
+        page.close();
+    }
+});
+
+// The documentation box of the selected row stayed in place while a finger scrolled the completion list and covered
+// other rows; scrolling hides it.
+test("scrolling the completion popup by touch hides the documentation box", async () => {
+    const page = await openEditor();
+    try {
+        const { editor, api } = page;
+        api.setText("var words = 1;\n");
+        await sleep(300);
+        editor.navigateFileEnd();
+        editor.completers = [{
+            getCompletions(e, s, p, prefix, callback) {
+                callback(null, Array.from({ length: 30 }, (_, n) => ({ caption: `alpha${n}`, value: `alpha${n}`, docText: `alpha number ${n}` })));
+            },
+        }];
+        editor.insert("al");
+        api.triggerSmartHint("test");
+        await sleep(200);
+        const completer = editor.completer;
+        assert.ok(completer.popup && completer.popup.isOpen, "the popup is open");
+        completer.updateDocTooltip();
+        await sleep(50);
+        const box = completer.tooltipNode;
+        assert.ok(box && box.parentNode && box.style.display !== "none", "the documentation box is shown");
+        const content = completer.popup.renderer.content;
+        touchEvent(page, "touchstart", content, 30, 100);
+        for (let step = 1; step <= 4; step++) touchEvent(page, "touchmove", content, 30, 100 - step * 15);
+        touchEvent(page, "touchend", content, 30, 40);
+        assert.ok(completer.popup.isOpen, "the popup stays open");
+        assert.ok(!completer.tooltipNode && !box.parentNode, "the documentation box is hidden while scrolling");
+    } finally {
+        page.close();
+    }
+});
+
 test("the IME panel's select all and start / end buttons run as editor actions", async () => {
     const page = await openAndroidEditor("abc\ndefg hij\nhi");
     try {

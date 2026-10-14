@@ -1852,9 +1852,34 @@
         notifyStateChanged("pinchSelectionSuppressed");
     }
 
+    // The host cancels touch interactions as soon as a single finger starts moving (AceCodeEditor, "single_finger_scroll")
+    // without knowing what the finger is on: a finger scrolling the completion popup, a documentation tooltip or the
+    // signature box closed the box it was scrolling (found by AceManualCoverageDeviceTest; DevTools touches, which
+    // bypass the host, could not show it). Such a cancel now leaves the boxes open when the touch started in one.
+    var touchStartedInFloatingBox = false;
+    var FLOATING_BOX_CLASSES = ["ace_autocomplete", "ace_tooltip", "autojs6_hover_tooltip", "autojs6_signature_tooltip"];
+
+    function isInFloatingBox(target) {
+        for (var node = target; node && node.nodeType === 1; node = node.parentNode) {
+            for (var i = 0; i < FLOATING_BOX_CLASSES.length; i++) {
+                if (node.classList && node.classList.contains(FLOATING_BOX_CLASSES[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function installFloatingBoxTouchTracking() {
+        document.addEventListener("touchstart", function(event) {
+            touchStartedInFloatingBox = isInFloatingBox(event.target);
+        }, true);
+    }
+
     function cancelAceMobileTouchInteraction(reason) {
         reason = String(reason || "touch_cancel");
         foldTapCandidate = null;
+        var keepFloatingBoxes = reason === "single_finger_scroll" && touchStartedInFloatingBox;
         try {
             // A touch drag of the cursor holds the flag on purpose (setTouchHandleDragActive); the host also cancels
             // when a single finger starts moving.
@@ -1868,7 +1893,7 @@
             // Best-effort reset for ACE mobile touch state held inside private handlers.
         }
         try {
-            if (editor && editor.completer && editor.completer.detach) {
+            if (!keepFloatingBoxes && editor && editor.completer && editor.completer.detach) {
                 editor.completer.detach();
             }
         } catch (ignore2) {
@@ -1882,10 +1907,10 @@
             // The overlay only holds timers and the magnifier.
         }
         try {
-            if (tooltipController) {
+            if (tooltipController && !keepFloatingBoxes) {
                 tooltipController.hide();
             }
-            if (signatureHelpController) {
+            if (signatureHelpController && !keepFloatingBoxes) {
                 signatureHelpController.hide();
             }
         } catch (ignore3) {
@@ -2032,6 +2057,13 @@
             global.AutoJsAceMobile.removeUpstreamTouchListeners(popup);
         }
         installTouchDragScroller(popup.container, function(dx, dy) {
+            // The documentation box belongs to the selected row; while a finger scrolls the list it stayed where the
+            // row had been and covered other rows, which then took the next tap (found by AceManualCoverageDeviceTest on
+            // narrow screens). Selecting a row shows it again.
+            var completer = popupCompleter();
+            if (dy && completer && completer.popup === popup && typeof completer.hideDocTooltip === "function") {
+                completer.hideDocTooltip();
+            }
             var scrolled = false;
             var beforeLeft = popup.container.scrollLeft;
             popup.container.scrollLeft += dx;
@@ -6452,6 +6484,7 @@
         }
         installHistoryOperationHooks();
         installCompletionPopupTouchScrollPatch();
+        installFloatingBoxTouchTracking();
         installCompletionPopupStates();
         installSymbolHighlights();
         installAceBuiltInPinchZoomSuppression();
