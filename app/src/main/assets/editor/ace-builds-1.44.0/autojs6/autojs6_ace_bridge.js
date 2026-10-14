@@ -2434,8 +2434,26 @@
         };
         editor.onCompositionEnd = function() {
             imeCompositionActive = false;
-            return compositionEnd.apply(this, arguments);
+            var result = compositionEnd.apply(this, arguments);
+            restoreInlineCompletionPreview(completer);
+            return result;
         };
+    }
+
+    // A composition usually ends without changing the text (the IME commits what it composed), so no popup update
+    // follows that would draw the preview hidden while composing; it stayed away until the next key (Sogou and Baidu
+    // compose English words too; found by AceImeReplayDeviceTest).
+    function restoreInlineCompletionPreview(completer) {
+        setTimeout(function() {
+            var popup = completer.popup;
+            if (imeCompositionActive || !completer.inlineEnabled || !completer.activated || !popup || !popup.isOpen) {
+                return;
+            }
+            var item = popup.getData(popup.getRow());
+            if (item) {
+                completer.$updateGhostText(item);
+            }
+        }, 0);
     }
 
     // Same-symbol highlights (Roadmap-Ace-1.44.0.md A5-8): 150 ms after the cursor settles on an identifier, the

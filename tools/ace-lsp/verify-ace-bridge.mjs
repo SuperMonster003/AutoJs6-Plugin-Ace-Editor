@@ -1604,8 +1604,9 @@ test("the inline completion preview is opt-in, hidden during IME composition and
         assert.equal(ghost(page), 0, "hidden while composing");
         editor.completer.$updateGhostText(editor.completer.popup.getData(0));
         assert.equal(ghost(page), 0, "not redrawn while composing");
+        // The composition ends without changing the text: no popup update draws the preview again by itself.
         editor.onCompositionEnd();
-        editor.completer.$updateGhostText(editor.completer.popup.getData(0));
+        await sleep(20);
         assert.ok(ghost(page) > 0, "shown again after the composition");
         api.acceptCompletionOrInsertTab();
         assert.equal(api.getText(), "zzqxAlpha", "TAB accepts the previewed row");
