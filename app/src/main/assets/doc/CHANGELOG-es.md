@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.1
+
+###### 2026/10/14
+
+* `Corrección` Problema por el que, en dispositivos más lentos, los diagnósticos de un archivo Java, Lua o Python a veces seguían correspondiendo al texto anterior a una edición rápida y solo se actualizaban en la siguiente edición
+
 # v2.0.0
 
 ###### 2026/10/14

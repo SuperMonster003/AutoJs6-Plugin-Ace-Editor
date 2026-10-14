@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.1
+
+###### 2026/10/14
+
+* `Correctif` Sur les appareils plus lents, après une modification rapide d'un fichier Java, Lua ou Python, les diagnostics correspondaient parfois encore au texte précédent et ne se mettaient à jour qu'à la modification suivante
+
 # v2.0.0
 
 ###### 2026/10/14

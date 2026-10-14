@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.1
+
+###### 2026/10/14
+
+* `Fix` Issue where, on slower devices, the diagnostics of a Java, Lua or Python file sometimes still matched the text before a quick edit and only updated at the next edit
+
 # v2.0.0
 
 ###### 2026/10/14

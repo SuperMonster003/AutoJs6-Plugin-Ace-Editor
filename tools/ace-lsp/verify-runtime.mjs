@@ -2086,6 +2086,135 @@ function verifyDiagnosticScheduler(paths) {
     };
 }
 
+// An async provider (Java, Lua, Python) publishes the result of an earlier request. Publishing must keep a validation
+// that a later edit scheduled: on a slow emulator ECJ answered the warm-up compile during the 450 ms debounce of the
+// next edit, and that edit was never compiled (AceJavaSemanticSmokeTest waited 30 s without diagnostics).
+function verifyAsyncPublicationKeepsPendingDiagnostics(paths) {
+    return Object.fromEntries([
+        {
+            name: "Java",
+            runtime: "AutoJsAceJavaProvider",
+            documentUri: "file:///autojs6/editor/Main.java",
+            initialText: "class Main {}",
+            editedText: "class Main { void run() { int value = 1 } }",
+        },
+        {
+            name: "Python",
+            runtime: "AutoJsAcePythonProvider",
+            documentUri: "file:///autojs6/editor/main.py",
+            initialText: "x = 1",
+            editedText: "x = 2",
+        },
+        {
+            name: "Lua",
+            runtime: "AutoJsAceLuaProvider",
+            documentUri: "file:///autojs6/editor/main.lua",
+            initialText: "local x = 1",
+            editedText: "local x = 2",
+            options: { serverAvailable: true },
+        },
+    ].map((language) => [language.name, verifyAsyncPublicationScenario(paths, language)]));
+}
+
+function verifyAsyncPublicationScenario(paths, language) {
+    const timer = createFakeTimer();
+    let text = language.initialText;
+    let changeListener = null;
+    let providerConfig = null;
+    const requestedTexts = [];
+    const session = {
+        getLength: () => 1,
+        getLine: () => text,
+        getValue: () => text,
+        getDocument: () => ({ getNewLineCharacter: () => "\n" }),
+        on(name, callback) {
+            if (name === "change") changeListener = callback;
+        },
+        off(name, callback) {
+            if (name === "change" && changeListener === callback) changeListener = null;
+        },
+        setAnnotations() {
+        },
+    };
+    const provider = {
+        id: `${language.name.toLowerCase()}-fake`,
+        name: `${language.name}Provider`,
+        capabilities: ["diagnostics", "dispose"],
+        start(callback) {
+            callback(true);
+            return true;
+        },
+        getDiagnostics(_session, source) {
+            requestedTexts.push(source);
+            return [];
+        },
+        getState() {
+            return { ready: true, status: "ready", capabilities: ["diagnostics", "dispose"] };
+        },
+        setDocumentUri() {
+            return false;
+        },
+        dispose() {
+        },
+    };
+    const context = {
+        clearTimeout: (id) => timer.clearTimeout(id),
+        console,
+        Date,
+        Function,
+        isFinite,
+        JSON,
+        Math,
+        performance,
+        setTimeout: (callback, delayMs) => timer.setTimeout(callback, delayMs),
+    };
+    context.window = context;
+    vm.createContext(context);
+    loadClientRuntime(context, paths);
+    // After loading: the Python and Lua provider scripts define their own runtimes.
+    context[language.runtime] = {
+        isSupported: () => true,
+        create(config) {
+            providerConfig = config;
+            return provider;
+        },
+    };
+    const client = context.AutoJsAceLspClient.createClient({
+        getOptions: () => JSON.stringify({
+            documentUri: language.documentUri,
+            enabled: true,
+            typescriptVersion: "6.0.3",
+            ...language.options,
+        }),
+        session,
+    });
+    client.warmUp();
+    while (timer.runPending() > 0) {
+        // The warm-up schedules its first diagnostics without a delay.
+    }
+    assert(
+        providerConfig !== null && requestedTexts.length === 1 && requestedTexts[0] === language.initialText,
+        `${language.name} warm-up did not request diagnostics once: ${JSON.stringify(requestedTexts)}`,
+    );
+    text = language.editedText;
+    changeListener?.({ action: "insert", lines: [language.editedText] });
+    assert(timer.pendingCount() === 1, `${language.name}: an edit did not schedule diagnostics`);
+    // The earlier request answers while the edit waits for its debounce.
+    providerConfig.onDiagnostics([], { ready: true, lastRequestDurationMs: 700 });
+    timer.runPending();
+    assert(
+        requestedTexts.length === 2 && requestedTexts[1] === language.editedText,
+        `${language.name}: publishing an earlier result dropped the diagnostics of a later edit: ` +
+            JSON.stringify(requestedTexts),
+    );
+    const state = client.getState();
+    client.destroy();
+    return {
+        requestedTextCount: requestedTexts.length,
+        lastDiagnosticReason: state.lastDiagnosticReason,
+    };
+}
+
 function createCompletionRefreshHarness(createController, initialText) {
     let text = initialText;
     let clock = 0;
@@ -4057,6 +4186,7 @@ function main() {
     const composeDialogDeclarations = verifyComposeDialogDeclarations(paths);
     const composeV2Declarations = verifyComposeV2Declarations(paths);
     const diagnosticScheduler = verifyDiagnosticScheduler(paths);
+    const asyncDiagnosticPublication = verifyAsyncPublicationKeepsPendingDiagnostics(paths);
     const completionRefresh = verifyCompletionRefreshController(paths);
     const completerLanguageIsolation = verifyCompleterLanguageIsolation(paths);
     const m1LanguageSnippets = verifyM1LanguageSnippets(paths);
@@ -4084,6 +4214,7 @@ function main() {
             composeDialogDeclarations,
             composeV2Declarations,
             diagnosticScheduler,
+            asyncDiagnosticPublication,
             completionRefresh,
             completerLanguageIsolation,
             m1LanguageSnippets,

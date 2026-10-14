@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.0.1
+
+###### 2026/10/14
+
+* `Corrección` Problema por el que, en dispositivos más lentos, los diagnósticos de un archivo Java, Lua o Python a veces seguían correspondiendo al texto anterior a una edición rápida y solo se actualizaban en la siguiente edición
 
 # v2.0.0
 
@@ -218,12 +224,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/13
 
 * `Función` El menú Editar > Plegado > Desplegar todo / Plegar todo actúa sobre todos los bloques de código, incluidos los pliegues anidados y los documentos de solo lectura, conservando el texto, la selección y el historial de deshacer
-
-# v1.31.0
-
-###### 2026/10/12
-
-* `Mejora` Declaraciones de tipos y autocompletado: device.getAndroidId acepta el booleano useSystemId para leer el valor del sistema del usuario Android de la aplicación mediante Shizuku/Root en Android 8.0+, lanza una excepción si falla el permiso o la lectura e ignora el parámetro en sistemas anteriores
 
 ##### Para ver más historial de versiones
 

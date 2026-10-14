@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.0.1": {
+      "released_date": "2026/10/14",
+      "fix": [
+        "Problema por el que, en dispositivos más lentos, los diagnósticos de un archivo Java, Lua o Python a veces seguían correspondiendo al texto anterior a una edición rápida y solo se actualizaban en la siguiente edición"
+      ]
+    },
     "v2.0.0": {
       "released_date": "2026/10/14",
       "hint": [

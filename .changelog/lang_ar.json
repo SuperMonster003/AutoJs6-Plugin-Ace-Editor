@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.0.1": {
+      "released_date": "2026/10/14",
+      "fix": [
+        "مشكلة كانت فيها التشخيصات على الأجهزة الأبطأ تبقى أحيانا مطابقة للنص السابق بعد تعديل سريع لملف Java أو Lua أو Python ولا تتحدث إلا عند التعديل التالي"
+      ]
+    },
     "v2.0.0": {
       "released_date": "2026/10/14",
       "hint": [

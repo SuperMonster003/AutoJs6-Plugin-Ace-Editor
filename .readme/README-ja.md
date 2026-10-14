@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-un
 ### リリース履歴
 
 ******
+
+# v2.0.1
+
+###### 2026/10/14
+
+* `修正` 低速なデバイスで Java, Lua, Python ファイルを素早く編集すると, 診断が編集前の内容のまま残り, 次の編集まで更新されないことがある問題
 
 # v2.0.0
 
@@ -218,12 +224,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-un
 ###### 2026/10/13
 
 * `機能` エディターで "編集 > 折りたたみ > すべて展開/すべて折りたたみ" に対応. 入れ子の折りたたみや読み取り専用文書を含む文書全体のコードブロックを操作し, テキスト, 選択範囲と元に戻す履歴を維持
-
-# v1.31.0
-
-###### 2026/10/12
-
-* `改善` 型定義と補完: device.getAndroidId が useSystemId 真偽値引数に対応し, Android 8.0+ では Shizuku/Root を通じてアプリの Android ユーザーのシステム値を取得. 権限または読み取りの失敗時は例外を送出し, 旧システムでは引数を無視
 
 ##### その他のリリース履歴
 

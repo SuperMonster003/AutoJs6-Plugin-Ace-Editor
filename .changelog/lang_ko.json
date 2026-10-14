@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v2.0.1": {
+      "released_date": "2026/10/14",
+      "fix": [
+        "느린 기기에서 Java, Lua 또는 Python 파일을 빠르게 편집하면 진단이 편집 전 내용에 머물러 다음 편집 때까지 갱신되지 않을 수 있던 문제"
+      ]
+    },
     "v2.0.0": {
       "released_date": "2026/10/14",
       "hint": [

@@ -1354,7 +1354,7 @@
                             state.semanticServiceSuppressed) {
                             return;
                         }
-                        var run = createDiagnosticRun("python-publish");
+                        var run = createPublicationRun("python-publish");
                         setSessionAnnotations(annotations, run, Date.now());
                     },
                     onUnavailable: function(reason) {
@@ -1419,7 +1419,7 @@
                             state.semanticServiceSuppressed) {
                             return;
                         }
-                        var run = createDiagnosticRun("lua-publish");
+                        var run = createPublicationRun("lua-publish");
                         setSessionAnnotations(annotations, run, Date.now());
                     },
                     onUnavailable: function(reason) {
@@ -1496,7 +1496,7 @@
                                 Number(providerState.lastRequestDurationMs) || 0
                             );
                         }
-                        var run = createDiagnosticRun("java-publish");
+                        var run = createPublicationRun("java-publish");
                         setSessionAnnotations(annotations, run, Date.now());
                         applyJavaProviderState();
                     },
@@ -2062,6 +2062,18 @@
             };
         }
 
+        // Async providers and the JSON worker publish results after the run that asked for them. Publishing keeps the
+        // current generation: a new one would cancel a validation that a later edit scheduled, and that edit would
+        // never be checked (ECJ answered its warm-up compile during the debounce of the next edit on a slow emulator).
+        function createPublicationRun(reason) {
+            return {
+                generation: diagnosticGeneration,
+                configurationRevision: configurationRevision,
+                reason: String(reason),
+                scheduledAt: Date.now()
+            };
+        }
+
         // JSON documents use Ace's json worker when the bridge enables it (Roadmap-Ace-1.44.0.md A4-3). Its annotations
         // replace the JSON.parse diagnostics once the current worker has answered at least once; until then, and on
         // devices where the worker cannot start, JSON.parse stays the source.
@@ -2077,7 +2089,7 @@
             var annotations = (event && Array.isArray(event.data) ? event.data : []).map(function(item) {
                 return annotation(item.row, item.column, item.text, item.type || "error", "json-worker");
             });
-            var run = createDiagnosticRun("json-worker");
+            var run = createPublicationRun("json-worker");
             setSessionAnnotations(annotations, run, Date.now());
         }
 

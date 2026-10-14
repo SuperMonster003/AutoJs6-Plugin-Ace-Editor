@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-un
 ### 发行历史
 
 ******
+
+# v2.0.1
+
+###### 2026/10/14
+
+* `修复` 在较慢的设备上快速修改 Java, Lua 或 Python 文件后, 诊断有时仍停留在修改前的内容, 直到下一次修改才更新的问题
 
 # v2.0.0
 
@@ -218,12 +224,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-un
 ###### 2026/10/13
 
 * `新增` 编辑器支持 "编辑 > 折叠 > 全部展开/全部折叠", 对整个文档的代码块生效, 支持嵌套折叠和只读文档, 保持文本, 选区及撤销历史不变
-
-# v1.31.0
-
-###### 2026/10/12
-
-* `优化` 类型声明与补全: device.getAndroidId 支持 useSystemId 布尔参数, 在 Android 8.0+ 上通过 Shizuku/Root 获取运行应用所属 Android 用户的系统值, 权限或读取失败时抛出异常, 旧系统忽略此参数
 
 ##### 更多发行历史可参阅
 

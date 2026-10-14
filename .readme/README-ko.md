@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-un
 ### 릴리스 기록
 
 ******
+
+# v2.0.1
+
+###### 2026/10/14
+
+* `수정` 느린 기기에서 Java, Lua 또는 Python 파일을 빠르게 편집하면 진단이 편집 전 내용에 머물러 다음 편집 때까지 갱신되지 않을 수 있던 문제
 
 # v2.0.0
 
@@ -218,12 +224,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-un
 ###### 2026/10/13
 
 * `기능` 편집기의 "편집 > 접기 > 모두 펼치기/모두 접기"로 문서 전체의 코드 블록을 제어하며, 중첩된 접기와 읽기 전용 문서를 지원하고 텍스트, 선택 영역 및 실행 취소 기록을 유지
-
-# v1.31.0
-
-###### 2026/10/12
-
-* `개선` 타입 선언 및 자동 완성: device.getAndroidId가 useSystemId 불리언 매개변수를 지원하며, Android 8.0+에서 Shizuku/Root로 앱이 실행되는 Android 사용자의 시스템 값을 읽음. 권한 또는 읽기 실패 시 예외를 발생시키고 이전 시스템에서는 매개변수를 무시
 
 ##### 더 많은 릴리스 기록
 

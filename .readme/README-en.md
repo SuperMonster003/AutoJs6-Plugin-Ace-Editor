@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.0.1
+
+###### 2026/10/14
+
+* `Fix` Issue where, on slower devices, the diagnostics of a Java, Lua or Python file sometimes still matched the text before a quick edit and only updated at the next edit
 
 # v2.0.0
 
@@ -218,12 +224,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/13
 
 * `Feature` The editor supports Edit > Folding > Unfold all / Fold all for every code block, including nested folds and read-only documents, while preserving text, selection and undo history
-
-# v1.31.0
-
-###### 2026/10/12
-
-* `Improvement` Type declarations and completion: device.getAndroidId accepts a useSystemId boolean to read the system value for the app's Android user through Shizuku/Root on Android 8.0+, throws on permission or read failure, and ignores the flag on older systems
 
 ##### Complete release history
 
