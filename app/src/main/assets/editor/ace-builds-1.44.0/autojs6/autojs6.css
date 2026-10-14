@@ -205,7 +205,9 @@ body.ace-ready #editor {
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
     font-family: var(--autojs6-editor-font-family);
     font-size: 12px;
-    /* Follows the editor font size (12px at 16px) like the completion popup does (maintainer test V7, 2026-10-14). */
+    /* Follows the editor font size (12px at 16px) like the completion popup does (maintainer test V7, 2026-10-14).
+       WebView before 79 has no clamp() and keeps the unbounded calc() line. */
+    font-size: calc(var(--autojs6-editor-font-size, 16px) * 0.75);
     font-size: clamp(10px, calc(var(--autojs6-editor-font-size, 16px) * 0.75), 30px);
     line-height: 1.45;
     /* Touch users read long documentation by scrolling inside the box; taps on it must not
@@ -233,7 +235,9 @@ body.ace-ready #editor {
     box-shadow: 0 4px 16px var(--autojs6-theme-shadow);
     font-family: var(--autojs6-editor-font-family);
     font-size: 13px;
-    /* Follows the editor font size (13px at 16px); the parts below are sized relative to it. */
+    /* Follows the editor font size (13px at 16px); the parts below are sized relative to it. WebView before 79 has
+       no clamp() and keeps the unbounded calc() line. */
+    font-size: calc(var(--autojs6-editor-font-size, 16px) * 0.8125);
     font-size: clamp(11px, calc(var(--autojs6-editor-font-size, 16px) * 0.8125), 32px);
     line-height: 1.35;
     pointer-events: auto;
