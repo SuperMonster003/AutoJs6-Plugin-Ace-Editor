@@ -180,14 +180,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 | 里程碑 | 内容 | 风险 | 前置 | 状态 |
 |---|---|---|---|---|
 | A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 完成 (A0-6 于 2026-10-14 按维护者决定以手测与设备自动化取代) |
-| A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 待确认 (G-A1 8 台已跑, 两台的既有失败待维护者判定) |
+| A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 完成 (G-A1 通过) |
 | A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 完成 (G-A2 通过, A2-10 复测通过) |
-| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 基本完成 (G-A3 通过; A3-6 待诊断信息核对) |
-| A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 进行中 (A4-3 已实现, G-A4-3 剩 XQ-DQ72 与模拟器) |
+| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 完成 (G-A3 通过) |
+| A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 完成 (G-A4-3 通过) |
 | A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 完成 (G-A5-3 / G-A5-6 / G-A5-7 已结) |
-| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 基本完成 (G-A6-4 于 2026-10-14 接受替换耗时差异) |
+| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 完成 (G-A6-4 于 2026-10-14 接受替换耗时差异) |
 | A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 完成 (A7-2 宿主本地提交 b7df923aaa, 宿主测试修正 8126740e0e) |
-| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-3 / A8-4 / A8-5 / A8-7 完成; A8-6 文案与发布文档草稿已备, 版本与发布在合并时) |
+| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-1 / A8-3 / A8-4 / A8-5 / A8-7 完成; A8-2 / A8-9 复跑中; A8-6 / A8-8 / G-A8 在合并时) |
 | X | 横切约束 | -- | 全程 | 持续 |
 
 推进顺序: A0 -> A1 -> (A2 与 A3 可并行, A2 优先) -> A4 -> A5 -> A6 -> A7 -> A8. A6-1 (清单与校验) 可在 A1 完成后提前做,
@@ -639,7 +639,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       结论 (2026-10-13): `AceCodeFoldingSmokeTest` (含上述用例) 在 8 台设备的 G-A1 运行中通过; 执行式测试中全部折叠 / 展开正常,
       在折叠占位符上 touchstart + touchend 经 `handleFoldPlaceholderTouch` 展开折叠并发出 `foldPlaceholderTouchExpanded`, 改掉 `ace_fold`
       类名判断的变异会被检出. 1.44.0 的占位符类名仍为 `ace_fold`.
-- [ ] **A3-6** IME 路径复核: `getImeTextInputElement` / `resetImeTextInputSelectionWindow` 对接 1.44.0 `TextInput`
+- [x] **A3-6** IME 路径复核: `getImeTextInputElement` / `resetImeTextInputSelectionWindow` 对接 1.44.0 `TextInput`
       (`getElement`, `resetSelection`), 复核 `onInput` 新增的 `isMobile` 重置条件是否与桥接层 `IME_TEXT_INPUT_PROGRAMMATIC_SELECTION_SUPPRESS_MS`
       窗口冲突; 需要时把 1.44.0 重置事件记入 `imeTextInputSelectionSuppressed` 事件的 reason.
       —— 验收: 附录 C 在 6 台真机通过; `AceRuntimeEventHistory` 中无非预期的 `imeTextInputSelectionDropped`.
@@ -651,6 +651,10 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       12 项) 全部通过. 诊断信息中的 `imeTextInputSelectionDropped` 在复测时一并核对.
       进度 (2026-10-14): C4 复测通过 (构建 250). 该事件只记在插件进程的运行事件历史中, logcat 中查不到, 待维护者提供复测后的诊断
       信息再核对并勾选.
+      结论 (2026-10-14): 维护者在 XQ-AT72 (插件构建 250, WebView 145) 上用百度输入法 (含 "选择" 模式) 与 Gboard 输入后复制诊断信息:
+      健康状态 RUNNING, 无失败记录, TypeScript 语义服务 16 次操作全部成功; 运行事件历史 (保留最近 30 条) 中没有
+      `imeTextInputSelectionDropped`, 可见 "选择" 模式下的 `ime_editing_action` (lineStart / lineEnd, extend=true) 与之后正常收起的工具条.
+      连同附录 C 复测与 `AceImeReplayDeviceTest`, 本项通过.
 - [x] **A3-7** 字号 / 滚动 / 双指缩放复核: `applyFontSizeSp` (`:4466`), `forceRendererCoordinateRefresh` (`:4485`),
       `scrollToPosition` (`:4555`) 使用的 renderer 成员在 1.44.0 均存在; 复核 `renderer.$padding` 在 1.44.0 是否仍为数字
       (文本层 `$padding` 与 gutter `$padding` 对象不同, 桥接层只读 renderer 的).
@@ -718,7 +722,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (含 fun / val / data / companion / suspend), 样例中 package / class / fun / return 等均为 keyword 类 token, 满足设备用例的高亮断言;
       `snippetFileId` 由补丁脚本补为 `ace/snippets/kotlin`, 且补丁以 `capturing` 方式注册在 changeMode 最前面, 保证 ext-language_tools
       加载片段时已生效 (jsdom 中 15 个 Kotlin 片段照常加载). `verifyAutoJs6KotlinP2Plus` 等 6 个 Node 任务与 JVM 测试通过.
-- [ ] **A4-3** JSON worker (验证门 G-A4-3): `shouldUseAceWorkerForMode` 对 json 返回 true, 保留 `JSON.parse` 诊断作为
+- [x] **A4-3** JSON worker (验证门 G-A4-3): `shouldUseAceWorkerForMode` 对 json 返回 true, 保留 `JSON.parse` 诊断作为
       worker 不可用时的回退; 两者产生的注解去重 (以 worker 注解优先); `applyDocumentLongLineSafetyMode` 下关闭.
       —— 验收: JSON 文档输入错误 JSON 出现 worker 注解, 修正后消失; `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua`
       扩展 json 分支.
@@ -730,7 +734,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       不被 JSON.parse 覆盖, 修正后清空, 安全模式关闭 worker), 去掉 worker 优先判断的变异会被检出; 设备用例
       `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua` 增加 json 分支 (断言策略开启且有注解, 打印 worker 是否应答), 待 G-A4-3 上设备.
       Lua 的 worker 注解与 LuaLS 诊断仍是后写者覆盖 (不在本项范围).
-- [ ] **G-A4-3** 在 8 台设备验证 worker-json 加载与注解; 任一设备失败则该设备回退 `JSON.parse` 路径且不报错.
+- [x] **G-A4-3** 在 8 台设备验证 worker-json 加载与注解; 任一设备失败则该设备回退 `JSON.parse` 路径且不报错.
       (降级路径: 失败设备比例 > 2/8 -> 默认关闭 json worker, 保留代码路径并记录结论.)
       备注 (2026-10-13): 暂缓实施. 现状是 Lua 的 Ace worker 注解与 LSP 诊断都直接 `setAnnotations`, 后写者覆盖; JSON 若开 worker,
       `validateDiagnosticRun` 的 `JSON.parse` 诊断会覆盖 worker 注解, 需要先给 LSP 客户端加 "worker 活动时以 worker 注解为准并同步到诊断状态"
@@ -740,6 +744,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       XQ-DQ72 与模拟器待补.
       补跑 (2026-10-13, A9 构建): XQ-DQ72 (WebView 153) 的 json 分支通过; x86 API 27 模拟器 (Chrome 69) 的 `AceLanguageRoutingSmokeTest`
       json 分支在第二轮全套中通过 (首轮在此前崩溃未跑到; 注解来自 worker 或 `JSON.parse` 回退均可). 6 台真机加模拟器均无报错.
+      结论 (2026-10-14): 通过, 保持 json worker 开启. 8 台都已覆盖: 上述 6 台真机与 x86 API 27 模拟器, 加上 x86_64 API 36.1 16 KB 模拟器
+      (WebView 134) 在 2026-10-13 的全套运行中 `AceLanguageRoutingSmokeTest` 通过 (见 G-A3). 记录了 worker 应答的 4 台 (G8441, 23046RP50C, OPD2413, XQ-AT72) 注解都来自
+      worker, 其余设备通过且无报错; A8-2 复跑时再确认一次.
 - [x] **A4-4** 其余 mode 复核: 1.44.0 的 `mode-python / lua / java / javascript / typescript / json / jsx` 生效后, 重跑
       `verifyAutoJs6LanguageIndices`, `verifyAutoJs6LspRuntime`, `verifyAutoJs6PythonWorker`, `verifyAutoJs6LuaLanguageServer`,
       `verifyAutoJs6JavaSemanticRuntime`; 比对上游 1.44.0 `snippets/python.js` 与项目版本, 结论 (继续项目维护 / 合并新增条目) 记录在
@@ -896,7 +903,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       不读取它, 不必进入 APK. 清单含 76 个文件 (71 个 upstream, 5 个 project 并注明原因). CI 只跑 `testDebugUnitTest`, 不跑 `check`,
       所以另加 JVM 测试 `AceDistributionLockTest` 按同一清单校验字节与 SHA-256 (尺寸不符时提示 CRLF). `.gitattributes` 的
       `-text -whitespace` 已在 A1-1 加入. 本地篡改 `mode-tsx.js` 一个字节后脚本报错, 恢复后通过; Linux 检出未验证 (由 CI 的 JVM 测试覆盖).
-- [ ] **A6-2** ace.d.ts 类型检查接入 CI: `tools/ace-lsp/ace-bridge-typecheck/` 放 `tsconfig.json` (`allowJs`, `checkJs`, `noEmit`,
+- [x] **A6-2** ace.d.ts 类型检查接入 CI: `tools/ace-lsp/ace-bridge-typecheck/` 放 `tsconfig.json` (`allowJs`, `checkJs`, `noEmit`,
       `strict: false`, `types` 指向 A0-3 解压目录或固定的 `ace-builds` 声明副本), `autojs6/ace-private.d.ts` 补充桥接层使用的
       私有成员声明 (§2.3 列表); Gradle `typecheckAutoJs6AceBridge` 挂到 `check`; Node/TypeScript 的获取方式沿用 `build-python-worker.mjs`
       的固定版本策略 (不提交 node_modules).
@@ -913,6 +920,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       _signal` 等) 写入私有声明; DOM 收窄, 历史分组上的扩展字段, `setNewLineMode` 参数与 `insertMatch(undefined)` 用 JSDoc 转换或显式参数,
       不改变行为. 变异验证: 把 `updateFull()` 改成 `updateFul()`, 把 `setTabSize` 改成 `setTabSizeX` 均报错. Gradle `typecheckAutoJs6AceBridge`
       已挂到 `check`; CI 只跑 `testDebugUnitTest`, 与 A6-1 / A6-3 相同, 由本地 `check` 覆盖.
+      结论 (2026-10-14): 按验收标准 (变异会使 `check` 失败) 勾选; 与 A6-1 / A6-3 相同, 不进 CI, 由本地 `check` 与推送前预检覆盖.
 - [x] **A6-3** 桥接层执行式测试: `tools/ace-lsp/verify-ace-bridge.mjs` 用 Node + jsdom (固定版本) 加载真实 ace.js, ext-language_tools,
       覆盖层与桥接层, 提供假的 `window.autojs` 记录调用; 用例至少覆盖: 初始化与 `notifyReady`, `setText/getState`, mode 路由,
       `foldAll/unfoldAll`, 撤销标记 (替换 A1-5 的 `@Ignore`), gutter 事件分发 (A3-1 四种 target), 覆盖层卸载上游监听 (A2-5),
@@ -1001,11 +1009,16 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 
 ## 12. A8 · 回归, 性能, 文档与发布评估
 
-- [ ] **A8-1** JVM 与静态门: `:app:testDebugUnitTest :app:lintDebug :app:check` 全绿; `py D:/idea-projects/prepush_check.py AutoJs6-Plugin-Ace-Editor`
+- [x] **A8-1** JVM 与静态门: `:app:testDebugUnitTest :app:lintDebug :app:check` 全绿; `py D:/idea-projects/prepush_check.py AutoJs6-Plugin-Ace-Editor`
       通过 (见 `COMMON_AGENTS.md` "推送前检查").
       —— 验收: 命令输出留存在 `docs/development/release-2.0.0.md` 草稿.
       进度 (2026-10-13, HEAD 6899bc3): `:app:check` (含 lint 与全部 verify / typecheck 任务) 通过; `prepush_check.py --lint` 6/6 通过
       (VERSION_BUILD=225 与提交数一致). 发布文档草稿在合并时随 A8-8 写入.
+      结论 (2026-10-14, HEAD 4db529f): JVM 测试 175 项全部通过; `lintDebug` 0 错误, 62 条警告; `:app:check` 通过, 11 个校验任务
+      (Ace 资产锁, 覆盖层回放 558 项, 桥接层 jsdom 50 例, 类型检查 7 个脚本, LSP, 语言索引, Python worker, LuaLS, Java, Kotlin P2+)
+      全部通过; 推送前预检 6/6. 首轮 check 中 `verifyAutoJs6PythonWorker` 失败: 为 A8-5 对照在同一工作区切到 master 再切回时,
+      `core.autocrlf=true` 把 Python worker 资产转换为 CRLF, 字节数与清单不符 (Git 中的内容未变, 运行时不校验该哈希). 已在提交
+      4db529f 把该目录设为 `-text` (与 LuaLS 相同) 并恢复字节, 复跑通过. 输出摘要写入发布文档草稿.
 - [ ] **A8-2** 8 台设备 instrumentation: 对每个 serial 设置 `ANDROID_SERIAL` 运行 `:app:connectedDebugAndroidTest`
       (63751f63, 968e9f18, BH900ASK9E, QV710AF65F, QV770340J7, bek749scrwv4wo8h, emulator-5554, emulator-5556); 失败用例逐一归因,
       与 `MILESTONE_BASELINES.md` 已记录的系统级偶发 (G8441 `ADB-JDWP` SIGSEGV) 区分.

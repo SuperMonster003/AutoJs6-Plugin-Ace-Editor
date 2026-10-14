@@ -31,7 +31,9 @@ with `VERSION_NAME=2.0.0` passed on 2026-10-14 (25 artifacts generated and check
 
 ## Validation
 
-- JVM tests: 175 passed (`:app:testDebugUnitTest`, 2026-10-14).
+- Static gates (A8-1, 2026-10-14, `4db529f`): 175 JVM tests passed; `lintDebug` reported 0 errors and 62 warnings;
+  `:app:check` passed with all eleven verification tasks (Ace asset lock, overlay replay, bridge tests, bridge type
+  check, LSP runtime, language indices, Python worker, LuaLS, Java, Kotlin P2+); the pre-push check passed 6/6.
 - Bridge tests in jsdom: 50 passed; bridge type check: 7 scripts; mobile overlay replay: 558 checks (36
   touch scenarios identical to the 1.4.12 build, 9 intended differences, 5 action mode scenarios).
 - Device instrumentation: the full suite ran on all eight devices on 2026-10-13 (Roadmap G-A3, A8-2).
@@ -52,8 +54,7 @@ with `VERSION_NAME=2.0.0` passed on 2026-10-14 (25 artifacts generated and check
   (22 items), appendix C with Gboard and Baidu IME, and visual items V1 to V10. All problems found were
   fixed and passed the retest. The last retest, of Baidu C4 and inline preview C11, used build 250. There
   is no P1.
-  The check for unexpected `imeTextInputSelectionDropped` events in the diagnostics after this retest
-  is still pending.
+  The diagnostics after this retest show no `imeTextInputSelectionDropped` events and no failures.
 - Host settings (A7-2) on 22120RN86C: all eight switches are visible, and toggling one applies without
   restarting the editor.
 - The host's `AceEditorPluginHostDeviceTest` passed 7/7 on XQ-AT72 and 22120RN86C after three test fixes
