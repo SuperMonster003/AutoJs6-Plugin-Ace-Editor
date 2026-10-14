@@ -42,7 +42,7 @@
   "text_release_build": "Release ビルド",
   "p_ace_editor_checks": "Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを変更した後は, 次の検証を個別に実行できます",
   "p_ace_editor_checks_detail": "同梱の Ace 1.44.0 ファイルをロックマニフェストと照合し (公式ファイルは変更禁止), 記録したタッチシナリオでモバイルオーバーレイを再生し, 固定バージョンの jsdom でエディタページとブリッジのテストを実行し, Ace の型宣言に対してブリッジスクリプトを型チェックします. いずれも `check` に含まれ, Node.js が必要です",
-  "p_build_params": "ビルドパラメータとバージョンは `version.properties` から取得されます. 現在の最小 SDK は 24, ターゲット SDK は 36 です",
+  "p_build_params": "ビルドパラメータとバージョンは `version.properties` から取得されます. 現在の最小 SDK は 24, ターゲット SDK は 37 です",
   "p_lsp_declarations_update": "`autojs6/types/**/*.d.ts` を更新または追加した後は, 次のタスクを単独で実行できます",
   "p_lsp_declarations_generation": "このタスクは宣言の参照と TypeScript 6 の構文を検証し, `core`, `android`, `libraries`, `resources`, `main-app` の 5 つの LSP アセットと manifest を生成します. `assemble` と `mergeAssets` は既にこのタスクに依存しているため, 通常のビルドで追加操作は不要です; 外部スクリプトから直接呼び出すこともできます. 生成結果は `app/build/generated/aceLspAssets` のみに書き込まれ, `src/main/assets` 内の完全なソース宣言を上書きまたは削除しません. Node が `PATH` にない場合は `-Pautojs6.nodeExecutable=<node-path>` を指定してください",
   "p_language_indices_update": "`tools/ace-lsp/generate-language-indices.mjs` の Python, Lua, Java, Kotlin 静的索引ソースを変更した後は, このタスクでコミット対象アセットを再生成します",

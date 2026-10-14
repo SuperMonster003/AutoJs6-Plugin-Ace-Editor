@@ -114,7 +114,7 @@ Release 建置:
 
 它們依序核對封裝的 Ace 1.44.0 檔案與鎖定清單 (官方檔案不得修改), 以錄製的觸控情境重播行動裝置覆蓋層, 在固定版本的 jsdom 中執行編輯器頁面與橋接層測試, 並依 Ace 的型別宣告檢查橋接指令碼. 這些工作都已掛在 `check` 上, 需要 Node.js.
 
-建置參數和版本號來自 `version.properties`; 目前最低 SDK 為 24, 目標 SDK 為 36.
+建置參數和版本號來自 `version.properties`; 目前最低 SDK 為 24, 目標 SDK 為 37.
 
 更新或新增 `autojs6/types/**/*.d.ts` 後, 可單獨執行:
 

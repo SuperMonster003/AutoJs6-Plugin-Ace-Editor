@@ -114,7 +114,7 @@ Release 构建:
 
 它们依次核对打包的 Ace 1.44.0 文件与锁定清单 (官方文件不得修改), 用录制的触摸场景回放移动端覆盖层, 在固定版本的 jsdom 中运行编辑器页面与桥接层测试, 并按 Ace 的类型声明检查桥接脚本. 这些任务都已挂到 `check` 上, 需要 Node.js.
 
-构建参数和版本号来自 `version.properties`, 当前最低 SDK 为 24, 目标 SDK 为 36.
+构建参数和版本号来自 `version.properties`, 当前最低 SDK 为 24, 目标 SDK 为 37.
 
 更新或新增 `autojs6/types/**/*.d.ts` 后, 可单独执行:
 

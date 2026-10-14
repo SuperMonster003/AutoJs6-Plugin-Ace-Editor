@@ -114,7 +114,7 @@ After changing the Ace assets, the mobile overlay or the bridge scripts, run the
 
 They compare the bundled Ace 1.44.0 files with the lock manifest (official files must stay unmodified), replay recorded touch scenarios against the mobile overlay, run the editor page and bridge tests in a pinned jsdom, and type check the bridge scripts against Ace's declarations. All of them are part of `check` and need Node.js.
 
-Build parameters and the version come from `version.properties`; the current minimum SDK is 24 and target SDK is 36.
+Build parameters and the version come from `version.properties`; the current minimum SDK is 24 and target SDK is 37.
 
 After updating or adding `autojs6/types/**/*.d.ts`, run this task directly:
 

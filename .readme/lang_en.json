@@ -42,7 +42,7 @@
   "text_release_build": "Release build",
   "p_ace_editor_checks": "After changing the Ace assets, the mobile overlay or the bridge scripts, run these checks",
   "p_ace_editor_checks_detail": "They compare the bundled Ace 1.44.0 files with the lock manifest (official files must stay unmodified), replay recorded touch scenarios against the mobile overlay, run the editor page and bridge tests in a pinned jsdom, and type check the bridge scripts against Ace's declarations. All of them are part of `check` and need Node.js",
-  "p_build_params": "Build parameters and the version come from `version.properties`; the current minimum SDK is 24 and target SDK is 36",
+  "p_build_params": "Build parameters and the version come from `version.properties`; the current minimum SDK is 24 and target SDK is 37",
   "p_lsp_declarations_update": "After updating or adding `autojs6/types/**/*.d.ts`, run this task directly",
   "p_lsp_declarations_generation": "The task validates declaration references and TypeScript 6 syntax, then generates the `core`, `android`, `libraries`, `resources`, and `main-app` LSP assets and their manifest. `assemble` and `mergeAssets` already depend on it, so normal builds require no extra step; external scripts can also invoke it directly. Generated files are written only to `app/build/generated/aceLspAssets` and never overwrite or delete the complete source declarations under `src/main/assets`. If Node is not in `PATH`, pass `-Pautojs6.nodeExecutable=<node-path>`",
   "p_language_indices_update": "After changing the curated Python, Lua, Java, or Kotlin static-index source in `tools/ace-lsp/generate-language-indices.mjs`, regenerate the committed assets with this task",

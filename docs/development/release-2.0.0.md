@@ -91,8 +91,8 @@ bridge (+20,333 B). Details are in `tools/ace-lsp/MILESTONE_BASELINES.md` ("A8-5
 
 - Replacing a document with one 500,000 character line is about 20% (25-30 ms) slower than with 1.4.12
   on G8441. The difference comes from Ace 1.44.0 itself; the maintainer accepted it (G-A6-4).
-- The host's language support matrix still shows TSX syntax as partial. Update it in the host release
-  that pairs with 2.0.0; 1.x plugins really are partial there.
+- The host's language support matrix shows TSX syntax as fully supported from AutoJs6 commit `21252648f1`
+  on. That host also lists it so with a 1.x plugin, whose TSX highlighting is partial.
 - Building master and this branch in the same working copy: master packages the generated declaration
   assets left by the other Ace directory (+1.79 MB). The branch generator removes them. This affects local
   builds only.

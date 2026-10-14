@@ -42,7 +42,7 @@
   "text_release_build": "Release 빌드",
   "p_ace_editor_checks": "Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 후에는 다음 검증을 개별적으로 실행할 수 있습니다",
   "p_ace_editor_checks_detail": "번들된 Ace 1.44.0 파일을 잠금 매니페스트와 대조하고 (공식 파일은 수정 금지), 기록된 터치 시나리오로 모바일 오버레이를 재생하며, 고정 버전 jsdom에서 편집기 페이지와 브리지 테스트를 실행하고, Ace 타입 선언으로 브리지 스크립트를 타입 검사합니다. 모두 `check`에 포함되며 Node.js가 필요합니다",
-  "p_build_params": "빌드 매개변수와 버전은 `version.properties`에서 가져옵니다. 현재 최소 SDK는 24이고 대상 SDK는 36입니다",
+  "p_build_params": "빌드 매개변수와 버전은 `version.properties`에서 가져옵니다. 현재 최소 SDK는 24이고 대상 SDK는 37입니다",
   "p_lsp_declarations_update": "`autojs6/types/**/*.d.ts`를 업데이트하거나 추가한 후 다음 작업을 단독으로 실행할 수 있습니다",
   "p_lsp_declarations_generation": "이 작업은 선언 참조와 TypeScript 6 구문을 검증한 다음 `core`, `android`, `libraries`, `resources`, `main-app`의 5개 LSP 자산과 manifest를 생성합니다. `assemble`과 `mergeAssets`는 이미 이 작업에 의존하므로 일반 빌드에는 추가 단계가 필요하지 않으며 외부 스크립트에서도 직접 호출할 수 있습니다. 생성 결과는 `app/build/generated/aceLspAssets`에만 기록되고 `src/main/assets`의 전체 원본 선언을 덮어쓰거나 삭제하지 않습니다. Node가 `PATH`에 없다면 `-Pautojs6.nodeExecutable=<node-path>`를 전달하십시오",
   "p_language_indices_update": "`tools/ace-lsp/generate-language-indices.mjs`의 Python, Lua, Java 또는 Kotlin 정적 인덱스 소스를 변경한 후 이 작업으로 커밋 대상 자산을 다시 생성합니다",

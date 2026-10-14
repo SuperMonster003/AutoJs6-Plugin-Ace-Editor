@@ -114,7 +114,7 @@ Después de modificar los recursos de Ace, la capa móvil o los scripts del puen
 
 Comparan los archivos de Ace 1.44.0 empaquetados con el manifiesto de bloqueo (los archivos oficiales no deben modificarse), reproducen escenarios táctiles grabados sobre la capa móvil, ejecutan las pruebas de la página del editor y del puente en un jsdom de versión fija y comprueban los tipos de los scripts del puente con las declaraciones de Ace. Todas forman parte de `check` y requieren Node.js.
 
-Los parámetros de compilación y la versión provienen de `version.properties`; el SDK mínimo actual es 24 y el SDK de destino es 36.
+Los parámetros de compilación y la versión provienen de `version.properties`; el SDK mínimo actual es 24 y el SDK de destino es 37.
 
 Después de actualizar o añadir `autojs6/types/**/*.d.ts`, puede ejecutar directamente esta tarea:
 

@@ -114,7 +114,7 @@ Après avoir modifié les ressources Ace, la couche mobile ou les scripts du pon
 
 Elles comparent les fichiers Ace 1.44.0 intégrés au manifeste de verrouillage (les fichiers officiels ne doivent pas être modifiés), rejouent des scénarios tactiles enregistrés sur la couche mobile, exécutent les tests de la page de l'éditeur et du pont dans un jsdom de version figée et vérifient les types des scripts du pont avec les déclarations d'Ace. Toutes font partie de `check` et nécessitent Node.js.
 
-Les paramètres de compilation et la version proviennent de `version.properties`; le SDK minimal actuel est 24 et le SDK cible est 36.
+Les paramètres de compilation et la version proviennent de `version.properties`; le SDK minimal actuel est 24 et le SDK cible est 37.
 
 Après la mise à jour ou l'ajout de `autojs6/types/**/*.d.ts`, vous pouvez exécuter directement cette tâche:
 
