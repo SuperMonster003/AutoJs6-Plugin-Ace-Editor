@@ -422,6 +422,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       默认处理器与 focusEditor: 按计划不移植. 执行式测试待 A6-3.
       结论 (2026-10-14): 执行式测试新增一例: textarea 上的 contextmenu 只取消浏览器菜单 (不移动 textarea, 不发出
       `nativecontextmenu`), 覆盖层发出 `touchscroll` 后行号栏提示隐藏.
+      更正 (2026-10-14, 发布前审查): "修饰键不移植" 的判断有误. 百度 / 搜狗的选择模式与部分键盘的快捷键都单独发送修饰键,
+      1.32.0 靠这项定制工作, 不移植即是回归 (见 A2-10 第 19 项). 现已在输入连接上恢复 (`AceImeModifierState`).
 - [x] **A2-10** 手测后的交互改进 (2026-10-13 新增, 维护者首轮手测 XQ-AT72 后决定): 1.4.12 的五处既有表现全部改进,
       另修手测发现的缺陷. 行为规格见 `tools/ace-mobile/README.md` 中标 "(A2-10)" 的各条.
       1. 慢点: 长按触发前抬起且未移动即为点击 (1.4.12 只认 100 ms 内抬起), 长按之后抬手不再算点击.
@@ -531,6 +533,11 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
          `shiftKey` ("行首" / "行尾" 由第 11 项的面板识别处理, 不受影响). 现在输入连接记录输入法按住的 Shift, 补到缺少它的导航键
          (方向键, Home / End, PageUp / PageDown) 上 (`AceImeShiftState`, 构建 244). 在 22120RN86C 上用搜狗输入法小米版的选择模式核对:
          四个方向键都扩展选区. 待维护者用百度输入法复测.
+         发布前审查 (2026-10-14) 发现这不是 1.32.0 的缺陷而是回归: Ace 1.4.12 的 Auto.js 构建在 `lib/event` 中把已按下未抬起的
+         Shift / Ctrl / Alt / Meta 键码都算作修饰键 (A2-9 当时判断不移植). 现改为通用的 `AceImeModifierState` (构建 262): Ctrl / Meta
+         补到之后的所有按键 (如单独发送 Ctrl 的键盘的 Ctrl+A, Ctrl+Z), Shift / Alt 补到不产生字符的按键 (导航, Tab, Enter, 删除,
+         Esc) 以及与 Ctrl / Meta 组合的按键, 输入的字母不受影响. `AceImeReplayDeviceTest` 新增 Ctrl+A 用例, 22120RN86C, 23046RP50C,
+         G8441 上 13/13 通过. 因此不列入 2.0.0 changelog 的修复项.
       20. 设备自动化 (2026-10-14, 见 A8-4) 运行中发现的缺陷, 均已修复, 每项有去掉修复即失败的执行式测试:
          (a) 选择工具条显示时输入法替换选区, 输入连接线程上关闭工具条抛出 CalledFromWrongThreadException (构建 245);
          (b) 宿主在单指开始移动时发出的 `single_finger_scroll` 取消, 关闭了手指正在滚动的补全弹窗, 文档提示或签名提示; 现在触摸

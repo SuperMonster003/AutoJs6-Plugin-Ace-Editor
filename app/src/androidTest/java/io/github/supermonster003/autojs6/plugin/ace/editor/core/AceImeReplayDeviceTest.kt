@@ -128,6 +128,21 @@ class AceImeReplayDeviceTest {
         assertEquals(original, editor.text())
     }
 
+    // Keyboards that send Ctrl on its own: the Auto.js build of Ace 1.4.12 counted a held Ctrl key, so Ctrl+A selected
+    // everything; the input connection now adds the held modifier to the key.
+    @Test
+    fun aCtrlSentOnItsOwnTurnsTheNextKeyIntoAShortcut() = withEditor { editor ->
+        val original = editor.text()
+        editor.moveCursorTo(3, 6)
+        rawKey(editor, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CTRL_LEFT)
+        rawKey(editor, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_A)
+        rawKey(editor, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A)
+        rawKey(editor, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_CTRL_LEFT)
+        SystemClock.sleep(100)
+        assertEquals("Ctrl+A selected everything", original, editor.selectedText())
+        assertEquals("no character was typed", original, editor.text())
+    }
+
     // C5: typing over a selection replaces it, also with a composition.
     @Test
     fun typingReplacesTheSelection() = withEditor { editor ->

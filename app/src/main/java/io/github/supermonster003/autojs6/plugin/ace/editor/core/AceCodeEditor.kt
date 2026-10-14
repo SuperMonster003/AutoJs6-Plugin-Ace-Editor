@@ -3004,7 +3004,7 @@ class AceCodeEditor @JvmOverloads constructor(
                 private var ignoreSelectionUntilUptimeMillis = 0L
                 private var extractedTextLength = -1
                 private var extractedTextUptimeMillis = 0L
-                private val imeShiftState = AceImeShiftState()
+                private val imeModifierState = AceImeModifierState()
 
                 override fun getExtractedText(request: ExtractedTextRequest?, flags: Int): ExtractedText? {
                     val extracted = super.getExtractedText(request, flags)
@@ -3057,7 +3057,7 @@ class AceCodeEditor @JvmOverloads constructor(
                     ) {
                         markImeTextMutation("InputConnection.sendKeyEvent:${event.keyCode}")
                     }
-                    val metaState = imeShiftState.metaStateFor(event.action, event.keyCode, event.metaState)
+                    val metaState = imeModifierState.metaStateFor(event.action, event.keyCode, event.metaState)
                     if (metaState == event.metaState) {
                         return super.sendKeyEvent(event)
                     }
