@@ -326,6 +326,7 @@ class AceCodeEditor @JvmOverloads constructor(
     private var selectionActionModeExpectedFinish = false
     private var selectionActionModeStabilizeUntilUptimeMillis = 0L
     private var selectionActionModeStabilizeRestarted = false
+    @Volatile
     private var textMutationActionModeSuppressUntilUptimeMillis = 0L
     private var lastTextTouchX = -1f
     private var lastTextTouchY = -1f
@@ -2943,16 +2944,21 @@ class AceCodeEditor @JvmOverloads constructor(
         invokeAce("runImeEditingAction", "${quote(action.bridgeName)}, $extend")
     }
 
+    // Input connection calls reach the input connection wrapper on the thread of WebView's input connection, not on the
+    // main thread; dismissing the selection toolbar there threw CalledFromWrongThreadException (found by
+    // AceImeReplayDeviceTest when an IME typed over a selection while the toolbar was shown).
     private fun suppressTextMutationSelectionMenu(reason: String) {
         textMutationActionModeSuppressUntilUptimeMillis = maxOf(
             textMutationActionModeSuppressUntilUptimeMillis,
             SystemClock.uptimeMillis() + ACTION_MODE_TEXT_MUTATION_SUPPRESS_MS,
         )
-        pendingSelectionActionModeRequest = null
-        mainHandler.removeCallbacks(pendingSelectionActionModeRunnable)
-        finishSelectionActionMode()
-        if (isReady) {
-            invokeAce("suppressTextMutationSelectionMenu", quote(reason))
+        postToMain {
+            pendingSelectionActionModeRequest = null
+            mainHandler.removeCallbacks(pendingSelectionActionModeRunnable)
+            finishSelectionActionMode()
+            if (isReady) {
+                invokeAce("suppressTextMutationSelectionMenu", quote(reason))
+            }
         }
     }
 
