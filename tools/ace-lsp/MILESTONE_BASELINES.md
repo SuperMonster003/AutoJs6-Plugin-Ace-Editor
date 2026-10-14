@@ -605,6 +605,12 @@ universal 中变化的条目 (原始 / 压缩, 单位字节):
 本分支 universal APK 的 SHA-256 为 `cabdc1f3477aa16da8428d49a8b857129325b9a4b9be95579fc30555b8714a7a` (版本名仍为 1.32.0,
 不是发布产物). 发布产物与哈希在合并提交 (A8-8) 时重新构建并记录在 `docs/development/release-2.0.0.md`.
 
+最终 release (2.0.0, versionCode 265, 2026-10-14): universal 18,627,816 B, 相对 1.32.0 +101,532 B (+0.5%); 各 ABI 变体
++101,532 至 +101,536 B. 上面的对照混入了换行符差异: Windows 工作区 (`core.autocrlf=true`) 中被检出改写的文本资产是 CRLF,
+1.32.0 对照包有 295 个 (压缩前多 647,335 字节), `710f323` 包有 81 个, 最终包为 0. 按 LF 统一后重新压缩估算 (该方法对最终包
+复算的结果与实际压缩大小一致), universal 的内容增量为 +121,512 B (+0.7%), `710f323` 时为 +106,192 B. 相对 `710f323`, 最终包
+新增的主要是随插件打包的 10 种语言 2.0.0 changelog (+14,567 B).
+
 注意: 首次对照时 master 的 universal 为 20,315,039 B, 原因是在同一工作区先构建了本分支, master 的生成器把遗留在
 `app/build/generated/aceLspAssets/editor/ace-builds-1.44.0/` 的声明资产 (6 个文件, 压缩 1,787,357 B) 一并打包. 本分支的
 `generate-declarations.mjs` 会清除其他 Ace 目录的生成资产; 上表为删除该目录后重新构建的 master 结果.

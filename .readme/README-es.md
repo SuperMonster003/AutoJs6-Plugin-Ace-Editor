@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.32.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -184,6 +184,35 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v2.0.0
+
+###### 2026/10/14
+
+* `Aviso` Las nuevas opciones del editor se activan o desactivan en los ajustes del editor de código de AutoJs6; las versiones anteriores de AutoJs6 sin estos ajustes usan los valores predeterminados
+* `Función` Los archivos TSX usan su propio resaltado de sintaxis, por lo que las etiquetas y los atributos JSX se colorean correctamente
+* `Función` Iconos vectoriales del margen, resaltado de la guía de sangría activa y visualización de espacios en blanco dentro de la selección (activados por defecto)
+* `Función` Barras de desplazamiento del editor, para marcar las posiciones de errores y advertencias, que se ocultan automáticamente al detenerse el desplazamiento (activadas por defecto)
+* `Función` Resaltado de apariciones del símbolo, para marcar las demás apariciones del símbolo bajo el cursor y distinguir lecturas de escrituras (activado por defecto)
+* `Función` Lupa al arrastrar, para ampliar el texto bajo el dedo mientras se arrastra el cursor o un tirador de selección (desactivada por defecto)
+* `Función` Vista previa en línea del autocompletado, para mostrar en gris tras el cursor el resto de la primera sugerencia, que se acepta con TAB (desactivada por defecto)
+* `Corrección` Problema por el que el autocompletado, los diagnósticos y otras funciones semánticas no estaban disponibles para los archivos Lua editados en AutoJs6
+* `Corrección` Problema por el que los diagnósticos de los archivos Java editados en AutoJs6 solo informaban de un fallo del compilador
+* `Corrección` Problema por el que los fondos superpuestos del texto seleccionado y del resaltado de la misma palabra eran demasiado claros en los temas oscuros y dificultaban la lectura del texto
+* `Corrección` Problema por el que el zoom con dos dedos quitaba la selección del texto y un doble toque justo después del zoom no seleccionaba una palabra
+* `Mejora` Los toques algo más lentos también mueven el cursor, y levantar el dedo tras arrastrar y detenerse ya no provoca desplazamiento por inercia
+* `Mejora` Tras seleccionar una palabra con doble toque, el cursor queda en el extremo más cercano al dedo
+* `Mejora` Tocar el cursor o mantener pulsada una zona vacía muestra una barra de herramientas con Pegar y Seleccionar todo
+* `Mejora` Tocar el margen de números de línea ya no mueve el cursor al inicio de esa línea, y las líneas con diagnósticos también permiten establecer puntos de interrupción junto al icono
+* `Mejora` Los ratones externos y el modo ratón de los lápices táctiles permiten colocar el cursor con un clic, seleccionar palabras con doble clic y seleccionar texto arrastrando en el editor
+* `Mejora` La ventana de autocompletado, su cuadro de documentación, las sugerencias de parámetros y la documentación emergente ya no tapan la línea del cursor
+* `Mejora` Las sugerencias de parámetros y la documentación emergente siguen el tamaño de fuente del editor
+* `Mejora` La ventana de autocompletado muestra un estado de carga mientras un servicio de lenguaje responde con lentitud, y "Sin sugerencias" cuando el autocompletado se invoca manualmente y no hay candidatos
+* `Mejora` El autocompletado de miembros también aparece cuando Gboard y métodos de entrada similares confirman una palabra junto con el punto
+* `Mejora` Las sugerencias de autocompletado de Python y Lua siguen el orden del servicio de lenguaje
+* `Mejora` Mejor compatibilidad con el panel de edición de texto de Gboard y con el movimiento del cursor deslizando sobre la barra espaciadora
+* `Mejora` El botón en el punto de corte de las líneas muy largas ahora se puede tocar para alternar el ajuste de línea, y el modo ligero para líneas muy largas corta con ese botón las líneas de más de 4096 caracteres
+* `Dependencia` Se actualizó el editor Ace integrado de `1.4.12` a `1.44.0`
+
 # v1.32.0
 
 ###### 2026/10/13
@@ -195,12 +224,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/12
 
 * `Mejora` Declaraciones de tipos y autocompletado: device.getAndroidId acepta el booleano useSystemId para leer el valor del sistema del usuario Android de la aplicación mediante Shizuku/Root en Android 8.0+, lanza una excepción si falla el permiso o la lectura e ignora el parámetro en sistemas anteriores
-
-# v1.30.0
-
-###### 2026/10/08
-
-* `Mejora` Declaraciones TypeScript, autocompletado y comprobación de argumentos para compose.memo
 
 ##### Para ver más historial de versiones
 

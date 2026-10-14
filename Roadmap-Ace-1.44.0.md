@@ -187,8 +187,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 | A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 完成 (G-A5-3 / G-A5-6 / G-A5-7 已结) |
 | A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 完成 (G-A6-4 于 2026-10-14 接受替换耗时差异) |
 | A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 完成 (A7-2 宿主本地提交 b7df923aaa, 宿主测试修正 8126740e0e, 宿主 TSX 矩阵 21252648f1) |
-| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 待合并 (A8-1 至 A8-5, A8-7, A8-9 完成; A8-6 草稿已备, A8-8 与 G-A8 在合并时) |
-| X | 横切约束 | -- | 全程 | 持续 |
+| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 完成 (G-A8 通过, 2026-10-14 快进合并到 master 并发布 2.0.0) |
+| X | 横切约束 | -- | 全程 | 完成 (X-1 至 X-7 于合并时核对) |
 
 推进顺序: A0 -> A1 -> (A2 与 A3 可并行, A2 优先) -> A4 -> A5 -> A6 -> A7 -> A8. A6-1 (清单与校验) 可在 A1 完成后提前做,
 以便后续每次改动都有资产完整性保护.
@@ -1096,7 +1096,10 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       其中 Ace 官方文件 +62,215 B, 移动端覆盖层 +18,695 B, 桥接层等 +20,333 B (压缩后); `verifySignedReleaseArtifacts` 与 16 KB 对齐
       门禁通过. 明细见 `MILESTONE_BASELINES.md` "A8-5 体积与 16 KB 对齐" 与发布文档草稿. 对照中发现同一工作区先构建本分支再构建
       master 时, master 会打包遗留的生成声明资产 (+1.79 MB), 本分支的生成器已处理, 只影响本地构建.
-- [ ] **A8-6** 文档与本地化: `.changelog/lang_*.json` 10 语言新增 `v2.0.0` (feature: Ace 1.44.0, TSX, 视觉与补全新能力;
+      补记 (2026-10-14, 最终 release): 上述对照混入了换行符差异: Windows 工作区 `core.autocrlf=true` 下被检出改写的文本资产为 CRLF,
+      1.32.0 对照包中有 295 个 (多 647,335 字节, 压缩前), `710f323` 包中有 81 个, 最终 2.0.0 包为 0. 按 LF 统一后估算, 最终 universal
+      的内容增量约 +121.5 KB (+0.7%), 实际文件差值为 +101,532 B (+0.5%). 明细见发布文档 "Size (A8-5)" 与 `MILESTONE_BASELINES.md`.
+- [x] **A8-6** 文档与本地化: `.changelog/lang_*.json` 10 语言新增 `v2.0.0` (feature: Ace 1.44.0, TSX, 视觉与补全新能力;
       improvement: 移动端交互覆盖层; hint: 需要配套宿主版本露出新开关), `.readme/lang_*.json` 更新 Ace 版本, 语言表 TSX 行,
       新开关说明与构建命令; 运行 `.python/generate_markdown.bat` 后 `.python/check_markdown.bat`; `app/src/main/assets/doc/CHANGELOG*.md` 随生成更新.
       —— 验收: `markdown.yml` 等价检查本地通过; 不手工编辑生成文件.
@@ -1104,16 +1107,28 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       先放在 `docs/development/release-2.0.0-changelog.json` (提示 1, 新增 6, 修复 4, 优化 12, 依赖 1), 合并时与 `VERSION_NAME=2.0.0`
       一起写入 `.changelog/lang_*.json`; 在临时副本中按 2.0.0 试生成并 `--check` 通过. 另修正了阿拉伯语, 法语与韩语 JSON 中残留的
       非 ASCII 标点 (提交 4bc635a).
+      结论 (2026-10-14, 发布提交): 10 种语言的 `v2.0.0` 条目写入 `.changelog/lang_*.json` (released_date 2026/10/14; 提示 1, 新增 6,
+      修复 4, 优化 12, 依赖 1), 草稿 `release-2.0.0-changelog.json` 删除. 发布前审查改正了条目: 去掉 1.32.0 本无问题的百度修复项,
+      改正超长行的说法, 补上遗漏项; 其余 9 种语言按中文条目与宿主设置页用词两轮核对. `generate_markdown.py` 重新生成 README 与
+      CHANGELOG (含打包的 `app/src/main/assets/doc/CHANGELOG*.md`), `--check` 与 Python 测试通过; 条目中没有非 ASCII 标点.
 - [x] **A8-7** 第三方声明: `THIRD_PARTY_NOTICES.md` "Ace" 段改为 1.44.0 (tarball, shasum, integrity, 许可证路径),
       新增 "AutoJs6 移动端覆盖层" 段落说明 A0-5 核实的来源; `tools/ace-lsp/README.md` 与 `MILESTONE_BASELINES.md` 路径与版本更新.
       —— 验收: 文档内 `1.4.12` 仅出现在历史记录语境.
       结论 (2026-10-14): `THIRD_PARTY_NOTICES.md` 的 Ace 段已为 1.44.0 (tarball, shasum, integrity, 许可证路径与 4 个项目维护文件), 移动端
       覆盖层段说明了来源; `tools/ace-lsp/README.md` 与 `MILESTONE_BASELINES.md` 的路径为 `ace-builds-1.44.0`. `git grep 1.4.12` 的其余
       结果都在历史记录 (M0 / M1 验收, 已发布的 changelog, `Roadmap.md` 加注), 与旧版的行为对照工具, 以及已签名字体目录的来源说明中.
-- [ ] **A8-8** 版本与提交: 合并前最后一笔提交把 `VERSION_NAME` 改为 `2.0.0`, 同步 changelog JSON 版本 key, README 安装命令中的
+- [x] **A8-8** 版本与提交: 合并前最后一笔提交把 `VERSION_NAME` 改为 `2.0.0`, 同步 changelog JSON 版本 key, README 安装命令中的
       APK 文件名, 测试夹具中的版本断言; `VERSION_BUILD` 按 "当前提交数 + 1" 规则; 发布文档 `docs/development/release-2.0.0.md`
       按 `release-1.13.1.md` 结构写明验证结果, 记录的限制与最终 APK 哈希.
       —— 验收: `git rev-list --count HEAD` 与 `VERSION_BUILD` 一致.
+      结论 (2026-10-14, 发布提交): `VERSION_NAME=2.0.0`, `VERSION_BUILD=265` 等于提交数 (分支 68 笔提交逐一核对, 无不符). README
+      不含带版本的安装文件名, 测试夹具没有写死版本的断言, 无需改动. 签名 release 由发布树构建 (`testDebugUnitTest`, `lintDebug`,
+      `:app:check`, `assembleRelease`, 两个 16 KB 对齐任务, `appendDigestToReleasedFiles`): JVM 测试 177 项通过, lint 0 错误 62 警告,
+      `:app:check` 全部通过. 5 个 APK 的 versionCode 265 / versionName 2.0.0, ABI, 签名证书 SHA-256 `31a681fc...` 与文件名中的
+      CRC32 均核对一致, 打包的受版本控制资产与 Git 中的字节一致; CRC32 与 SHA-256 写入 `docs/development/release-2.0.0.md` (按
+      `release-1.13.1.md` 结构定稿). 过程中的两个问题: (1) 首次构建把对齐检查排在打包之前, 读到上次 1.32.0 构建留下的输出元数据而
+      失败, 改为先 `assembleRelease`; (2) 第二次构建的包中有 227 个资产为 CRLF (A8-5 对照切换分支时 `core.autocrlf=true` 改写了工作区,
+      `typescript.js` 因此大 201,039 字节), 该批作废, 从索引恢复 LF 字节后全部重跑, 发布文档的已知限制记录了这一风险.
 - [x] **A8-9** 宿主侧联合验证: 用 AutoJs6 宿主 (含 A7-2 改动) 安装签名 release APK, 运行宿主 `AceEditorPluginHostDeviceTest`
       与 `CompanionReleaseSmokeTest`, 并手动走一遍新开关.
       —— 验收: 宿主测试通过; 新开关生效.
@@ -1121,21 +1136,41 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       至 97f845b 前只有文档与测试改动), 宿主为含 A7-2 (b7df923aaa) 的 debug 构建, 测试包含宿主测试修正 8126740e0e:
       `AceEditorPluginHostDeviceTest` 7/7, `CompanionReleaseSmokeTest` 的 Ace 项 1/1 (需 `-e autojs.companion.release true`);
       手动走查: 设置页 8 个开关可见, 全选后关闭 / 开启 "选区内显示空白符" 立即生效, 开关已恢复默认. 测完换回调试版插件.
-      合并时的最终 release (含之后的 97f845b) 随 A8-8 重建并复核.
-- [ ] **G-A8** 合并决策门: 对照 §1 合并标准逐条打勾 (冷启动 +10% 内, 8 台全绿, 手测无 P1, 资产增量已记录);
+      最终复核 (2026-10-14, 最终 release): 22120RN86C 上换装最终 arm64-v8a APK (versionCode 265, LF 重建批次), 宿主 debug 构建含
+      b7df923aaa, 8126740e0e 与 21252648f1: `AceEditorPluginHostDeviceTest` 7/7, `CompanionReleaseSmokeTest` 的 Ace 项 1/1; 设置页
+      语言矩阵中 TSX 语法为 Full, 8 个开关可见; 在编辑器的设置对话框中对全选文本关闭再开启 "选区内显示空白符", 空白点即时消失又
+      恢复, 选区保留, 开关已恢复默认. 作废的 CRLF 批次复核结果相同. 测完换回调试版插件.
+- [x] **G-A8** 合并决策门: 对照 §1 合并标准逐条打勾 (冷启动 +10% 内, 8 台全绿, 手测无 P1, 资产增量已记录);
       全部满足 -> 合并到 `master` 并发布 2.0.0; 任一不满足 -> 在本文件记录差距与整改项, 分支继续迭代, 不合并.
+      结论 (2026-10-14): 对照 §1 合并标准: (1) 冷启动: 三台基线真机的中位数最大 +4.7% (A8-3), 在 +10% 内; (2) 8 台设备: 全套归因后
+      通过 (A8-2), 唯一未过的是 API 36.1 16 KB 模拟器上触摸用例 B1 的首次注入, 自 1.4.12 基线 (A0) 起即如此, 属测试环境而非回归;
+      (3) 手测: 附录 B / C (Gboard, 百度) 与 V1 - V10 无 P1, 发现的问题均已修复并复测通过; (4) 资产增量已记录 (A8-5 与发布文档).
+      维护者确认合并, 推送与发布 (宿主提交只保留在本地). 发布提交快进合并到 `master`, 发布 GitHub Release v2.0.0 并登记官方插件索引.
 
 ## 13. X · 横切约束
 
-- [ ] **X-1** 提交纪律: 一个提交一个完整意图; 每笔提交前 `VERSION_BUILD = git rev-list --count HEAD + 1`; 推送前运行
+- [x] **X-1** 提交纪律: 一个提交一个完整意图; 每笔提交前 `VERSION_BUILD = git rev-list --count HEAD + 1`; 推送前运行
       `py D:/idea-projects/prepush_check.py AutoJs6-Plugin-Ace-Editor`; 不包含其他任务的未提交改动.
-- [ ] **X-2** 官方文件不可改: `src-min-noconflict/` 内 origin=upstream 的文件任何时候都必须与清单一致; 所有定制只能进入
+      结论 (2026-10-14): 分支 68 笔提交与发布提交的 `VERSION_BUILD` 都等于各自的提交数; 推送前预检 6/6; 宿主提交用
+      `git commit -- <path>`, 不含其他会话的改动.
+- [x] **X-2** 官方文件不可改: `src-min-noconflict/` 内 origin=upstream 的文件任何时候都必须与清单一致; 所有定制只能进入
       `autojs6/` (含 `autojs6/mobile/`) 或运行期补丁脚本; 若出现必须改官方文件的情况, 先在本文件记录并改回运行期方案.
-- [ ] **X-3** 文案与标点: 源码注释, 字符串资源, changelog, README 10 种语言一律 ASCII 标点; 生成文件只经生成器更新.
-- [ ] **X-4** 验证门记录: 每个 G 项无论通过与否, 都在条目下追加 "结论 (日期): ..." 一行, 含设备与 WebView 版本.
-- [ ] **X-5** 设备操作: 多设备并发时 `connectedDebugAndroidTest` 必须显式设置 `ANDROID_SERIAL`; 测试结束恢复设备屏幕超时等设置.
-- [ ] **X-6** 不新增 worktree; 分支只在本仓库内 checkout; 宿主 AutoJs6 的 A7-2 改动在宿主仓库独立提交, 不在插件仓库引用兄弟目录.
-- [ ] **X-7** 每个里程碑结束更新 §3 状态列与 `MILESTONE_BASELINES.md` 的 "A 系列" 节 (资产增量与性能数据).
+      结论 (2026-10-14): 发布树上 `:app:check` 的 Ace 资产锁校验通过, `src-min-noconflict/` 与 npm tarball 字节一致; 定制都在
+      `autojs6/` 与四个有记录的例外 (两个 snippets, 两个 Visual Studio 主题) 中.
+- [x] **X-3** 文案与标点: 源码注释, 字符串资源, changelog, README 10 种语言一律 ASCII 标点; 生成文件只经生成器更新.
+      结论 (2026-10-14): 10 种语言的 changelog 与 README 只用 ASCII 标点 (v2.0.0 条目逐语言扫描无全角或本地标点), 生成文件只经
+      `generate_markdown.py` 更新.
+- [x] **X-4** 验证门记录: 每个 G 项无论通过与否, 都在条目下追加 "结论 (日期): ..." 一行, 含设备与 WebView 版本.
+      结论 (2026-10-14): G-A1 至 G-A8 每项都有结论行, 含设备与 WebView 版本.
+- [x] **X-5** 设备操作: 多设备并发时 `connectedDebugAndroidTest` 必须显式设置 `ANDROID_SERIAL`; 测试结束恢复设备屏幕超时等设置.
+      结论 (2026-10-14): 多设备运行逐台指定 serial (`ANDROID_SERIAL` 或 `adb -s`); 测试改动的宿主偏好 (字号, 主题, 新开关) 已恢复;
+      模拟器以 `-read-only` 启动, 用完 `emu kill`.
+- [x] **X-6** 不新增 worktree; 分支只在本仓库内 checkout; 宿主 AutoJs6 的 A7-2 改动在宿主仓库独立提交, 不在插件仓库引用兄弟目录.
+      结论 (2026-10-14): 分支只在本仓库 checkout, `git worktree list` 只有主工作区; 宿主改动是宿主仓库的本地提交 b7df923aaa,
+      8126740e0e 与 21252648f1, 插件提交不含宿主文件.
+- [x] **X-7** 每个里程碑结束更新 §3 状态列与 `MILESTONE_BASELINES.md` 的 "A 系列" 节 (资产增量与性能数据).
+      结论 (2026-10-14): §3 状态列随各里程碑更新; `MILESTONE_BASELINES.md` 的 "A 系列" 节记录了性能 (A8-3) 与体积 (A8-5, 含最终
+      release 补记).
 
 ---
 

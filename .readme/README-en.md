@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v1.32.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -184,6 +184,35 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.0.0
+
+###### 2026/10/14
+
+* `Hint` The new editor options can be turned on or off in the AutoJs6 code editor settings; older AutoJs6 versions without these settings use the default values
+* `Feature` TSX files use their own syntax highlighting, so JSX tags and attributes are colored correctly
+* `Feature` Vector gutter icons, active indent guide highlighting and whitespace display inside the selection (on by default)
+* `Feature` Editor scrollbars, for marking error and warning positions, hidden automatically after scrolling stops (on by default)
+* `Feature` Symbol occurrence highlighting, for marking other occurrences of the symbol at the cursor and telling reads from writes (on by default)
+* `Feature` Drag magnifier, for enlarging the text under the finger while dragging the cursor or selection handles (off by default)
+* `Feature` Inline completion preview, for showing the rest of the first suggestion in gray after the cursor, accepted with TAB (off by default)
+* `Fix` Issue where completion, diagnostics and other semantic features were unavailable for Lua files edited in AutoJs6
+* `Fix` Issue where diagnostics for Java files edited in AutoJs6 only reported a compiler failure
+* `Fix` Issue where the overlapping backgrounds of selected text and same-word highlights were too bright in dark themes, making the text hard to read
+* `Fix` Issue where a two-finger zoom cleared the selected text and a double tap right after zooming did not select a word
+* `Improvement` Slightly slower taps also move the cursor, and lifting the finger after dragging and then holding still no longer causes fling scrolling
+* `Improvement` After a double tap selects a word, the cursor lands on the end closer to the finger
+* `Improvement` Tapping on the cursor or long-pressing an empty area shows a toolbar with Paste and Select all
+* `Improvement` Tapping the gutter no longer moves the cursor to the start of that line, and breakpoints can also be set next to the diagnostic icon on lines with diagnostics
+* `Improvement` External mice and the mouse mode of styluses can place the cursor, select words by double click and select text by dragging in the editor
+* `Improvement` The completion popup, its documentation box, parameter hints and hover documentation no longer cover the cursor line
+* `Improvement` Parameter hints and hover documentation scale with the editor font size
+* `Improvement` The completion popup shows a loading state while a language service responds slowly, and "No suggestions" when completion is triggered manually and nothing matches
+* `Improvement` Member completion also appears when Gboard and similar input methods commit a word together with the dot
+* `Improvement` Python and Lua completion suggestions follow the order given by the language service
+* `Improvement` Improved support for the Gboard text editing panel and moving the cursor by sliding on the space bar
+* `Improvement` The button at the truncation point of very long lines can now be tapped to toggle word wrap, and the lightweight mode for very long lines now truncates lines longer than 4096 characters with that button
+* `Dependency` Upgraded the bundled Ace editor from `1.4.12` to `1.44.0`
+
 # v1.32.0
 
 ###### 2026/10/13
@@ -195,12 +224,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/12
 
 * `Improvement` Type declarations and completion: device.getAndroidId accepts a useSystemId boolean to read the system value for the app's Android user through Shizuku/Root on Android 8.0+, throws on permission or read failure, and ignores the flag on older systems
-
-# v1.30.0
-
-###### 2026/10/08
-
-* `Improvement` TypeScript declarations, completion and argument checks for compose.memo
 
 ##### Complete release history
 
