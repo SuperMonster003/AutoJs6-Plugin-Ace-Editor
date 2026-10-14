@@ -56,6 +56,9 @@ with `VERSION_NAME=2.0.0` passed on 2026-10-14 (25 artifacts generated and check
   is still pending.
 - Host settings (A7-2) on 22120RN86C: all eight switches are visible, and toggling one applies without
   restarting the editor.
+- The host's `AceEditorPluginHostDeviceTest` passed 7/7 on XQ-AT72 and 22120RN86C after three test fixes
+  in host commit `8126740e0e` (a diagnostic script that threw into the page, a stale contract version and a
+  theme key that depended on the night mode source).
 - Startup performance (A8-3, 2026-10-13): the medians stay within +10% of the 1.4.12 baseline on all three
   baseline devices (largest: +4.7%).
 - Signed release build, `verifySignedReleaseArtifacts` and the 16 KB native page alignment gate passed for
@@ -80,10 +83,6 @@ bridge (+20,333 B). Details are in `tools/ace-lsp/MILESTONE_BASELINES.md` ("A8-5
 
 - Replacing a document with one 500,000 character line is about 20% (25-30 ms) slower than with 1.4.12
   on G8441. The difference comes from Ace 1.44.0 itself; the maintainer accepted it (G-A6-4).
-- Two tests in the host's `AceEditorPluginHostDeviceTest` fail and need a separate fix (see Roadmap A7-2).
-  `installedAceEditorConsumesHostSnapshotForProjectDiagnosticsAndDefinitionNavigation` still expects
-  contract version 5. `foldingMenuWorksThroughPluginContractInReadOnlyMode` gets `false` from "Unfold all"
-  after "Fold all"; it also fails with plugin build 243.
 - The host's language support matrix still shows TSX syntax as partial. Update it in the host release
   that pairs with 2.0.0; 1.x plugins really are partial there.
 - Building master and this branch in the same working copy: master packages the generated declaration

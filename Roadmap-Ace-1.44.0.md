@@ -186,7 +186,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 | A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 进行中 (A4-3 已实现, G-A4-3 剩 XQ-DQ72 与模拟器) |
 | A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 完成 (G-A5-3 / G-A5-6 / G-A5-7 已结) |
 | A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 基本完成 (G-A6-4 于 2026-10-14 接受替换耗时差异) |
-| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 基本完成 (A7-1 / A7-3 完成; A7-2 宿主本地提交 b7df923aaa, 宿主设备用例两项待查) |
+| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 完成 (A7-2 宿主本地提交 b7df923aaa, 宿主测试修正 8126740e0e) |
 | A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-3 / A8-4 / A8-5 / A8-7 完成; A8-6 文案与发布文档草稿已备, 版本与发布在合并时) |
 | X | 横切约束 | -- | 全程 | 持续 |
 
@@ -972,7 +972,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `notifyDisplayPreferencesChanged` 中的 `setSmartHintOptions` 重新应用).
       结论 (2026-10-14): 宿主未露出开关时插件按默认值运行 (各设备测试均如此); 22120RN86C 上从宿主设置页切换后立即生效 (见 A7-2).
       `key_$_ace_upstream_completion_trigger` 按 G-A5-6 不设立.
-- [ ] **A7-2** 宿主侧 (AutoJs6 仓库, 单独提交): `app/src/main/res/xml/fragment_code_editor_settings.xml` 在 "缩进参考线" (`:82`)
+- [x] **A7-2** 宿主侧 (AutoJs6 仓库, 单独提交): `app/src/main/res/xml/fragment_code_editor_settings.xml` 在 "缩进参考线" (`:82`)
       所在分组后增加视觉 4 项, 滚动条自动隐藏 (A2-10) 与放大镜开关, 在智能提示分组 (`:183`) 增加 ghost text 与同名符号高亮;
       `bools.xml` 默认值与 A7-1 一致;
       10 种语言 `strings.xml` 标题 / 摘要 / 长按说明 (ASCII 标点); 变更时调用 `EditorPluginSession.notifyDisplayPreferencesChanged`.
@@ -986,6 +986,12 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       失败的两项与本改动无关, 待另查后勾选: `installedAceEditorConsumesHostSnapshotForProjectDiagnosticsAndDefinitionNavigation` 仍断言
       插件契约版本为 5 (宿主已是契约 7); `foldingMenuWorksThroughPluginContractInReadOnlyMode` 在 "全部折叠" 之后 "全部展开" 返回 false
       (换回今天改动之前的插件构建 243 同样失败; 宿主仓库当时另有构建占用文件, 未能加诊断输出复查).
+      结论 (2026-10-14): 两项失败都是测试自身的问题, 已在宿主本地提交 8126740e0e 修正 (与本改动无关, 未改宿主代码): 折叠用例的诊断
+      脚本调用 Ace 不存在的 `getFoldStyle()`, 未捕获的 TypeError 经 `window.onerror` 成为致命的 "Script error.", 宿主随即退回原生
+      编辑器 ("全部展开" 因此找不到可折叠的编辑器); 项目诊断用例仍断言契约 5, 改为 `EditorPluginContract.VERSION`. 在 XQ-AT72 上
+      另发现首帧主题用例只写入应用 context 夜间模式对应的主题键, AutoJs6 夜间模式与系统不一致时编辑页读另一个键, 改为同时设置
+      统一, 亮色, 暗色三个键并恢复. 修正后 `AceEditorPluginHostDeviceTest` 7/7 在 XQ-AT72 (API 31, 插件构建 250) 与 22120RN86C
+      (API 33, 插件构建 248) 通过.
 - [x] **A7-3** `requiresHostVersion` 保持不变 (仅偏好键, 老宿主按默认值); README "功能" 段补充新开关说明 (10 语言经生成器).
       —— 验收: 旧宿主 (当前发布版) 安装 2.0.0 插件可正常使用.
       结论 (2026-10-14): `REQUIRED_HOST_VERSION_CODE` 与 master 相同 (5352), Editor 契约仍为 7. 维护者全部手测都在不含 A7-2 的宿主
