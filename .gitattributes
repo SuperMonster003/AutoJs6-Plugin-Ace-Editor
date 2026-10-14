@@ -20,6 +20,8 @@ app/src/main/assets/editor/ace-builds-*/autojs6/indices/*.js text eol=lf
 # Pinned LuaLS runtime assets are verified by size and SHA-256 at runtime (luals/manifest.json).
 # Keep the exact upstream bytes on every platform; core.autocrlf must not rewrite them.
 app/src/main/assets/luals/** -text
+# The Python worker's manifest records byte counts and SHA-256 hashes; checkouts must not convert line endings.
+app/src/main/assets/editor/ace-builds-*/autojs6/python/** -text
 
 # Ace assets are compared byte-for-byte with the pinned ace-builds tarball (Roadmap-Ace-1.44.0.md A6-1).
 app/src/main/assets/editor/ace-builds-*/src-min-noconflict/** -text -whitespace
