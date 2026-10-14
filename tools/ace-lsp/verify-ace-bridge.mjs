@@ -1388,6 +1388,42 @@ test("rows rendered after a scrollbar toggles under soft wrap match the scroll p
     }
 });
 
+// Roadmap-Ace-1.44.0.md A2-9: two small customizations of the 1.4.12 build kept for 1.44.0. A context menu on the
+// textarea only cancels the browser menu (Ace would also move the textarea and emit "nativecontextmenu"), and the
+// gutter tooltip hides when the text scrolls under a finger.
+test("the textarea ignores context menus and touch scrolling hides the gutter tooltip", async () => {
+    const page = await openEditor();
+    try {
+        const { editor, window } = page;
+        page.api.setText(Array.from({ length: 80 }, (_, row) => `line${row} alpha beta gamma`).join("\n"));
+        render(page);
+        let nativeMenus = 0;
+        editor.on("nativecontextmenu", () => nativeMenus++);
+        const textarea = editor.textInput.getElement();
+        const menu = new window.MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: 120, clientY: 200 });
+        textarea.dispatchEvent(menu);
+        assert.equal(menu.defaultPrevented, true, "the browser menu is cancelled");
+        assert.equal(nativeMenus, 0, "Ace's own context menu handling does not run");
+
+        const tooltip = editor.$mouseHandler && editor.$mouseHandler.$tooltip;
+        assert.ok(tooltip, "Ace created the gutter tooltip");
+        let hidden = 0;
+        tooltip.isOpen = true;
+        tooltip.hide = function() {
+            hidden++;
+            this.isOpen = false;
+        };
+        const content = window.document.querySelector(".ace_content");
+        touchEvent(page, "touchstart", content, 150, 300);
+        for (let step = 1; step <= 5; step++) touchEvent(page, "touchmove", content, 150, 300 - step * 30);
+        touchEvent(page, "touchend", content, 150, 150);
+        assert.ok(editor.renderer.getScrollTop() > 0, "the finger scrolled the text");
+        assert.equal(hidden, 1, "the gutter tooltip was hidden once");
+    } finally {
+        page.close();
+    }
+});
+
 // A finger scrolling the completion popup made the host cancel the touch interaction ("single_finger_scroll"), which
 // closed the popup it was scrolling. Touches that start in the text still close it.
 test("the host's scroll cancel keeps a completion popup the finger is scrolling", async () => {
