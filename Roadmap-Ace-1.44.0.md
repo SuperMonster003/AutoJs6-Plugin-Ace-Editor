@@ -187,7 +187,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 | A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 完成 (G-A5-3 / G-A5-6 / G-A5-7 已结) |
 | A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 完成 (G-A6-4 于 2026-10-14 接受替换耗时差异) |
 | A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 完成 (A7-2 宿主本地提交 b7df923aaa, 宿主测试修正 8126740e0e) |
-| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-1 / A8-3 / A8-4 / A8-5 / A8-7 完成; A8-2 / A8-9 复跑中; A8-6 / A8-8 / G-A8 在合并时) |
+| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 待合并 (A8-1 至 A8-5, A8-7, A8-9 完成; A8-6 草稿已备, A8-8 与 G-A8 在合并时) |
 | X | 横切约束 | -- | 全程 | 持续 |
 
 推进顺序: A0 -> A1 -> (A2 与 A3 可并行, A2 优先) -> A4 -> A5 -> A6 -> A7 -> A8. A6-1 (清单与校验) 可在 A1 完成后提前做,
@@ -1019,7 +1019,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       全部通过; 推送前预检 6/6. 首轮 check 中 `verifyAutoJs6PythonWorker` 失败: 为 A8-5 对照在同一工作区切到 master 再切回时,
       `core.autocrlf=true` 把 Python worker 资产转换为 CRLF, 字节数与清单不符 (Git 中的内容未变, 运行时不校验该哈希). 已在提交
       4db529f 把该目录设为 `-text` (与 LuaLS 相同) 并恢复字节, 复跑通过. 输出摘要写入发布文档草稿.
-- [ ] **A8-2** 8 台设备 instrumentation: 对每个 serial 设置 `ANDROID_SERIAL` 运行 `:app:connectedDebugAndroidTest`
+- [x] **A8-2** 8 台设备 instrumentation: 对每个 serial 设置 `ANDROID_SERIAL` 运行 `:app:connectedDebugAndroidTest`
       (63751f63, 968e9f18, BH900ASK9E, QV710AF65F, QV770340J7, bek749scrwv4wo8h, emulator-5554, emulator-5556); 失败用例逐一归因,
       与 `MILESTONE_BASELINES.md` 已记录的系统级偶发 (G8441 `ADB-JDWP` SIGSEGV) 区分.
       —— 验收: 8/8 设备全部用例通过, 结果表进入发布文档.
@@ -1030,6 +1030,26 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       补跑 (2026-10-13): x86_64 API 36.1 16 KB 模拟器全套见 G-A3. 至此 8 台的全套都已运行; 未通过的只有该模拟器上触摸用例的首次注入
       (旧版同样失败) 与此前记录的偶发项.
       补跑 (2026-10-14): 新增的 `AceManualCoverageDeviceTest` 与 `AceImeReplayDeviceTest` (共 22 项) 结果见 A8-4; 全套未重跑.
+      结论 (2026-10-14, 构建 257 - 260): 8 台全套 (52 项, 2 个编译器探针按设计跳过) 复跑, 归因后通过:
+      | 设备 | API / WebView | 结果 |
+      |---|---|---|
+      | XQ-AT72 | 31 / 145 | 52/52 |
+      | 23046RP50C | 35 / 130 | 52/52; 改动类复跑时 B1 首次注入失败一次 (小米已知) |
+      | OPD2413 | 35 / 136 | 52/52 |
+      | 22120RN86C | 33 / 111 | 触摸用例 B10 (测试问题, 见下) 修正后通过 |
+      | G8441 | 28 / Chrome 126 | 同上 |
+      | XQ-DQ72 | 33 / 153 | 触摸用例 B5 / B6 一次未收到触摸, 复跑通过 |
+      | x86 API 27 模拟器 | 27 / Chrome 69 | 见下, 修正后对应用例通过; x86 无 LuaLS, Lua 用例按设计跳过 |
+      | x86_64 API 36.1 16 KB 模拟器 | 36 / 134 | 51/52, 只有 B1 首次注入 (A0 起即如此) |
+      复跑发现并处理: (1) 触摸用例 "slow tap" 在首个点击弹出键盘的设备上失败: 插件的输入法状态只在宿主报告键盘 insets 后离开
+      SHOWING, 测试 Activity 从不报告, 之后的弹出请求被当作 "already_showing" 忽略; 测试新增 `forwardImeInsets()` 按宿主方式转发
+      (提交 ae60304, 设备测试基座同用). 键盘恢复弹出后, B10 中用来停止惯性的点击会移动光标并弹出键盘, 视口缩小后滚动到光标,
+      改为在手指按住时测量. (2) API 27 模拟器上提示框字号不随编辑器缩放: WebView 79 以前不支持 CSS `clamp()`, 整条声明被丢弃,
+      已加 `calc()` 回退 (提交 97f845b, 产品修复). (3) API 27 模拟器上 C3 退格重放两次中一次删掉两行: 程序移动光标后约 100 ms 内
+      隐藏输入框仍是上一行, 重放的退格作用在旧内容上; 人的下一次按键远晚于此, 设备测试基座改为等输入框同步后再继续 (提交
+      86c4f0c), 4 次复跑通过; 记为老 WebView 上程序移动光标后立即的 IME 操作的已知限制. (4) ECJ 用例在多台模拟器同时运行时超时,
+      单独复跑通过. (5) API 36.1 16 KB 模拟器以 AVD 缺省的 2 GB 内存运行时, 补全弹窗点击三次都未送达页面, 触摸用例的双击 / 惯性
+      时好时坏; 按维护者建议以 `-memory 6144 -cores 4` 重启 (只读, 不改 AVD 配置) 后只剩 B1.
 - [x] **A8-3** 性能复测: 三台基线真机各 3 轮 `measure-editor-performance.ps1 -SkipBuild -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F`,
       与 A0-2 基线逐项比较; 另在 OPD2413 与 22120RN86C 各取 3 轮作为参考 (不设门).
       —— 验收: 三项中位数相对 A0-2 不超过 +10% (功能优先档); 超出则在 G-A8 决策.
@@ -1087,9 +1107,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       APK 文件名, 测试夹具中的版本断言; `VERSION_BUILD` 按 "当前提交数 + 1" 规则; 发布文档 `docs/development/release-2.0.0.md`
       按 `release-1.13.1.md` 结构写明验证结果, 记录的限制与最终 APK 哈希.
       —— 验收: `git rev-list --count HEAD` 与 `VERSION_BUILD` 一致.
-- [ ] **A8-9** 宿主侧联合验证: 用 AutoJs6 宿主 (含 A7-2 改动) 安装签名 release APK, 运行宿主 `AceEditorPluginHostDeviceTest`
+- [x] **A8-9** 宿主侧联合验证: 用 AutoJs6 宿主 (含 A7-2 改动) 安装签名 release APK, 运行宿主 `AceEditorPluginHostDeviceTest`
       与 `CompanionReleaseSmokeTest`, 并手动走一遍新开关.
       —— 验收: 宿主测试通过; 新开关生效.
+      结论 (2026-10-14): 22120RN86C (API 33, WebView 111) 上卸载调试版插件, 安装 710f323 的签名 release APK (versionCode 253, 其后
+      至 97f845b 前只有文档与测试改动), 宿主为含 A7-2 (b7df923aaa) 的 debug 构建, 测试包含宿主测试修正 8126740e0e:
+      `AceEditorPluginHostDeviceTest` 7/7, `CompanionReleaseSmokeTest` 的 Ace 项 1/1 (需 `-e autojs.companion.release true`);
+      手动走查: 设置页 8 个开关可见, 全选后关闭 / 开启 "选区内显示空白符" 立即生效, 开关已恢复默认. 测完换回调试版插件.
+      合并时的最终 release (含之后的 97f845b) 随 A8-8 重建并复核.
 - [ ] **G-A8** 合并决策门: 对照 §1 合并标准逐条打勾 (冷启动 +10% 内, 8 台全绿, 手测无 P1, 资产增量已记录);
       全部满足 -> 合并到 `master` 并发布 2.0.0; 任一不满足 -> 在本文件记录差距与整改项, 分支继续迭代, 不合并.
 

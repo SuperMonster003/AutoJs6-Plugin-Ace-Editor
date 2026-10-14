@@ -36,7 +36,11 @@ with `VERSION_NAME=2.0.0` passed on 2026-10-14 (25 artifacts generated and check
   check, LSP runtime, language indices, Python worker, LuaLS, Java, Kotlin P2+); the pre-push check passed 6/6.
 - Bridge tests in jsdom: 50 passed; bridge type check: 7 scripts; mobile overlay replay: 558 checks (36
   touch scenarios identical to the 1.4.12 build, 9 intended differences, 5 action mode scenarios).
-- Device instrumentation: the full suite ran on all eight devices on 2026-10-13 (Roadmap G-A3, A8-2).
+- Device instrumentation (A8-2, 2026-10-14, builds 257 - 260): the full suite (52 tests, two compiler probes skipped by
+  design) passed on all eight devices after attribution: the six phones, an x86 API 27 emulator (WebView 69) and an
+  x86_64 API 36.1 16 KB emulator (WebView 134, started with 6 GB of memory), where only the first injected tap is lost
+  as it has been since the 1.4.12 baseline. The rerun fixed the tooltip font size on WebView before 79 and three test
+  harness problems (see Roadmap A8-2).
   The device tests added on 2026-10-14 cover manual checks (`AceManualCoverageDeviceTest`, 10 tests) and
   replay the input connection calls of Gboard, Baidu and Sogou (`AceImeReplayDeviceTest`, 12 tests):
 
@@ -64,6 +68,9 @@ with `VERSION_NAME=2.0.0` passed on 2026-10-14 (25 artifacts generated and check
   baseline devices (largest: +4.7%).
 - Signed release build, `verifySignedReleaseArtifacts` and the 16 KB native page alignment gate passed for
   all five APKs (2026-10-14, `710f323`).
+- Host joint verification (A8-9): with the signed release plugin from `710f323` and a host containing A7-2 on
+  22120RN86C, `AceEditorPluginHostDeviceTest` passed 7/7 and the Ace companion release smoke test 1/1, and the new
+  settings switches applied without restarting the editor.
 
 ## Size (A8-5)
 
@@ -91,6 +98,8 @@ bridge (+20,333 B). Details are in `tools/ace-lsp/MILESTONE_BASELINES.md` ("A8-5
   builds only.
 - The x86 emulator `emulator-5554` crashed natively (memory reclaim, SIGTRAP) during the new device tests.
   This is environmental, and the emulator was not counted.
+- On WebView 69, an IME edit that arrives within about 100 ms of a programmatic cursor move can work on the
+  previous row's text, because the hidden textarea has not caught up yet. A person's next key comes much later.
 
 ## Final APKs
 
