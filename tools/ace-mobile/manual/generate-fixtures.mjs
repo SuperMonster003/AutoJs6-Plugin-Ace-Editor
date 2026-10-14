@@ -148,6 +148,7 @@ def make_greeters(names) -> list[Greeter]:
     greeters: list[Greeter] = []
     for name in names:
         greeters.append(Greeter(name))
+    greeters += [Greeter("Guest")]
     return greeters
 
 

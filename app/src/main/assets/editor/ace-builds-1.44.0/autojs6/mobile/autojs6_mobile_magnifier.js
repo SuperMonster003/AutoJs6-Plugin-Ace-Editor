@@ -133,6 +133,10 @@ ace.define("autojs6/mobile/magnifier", ["require", "exports", "module"], functio
             highlight.style.left = startColumn * config.characterWidth + "px";
             highlight.style.width = Math.max(1, endColumn - startColumn) * config.characterWidth + "px";
             highlight.style.transform = "translateX(" + translateX + "px)";
+            // Under the cloned rows, as Ace's marker layer is under its text layer: the layer classes also give the
+            // highlight Ace's marker z-index (5), which drew it over the text; an opaque theme selection (Gruvbox
+            // since A2-10 item 15) hid the selected text (maintainer test V10, 2026-10-14).
+            highlight.style.zIndex = "auto";
             this.content.appendChild(highlight);
         }
     };

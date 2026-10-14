@@ -146,6 +146,17 @@ function touchEvent(page, type, target, x, y) {
     return event;
 }
 
+// A touch event with several fingers: `points` are the fingers still down after the event, `changed` the fingers
+// that moved, landed or lifted.
+function multiTouchEvent(page, type, target, points, changed = points) {
+    const event = new page.window.Event(type, { bubbles: true, cancelable: true });
+    const touch = ([x, y, identifier]) => ({ clientX: x, clientY: y, identifier, target });
+    event.touches = points.map(touch);
+    event.changedTouches = changed.map(touch);
+    target.dispatchEvent(event);
+    return event;
+}
+
 function mouseDown(page, target, x, y) {
     const event = new page.window.MouseEvent("mousedown", { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0 });
     target.dispatchEvent(event);
@@ -731,10 +742,19 @@ test("the drag magnifier clones rows unwrapped and without Ace's per-row contain
         render(page);
         assert.ok(editor.container.classList.contains("ace_hidpi"), "the hidpi containment rules apply");
         const { Magnifier } = window.ace.require("autojs6/mobile/magnifier");
+        const Range = window.ace.require("ace/range").Range;
+        editor.selection.setRange(new Range(4, 2, 5, 30));
         const magnifier = new Magnifier(editor.container, editor);
         magnifier.show({ row: 5, column: 30 }, { x: 200, y: 300 });
         const clones = [...magnifier.content.children].filter((node) => node.classList.contains("ace_line"));
         assert.deepEqual(clones.map((clone) => clone.textContent.split(" ")[0]), ["line4", "line5", "line6"]);
+        // V10: the selection is drawn under the rows (before them, without the z-index of Ace's marker layer).
+        const highlights = [...magnifier.content.children].filter((node) => node.classList.contains("autojs6-magnifier-selection"));
+        assert.equal(highlights.length, 2, "the selected rows above and at the cursor");
+        for (const highlight of highlights) {
+            assert.equal(highlight.style.zIndex, "auto");
+            assert.ok(highlight.compareDocumentPosition(clones[0]) & window.Node.DOCUMENT_POSITION_FOLLOWING);
+        }
         // Without white-space: pre the rows wrap inside the narrow content, and with Ace's containment the rows are
         // clipped to the content width before they are shifted to center the cursor: the magnifier stays empty.
         assert.equal(window.getComputedStyle(magnifier.content).whiteSpace, "pre");
@@ -1228,6 +1248,141 @@ test("a double tap during an IME composition puts the selected word into the tex
         textarea.element.dispatchEvent(new window.CompositionEvent("compositionend", { data: "index", bubbles: true }));
         assert.equal(editor.getValue(), text);
         assert.equal(editor.getSelectedText(), "index");
+    } finally {
+        page.close();
+    }
+});
+
+// Maintainer test V8 (2026-10-14): a pinch cleared the selection, and double taps right after it selected nothing.
+test("a pinch keeps the selection and a double tap right after it selects a word", async () => {
+    const page = await openAndroidEditor("alpha beta gamma\ndelta epsilon\nzeta eta theta");
+    try {
+        const { editor, window } = page;
+        render(page);
+        const content = window.document.querySelector(".ace_content");
+        const point = (row, column) => editor.renderer.$cursorLayer.getPixelPosition({ row, column }, true);
+        const doubleTap = (row, column) => {
+            const p = point(row, column);
+            for (let i = 0; i < 2; i++) {
+                touchEvent(page, "touchstart", content, p.left + 2, p.top + 5);
+                touchEvent(page, "touchend", content, p.left + 2, p.top + 5);
+            }
+        };
+        doubleTap(0, 7);
+        assert.equal(editor.getSelectedText(), "beta");
+        const before = editor.getFontSize();
+        const one = [60, 20, 1];
+        const two = [160, 60, 2];
+        multiTouchEvent(page, "touchstart", content, [one]);
+        multiTouchEvent(page, "touchstart", content, [one, two], [two]);
+        multiTouchEvent(page, "touchmove", content, [[50, 15, 1], [190, 75, 2]]);
+        multiTouchEvent(page, "touchmove", content, [[40, 10, 1], [220, 90, 2]]);
+        multiTouchEvent(page, "touchend", content, [[40, 10, 1]], [[220, 90, 2]]);
+        multiTouchEvent(page, "touchend", content, [], [[40, 10, 1]]);
+        assert.notEqual(editor.getFontSize(), before, "the pinch zoomed");
+        await sleep(500); // the deferred selection restores after the pinch
+        assert.equal(editor.getSelectedText(), "beta", "the pinch keeps the selection");
+        render(page);
+        doubleTap(1, 2);
+        assert.equal(editor.getSelectedText(), "delta", "a double tap right after the pinch selects");
+        await sleep(300);
+        assert.equal(editor.getSelectedText(), "delta", "and the selection stays");
+    } finally {
+        page.close();
+    }
+});
+
+test("the selection toolbar comes back after a pinch", async () => {
+    const page = await openAndroidEditor("alpha beta gamma\ndelta epsilon");
+    try {
+        const { editor, window } = page;
+        render(page);
+        const content = window.document.querySelector(".ace_content");
+        const p = editor.renderer.$cursorLayer.getPixelPosition({ row: 0, column: 7 }, true);
+        for (let i = 0; i < 2; i++) {
+            touchEvent(page, "touchstart", content, p.left + 2, p.top + 5);
+            touchEvent(page, "touchend", content, p.left + 2, p.top + 5);
+        }
+        assert.equal(editor.getSelectedText(), "beta");
+        const starts = () => page.calls.filter((call) => call.name === "startActionMode");
+        multiTouchEvent(page, "touchstart", content, [[60, 20, 1]]);
+        multiTouchEvent(page, "touchstart", content, [[60, 20, 1], [160, 60, 2]], [[160, 60, 2]]);
+        multiTouchEvent(page, "touchmove", content, [[40, 10, 1], [220, 90, 2]]);
+        multiTouchEvent(page, "touchend", content, [[40, 10, 1]], [[220, 90, 2]]);
+        multiTouchEvent(page, "touchend", content, [], [[40, 10, 1]]);
+        page.clearCalls();
+        await sleep(500);
+        assert.deepEqual(starts(), [], "no toolbar right after zooming");
+        await sleep(1500);
+        assert.equal(editor.getSelectedText(), "beta");
+        assert.equal(starts().length, 1, "the toolbar is back");
+        assert.equal(starts()[0].args[4], true, "for the selection");
+    } finally {
+        page.close();
+    }
+});
+
+// Maintainer test V7 (2026-10-14): the signature box kept 13px text next to a zoomed editor font.
+test("the hover and signature boxes follow the editor font size", async () => {
+    const page = await openEditor({ layout: false });
+    try {
+        const { window } = page;
+        page.api.setFontSizeSp(24);
+        assert.equal(window.document.documentElement.style.getPropertyValue("--autojs6-editor-font-size"), "24px");
+        const rules = [];
+        // jsdom gives the sheets no href; only autojs6.css uses the variable.
+        for (const sheet of window.document.styleSheets) {
+            for (const rule of sheet.cssRules) {
+                if (rule.style) rules.push(rule);
+            }
+        }
+        for (const className of ["autojs6_signature_tooltip", "autojs6_hover_tooltip"]) {
+            const box = window.document.createElement("div");
+            box.className = className;
+            window.document.body.appendChild(box);
+            const declarations = rules.filter((rule) => box.matches(rule.selectorText)).map((rule) => rule.style.cssText);
+            assert.ok(declarations.some((text) => /font-size:[^;]*var\(--autojs6-editor-font-size/.test(text)),
+                `${className}: ${declarations.join(" | ")}`);
+            box.remove();
+        }
+    } finally {
+        page.close();
+    }
+});
+
+// Maintainer report after V10 (2026-10-14): with soft wrap, a scrollbar appearing or disappearing during a render
+// changed the wrap limit after Ace had picked the first visible row, and the text was drawn outside the visible area.
+test("rows rendered after a scrollbar toggles under soft wrap match the scroll position", async () => {
+    const page = await openEditor();
+    try {
+        const { editor } = page;
+        const renderer = editor.renderer;
+        // 31 characters: one screen row at a wrap limit of 31, two at 30.
+        page.api.setText(Array.from({ length: 300 }, (_, row) => `let v${String(row).padStart(3, "0")} = "${"y".repeat(17)}";`).join("\n"));
+        editor.session.setUseWrapMode(true);
+        // jsdom has no layout: the vertical scrollbar takes width only while it is visible, as on a device.
+        renderer.scrollBarV.getWidth = function() {
+            return this.isVisible ? 24 : 0;
+        };
+        renderer.onResize(true, 40, 360, 600);
+        renderer.updateFull(true);
+        editor.session.setScrollTop(120 * renderer.lineHeight);
+        renderer.updateFull(true);
+        const withScrollbar = editor.session.getWrapLimit();
+        const assertRowsAtScrollPosition = (when) => {
+            const config = renderer.layerConfig;
+            assert.equal(editor.session.documentToScreenRow(config.firstRow, 0), config.firstRowScreen,
+                `${when}: the first rendered row is where the current wrap data puts it`);
+            assert.ok(Math.abs(config.firstRowScreen * config.lineHeight + config.offset - renderer.scrollTop) < 1,
+                `${when}: and at the scroll position`);
+        };
+        // Too low for scrollbars (as during a keyboard animation), then the full height again; each resize renders once.
+        renderer.onResize(true, 40, 360, renderer.lineHeight);
+        assert.notEqual(editor.session.getWrapLimit(), withScrollbar, "the hidden scrollbar widened the wrap limit");
+        assertRowsAtScrollPosition("without scrollbar");
+        renderer.onResize(true, 40, 360, 600);
+        assert.equal(editor.session.getWrapLimit(), withScrollbar);
+        assertRowsAtScrollPosition("with scrollbar");
     } finally {
         page.close();
     }

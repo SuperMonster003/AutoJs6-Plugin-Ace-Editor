@@ -106,6 +106,8 @@
     var bridgePinchZoomSelectionRange = null;
     var bridgePinchPostTouchSuppressUntil = 0;
     var bridgePinchSelectionSuppressUntil = 0;
+    var bridgePinchKeptSelectionRange = null;
+    var bridgePinchActionModeTimer = null;
     var bridgePinchImeSuppressUntil = 0;
     var bridgePinchImeRestoreTimer = null;
     var bridgePinchImeElement = null;
@@ -1622,6 +1624,40 @@
         return bridgePinchZoomActive || Date.now() <= bridgePinchSelectionSuppressUntil;
     }
 
+    // A pinch keeps the selection made before it (maintainer test V8, 2026-10-14): the selection the pinch restores
+    // when it ends was cleared as a selection made during the pinch, and since every clear extended the suppression,
+    // double taps right after the pinch were cleared as well. Selections the pinch did not start with are still
+    // cleared; the first single-finger touch after the pinch ends the suppression.
+    function isPinchKeptSelection() {
+        var kept = bridgePinchKeptSelectionRange;
+        var current = editor && editor.getSelectionRange ? editor.getSelectionRange() : null;
+        return !!(kept && current && !kept.isEmpty() && kept.isEqual(current));
+    }
+
+    function releaseBridgePinchSelectionSuppression() {
+        bridgePinchSelectionSuppressUntil = 0;
+        bridgePinchKeptSelectionRange = null;
+        if (bridgePinchActionModeTimer !== null) {
+            clearTimeout(bridgePinchActionModeTimer);
+            bridgePinchActionModeTimer = null;
+        }
+    }
+
+    // The selection toolbar, hidden while zooming, comes back for a kept selection once the suppression ends.
+    function schedulePinchSelectionActionModeRestore() {
+        if (bridgePinchActionModeTimer !== null) {
+            clearTimeout(bridgePinchActionModeTimer);
+        }
+        bridgePinchActionModeTimer = setTimeout(function() {
+            bridgePinchActionModeTimer = null;
+            if (bridgePinchZoomActive || shouldSuppressSelectionActionModeForPinch() || !isPinchKeptSelection()) {
+                return;
+            }
+            bridgePinchKeptSelectionRange = null;
+            notifySelectionChanged();
+        }, Math.max(0, bridgePinchSelectionSuppressUntil - Date.now()) + 50);
+    }
+
     function extendBridgePinchImeSuppression(durationMs) {
         bridgePinchImeSuppressUntil = Math.max(
             bridgePinchImeSuppressUntil,
@@ -1720,6 +1756,7 @@
             return;
         }
         releaseBridgePinchPostTouchSuppression("single_touch");
+        releaseBridgePinchSelectionSuppression();
         if (shouldSuppressImeForPinch()) {
             releaseBridgePinchImeSuppression("single_touch");
         }
@@ -2722,6 +2759,7 @@
         bridgePinchZoomLastFocus = focus;
         bridgePinchZoomAnchor = capturePinchZoomAnchor(focus);
         bridgePinchZoomSelectionRange = cloneEditorSelectionRange();
+        bridgePinchKeptSelectionRange = bridgePinchZoomSelectionRange;
         bridgePinchPostTouchSuppressUntil = 0;
         cursorRevealSuppressUntil = Math.max(cursorRevealSuppressUntil, Date.now() + PINCH_CURSOR_REVEAL_SUPPRESS_MS);
         suppressBridgePinchIme(PINCH_IME_SUPPRESS_MS);
@@ -2769,13 +2807,15 @@
             cursorRevealSuppressUntil = Math.max(cursorRevealSuppressUntil, Date.now() + PINCH_CURSOR_REVEAL_SUPPRESS_MS);
             suppressBridgePinchIme(PINCH_IME_SUPPRESS_MS);
             markBridgePinchPostTouchSuppressed(PINCH_POST_TOUCH_SUPPRESS_MS);
-            markBridgePinchSelectionSuppressed(1600);
+            // Long enough for the deferred selection and anchor restores (schedulePinchZoomSelectionRestore).
+            markBridgePinchSelectionSuppressed(PINCH_CURSOR_RESTORE_MS);
             restorePinchZoomSelection("pinch_zoom_end");
             stopDomTouchEvent(event);
             resetAceBuiltInBodyZoom();
             restorePinchZoomAnchor(bridgePinchZoomLastFocus);
             schedulePinchZoomAnchorRestore(bridgePinchZoomLastFocus);
             schedulePinchZoomSelectionRestore("pinch_zoom_end_deferred");
+            schedulePinchSelectionActionModeRestore();
             setTimeout(function(anchor) {
                 if (bridgePinchZoomAnchor === anchor) {
                     bridgePinchZoomAnchor = null;
@@ -3562,6 +3602,34 @@
         editor.$autojs6UnchangedCompositionGuard = true;
     }
 
+    // VirtualRenderer.$computeLayerConfig (Ace 1.44.0) finds the first visible document row from the wrap data and only
+    // then updates the cached size when a scrollbar appears or disappears. With soft wrap, the narrower or wider text
+    // area can change the wrap limit and so the wrap data; Ace schedules a full render for that, but the render in
+    // progress takes the scheduled change ($loop.clear) and draws rows from the old first row at their new positions.
+    // The text and the gutter then sat outside the visible area until the next scroll, while the cursor was drawn
+    // where it belonged: the editor looked empty (maintainer report after V10, 2026-10-14; reproduced on XQ-AT72 by
+    // showing the keyboard at font size 20). The layer configuration is computed again while the wrap limit moves.
+    function installWrapLayerConfigGuard() {
+        var renderer = editor && editor.renderer;
+        if (!renderer || typeof renderer.$computeLayerConfig !== "function" || renderer.$autojs6WrapLayerConfigGuard) {
+            return;
+        }
+        var computeLayerConfig = renderer.$computeLayerConfig;
+        renderer.$computeLayerConfig = function() {
+            var changes = 0;
+            for (var attempt = 0; attempt < 3; attempt++) {
+                var session = this.session;
+                var wrapLimit = session ? session.getWrapLimit() : 0;
+                changes |= computeLayerConfig.apply(this, arguments);
+                if (!session || !session.getUseWrapMode() || session.getWrapLimit() === wrapLimit) {
+                    break;
+                }
+            }
+            return changes;
+        };
+        renderer.$autojs6WrapLayerConfigGuard = true;
+    }
+
     // True while Ace sends input (TextInput.sendText) for a textarea whose value it has already read; Ace stores the
     // value it read after sending.
     function isUnchangedImeTextInput(textInput) {
@@ -3607,7 +3675,7 @@
         lastSelectionChangedAt = Date.now();
         var selection = getSelectionState();
         if (shouldSuppressSelectionActionModeForPinch()) {
-            if (selection.text) {
+            if (selection.text && !isPinchKeptSelection()) {
                 clearSelectionForPinch("pinch_selection_changed");
                 return;
             }
@@ -5196,6 +5264,10 @@
         var sp = clampFontSizeSp(size);
         currentFontSizeSp = sp;
         editor.setFontSize(sp + "px");
+        // The hover and signature boxes size their text from it (autojs6.css).
+        if (document && document.documentElement && document.documentElement.style) {
+            document.documentElement.style.setProperty("--autojs6-editor-font-size", sp + "px");
+        }
         forceRendererCoordinateRefresh(options.reason || "font_size_apply");
         if (options.deferRefresh !== false) {
             scheduleFontMetricsRefresh(options.reason || "font_size_apply");
@@ -6576,6 +6648,7 @@
         editor.selection.on("changeSelection", notifySelectionChanged);
         installImeTextInputSelectionWindow();
         installUnchangedCompositionGuard();
+        installWrapLayerConfigGuard();
         global.addEventListener("resize", function() {
             scheduleResize("window_resize");
         });

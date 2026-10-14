@@ -117,5 +117,8 @@ declare module "ace-builds-internal/virtual_renderer" {
         $isMousePressed: boolean;
         $keepTextAreaAtCursor: boolean;
         $moveTextAreaToCursor(): void;
+        $computeLayerConfig(): number;
+        // Installation flags of bridge hooks.
+        $autojs6WrapLayerConfigGuard?: boolean;
     }
 }
