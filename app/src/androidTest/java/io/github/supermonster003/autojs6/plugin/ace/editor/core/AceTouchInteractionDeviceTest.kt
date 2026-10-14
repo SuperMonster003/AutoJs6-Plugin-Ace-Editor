@@ -68,6 +68,7 @@ class AceTouchInteractionDeviceTest {
                 session.set(createdSession)
                 createdSession.setInitialText(DOCUMENT)
                 activity.setContentView(createdSession.view)
+                forwardImeInsets(activity, createdSession)
             }
             assertTrue("ACE editor did not become ready", ready.await(15, TimeUnit.SECONDS))
             val probe = Probe(scenario, session)
@@ -191,11 +192,15 @@ class AceTouchInteractionDeviceTest {
                 val end = Point(start.x, start.y - p.swipeRows() * p.lineHeightPx())
                 drag(start, end, steps = 6, stepMs = 8)
                 SystemClock.sleep(120)
-                tap(start, holdMs = 150)
+                // Measured while the finger rests, before the long press: lifting it is a tap that moves the cursor
+                // and shows the keyboard, and the smaller viewport then scrolls the cursor into view.
+                val downTime = SystemClock.uptimeMillis()
+                inject(downTime, downTime, MotionEvent.ACTION_DOWN, start)
                 SystemClock.sleep(50)
                 val stopped = p.state().scrollTop
-                SystemClock.sleep(800)
+                SystemClock.sleep(250)
                 val later = p.state().scrollTop
+                inject(downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, start)
                 p.note("scrollTopAfterTouch", stopped)
                 p.note("scrollTopLater", later)
                 expect(p, kotlin.math.abs(later - stopped) < 1.0, "touching should stop the fling ($stopped -> $later)")

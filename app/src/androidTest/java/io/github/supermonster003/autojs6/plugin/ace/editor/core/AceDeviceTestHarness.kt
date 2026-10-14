@@ -542,6 +542,7 @@ internal class AceDeviceTestHarness private constructor(
                 session.set(created)
                 created.setInitialText(document)
                 activity.setContentView(created.view)
+                forwardImeInsets(activity, created)
             }
             val harness = AceDeviceTestHarness(scenario, session, previous)
             try {
