@@ -181,13 +181,13 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 |---|---|---|---|---|
 | A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 完成 (A0-6 于 2026-10-14 按维护者决定以手测与设备自动化取代) |
 | A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 待确认 (G-A1 8 台已跑, 两台的既有失败待维护者判定) |
-| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 基本完成 (G-A2 通过; A2-10 剩第 19 项百度输入法复测) |
-| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 基本完成 (A3-6 与 G-A3 待百度输入法 C4 复测) |
+| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 完成 (G-A2 通过, A2-10 复测通过) |
+| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 基本完成 (G-A3 通过; A3-6 待诊断信息核对) |
 | A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 进行中 (A4-3 已实现, G-A4-3 剩 XQ-DQ72 与模拟器) |
-| A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 基本完成 (真机目视已确认; A5-7 / G-A5-7 待复测) |
+| A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 完成 (G-A5-3 / G-A5-6 / G-A5-7 已结) |
 | A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 基本完成 (G-A6-4 于 2026-10-14 接受替换耗时差异) |
-| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 进行中 (A7-1 完成; A7-2 宿主本地提交 b7df923aaa, 宿主设备用例两项待查; A7-3 随 A8-6) |
-| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-3 通过; A8-1 / A8-2 已跑, 文档与版本在合并时) |
+| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 基本完成 (A7-1 / A7-3 完成; A7-2 宿主本地提交 b7df923aaa, 宿主设备用例两项待查) |
+| A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-3 / A8-4 / A8-5 / A8-7 完成; A8-6 文案与发布文档草稿已备, 版本与发布在合并时) |
 | X | 横切约束 | -- | 全程 | 持续 |
 
 推进顺序: A0 -> A1 -> (A2 与 A3 可并行, A2 优先) -> A4 -> A5 -> A6 -> A7 -> A8. A6-1 (清单与校验) 可在 A1 完成后提前做,
@@ -422,7 +422,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       默认处理器与 focusEditor: 按计划不移植. 执行式测试待 A6-3.
       结论 (2026-10-14): 执行式测试新增一例: textarea 上的 contextmenu 只取消浏览器菜单 (不移动 textarea, 不发出
       `nativecontextmenu`), 覆盖层发出 `touchscroll` 后行号栏提示隐藏.
-- [ ] **A2-10** 手测后的交互改进 (2026-10-13 新增, 维护者首轮手测 XQ-AT72 后决定): 1.4.12 的五处既有表现全部改进,
+- [x] **A2-10** 手测后的交互改进 (2026-10-13 新增, 维护者首轮手测 XQ-AT72 后决定): 1.4.12 的五处既有表现全部改进,
       另修手测发现的缺陷. 行为规格见 `tools/ace-mobile/README.md` 中标 "(A2-10)" 的各条.
       1. 慢点: 长按触发前抬起且未移动即为点击 (1.4.12 只认 100 ms 内抬起), 长按之后抬手不再算点击.
       2. 静止后抬手: 抬手前手指静止超过 40 ms (无 touchmove) 不惯性, 取 Android VelocityTracker 的 "指针已停止" 时间;
@@ -552,6 +552,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       在 XQ-AT72 上用真实 Gboard 核对: 面板左右键每次一格 (单词中间亦然), 上下键保持列, "|<" / ">|" 到行首 / 行尾且长行横向
       滚动跟随, 行首按 "|<" 不动, "选择" 模式下扩展选区, "全选" 选中整篇; 空格键左右滑动跨过行尾 / 行首, 文档不变.
       复测 (2026-10-14, 构建 243): 维护者在 XQ-AT72 上复测第 1 - 18 项未发现问题. 第 19 项待复测后勾选本项.
+      结论 (2026-10-14): 构建 250 上维护者复测百度输入法 C4 (第 19 项) 通过; C11 中百度英文状态不组字, 灰色预览正常, Gboard 组字后
+      点候选会追加空格, 弹窗与预览随之关闭, 均符合预期.
 
 - [x] **G-A2** 交互等价门: 8 台设备逐项执行附录 B, 每项与 A0-6 的 1.4.12 实测一致 (惯性手感允许主观 "接近");
       自动部分为在每台设备上运行 `AceTouchInteractionDeviceTest` 并与 `tools/ace-mobile/device-records/` 中同设备的 A0 记录逐场景比对
@@ -647,6 +649,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-14): 附录 C 已由维护者在 XQ-AT72 上用 Gboard 与百度输入法完成, 只有百度 C4 (选择模式方向键) 有问题, 已修复
       (A2-10 第 19 项), 待复测; `AceImeReplayDeviceTest` 在 5 台真机重放 Gboard, 百度与搜狗的输入连接调用 (附录 C 第 1 - 5, 7, 8, 11,
       12 项) 全部通过. 诊断信息中的 `imeTextInputSelectionDropped` 在复测时一并核对.
+      进度 (2026-10-14): C4 复测通过 (构建 250). 该事件只记在插件进程的运行事件历史中, logcat 中查不到, 待维护者提供复测后的诊断
+      信息再核对并勾选.
 - [x] **A3-7** 字号 / 滚动 / 双指缩放复核: `applyFontSizeSp` (`:4466`), `forceRendererCoordinateRefresh` (`:4485`),
       `scrollToPosition` (`:4555`) 使用的 renderer 成员在 1.44.0 均存在; 复核 `renderer.$padding` 在 1.44.0 是否仍为数字
       (文本层 `$padding` 与 gutter `$padding` 对象不同, 桥接层只读 renderer 的).
@@ -675,7 +679,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `AceDiagnosticsSnapshot.aceVersion` / `mobileOverlay` (JSON 文本), Bundle 键与诊断文本同名. 原定扩展的用例不等待就绪, 因此改为新增
       `sessionDiagnosticsReportAceRuntimeAndMobileOverlay` (就绪后轮询事件), 断言 "1.44.0", 已安装, 卸下 4 个上游监听器, 未退回捕获阶段,
       放大镜关闭; G8441 通过.
-- [ ] **G-A3** 桥接门: JVM 测试全绿 (无 `@Ignore` 新增), 8 台设备全部 instrumentation 用例通过, 附录 C 在 6 台真机通过.
+- [x] **G-A3** 桥接门: JVM 测试全绿 (无 `@Ignore` 新增), 8 台设备全部 instrumentation 用例通过, 附录 C 在 6 台真机通过.
       进度 (2026-10-13): JVM 测试 35 个类全部通过 (`--rerun`), `@Ignore` 为 0. 全套 instrumentation (A7 / A7b 构建, 27 至 28 个用例,
       其中 2 个 JDT / Kotlin 编译器探针按设计在 ART 上跳过): G8441, 23046RP50C, OPD2413, XQ-AT72 全部通过; 22120RN86C 只剩
       TypeScript 诊断超过 2000 ms 与 ECJ 等待超时两项, 与该机 A0 版的既有失败相同 (见 G-A1). 首轮全套在 22120RN86C 上发现并修复了
@@ -689,6 +693,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-14): 附录 C 的百度输入法一轮 (XQ-AT72, WebView 145) 完成: 空格键滑动移动光标可用, 该输入法没有双击空格输入句号;
       除 C4 外未发现问题, C6 保存后的文件经 adb 核对仍全部为 CRLF. C4 已修复 (A2-10 第 19 项), 待复测. 新增的两个设备测试类见 A8-4,
       运行中发现的缺陷见 A2-10 第 20 项. 复测通过后按维护者决定 (XQ-AT72 手测加 8 台自动化) 勾选本门.
+      结论 (2026-10-14): 通过. JVM 测试 175 项全部通过, 无新增 `@Ignore`; 8 台的全套 instrumentation 已于 2026-10-13 跑齐 (上文),
+      新增的两个设备测试类在 5 台真机 22/22 通过; 附录 C 由维护者在 XQ-AT72 (WebView 145) 用 Gboard 与百度输入法完成, C4 修复后
+      复测通过 (构建 250). 按维护者决定, 其余真机的附录 C 以 `AceImeReplayDeviceTest` 代替.
 
 ## 8. A4 · 语言资源
 
@@ -829,7 +836,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       自研在 30 ms 计时后弹出, 只是时序差异, 共 5 格. 另外上游实时补全把 `autoShown` 设为 true, 慢速 provider 的加载项 (A5-5) 不会出现.
       因 (1) 不等价, 真机 IME 复核不再需要. 桥接执行式测试新增一例固定自研触发的行为 (标识符无延迟 / 最小 3 字符 / 300 ms 延迟,
       点后重启成员补全, 退格到空前缀关闭, dot 模式只在点后弹出, off 不请求). `key_$_ace_upstream_completion_trigger` 因此不设立.
-- [ ] **A5-7** ghost text 内联预览 (默认关, 验证门 G-A5-7): `Autocomplete.for(editor).inlineEnabled = enabled`;
+- [x] **A5-7** ghost text 内联预览 (默认关, 验证门 G-A5-7): `Autocomplete.for(editor).inlineEnabled = enabled`;
       组合输入 (`compositionStart` 信号) 期间隐藏; `acceptCompletionOrInsertTab` (`:3827`) 优先接受内联预览;
       `ESC` 处理 (`handleEscapeKey`, `:3971`) 同时清除 ghost text.
       —— 验收: 开启后首选候选以灰色预览显示, TAB 接受, 输入继续时预览更新.
@@ -840,11 +847,15 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (缺省关闭, 开启后出现 `ace_ghost_text` 且不改文本, 组合中隐藏且不重绘, 组合结束恢复, TAB 接受, ESC 移除, 宿主关闭),
       去掉组合守卫的变异会被检出. jsdom 中新文档的 mode 异步加载会重新分词并冲掉 ghost token, 测试在 setText 后等 300 ms; 真机上
       mode 早已加载, 但输入后立即弹出补全的时序仍需 G-A5-7 复核. `AceEditorSmartHintPreferencesTest` 覆盖两个新键的缺省值与读取.
-- [ ] **G-A5-7** 6 台真机 Gboard + 中文输入法下开启 ghost text 输入 200 字符样例, 无重复字符 / 光标跳动 -> 维持默认关闭但开关可用;
+      结论 (2026-10-14): 随 G-A5-7 通过.
+- [x] **G-A5-7** 6 台真机 Gboard + 中文输入法下开启 ghost text 输入 200 字符样例, 无重复字符 / 光标跳动 -> 维持默认关闭但开关可用;
       出现缺陷 -> 开关隐藏 (宿主不露出), 代码保留并记录.
       进度 (2026-10-14): 维护者在 XQ-AT72 上用 Gboard 与百度输入法做了 C11, 未发现重复字符或光标跳动; `AceImeReplayDeviceTest` 的
       `inlinePreviewHidesDuringCompositions` 在 5 台真机通过, 运行中发现组字结束后预览不恢复, 已修复 (A2-10 第 20 项 (d)). 修复改变了
       组字结束后的行为, 与 C4 一起复测后勾选; 开关维持默认关闭, 由宿主 A7-2 露出.
+      结论 (2026-10-14): 通过, 维持默认关闭且开关可用. 构建 250 上维护者复测 C11 (XQ-AT72, WebView 145): 百度英文状态不组字, 预览正常
+      显示; Gboard 组字中不显示预览, 点候选上屏时追加空格, 弹窗与预览随之关闭, 无重复字符或光标跳动. 其余真机由
+      `AceImeReplayDeviceTest` 的 C11 用例覆盖 (5 台通过).
 - [x] **A5-8** MarkerGroup 同名符号高亮 (默认开): `autojs6_lsp_client.js` 增加 `getDocumentHighlights(pos)` (TS 服务用
       `languageService.getDocumentHighlights`, Pyright / LuaLS 用 `textDocument/documentHighlight`); 桥接层在 `changeCursor`
       防抖 150 ms 后用 `ace.require("ace/marker_group").MarkerGroup` (随 ext-language_tools 提供) 绘制 `autojs6_symbol_highlight`
@@ -975,8 +986,12 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       失败的两项与本改动无关, 待另查后勾选: `installedAceEditorConsumesHostSnapshotForProjectDiagnosticsAndDefinitionNavigation` 仍断言
       插件契约版本为 5 (宿主已是契约 7); `foldingMenuWorksThroughPluginContractInReadOnlyMode` 在 "全部折叠" 之后 "全部展开" 返回 false
       (换回今天改动之前的插件构建 243 同样失败; 宿主仓库当时另有构建占用文件, 未能加诊断输出复查).
-- [ ] **A7-3** `requiresHostVersion` 保持不变 (仅偏好键, 老宿主按默认值); README "功能" 段补充新开关说明 (10 语言经生成器).
+- [x] **A7-3** `requiresHostVersion` 保持不变 (仅偏好键, 老宿主按默认值); README "功能" 段补充新开关说明 (10 语言经生成器).
       —— 验收: 旧宿主 (当前发布版) 安装 2.0.0 插件可正常使用.
+      结论 (2026-10-14): `REQUIRED_HOST_VERSION_CODE` 与 master 相同 (5352), Editor 契约仍为 7. 维护者全部手测都在不含 A7-2 的宿主
+      (c247cd5663) 上进行, 新开关按默认值生效. README 10 种语言经生成器更新 (提交 d163588): 功能列表增加 Ace 1.44.0 与移动端覆盖层,
+      新开关及默认值; 语言表 TSX 语法改为支持并删去 Ace 1.4.12 的 TSX 说明; 构建一节增加 Ace 资产, 覆盖层, 桥接层与类型检查任务.
+      插件语言能力模型的 TSX 语法同步改为 FULL (提交 710f323); 宿主的同名模型仍为 PARTIAL, 随配套 2.0.0 的宿主版本更新.
 
 ## 12. A8 · 回归, 性能, 文档与发布评估
 
@@ -1002,7 +1017,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       结论 (2026-10-13): 三台基线机各 3 轮, WebView provider 与 A0 相同. 三项启动中位数相对 A0: 23046RP50C -6.0% / -5.5% / -7.7%,
       G8441 +3.9% / +4.7% / -4.4%, XQ-AT72 -1.5% / +0.5% / +0.7%, 均在 +10% 内; 明细见 `tools/ace-lsp/MILESTONE_BASELINES.md`
       "A8-3 启动性能复测". OPD2413 与 22120RN86C 的参考测量未做.
-- [ ] **A8-4** 手测清单: 附录 B 在 8 台设备, 附录 C 在 6 台真机 (Gboard + 一款中文输入法; 模拟器用 AOSP 键盘跑附录 C 的 1-6 项);
+- [x] **A8-4** 手测清单: 附录 B 在 8 台设备, 附录 C 在 6 台真机 (Gboard + 一款中文输入法; 模拟器用 AOSP 键盘跑附录 C 的 1-6 项);
       记录为 "通过 / P1 / P2 / P3", P1 必须为 0.
       —— 验收: 清单表进入发布文档.
       进度 (2026-10-13): 逐项步骤, 期望, 1.4.12 参照与分级标准写在 `docs/development/ace-1.44.0-manual-tests.md` (附录 B 20 项,
@@ -1027,16 +1042,28 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       x86 模拟器 emulator-5554 上测试进程多次 native 崩溃 (内存回收与 SIGTRAP), 属环境因素, 未计入. 稳定化中处理过的设备差异: 首次注入的
       触摸偶发丢失 (预热), 慢设备语言服务冷启动推迟长按计时 (先等服务空闲, 长按 1.5 s), 选择工具条与键盘是独立窗口会接走触摸 (操作前
       收起), 平板全面屏首行位于状态栏之下, 横屏 G8441 放大后行数很少.
-- [ ] **A8-5** 体积与对齐: 记录 release universal APK 与 5 个 ABI 变体大小, Ace 资产增量 (相对 1.32.0), `docs/16kb.md` 的
+      结论 (2026-10-14): 通过, P1 为 0. 百度 C4 与 C11 于构建 250 复测通过; 结果表写入发布文档草稿 `docs/development/release-2.0.0.md`.
+- [x] **A8-5** 体积与对齐: 记录 release universal APK 与 5 个 ABI 变体大小, Ace 资产增量 (相对 1.32.0), `docs/16kb.md` 的
       16 KB 对齐检查通过, `verifySignedReleaseArtifacts` 通过.
       —— 验收: 数字写入发布文档与 `MILESTONE_BASELINES.md` "A 系列资产增量" 节.
+      结论 (2026-10-14): 本分支 (`710f323`) 签名 release 与 1.32.0 (`f067e63`) 同机对照, 5 个 APK 均大 92,876 - 92,880 B (+0.5% 至 +0.6%),
+      其中 Ace 官方文件 +62,215 B, 移动端覆盖层 +18,695 B, 桥接层等 +20,333 B (压缩后); `verifySignedReleaseArtifacts` 与 16 KB 对齐
+      门禁通过. 明细见 `MILESTONE_BASELINES.md` "A8-5 体积与 16 KB 对齐" 与发布文档草稿. 对照中发现同一工作区先构建本分支再构建
+      master 时, master 会打包遗留的生成声明资产 (+1.79 MB), 本分支的生成器已处理, 只影响本地构建.
 - [ ] **A8-6** 文档与本地化: `.changelog/lang_*.json` 10 语言新增 `v2.0.0` (feature: Ace 1.44.0, TSX, 视觉与补全新能力;
       improvement: 移动端交互覆盖层; hint: 需要配套宿主版本露出新开关), `.readme/lang_*.json` 更新 Ace 版本, 语言表 TSX 行,
       新开关说明与构建命令; 运行 `.python/generate_markdown.bat` 后 `.python/check_markdown.bat`; `app/src/main/assets/doc/CHANGELOG*.md` 随生成更新.
       —— 验收: `markdown.yml` 等价检查本地通过; 不手工编辑生成文件.
-- [ ] **A8-7** 第三方声明: `THIRD_PARTY_NOTICES.md` "Ace" 段改为 1.44.0 (tarball, shasum, integrity, 许可证路径),
+      进度 (2026-10-14): README 已更新 (见 A7-3). 生成器要求 changelog 的最新版本等于 `VERSION_NAME`, 因此 v2.0.0 的 10 种语言条目
+      先放在 `docs/development/release-2.0.0-changelog.json` (提示 1, 新增 6, 修复 4, 优化 12, 依赖 1), 合并时与 `VERSION_NAME=2.0.0`
+      一起写入 `.changelog/lang_*.json`; 在临时副本中按 2.0.0 试生成并 `--check` 通过. 另修正了阿拉伯语, 法语与韩语 JSON 中残留的
+      非 ASCII 标点 (提交 4bc635a).
+- [x] **A8-7** 第三方声明: `THIRD_PARTY_NOTICES.md` "Ace" 段改为 1.44.0 (tarball, shasum, integrity, 许可证路径),
       新增 "AutoJs6 移动端覆盖层" 段落说明 A0-5 核实的来源; `tools/ace-lsp/README.md` 与 `MILESTONE_BASELINES.md` 路径与版本更新.
       —— 验收: 文档内 `1.4.12` 仅出现在历史记录语境.
+      结论 (2026-10-14): `THIRD_PARTY_NOTICES.md` 的 Ace 段已为 1.44.0 (tarball, shasum, integrity, 许可证路径与 4 个项目维护文件), 移动端
+      覆盖层段说明了来源; `tools/ace-lsp/README.md` 与 `MILESTONE_BASELINES.md` 的路径为 `ace-builds-1.44.0`. `git grep 1.4.12` 的其余
+      结果都在历史记录 (M0 / M1 验收, 已发布的 changelog, `Roadmap.md` 加注), 与旧版的行为对照工具, 以及已签名字体目录的来源说明中.
 - [ ] **A8-8** 版本与提交: 合并前最后一笔提交把 `VERSION_NAME` 改为 `2.0.0`, 同步 changelog JSON 版本 key, README 安装命令中的
       APK 文件名, 测试夹具中的版本断言; `VERSION_BUILD` 按 "当前提交数 + 1" 规则; 发布文档 `docs/development/release-2.0.0.md`
       按 `release-1.13.1.md` 结构写明验证结果, 记录的限制与最终 APK 哈希.
