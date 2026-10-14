@@ -179,14 +179,14 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 
 | 里程碑 | 内容 | 风险 | 前置 | 状态 |
 |---|---|---|---|---|
-| A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 进行中 (剩 A0-6 手动项与来源决策) |
+| A0 | 分支, 基线采集, 上游下载与校验, 定制源码重建 | 低 | -- | 完成 (A0-6 于 2026-10-14 按维护者决定以手测与设备自动化取代) |
 | A1 | 官方资产替换, 目录改名, 引用审计, 可启动 | 中 | A0 | 待确认 (G-A1 8 台已跑, 两台的既有失败待维护者判定) |
-| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 进行中 (8 台自动比对已齐, 剩附录 B 手动项与放大镜真机验收) |
-| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 进行中 (剩 A3-3 / A3-6 / A3-7 / A3-8 的真机与手动项) |
+| A2 | 移动端交互覆盖层移植 (触摸, ActionMode, 惯性, 放大镜) | 高 | A1 | 基本完成 (G-A2 通过; A2-10 剩第 19 项百度输入法复测) |
+| A3 | 桥接层适配与 1.4.12 专属代码清理 | 中 | A1 | 基本完成 (A3-6 与 G-A3 待百度输入法 C4 复测) |
 | A4 | 语言资源: tsx, Kotlin 官方 mode, worker-json, 其余 mode/snippets 复核 | 低中 | A1 | 进行中 (A4-3 已实现, G-A4-3 剩 XQ-DQ72 与模拟器) |
-| A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 进行中 (8 项插件侧已实现, A5-6 按门保留自研触发; 剩真机目视与 IME 门) |
-| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 基本完成 (G-A6-4 待维护者确认替换耗时差异) |
-| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 进行中 (A7-1 插件侧完成; A7-2 宿主改动待合并时机确认) |
+| A5 | 上游能力纳入 (视觉 4 项, 补全 4 项) | 中 | A2, A3 | 基本完成 (真机目视已确认; A5-7 / G-A5-7 待复测) |
+| A6 | 工程与健壮性 (清单校验, 类型检查, 执行式测试, MAX_LINE_LENGTH) | 中 | A1 (A6-4 需 A3) | 基本完成 (G-A6-4 于 2026-10-14 接受替换耗时差异) |
+| A7 | 宿主设置联动 (AutoJs6 仓库) | 低 | A5 | 进行中 (A7-1 完成; A7-2 宿主本地提交 b7df923aaa, 宿主设备用例两项待查; A7-3 随 A8-6) |
 | A8 | 回归, 性能, 文档, 发布评估与合并决策 | -- | 全部 | 进行中 (A8-3 通过; A8-1 / A8-2 已跑, 文档与版本在合并时) |
 | X | 横切约束 | -- | 全程 | 持续 |
 
@@ -250,12 +250,15 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       触摸用例与旧版逐场景一致 (差异见 G-A2). `THIRD_PARTY_NOTICES.md` 新增 "AutoJs6 Mobile Touch Overlay" 段, 覆盖层目录随附
       `THIRD_PARTY_NOTICES.txt` (AOSP Apache-2.0 声明与 regression-js MIT 全文). Git 历史中的旧 `ace.js` 是插件曾分发的版本,
       未改写历史.
-- [ ] **A0-6** 在两台设备 (G8441, 23046RP50C) 上按附录 B 逐项记录当前 1.4.12 行为 (文字记录, 必要时录屏), 作为 G-A2 的参照.
+- [x] **A0-6** 在两台设备 (G8441, 23046RP50C) 上按附录 B 逐项记录当前 1.4.12 行为 (文字记录, 必要时录屏), 作为 G-A2 的参照.
       —— 验收: 附录 B 每行填有 "1.4.12 实测" 一列.
       进度 (2026-10-13): 新增 `AceTouchInteractionDeviceTest` (UiAutomation 注入真实触摸, 记录 JS 选区 / 滚动 / ActionMode 调用
       与宿主软键盘 / 工具条状态), 在 G8441, 23046RP50C 与 XQ-AT72 上用 A0 版 APK 跑通, 附录 B 的 15 行已填实测, 原始记录入库在
       `tools/ace-mobile/device-records/`. 第 11, 14, 16, 17, 18 项无法可靠自动化, 需要维护者手测后补填, 完成后勾选本项.
       设备与其他会话共用, 测试前需先与占用方确认 (本轮借用了 3-Block Compose 与 3-Maple Image 会话让出的时段).
+      结论 (2026-10-14): 按维护者决定以取代方式关闭. 15 行的 1.4.12 实测已由 `AceTouchInteractionDeviceTest` 在三台填写; 第 11, 14, 16,
+      17, 18 项不再补录 1.4.12 行为, 改由维护者在 XQ-AT72 上按 2.0.0 的期望手测 (手测指南第 6 节), 其中第 11, 13, 14 (视口变化部分)
+      与 18 (超长行按钮) 项另由 `AceManualCoverageDeviceTest` 在 6 台设备上覆盖 (见 G-A2).
 
 ## 5. A1 · 官方资产替换与目录改名
 
@@ -354,7 +357,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       —— 验收: `tools/ace-mobile/verify-reconstructed.mjs` 的 5 个 ActionMode 场景对覆盖层实现产生相同调用轨迹.
       结论 (2026-10-13): `autojs6/mobile/autojs6_mobile_action_mode.js`. 实现时改为保留 changeSession 上的 changeSelection 监听
       (与 1.4.12 一样, 首个会话不受影响, 将来若调用 `setSession` 也保持同样行为), 5 个场景在有无 `autojs` 两种情况下调用轨迹一致.
-- [ ] **A2-4** `autojs6/mobile/autojs6_mobile_touch_handler.js`: 重建 §2.2 描述的全部单指行为 (单击 / 双击 / 长按 /
+- [x] **A2-4** `autojs6/mobile/autojs6_mobile_touch_handler.js`: 重建 §2.2 描述的全部单指行为 (单击 / 双击 / 长按 /
       光标与锚点拖拽 / 滚动 / 惯性 / 惯性后 ActionMode / `touchscroll` 事件 / gutter 与弹窗跳过 / `preventDefault`).
       双指: 只做 "取消长按计时并 `finishActionMode`", 缩放交给桥接层 `suppressAceBuiltInPinchZoom` (`:2121`), 删除 body zoom 路径.
       1.4.12 检查的 `editor.popup` 从未被赋值, 补全弹窗又在编辑器容器之外, 所以不移植这一判断 (改成判断弹窗打开会让弹窗打开时
@@ -364,7 +367,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): `autojs6/mobile/autojs6_mobile_touch_handler.js` 已完成; 43 个场景与 1.4.12 调用轨迹一致 (比较时忽略 DOM 写入
       与 `renderer.onResize`, 即旧版的放大镜 DOM 与 body zoom), 唯一的预期差异是 `editor.popup` 场景. 对覆盖层做 28 处单点变异全部被检出.
       真机部分随 G-A2 进行.
-- [ ] **A2-5** 卸载上游触摸处理: 安装时遍历 `editor.$toDestroy`, 移除 `elem === editor.container` 且 `type` 属于
+      结论 (2026-10-14): 真机部分随 G-A2 通过.
+- [x] **A2-5** 卸载上游触摸处理: 安装时遍历 `editor.$toDestroy`, 移除 `elem === editor.container` 且 `type` 属于
       `touchstart / touchmove / touchend / contextmenu` 的 4 个 `EventListener` (调用其 `destroy()` 并从数组删除);
       断言移除数量为 4, 否则启用兜底: 在 container 上以 capture 注册同名事件并 `stopImmediatePropagation`,
       同时 `notifyRecoverableError("mobileOverlay", ...)` 上报. 两种路径都要把 `editor.$mouseHandler.isMousePressed` 复位.
@@ -372,7 +376,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): 安装入口 `AutoJsAceMobile.install` 在 `ace.edit` 之后立即执行; jsdom 加载完整页面确认移除了 4 个上游监听
       (contextmenu, touchstart, touchend, touchmove), 未启用兜底, 容器上只剩覆盖层自己的 3 个触摸监听. 兜底模式为覆盖层改在 capture 阶段
       处理并 `stopPropagation` (不用 `stopImmediatePropagation`, 以免挡住桥接层同在 capture 阶段的双指缩放监听). 真机部分随 G-A2.
-- [ ] **A2-6** `autojs6/mobile/autojs6_mobile_magnifier.js` + CSS: 重建 `Magnifier`, 在 `autojs6.css` 新增
+      结论 (2026-10-14): 真机部分随 G-A2 通过, 各设备的长按与双击都只有覆盖层的行为.
+- [x] **A2-6** `autojs6/mobile/autojs6_mobile_magnifier.js` + CSS: 重建 `Magnifier`, 在 `autojs6.css` 新增
       `#magnifier` / `#magnifier-content` / `#magnifier-progress` 样式 (圆角容器, 当前行放大约 1.5 倍, 跟随主题调色板变量),
       用 `options.magnifierEnabled` 控制 (来源 A7 的宿主开关, 默认关闭), 在 touchend / touchcancel / 双指 / 页面隐藏时隐藏;
       `zoom` 固定为 1 (不再依赖 body zoom).
@@ -386,6 +391,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       修复: 内容层补 `white-space: pre`, 克隆行设 `contain: none` 与 `right: auto`; 另在放大框中心画出光标竖线 (`ace_cursor`,
       沿用主题的光标色), 否则看不出手指落在哪个字符上. 桥接执行式测试新增一例, 去掉任一修复的变异都会被检出; 真机拖拽时放大框
       显示三行文字, 光标位置与编辑器一致. 其余目视项 (主题, 自动换行, 折叠, 旋转) 见手测指南 V10.
+      结论 (2026-10-14): 维护者 V10 复测未发现问题 (放大镜选区遮字已在 A2-10 第 17 项修复); `AceManualCoverageDeviceTest` 的
+      `magnifierDrawsTheSelectionUnderTheText` 在 6 台设备通过. 开关由宿主 A7-2 露出, 缺省关闭.
 - [x] **A2-7** 覆盖层与桥接层对接: `cancelAceMobileTouchInteraction` (`:1781`) 调用覆盖层的 `cancel()` 清理长按计时与惯性;
       `installTouchCursorSelectionGuard` (`:3770`) 与 `installImeTextInputSelectionWindow` (`:2890`) 不变;
       `global.AutoJsAce` 增加 `getMobileOverlayState()` 供诊断快照使用 (`AceDiagnostics` 增加字段 `mobileOverlay`).
@@ -401,7 +408,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       结论 (2026-10-13): 4 段 `.ace_mobile-menu` 规则已换成放大镜样式; HTML 在 `autojs6_mode_patches.js` 之后按顺序加载 5 个覆盖层脚本;
       `requiredAssetPaths` 登记 5 个文件; JVM 测试通过, `requiredAceAssetsArePackaged` 随 G-A2 的设备运行验证. 另新增 Gradle 任务
       `verifyAutoJs6AceMobileOverlay` (挂在 `check` 上, 约 2 秒).
-- [ ] **A2-9** A0-4 补充的小定制在 1.44.0 下的处理:
+- [x] **A2-9** A0-4 补充的小定制在 1.44.0 下的处理:
       textinput 的 contextmenu 用实例覆盖 `editor.textInput.onContextMenu = function (e) { e.preventDefault(); }`
       (1.44.0 的 `$onContextMenu` 经 `host.textInput.onContextMenu` 动态调用, 覆盖即生效); 行号栏提示在覆盖层发出 `touchscroll`
       时调用 `editor.$mouseHandler.$tooltip.hide()` (1.44.0 的 GutterTooltip); `lib/event` 修饰键判定在 1.44.0 是模块内函数,
@@ -413,6 +420,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): contextmenu 实例覆盖与 touchscroll 隐藏行号栏提示已实现 (jsdom 确认覆盖生效). 修饰键结论: 不移植. 宿主与插件都不
       发送独立的修饰键事件 (快捷面板直接执行命令), 实体键盘的组合键自带 metaState, 只有少数只发独立修饰键的第三方软键盘受影响.
       默认处理器与 focusEditor: 按计划不移植. 执行式测试待 A6-3.
+      结论 (2026-10-14): 执行式测试新增一例: textarea 上的 contextmenu 只取消浏览器菜单 (不移动 textarea, 不发出
+      `nativecontextmenu`), 覆盖层发出 `touchscroll` 后行号栏提示隐藏.
 - [ ] **A2-10** 手测后的交互改进 (2026-10-13 新增, 维护者首轮手测 XQ-AT72 后决定): 1.4.12 的五处既有表现全部改进,
       另修手测发现的缺陷. 行为规格见 `tools/ace-mobile/README.md` 中标 "(A2-10)" 的各条.
       1. 慢点: 长按触发前抬起且未移动即为点击 (1.4.12 只认 100 ms 内抬起), 长按之后抬手不再算点击.
@@ -517,6 +526,21 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
          的进程自己的私有目录 (`AceRuntimeStorage`, 宿主进程中即宿主的 files / no_backup / cache). 新增设备测试
          `AceRuntimeStorageDeviceTest` 用无 applicationContext 且禁止使用自身数据目录的包上下文验证两者. 在 XQ-AT72 的宿主中
          核对: LuaLS 就绪 (初始化约 0.2 s), `counter` 的 5 处高亮中第 2, 5 行为写入; Java 文件给出 ECJ 诊断.
+      19. 百度输入法手测 C4 (2026-10-14): "选择" 模式下 "行首" / "行尾" 能扩展选区, 四个方向键却只移动光标. 百度与搜狗的选择模式
+         在方向键前后单独发送 SHIFT_LEFT 的按下与抬起, 方向键本身的 metaState 为 0, 而 WebView 只按事件自身的 metaState 设置
+         `shiftKey` ("行首" / "行尾" 由第 11 项的面板识别处理, 不受影响). 现在输入连接记录输入法按住的 Shift, 补到缺少它的导航键
+         (方向键, Home / End, PageUp / PageDown) 上 (`AceImeShiftState`, 构建 244). 在 22120RN86C 上用搜狗输入法小米版的选择模式核对:
+         四个方向键都扩展选区. 待维护者用百度输入法复测.
+      20. 设备自动化 (2026-10-14, 见 A8-4) 运行中发现的缺陷, 均已修复, 每项有去掉修复即失败的执行式测试:
+         (a) 选择工具条显示时输入法替换选区, 输入连接线程上关闭工具条抛出 CalledFromWrongThreadException (构建 245);
+         (b) 宿主在单指开始移动时发出的 `single_finger_scroll` 取消, 关闭了手指正在滚动的补全弹窗, 文档提示或签名提示; 现在触摸
+         从这些浮窗内开始时保留浮窗 (构建 246; DevTools 注入的触摸不经过宿主, 此前无法发现);
+         (c) 手指滚动补全列表时, 选中行的说明框留在原处盖住其他行, 下一次点击落在说明框上; 现在滚动时隐藏说明框, 选中行时
+         重新显示 (构建 246);
+         (d) 组字结束时文字通常不变, 没有弹窗更新重绘被隐藏的内联预览, 预览缺失到下一次按键; 搜狗与百度连英文也组字, 几乎每个
+         单词后都缺失. 现在组字结束后按选中行重绘预览 (构建 247);
+         另有 (e) 宿主开关核对时发现 (见 A7-2): "选区内显示空白符" 开启时 Ace 只在下一次选区变化时加标记, 已有的选区不显示;
+         现在切换时按当前选区立即重绘 (构建 249).
       —— 验收: `verify-overlay.mjs` 中 7 个场景登记为有意差异并说明原因, 新行为各有单独断言 (共 536 项), 9 处单点变异
       全部检出; 桥接执行式测试新增行号栏触摸, 拖拽暂停高亮, 插入点工具条, 截断按钮, 文档提示位置, 滚动条自动隐藏, 不变的组合
       更新, 以及以 Android UA 运行的方向键, 输入法光标换算, 收起选区, 组合结束与面板操作 (共 36 例), 变异检出 (第 11 项的 6 处
@@ -527,8 +551,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       第 10 项 (构建 234) 在 XQ-AT72 上用真实 Gboard 输入核对: 点击, 拖拽不再删字, 多行退格与撤销结果一致. 第 11 项 (构建 235)
       在 XQ-AT72 上用真实 Gboard 核对: 面板左右键每次一格 (单词中间亦然), 上下键保持列, "|<" / ">|" 到行首 / 行尾且长行横向
       滚动跟随, 行首按 "|<" 不动, "选择" 模式下扩展选区, "全选" 选中整篇; 空格键左右滑动跨过行尾 / 行首, 文档不变.
+      复测 (2026-10-14, 构建 243): 维护者在 XQ-AT72 上复测第 1 - 18 项未发现问题. 第 19 项待复测后勾选本项.
 
-- [ ] **G-A2** 交互等价门: 8 台设备逐项执行附录 B, 每项与 A0-6 的 1.4.12 实测一致 (惯性手感允许主观 "接近");
+- [x] **G-A2** 交互等价门: 8 台设备逐项执行附录 B, 每项与 A0-6 的 1.4.12 实测一致 (惯性手感允许主观 "接近");
       自动部分为在每台设备上运行 `AceTouchInteractionDeviceTest` 并与 `tools/ace-mobile/device-records/` 中同设备的 A0 记录逐场景比对
       (缺 A0 记录的设备先用 `build/ace-perf/apk-a0/` 中的 A0 版 APK 补录);
       进度 (2026-10-13): G8441 上 A2 构建通过 `AceTouchInteractionDeviceTest`, 逐场景与 A0 记录一致 (记录在
@@ -562,6 +587,11 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       总在末尾, B6 放大镜光标偏移与拖拽卡顿, B11 文档提示遮挡补全弹窗, 以及维护者要求改进的五处 1.4.12 旧表现, 均在 A2-10
       处理, 待复测. B11 中另发现宿主设置页暗色主题下对话框 "更多" 菜单不可读, 属宿主通用组件, 另立任务.
       ActionMode 工具条 (`AceSelectionToolbar`) 出现 / 消失时机一致; 旋转屏幕与软键盘弹出后拖拽仍准确.
+      结论 (2026-10-14): 通过. 自动比对 8 台已齐 (见上); 附录 B 手动项由维护者在 XQ-AT72 (WebView 145) 完成, 首轮问题在 A2-10 修复后
+      复测未发现问题. 按维护者决定, 其余设备不再逐项手测, 由新增的 `AceManualCoverageDeviceTest` 代替 (缩放保留选区与缩放后立即双击,
+      缩放焦点, 补全弹窗点击与拖动, 空白处长按, 超长行按钮, 放大镜选区, 视口变化后的软换行行位置, 提示框字号, 矢量图标尺寸,
+      Gruvbox 选区): OPD2413 (WebView 136), 23046RP50C (130), XQ-DQ72 (153), 22120RN86C (111), G8441 (Chrome 126) 与 x86 模拟器
+      emulator-5560 (WebView 83) 10/10 通过. G8441 运行时处于横屏, 放大后可见行很少, 测试改为只操作屏幕内 (且在键盘之上) 的行.
       (降级路径: 若 `$toDestroy` 与 capture 兜底在某设备都无法阻止上游处理 -> 在本文件记录该 WebView 版本,
       并评估为该设备启用 "上游触摸处理 + 覆盖层只接管 ActionMode" 的降级模式; 仍不得改动官方文件.)
 
@@ -584,13 +614,15 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       —— 验收: `grep -n "1\.4\.12\|1\.4\.x" autojs6/*.js` 无命中.
       结论 (2026-10-13): 已改写 5 处注释 (超长行守卫, 两处选项容错, `window.editor` 用途, LSP choice 占位). 1.44.0 对首个 token
       也按 `MAX_LINE_LENGTH` 截断并加展开按钮, 桥接层的 16K 守卫对更长的行仍然生效, §2.4 第 5 条 "实际已失效" 的说法不准确, A6-4 再评估.
-- [ ] **A3-3** 补全弹窗补丁复核 (`installCompletionPopupTouchScrollPatch`, `:2073`): 确认 `$init` 仍返回 popup, `showDocTooltip`
+- [x] **A3-3** 补全弹窗补丁复核 (`installCompletionPopupTouchScrollPatch`, `:2073`): 确认 `$init` 仍返回 popup, `showDocTooltip`
       仍在 `this.tooltipNode` 上工作; 上游已设置 `pointerEvents` 与 `overscrollBehavior`, 保留触摸滚动器但去掉重复样式赋值;
       `refreshAutocompletePopupTheme` (`:493`) 改为通过 `Autocomplete.for(editor).popup` 获取弹窗 (弹窗可能尚未创建时跳过).
       —— 验收: 真机上弹窗可手指滚动, 文档提示可滚动, 主题切换后弹窗配色随之变化.
       进度 (2026-10-13): 代码复核结论为无需修改: 1.44.0 的 `$init` 仍返回 popup, `showDocTooltip` 仍使用 `this.tooltipNode`,
       上游只设置了 `pointerEvents` 与 `overscrollBehavior`, 与桥接层的样式不重复; `Autocomplete.for(editor)` 会给 `editor.completer`
       赋值, 且每次打开弹窗都重新 `setTheme`, 所以继续用 `editor.completer.popup` 即可, 不必主动创建. 真机滚动与主题验证随 G-A3 进行.
+      结论 (2026-10-14): 真机上手指滚动与点击插入由 `completionPopupInsertsOnTapAndScrollsOnDrag` 在 6 台设备覆盖, 运行中发现的宿主
+      滚动取消关闭弹窗与说明框遮挡已修复 (A2-10 第 20 项 (b) (c)); 主题配色由维护者 V5 与 Gruvbox 手测确认.
 - [x] **A3-4** 历史操作钩子复核 (`installHistoryOperationHooks`, `:3469`): 对照 1.44.0 `UndoManager.add / undo / redo` 与
       `EditSession.undoChanges(deltas, dontSelect)`, 确认 `addUndoableHistoryMarker` 的空 delta (`lines: [""]`) 仍被
       `UndoManager` 接受且不改文本; `markClean / isClean` 语义不变.
@@ -612,16 +644,24 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       进度 (2026-10-13): A2-10 第 11 项改写了输入框选区的处理: 输入法光标按 1.44.0 `$resetSelection` 的输入框布局换算,
       抑制窗口只保留聚焦与触摸之后, 编程式移动不再设置; `imeTextInputSelectionDropped` 现在只在输入框文字不符合已知布局时
       发出 (reason `unknown_layout`, 如超过 400 字符的行); 1.44.0 在组合中不重置输入框, 桥接层移动光标后按 Ace 的方式结束组合.
-- [ ] **A3-7** 字号 / 滚动 / 双指缩放复核: `applyFontSizeSp` (`:4466`), `forceRendererCoordinateRefresh` (`:4485`),
+      进度 (2026-10-14): 附录 C 已由维护者在 XQ-AT72 上用 Gboard 与百度输入法完成, 只有百度 C4 (选择模式方向键) 有问题, 已修复
+      (A2-10 第 19 项), 待复测; `AceImeReplayDeviceTest` 在 5 台真机重放 Gboard, 百度与搜狗的输入连接调用 (附录 C 第 1 - 5, 7, 8, 11,
+      12 项) 全部通过. 诊断信息中的 `imeTextInputSelectionDropped` 在复测时一并核对.
+- [x] **A3-7** 字号 / 滚动 / 双指缩放复核: `applyFontSizeSp` (`:4466`), `forceRendererCoordinateRefresh` (`:4485`),
       `scrollToPosition` (`:4555`) 使用的 renderer 成员在 1.44.0 均存在; 复核 `renderer.$padding` 在 1.44.0 是否仍为数字
       (文本层 `$padding` 与 gutter `$padding` 对象不同, 桥接层只读 renderer 的).
       —— 验收: 双指缩放后焦点位置不漂移 (附录 B 第 13 项).
       进度 (2026-10-13): 1.44.0 中 `renderer.$padding` 仍为数字 (执行式测试断言), 桥接层用到的 renderer 成员都在 A6-2 的类型检查中
       (公开成员来自 ace.d.ts, `$padding` 等私有成员写入 `ace-private.d.ts`). 双指缩放焦点为附录 B 第 13 项手动检查.
-- [ ] **A3-8** CSS 类审计 (`autojs6.css`): `.ace_gutter-cell.ace_breakpoint` 增加 `.ace_gutter-cell_svg-icons.ace_breakpoint`;
+      结论 (2026-10-14): 维护者 B13 / V8 复测未发现问题; `pinchKeepsTheTextBetweenTheFingersInPlace` 在 6 台设备断言放大与缩小后
+      手指下的行不变 (误差 1 行内).
+- [x] **A3-8** CSS 类审计 (`autojs6.css`): `.ace_gutter-cell.ace_breakpoint` 增加 `.ace_gutter-cell_svg-icons.ace_breakpoint`;
       `.ace_doc-tooltip` / `.ace_tooltip` / `.error_widget` 的尺寸限制在 1.44.0 结构下复核; 新增 `.ace_inline_button.ace_toggle_wrap`
       (超长行溢出按钮) 的触摸友好尺寸; 暗色主题下 `ace_line-hover` (setSelectOnHover=false 时的悬停标记) 配色.
       —— 验收: 8 台设备截图抽查无明显错位; 暗色主题下弹窗与提示框可读.
+      结论 (2026-10-14): 维护者 V1, V5, V7 复测未发现问题 (提示框字号随编辑器缩放, 见 A2-10 第 17 项; 暗色主题弹窗可读);
+      `tooltipTextFollowsTheEditorFontSize`, `svgGutterIconsFollowTheTextSize` 与 `longLineButtonTogglesWordWrapByTouch` (超长行按钮
+      可用手指点击) 在 6 台设备通过.
 - [x] **A3-9** Worker 策略复核: `shouldUseAceWorkerForMode` (`:267`) 维持 lua 开启; 确认 1.44.0 Blob worker 在
       `https://appassets.androidplatform.net` 源下 `importScripts` 成功 (G-A1 已验); JSON worker 交给 A4-3.
       —— 验收: `luaWorkerPublishesSyntaxAnnotationsAndStopsOutsideLua` 通过.
@@ -646,6 +686,9 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       崩溃 (WebView 渲染进程被回收), 未复现. 8 台的 instrumentation 均已覆盖; 附录 C 为手动项, 待维护者统一手测.
       补跑 (2026-10-13, A9 构建): x86_64 API 36.1 16 KB 模拟器全套 28 项中 27 项通过 (2 个编译器探针按设计跳过), 唯一失败为触摸用例的
       B1 首次注入 (见 G-A2). 附录 C 的逐项步骤见 `docs/development/ace-1.44.0-manual-tests.md`.
+      进度 (2026-10-14): 附录 C 的百度输入法一轮 (XQ-AT72, WebView 145) 完成: 空格键滑动移动光标可用, 该输入法没有双击空格输入句号;
+      除 C4 外未发现问题, C6 保存后的文件经 adb 核对仍全部为 CRLF. C4 已修复 (A2-10 第 19 项), 待复测. 新增的两个设备测试类见 A8-4,
+      运行中发现的缺陷见 A2-10 第 20 项. 复测通过后按维护者决定 (XQ-AT72 手测加 8 台自动化) 勾选本门.
 
 ## 8. A4 · 语言资源
 
@@ -712,19 +755,21 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
 
 ### 9.1 视觉
 
-- [ ] **A5-1** `useSvgGutterIcons` (默认开): `editor.setOption("useSvgGutterIcons", enabled)`; A3-8 的断点样式已兼容两种类名;
+- [x] **A5-1** `useSvgGutterIcons` (默认开): `editor.setOption("useSvgGutterIcons", enabled)`; A3-8 的断点样式已兼容两种类名;
       `isDiagnosticGutterCell` 同时识别 `ace_icon` 与 `ace_icon_svg`.
       —— 验收: 23046RP50C (3x 密度) 上注解图标边缘清晰, 断点红点位置不变.
       进度 (2026-10-13): 初始值读 `isSvgGutterIconsEnabled` (缺省 true), `AutoJsAce.setSvgGutterIconsEnabled` 切换后 `updateFull`;
       `autojs6.css` 的断点, 隐藏断点与禁止选中规则都加了 `.ace_gutter-cell_svg-icons`. 1.44.0 两种模式下注解类名都挂在单元格上
       (svg 模式图标子节点另有 `ace_icon_svg ace_error`), `findGutterCell` 已识别两种单元格, `isDiagnosticGutterCell` 无需改动;
       jsdom 中 svg 开 / 关两种模式的 gutter 点击 (断点切换, 注解图标, errorMarker) 结果一致. 待真机目视验收.
-- [ ] **A5-2** `highlightIndentGuides` (默认开, 且仅在 `displayIndentGuides` 开启时生效): `setIndentGuidesEnabled` (`:4731`)
+      结论 (2026-10-14): 维护者 V1 复测未发现问题 (图标随行号字号, 见 A2-10 第 14 项); `svgGutterIconsFollowTheTextSize` 在 6 台设备通过.
+- [x] **A5-2** `highlightIndentGuides` (默认开, 且仅在 `displayIndentGuides` 开启时生效): `setIndentGuidesEnabled` (`:4731`)
       同时设置两项; 关闭缩进参考线时强制关闭高亮.
       —— 验收: 光标进入嵌套块时对应参考线高亮, 自动换行下不错位 (上游 #5621 修复).
       进度 (2026-10-13): 初始值读 `isHighlightIndentGuidesEnabled` (缺省 true), 生效值为 "参考线开 且 高亮开";
       `setIndentGuidesEnabled` / `setHighlightIndentGuidesEnabled` 两个入口都按该规则设置, jsdom 已核对四种组合. 待真机目视验收.
-- [ ] **A5-3** `customScrollbar` (默认开, 验证门 G-A5-3): `editor.setOption("customScrollbar", enabled)`; 复核触摸拖动滚动条,
+      结论 (2026-10-14): 维护者 V2 确认符合预期.
+- [x] **A5-3** `customScrollbar` (默认开, 验证门 G-A5-3): `editor.setOption("customScrollbar", enabled)`; 复核触摸拖动滚动条,
       `installScrollChangeHooks` (`:2580`) 的 `scrollToX/Y` 包装仍被触发, 诊断标记在滚动条上的配色跟随 `applyThemePalette`.
       —— 验收: 滚动条上出现错误 / 警告标记, 手指拖动滚动条与惯性滚动互不干扰.
       进度 (2026-10-13): 初始值读 `isCustomScrollbarEnabled` (缺省 true), 在 `setOptions` 之后单独设置; 滚动条标记画在 canvas 上,
@@ -734,7 +779,8 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `renderer.scrollToY`, `installScrollChangeHooks` 的包装照常触发); 不移动光标, 不长按, 不惯性. `verify-overlay.mjs` 新增
       9 项断言 (共 491 项), jsdom 用真实 1.44.0 滚动条核对了拖动与轨道点击. 标记配色由上游按 `theme.isDark` 选择亮 / 暗两套,
       主题调色板只有前景 / 背景两色, 不再另行覆盖. 待 G-A5-3 真机复核.
-- [ ] **G-A5-3** 8 台设备复核 customScrollbar 与覆盖层惯性滚动; 任一设备出现滚动条吞掉触摸或渲染错位 -> 默认改为关闭并记录.
+      结论 (2026-10-14): 随 G-A5-3 通过.
+- [x] **G-A5-3** 8 台设备复核 customScrollbar 与覆盖层惯性滚动; 任一设备出现滚动条吞掉触摸或渲染错位 -> 默认改为关闭并记录.
       进度 (2026-10-13): A5 构建 (自定义滚动条默认开) 在 G8441, 23046RP50C, OPD2413, x86_64 模拟器上跑了 G-A1 六个类与触摸用例,
       惯性滚动, 打断惯性与拖拽均正常 (见 G-A2 补跑); XQ-AT72, XQ-DQ72 与 x86 API 27 模拟器尚未用 A5 构建复跑. jsdom 中发现上游滚动条
       在首次渲染前没有滑块几何 (thumbTop 为 undefined), 覆盖层对这种滚动条不进入 "scrollbar" 模式, 按普通滚动处理 (离线校验 493 项).
@@ -743,15 +789,18 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       XQ-DQ72 外都已用自定义滚动条默认开启的构建跑过触摸用例, 未出现滚动条吞掉触摸.
       补跑 (2026-10-13, A9 构建): XQ-DQ72 与 x86 API 27 模拟器的触摸用例 (含惯性与打断惯性) 通过; 8 台的自动部分已齐, 滚动条标记的
       目视检查与手指拖动滑块的手感留给维护者统一手测.
-- [ ] **A5-4** `showWhitespacesInSelection` (默认开): 加载 `ext-whitespaces_in_selection.js` 后 `editor.setOption("showWhitespacesInSelection", enabled)`;
+      结论 (2026-10-14): 通过, 保持默认开启. 8 台的触摸用例 (含惯性与打断惯性) 未出现滚动条吞掉触摸或渲染错位; 滚动条标记与拖动滑块
+      的手感由维护者在 XQ-AT72 (WebView 145) 确认 (V3), 自动隐藏 (A2-10 第 6 项) 复测未发现问题.
+- [x] **A5-4** `showWhitespacesInSelection` (默认开): 加载 `ext-whitespaces_in_selection.js` 后 `editor.setOption("showWhitespacesInSelection", enabled)`;
       暗色主题下空白符颜色复核.
       —— 验收: 选中含制表符与空格的文本时显示占位符号, 取消选区后消失.
       进度 (2026-10-13): 初始值读 `isWhitespacesInSelectionEnabled` (缺省 true), 在 `setOptions` 之后单独设置 (选项由扩展注册);
       jsdom 中选中含制表符与空格的两行后文本层出现 6 个占位节点. 待真机目视与暗色主题复核.
+      结论 (2026-10-14): 维护者 V4 确认符合预期 (制表符显示为横线). 宿主开关切换时已有选区不更新的问题已修复 (A2-10 第 20 项 (e)).
 
 ### 9.2 补全与智能提示
 
-- [ ] **A5-5** 弹窗状态: `Autocomplete.for(editor)` 后设置 `showLoadingState = true`, `emptyMessage = function(prefix) {...}`
+- [x] **A5-5** 弹窗状态: `Autocomplete.for(editor)` 后设置 `showLoadingState = true`, `emptyMessage = function(prefix) {...}`
       (文案经 `getSmartHintOptions` JSON 由宿主本地化下发, 缺省英文), `setSelectOnHover = false` (断言默认值), `stickySelectionDelay`
       保持 500; 慢速 provider (Pyright / LuaLS) 首包前显示加载项.
       —— 验收: Python 文档冷启动首次补全看到加载态; 无候选时看到提示而不是空弹窗; 指尖滑过候选不改变选中项.
@@ -763,6 +812,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       放在插件自己的 11 个 `strings.xml` (插件已有 10 语言资源), 随 `getSmartHintOptions` JSON 下发 (`completionLoadingText`,
       `completionEmptyText`), 缺省英文. jsdom 核对: 显式无候选显示 "无建议", 实时输入无候选不弹窗, 有候选照常弹出, 慢速 provider
       700 ms 时显示 "加载中...", 结果到达后替换. 待真机验收 (Python 冷启动).
+      结论 (2026-10-14): 维护者 V5 复测符合预期.
 - [x] **A5-6** 上游 triggerCharacters 替换自研点触发 (验证门 G-A5-6): 映射表
       identifier -> `enableLiveAutocompletion: true, liveAutocompletionThreshold: completionMinChars, liveAutocompletionDelay: completionDelayMs`;
       dot -> `enableLiveAutocompletion: true, liveAutocompletionThreshold: 1e9` 且仅靠 `triggerCharacters`;
@@ -792,7 +842,10 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       mode 早已加载, 但输入后立即弹出补全的时序仍需 G-A5-7 复核. `AceEditorSmartHintPreferencesTest` 覆盖两个新键的缺省值与读取.
 - [ ] **G-A5-7** 6 台真机 Gboard + 中文输入法下开启 ghost text 输入 200 字符样例, 无重复字符 / 光标跳动 -> 维持默认关闭但开关可用;
       出现缺陷 -> 开关隐藏 (宿主不露出), 代码保留并记录.
-- [ ] **A5-8** MarkerGroup 同名符号高亮 (默认开): `autojs6_lsp_client.js` 增加 `getDocumentHighlights(pos)` (TS 服务用
+      进度 (2026-10-14): 维护者在 XQ-AT72 上用 Gboard 与百度输入法做了 C11, 未发现重复字符或光标跳动; `AceImeReplayDeviceTest` 的
+      `inlinePreviewHidesDuringCompositions` 在 5 台真机通过, 运行中发现组字结束后预览不恢复, 已修复 (A2-10 第 20 项 (d)). 修复改变了
+      组字结束后的行为, 与 C4 一起复测后勾选; 开关维持默认关闭, 由宿主 A7-2 露出.
+- [x] **A5-8** MarkerGroup 同名符号高亮 (默认开): `autojs6_lsp_client.js` 增加 `getDocumentHighlights(pos)` (TS 服务用
       `languageService.getDocumentHighlights`, Pyright / LuaLS 用 `textDocument/documentHighlight`); 桥接层在 `changeCursor`
       防抖 150 ms 后用 `ace.require("ace/marker_group").MarkerGroup` (随 ext-language_tools 提供) 绘制 `autojs6_symbol_highlight`
       标记, 选区变化或文档变更时清除; 超长行安全模式与只读无关 (只读也高亮); `autojs6.css` 增加亮/暗两套底色.
@@ -817,6 +870,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       阈值, 两次即触发 `recordSemanticOperation` 的熔断, 语义服务被关闭, 之后的补全直接返回空. 现在高亮请求不计入熔断 (尽力而为),
       桥接层同一时间只保留一个在途高亮请求 (光标在等待期间移动时, 返回后按最新位置补发一次; 5 s 无回调则释放), 执行式测试新增一例.
       修复后该机 Python 用例两轮通过.
+      结论 (2026-10-14): 维护者 V6 复测未发现问题 (Lua 的读写区分在 A2-10 第 18 项修复后可见).
 
 ## 10. A6 · 工程与健壮性
 
@@ -870,7 +924,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       与 `$renderSimpleLine` 补丁; 保留 `applyDocumentAccessibilityLightweightMode`; 溢出按钮 (`ace_toggle_wrap`) 点击展开时的
       性能由 Ace 自身负责, 桥接层不再截断.
       —— 验收: `AceEditorTextLoadPolicy.ACE_UNSAFE_LINE_LENGTH` 不变; 执行式测试断言安全模式下文本层只渲染 4096 字符加按钮.
-- [ ] **G-A6-4** G8441 上加载 50 万字符单行样例: 首次渲染与滚动不触发 ANR, 替换文档耗时不劣于 1.4.12 守卫版 (A0 期间先测一次留档);
+- [x] **G-A6-4** G8441 上加载 50 万字符单行样例: 首次渲染与滚动不触发 ANR, 替换文档耗时不劣于 1.4.12 守卫版 (A0 期间先测一次留档);
       不达标 -> 恢复守卫并记录.
       A6-4 实现 (2026-10-13): `applyLongLineRenderLimit` 在安全模式下设置 `textLayer.MAX_LINE_LENGTH = 4096`, 退出时删除实例属性回到原型
       默认 10000; `installDocumentLongLineRenderGuard` 与 `$renderSimpleLine` 补丁及 16 KiB 触发阈值已删除, `applyDocumentAccessibilityLightweightMode`
@@ -887,10 +941,12 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       结论: 无 ANR; 与带自研守卫的 1.44.0 构建相比 MAX_LINE_LENGTH 方案基本持平 (渲染差 1 ms 以内, A6 的首轮替换偏慢, 其余两轮
       141-147 / 209-214). 相对 1.4.12 替换慢约 20% (约 25-30 ms) 来自 Ace 1.44.0 本身, 恢复守卫不能改善 (A5 同样慢), 因此未按字面恢复守卫.
       按门的字面要求为不达标; 是否接受该差异 (计入 A8-3 / G-A8 的性能评估) 由维护者确认, 确认前不勾选.
+      结论 (2026-10-14): 维护者接受相对 1.4.12 约 20% (25 - 30 ms) 的替换耗时差异 (来自 Ace 1.44.0 本身), 计入 G-A8 的性能评估;
+      无 ANR, 保留 MAX_LINE_LENGTH 方案, 不恢复守卫.
 
 ## 11. A7 · 宿主设置联动 (跨仓库: AutoJs6)
 
-- [ ] **A7-1** 插件侧键名与默认值 (`AceEditorDisplayPreferences` / `AceEditorSmartHintPreferences`):
+- [x] **A7-1** 插件侧键名与默认值 (`AceEditorDisplayPreferences` / `AceEditorSmartHintPreferences`):
       `key_$_ace_svg_gutter_icons_enabled` (true), `key_$_ace_highlight_indent_guides_enabled` (true),
       `key_$_ace_custom_scrollbar_enabled` (true), `key_$_ace_whitespaces_in_selection_enabled` (true),
       `key_$_ace_symbol_highlight_enabled` (true), `key_$_ace_inline_completion_preview_enabled` (false),
@@ -903,11 +959,22 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       `AceEditorDisplayPreferencesTest` 覆盖缺省值, 读取与键名. 同名符号高亮, ghost text 与上游触发三个键随 A5-5 至 A5-8 加入.
       同名符号高亮键已随 A5-8 加入 `AceEditorSmartHintPreferences` (经 `getSmartHintOptions` JSON 下发, 宿主改动后由
       `notifyDisplayPreferencesChanged` 中的 `setSmartHintOptions` 重新应用).
+      结论 (2026-10-14): 宿主未露出开关时插件按默认值运行 (各设备测试均如此); 22120RN86C 上从宿主设置页切换后立即生效 (见 A7-2).
+      `key_$_ace_upstream_completion_trigger` 按 G-A5-6 不设立.
 - [ ] **A7-2** 宿主侧 (AutoJs6 仓库, 单独提交): `app/src/main/res/xml/fragment_code_editor_settings.xml` 在 "缩进参考线" (`:82`)
       所在分组后增加视觉 4 项, 滚动条自动隐藏 (A2-10) 与放大镜开关, 在智能提示分组 (`:183`) 增加 ghost text 与同名符号高亮;
       `bools.xml` 默认值与 A7-1 一致;
       10 种语言 `strings.xml` 标题 / 摘要 / 长按说明 (ASCII 标点); 变更时调用 `EditorPluginSession.notifyDisplayPreferencesChanged`.
       —— 验收: 宿主设置页可见并可切换, 切换后编辑器无需重启即生效; 宿主 `AceEditorPluginHostDeviceTest` 通过.
+      进度 (2026-10-14): 宿主本地提交 b7df923aaa (AutoJs6 master, 未推送). 代码编辑器设置在 "缩进参考线" 后增加 "高亮当前缩进参考线",
+      "自动换行" 后增加 "选区内显示空白符", "编辑器滚动条" 与 "自动隐藏滚动条", 智能提示分组增加 "同名符号高亮" 与 "补全内联预览",
+      手势分组增加 "拖拽放大镜", 边栏标记分组增加 "矢量边栏图标" (仅 Ace 引擎可用); 10 种语言字符串, `bools.xml` 默认值与 A7-1 一致,
+      8 个键列入 `EditorView` 的显示偏好键, 变更时经 `notifyDisplayPreferencesChanged` 转发; 宿主 changelog 只写 zh-Hans. 在 22120RN86C
+      (宿主 debug, 插件构建 248 / 249) 上核对: 8 个开关可见, 全选后关闭 / 开启 "选区内显示空白符", 编辑器立即变化, 无需重启 (开启时
+      原先要等选区变化, 已在插件修复, 见 A2-10 第 20 项 (e)); 开关已恢复默认值. 宿主 `AceEditorPluginHostDeviceTest` 7 项中 5 项通过,
+      失败的两项与本改动无关, 待另查后勾选: `installedAceEditorConsumesHostSnapshotForProjectDiagnosticsAndDefinitionNavigation` 仍断言
+      插件契约版本为 5 (宿主已是契约 7); `foldingMenuWorksThroughPluginContractInReadOnlyMode` 在 "全部折叠" 之后 "全部展开" 返回 false
+      (换回今天改动之前的插件构建 243 同样失败; 宿主仓库当时另有构建占用文件, 未能加诊断输出复查).
 - [ ] **A7-3** `requiresHostVersion` 保持不变 (仅偏好键, 老宿主按默认值); README "功能" 段补充新开关说明 (10 语言经生成器).
       —— 验收: 旧宿主 (当前发布版) 安装 2.0.0 插件可正常使用.
 
@@ -928,6 +995,7 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       (A5 构建), 全套待该模拟器空出 (目前由 3-Maple Image 会话使用).
       补跑 (2026-10-13): x86_64 API 36.1 16 KB 模拟器全套见 G-A3. 至此 8 台的全套都已运行; 未通过的只有该模拟器上触摸用例的首次注入
       (旧版同样失败) 与此前记录的偶发项.
+      补跑 (2026-10-14): 新增的 `AceManualCoverageDeviceTest` 与 `AceImeReplayDeviceTest` (共 22 项) 结果见 A8-4; 全套未重跑.
 - [x] **A8-3** 性能复测: 三台基线真机各 3 轮 `measure-editor-performance.ps1 -SkipBuild -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F`,
       与 A0-2 基线逐项比较; 另在 OPD2413 与 22120RN86C 各取 3 轮作为参考 (不设门).
       —— 验收: 三项中位数相对 A0-2 不超过 +10% (功能优先档); 超出则在 G-A8 决策.
@@ -941,6 +1009,24 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       附录 C 12 项, 视觉与补全 10 项); 测试文件由 `tools/ace-mobile/manual/generate-fixtures.mjs` 生成, 新开关在宿主露出前用其中的
       `00-toggles.js` 切换 (写入宿主偏好, 重新打开文件生效). XQ-AT72 已就绪: 宿主换为含 Editor 契约 7 (宿主提交 515a92f2c1) 的构建,
       此前上午的宿主只支持契约 6, 打开文件会静默退回原生编辑器. 待维护者手测.
+      进度 (2026-10-14): 维护者在 XQ-AT72 上完成附录 B, 附录 C (Gboard 与百度输入法) 与视觉项 V1 - V10, 问题在 A2-10 修复后复测未发现
+      问题, 只剩百度 C4 (A2-10 第 19 项) 与组字后的内联预览 (第 20 项 (d)) 待复测; 结果表见手测指南第 6 节与
+      `docs/development/ace-1.44.0-manual-tests-baidu-ime.md`. 按维护者决定, 其余设备的手动项改为设备自动化: `AceManualCoverageDeviceTest`
+      (10 项, 附录 B 的触摸项与 V1 / V7 / V8 / V10) 与 `AceImeReplayDeviceTest` (12 项, 在输入连接上重放 Gboard, 百度与搜狗的调用,
+      覆盖附录 C 第 1 - 5, 7, 8, 11, 12 项与选择模式方向键). 公共部分在 `AceDeviceTestHarness` (打开编辑器并写入宿主偏好, 等待语言服务
+      空闲, 预热触摸注入, UiAutomation 触摸, 在输入连接线程上调用 IME 接口).
+      | 设备 | API / WebView | 覆盖 (10) | IME 重放 (12) |
+      |---|---|---|---|
+      | OPD2413 | 35 / 136 | 通过 | 通过 |
+      | 23046RP50C | 35 / 130 | 通过 | 通过 |
+      | XQ-DQ72 | 33 / 153 | 通过 | 通过 |
+      | 22120RN86C | 33 / 111 | 通过 | 通过 |
+      | G8441 | 28 / Chrome 126 | 通过 | 通过 |
+      | x86 模拟器 emulator-5560 | - / 83 | 通过 | 未跑完 (模拟器中途被收回) |
+      | XQ-AT72 | 31 / 145 | 维护者手测 | 维护者手测 |
+      x86 模拟器 emulator-5554 上测试进程多次 native 崩溃 (内存回收与 SIGTRAP), 属环境因素, 未计入. 稳定化中处理过的设备差异: 首次注入的
+      触摸偶发丢失 (预热), 慢设备语言服务冷启动推迟长按计时 (先等服务空闲, 长按 1.5 s), 选择工具条与键盘是独立窗口会接走触摸 (操作前
+      收起), 平板全面屏首行位于状态栏之下, 横屏 G8441 放大后行数很少.
 - [ ] **A8-5** 体积与对齐: 记录 release universal APK 与 5 个 ABI 变体大小, Ace 资产增量 (相对 1.32.0), `docs/16kb.md` 的
       16 KB 对齐检查通过, `verifySignedReleaseArtifacts` 通过.
       —— 验收: 数字写入发布文档与 `MILESTONE_BASELINES.md` "A 系列资产增量" 节.
