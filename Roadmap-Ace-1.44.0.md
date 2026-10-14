@@ -1068,7 +1068,11 @@ shasum `d657730f665fccf72d2945d95887e12c514a29f1`, integrity
       用户最后一次修改可能没有诊断); 发布改为沿用当前世代, `verify-runtime.mjs` 的回归用例覆盖三种语言, 随 2.0.1 发布. (d) 23046RP50C 上 B1 偶发的失败与 (a)
       无关 (该机状态栏只到 60 px): 新装构建后首个测试 Activity 启动时系统拒绝注入两秒以上, 报 "Touch injection failed"; 触摸用例也加入
       设备测试基座的预热触摸. (e) 刚开机的模拟器上 Gboard 尚未就绪时, 一次弹出键盘的请求没有产生键盘, 插件 IME 状态停在 SHOWING,
-      之后的请求都被当作 already_showing 忽略 (API 36.1 上 "slow tap" 一次); IME 状态机没有超时, 另立任务处理. 修复后同配置 AVD 上
+      之后的请求都被当作 already_showing 忽略 (API 36.1 上 "slow tap" 一次). 2.0.2 修复: ImeTracker 显示客户端已接受请求
+      (`showSoftInput` 返回 true), 2.5 s 后被窗口管理器中止 (PHASE_WM_ABORT_SHOW_IME_POST_LAYOUT); 键盘未显示时的收起请求被取消
+      (ALREADY_HIDDEN), 状态停在 HIDING. IME 状态机加入 1000 ms 转换超时 (热键盘 50 - 250 ms 确认, 冷启动首次约 3 s), 被拒绝的弹出
+      请求恢复原状态; 冷启动复测中出现 accepted_after_stale_hiding 后键盘正常弹出. (f) 刚开机的 CI 同款 AVD 上 System UI 无响应对话框
+      抢走窗口焦点, 25 项设备测试失败; 工作流在套件前执行 `settings put global hide_error_dialogs 1` 后全套 56 项通过. 修复后同配置 AVD 上
       触摸用例 7/7, ECJ 用例 8/8 (修复前 2/5 失败), 覆盖与 IME 重放用例通过, 全套 55 项通过; G8441 与 23046RP50C 上触摸与覆盖用例
       通过.
 - [x] **A8-3** 性能复测: 三台基线真机各 3 轮 `measure-editor-performance.ps1 -SkipBuild -Iterations 3 -Serial 968e9f18,BH900ASK9E,QV710AF65F`,
