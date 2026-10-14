@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.2-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -183,6 +183,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v2.0.2
+
+###### 2026/10/14
+
+* `Correctif` Lorsqu'un appui sur l'éditeur n'affichait pas le clavier (par exemple pendant le démarrage de la méthode de saisie), les appuis suivants ne l'affichaient pas non plus
 
 # v2.0.1
 
@@ -218,12 +224,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 * `Amélioration` Meilleure prise en charge du panneau d'édition de texte de Gboard et du déplacement du curseur en glissant sur la barre d'espace
 * `Amélioration` Le bouton au point de troncature des lignes très longues peut désormais être touché pour activer ou désactiver le retour automatique à la ligne, et le mode allégé pour les lignes très longues tronque avec ce bouton les lignes de plus de 4096 caractères
 * `Dépendance` Mise à niveau de l'éditeur Ace intégré de `1.4.12` vers `1.44.0`
-
-# v1.32.0
-
-###### 2026/10/13
-
-* `Fonctionnalité` Le menu Edition > Pliage > Tout déplier / Tout replier agit sur tous les blocs de code, y compris les plis imbriqués et les documents en lecture seule, sans modifier le texte, la sélection ni l'historique d'annulation
 
 ##### Pour plus d'historique des versions
 

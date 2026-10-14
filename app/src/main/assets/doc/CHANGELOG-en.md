@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.2
+
+###### 2026/10/14
+
+* `Fix` Issue where, after a tap on the editor did not bring up the keyboard (for example while the input method was still starting), later taps did not bring it up either
+
 # v2.0.1
 
 ###### 2026/10/14

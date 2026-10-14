@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v2.0.2": {
+      "released_date": "2026/10/14",
+      "fix": [
+        "Issue where, after a tap on the editor did not bring up the keyboard (for example while the input method was still starting), later taps did not bring it up either"
+      ]
+    },
     "v2.0.1": {
       "released_date": "2026/10/14",
       "fix": [

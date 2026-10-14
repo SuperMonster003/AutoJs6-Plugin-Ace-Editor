@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.2-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-un
 ### リリース履歴
 
 ******
+
+# v2.0.2
+
+###### 2026/10/14
+
+* `修正` 入力メソッドの起動中などにエディタをタップしてもキーボードが表示されなかった場合, 再度タップしても表示されない問題
 
 # v2.0.1
 
@@ -218,12 +224,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-un
 * `改善` Gboard のテキスト編集パネルとスペースキーのスライドによるカーソル移動に対応
 * `改善` 非常に長い行の切り詰め位置のボタンを指でタップして折り返しを切り替え可能になり, 非常に長い行向けの軽量モードでも 4096 文字を超える行をこのボタンで切り詰め
 * `依存関係` 組み込みの Ace エディタを `1.4.12` から `1.44.0` にアップグレード
-
-# v1.32.0
-
-###### 2026/10/13
-
-* `機能` エディターで "編集 > 折りたたみ > すべて展開/すべて折りたたみ" に対応. 入れ子の折りたたみや読み取り専用文書を含む文書全体のコードブロックを操作し, テキスト, 選択範囲と元に戻す履歴を維持
 
 ##### その他のリリース履歴
 

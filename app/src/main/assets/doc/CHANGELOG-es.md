@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.2
+
+###### 2026/10/14
+
+* `Corrección` Problema por el que, si un toque en el editor no mostraba el teclado (por ejemplo, mientras el método de entrada aún se iniciaba), los toques siguientes tampoco lo mostraban
+
 # v2.0.1
 
 ###### 2026/10/14

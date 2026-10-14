@@ -124,7 +124,7 @@ class AceCodeEditor @JvmOverloads constructor(
     private val pendingScripts = ArrayDeque<PendingScript>()
     private val bridge = AceBridge(this)
     private val textMirror = AceTextMirror()
-    private val imeController = AceImeController(IME_REQUEST_COALESCE_MS)
+    private val imeController = AceImeController(IME_REQUEST_COALESCE_MS, IME_TRANSITION_TIMEOUT_MS)
     private val singleTouchScrollCancelSlopPx = minOf(
         ViewConfiguration.get(hostContext).scaledTouchSlop.toFloat(),
         resources.displayMetrics.density * SINGLE_TOUCH_SCROLL_CANCEL_SLOP_DP,
@@ -2185,7 +2185,11 @@ class AceCodeEditor @JvmOverloads constructor(
             }
             webView.requestFocus()
             scheduleTransientResize("ime_show_requested", RESIZE_SETTLE_DELAY_MS)
-            showHostSoftInput(webView)
+            if (!showHostSoftInput(webView)) {
+                // InputMethodManager refused the request (a view it does not serve), so the next tap asks again.
+                imeController.onShowRequestNotDelivered()
+                eventHistory.record("ime_show_not_delivered", "state=${imeController.state.name}")
+            }
         }
     }
 
@@ -2202,7 +2206,10 @@ class AceCodeEditor @JvmOverloads constructor(
                 return@postToMain
             }
             scheduleTransientResize("ime_hide_requested", RESIZE_SETTLE_DELAY_MS)
-            hideHostSoftInput(webView)
+            if (!hideHostSoftInput(webView)) {
+                // Also false when the keyboard was already hidden, so the state waits for the insets or the timeout.
+                eventHistory.record("ime_hide_not_delivered", "state=${imeController.state.name}")
+            }
         }
     }
 
@@ -2552,15 +2559,13 @@ class AceCodeEditor @JvmOverloads constructor(
         manager.setPrimaryClip(ClipData.newPlainText(null, text))
     }
 
-    private fun showHostSoftInput(view: View) {
+    private fun showHostSoftInput(view: View): Boolean =
         (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
-            ?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
-    }
+            ?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT) == true
 
-    private fun hideHostSoftInput(view: View) {
+    private fun hideHostSoftInput(view: View): Boolean =
         (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
-            ?.hideSoftInputFromWindow(view.windowToken, 0)
-    }
+            ?.hideSoftInputFromWindow(view.windowToken, 0) == true
 
     private fun canMutateText(operation: String): Boolean {
         if (!readOnly) {
@@ -3838,6 +3843,10 @@ class AceCodeEditor @JvmOverloads constructor(
         private const val TEXT_MIRROR_CALIBRATION_DELAY_MS = 500L
         private const val PROJECT_CONTEXT_REFRESH_DEBOUNCE_MS = 75L
         private const val IME_REQUEST_COALESCE_MS = 150L
+
+        // About four times the slowest warm keyboard seen (50 to 250 ms from request to insets on the test devices); a
+        // cold input method's first show took up to about 3 s, and a request repeated meanwhile is harmless.
+        private const val IME_TRANSITION_TIMEOUT_MS = 1_000L
         private const val IME_TRANSITION_HEARTBEAT_SUSPEND_MS = 800L
         private const val IME_TEXT_INPUT_SELECTION_SUPPRESS_MS = 120L
         private const val IME_EDITING_ACTION_WINDOW_MS = 50L

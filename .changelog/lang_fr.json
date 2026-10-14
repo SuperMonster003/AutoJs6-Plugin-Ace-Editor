@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.0.2": {
+      "released_date": "2026/10/14",
+      "fix": [
+        "Lorsqu'un appui sur l'éditeur n'affichait pas le clavier (par exemple pendant le démarrage de la méthode de saisie), les appuis suivants ne l'affichaient pas non plus"
+      ]
+    },
     "v2.0.1": {
       "released_date": "2026/10/14",
       "fix": [

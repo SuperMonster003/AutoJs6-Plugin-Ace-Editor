@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.2
+
+###### 2026/10/14
+
+* `Correctif` Lorsqu'un appui sur l'éditeur n'affichait pas le clavier (par exemple pendant le démarrage de la méthode de saisie), les appuis suivants ne l'affichaient pas non plus
+
 # v2.0.1
 
 ###### 2026/10/14

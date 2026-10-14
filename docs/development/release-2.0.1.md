@@ -50,7 +50,7 @@ regenerated with `py .python/generate_markdown.py`, and `--check` passed.
 
 - When a request to show the keyboard is lost (seen once on an API 36.1 emulator right after boot, while Gboard was
   still starting), the plugin's IME state stays "showing", and later taps do not ask for the keyboard until the
-  keyboard insets change. A fix is planned for the next version.
+  keyboard insets change. Fixed in 2.0.2.
 - The limits recorded for 2.0.0 still apply, except the lost diagnostics of a later edit, which this release fixes.
 
 ## Final APKs

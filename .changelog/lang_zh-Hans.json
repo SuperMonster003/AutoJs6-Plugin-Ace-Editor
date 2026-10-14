@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.0.2": {
+      "released_date": "2026/10/14",
+      "fix": [
+        "输入法尚未就绪等情况下点击编辑器没有弹出键盘后, 再次点击也不再弹出键盘的问题"
+      ]
+    },
     "v2.0.1": {
       "released_date": "2026/10/14",
       "fix": [

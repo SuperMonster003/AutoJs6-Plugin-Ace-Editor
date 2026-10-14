@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.2-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-un
 ### 릴리스 기록
 
 ******
+
+# v2.0.2
+
+###### 2026/10/14
+
+* `수정` 입력기가 아직 시작되는 중일 때 등 편집기를 탭해도 키보드가 나타나지 않으면 다시 탭해도 나타나지 않던 문제
 
 # v2.0.1
 
@@ -218,12 +224,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-un
 * `개선` Gboard 텍스트 편집 패널과 스페이스바를 밀어 커서를 이동하는 기능 지원
 * `개선` 매우 긴 줄의 잘린 위치에 있는 버튼을 손가락으로 탭해 자동 줄 바꿈을 전환할 수 있으며, 매우 긴 줄을 위한 경량 모드에서도 4096자를 넘는 줄을 이 버튼으로 자름
 * `의존성` 내장 Ace 편집기를 `1.4.12`에서 `1.44.0`으로 업그레이드
-
-# v1.32.0
-
-###### 2026/10/13
-
-* `기능` 편집기의 "편집 > 접기 > 모두 펼치기/모두 접기"로 문서 전체의 코드 블록을 제어하며, 중첩된 접기와 읽기 전용 문서를 지원하고 텍스트, 선택 영역 및 실행 취소 기록을 유지
 
 ##### 더 많은 릴리스 기록
 

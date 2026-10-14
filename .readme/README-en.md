@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.2-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.0.2
+
+###### 2026/10/14
+
+* `Fix` Issue where, after a tap on the editor did not bring up the keyboard (for example while the input method was still starting), later taps did not bring it up either
 
 # v2.0.1
 
@@ -218,12 +224,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Improvement` Improved support for the Gboard text editing panel and moving the cursor by sliding on the space bar
 * `Improvement` The button at the truncation point of very long lines can now be tapped to toggle word wrap, and the lightweight mode for very long lines now truncates lines longer than 4096 characters with that button
 * `Dependency` Upgraded the bundled Ace editor from `1.4.12` to `1.44.0`
-
-# v1.32.0
-
-###### 2026/10/13
-
-* `Feature` The editor supports Edit > Folding > Unfold all / Fold all for every code block, including nested folds and read-only documents, while preserving text, selection and undo history
 
 ##### Complete release history
 

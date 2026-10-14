@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.2-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-un
 ### 发行历史
 
 ******
+
+# v2.0.2
+
+###### 2026/10/14
+
+* `修复` 输入法尚未就绪等情况下点击编辑器没有弹出键盘后, 再次点击也不再弹出键盘的问题
 
 # v2.0.1
 
@@ -218,12 +224,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-un
 * `优化` 适配 Gboard 文字编辑面板与空格键滑动移动光标
 * `优化` 超长行截断处的按钮可用手指点击以切换自动换行, 超长行轻量模式下超过 4096 字符的行也改用该按钮截断
 * `依赖` 升级内置 Ace 编辑器版本 1.4.12 -> 1.44.0
-
-# v1.32.0
-
-###### 2026/10/13
-
-* `新增` 编辑器支持 "编辑 > 折叠 > 全部展开/全部折叠", 对整个文档的代码块生效, 支持嵌套折叠和只读文档, 保持文本, 选区及撤销历史不变
 
 ##### 更多发行历史可参阅
 

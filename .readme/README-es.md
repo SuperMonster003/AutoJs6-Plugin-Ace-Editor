@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.2-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.0.2
+
+###### 2026/10/14
+
+* `Corrección` Problema por el que, si un toque en el editor no mostraba el teclado (por ejemplo, mientras el método de entrada aún se iniciaba), los toques siguientes tampoco lo mostraban
 
 # v2.0.1
 
@@ -218,12 +224,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Mejora` Mejor compatibilidad con el panel de edición de texto de Gboard y con el movimiento del cursor deslizando sobre la barra espaciadora
 * `Mejora` El botón en el punto de corte de las líneas muy largas ahora se puede tocar para alternar el ajuste de línea, y el modo ligero para líneas muy largas corta con ese botón las líneas de más de 4096 caracteres
 * `Dependencia` Se actualizó el editor Ace integrado de `1.4.12` a `1.44.0`
-
-# v1.32.0
-
-###### 2026/10/13
-
-* `Función` El menú Editar > Plegado > Desplegar todo / Plegar todo actúa sobre todos los bloques de código, incluidos los pliegues anidados y los documentos de solo lectura, conservando el texto, la selección y el historial de deshacer
 
 ##### Para ver más historial de versiones
 
