@@ -56,7 +56,7 @@
 | JavaScript | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
 | JSX | {{ text_support_yes }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_yes }} | {{ text_support_yes }} |
 | TypeScript | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
-| TSX | {{ text_support_partial }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
+| TSX | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
 | JSON | {{ text_support_yes }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_no }} | {{ text_support_syntax_only }} |
 | Python | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
 | Lua | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} | {{ text_support_yes }} |
@@ -84,6 +84,14 @@
 ```powershell
 .\gradlew.bat :app:assembleRelease
 ```
+
+{{ p_ace_editor_checks }}:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceMobileOverlay :app:verifyAutoJs6AceBridge :app:typecheckAutoJs6AceBridge
+```
+
+{{ p_ace_editor_checks_detail }}.
 
 {{ p_build_params }}.
 

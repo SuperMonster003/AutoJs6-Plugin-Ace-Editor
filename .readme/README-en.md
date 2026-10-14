@@ -54,6 +54,8 @@ The AutoJs6 Ace Editor Plugin separates the Ace WebView runtime, JavaScript brid
 - Uses Editor API contract 7 and requires AutoJs6 build 5352 or later and Android API 24 or later.
 - Supports text editing, undo/redo, search and replace, regex and whole-word search, cursor and selection navigation, line operations, breakpoints, comment toggling, and code formatting.
 - The editor supports Edit > Folding > Unfold all / Fold all for every code block, including nested folds and read-only documents, while preserving text, selection and undo history.
+- Built on Ace 1.44.0; touch gestures such as tapping, selecting words by double tap or long press, dragging the cursor and selection handles, fling scrolling, pinch zoom and the drag magnifier come from the plugin's own mobile overlay.
+- The host's code editor settings can toggle vector gutter icons, active indent guide highlighting, the editor scrollbars and their auto hide, whitespace in selection, the drag magnifier, symbol occurrence highlighting and the inline completion preview; the magnifier and the inline preview are off by default, and hosts without these settings use the defaults.
 - Includes JavaScript/TypeScript language services and AutoJs6 type declarations with completion, hover, diagnostics, and signature help; JSON files receive syntax diagnostics.
 - Adds bundled Python 3.12 semantic analysis through a lazy Pyright 1.1.413 WebWorker: type-aware completion, hover, signature help, diagnostics, and definition; unsupported older WebViews silently retain P2.
 - Adds fully offline Lua semantics through an on-device LuaLS 3.18.2 companion process: completion, hover, signature help, diagnostics, and definition default on for arm64-v8a, armeabi-v7a, and x86_64; unsupported ABIs and runtime failures silently retain P2.
@@ -75,14 +77,14 @@ The table below describes the currently bundled language capabilities. Semantic 
 | JavaScript | Yes | Yes | Yes | Yes | Yes |
 | JSX | Yes | No | No | Yes | Yes |
 | TypeScript | Yes | Yes | Yes | Yes | Yes |
-| TSX | Partial | Yes | Yes | Yes | Yes |
+| TSX | Yes | Yes | Yes | Yes | Yes |
 | JSON | Yes | No | No | No | Syntax diagnostics only |
 | Python | Yes | Yes | Yes | Yes | Yes |
 | Lua | Yes | Yes | Yes | Yes | Yes |
 | Java | Yes | Yes | Yes | Yes | Single-file diagnostics |
 | Kotlin | Yes | Yes | Yes | P2+ | No |
 
-TSX uses the TypeScript mode in Ace 1.4.12, so JSX tag highlighting is partial. Python defaults to an offline Pyright 1.1.413 Worker with Python 3.12 standard-library stubs and falls back silently to P2 on an incompatible old WebView or runtime failure. Lua defaults to an offline LuaLS 3.18.2 companion process on arm64-v8a, armeabi-v7a, and x86_64 and falls back silently to P2 when its native runtime is unavailable or fails. Java combines isolated P2 standard-library and current-document completion with ECJ single-file diagnostics. Kotlin provides P2+ completion without a semantic provider.
+Python defaults to an offline Pyright 1.1.413 Worker with Python 3.12 standard-library stubs and falls back silently to P2 on an incompatible old WebView or runtime failure. Lua defaults to an offline LuaLS 3.18.2 companion process on arm64-v8a, armeabi-v7a, and x86_64 and falls back silently to P2 when its native runtime is unavailable or fails. Java combines isolated P2 standard-library and current-document completion with ECJ single-file diagnostics. Kotlin provides P2+ completion without a semantic provider.
 
 AutoJs6 Code editor settings expose this same nine-mode matrix. The global LSP switch gates every semantic service, with per-language switches for TypeScript/JavaScript, Python, Lua, and Java; Kotlin remains visible but unavailable. The file-type list is evaluated first: removing a recognized suffix disables semantics for it, while adding a custom suffix only admits the file to the LSP path and does not classify it as another language or create a semantic provider.
 
@@ -103,6 +105,14 @@ Release build:
 ```powershell
 .\gradlew.bat :app:assembleRelease
 ```
+
+After changing the Ace assets, the mobile overlay or the bridge scripts, run these checks:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceMobileOverlay :app:verifyAutoJs6AceBridge :app:typecheckAutoJs6AceBridge
+```
+
+They compare the bundled Ace 1.44.0 files with the lock manifest (official files must stay unmodified), replay recorded touch scenarios against the mobile overlay, run the editor page and bridge tests in a pinned jsdom, and type check the bridge scripts against Ace's declarations. All of them are part of `check` and need Node.js.
 
 Build parameters and the version come from `version.properties`; the current minimum SDK is 24 and target SDK is 36.
 

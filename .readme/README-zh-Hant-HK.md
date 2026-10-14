@@ -54,6 +54,8 @@ AutoJs6 Ace Editor Plugin 將 Ace WebView 運行時, JavaScript bridge, 輸入�
 - 使用 Editor API 契約 7, 需要 AutoJs6 建置 5352 及以上和 Android API 24 及以上.
 - 支援文本編輯, 撤銷/重做, 搜尋及取代, 正則表達式及全詞搜尋, 游標/選區導覽, 行操作, 斷點, 註釋切換和代碼格式化.
 - 編輯器支援 "編輯 > 摺疊 > 全部展開/全部摺疊", 對整份文件的程式碼區塊生效, 支援巢狀摺疊和唯讀文件, 保持文字, 選取範圍及復原記錄不變.
+- 基於 Ace 1.44.0; 點擊, 雙擊/長按選詞, 拖動游標與選取範圍控點, 慣性捲動, 雙指縮放和拖曳放大鏡等觸控操作由插件自己的流動端覆蓋層提供.
+- 宿主的程式碼編輯器設定可開關向量邊欄圖示, 目前縮排參考線高亮, 編輯器捲動條及其自動隱藏, 選取範圍內的空白字元, 拖曳放大鏡, 同名符號高亮和自動完成內嵌預覽; 拖曳放大鏡與內嵌預覽預設關閉, 沒有這些設定的宿主按預設值執行.
 - 內置 JavaScript/TypeScript 語言服務和 AutoJs6 類型聲明, 提供 completion, hover, diagnostics 和 signature help; JSON 僅提供語法診斷.
 - 透過按需建立的 Pyright 1.1.413 WebWorker 內置 Python 3.12 語義分析: 類型補全, hover, signature help, 診斷和定義跳轉; 不相容的舊 WebView 會靜默保留 P2.
 - 透過裝置內 LuaLS 3.18.2 伴生程序內置完全離線的 Lua 語義: 補全, hover, signature help, 診斷和定義跳轉在 arm64-v8a, armeabi-v7a 與 x86_64 預設開啟; 不支援的 ABI 與執行故障會靜默保留 P2.
@@ -75,14 +77,14 @@ AutoJs6 Ace Editor Plugin 將 Ace WebView 運行時, JavaScript bridge, 輸入�
 | JavaScript | 支援 | 支援 | 支援 | 支援 | 支援 |
 | JSX | 支援 | 無 | 無 | 支援 | 支援 |
 | TypeScript | 支援 | 支援 | 支援 | 支援 | 支援 |
-| TSX | 部分 | 支援 | 支援 | 支援 | 支援 |
+| TSX | 支援 | 支援 | 支援 | 支援 | 支援 |
 | JSON | 支援 | 無 | 無 | 無 | 僅語法診斷 |
 | Python | 支援 | 支援 | 支援 | 支援 | 支援 |
 | Lua | 支援 | 支援 | 支援 | 支援 | 支援 |
 | Java | 支援 | 支援 | 支援 | 支援 | 單文件診斷 |
 | Kotlin | 支援 | 支援 | 支援 | P2+ | 無 |
 
-Ace 1.4.12 的 TSX 使用 TypeScript mode, 因此 JSX 標籤高亮僅部分可用. Python 預設使用完全離線的 Pyright 1.1.413 Worker 和 Python 3.12 標準庫存根; 舊 WebView 不相容或執行失敗時會靜默降級至 P2. Lua 在 arm64-v8a, armeabi-v7a 與 x86_64 預設使用完全離線的 LuaLS 3.18.2 伴生程序; 原生運行時不可用或故障時會靜默降級至 P2. Java 結合互相隔離的標準庫與目前文件 P2 補全及 ECJ 單文件診斷. Kotlin 提供 P2+ 補全, 但沒有語義 Provider.
+Python 預設使用完全離線的 Pyright 1.1.413 Worker 和 Python 3.12 標準庫存根; 舊 WebView 不相容或執行失敗時會靜默降級至 P2. Lua 在 arm64-v8a, armeabi-v7a 與 x86_64 預設使用完全離線的 LuaLS 3.18.2 伴生程序; 原生運行時不可用或故障時會靜默降級至 P2. Java 結合互相隔離的標準庫與目前文件 P2 補全及 ECJ 單文件診斷. Kotlin 提供 P2+ 補全, 但沒有語義 Provider.
 
 AutoJs6 的程式碼編輯器設定會展示同一份 9-mode 矩陣. 全域 LSP 開關控制所有語義服務, TypeScript/JavaScript, Python, Lua 與 Java 另有逐語言開關; Kotlin 保持可見但不可啟用. 文件類型列表會最先作為白名單判斷: 移除已識別後綴會停用該語言的語義, 加入自訂後綴只允許文件進入 LSP 路徑, 不會把它重新識別為其他語言或建立語義 Provider.
 
@@ -103,6 +105,14 @@ Release 構建:
 ```powershell
 .\gradlew.bat :app:assembleRelease
 ```
+
+修改 Ace 資產, 流動端覆蓋層或橋接腳本後, 可單獨執行以下驗證:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceMobileOverlay :app:verifyAutoJs6AceBridge :app:typecheckAutoJs6AceBridge
+```
+
+它們依次核對打包的 Ace 1.44.0 檔案與鎖定清單 (官方檔案不得修改), 以錄製的觸控場景重播流動端覆蓋層, 在固定版本的 jsdom 中執行編輯器頁面與橋接層測試, 並按 Ace 的類型聲明檢查橋接腳本. 這些任務都已掛到 `check` 上, 需要 Node.js.
 
 構建參數和版本號來自 `version.properties`; 目前最低 SDK 為 24, 目標 SDK 為 36.
 

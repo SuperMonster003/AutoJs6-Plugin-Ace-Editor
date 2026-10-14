@@ -54,6 +54,8 @@ AutoJs6 Ace Editor 플러그인은 Ace WebView 런타임, JavaScript 브리지, 
 - Editor API 계약 7를 사용하며 AutoJs6 빌드 5352 이상 및 Android API 24 이상이 필요합니다.
 - 텍스트 편집, 실행 취소/다시 실행, 검색 및 바꾸기, 정규식 및 단어 단위 검색, 커서 및 선택 영역 탐색, 줄 작업, 중단점, 주석 전환 및 코드 서식을 지원합니다.
 - 편집기의 "편집 > 접기 > 모두 펼치기/모두 접기"로 문서 전체의 코드 블록을 제어하며, 중첩된 접기와 읽기 전용 문서를 지원하고 텍스트, 선택 영역 및 실행 취소 기록을 유지.
+- Ace 1.44.0을 기반으로 하며, 탭, 두 번 탭/길게 눌러 단어 선택, 커서와 선택 핸들 드래그, 관성 스크롤, 핀치 확대/축소, 드래그 돋보기 같은 터치 동작은 플러그인 자체의 모바일 오버레이가 제공합니다.
+- 호스트의 코드 편집기 설정에서 벡터 거터 아이콘, 현재 들여쓰기 가이드 강조, 편집기 스크롤바와 자동 숨기기, 선택 영역 안의 공백 문자, 드래그 돋보기, 같은 기호 강조, 자동 완성 인라인 미리보기를 켜고 끌 수 있습니다. 돋보기와 인라인 미리보기는 기본적으로 꺼져 있으며, 이 설정이 없는 호스트에서는 기본값으로 동작합니다.
 - JavaScript/TypeScript 언어 서비스와 AutoJs6 타입 선언이 포함되어 있으며 자동 완성, hover, diagnostics 및 signature help를 제공합니다. JSON에는 syntax diagnostics만 제공합니다.
 - 필요할 때 생성되는 Pyright 1.1.413 WebWorker로 Python 3.12 의미 분석을 내장하여 타입 기반 자동 완성, hover, signature help, 진단 및 정의 이동을 제공합니다. 호환되지 않는 구형 WebView는 조용히 P2를 유지합니다.
 - 기기 내 LuaLS 3.18.2 동반 프로세스로 완전 오프라인 Lua 의미 기능을 내장하여 arm64-v8a, armeabi-v7a 및 x86_64에서 자동 완성, hover, signature help, 진단 및 정의 이동을 기본 활성화합니다. 지원되지 않는 ABI와 runtime 실패 시 조용히 P2를 유지합니다.
@@ -75,14 +77,14 @@ AutoJs6 Ace Editor 플러그인은 Ace WebView 런타임, JavaScript 브리지, 
 | JavaScript | 지원 | 지원 | 지원 | 지원 | 지원 |
 | JSX | 지원 | 없음 | 없음 | 지원 | 지원 |
 | TypeScript | 지원 | 지원 | 지원 | 지원 | 지원 |
-| TSX | 부분 지원 | 지원 | 지원 | 지원 | 지원 |
+| TSX | 지원 | 지원 | 지원 | 지원 | 지원 |
 | JSON | 지원 | 없음 | 없음 | 없음 | 구문 진단만 |
 | Python | 지원 | 지원 | 지원 | 지원 | 지원 |
 | Lua | 지원 | 지원 | 지원 | 지원 | 지원 |
 | Java | 지원 | 지원 | 지원 | 지원 | 단일 파일 진단 |
 | Kotlin | 지원 | 지원 | 지원 | P2+ | 없음 |
 
-Ace 1.4.12의 TSX는 TypeScript mode를 사용하므로 JSX 태그 강조는 부분 지원입니다. Python은 Python 3.12 표준 라이브러리 stub을 포함한 완전 오프라인 Pyright 1.1.413 Worker를 기본으로 사용하며 구형 WebView 비호환 또는 runtime 실패 시 조용히 P2로 전환합니다. Lua는 arm64-v8a, armeabi-v7a 및 x86_64에서 완전 오프라인 LuaLS 3.18.2 동반 프로세스를 기본으로 사용하며 네이티브 runtime을 사용할 수 없거나 실패하면 조용히 P2로 전환합니다. Java는 격리된 표준 라이브러리와 현재 문서 P2 자동 완성에 ECJ 단일 파일 진단을 결합합니다. Kotlin은 의미 Provider 없이 P2+ 자동 완성을 제공합니다.
+Python은 Python 3.12 표준 라이브러리 stub을 포함한 완전 오프라인 Pyright 1.1.413 Worker를 기본으로 사용하며 구형 WebView 비호환 또는 runtime 실패 시 조용히 P2로 전환합니다. Lua는 arm64-v8a, armeabi-v7a 및 x86_64에서 완전 오프라인 LuaLS 3.18.2 동반 프로세스를 기본으로 사용하며 네이티브 runtime을 사용할 수 없거나 실패하면 조용히 P2로 전환합니다. Java는 격리된 표준 라이브러리와 현재 문서 P2 자동 완성에 ECJ 단일 파일 진단을 결합합니다. Kotlin은 의미 Provider 없이 P2+ 자동 완성을 제공합니다.
 
 AutoJs6 코드 편집기 설정은 동일한 9-mode matrix를 표시합니다. 전역 LSP switch가 모든 의미 서비스를 제어하고 TypeScript/JavaScript, Python, Lua 및 Java에는 언어별 switch가 있습니다; Kotlin은 표시되지만 사용할 수 없습니다. 파일 형식 목록이 먼저 평가됩니다: 인식된 suffix를 제거하면 해당 의미 기능이 꺼지고 custom suffix를 추가하면 파일이 LSP path에 들어갈 뿐 다른 언어로 재분류되거나 의미 Provider가 생성되지 않습니다.
 
@@ -103,6 +105,14 @@ Release 빌드:
 ```powershell
 .\gradlew.bat :app:assembleRelease
 ```
+
+Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 후에는 다음 검증을 개별적으로 실행할 수 있습니다:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceMobileOverlay :app:verifyAutoJs6AceBridge :app:typecheckAutoJs6AceBridge
+```
+
+번들된 Ace 1.44.0 파일을 잠금 매니페스트와 대조하고 (공식 파일은 수정 금지), 기록된 터치 시나리오로 모바일 오버레이를 재생하며, 고정 버전 jsdom에서 편집기 페이지와 브리지 테스트를 실행하고, Ace 타입 선언으로 브리지 스크립트를 타입 검사합니다. 모두 `check`에 포함되며 Node.js가 필요합니다.
 
 빌드 매개변수와 버전은 `version.properties`에서 가져옵니다. 현재 최소 SDK는 24이고 대상 SDK는 36입니다.
 

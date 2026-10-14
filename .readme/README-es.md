@@ -54,6 +54,8 @@ El complemento AutoJs6 Ace Editor separa del APK anfitrión el runtime de Ace We
 - Usa el contrato 7 de Editor API y requiere AutoJs6 build 5352 o posterior y Android API 24 o posterior.
 - Admite edición de texto, deshacer y rehacer, búsqueda y reemplazo, búsqueda por expresiones regulares y palabras completas, navegación del cursor y la selección, operaciones con líneas, puntos de interrupción, activación y desactivación de comentarios y formato de código.
 - El menú Editar > Plegado > Desplegar todo / Plegar todo actúa sobre todos los bloques de código, incluidos los pliegues anidados y los documentos de solo lectura, conservando el texto, la selección y el historial de deshacer.
+- Basado en Ace 1.44.0; los gestos táctiles, como tocar, seleccionar palabras con doble toque o pulsación larga, arrastrar el cursor y los tiradores de selección, el desplazamiento por inercia, el zoom con pellizco y la lupa de arrastre, los proporciona la capa móvil propia del complemento.
+- Los ajustes del editor de código del anfitrión permiten activar o desactivar los iconos vectoriales del margen, el resaltado de la guía de sangría activa, las barras de desplazamiento del editor y su ocultación automática, los espacios en blanco dentro de la selección, la lupa de arrastre, el resaltado de apariciones del símbolo y la vista previa en línea del autocompletado; la lupa y la vista previa en línea están desactivadas por defecto, y los anfitriones sin estos ajustes usan los valores predeterminados.
 - Incluye servicios de lenguaje JavaScript/TypeScript y declaraciones de tipos de AutoJs6 con autocompletado, información al pasar el cursor, diagnósticos y ayuda de firmas, mientras que el servicio JSON solo proporciona diagnósticos de sintaxis.
 - Añade análisis semántico de Python 3.12 mediante un WebWorker Pyright 1.1.413 cargado bajo demanda: autocompletado con tipos, información al pasar el cursor, ayuda de firmas, diagnósticos y definiciones; los WebView antiguos incompatibles conservan P2 silenciosamente.
 - Añade semántica de Lua totalmente sin conexión mediante un proceso complementario LuaLS 3.18.2 en el dispositivo: autocompletado, hover, ayuda de firmas, diagnósticos y definiciones se activan por defecto en arm64-v8a, armeabi-v7a y x86_64; los ABI no compatibles y los fallos del runtime conservan P2 silenciosamente.
@@ -75,14 +77,14 @@ La tabla siguiente describe las capacidades de lenguaje incluidas actualmente. L
 | JavaScript | Sí | Sí | Sí | Sí | Sí |
 | JSX | Sí | No | No | Sí | Sí |
 | TypeScript | Sí | Sí | Sí | Sí | Sí |
-| TSX | Parcial | Sí | Sí | Sí | Sí |
+| TSX | Sí | Sí | Sí | Sí | Sí |
 | JSON | Sí | No | No | No | Solo diagnósticos de sintaxis |
 | Python | Sí | Sí | Sí | Sí | Sí |
 | Lua | Sí | Sí | Sí | Sí | Sí |
 | Java | Sí | Sí | Sí | Sí | Diagnósticos de un solo archivo |
 | Kotlin | Sí | Sí | Sí | P2+ | No |
 
-TSX usa el modo TypeScript de Ace 1.4.12, por lo que el resaltado de etiquetas JSX es parcial. Python usa por defecto un Worker Pyright 1.1.413 totalmente sin conexión con stubs de la biblioteca estándar de Python 3.12 y vuelve silenciosamente a P2 si un WebView antiguo es incompatible o falla el runtime. Lua usa por defecto un proceso complementario LuaLS 3.18.2 sin conexión en arm64-v8a, armeabi-v7a y x86_64, y vuelve silenciosamente a P2 si el runtime nativo no está disponible o falla. Java combina el autocompletado P2 aislado de la biblioteca estándar y el documento actual con diagnósticos ECJ de un solo archivo. Kotlin proporciona autocompletado P2+ sin proveedor semántico.
+Python usa por defecto un Worker Pyright 1.1.413 totalmente sin conexión con stubs de la biblioteca estándar de Python 3.12 y vuelve silenciosamente a P2 si un WebView antiguo es incompatible o falla el runtime. Lua usa por defecto un proceso complementario LuaLS 3.18.2 sin conexión en arm64-v8a, armeabi-v7a y x86_64, y vuelve silenciosamente a P2 si el runtime nativo no está disponible o falla. Java combina el autocompletado P2 aislado de la biblioteca estándar y el documento actual con diagnósticos ECJ de un solo archivo. Kotlin proporciona autocompletado P2+ sin proveedor semántico.
 
 Los ajustes del editor de código de AutoJs6 muestran esta misma matriz de nueve modos. El interruptor LSP global controla todos los servicios semánticos, con interruptores por lenguaje para TypeScript/JavaScript, Python, Lua y Java; Kotlin permanece visible pero no disponible. La lista de tipos de archivo se evalúa primero: quitar un sufijo reconocido desactiva su semántica, mientras que añadir un sufijo personalizado solo admite el archivo en la ruta LSP sin reclasificarlo ni crear un proveedor semántico.
 
@@ -103,6 +105,14 @@ Compilación Release:
 ```powershell
 .\gradlew.bat :app:assembleRelease
 ```
+
+Después de modificar los recursos de Ace, la capa móvil o los scripts del puente, ejecute estas comprobaciones:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceMobileOverlay :app:verifyAutoJs6AceBridge :app:typecheckAutoJs6AceBridge
+```
+
+Comparan los archivos de Ace 1.44.0 empaquetados con el manifiesto de bloqueo (los archivos oficiales no deben modificarse), reproducen escenarios táctiles grabados sobre la capa móvil, ejecutan las pruebas de la página del editor y del puente en un jsdom de versión fija y comprueban los tipos de los scripts del puente con las declaraciones de Ace. Todas forman parte de `check` y requieren Node.js.
 
 Los parámetros de compilación y la versión provienen de `version.properties`; el SDK mínimo actual es 24 y el SDK de destino es 36.
 

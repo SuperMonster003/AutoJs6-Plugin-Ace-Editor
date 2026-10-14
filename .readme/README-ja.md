@@ -54,6 +54,8 @@ AutoJs6 Ace Editor Plugin は, Ace WebView ランタイム, JavaScript ブリッ
 - Editor API 契約 7 を使用し, AutoJs6 ビルド 5352 以降と Android API 24 以降が必要です.
 - テキスト編集, 元に戻す/やり直し, 検索と置換, 正規表現検索と単語単位検索, カーソルと選択範囲の移動, 行操作, ブレークポイント, コメントの切り替え, コード整形に対応します.
 - エディターで "編集 > 折りたたみ > すべて展開/すべて折りたたみ" に対応. 入れ子の折りたたみや読み取り専用文書を含む文書全体のコードブロックを操作し, テキスト, 選択範囲と元に戻す履歴を維持.
+- Ace 1.44.0 をベースとし, タップ, ダブルタップ/長押しによる単語選択, カーソルと選択ハンドルのドラッグ, 慣性スクロール, ピンチズーム, ドラッグ時の拡大鏡などのタッチ操作はプラグイン独自のモバイルオーバーレイが提供します.
+- ホストのコードエディタ設定で, ベクター形式のガターアイコン, 現在のインデントガイドの強調, エディタ独自のスクロールバーとその自動非表示, 選択範囲内の空白文字, ドラッグ時の拡大鏡, 同じシンボルの強調, 補完のインラインプレビューを切り替えられます. 拡大鏡とインラインプレビューは既定でオフで, これらの設定がないホストでは既定値で動作します.
 - JavaScript/TypeScript 言語サービスと AutoJs6 型宣言を内蔵し, 補完, hover, diagnostics, signature help を提供します. JSON には syntax diagnostics のみを提供します.
 - 必要時に起動する Pyright 1.1.413 WebWorker で Python 3.12 セマンティック解析を内蔵し, 型補完, hover, signature help, diagnostics, 定義ジャンプを提供します. 非対応の古い WebView は通知なしで P2 を維持します.
 - 端末内 LuaLS 3.18.2 コンパニオンプロセスで完全オフラインの Lua セマンティック機能を内蔵し, arm64-v8a, armeabi-v7a, x86_64 では補完, hover, signature help, diagnostics, 定義ジャンプを既定で有効にします. 非対応 ABI と runtime 障害時は通知なしで P2 を維持します.
@@ -75,14 +77,14 @@ AutoJs6 Ace Editor Plugin は, Ace WebView ランタイム, JavaScript ブリッ
 | JavaScript | 対応 | 対応 | 対応 | 対応 | 対応 |
 | JSX | 対応 | なし | なし | 対応 | 対応 |
 | TypeScript | 対応 | 対応 | 対応 | 対応 | 対応 |
-| TSX | 一部対応 | 対応 | 対応 | 対応 | 対応 |
+| TSX | 対応 | 対応 | 対応 | 対応 | 対応 |
 | JSON | 対応 | なし | なし | なし | 構文診断のみ |
 | Python | 対応 | 対応 | 対応 | 対応 | 対応 |
 | Lua | 対応 | 対応 | 対応 | 対応 | 対応 |
 | Java | 対応 | 対応 | 対応 | 対応 | 単一ファイル診断 |
 | Kotlin | 対応 | 対応 | 対応 | P2+ | なし |
 
-Ace 1.4.12 の TSX は TypeScript mode を使うため JSX タグのハイライトは一部対応です. Python は Python 3.12 標準ライブラリ stub を含む完全オフラインの Pyright 1.1.413 Worker を既定で使い, 古い WebView の非互換や runtime 障害時は通知なしで P2 に戻ります. Lua は arm64-v8a, armeabi-v7a, x86_64 で完全オフラインの LuaLS 3.18.2 コンパニオンプロセスを既定で使い, ネイティブ runtime が利用不能または障害時は通知なしで P2 に戻ります. Java は分離された標準ライブラリと現在文書の P2 補完に ECJ 単一ファイル診断を組み合わせます. Kotlin はセマンティック Provider なしで P2+ 補完を提供します.
+Python は Python 3.12 標準ライブラリ stub を含む完全オフラインの Pyright 1.1.413 Worker を既定で使い, 古い WebView の非互換や runtime 障害時は通知なしで P2 に戻ります. Lua は arm64-v8a, armeabi-v7a, x86_64 で完全オフラインの LuaLS 3.18.2 コンパニオンプロセスを既定で使い, ネイティブ runtime が利用不能または障害時は通知なしで P2 に戻ります. Java は分離された標準ライブラリと現在文書の P2 補完に ECJ 単一ファイル診断を組み合わせます. Kotlin はセマンティック Provider なしで P2+ 補完を提供します.
 
 AutoJs6 のコードエディタ設定は同じ 9-mode matrix を表示します. グローバル LSP switch がすべてのセマンティックサービスを制御し, TypeScript/JavaScript, Python, Lua, Java には言語別 switch があります; Kotlin は表示されますが利用できません. ファイル種類リストが最初に判定されます: 認識済み suffix を外すとそのセマンティック機能は無効になり, custom suffix の追加はファイルを LSP path に通すだけで別言語への再分類や Provider 作成は行いません.
 
@@ -103,6 +105,14 @@ Release ビルド:
 ```powershell
 .\gradlew.bat :app:assembleRelease
 ```
+
+Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを変更した後は, 次の検証を個別に実行できます:
+
+```powershell
+.\gradlew.bat :app:verifyAutoJs6AceAssets :app:verifyAutoJs6AceMobileOverlay :app:verifyAutoJs6AceBridge :app:typecheckAutoJs6AceBridge
+```
+
+同梱の Ace 1.44.0 ファイルをロックマニフェストと照合し (公式ファイルは変更禁止), 記録したタッチシナリオでモバイルオーバーレイを再生し, 固定バージョンの jsdom でエディタページとブリッジのテストを実行し, Ace の型宣言に対してブリッジスクリプトを型チェックします. いずれも `check` に含まれ, Node.js が必要です.
 
 ビルドパラメータとバージョンは `version.properties` から取得されます. 現在の最小 SDK は 24, ターゲット SDK は 36 です.
 
