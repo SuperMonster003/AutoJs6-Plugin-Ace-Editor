@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ### 릴리스 기록
 
 ******
+
+# v2.0.4
+
+###### 2026/10/15
+
+* `수정` 자동 완성 목록을 처음 열 때 문서 도움말이 후보 항목을 가리는 문제
 
 # v2.0.3
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ###### 2026/10/14
 
 * `수정` 입력기가 아직 시작되는 중일 때 등 편집기를 탭해도 키보드가 나타나지 않으면 다시 탭해도 나타나지 않던 문제
-
-# v2.0.1
-
-###### 2026/10/14
-
-* `수정` 느린 기기에서 Java, Lua 또는 Python 파일을 빠르게 편집하면 진단이 편집 전 내용에 머물러 다음 편집 때까지 갱신되지 않을 수 있던 문제
 
 ##### 더 많은 릴리스 기록
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.0.4": {
+      "released_date": "2026/10/15",
+      "fix": [
+        "Документация автодополнения перекрывала варианты при первом открытии списка"
+      ]
+    },
     "v2.0.3": {
       "released_date": "2026/10/15",
       "feature": [

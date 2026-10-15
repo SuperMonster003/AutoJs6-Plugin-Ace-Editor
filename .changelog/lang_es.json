@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.0.4": {
+      "released_date": "2026/10/15",
+      "fix": [
+        "La documentación de autocompletado que ocultaba sugerencias al abrir la lista por primera vez"
+      ]
+    },
     "v2.0.3": {
       "released_date": "2026/10/15",
       "feature": [

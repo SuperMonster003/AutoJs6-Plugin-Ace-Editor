@@ -1851,6 +1851,42 @@ function mockFloatingBoxRects(window, heights) {
 const coversRow = (rect, row) => rect.height > 0 && rect.top < (row + 1) * 20 && rect.bottom > row * 20;
 const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
 
+test("completion documentation is repositioned after the popup finishes its first layout", async () => {
+    const page = await openEditor({ layout: false });
+    try {
+        const { editor, window } = page;
+        Object.defineProperty(window, "innerWidth", { configurable: true, value: 400 });
+        Object.defineProperty(window, "innerHeight", { configurable: true, value: 700 });
+        const restore = mockFloatingBoxRects(window, { doc: 25 });
+        page.api.setText("cons");
+        editor.navigateFileEnd();
+        editor.focus();
+        editor.completers = [{ getCompletions(e, s, p, prefix, callback) {
+            callback(null, [{ caption: "console", value: "console", docText: "declare var console: Console;" }]);
+        } }];
+        const completer = editor.completer;
+        completer.showPopup(editor);
+        await sleep(100);
+        // A real WebView initially reports only the popup's border. Ace sets its row height in a later frame.
+        const popupRect = { left: 4, right: 396, top: 120, bottom: 122, width: 392, height: 2 };
+        completer.popup.container.getBoundingClientRect = () => popupRect;
+        completer.popup.isTopdown = true;
+        completer.showDocTooltip({ docText: "declare var console: Console;" });
+        Object.assign(popupRect, { bottom: 320, height: 200 });
+        await sleep(100);
+        const node = completer.tooltipNode;
+        assert.ok(!overlaps(node.getBoundingClientRect(), popupRect), "documentation follows the final popup rectangle");
+        assert.ok(node.getBoundingClientRect().top >= popupRect.bottom, "documentation moves beyond the final list height");
+        completer.showDocTooltip({ docText: "detaching must cancel the pending placement" });
+        completer.detach();
+        await sleep(100);
+        assert.equal(window.document.querySelector("#doc-tooltip"), null, "a deferred fit must not reopen a closed tooltip");
+        restore();
+    } finally {
+        page.close();
+    }
+});
+
 test("the completion documentation never covers the cursor row", async () => {
     const page = await openEditor();
     try {

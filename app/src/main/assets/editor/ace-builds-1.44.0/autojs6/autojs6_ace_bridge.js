@@ -2651,6 +2651,19 @@
                 prototype.showDocTooltip = function() {
                     var result = originalShowDocTooltip.apply(this, arguments);
                     installDocTooltipTouchScroller(this.tooltipNode);
+                    var completer = this;
+                    var node = this.tooltipNode;
+                    var raf = global.requestAnimationFrame || function(run) { return setTimeout(run, 16); };
+                    // The first WebView layout can still report only the popup's border here. Ace applies the row
+                    // height in its renderer frame; fit again once that frame has completed, using the final list size.
+                    raf(function() {
+                        raf(function() {
+                            if (completer.tooltipNode === node && node && node.parentNode &&
+                                completer.popup && completer.popup.isOpen) {
+                                fitDocTooltipToViewport(node);
+                            }
+                        });
+                    });
                     return result;
                 };
             }

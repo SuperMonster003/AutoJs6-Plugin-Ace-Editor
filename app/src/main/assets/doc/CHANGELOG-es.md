@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.4
+
+###### 2026/10/15
+
+* `Corrección` La documentación de autocompletado que ocultaba sugerencias al abrir la lista por primera vez
+
 # v2.0.3
 
 ###### 2026/10/15

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.0.4": {
+      "released_date": "2026/10/15",
+      "fix": [
+        "首次開啟補全清單時, 文件提示遮擋候選項目的問題"
+      ]
+    },
     "v2.0.3": {
       "released_date": "2026/10/15",
       "feature": [

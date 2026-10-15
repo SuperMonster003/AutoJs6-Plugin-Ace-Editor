@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.4
+
+###### 2026/10/15
+
+* `Correctif` La documentation de complétion masquant les suggestions lors de la première ouverture de la liste
+
 # v2.0.3
 
 ###### 2026/10/15

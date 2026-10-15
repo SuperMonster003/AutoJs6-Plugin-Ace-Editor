@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ### سجل الإصدارات
 
 ******
+
+# v2.0.4
+
+###### 2026/10/15
+
+* `إصلاح` تغطية تلميحات التوثيق للاقتراحات عند فتح قائمة الإكمال لأول مرة
 
 # v2.0.3
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ###### 2026/10/14
 
 * `إصلاح` مشكلة عدم ظهور لوحة المفاتيح عند النقرات التالية إذا لم تظهرها نقرة على المحرر (مثلا أثناء بدء تشغيل طريقة الإدخال)
-
-# v2.0.1
-
-###### 2026/10/14
-
-* `إصلاح` مشكلة كانت فيها التشخيصات على الأجهزة الأبطأ تبقى أحيانا مطابقة للنص السابق بعد تعديل سريع لملف Java أو Lua أو Python ولا تتحدث إلا عند التعديل التالي
 
 ##### لمزيد من سجل الإصدارات
 

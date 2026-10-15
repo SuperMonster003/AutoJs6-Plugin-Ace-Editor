@@ -4,6 +4,12 @@
 
 ******
 
+# v2.0.4
+
+###### 2026/10/15
+
+* `Fix` Completion documentation covering candidates when the popup first opens
+
 # v2.0.3
 
 ###### 2026/10/15

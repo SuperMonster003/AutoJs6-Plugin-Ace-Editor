@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.0.4": {
+      "released_date": "2026/10/15",
+      "fix": [
+        "La documentation de complétion masquant les suggestions lors de la première ouverture de la liste"
+      ]
+    },
     "v2.0.3": {
       "released_date": "2026/10/15",
       "feature": [

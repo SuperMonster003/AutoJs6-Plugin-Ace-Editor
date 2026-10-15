@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ### リリース履歴
 
 ******
+
+# v2.0.4
+
+###### 2026/10/15
+
+* `修正` 補完リストを初めて開いたときにドキュメントのヒントが候補を覆う問題
 
 # v2.0.3
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ###### 2026/10/14
 
 * `修正` 入力メソッドの起動中などにエディタをタップしてもキーボードが表示されなかった場合, 再度タップしても表示されない問題
-
-# v2.0.1
-
-###### 2026/10/14
-
-* `修正` 低速なデバイスで Java, Lua, Python ファイルを素早く編集すると, 診断が編集前の内容のまま残り, 次の編集まで更新されないことがある問題
 
 ##### その他のリリース履歴
 

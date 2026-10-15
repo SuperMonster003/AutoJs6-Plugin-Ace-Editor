@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ### 發行歷史
 
 ******
+
+# v2.0.4
+
+###### 2026/10/15
+
+* `修復` 首次開啟補全清單時, 文件提示遮擋候選項目的問題
 
 # v2.0.3
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-un
 ###### 2026/10/14
 
 * `修復` 輸入法尚未就緒等情況下點按編輯器沒有彈出鍵盤後, 再次點按也不再彈出鍵盤的問題
-
-# v2.0.1
-
-###### 2026/10/14
-
-* `修復` 在較慢的裝置上快速修改 Java, Lua 或 Python 檔案後, 診斷有時仍停留在修改前的內容, 直到下一次修改才更新的問題
 
 ##### 更多發行歷史可參閱
 

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v2.0.4": {
+      "released_date": "2026/10/15",
+      "fix": [
+        "補完リストを初めて開いたときにドキュメントのヒントが候補を覆う問題"
+      ]
+    },
     "v2.0.3": {
       "released_date": "2026/10/15",
       "feature": [

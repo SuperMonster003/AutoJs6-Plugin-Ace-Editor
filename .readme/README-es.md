@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.0.4
+
+###### 2026/10/15
+
+* `Corrección` La documentación de autocompletado que ocultaba sugerencias al abrir la lista por primera vez
 
 # v2.0.3
 
@@ -196,12 +202,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/14
 
 * `Corrección` Problema por el que, si un toque en el editor no mostraba el teclado (por ejemplo, mientras el método de entrada aún se iniciaba), los toques siguientes tampoco lo mostraban
-
-# v2.0.1
-
-###### 2026/10/14
-
-* `Corrección` Problema por el que, en dispositivos más lentos, los diagnósticos de un archivo Java, Lua o Python a veces seguían correspondiendo al texto anterior a una edición rápida y solo se actualizaban en la siguiente edición
 
 ##### Para ver más historial de versiones
 
