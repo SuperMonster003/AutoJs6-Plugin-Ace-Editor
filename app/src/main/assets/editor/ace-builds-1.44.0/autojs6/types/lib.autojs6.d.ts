@@ -6,6 +6,10 @@ declare namespace AutoJs6 {
         window: Activity.PhoneWindow;
     }
 
+    interface Activity_window {
+        decorView: com.android.internal.policy.DecorView;
+    }
+
     interface Agent {
         run(goal: string, options?: AgentRunOptions): AgentRun;
         create(options: AgentRunOptions): AgentAssistant;
@@ -47,6 +51,18 @@ declare namespace AutoJs6 {
         stream(input: Ai.Input, options?: Ai.Options): Ai.Stream;
         session(options?: Ai.SessionOptions | null): Promise<Ai.Session>;
         catalog(options?: Ai.CatalogOptions | null): Promise<Ai.TargetCatalog>;
+    }
+
+    interface Ai_agent {
+        run(goal: string, options?: AgentRunOptions): AgentRun;
+        create(options: AgentRunOptions): AgentAssistant;
+        get(id: string): AgentRun | null;
+        list(filter?: AgentListFilter): Promise<AgentRunSummary[]>;
+        catalog(query?: string): Promise<AgentScriptEntry[]>;
+        presets(): Promise<string[]>;
+        status(): AgentLinkStatus;
+        result(value: JsonValue): boolean;
+        context(): AgentExecutionContext | null;
     }
 
     interface App {
@@ -101,20 +117,65 @@ declare namespace AutoJs6 {
         getFileProviderAuthority(): string;
     }
 
+    interface App_autojs {
+        versionCode: number;
+        versionName: string;
+        versionDate: string;
+        name: string;
+        packageName: string;
+        R: typeof org.autojs.autojs6.R;
+        rotation: number;
+        orientation: number;
+        version: AutojsVersion;
+        setRootMode(mode: -1 | 0 | 1 | boolean | "auto" | "root" | "non-root", isWriteIntoPreference?: boolean | "write_into_pref"): void;
+        isScreenPortrait(): boolean;
+        isScreenLandscape(): boolean;
+        getRootMode(): org.autojs.autojs.util.RootUtils.RootMode;
+        isRootAvailable(): boolean;
+        canModifySystemSettings(): boolean;
+        canWriteSecureSettings(): boolean;
+        canDisplayOverOtherApps(): boolean;
+        getLanguage(): java.util.Locale;
+        getLanguageTag(): string;
+        restart(scriptsAfterRestart?: string | string[]): void;
+        exit(scriptsAfterRestart?: string | string[]): void;
+        themeColor: org.autojs.autojs.theme.ThemeColor;
+        requestHandlers: {};
+        onEventInternal(event: any, args: any): void;
+        send(event: any, ...args: any[]): void;
+        invoke(channel: any, ...args: any[]): Promise<unknown>;
+        handle(channel: any, handler: any): Autojs;
+        removeHandler(channel: any): void;
+        handleRequest(request: any): void;
+        sendResponse(request: any, result: any, error: any): void;
+    }
+
+    interface App_autojs_version {
+        code: number;
+        name: string;
+        date: string;
+        isHigherThan(otherVersion: string | number | Version): boolean;
+        isLowerThan(otherVersion: string | number | Version): boolean;
+        isEqual(otherVersion: string | number | Version): boolean;
+        isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;
+    }
+
     interface Arrayx {
-        ensureArray(...o: any[]);
-        intersect<T, U>(arr: T[], ...others: U[][]): (T & U)[];
-        union<T, U>(arr: T[], ...others: U[][]): (T | U)[];
+        ensureArray(...o: unknown[]): void;
+        subtract<T>(arr: T[], other: readonly unknown[]): T[];
+        differ<T, U>(arr: T[], other: U[]): (T | U)[];
+        intersect<T, U>(arr: T[], ...others: (U | U[])[]): (T & U)[];
+        union<T, U>(arr: T[], ...others: (U | U[])[]): (T | U)[];
         distinct<T>(arr: T[]): T[];
-        distinctBy<T, U>(arr: T[], selector: (T) => U): T[];
-        sortBy<T, U>(arr: T[], selector: (T) => U): T[];
+        distinctBy<T, U>(arr: T[], selector: (value: T) => U): T[];
+        sortBy<T, U>(arr: T[], selector: (value: T) => U): T[];
         sortDescending<T, U>(arr: T[]): T[];
-        sortByDescending<T, U>(arr: T[], selector: (T) => U): T[];
+        sortByDescending<T, U>(arr: T[], selector: (value: T) => U): T[];
         sorted<T>(arr: T[]): T[];
-        sortedBy<T, U>(arr: T[], selector: (T) => U): T[];
+        sortedBy<T, U>(arr: T[], selector: (value: T) => U): T[];
         sortedDescending<T, U>(arr: T[]): T[];
-        sortedByDescending<T, U>(arr: T[], selector: (T) => U): T[];
-        shuffle(arr: any[]);
+        sortedByDescending<T, U>(arr: T[], selector: (value: T) => U): T[];
+        shuffle<T>(arr: T[]): T[];
     }
 
     interface Auto {
@@ -159,6 +220,45 @@ declare namespace AutoJs6 {
         currentComponent(): string;
     }
 
+    interface Auto_state {
+        hasInstance: boolean;
+        hasService: boolean;
+        isRunning: boolean;
+        isOperational: boolean;
+        adoptedByEvent: boolean;
+    }
+
+    interface Auto_stats {
+        since: number;
+        now: number;
+        elapsed: number;
+        searches: Timing;
+        queries: QueryTiming;
+        selectors: SelectorStats[];
+        slowest: SelectorStats | null;
+        steps: StepStats[];
+        text: string;
+        reset(): void;
+        toString(): string;
+    }
+
+    interface Auto_stats_queries {
+        found: number;
+        missed: number;
+        attempts: number;
+        count: number;
+        totalMillis: number;
+        averageMillis: number;
+        maxMillis: number;
+    }
+
+    interface Auto_stats_searches {
+        count: number;
+        totalMillis: number;
+        averageMillis: number;
+        maxMillis: number;
+    }
+
     interface Autojs {
         versionCode: number;
         versionName: string;
@@ -182,6 +282,24 @@ declare namespace AutoJs6 {
         restart(scriptsAfterRestart?: string | string[]): void;
         exit(scriptsAfterRestart?: string | string[]): void;
         themeColor: org.autojs.autojs.theme.ThemeColor;
+        requestHandlers: {};
+        onEventInternal(event: any, args: any): void;
+        send(event: any, ...args: any[]): void;
+        invoke(channel: any, ...args: any[]): Promise<unknown>;
+        handle(channel: any, handler: any): Autojs;
+        removeHandler(channel: any): void;
+        handleRequest(request: any): void;
+        sendResponse(request: any, result: any, error: any): void;
+    }
+
+    interface Autojs_version {
+        code: number;
+        name: string;
+        date: string;
+        isHigherThan(otherVersion: string | number | Version): boolean;
+        isLowerThan(otherVersion: string | number | Version): boolean;
+        isEqual(otherVersion: string | number | Version): boolean;
+        isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;
     }
 
     interface Automator {
@@ -300,6 +418,102 @@ declare namespace AutoJs6 {
         waitForNotification(timeout: number): org.autojs.autojs.core.notification.Notification;
     }
 
+    interface Axios {
+        create(config?: AxiosConfig): AxiosInstance;
+        isAxiosError<T = unknown, D = unknown>(error: unknown): error is AxiosError<T, D>;
+        isCancel(value: unknown): boolean;
+        all<T>(values: (T | Promise<T>)[]): Promise<T[]>;
+        spread<T, R>(callback: (...values: T[]) => R): (values: T[]) => R;
+        CancelToken: { new (executor: (cancel: (message?: string) => void) => void): AxiosCancelToken; source(): { token: AxiosCancelToken; cancel(message?: string): void; }; };
+        browser: { Object: ObjectConstructor; window: object; FormData: unknown; XMLHttpRequest: unknown; Blob: unknown; EventTarget: unknown; Event: unknown; setTimeout(callback: () => void, delay?: number): unknown; };
+        utils: { openFile(path: string): HostBlob; saveBlobToFile(blob: HostBlob, path: string): Promise<void>; copyInputStream(input: java.io.InputStream, output: java.io.OutputStream, bufferSize?: number): void; ThreadPool: { run<T>(callback: () => T): Promise<T>; create_thread(): { run<T>(callback: () => T): Promise<T>; close(): void; }; setPrintError(enabled: boolean): void; }; };
+        defaults: AxiosConfig<unknown>;
+        interceptors: { request: InterceptorManager<AxiosConfig>; response: InterceptorManager<AxiosResponse>; };
+        request<T = unknown, D = unknown>(config: AxiosConfig<D>): Promise<AxiosResponse<T, D>>;
+        get<T = unknown>(url: string, config?: AxiosConfig): Promise<AxiosResponse<T>>;
+        delete<T = unknown>(url: string, config?: AxiosConfig): Promise<AxiosResponse<T>>;
+        head<T = unknown>(url: string, config?: AxiosConfig): Promise<AxiosResponse<T>>;
+        options<T = unknown>(url: string, config?: AxiosConfig): Promise<AxiosResponse<T>>;
+        post<T = unknown, D = unknown>(url: string, data?: D, config?: AxiosConfig<D>): Promise<AxiosResponse<T, D>>;
+        put<T = unknown, D = unknown>(url: string, data?: D, config?: AxiosConfig<D>): Promise<AxiosResponse<T, D>>;
+        patch<T = unknown, D = unknown>(url: string, data?: D, config?: AxiosConfig<D>): Promise<AxiosResponse<T, D>>;
+        getUri(config?: AxiosConfig): string;
+    }
+
+    interface Axios_browser {
+        Object(): any;
+        Object(value: any): any;
+        window: object;
+        FormData: unknown;
+        XMLHttpRequest: unknown;
+        Blob: unknown;
+        EventTarget: unknown;
+        Event: unknown;
+        setTimeout(callback: () => void, delay?: number): unknown;
+    }
+
+    interface Axios_browser_Object {
+        hasOwn(o: object, v: PropertyKey): boolean;
+        hasOwn(o: object, v: PropertyKey): any;
+        observe(object: object, handler: Object.Observe.Handler, acceptList: string[]): object;
+        unobserve(object: object, handler: Object.Observe.Handler): object;
+        getNotifier(object: object): Object.Observe.Notifier;
+        deliverChangeRecords(handler: Object.Observe.Handler): any;
+    }
+
+    interface Axios_CancelToken {
+        source(): { token: AxiosCancelToken; cancel(message?: string): void; };
+    }
+
+    interface Axios_defaults {
+        url: string | undefined;
+        method: string | undefined;
+        baseURL: string | undefined;
+        headers: Record<string, string | number | boolean | string[]> | undefined;
+        params: Record<string, unknown> | undefined;
+        data: unknown;
+        timeout: number | undefined;
+        timeoutErrorMessage: string | undefined;
+        responseType: "arraybuffer" | "blob" | "document" | "json" | "text" | "stream" | undefined;
+        responseEncoding: string | undefined;
+        auth: { username: string; password: string; } | undefined;
+        withCredentials: boolean | undefined;
+        validateStatus: ((status: number) => boolean) | null | undefined;
+        transformRequest: ((data: unknown, headers: Record<string, unknown>) => unknown)[] | undefined;
+        transformResponse: ((data: unknown) => unknown)[] | undefined;
+        cancelToken: AxiosCancelToken | undefined;
+        onUploadProgress: ((event: { loaded: number; total?: number; lengthComputable: boolean; }) => void) | undefined;
+        onDownloadProgress: ((event: { loaded: number; total?: number; lengthComputable: boolean; }) => void) | undefined;
+    }
+
+    interface Axios_interceptors {
+        request: InterceptorManager<AxiosConfig<unknown>>;
+        response: InterceptorManager<AxiosResponse<unknown, unknown>>;
+    }
+
+    interface Axios_interceptors_request {
+        use(onFulfilled?: ((value: AxiosConfig<unknown>) => AxiosConfig<unknown> | Promise<AxiosConfig<unknown>>) | undefined, onRejected?: (error: unknown) => unknown): number;
+        eject(id: number): void;
+    }
+
+    interface Axios_interceptors_response {
+        use(onFulfilled?: ((value: AxiosResponse<unknown, unknown>) => AxiosResponse<unknown, unknown> | Promise<AxiosResponse<unknown, unknown>>) | undefined, onRejected?: (error: unknown) => unknown): number;
+        eject(id: number): void;
+    }
+
+    interface Axios_utils {
+        openFile(path: string): HostBlob;
+        saveBlobToFile(blob: HostBlob, path: string): Promise<void>;
+        copyInputStream(input: java.io.InputStream, output: java.io.OutputStream, bufferSize?: number): void;
+        ThreadPool: { run<T>(callback: () => T): Promise<T>; create_thread(): { run<T>(callback: () => T): Promise<T>; close(): void; }; setPrintError(enabled: boolean): void; };
+    }
+
+    interface Axios_utils_ThreadPool {
+        run<T>(callback: () => T): Promise<T>;
+        create_thread(): { run<T>(callback: () => T): Promise<T>; close(): void; };
+        setPrintError(enabled: boolean): void;
+    }
+
     interface Barcode {
         detect(options: Barcode.DetectAllOptions): Barcode.Result[];
         detect(options: DetectOptions, isAll: true): Barcode.Result[];
@@ -338,7 +552,55 @@ declare namespace AutoJs6 {
         decode(o: Base64.DecodeInput, encoding?: Base64.Encoding): string;
     }
 
+    interface BuildConfig {
+        DEBUG: boolean;
+        APPLICATION_ID: string;
+        BUILD_TYPE: string;
+        FLAVOR: string;
+        VERSION_CODE: number;
+        VERSION_NAME: string;
+        APK_BUILDER_BUILT_IN_TEMPLATE_INCLUDED: boolean;
+        CHANNEL: string;
+        COMPOSE_UI_SHARED_FINGERPRINT: string;
+        FILE_PROVIDER_AUTHORITY: string;
+        JVM_SOURCE_EXPERIMENTAL_ENABLED: boolean;
+        VERSION_DATE: string;
+        VSCODE_EXT_REQUIRED_VERSION: string;
+        isInrt: boolean;
+    }
+
+    interface Cheerio {
+        default(selector?: CheerioContent, context?: CheerioContent, root?: CheerioContent, options?: CheerioOptions): Cheerio;
+        merge<T extends ArrayLike<HtmlNode> & { length: number; }>(first: T, second: ArrayLike<HtmlNode>): T;
+        text(content?: ArrayLike<HtmlNode>): string;
+        html(options?: CheerioOptions): string;
+        html(content: CheerioContent, options?: CheerioOptions): string;
+        xml(content?: CheerioContent): string;
+        root(): Cheerio;
+        contains(container: HtmlNode, contained: HtmlNode): boolean;
+        parseHTML(data: string, keepScripts?: boolean): HtmlNode[] | null;
+        load(content: CheerioContent, options?: CheerioOptions | null, isDocument?: boolean): CheerioAPI;
+    }
+
+    interface Cheerio_default {
+        html(options?: CheerioOptions): string;
+        html(content: CheerioContent, options?: CheerioOptions): string;
+        xml(content?: CheerioContent): string;
+        text(content?: ArrayLike<HtmlNode>): string;
+        root(): Cheerio;
+        contains(container: HtmlNode, contained: HtmlNode): boolean;
+        parseHTML(data: string, keepScripts?: boolean): HtmlNode[] | null;
+        load(content: CheerioContent, options?: CheerioOptions | null, isDocument?: boolean): CheerioAPI;
+    }
+
     interface Color {
+        argb(): number[];
+        rgb(): number[];
+        rgba(): number[];
+        hsv(result?: FloatArray): number[];
+        hsva(result?: FloatArray): number[];
+        hsl(result?: FloatArray): number[];
+        hsla(): number[];
         new(color?: OmniColor): Color;
         new(r: ColorComponent, g: ColorComponent, b: ColorComponent, a?: ColorComponent): Color;
         color: ColorInt;
@@ -1030,6 +1292,7 @@ declare namespace AutoJs6 {
         hsla(hsl: (ColorHueComponent | ColorComponent)[], a: ColorComponent): number;
         hsla(components: (ColorComponent | ColorHueComponent)[]): number;
         toRgb(color: OmniColor): number[];
+        toRgb(r: ColorComponent, g: ColorComponent, b: ColorComponent): number[];
         toRgba(color: OmniColor, options?: ToComponentOptions): number[];
         toArgb(color: OmniColor, options?: ToComponentOptions): number[];
         toHsv(color: OmniColor): number[];
@@ -1088,21 +1351,40 @@ declare namespace AutoJs6 {
         summary(color: OmniColor): string;
     }
 
+    interface Colors_theme {
+        get(): ColorInt;
+        set(color: OmniColor, options?: ThemeSetOptions): void;
+        reset(): void;
+        libraries(): ThemeLibrary[];
+        activate(libraryId: number, options?: { group?: number; }): void;
+        deactivate(): boolean;
+        next(): boolean;
+        state(name: string): void;
+        current(): ThemeCurrent;
+    }
+
     interface Compose {
         version: { plugin: string; contract: number; compose: string } | null;
         sessions: ReadonlyArray<ComposeSession>;
         ComposeError: ComposeErrorConstructor;
         isAvailable(): boolean;
-        createElement<N extends ComposeCatalogNodeName>(type: N, ...args: ComposeFactoryArguments<N>): ComposeNode<N>;
+        createElement<N extends ComposeNodeName>(type: N, ...args: ComposeFactoryArguments<N>): ComposeNode<N>;
         modifier(): ComposeModifier;
         state<T>(initial: T): ComposeState<T>;
         ref<T extends ComposeNode = ComposeNode>(): ComposeRef<T>;
         batch<T>(callback: () => T): T;
+        memo<T extends ComposeNode>(build: () => T, deps: ReadonlyArray<unknown>, options?: ComposeMemoOptions | null): T;
         mount(root: ComposeNode | (() => ComposeNode), options?: ComposeMountOptions | null): ComposeSession;
+        attach(container: ComposeNativeView, root: ComposeNode | (() => ComposeNode), options?: ComposeMountOptions | null): ComposeSession;
         floaty(root: ComposeNode | (() => ComposeNode), options?: ComposeFloatyOptions | null): ComposeFloatyWindow;
+        dialog(root: ComposeNode | (() => ComposeNode), options?: ComposeDialogOptions | null): ComposeSession;
         post(callback: () => void, delay?: number): void;
         theme(): ComposeThemeSnapshot;
         theme(theme: ComposeTheme | null | undefined): ComposeThemeSnapshot;
+    }
+
+    interface Compose_ComposeError {
+        prototype: ComposeError;
     }
 
     interface ComposeError {
@@ -1150,6 +1432,7 @@ declare namespace AutoJs6 {
         setContentTextColor(colors: OmniColor[]): this;
         setContentTextColor(colors: { verbose?: OmniColor; log?: OmniColor; info?: OmniColor; warn?: OmniColor; error?: OmniColor; assert?: OmniColor; }): this;
         setContentTextColor(verbose: OmniColor, log?: OmniColor, info?: OmniColor, warn?: OmniColor, error?: OmniColor, assert?: OmniColor): this;
+        setContentTextColors: Console['setContentTextColor'];
         setContentBackgroundColor(color: OmniColor): this;
         setContentBackgroundTint(color: OmniColor): this;
         setContentBackgroundAlpha(alpha: number): this;
@@ -1336,6 +1619,38 @@ declare namespace AutoJs6 {
         bytes: Converter.Bytes;
     }
 
+    interface Cvt_bytes {
+        strict(source: BytesValue, options?: BytesModeOptions | undefined): BytesResult;
+        strict(source: BytesValue, useIecIdentifier: boolean): BytesResult;
+        strict(source: BytesValue, fractionDigits: number): BytesResult;
+        strict(source: BytesValue, toUnit: BytesUnit, options?: BytesModeOptions | undefined): BytesResult;
+        strict(source: BytesValue, toUnit: BytesUnit, useIecIdentifier: boolean): BytesResult;
+        strict(source: BytesValue, toUnit: BytesUnit, fractionDigits: number): BytesResult;
+        strict(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, options?: BytesModeOptions | undefined): BytesResult;
+        strict(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, useIecIdentifier: boolean): BytesResult;
+        strict(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, fractionDigits: number): BytesResult;
+        loose(source: BytesValue, options?: BytesModeOptions | undefined): BytesResult;
+        loose(source: BytesValue, useIecIdentifier: boolean): BytesResult;
+        loose(source: BytesValue, fractionDigits: number): BytesResult;
+        loose(source: BytesValue, toUnit: BytesUnit, options?: BytesModeOptions | undefined): BytesResult;
+        loose(source: BytesValue, toUnit: BytesUnit, useIecIdentifier: boolean): BytesResult;
+        loose(source: BytesValue, toUnit: BytesUnit, fractionDigits: number): BytesResult;
+        loose(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, options?: BytesModeOptions | undefined): BytesResult;
+        loose(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, useIecIdentifier: boolean): BytesResult;
+        loose(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, fractionDigits: number): BytesResult;
+        UNITS: string;
+        AUTO: "AUTO";
+        IEC_DIV: number;
+        SI_DIV: number;
+    }
+
+    interface Dayjs {
+        unix(seconds: number): Dayjs;
+        isDayjs(value: unknown): value is Dayjs;
+        locale(preset?: string | object, object?: object, isLocal?: boolean): string;
+        extend<T>(plugin: (option: T | undefined, dayjsClass: { new (...args: unknown[]): Dayjs; }, factory: DayjsFactory) => void, option?: T): DayjsFactory;
+    }
+
     interface Device {
         width: number;
         height: number;
@@ -1369,6 +1684,7 @@ declare namespace AutoJs6 {
         getAlarmMaxVolume(): number;
         getAlarmVolume(): number;
         getAndroidId(): string;
+        getAndroidId(useSystemId: boolean): string;
         getAvailMem(): number;
         getBattery(): number;
         getBrightness(): number;
@@ -1434,6 +1750,7 @@ declare namespace AutoJs6 {
     }
 
     interface Engines {
+        getEngines(): java.util.Set<org.autojs.autojs.engine.ScriptEngine<org.autojs.autojs.script.ScriptSource>>;
         myEngine(): org.autojs.autojs.engine.RhinoJavaScriptEngine;
         all(): org.autojs.autojs.engine.ScriptEngine<any>[];
         stopAll(): number;
@@ -1467,6 +1784,10 @@ declare namespace AutoJs6 {
         isAvailable(): boolean;
         isAvailableAsync(): Promise<boolean>;
         EpubError: Epub.EpubErrorConstructor;
+    }
+
+    interface Epub_EpubError {
+        prototype: EpubError;
     }
 
     interface Events {
@@ -1549,13 +1870,12 @@ declare namespace AutoJs6 {
         write(path: string, text: string, encoding?: StandardCharsets): void;
         writeBytes(path: string, bytes: number[]): void;
         toFile(path: string): java.io.File;
+        formatSizeWithUnit(bytes: number): string;
     }
 
     interface Floaty {
-        window(layout: org.autojs.autojs.core.floaty.BaseResizableFloatyWindow.ViewSupplier | Xml): org.autojs.autojs.runtime.api.Floaty.JsResizableWindow;
-        window(layout: android.view.View): org.autojs.autojs.runtime.api.Floaty.JsResizableWindow;
-        rawWindow(layout: org.autojs.autojs.core.floaty.RawWindow.RawFloaty | Xml): org.autojs.autojs.runtime.api.Floaty.JsRawWindow;
-        rawWindow(layout: android.view.View): org.autojs.autojs.runtime.api.Floaty.JsRawWindow;
+        window(layout: string | XML): org.autojs.autojs.runtime.api.Floaty.JsResizableWindow;
+        rawWindow(layout: string | XML): org.autojs.autojs.runtime.api.Floaty.JsRawWindow;
         hasPermission(): boolean;
         checkPermission(): boolean;
         requestPermission(): void;
@@ -1591,6 +1911,7 @@ declare namespace AutoJs6 {
         delay(millis: number): Flow<void>;
         delay(millisMin: number, millisMax: number | string): Flow<void>;
         run<R>(fn: () => R | Flow<R> | PromiseLike<R>): Flow<R>;
+        of(): Flow<null>;
         of<V>(value: V): Flow<V>;
         Flow: Flow.Constructor;
         all(...sources: Flow.Source[]): Flow<any[]>;
@@ -1633,8 +1954,37 @@ declare namespace AutoJs6 {
         waitForNotification(timeout: number): Flow<org.autojs.autojs.core.notification.Notification>;
     }
 
+    interface Flow_Flow {
+        prototype: Flow<any>;
+    }
+
     interface Fmt {
         bytes: Formatter.Bytes;
+    }
+
+    interface Fmt_bytes {
+        strict(source: BytesValue, options?: BytesStrictOptions | undefined): string;
+        strict(source: BytesValue, useIecIdentifier: boolean): string;
+        strict(source: BytesValue, fractionDigits: number): string;
+        strict(source: BytesValue, toUnit: BytesUnit, options?: BytesStrictOptions | undefined): string;
+        strict(source: BytesValue, toUnit: BytesUnit, useIecIdentifier: boolean): string;
+        strict(source: BytesValue, toUnit: BytesUnit, fractionDigits: number): string;
+        strict(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, options?: BytesStrictOptions | undefined): string;
+        strict(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, useIecIdentifier: boolean): string;
+        strict(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, fractionDigits: number): string;
+        loose(source: BytesValue, options?: BytesLooseOptions | undefined): string;
+        loose(source: BytesValue, useIecIdentifier: boolean): string;
+        loose(source: BytesValue, fractionDigits: number): string;
+        loose(source: BytesValue, toUnit: BytesUnit, options?: BytesLooseOptions | undefined): string;
+        loose(source: BytesValue, toUnit: BytesUnit, useIecIdentifier: boolean): string;
+        loose(source: BytesValue, toUnit: BytesUnit, fractionDigits: number): string;
+        loose(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, options?: BytesLooseOptions | undefined): string;
+        loose(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, useIecIdentifier: boolean): string;
+        loose(source: BytesValue, fromUnit: BytesUnit, toUnit: BytesUnit, fractionDigits: number): string;
+        UNITS: string;
+        AUTO: "AUTO";
+        IEC_DIV: number;
+        SI_DIV: number;
     }
 
     interface Http {
@@ -1672,6 +2022,62 @@ declare namespace AutoJs6 {
         load(messageSource: object, locale: string): void;
         load(messageSource: string, locale?: string): void;
         loadAll(): void;
+    }
+
+    interface I18n_banana {
+        load(messageSource: object, locale?: string): any;
+        i18n(key: string, ...parameters: any[]): string;
+        messageStore: Banana.BananaMessageStore;
+        locale: string;
+        parser: Banana.Parser;
+        finalFallback: string;
+        wikilinks: boolean;
+        setLocale(locale: string): void;
+        getFallbackLocales(): string[];
+        getMessage(key: string): string;
+        registerParserPlugin(name: string, plugin: Function): void;
+    }
+
+    interface I18n_banana_messageStore {
+        sourceMap: Map<string, object>;
+        load(messageSource: object, locale: string): void;
+        getMessage(key: string, locale: string): object | null;
+        hasLocale(locale: string): boolean;
+    }
+
+    interface I18n_banana_parser {
+        locale: string;
+        wikilinks: boolean;
+        emitter: Emitter;
+        parse(message: string, params: any[]): string;
+        simpleParse(message: string, params: any[]): string;
+    }
+
+    interface I18n_banana_parser_emitter {
+        locale: string;
+        language: Language;
+        emit(node: Mixed, replacements: any[]): Mixed;
+        concat(nodes: any[]): string;
+        replace(nodes: any[], replacements: any[]): string;
+        plural(nodes: any[]): string;
+        gender(nodes: any[]): string;
+        grammar(nodes: any[]): string;
+        wikilink(nodes: string[]): string;
+        extlink(nodes: string[]): string;
+        bidi(nodes: string[]): string;
+        formatnum(nodes: any[]): number | string;
+        htmlattributes(nodes: any[]): object;
+        htmlelement(nodes: any[]): string;
+    }
+
+    interface Image {
+        ofBitmap(scriptRuntime: org.autojs.autojs.runtime.ScriptRuntime, bitmap: android.graphics.Bitmap): ImageWrapper;
+        ofBitmap(bitmap: android.graphics.Bitmap): ImageWrapper;
+        ofImage(scriptRuntime: org.autojs.autojs.runtime.ScriptRuntime, image: android.media.Image): ImageWrapper;
+        ofImage(image: android.media.Image): ImageWrapper;
+        ofMat(scriptRuntime: org.autojs.autojs.runtime.ScriptRuntime, mat: org.opencv.core.Mat): ImageWrapper;
+        ofMat(mat: org.autojs.autojs.core.opencv.Mat): ImageWrapper;
+        ofMat(mat: org.opencv.core.Mat): ImageWrapper;
     }
 
     interface Images {
@@ -1758,6 +2164,7 @@ declare namespace AutoJs6 {
         getWidth(img: ImageWrapper | android.graphics.Bitmap | org.opencv.core.Mat | string): number;
         getHeight(img: ImageWrapper | android.graphics.Bitmap | org.opencv.core.Mat | string): number;
         buildRegion(img: Images.ImageSource, region: OmniRegion): org.opencv.core.Rect;
+        __buildRegion(region?: OmniRegion, imageWidth?: number, imageHeight?: number): org.opencv.core.Rect | null;
         detectAndComputeFeatures(img: Images.ImageSource, options?: Images.DetectAndComputeFeaturesOptions): Images.ImageFeatures;
         matchFeatures(scene: Images.ImageFeatures | Images.ImageSource, object: Images.ImageFeatures | Images.ImageSource, options?: Images.FeatureMatchingOptions): Images.ObjectFrame | null;
         psnr(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource): number;
@@ -1768,6 +2175,43 @@ declare namespace AutoJs6 {
         ncc(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource): number;
         isEqual(imageA: Images.ImageSource, imageB: Images.ImageSource): boolean;
         getSimilarity(imageA: Images.ComparableImageSource, imageB: Images.ComparableImageSource, options?: Images.SimilarityOptions): number;
+        on(eventName: string, listener: any): Internal.Images;
+        on(eventName: "key" | "key_down" | "key_up", listener: (keyCode: number, event: android.view.KeyEvent) => void): Internal.Images;
+        on(eventName: "touch", listener: (point: android.graphics.Point) => void): Internal.Images;
+        on(eventName: "notification", listener: (notification: org.autojs.autojs.core.notification.Notification) => void): Internal.Images;
+        on(eventName: "toast", listener: (toast: org.autojs.autojs.core.accessibility.AccessibilityNotificationObserver.Toast) => void): Internal.Images;
+        on(eventName: "gesture", listener: (gestureString: string) => void): Internal.Images;
+        on(eventName: "exit", listener: () => void): Internal.Images;
+        on(eventName: "accuracy_change", listener: (accuracy: number) => void): Internal.Images;
+        on(eventName: "unsupported_sensor", listener: (sensorName: string) => void): Internal.Images;
+        once(eventName: string, listener: any): Internal.Images;
+        once(eventName: "key" | "key_down" | "key_up", listener: (keyCode: number, event: android.view.KeyEvent) => void): Internal.Images;
+        once(eventName: "touch", listener: (point: android.graphics.Point) => void): Internal.Images;
+        once(eventName: "notification", listener: (notification: org.autojs.autojs.core.notification.Notification) => void): Internal.Images;
+        once(eventName: "toast", listener: (toast: org.autojs.autojs.core.accessibility.AccessibilityNotificationObserver.Toast) => void): Internal.Images;
+        once(eventName: "gesture", listener: (gestureString: string) => void): Internal.Images;
+        once(eventName: "exit", listener: () => void): Internal.Images;
+        emit(eventName: string, ...args: any[]): boolean;
+        emitSticky(eventName: string, ...args: any[]): boolean;
+        eventNames(): string[];
+        getMaxListeners(): number;
+        listenerCount(eventName: string): number;
+        listeners(eventName: string): any[];
+        prependListener(eventName: string, listener: any): Internal.Images;
+        prependOnceListener(eventName: string, listener: any): Internal.Images;
+        removeAllListeners(eventName?: string): Internal.Images;
+        removeListener(eventName: string, listener: any): Internal.Images;
+        setMaxListeners(maxListeners: number): Internal.Images;
+    }
+
+    interface ImageWrapper {
+        ofBitmap(scriptRuntime: org.autojs.autojs.runtime.ScriptRuntime, bitmap: android.graphics.Bitmap): ImageWrapper;
+        ofBitmap(bitmap: android.graphics.Bitmap): ImageWrapper;
+        ofImage(scriptRuntime: org.autojs.autojs.runtime.ScriptRuntime, image: android.media.Image): ImageWrapper;
+        ofImage(image: android.media.Image): ImageWrapper;
+        ofMat(scriptRuntime: org.autojs.autojs.runtime.ScriptRuntime, mat: org.opencv.core.Mat): ImageWrapper;
+        ofMat(mat: org.autojs.autojs.core.opencv.Mat): ImageWrapper;
+        ofMat(mat: org.opencv.core.Mat): ImageWrapper;
     }
 
     interface Installer {
@@ -1793,6 +2237,24 @@ declare namespace AutoJs6 {
         isAvailable(): boolean;
         status: Installer.Status;
         InstallerError: Installer.InstallerErrorConstructor;
+    }
+
+    interface Installer_authorizer {
+        available: ActualAuthorizer[];
+        state(name?: AuthorizerName): AuthorizerState;
+        request(name: AuthorizerName, timeout?: number): boolean;
+        requestAsync(name: AuthorizerName, timeout?: number): Promise<boolean>;
+    }
+
+    interface Installer_InstallerError {
+        prototype: InstallerError;
+    }
+
+    interface Installer_status {
+        available: boolean;
+        pluginVersion: string | undefined;
+        contractVersion: number | undefined;
+        reason: string | undefined;
     }
 
     interface Jsox {
@@ -1847,9 +2309,79 @@ declare namespace AutoJs6 {
         providers: Mail.Providers;
         accounts: Mail.Accounts;
         MailError: Mail.MailErrorConstructor;
+        test(): SessionTestResult;
+        testAsync(): Promise<SessionTestResult>;
+        send(message: SendMessage, options?: SendOptions): SendResult;
+        sendAsync(message: SendMessage, options?: SendOptions): Promise<SendResult>;
+        folders(options?: FoldersOptions): Folder[];
+        foldersAsync(options?: FoldersOptions): Promise<Folder[]>;
+        folder(path: string): ClientFolder;
+        folderStatus(path: string): FolderStatus;
+        folderStatusAsync(path: string): Promise<FolderStatus>;
+        createFolder(path: string): Folder;
+        createFolderAsync(path: string): Promise<Folder>;
+        deleteFolder(path: string): boolean;
+        deleteFolderAsync(path: string): Promise<boolean>;
+        renameFolder(path: string, newPath: string): Folder;
+        renameFolderAsync(path: string, newPath: string): Promise<Folder>;
+        fetch(options?: FetchOptions): Message[];
+        fetchAsync(options?: FetchOptions): Promise<Message[]>;
+        search(query: SearchQuery, options?: SearchOptions): SearchResult;
+        searchAsync(query: SearchQuery, options?: SearchOptions): Promise<SearchResult>;
+        get(uid: MessageRef, options?: GetOptions): Message;
+        getAsync(uid: MessageRef, options?: GetOptions): Promise<Message>;
+        fetchBody(uid: MessageRef, options?: GetOptions): Message;
+        fetchBodyAsync(uid: MessageRef, options?: GetOptions): Promise<Message>;
+        download(attachment: AttachmentRef, target?: string, options?: DownloadOptions): string;
+        downloadAsync(attachment: AttachmentRef, target?: string, options?: DownloadAsyncOptions): Promise<string>;
+        raw(uid: MessageRef, target?: string, options?: DownloadOptions): string;
+        rawAsync(uid: MessageRef, target?: string, options?: DownloadAsyncOptions): Promise<string>;
+        setFlags(uids: MessageRefs, flags: FlagName | FlagName[], mode?: FlagMode, options?: FolderOptions): Uid[];
+        setFlagsAsync(uids: MessageRefs, flags: FlagName | FlagName[], mode?: FlagMode, options?: FolderOptions): Promise<Uid[]>;
+        markRead(uids: MessageRefs, options?: FolderOptions): Uid[];
+        markReadAsync(uids: MessageRefs, options?: FolderOptions): Promise<Uid[]>;
+        markUnread(uids: MessageRefs, options?: FolderOptions): Uid[];
+        markUnreadAsync(uids: MessageRefs, options?: FolderOptions): Promise<Uid[]>;
+        flag(uids: MessageRefs, options?: FolderOptions): Uid[];
+        flagAsync(uids: MessageRefs, options?: FolderOptions): Promise<Uid[]>;
+        unflag(uids: MessageRefs, options?: FolderOptions): Uid[];
+        unflagAsync(uids: MessageRefs, options?: FolderOptions): Promise<Uid[]>;
+        move(uids: MessageRefs, folder: string, options?: TransferOptions): number[] | true;
+        moveAsync(uids: MessageRefs, folder: string, options?: TransferOptions): Promise<number[] | true>;
+        copy(uids: MessageRefs, folder: string, options?: TransferOptions): number[] | true;
+        copyAsync(uids: MessageRefs, folder: string, options?: TransferOptions): Promise<number[] | true>;
+        delete(uids: MessageRefs, options?: DeleteOptions): Uid[];
+        deleteAsync(uids: MessageRefs, options?: DeleteOptions): Promise<Uid[]>;
+        expunge(folder?: string): number;
+        expungeAsync(folder?: string): Promise<number>;
+        append(folder: string, message: SendMessage, flags?: FlagName | FlagName[]): number | null;
+        appendAsync(folder: string, message: SendMessage, flags?: FlagName | FlagName[]): Promise<number | null>;
+        watch(folder?: string, options?: WatchOptions): Watch;
+        watch(options: WatchOptions): Watch;
+    }
+
+    interface Mail_accounts {
+        list(): SavedAccount[];
+        has(alias: string): boolean;
+    }
+
+    interface Mail_MailError {
+        prototype: MailError;
+    }
+
+    interface Mail_providers {
+        list(): Provider[];
+        get(id: string): Provider | null;
+        resolve(address: string): Provider | null;
     }
 
     interface Mathx {
+        randomInt(...range: Mathx.NumberInput[]): number;
+        randomFloat(...range: Mathx.NumberInput[]): number;
+        random(...range: Mathx.NumberInput[]): number;
+        randFloat(...range: Mathx.NumberInput[]): number;
+        mean(...values: Mathx.NumberInput[]): number;
+        mode(...values: Mathx.NumberInput[]): number;
         randInt(range?: number[]): number;
         randInt(stop: number): number;
         randInt(start: number, stop: number): number;
@@ -4485,10 +5017,23 @@ declare namespace AutoJs6 {
         cancel(id: number | null | undefined): void;
     }
 
+    interface Notice_channel {
+        create(channelId: Options.Id | null | undefined, options?: Notice.Channel.Options): string;
+        create(options?: Notice.Channel.Options): string;
+        createIfNeeded(channelId: Options.Id | null | undefined, options?: Notice.Channel.Options): void;
+        createIfNeeded(options?: Notice.Channel.Options): void;
+        remove(channelId: Options.Id | null | undefined): boolean;
+        contains(channelId: Options.Id | null | undefined): boolean;
+        get(channelId: Options.Id | null | undefined): android.app.NotificationChannel | null;
+        getAll(): android.app.NotificationChannel[];
+    }
+
     interface Numberx {
         ICU: 996;
-        ensureNumber(...o: any[]);
-        check(...numOrOpr: (number | '<' | '<=' | '>' | '>=' | '=')[]): boolean;
+        ensureNumber(...o: unknown[]): void;
+        ensureNumberLike(value: number | string, allowNaN?: boolean): number;
+        ensureNumbersLike(values: readonly (number | string)[], allowNaN?: boolean, containsNaN?: boolean): number[];
+        check(...numOrOpr: (number | '<' | '<=' | '>' | '>=' | '=' | '==' | '!=' | '<>')[]): boolean;
         clamp(num: number, ...clamps: (any | any[])[]): number;
         clampTo(num: number, range: number[], cycle?: number): number;
         toFixedNum(num: number, fraction?: number): number;
@@ -4515,6 +5060,40 @@ declare namespace AutoJs6 {
         mode: ModeName;
         tap(mode: Mode): void;
         summary(): string;
+        toString(): string;
+    }
+
+    interface Ocr_mlkit {
+        recognizeText(options?: DetectOptionsMLKit): string[];
+        recognizeText(region: OmniRegion): string[];
+        recognizeText(img: ImageWrapper | string, options?: DetectOptionsMLKit): string[];
+        recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
+        detect(options?: DetectOptionsMLKit): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsMLKit): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+    }
+
+    interface Ocr_paddle {
+        recognizeText(options?: DetectOptionsPaddle): string[];
+        recognizeText(region: OmniRegion): string[];
+        recognizeText(img: ImageWrapper | string, options?: DetectOptionsPaddle): string[];
+        recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
+        detect(options?: DetectOptionsPaddle): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsPaddle): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+    }
+
+    interface Ocr_rapid {
+        recognizeText(options?: DetectOptionsRapid): string[];
+        recognizeText(region: OmniRegion): string[];
+        recognizeText(img: ImageWrapper | string, options?: DetectOptionsRapid): string[];
+        recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
+        detect(options?: DetectOptionsRapid): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsRapid): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
     }
 
     interface Opencc {
@@ -4553,6 +5132,38 @@ declare namespace AutoJs6 {
         jp2twi(s: string): string;
     }
 
+    interface Packages {
+        android: typeof android;
+        androidx: typeof androidx;
+        java: typeof java;
+        javax: typeof javax;
+        org: typeof org;
+        com: typeof com;
+        net: typeof net;
+        de: org.mozilla.javascript.NativeJavaPackage;
+        okio: typeof okio;
+        ezy: typeof ezy;
+        kotlin: typeof kotlin;
+        okhttp3: typeof okhttp3;
+        io: typeof io;
+    }
+
+    interface Packages_android {
+        view: typeof view;
+    }
+
+    interface Packages_org {
+        autojs: typeof org.autojs;
+    }
+
+    interface Packages_org_autojs {
+        autojs: typeof autojs;
+    }
+
+    interface Packages_org_autojs_autojs {
+        util: typeof util;
+    }
+
     interface Pangu {
         version: string;
         spaceText(text: string): string;
@@ -4578,9 +5189,80 @@ declare namespace AutoJs6 {
         fromPhrase(phrase: string): Pinyin.Matrix;
     }
 
+    interface Pinyin_MODE_NORMAL {
+        value: Pinyin.ModeValue;
+        getValue(): Pinyin.ModeValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_MODE_PLACE_NAME {
+        value: Pinyin.ModeValue;
+        getValue(): Pinyin.ModeValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_MODE_PLACENAME {
+        value: Pinyin.ModeValue;
+        getValue(): Pinyin.ModeValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_MODE_SURNAME {
+        value: Pinyin.ModeValue;
+        getValue(): Pinyin.ModeValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_STYLE_FIRST_LETTER {
+        value: Pinyin.StyleValue;
+        getValue(): Pinyin.StyleValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_STYLE_INITIALS {
+        value: Pinyin.StyleValue;
+        getValue(): Pinyin.StyleValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_STYLE_NORMAL {
+        value: Pinyin.StyleValue;
+        getValue(): Pinyin.StyleValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_STYLE_TO3NE {
+        value: Pinyin.StyleValue;
+        getValue(): Pinyin.StyleValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_STYLE_TONE {
+        value: Pinyin.StyleValue;
+        getValue(): Pinyin.StyleValue;
+        name(): string;
+        ordinal(): number;
+    }
+
+    interface Pinyin_STYLE_TONE2 {
+        value: Pinyin.StyleValue;
+        getValue(): Pinyin.StyleValue;
+        name(): string;
+        ordinal(): number;
+    }
+
     interface Pinyin4j {
         of(source: string, options?: string | Pinyin4j.Options): string;
         readings(source: string, options?: Pinyin4j.ReadingsOptions): Pinyin4j.Matrix;
+        as(source: string): string;
     }
 
     interface Plugins {
@@ -4588,6 +5270,11 @@ declare namespace AutoJs6 {
         extendAll(): void;
         extendAllBut(...names: Plugins.ExtensionName[]): void;
         load(name: string): any;
+    }
+
+    interface Plugins_extend {
+        exclude(...names: ExtensionName[]): void;
+        registerModule(module: Record<string, { extendJsBuildInObjects(): void; }>): void;
     }
 
     interface Power_manager {
@@ -4751,19 +5438,19 @@ declare namespace AutoJs6 {
 
     interface Sensors {
         ignoresUnsupportedSensor: boolean;
-        register(sensorName: string, delay?: number): org.autojs.autojs.runtime.api.Sensors.SensorEventEmitter;
-        register(sensorName: 'light', delay?: number): Sensors.Light;
-        register(sensorName: 'accelerometer', delay?: number): Sensors.Accelerometer;
-        register(sensorName: 'ambient_temperature', delay?: number): Sensors.AmbientTemperature;
-        register(sensorName: 'gravity', delay?: number): Sensors.Gravity;
-        register(sensorName: 'gyroscope', delay?: number): Sensors.Gyroscope;
-        register(sensorName: 'linear_acceleration', delay?: number): Sensors.LinearAcceleration;
-        register(sensorName: 'magnetic_field', delay?: number): Sensors.MagneticField;
-        register(sensorName: 'orientation', delay?: number): Sensors.Orientation;
-        register(sensorName: 'pressure', delay?: number): Sensors.Pressure;
-        register(sensorName: 'proximity', delay?: number): Sensors.Proximity;
-        register(sensorName: 'relative_humidity', delay?: number): Sensors.RelativeHumidity;
-        unregister(...args: any[]): any;
+        register(sensorName: 'light', delay?: number): Sensors.Light | null;
+        register(sensorName: 'accelerometer', delay?: number): Sensors.Accelerometer | null;
+        register(sensorName: 'ambient_temperature', delay?: number): Sensors.AmbientTemperature | null;
+        register(sensorName: 'gravity', delay?: number): Sensors.Gravity | null;
+        register(sensorName: 'gyroscope', delay?: number): Sensors.Gyroscope | null;
+        register(sensorName: 'linear_acceleration', delay?: number): Sensors.LinearAcceleration | null;
+        register(sensorName: 'magnetic_field', delay?: number): Sensors.MagneticField | null;
+        register(sensorName: 'orientation', delay?: number): Sensors.Orientation | null;
+        register(sensorName: 'pressure', delay?: number): Sensors.Pressure | null;
+        register(sensorName: 'proximity', delay?: number): Sensors.Proximity | null;
+        register(sensorName: 'relative_humidity', delay?: number): Sensors.RelativeHumidity | null;
+        register(sensorName: string, delay?: number): Sensors.EventEmitter | null;
+        unregister(emitter: Sensors.EventEmitter | null): void;
         unregisterAll(...args: any[]): any;
     }
 
@@ -4802,6 +5489,54 @@ declare namespace AutoJs6 {
         currentPackage(): string;
         currentActivity(): string;
         currentComponent(): string;
+    }
+
+    interface Shizuku_state {
+        isInstalled: boolean;
+        hasService: boolean;
+        isRunning: boolean;
+        hasPermission: boolean;
+        isOperational: boolean;
+    }
+
+    interface Species {
+        isArray(o: any): boolean;
+        isArrayBuffer(o: any): boolean;
+        isBigInt(o: any): boolean;
+        isBoolean(o: any): boolean;
+        isContinuation(o: any): boolean;
+        isDataView(o: any): boolean;
+        isDate(o: any): boolean;
+        isError(o: any): boolean;
+        isFloat32Array(o: any): boolean;
+        isFloat64Array(o: any): boolean;
+        isFunction(o: any): boolean;
+        isHTMLDocument(o: any): boolean;
+        isInt16Array(o: any): boolean;
+        isInt32Array(o: any): boolean;
+        isInt8Array(o: any): boolean;
+        isJavaObject(o: any): boolean;
+        isJavaClass(o: any): boolean;
+        isJavaPackage(o: any): boolean;
+        isMap(o: any): boolean;
+        isNamespace(o: any): boolean;
+        isNull(o: any): boolean;
+        isNumber(o: any): boolean;
+        isObject(o: any): boolean;
+        isQName(o: any): boolean;
+        isRegExp(o: any): boolean;
+        isSet(o: any): boolean;
+        isString(o: any): boolean;
+        isUint16Array(o: any): boolean;
+        isUint32Array(o: any): boolean;
+        isUint8Array(o: any): boolean;
+        isUint8ClampedArray(o: any): boolean;
+        isUndefined(o: any): boolean;
+        isWeakMap(o: any): boolean;
+        isWeakSet(o: any): boolean;
+        isWindow(o: any): boolean;
+        isXML(o: any): boolean;
+        isXMLList(o: any): boolean;
     }
 
     interface Sqlite {
@@ -4877,12 +5612,21 @@ declare namespace AutoJs6 {
         TerminalError: Terminal.ErrorConstructor;
     }
 
+    interface Terminal_npm {
+        run(script: string, directory?: string | null, options?: ExecOptions): Session;
+        runAsync(script: string, directory?: string | null, options?: ExecOptions): Promise<Session>;
+    }
+
+    interface Terminal_TerminalError {
+        prototype: Error;
+    }
+
     interface Threads {
         start(runnable: java.lang.Runnable | Func): org.autojs.autojs.runtime.api.Threads.Companion.TimerThread | undefined;
         pool(options?: Threads.PoolOptions | null): java.util.concurrent.ThreadPoolExecutor;
         lock(): java.util.concurrent.locks.Lock;
         atomic(value?: number): java.util.concurrent.atomic.AtomicLong;
-        disposable(): Threads.Disposable;
+        disposable<T = unknown>(): Threads.Disposable<T>;
         currentThread(): any;
         interrupt(thread: org.autojs.autojs.core.looper.TimerThread | any): void;
         shutDownAll(...args: any[]): any;
@@ -4891,6 +5635,16 @@ declare namespace AutoJs6 {
     interface Timers {
         setIntervalExt(timeoutCallback: Function, interval?: number, timeout?: number | (() => any), resultCallback?: (result: any) => void): number;
         keepAlive(timeout?: number | null): number;
+        addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
+        addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
+        addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
+        addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        getTimedTask(id: number): TimedTask$ | null;
+        getIntentTask(id: number): IntentTask$ | null;
+        removeIntentTask(id: number): boolean | null;
+        removeTimedTask(id: number): boolean | null;
+        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
+        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
         setTimeout(...args: any[]): any;
         clearTimeout(...args: any[]): any;
         setInterval(...args: any[]): any;
@@ -4980,11 +5734,17 @@ declare namespace AutoJs6 {
     }
 
     interface Util {
+        checkStringArgument(source: string | number | boolean, pattern: string | kotlin.text.Regex): boolean;
+        dpToPx(value: number): number;
+        spToPx(value: number): number;
+        pxToDp(value: number): number;
+        pxToSp(value: number): number;
         version: Util.Version;
         java: Util.Java;
         inspect: Util.Inspect;
         morseCode: Util.MorseCode;
         versionCodes: Util.VersionCodes;
+        __assignFunctions__(src: object, target: object, functions: string[]): void;
         isArray(arg: any): boolean;
         isBoolean(arg: any): boolean;
         isNull(arg: any): boolean;
@@ -5036,11 +5796,115 @@ declare namespace AutoJs6 {
         toRegularAndApply<T>(f: (...args) => T, args: any[]): T;
     }
 
+    interface Util_inspect {
+        colors: { bold: [1, 22]; italic: [3, 23]; underline: [4, 24]; inverse: [7, 27]; white: [37, 39]; grey: [90, 39]; black: [30, 39]; blue: [34, 39]; cyan: [36, 39]; green: [32, 39]; magenta: [35, 39]; red: [31, 39]; yellow: [33, 39]; };
+        styles: { special: "cyan"; number: "yellow"; boolean: "yellow"; undefined: "grey"; null: "bold"; string: "green"; date: "magenta"; regexp: "red"; };
+    }
+
+    interface Util_inspect_colors {
+        bold: [1, 22];
+        italic: [3, 23];
+        underline: [4, 24];
+        inverse: [7, 27];
+        white: [37, 39];
+        grey: [90, 39];
+        black: [30, 39];
+        blue: [34, 39];
+        cyan: [36, 39];
+        green: [32, 39];
+        magenta: [35, 39];
+        red: [31, 39];
+        yellow: [33, 39];
+    }
+
+    interface Util_inspect_styles {
+        special: "cyan";
+        number: "yellow";
+        boolean: "yellow";
+        undefined: "grey";
+        null: "bold";
+        string: "green";
+        date: "magenta";
+        regexp: "red";
+    }
+
+    interface Util_java {
+        instanceof(obj: any, clazz: java.lang.Class<any> | string | object): boolean;
+        instanceOf(obj: any, clazz: java.lang.Class<any> | string | object): boolean;
+        array(type: Java.LangAbbr | java.lang.Class<any> | any, length: number): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;
+        array(type: Java.LangAbbr | java.lang.Class<any> | any, ...dimensions: number[]): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;
+        toJsArray(list?: java.util.List<any>, nullListToEmptyArray?: boolean): any[];
+        objectToMap(obj?: object): java.util.HashMap<any, any> | null;
+        mapToObject(map?: java.util.HashMap<any, any>): object | null;
+    }
+
+    interface Util_morseCode {
+        getPattern(text: string): number[];
+        getCode(text: string): string;
+        vibrate(text: string, delay?: number): void;
+    }
+
+    interface Util_version {
+        sdkInt: number;
+    }
+
+    interface Util_versionCodes {
+        toString(isInDetail?: VersionCodes.IsInDetail): string;
+        summary(isInDetail?: VersionCodes.IsInDetail): string;
+        searchAll(value: string | number | Date | null): VersionCodes.Info[];
+        search(versionCode: VersionCodes.CodeName | string): VersionCodes.SearchResult;
+        search(releaseName: string): VersionCodes.SearchResult;
+        search(internalCodename: string): VersionCodes.SearchResult;
+        search(platformVersion: string | number): VersionCodes.SearchResult;
+        search(apiLevel: number): VersionCodes.SearchResult;
+        search(releaseDate: Date): VersionCodes.SearchResult;
+        search(releaseYear: number | string): VersionCodes.SearchResult;
+        search(releaseMonth: string): VersionCodes.SearchResult;
+        search(releaseDay: string): VersionCodes.SearchResult;
+        search(releaseTimestamp: number): VersionCodes.SearchResult;
+    }
+
+    interface Wait {
+        async(cond: Flow<T = any>.SelectorCond, options: Flow.WaitOptions & { resultType: "[]"; }, onOk?: Flow.OnOk<UiObject[]>, onErr?: Flow.OnErr): Flow<UiObject[]>;
+        async(cond: Flow<T = any>.SelectorCond, timeout?: number, interval?: number, onOk?: Flow.OnOk<UiObject, any> | undefined, onErr?: Flow.OnErr): Flow<UiObject>;
+        async(cond: Flow<T = any>.SelectorCond, options: Flow.WaitOptions, onOk?: Flow.OnOk<UiObject, any> | undefined, onErr?: Flow.OnErr): Flow<UiObject>;
+        async<T>(cond: () => T, timeout?: number, interval?: number, onOk?: Flow<T = any>.OnOk<T, any> | undefined, onErr?: Flow.OnErr): Flow<T>;
+        async<T>(cond: () => T, options: Flow<T = any>.WaitOptions, onOk?: Flow.OnOk<T, any> | undefined, onErr?: Flow.OnErr): Flow<T>;
+        async<T>(cond: Flow<T> | PromiseLike<T>, timeout?: number, interval?: number, onOk?: Flow<T = any>.OnOk<T, any> | undefined, onErr?: Flow.OnErr): Flow<T>;
+        async<T>(cond: Flow<T> | PromiseLike<T>, options: Flow<T = any>.WaitOptions, onOk?: Flow.OnOk<T, any> | undefined, onErr?: Flow.OnErr): Flow<T>;
+    }
+
     interface Web {
         ByteString: typeof okio.ByteString;
         newInjectableWebView(context?: android.content.Context | string, url?: string): org.autojs.autojs.core.web.InjectableWebView;
         newInjectableWebClient(): org.autojs.autojs.core.web.InjectableWebClient;
         newWebSocket(url: string, options?: Web.NewWebSocketOptions): org.autojs.autojs.core.web.WebSocket;
+    }
+
+    interface WebSocket {
+        CODE_CLOSE_NORMAL: number;
+        CODE_CLOSE_GOING_AWAY: number;
+        CODE_CLOSE_PROTOCOL_ERROR: number;
+        CODE_CLOSE_UNSUPPORTED: number;
+        CODE_CLOSED_NO_STATUS: number;
+        CODE_CLOSE_ABNORMAL: number;
+        CODE_UNSUPPORTED_PAYLOAD: number;
+        CODE_POLICY_VIOLATION: number;
+        CODE_CLOSE_TOO_LARGE: number;
+        CODE_MANDATORY_EXTENSION: number;
+        CODE_SERVER_ERROR: number;
+        CODE_SERVICE_RESTART: number;
+        CODE_TRY_AGAIN_LATER: number;
+        CODE_BAD_GATEWAY: number;
+        CODE_TLS_HANDSHAKE_FAIL: number;
+        EVENT_CLOSED: string;
+        EVENT_CLOSING: string;
+        EVENT_FAILURE: string;
+        EVENT_TEXT: string;
+        EVENT_MESSAGE: string;
+        EVENT_BYTES: string;
+        EVENT_OPEN: string;
+        EVENT_MAX_REBUILDS: string;
     }
 
     interface Work_manager {
@@ -5096,8 +5960,11 @@ declare const Arrayx: AutoJs6.Arrayx;
 declare const auto: AutoJs6.Auto;
 declare const autojs: AutoJs6.Autojs;
 declare const automator: AutoJs6.Automator;
+declare const axios: AutoJs6.Axios;
 declare const barcode: AutoJs6.Barcode;
 declare const base64: AutoJs6.Base64;
+declare const BuildConfig: AutoJs6.BuildConfig;
+declare const cheerio: AutoJs6.Cheerio;
 declare const Color: AutoJs6.Color;
 declare const colors: AutoJs6.Colors;
 declare const compose: AutoJs6.Compose;
@@ -5107,6 +5974,7 @@ declare const context: AutoJs6.Context;
 declare const continuation: AutoJs6.Continuation;
 declare const crypto: AutoJs6.Crypto;
 declare const cvt: AutoJs6.Cvt;
+declare const dayjs: AutoJs6.Dayjs;
 declare const device: AutoJs6.Device;
 declare const dialogs: AutoJs6.Dialogs;
 declare const engines: AutoJs6.Engines;
@@ -5118,7 +5986,9 @@ declare const flow: AutoJs6.Flow;
 declare const fmt: AutoJs6.Fmt;
 declare const http: AutoJs6.Http;
 declare const i18n: AutoJs6.I18n;
+declare const Image: AutoJs6.Image;
 declare const images: AutoJs6.Images;
+declare const ImageWrapper: AutoJs6.ImageWrapper;
 declare const installer: AutoJs6.Installer;
 declare const jsox: AutoJs6.Jsox;
 declare const keys: AutoJs6.Keys;
@@ -5131,6 +6001,7 @@ declare const notice: AutoJs6.Notice;
 declare const Numberx: AutoJs6.Numberx;
 declare const ocr: AutoJs6.Ocr;
 declare const opencc: AutoJs6.Opencc;
+declare const Packages: AutoJs6.Packages;
 declare const pangu: AutoJs6.Pangu;
 declare const pinyin: AutoJs6.Pinyin;
 declare const pinyin4j: AutoJs6.Pinyin4j;
@@ -5147,6 +6018,7 @@ declare const sensors: AutoJs6.Sensors;
 declare const settings: AutoJs6.Settings;
 declare const shell: AutoJs6.Shell;
 declare const shizuku: AutoJs6.Shizuku;
+declare const species: AutoJs6.Species;
 declare const sqlite: AutoJs6.Sqlite;
 declare const storages: AutoJs6.Storages;
 declare const sysprops: AutoJs6.Sysprops;
@@ -5158,7 +6030,9 @@ declare const toast: AutoJs6.Toast;
 declare const tts: AutoJs6.Tts;
 declare const ui: AutoJs6.Ui;
 declare const util: AutoJs6.Util;
+declare const wait: AutoJs6.Wait;
 declare const web: AutoJs6.Web;
+declare const WebSocket: AutoJs6.WebSocket;
 declare const work_manager: AutoJs6.Work_manager;
 declare const workManager: AutoJs6.WorkManager;
 declare const yolo: AutoJs6.Yolo;
@@ -5567,6 +6441,27 @@ declare function maxIndexInParent(...args: any[]): any;
 declare function minChildCount(...args: any[]): any;
 declare function minDepth(...args: any[]): any;
 declare function minIndexInParent(...args: any[]): any;
+declare function randomInt(...args: any[]): any;
+declare function randomFloat(...args: any[]): any;
+declare function verbose(...args: any[]): any;
+declare function $selector(...args: any[]): any;
+declare function waitAsync(...args: any[]): any;
+declare function waitThenClick(...args: any[]): any;
+declare function waitThenClickBounds(...args: any[]): any;
+declare function clickWait(...args: any[]): any;
+declare function clickBoundsWait(...args: any[]): any;
+declare function waitForStable(...args: any[]): any;
+declare function waitForStableThenClick(...args: any[]): any;
+declare function waitForStableThenClickBounds(...args: any[]): any;
+declare function clickWhenStable(...args: any[]): any;
+declare function clickBoundsWhenStable(...args: any[]): any;
+declare function waitForVisible(...args: any[]): any;
+declare function waitForHidden(...args: any[]): any;
+declare function waitForGone(...args: any[]): any;
+declare function clickWhenStableAfter(...args: any[]): any;
+declare function clickBoundsWhenStableAfter(...args: any[]): any;
+declare function nanoid(...args: any[]): any;
+declare function sync(...args: any[]): any;
 declare const context: any;
 declare const isAutoJs6: any;
 declare const HEIGHT: any;
@@ -5593,6 +6488,175 @@ declare const waitForHidden: any;
 declare const waitForGone: any;
 declare const clickWhenStableAfter: any;
 declare const clickBoundsWhenStableAfter: any;
+declare const $species: any;
+declare const EventEmitter$: any;
+declare const media: any;
+declare const RootAutomator: any;
+declare const App: any;
+declare const RootMode: any;
+declare const Version: any;
+declare const ColorTable: any;
+declare const R: any;
+declare const Pref: any;
+declare const Canvas: any;
+declare const Shell: any;
+declare const Paint: any;
+declare const KeyEvent: any;
+declare const MotionEvent: any;
+declare const UiObjectIterator: any;
+declare const UiObjectCollection: any;
+declare const UiSelector: any;
+declare const ScriptInterruptedException: any;
+declare const Toast: any;
+declare const NotificationManager: any;
+declare const ComponentName: any;
+declare const Handler: any;
+declare const Settings: any;
+declare const TextToSpeech: any;
+declare const SecurityException: any;
+declare const System: any;
+declare const Locale: any;
+declare const Crypto: any;
+declare const TextUtils: any;
+declare const ScriptEngineService: any;
+declare const Intent: any;
+declare const Context: any;
+declare const OkHttpClient: any;
+declare const MutableOkHttp: any;
+declare const VolatileBox: any;
+declare const ReentrantLock: any;
+declare const ScreenMetrics: any;
+declare const WebView: any;
+declare const WebViewClient: any;
+declare const WebChromeClient: any;
+declare const StandardCharsets: any;
+declare const PendingIntent: any;
+declare const GlobalAppContext: any;
+declare const ArrayUtils: any;
+declare const DisplayUtils: any;
+declare const ColorUtils: any;
+declare const StringUtils: any;
+declare const ProxyObject: any;
+declare const ProxyJavaObject: any;
+declare const NotificationCompat: any;
+declare const NotificationManagerCompat: any;
+declare const URI: any;
+declare const File: any;
+declare const JsAppBarLayout: any;
+declare const JsButton: any;
+declare const JsCanvasView: any;
+declare const JsCardView: any;
+declare const JsCheckBox: any;
+declare const JsConsoleView: any;
+declare const JsDatePicker: any;
+declare const JsDrawerLayout: any;
+declare const JsEditText: any;
+declare const JsFloatingActionButton: any;
+declare const JsFrameLayout: any;
+declare const JsGridView: any;
+declare const JsImageButton: any;
+declare const JsImageView: any;
+declare const JsLinearLayout: any;
+declare const JsListView: any;
+declare const JsProgressBar: any;
+declare const JsRadioButton: any;
+declare const JsRadioGroup: any;
+declare const JsRatingBar: any;
+declare const JsRelativeLayout: any;
+declare const JsScrollView: any;
+declare const JsSeekBar: any;
+declare const JsSpinner: any;
+declare const JsSwitch: any;
+declare const JsTabLayout: any;
+declare const JsTextClock: any;
+declare const JsTextView: any;
+declare const JsTimePicker: any;
+declare const JsToggleButton: any;
+declare const JsToolbar: any;
+declare const JsViewPager: any;
+declare const JsWebView: any;
+declare const JsVideoView: any;
+declare const JsViewFlipper: any;
+declare const JsViewSwitcher: any;
+declare const ScriptRuntime: any;
+declare const EventEmitter: any;
+declare const FileProvider: any;
+declare const AppUtils: any;
+declare const Uri: any;
+declare const JavaScriptSource: any;
+declare const Looper: any;
+declare const Runnable: any;
+declare const Build: any;
+declare const Manifest: any;
+declare const PackageManager: any;
+declare const NetworkUtils: any;
+declare const DeviceUtils: any;
+declare const JavaUtils: any;
+declare const RootUtils: any;
+declare const InputType: any;
+declare const TextWatcher: any;
+declare const AccessibilityBridge: any;
+declare const Base64: any;
+declare const ColorStateList: any;
+declare const ColorDetector: any;
+declare const ThemeColor: any;
+declare const AtomicLong: any;
+declare const BigTextStyle: any;
+declare const Bitmap: any;
+declare const BitmapFactory: any;
+declare const Typeface: any;
+declare const ByteArrayOutputStream: any;
+declare const Callback: any;
+declare const ColorDrawable: any;
+declare const ConsoleUtils: any;
+declare const ContextThemeWrapper: any;
+declare const DynamicLayoutInflater: any;
+declare const FormBody: any;
+declare const Gravity: any;
+declare const IntentUtils: any;
+declare const JavaScriptEngine: any;
+declare const ScaleGestureDetector: any;
+declare const WindowManager: any;
+declare const LayoutParams: any;
+declare const Level: any;
+declare const Linkify: any;
+declare const Log: any;
+declare const TypedValue: any;
+declare const LogConfigurator: any;
+declare const LogManager: any;
+declare const Mat: any;
+declare const MediaType: any;
+declare const MimeTypeMap: any;
+declare const MultipartBody: any;
+declare const Notification: any;
+declare const NotificationUtils: any;
+declare const PFile: any;
+declare const Request: any;
+declare const RequestBody: any;
+declare const Snackbar: any;
+declare const MaterialDialog: any;
+declare const Thread: any;
+declare const Throwable: any;
+declare const ApkBuilder: any;
+declare const GestureResultCallback: any;
+declare const TimeUnit: any;
+declare const Imgproc: any;
+declare const Imgcodecs: any;
+declare const CvType: any;
+declare const TopLevelScope: any;
+declare const ContinuationResult: any;
+declare const ContinuationCreator: any;
+declare const RhinoUtils: any;
+declare const EvaluatorException: any;
+declare const PorterDuff: any;
+declare const ImageViewCompat: any;
+declare const AndroidUtils: any;
+declare const Continuation: any;
+declare const JavaImporter: any;
+declare const XML: any;
+declare const XMLList: any;
+declare const Namespace: any;
+declare const QName: any;
 declare function isServiceRunning(): boolean;
 declare function ensureService(): void;
 declare function waitForService(timeout?: number): void;
@@ -5608,6 +6672,16 @@ declare function accessibilityShortcut(): boolean;
 declare function accessibilityAllApps(): boolean;
 declare function dismissNotificationShade(): boolean;
 declare function setIntervalExt(timeoutCallback: Function, interval?: number, timeout?: number | (() => any), resultCallback?: (result: any) => void): number;
+declare function addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
+declare function addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
+declare function addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
+declare function addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+declare function getTimedTask(id: number): TimedTask$ | null;
+declare function getIntentTask(id: number): IntentTask$ | null;
+declare function removeIntentTask(id: number): boolean | null;
+declare function removeTimedTask(id: number): boolean | null;
+declare function queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
+declare function queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
 declare const HOME: number;
 declare const menu: number;
 declare const MENU: number;

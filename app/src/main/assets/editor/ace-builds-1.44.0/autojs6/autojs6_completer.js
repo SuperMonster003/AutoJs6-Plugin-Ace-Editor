@@ -327,6 +327,7 @@
             globals: [],
             modules: Object.create(null),
             aliases: Object.create(null),
+            conditionalModules: indices && indices.conditionalModules || {},
             instanceOnlyModules: indices && indices.instanceOnlyModules || [],
             snippets: indices && indices.snippets || [],
             language: options.language || indices && indices.language || "",
@@ -523,6 +524,13 @@
             }
             if (source.aliases && Object.prototype.hasOwnProperty.call(source.aliases, current)) {
                 current = source.aliases[current];
+                continue;
+            }
+            var dot = current.indexOf(".");
+            var rootName = dot >= 0 ? current.substring(0, dot) : current;
+            var rootAlias = extraAliases && extraAliases[rootName] || source.aliases && source.aliases[rootName];
+            if (rootAlias && rootAlias !== rootName) {
+                current = rootAlias + current.substring(rootName.length);
                 continue;
             }
             break;
@@ -1321,14 +1329,31 @@
         return aliases;
     }
 
-    function sourceWithLocalContext(source, localContext) {
+    function sourceWithLocalContext(source, localContext, session) {
+        var detector = global.AutoJsAceLocalSymbols && global.AutoJsAceLocalSymbols.detectJsoxModules;
+        var enabled = detector && session && session.getValue ? detector(session.getValue()) : [];
+        var modules = source.modules;
+        if (enabled.length && source.conditionalModules) {
+            modules = Object.create(null);
+            copyOwnProperties(modules, source.modules);
+            enabled.forEach(function(group) {
+                var extensions = source.conditionalModules[group] || {};
+                Object.keys(extensions).forEach(function(name) {
+                    var additions = extensions[name].map(normalizeProperty);
+                    var replaced = additions.map(nameOf);
+                    modules[name] = (modules[name] || []).filter(function(item) {
+                        return replaced.indexOf(nameOf(item)) < 0;
+                    }).concat(additions);
+                });
+            });
+        }
         if (!localContext || (!(localContext.globals || []).length &&
-            !Object.keys(localContext.aliases || {}).length)) {
+            !Object.keys(localContext.aliases || {}).length && modules === source.modules)) {
             return source;
         }
         return {
             globals: (localContext.globals || []).concat(source.globals || []),
-            modules: source.modules,
+            modules: modules,
             instanceOnlyModules: source.instanceOnlyModules || [],
             aliases: mergeAliases(source.aliases, localContext.aliases),
             snippets: source.snippets || [],
@@ -1479,7 +1504,7 @@
                 return;
             }
             var localContext = localContextForSession(session, language);
-            var querySource = sourceWithLocalContext(source, localContext);
+            var querySource = sourceWithLocalContext(source, localContext, session);
             var memberContext = session && typeof session.getLine === "function" ?
                 findMemberContext(session, normalizePosition(pos)) : null;
             var members = memberContext && membersForContext(
@@ -1533,7 +1558,7 @@
             return null;
         }
         var localContext = localContextForSession(session, loaded.language);
-        var source = sourceWithLocalContext(loaded.source, localContext);
+        var source = sourceWithLocalContext(loaded.source, localContext, session);
         return findHover(source, session, pos, source.aliases, loaded.language);
     };
 
@@ -1543,7 +1568,7 @@
             return null;
         }
         var localContext = localContextForSession(session, loaded.language);
-        var source = sourceWithLocalContext(loaded.source, localContext);
+        var source = sourceWithLocalContext(loaded.source, localContext, session);
         return findSignatureHelp(source, session, pos, source.aliases, loaded.language);
     };
 

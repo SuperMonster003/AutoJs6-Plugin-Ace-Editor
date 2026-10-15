@@ -11,6 +11,7 @@ import {
     writeFileSync,
 } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { buildCoreRuntimeBridges } from "./generate-core-bridges.mjs";
 
 const GENERATED_BY = "tools/ace-lsp/generate-declarations.mjs";
 const GENERATED_OUTPUT_ROOT = "editor/ace-builds-1.44.0/autojs6/types/generated";
@@ -37,6 +38,9 @@ const GROUP_ORDER = [
     "libraries",
     "resources",
     "main-app",
+    "jsox-array",
+    "jsox-number",
+    "jsox-math",
 ];
 
 function fail(message) {
@@ -398,6 +402,17 @@ function buildGroups(sourceDirectory, declarationPaths, sourceTextByPath) {
     ]);
 
     const groupBySourcePath = new Map();
+    for (const module of ["array", "number", "math"]) {
+        groups.set(`jsox-${module}`, {
+            defaultEnabled: false,
+            dependencies: ["core"],
+            sourceFiles: [requireFile(sourceDirectory,
+                `autojs6/aj6-jsox-${module}-extensions.d.ts`, knownDeclarations)],
+        });
+    }
+    // The public aggregate entry references the three opt-in files; the editor enables
+    // their separate bundles only after an explicit activation in the current script.
+    IGNORED_DECLARATIONS.add("autojs6/aj6-jsox-extensions.d.ts");
     for (const [groupId, group] of groups) {
         for (const sourcePath of group.sourceFiles) {
             const previousGroup = groupBySourcePath.get(sourcePath);
@@ -541,7 +556,8 @@ function writeGeneratedAssets(
         const group = groups.get(groupId);
         const fileName = `lib.autojs6.${groupId}.d.ts`;
         const generatedBundle = buildBundle(groupId, group, sourceTextByPath, sourcePackage);
-        const bundle = generatedBundle.text;
+        const bundle = generatedBundle.text + (groupId === "core" ?
+            buildCoreRuntimeBridges(ts, sourceTextByPath.get("autojs6/aj6-main-app.d.ts")) : "");
         for (const libName of generatedBundle.requiredLibs) {
             const libFile = join(typescriptLibDirectory, `lib.${libName}.d.ts`);
             if (!existsSync(libFile) || !statSync(libFile).isFile()) {

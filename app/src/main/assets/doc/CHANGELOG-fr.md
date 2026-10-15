@@ -4,6 +4,13 @@
 
 ******
 
+# v2.0.3
+
+###### 2026/10/15
+
+* `Fonctionnalité` Complétion des extensions Array, Number et Math après activation explicite par jsox
+* `Correctif` Completions manquantes pour les API de script, les membres imbriqués et les alias, et types incomplets des objets de retour courants avec les groupes de déclarations par défaut
+
 # v2.0.2
 
 ###### 2026/10/14

@@ -20,7 +20,7 @@ The task:
 - keeps every source declaration unchanged;
 - validates triple-slash paths and TypeScript 6 syntax;
 - emits deterministic `core`, `android`, `libraries`, `resources`, and
-  `main-app` bundles plus `manifest.json`;
+  `main-app` bundles plus three conditional JSOX bundles and `manifest.json`;
 - removes recursive path directives, hoists required TypeScript `lib`
   directives, normalizes legacy identifier `module` declarations, and changes
   the known empty core `App` forward class into a mergeable interface only in
@@ -42,6 +42,29 @@ Optional group dependencies are:
 - `main-app` → `android`, `libraries`, `resources`
 
 All optional groups are disabled by default in the host editor settings.
+
+The core bundle includes small generated instance interfaces for common selector,
+widget, floaty, media and file return types. `generate-core-bridges.mjs` derives
+their signatures from the synchronized native declarations; this preserves
+chained completion without loading the entire native declaration groups.
+
+JSOX extensions are separate `jsox-array`, `jsox-number` and `jsox-math` bundles.
+The current script activates them through explicit unshadowed top-level calls to
+`jsox`, `$jsox`, `extend` or `extendAll`. Comments, string literals and calls inside
+functions do not activate extensions. The semantic service and static completer
+share the activation detector. When TypeScript is unavailable, the conservative
+fallback recognizes statements at the beginning of a script or after a semicolon
+or completed block. The public opt-in `.d.ts` entry remains available to other editors.
+
+The host checkout provides `tools/ace-completion/generate-editor-assets.mjs` to
+refresh both static indices and these semantic bundles after declaration publishing.
+It reads this plugin's Ace lock file instead of embedding a distribution version.
+Its `--check` mode verifies existing artifacts without rewriting source assets.
+
+`:app:verifyAutoJs6ApiCoverage` checks default returned-object types, namespace and
+alias completion, and JSOX activation and deactivation with the real bundled service.
+The checks also reject `any`/`unknown` in representative return chains. The existing
+`:app:verifyAutoJs6LspRuntime` task includes this gate.
 
 `:app:verifyAutoJs6LspRuntime` checks Compose completion, event signatures and
 invalid inputs with the real bundled TypeScript service using both the default

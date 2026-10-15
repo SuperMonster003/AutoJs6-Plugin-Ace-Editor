@@ -4,6 +4,13 @@
 
 ******
 
+# v2.0.3
+
+###### 2026/10/15
+
+* `Feature` Completion for Array, Number and Math extensions after explicit activation through jsox
+* `Fix` Missing script API completions, nested members and aliases, and incomplete types for common returned objects with the default declaration groups
+
 # v2.0.2
 
 ###### 2026/10/14

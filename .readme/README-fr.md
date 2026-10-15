@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.2-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.3-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -184,6 +184,13 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v2.0.3
+
+###### 2026/10/15
+
+* `Fonctionnalité` Complétion des extensions Array, Number et Math après activation explicite par jsox
+* `Correctif` Completions manquantes pour les API de script, les membres imbriqués et les alias, et types incomplets des objets de retour courants avec les groupes de déclarations par défaut
+
 # v2.0.2
 
 ###### 2026/10/14
@@ -195,35 +202,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/14
 
 * `Correctif` Sur les appareils plus lents, après une modification rapide d'un fichier Java, Lua ou Python, les diagnostics correspondaient parfois encore au texte précédent et ne se mettaient à jour qu'à la modification suivante
-
-# v2.0.0
-
-###### 2026/10/14
-
-* `Note` Les nouvelles options de l'éditeur se règlent dans les paramètres de l'éditeur de code d'AutoJs6; les versions antérieures d'AutoJs6 sans ces paramètres utilisent les valeurs par défaut
-* `Fonctionnalité` Les fichiers TSX utilisent leur propre coloration syntaxique, les balises et attributs JSX sont donc colorés correctement
-* `Fonctionnalité` Icônes vectorielles de la gouttière, mise en évidence du guide d'indentation actif et affichage des espaces dans la sélection (activés par défaut)
-* `Fonctionnalité` Barres de défilement de l'éditeur, pour signaler la position des erreurs et avertissements, masquées automatiquement après l'arrêt du défilement (activées par défaut)
-* `Fonctionnalité` Mise en évidence des occurrences du symbole, pour signaler les autres occurrences du symbole sous le curseur et distinguer lectures et écritures (activée par défaut)
-* `Fonctionnalité` Loupe de glissement, pour agrandir le texte sous le doigt pendant le déplacement du curseur ou des poignées de sélection (désactivée par défaut)
-* `Fonctionnalité` Aperçu en ligne de la complétion, pour afficher en gris après le curseur la suite de la première suggestion, acceptée avec TAB (désactivé par défaut)
-* `Correctif` La complétion, les diagnostics et les autres fonctions sémantiques étaient indisponibles lors de l'édition de fichiers Lua dans AutoJs6
-* `Correctif` Les diagnostics ne signalaient qu'une défaillance du compilateur lors de l'édition de fichiers Java dans AutoJs6
-* `Correctif` Dans les thèmes sombres, le fond du texte sélectionné superposé à la mise en évidence du même mot était trop clair, ce qui rendait le texte difficile à lire
-* `Correctif` Le zoom à deux doigts annulait la sélection du texte et un double toucher juste après le zoom ne sélectionnait pas de mot
-* `Amélioration` Un toucher un peu plus lent déplace aussi le curseur, et lever le doigt immobilisé après un glissement ne lance plus de défilement inertiel
-* `Amélioration` Après la sélection d'un mot par double toucher, le curseur se place à l'extrémité la plus proche du doigt
-* `Amélioration` Toucher le curseur ou appuyer longuement sur une zone vide affiche une barre d'outils avec Coller et Tout sélectionner
-* `Amélioration` Toucher la gouttière ne déplace plus le curseur au début de cette ligne, et un point d'arrêt peut aussi être placé à côté de l'icône sur les lignes avec diagnostics
-* `Amélioration` Les souris externes et le mode souris des stylets permettent de placer le curseur d'un clic, de sélectionner un mot par double-clic et de sélectionner du texte en glissant dans l'éditeur
-* `Amélioration` La fenêtre de complétion, son encadré de documentation, les indications de paramètres et la documentation au survol ne masquent plus la ligne du curseur
-* `Amélioration` Les indications de paramètres et la documentation au survol suivent la taille de police de l'éditeur
-* `Amélioration` La fenêtre de complétion affiche un état de chargement lorsqu'un service de langage répond lentement, et "Aucune suggestion" lorsque la complétion est lancée manuellement sans résultat
-* `Amélioration` La complétion des membres apparaît aussi lorsque Gboard et les méthodes de saisie similaires valident un mot en même temps que le point
-* `Amélioration` Les suggestions de complétion Python et Lua suivent l'ordre fourni par le service de langage
-* `Amélioration` Meilleure prise en charge du panneau d'édition de texte de Gboard et du déplacement du curseur en glissant sur la barre d'espace
-* `Amélioration` Le bouton au point de troncature des lignes très longues peut désormais être touché pour activer ou désactiver le retour automatique à la ligne, et le mode allégé pour les lignes très longues tronque avec ce bouton les lignes de plus de 4096 caractères
-* `Dépendance` Mise à niveau de l'éditeur Ace intégré de `1.4.12` vers `1.44.0`
 
 ##### Pour plus d'historique des versions
 

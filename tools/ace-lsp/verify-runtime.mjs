@@ -218,7 +218,7 @@ function createBrowserTypeScriptContext(paths) {
     };
     context.window = context;
     vm.createContext(context);
-    for (const file of [paths.runtime, paths.service]) {
+    for (const file of [paths.runtime, paths["local-symbols"], paths.service]) {
         vm.runInContext(readFileSync(file, "utf8"), context, {
             filename: basename(file),
         });

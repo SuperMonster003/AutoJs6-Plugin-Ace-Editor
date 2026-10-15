@@ -86,6 +86,9 @@ object AceEditorAssets {
         "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.libraries.d.ts",
         "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.resources.d.ts",
         "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.main-app.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.jsox-array.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.jsox-number.d.ts",
+        "$EDITOR_ASSET_ROOT/autojs6/types/generated/lib.autojs6.jsox-math.d.ts",
         "$EDITOR_ASSET_ROOT/autojs6/types/lib.autojs6.extra.d.ts",
     )
 

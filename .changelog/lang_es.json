@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.0.3": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "Sugerencias para las extensiones de Array, Number y Math tras su activación explícita mediante jsox"
+      ],
+      "fix": [
+        "Sugerencias ausentes para las API de scripts, miembros anidados y alias, y tipos incompletos de objetos devueltos habituales con los grupos de declaraciones predeterminados"
+      ]
+    },
     "v2.0.2": {
       "released_date": "2026/10/14",
       "fix": [

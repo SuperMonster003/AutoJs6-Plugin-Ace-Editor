@@ -5,6 +5,15 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.0.3": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "通过 jsox 显式启用 Array, Number 和 Math 扩展后的智能提示"
+      ],
+      "fix": [
+        "脚本 API, 嵌套成员和别名的提示遗漏, 以及默认声明组下常用返回对象类型不完整的问题"
+      ]
+    },
     "v2.0.2": {
       "released_date": "2026/10/14",
       "fix": [

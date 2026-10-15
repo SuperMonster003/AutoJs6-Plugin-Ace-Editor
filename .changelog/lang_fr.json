@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.0.3": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "Complétion des extensions Array, Number et Math après activation explicite par jsox"
+      ],
+      "fix": [
+        "Completions manquantes pour les API de script, les membres imbriqués et les alias, et types incomplets des objets de retour courants avec les groupes de déclarations par défaut"
+      ]
+    },
     "v2.0.2": {
       "released_date": "2026/10/14",
       "fix": [

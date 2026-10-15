@@ -465,6 +465,23 @@
         var disposed = false;
         var diagnosticsLimit = Math.max(1, Number(config.diagnosticsLimit) || 100);
         var completionLimit = Math.max(1, Number(config.completionLimit) || 300);
+        var activeJsoxModules = "";
+
+        function updateJsoxLibraries(text) {
+            var detector = global.AutoJsAceLocalSymbols && global.AutoJsAceLocalSymbols.detectJsoxModules;
+            var modules = detector ? detector(text) : [];
+            var key = modules.join(",");
+            if (key === activeJsoxModules) return;
+            activeJsoxModules = key;
+            rootLibraryUris = rootLibraryUris.filter(function(uri) {
+                return !/\/lib\.autojs6\.jsox-(array|number|math)\.d\.ts$/.test(uri);
+            });
+            modules.forEach(function(module) {
+                var uri = "file:///autojs6/types/generated/lib.autojs6.jsox-" + module + ".d.ts";
+                libraryAssetUrls[uri] = AUTOJS6_ASSET_ROOT + "types/generated/lib.autojs6.jsox-" + module + ".d.ts";
+                if (ensureConfiguredLibrary(uri)) rootLibraryUris.push(uri);
+            });
+        }
 
         function compilerOptions() {
             if (executionProfile === PROFILE_RHINO) {
@@ -878,6 +895,7 @@
                 files[currentFile] = currentText;
                 bump(currentFile);
             }
+            updateJsoxLibraries(text);
             return true;
         }
 

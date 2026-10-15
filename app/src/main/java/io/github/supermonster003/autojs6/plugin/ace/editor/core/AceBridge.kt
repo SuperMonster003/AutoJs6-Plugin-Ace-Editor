@@ -366,6 +366,9 @@ class AceBridge(
             "autojs6/types/generated/lib.autojs6.libraries.d.ts",
             "autojs6/types/generated/lib.autojs6.resources.d.ts",
             "autojs6/types/generated/lib.autojs6.main-app.d.ts",
+            "autojs6/types/generated/lib.autojs6.jsox-array.d.ts",
+            "autojs6/types/generated/lib.autojs6.jsox-number.d.ts",
+            "autojs6/types/generated/lib.autojs6.jsox-math.d.ts",
         )
     }
 }

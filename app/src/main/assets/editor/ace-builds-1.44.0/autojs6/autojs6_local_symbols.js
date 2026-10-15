@@ -632,7 +632,159 @@
     register("java", extractJava);
     register("kotlin", extractKotlin);
 
+    // Recognize only explicit, unshadowed top-level activation statements. This scanner
+    // runs without TypeScript so the static fallback follows the same opt-in contract.
+    var activationText = null, activationHasParser = false, activationModules = [];
+    function detectJsoxModules(text) {
+        text = String(text || "");
+        var ts = global.ts;
+        var hasParser = !!(ts && typeof ts.createSourceFile === "function");
+        if (activationText === text && activationHasParser === hasParser) return activationModules.slice(0);
+        function remember(modules) {
+            activationText = text;
+            activationHasParser = hasParser;
+            activationModules = modules;
+            return modules.slice(0);
+        }
+        if (hasParser) {
+            var file = ts.createSourceFile("activation.tsx", text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+            var available = { jsox: true, $jsox: true }, active = {};
+            function shadow(name) {
+                if (!name) return;
+                if (ts.isIdentifier(name)) { if (Object.prototype.hasOwnProperty.call(available, name.text)) available[name.text] = false; }
+                else if (name.elements) name.elements.forEach(function(element) { shadow(element.name); });
+            }
+            file.statements.forEach(function(statement) {
+                if (ts.isVariableStatement(statement)) statement.declarationList.declarations.forEach(function(declaration) { shadow(declaration.name); });
+                if (ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement)) shadow(statement.name);
+                if (ts.isImportDeclaration(statement) && statement.importClause) {
+                    shadow(statement.importClause.name);
+                    var bindings = statement.importClause.namedBindings;
+                    if (bindings && bindings.elements) bindings.elements.forEach(function(binding) { shadow(binding.name); });
+                    else if (bindings) shadow(bindings.name);
+                }
+                if (ts.isExpressionStatement(statement) && ts.isBinaryExpression(statement.expression) &&
+                    statement.expression.operatorToken.kind === ts.SyntaxKind.EqualsToken) shadow(statement.expression.left);
+            });
+            file.statements.forEach(function(statement) {
+                if (!ts.isExpressionStatement(statement) || !ts.isCallExpression(statement.expression)) return;
+                var call = statement.expression, callee = call.expression, method = "";
+                if (ts.isPropertyAccessExpression(callee)) { method = callee.name.text; callee = callee.expression; }
+                if (!ts.isIdentifier(callee) || !available[callee.text] ||
+                    (method && method !== "extend" && method !== "extendAll")) return;
+                var selected = [], valid = true;
+                function collect(argument) {
+                    if (ts.isArrayLiteralExpression(argument)) { argument.elements.forEach(collect); return; }
+                    if (!ts.isStringLiteral(argument)) { valid = false; return; }
+                    var name = argument.text.toLowerCase().replace(/x$/, "");
+                    if (name === "array" || name === "number" || name === "math") selected.push(name);
+                    else valid = false;
+                }
+                call.arguments.forEach(collect);
+                if (!valid) return;
+                if (!call.arguments.length || method === "extendAll") selected = ["array", "math", "number"];
+                selected.forEach(function(name) { active[name] = true; });
+            });
+            return remember(Object.keys(active).sort());
+        }
+        var tokens = [], i = 0, depth = 0, previous = "";
+        while (i < text.length) {
+            var ch = text.charAt(i), next = text.charAt(i + 1), start = i;
+            if (/\s/.test(ch)) { i++; continue; }
+            if (ch === "/" && next === "/") {
+                while (i < text.length && text.charAt(i) !== "\n") i++;
+                continue;
+            }
+            if (ch === "/" && next === "*") {
+                i = text.indexOf("*/", i + 2); i = i < 0 ? text.length : i + 2;
+                continue;
+            }
+            if (ch === "'" || ch === "\"" || ch === "`") {
+                var quote = ch, escaped = false;
+                i++;
+                while (i < text.length && text.charAt(i) !== quote) {
+                    if (text.charAt(i) === "\\") { escaped = true; i++; }
+                    i++;
+                }
+                var value = text.substring(start + 1, i);
+                i++;
+                tokens.push({ value: value, string: quote !== "`" && !escaped, depth: depth, start: start, end: i });
+                previous = "literal";
+                continue;
+            }
+            if (ch === "/" && (!previous || /^[=(:,;!?{[]$/.test(previous) || previous === "return")) {
+                i++;
+                var characterClass = false;
+                while (i < text.length) {
+                    var rc = text.charAt(i++);
+                    if (rc === "\\") { i++; continue; }
+                    if (rc === "[") characterClass = true;
+                    if (rc === "]") characterClass = false;
+                    if (rc === "/" && !characterClass) break;
+                }
+                while (/[a-z]/i.test(text.charAt(i)) && i < text.length) i++;
+                previous = "literal";
+                tokens.push({ value: "literal", depth: depth, start: start, end: i });
+                continue;
+            }
+            if (/[A-Za-z_$]/.test(ch)) {
+                while (i < text.length && /[\w$]/.test(text.charAt(i))) i++;
+            } else { i++; }
+            var token = text.substring(start, i);
+            if (token === "}") depth--;
+            tokens.push({ value: token, depth: depth, start: start, end: i });
+            if (token === "{") depth++;
+            previous = token;
+        }
+        var names = { jsox: true, $jsox: true }, enabled = {};
+        // A local binding or replacement invalidates assumptions about that global.
+        tokens.forEach(function(token, index) {
+            if (token.depth === 0 && /^(var|let|const|import)$/.test(token.value)) {
+                for (var binding = index + 1; binding < tokens.length; binding++) {
+                    var part = tokens[binding];
+                    if (part.depth === 0 && (part.value === "=" || part.value === ";" || part.value === "from")) break;
+                    if (!part.string && Object.prototype.hasOwnProperty.call(names, part.value)) names[part.value] = false;
+                }
+            }
+            if (token.depth !== 0 || !names[token.value]) return;
+            var prev = tokens[index - 1] && tokens[index - 1].value;
+            var following = tokens[index + 1] && tokens[index + 1].value;
+            if (/^(var|let|const|function|class|import)$/.test(prev || "") || following === "=") {
+                names[token.value] = false;
+            }
+        });
+        for (var n = 0; n < tokens.length; n++) {
+            var current = tokens[n];
+            var before = tokens[n - 1];
+            if (current.depth !== 0 || !names[current.value] || current.string ||
+                (n > 0 && before.value !== ";" && before.value !== "}")) continue;
+            var cursor = n + 1, method = "";
+            if (tokens[cursor] && tokens[cursor].value === ".") {
+                method = tokens[cursor + 1] && tokens[cursor + 1].value;
+                if (method !== "extend" && method !== "extendAll") continue;
+                cursor += 2;
+            }
+            if (!tokens[cursor] || tokens[cursor].value !== "(") continue;
+            cursor++;
+            var selected = [], valid = true, argumentCount = 0;
+            while (cursor < tokens.length && tokens[cursor].value !== ")") {
+                var argument = tokens[cursor++];
+                if (argument.string) {
+                    argumentCount++;
+                    var module = argument.value.toLowerCase().replace(/x$/, "");
+                    if (module === "array" || module === "number" || module === "math") selected.push(module);
+                    else valid = false;
+                } else if (argument.value !== "," && argument.value !== "[" && argument.value !== "]") valid = false;
+            }
+            if (!valid || cursor >= tokens.length) continue;
+            if (!argumentCount || method === "extendAll") selected = ["array", "number", "math"];
+            selected.forEach(function(module) { enabled[module] = true; });
+        }
+        return remember(Object.keys(enabled).sort());
+    }
+
     global.AutoJsAceLocalSymbols = {
+        detectJsoxModules: detectJsoxModules,
         register: register,
         extract: extract,
         languageIdForSession: languageIdForSession,

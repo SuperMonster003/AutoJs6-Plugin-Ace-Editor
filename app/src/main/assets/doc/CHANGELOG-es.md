@@ -4,6 +4,13 @@
 
 ******
 
+# v2.0.3
+
+###### 2026/10/15
+
+* `Función` Sugerencias para las extensiones de Array, Number y Math tras su activación explícita mediante jsox
+* `Corrección` Sugerencias ausentes para las API de scripts, miembros anidados y alias, y tipos incompletos de objetos devueltos habituales con los grupos de declaraciones predeterminados
+
 # v2.0.2
 
 ###### 2026/10/14

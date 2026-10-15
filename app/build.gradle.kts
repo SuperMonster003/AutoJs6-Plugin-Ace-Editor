@@ -299,6 +299,7 @@ val generateAutoJs6LspDeclarations = tasks.register<GenerateAutoJs6LspDeclaratio
     generatorScript.set(
         rootProject.layout.projectDirectory.file("tools/ace-lsp/generate-declarations.mjs"),
     )
+    inputs.file(rootProject.layout.projectDirectory.file("tools/ace-lsp/generate-core-bridges.mjs"))
     typescriptRuntime.set(autoJs6TypeScriptDirectory.file("typescript.js"))
     typescriptLibraryFiles.from(
         fileTree(autoJs6TypeScriptDirectory) {
@@ -318,7 +319,7 @@ tasks.register("generateAutoJs6EditorAssets") {
 val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     group = "verification"
     description = "Verifies execution-profile diagnostics, declaration groups, and old-WebView fallback."
-    dependsOn(generateAutoJs6LspDeclarations, verifyAutoJs6LanguageIndices)
+    dependsOn(generateAutoJs6LspDeclarations, verifyAutoJs6LanguageIndices, "verifyAutoJs6ApiCoverage")
 
     val verifier = rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-runtime.mjs")
     val runtime = autoJs6TypeScriptDirectory.file("typescript.js")
@@ -416,6 +417,18 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
             settings.asFile.absolutePath,
         )
     }
+}
+
+val verifyAutoJs6ApiCoverage = tasks.register<Exec>("verifyAutoJs6ApiCoverage") {
+    group = "verification"
+    description = "Verifies default API return chains, static aliases and conditional JSOX completion."
+    dependsOn(generateAutoJs6LspDeclarations)
+    workingDir(rootProject.layout.projectDirectory)
+    executable(autoJs6NodeExecutable.get())
+    args("tools/ace-lsp/verify-api-coverage.mjs")
+    inputs.file(rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-api-coverage.mjs"))
+    inputs.dir(autoJs6EditorAssetsDirectory)
+    inputs.dir(generateAutoJs6LspDeclarations.flatMap { it.outputDirectory })
 }
 
 // An APK carries the working copy's bytes. A Windows checkout with core.autocrlf=true once rewrote 227 text assets to
