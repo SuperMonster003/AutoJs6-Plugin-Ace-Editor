@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v2.1.0": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "Completion for the gallery module (3-Maple Image plugin): pick / view / edit / convert and their Async forms, options, result objects and viewer sessions"
+      ]
+    },
     "v2.0.4": {
       "released_date": "2026/10/15",
       "fix": [

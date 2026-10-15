@@ -4,6 +4,12 @@
 
 ******
 
+# v2.1.0
+
+###### 2026/10/15
+
+* `Función` Autocompletado del módulo gallery (plugin 3-Maple Image): pick / view / edit / convert y sus formas Async, opciones, objetos de resultado y sesiones del visor
+
 # v2.0.4
 
 ###### 2026/10/15

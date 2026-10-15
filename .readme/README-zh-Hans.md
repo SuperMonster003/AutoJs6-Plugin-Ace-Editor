@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 ### 发行历史
 
 ******
+
+# v2.1.0
+
+###### 2026/10/15
+
+* `新增` gallery 模块 (3-Maple Image 插件) 的智能提示, 包括 pick / view / edit / convert 及其 Async 形态, 选项, 结果对象与查看器会话
 
 # v2.0.4
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 
 * `新增` 通过 jsox 显式启用 Array, Number 和 Math 扩展后的智能提示
 * `修复` 脚本 API, 嵌套成员和别名的提示遗漏, 以及默认声明组下常用返回对象类型不完整的问题
-
-# v2.0.2
-
-###### 2026/10/14
-
-* `修复` 输入法尚未就绪等情况下点击编辑器没有弹出键盘后, 再次点击也不再弹出键盘的问题
 
 ##### 更多发行历史可参阅
 

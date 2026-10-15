@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 ### リリース履歴
 
 ******
+
+# v2.1.0
+
+###### 2026/10/15
+
+* `機能` gallery モジュール (3-Maple Image プラグイン) の補完: pick / view / edit / convert と Async 形式, オプション, 結果オブジェクト, ビューアセッション
 
 # v2.0.4
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 
 * `機能` jsox で明示的に有効化した Array, Number, Math 拡張の補完
 * `修正` スクリプト API, ネストしたメンバーとエイリアスの補完漏れ, および既定の宣言グループで一般的な戻り値オブジェクトの型が不完全になる問題
-
-# v2.0.2
-
-###### 2026/10/14
-
-* `修正` 入力メソッドの起動中などにエディタをタップしてもキーボードが表示されなかった場合, 再度タップしても表示されない問題
 
 ##### その他のリリース履歴
 

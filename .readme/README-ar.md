@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 ### سجل الإصدارات
 
 ******
+
+# v2.1.0
+
+###### 2026/10/15
+
+* `ميزة` الإكمال التلقائي لوحدة gallery (ملحق 3-Maple Image): pick / view / edit / convert وأشكالها Async والخيارات وكائنات النتائج وجلسات العارض
 
 # v2.0.4
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 
 * `ميزة` اقتراحات إضافات Array و Number و Math بعد تفعيلها صراحة عبر jsox
 * `إصلاح` غياب اقتراحات واجهات السكربت والأعضاء المتداخلة والأسماء البديلة, وعدم اكتمال أنواع الكائنات المرجعة الشائعة مع مجموعات التعريف الافتراضية
-
-# v2.0.2
-
-###### 2026/10/14
-
-* `إصلاح` مشكلة عدم ظهور لوحة المفاتيح عند النقرات التالية إذا لم تظهرها نقرة على المحرر (مثلا أثناء بدء تشغيل طريقة الإدخال)
 
 ##### لمزيد من سجل الإصدارات
 

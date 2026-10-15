@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.1.0": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "Autocompletado del módulo gallery (plugin 3-Maple Image): pick / view / edit / convert y sus formas Async, opciones, objetos de resultado y sesiones del visor"
+      ]
+    },
     "v2.0.4": {
       "released_date": "2026/10/15",
       "fix": [

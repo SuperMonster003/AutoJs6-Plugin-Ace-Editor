@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.1.0
+
+###### 2026/10/15
+
+* `Feature` Completion for the gallery module (3-Maple Image plugin): pick / view / edit / convert and their Async forms, options, result objects and viewer sessions
 
 # v2.0.4
 
@@ -196,12 +202,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 * `Feature` Completion for Array, Number and Math extensions after explicit activation through jsox
 * `Fix` Missing script API completions, nested members and aliases, and incomplete types for common returned objects with the default declaration groups
-
-# v2.0.2
-
-###### 2026/10/14
-
-* `Fix` Issue where, after a tap on the editor did not bring up the keyboard (for example while the input method was still starting), later taps did not bring it up either
 
 ##### Complete release history
 

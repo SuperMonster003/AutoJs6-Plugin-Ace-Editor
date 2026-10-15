@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v2.1.0": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "gallery 模組 (3-Maple Image 外掛) 的智慧提示, 包括 pick / view / edit / convert 及其 Async 形態, 選項, 結果物件與檢視器工作階段"
+      ]
+    },
     "v2.0.4": {
       "released_date": "2026/10/15",
       "fix": [

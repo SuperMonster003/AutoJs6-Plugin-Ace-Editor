@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.1.0": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "الإكمال التلقائي لوحدة gallery (ملحق 3-Maple Image): pick / view / edit / convert وأشكالها Async والخيارات وكائنات النتائج وجلسات العارض"
+      ]
+    },
     "v2.0.4": {
       "released_date": "2026/10/15",
       "fix": [

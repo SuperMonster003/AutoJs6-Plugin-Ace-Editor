@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -183,6 +183,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v2.1.0
+
+###### 2026/10/15
+
+* `Fonctionnalité` Complétion du module gallery (plugin 3-Maple Image): pick / view / edit / convert et leurs formes Async, options, objets de résultat et sessions de visionneuse
 
 # v2.0.4
 
@@ -196,12 +202,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 * `Fonctionnalité` Complétion des extensions Array, Number et Math après activation explicite par jsox
 * `Correctif` Completions manquantes pour les API de script, les membres imbriqués et les alias, et types incomplets des objets de retour courants avec les groupes de déclarations par défaut
-
-# v2.0.2
-
-###### 2026/10/14
-
-* `Correctif` Lorsqu'un appui sur l'éditeur n'affichait pas le clavier (par exemple pendant le démarrage de la méthode de saisie), les appuis suivants ne l'affichaient pas non plus
 
 ##### Pour plus d'historique des versions
 

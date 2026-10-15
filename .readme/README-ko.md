@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 ### 릴리스 기록
 
 ******
+
+# v2.1.0
+
+###### 2026/10/15
+
+* `기능` gallery 모듈 (3-Maple Image 플러그인) 자동 완성: pick / view / edit / convert 및 Async 형태, 옵션, 결과 객체, 뷰어 세션
 
 # v2.0.4
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.0.4-un
 
 * `기능` jsox 로 명시적으로 활성화한 Array, Number 및 Math 확장의 자동 완성
 * `수정` 스크립트 API, 중첩 멤버 및 별칭의 자동 완성 누락과 기본 선언 그룹에서 자주 사용하는 반환 객체의 불완전한 타입 문제
-
-# v2.0.2
-
-###### 2026/10/14
-
-* `수정` 입력기가 아직 시작되는 중일 때 등 편집기를 탭해도 키보드가 나타나지 않으면 다시 탭해도 나타나지 않던 문제
 
 ##### 더 많은 릴리스 기록
 

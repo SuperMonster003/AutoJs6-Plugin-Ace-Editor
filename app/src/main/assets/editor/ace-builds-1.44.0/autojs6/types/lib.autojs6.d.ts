@@ -1987,6 +1987,24 @@ declare namespace AutoJs6 {
         SI_DIV: number;
     }
 
+    interface Gallery {
+        pick(options?: Gallery.PickOptions): Gallery.PickedImage[] | null;
+        pickAsync(options?: Gallery.PickOptions): Promise<Gallery.PickedImage[] | null>;
+        view(paths: string | string[], options?: Gallery.ViewOptions): Gallery.ViewSession;
+        viewAsync(paths: string | string[], options?: Gallery.ViewOptions): Promise<Gallery.ViewSession>;
+        edit(path: string, options?: Gallery.EditOptions): string | null;
+        editAsync(path: string, options?: Gallery.EditOptions): Promise<string | null>;
+        convert(path: string, options?: Gallery.ConvertOptions): Gallery.WrittenImage;
+        convertAsync(path: string, options?: Gallery.ConvertOptions): Promise<Gallery.WrittenImage>;
+        isAvailable(): boolean;
+        isAvailableAsync(): Promise<boolean>;
+        GalleryError: Gallery.GalleryErrorConstructor;
+    }
+
+    interface Gallery_GalleryError {
+        prototype: GalleryError;
+    }
+
     interface Http {
         client(): okhttp3.OkHttpClient;
         get(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
@@ -5984,6 +6002,7 @@ declare const files: AutoJs6.Files;
 declare const floaty: AutoJs6.Floaty;
 declare const flow: AutoJs6.Flow;
 declare const fmt: AutoJs6.Fmt;
+declare const gallery: AutoJs6.Gallery;
 declare const http: AutoJs6.Http;
 declare const i18n: AutoJs6.I18n;
 declare const Image: AutoJs6.Image;

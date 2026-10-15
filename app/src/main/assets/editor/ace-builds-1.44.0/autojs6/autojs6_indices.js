@@ -165,6 +165,11 @@
                 "doc": "AutoJs6 Formatter API"
             },
             {
+                "name": "gallery",
+                "type": "module",
+                "doc": "AutoJs6 Gallery API"
+            },
+            {
                 "name": "http",
                 "type": "module",
                 "doc": "HTTP client API"
@@ -3501,6 +3506,11 @@
                 "name": "$epub",
                 "type": "module",
                 "doc": "Alias of epub"
+            },
+            {
+                "name": "$gallery",
+                "type": "module",
+                "doc": "Alias of gallery"
             },
             {
                 "name": "$terminal",
@@ -14094,6 +14104,82 @@
                     "type": "variable",
                     "doc": "SI_DIV: number;",
                     "signature": "SI_DIV: number;"
+                }
+            ],
+            "gallery": [
+                {
+                    "name": "pick",
+                    "type": "function",
+                    "doc": "pick(options?: Gallery.PickOptions): Gallery.PickedImage[] | null;",
+                    "signature": "pick(options?: Gallery.PickOptions): Gallery.PickedImage[] | null;"
+                },
+                {
+                    "name": "pickAsync",
+                    "type": "function",
+                    "doc": "pickAsync(options?: Gallery.PickOptions): Promise<Gallery.PickedImage[] | null>;",
+                    "signature": "pickAsync(options?: Gallery.PickOptions): Promise<Gallery.PickedImage[] | null>;"
+                },
+                {
+                    "name": "view",
+                    "type": "function",
+                    "doc": "view(paths: string | string[], options?: Gallery.ViewOptions): Gallery.ViewSession;",
+                    "signature": "view(paths: string | string[], options?: Gallery.ViewOptions): Gallery.ViewSession;"
+                },
+                {
+                    "name": "viewAsync",
+                    "type": "function",
+                    "doc": "viewAsync(paths: string | string[], options?: Gallery.ViewOptions): Promise<Gallery.ViewSession>;",
+                    "signature": "viewAsync(paths: string | string[], options?: Gallery.ViewOptions): Promise<Gallery.ViewSession>;"
+                },
+                {
+                    "name": "edit",
+                    "type": "function",
+                    "doc": "edit(path: string, options?: Gallery.EditOptions): string | null;",
+                    "signature": "edit(path: string, options?: Gallery.EditOptions): string | null;"
+                },
+                {
+                    "name": "editAsync",
+                    "type": "function",
+                    "doc": "editAsync(path: string, options?: Gallery.EditOptions): Promise<string | null>;",
+                    "signature": "editAsync(path: string, options?: Gallery.EditOptions): Promise<string | null>;"
+                },
+                {
+                    "name": "convert",
+                    "type": "function",
+                    "doc": "convert(path: string, options?: Gallery.ConvertOptions): Gallery.WrittenImage;",
+                    "signature": "convert(path: string, options?: Gallery.ConvertOptions): Gallery.WrittenImage;"
+                },
+                {
+                    "name": "convertAsync",
+                    "type": "function",
+                    "doc": "convertAsync(path: string, options?: Gallery.ConvertOptions): Promise<Gallery.WrittenImage>;",
+                    "signature": "convertAsync(path: string, options?: Gallery.ConvertOptions): Promise<Gallery.WrittenImage>;"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "isAvailableAsync",
+                    "type": "function",
+                    "doc": "isAvailableAsync(): Promise<boolean>;",
+                    "signature": "isAvailableAsync(): Promise<boolean>;"
+                },
+                {
+                    "name": "GalleryError",
+                    "type": "variable",
+                    "doc": "GalleryError: Gallery.GalleryErrorConstructor;",
+                    "signature": "GalleryError: Gallery.GalleryErrorConstructor;"
+                }
+            ],
+            "gallery.GalleryError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: GalleryError;",
+                    "signature": "prototype: GalleryError;"
                 }
             ],
             "http": [
@@ -35683,6 +35769,7 @@
             "$installer": "installer",
             "$mail": "mail",
             "$epub": "epub",
+            "$gallery": "gallery",
             "$terminal": "terminal",
             "$media": "media",
             "$notice": "notice",
