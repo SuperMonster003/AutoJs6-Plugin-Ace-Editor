@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.2.0": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "الإكمال التلقائي لـ files.batchRename (ملحق Batch Rename): plan / apply / undo / history وأشكالها Async والخيارات وكائنات الخطة والنتائج"
+      ]
+    },
     "v2.1.0": {
       "released_date": "2026/10/15",
       "feature": [

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.2.0
+
+###### 2026/10/15
+
+* `Fonctionnalité` Complétion de files.batchRename (plugin Batch Rename): plan / apply / undo / history et leurs formes Async, options, objets de plan et de résultat
+
 # v2.1.0
 
 ###### 2026/10/15

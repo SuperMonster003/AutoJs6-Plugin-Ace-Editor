@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.2.0": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "Complétion de files.batchRename (plugin Batch Rename): plan / apply / undo / history et leurs formes Async, options, objets de plan et de résultat"
+      ]
+    },
     "v2.1.0": {
       "released_date": "2026/10/15",
       "feature": [

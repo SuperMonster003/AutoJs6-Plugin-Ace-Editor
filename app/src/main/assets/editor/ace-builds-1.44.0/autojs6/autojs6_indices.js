@@ -13594,10 +13594,80 @@
                     "signature": "toFile(path: string): java.io.File;"
                 },
                 {
+                    "name": "batchRename",
+                    "type": "variable",
+                    "doc": "batchRename: FilesBatchRename;",
+                    "signature": "batchRename: FilesBatchRename;"
+                },
+                {
                     "name": "formatSizeWithUnit",
                     "type": "function",
                     "doc": "formatSizeWithUnit(bytes: number): string;",
                     "signature": "formatSizeWithUnit(bytes: number): string;"
+                }
+            ],
+            "files.batchRename": [
+                {
+                    "name": "plan",
+                    "type": "function",
+                    "doc": "plan(paths: string | string[], options: FilesBatchRename.Options): FilesBatchRename.Plan;",
+                    "signature": "plan(paths: string | string[], options: FilesBatchRename.Options): FilesBatchRename.Plan;"
+                },
+                {
+                    "name": "apply",
+                    "type": "function",
+                    "doc": "apply(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): FilesBatchRename.Result;",
+                    "signature": "apply(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): FilesBatchRename.Result;"
+                },
+                {
+                    "name": "undo",
+                    "type": "function",
+                    "doc": "undo(target: FilesBatchRename.Result | string): FilesBatchRename.UndoResult;",
+                    "signature": "undo(target: FilesBatchRename.Result | string): FilesBatchRename.UndoResult;"
+                },
+                {
+                    "name": "history",
+                    "type": "function",
+                    "doc": "history(limit?: number): FilesBatchRename.HistoryEntry[];",
+                    "signature": "history(limit?: number): FilesBatchRename.HistoryEntry[];"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "planAsync",
+                    "type": "function",
+                    "doc": "planAsync(paths: string | string[], options: FilesBatchRename.Options): Promise<FilesBatchRename.Plan>;",
+                    "signature": "planAsync(paths: string | string[], options: FilesBatchRename.Options): Promise<FilesBatchRename.Plan>;"
+                },
+                {
+                    "name": "applyAsync",
+                    "type": "function",
+                    "doc": "applyAsync(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): Promise<FilesBatchRename.Result>;",
+                    "signature": "applyAsync(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): Promise<FilesBatchRename.Result>;"
+                },
+                {
+                    "name": "undoAsync",
+                    "type": "function",
+                    "doc": "undoAsync(target: FilesBatchRename.Result | string): Promise<FilesBatchRename.UndoResult>;",
+                    "signature": "undoAsync(target: FilesBatchRename.Result | string): Promise<FilesBatchRename.UndoResult>;"
+                },
+                {
+                    "name": "BatchRenameError",
+                    "type": "function",
+                    "doc": "BatchRenameError(message: string, code?: FilesBatchRename.ErrorCode | string): FilesBatchRename.BatchRenameError;",
+                    "signature": "BatchRenameError(message: string, code?: FilesBatchRename.ErrorCode | string): FilesBatchRename.BatchRenameError;"
+                }
+            ],
+            "files.batchRename.BatchRenameError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: BatchRenameError;",
+                    "signature": "prototype: BatchRenameError;"
                 }
             ],
             "floaty": [

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.2.0": {
+      "released_date": "2026/10/15",
+      "feature": [
+        "files.batchRename (Batch Rename 插件) 的智能提示, 包括 plan / apply / undo / history 及其 Async 形态, 选项, 方案与结果对象"
+      ]
+    },
     "v2.1.0": {
       "released_date": "2026/10/15",
       "feature": [

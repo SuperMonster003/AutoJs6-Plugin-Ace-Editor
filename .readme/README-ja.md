@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.2.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-un
 
 ******
 
+# v2.2.0
+
+###### 2026/10/15
+
+* `機能` files.batchRename (Batch Rename プラグイン) の補完: plan / apply / undo / history と Async 形式, オプション, プランと結果オブジェクト
+
 # v2.1.0
 
 ###### 2026/10/15
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-un
 ###### 2026/10/15
 
 * `修正` 補完リストを初めて開いたときにドキュメントのヒントが候補を覆う問題
-
-# v2.0.3
-
-###### 2026/10/15
-
-* `機能` jsox で明示的に有効化した Array, Number, Math 拡張の補完
-* `修正` スクリプト API, ネストしたメンバーとエイリアスの補完漏れ, および既定の宣言グループで一般的な戻り値オブジェクトの型が不完全になる問題
 
 ##### その他のリリース履歴
 

@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.2.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-un
 
 ******
 
+# v2.2.0
+
+###### 2026/10/15
+
+* `ميزة` الإكمال التلقائي لـ files.batchRename (ملحق Batch Rename): plan / apply / undo / history وأشكالها Async والخيارات وكائنات الخطة والنتائج
+
 # v2.1.0
 
 ###### 2026/10/15
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-un
 ###### 2026/10/15
 
 * `إصلاح` تغطية تلميحات التوثيق للاقتراحات عند فتح قائمة الإكمال لأول مرة
-
-# v2.0.3
-
-###### 2026/10/15
-
-* `ميزة` اقتراحات إضافات Array و Number و Math بعد تفعيلها صراحة عبر jsox
-* `إصلاح` غياب اقتراحات واجهات السكربت والأعضاء المتداخلة والأسماء البديلة, وعدم اكتمال أنواع الكائنات المرجعة الشائعة مع مجموعات التعريف الافتراضية
 
 ##### لمزيد من سجل الإصدارات
 

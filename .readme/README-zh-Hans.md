@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.2.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-un
 
 ******
 
+# v2.2.0
+
+###### 2026/10/15
+
+* `新增` files.batchRename (Batch Rename 插件) 的智能提示, 包括 plan / apply / undo / history 及其 Async 形态, 选项, 方案与结果对象
+
 # v2.1.0
 
 ###### 2026/10/15
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.1.0-un
 ###### 2026/10/15
 
 * `修复` 首次打开补全列表时, 文档提示遮挡候选项的问题
-
-# v2.0.3
-
-###### 2026/10/15
-
-* `新增` 通过 jsox 显式启用 Array, Number 和 Math 扩展后的智能提示
-* `修复` 脚本 API, 嵌套成员和别名的提示遗漏, 以及默认声明组下常用返回对象类型不完整的问题
 
 ##### 更多发行历史可参阅
 

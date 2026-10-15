@@ -4,6 +4,12 @@
 
 ******
 
+# v2.2.0
+
+###### 2026/10/15
+
+* `機能` files.batchRename (Batch Rename プラグイン) の補完: plan / apply / undo / history と Async 形式, オプション, プランと結果オブジェクト
+
 # v2.1.0
 
 ###### 2026/10/15

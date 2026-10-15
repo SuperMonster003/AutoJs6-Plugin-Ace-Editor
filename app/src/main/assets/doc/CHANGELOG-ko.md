@@ -4,6 +4,12 @@
 
 ******
 
+# v2.2.0
+
+###### 2026/10/15
+
+* `기능` files.batchRename (Batch Rename 플러그인) 자동 완성: plan / apply / undo / history 및 Async 형태, 옵션, 계획과 결과 객체
+
 # v2.1.0
 
 ###### 2026/10/15

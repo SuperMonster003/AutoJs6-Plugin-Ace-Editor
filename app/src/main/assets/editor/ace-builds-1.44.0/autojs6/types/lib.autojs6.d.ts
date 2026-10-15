@@ -1870,7 +1870,24 @@ declare namespace AutoJs6 {
         write(path: string, text: string, encoding?: StandardCharsets): void;
         writeBytes(path: string, bytes: number[]): void;
         toFile(path: string): java.io.File;
+        batchRename: FilesBatchRename;
         formatSizeWithUnit(bytes: number): string;
+    }
+
+    interface Files_batchRename {
+        plan(paths: string | string[], options: FilesBatchRename.Options): FilesBatchRename.Plan;
+        apply(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): FilesBatchRename.Result;
+        undo(target: FilesBatchRename.Result | string): FilesBatchRename.UndoResult;
+        history(limit?: number): FilesBatchRename.HistoryEntry[];
+        isAvailable(): boolean;
+        planAsync(paths: string | string[], options: FilesBatchRename.Options): Promise<FilesBatchRename.Plan>;
+        applyAsync(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): Promise<FilesBatchRename.Result>;
+        undoAsync(target: FilesBatchRename.Result | string): Promise<FilesBatchRename.UndoResult>;
+        BatchRenameError(message: string, code?: FilesBatchRename.ErrorCode | string): FilesBatchRename.BatchRenameError;
+    }
+
+    interface Files_batchRename_BatchRenameError {
+        prototype: BatchRenameError;
     }
 
     interface Floaty {

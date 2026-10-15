@@ -4,6 +4,12 @@
 
 ******
 
+# v2.2.0
+
+###### 2026/10/15
+
+* `新增` files.batchRename (Batch Rename 插件) 的智能提示, 包括 plan / apply / undo / history 及其 Async 形态, 选项, 方案与结果对象
+
 # v2.1.0
 
 ###### 2026/10/15
