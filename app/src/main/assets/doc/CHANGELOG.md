@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `新增` plugins.tools 目录输出的补全与提示: ToolOutput.kind, 调用选项 outputs 的目录路径, 以及调用结果 outputs 项中的 kind, files, conflicts 与 conflictCount
+
 # v2.4.0
 
 ###### 2026/10/16

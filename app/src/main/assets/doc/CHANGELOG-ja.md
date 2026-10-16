@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `機能` plugins.tools のディレクトリ出力の補完とヒント: ToolOutput.kind, 呼び出しオプション outputs のフォルダー, 呼び出し結果の outputs 項目の kind, files, conflicts, conflictCount
+
 # v2.4.0
 
 ###### 2026/10/16

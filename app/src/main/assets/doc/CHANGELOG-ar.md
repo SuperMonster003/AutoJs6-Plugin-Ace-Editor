@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `ميزة` إكمال وتلميحات لمخرجات المجلدات في plugins.tools: ToolOutput.kind والمجلدات في خيار الاستدعاء outputs والحقول kind و files و conflicts و conflictCount في outputs لنتيجة الاستدعاء
+
 # v2.4.0
 
 ###### 2026/10/16

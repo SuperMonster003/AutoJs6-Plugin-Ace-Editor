@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `Función` Autocompletado e indicaciones para las salidas de carpeta de plugins.tools: ToolOutput.kind, carpetas en la opción de llamada outputs, y kind, files, conflicts y conflictCount en los outputs del resultado de una llamada
+
 # v2.4.0
 
 ###### 2026/10/16

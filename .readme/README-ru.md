@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-un
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `Функция` Автодополнение и подсказки для вывода в папку plugins.tools: ToolOutput.kind, папки в параметре вызова outputs, а также kind, files, conflicts и conflictCount в outputs результата вызова
+
 # v2.4.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-un
 ###### 2026/10/16
 
 * `Функция` Автодополнение для plugins.tools, вызывающего инструменты, которые описывают сами плагины AutoJs6: list / providers / call / callAsync, параметры вызова, сведения об инструментах и объекты результата
-
-# v2.2.0
-
-###### 2026/10/15
-
-* `Функция` Автодополнение files.batchRename (плагин Batch Rename): plan / apply / undo / history и их формы Async, параметры, объекты плана и результатов
 
 ##### Подробнее об истории выпусков
 

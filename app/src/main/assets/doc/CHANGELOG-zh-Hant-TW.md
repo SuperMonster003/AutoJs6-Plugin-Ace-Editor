@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `新增` plugins.tools 目錄輸出的補全與提示: ToolOutput.kind, 呼叫選項 outputs 的目錄路徑, 以及呼叫結果 outputs 項目中的 kind, files, conflicts 與 conflictCount
+
 # v2.4.0
 
 ###### 2026/10/16

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `Feature` Completion and hints for the directory outputs of plugins.tools: ToolOutput.kind, folders in the outputs call option, and kind, files, conflicts and conflictCount in the outputs of a call result
+
 # v2.4.0
 
 ###### 2026/10/16

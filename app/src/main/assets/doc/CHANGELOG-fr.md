@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `Fonctionnalité` Complétion et indications pour les sorties de dossier de plugins.tools : ToolOutput.kind, dossiers dans l'option d'appel outputs, et kind, files, conflicts et conflictCount dans les outputs d'un résultat d'appel
+
 # v2.4.0
 
 ###### 2026/10/16

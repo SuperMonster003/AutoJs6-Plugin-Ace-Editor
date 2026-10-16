@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -184,6 +184,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `Función` Autocompletado e indicaciones para las salidas de carpeta de plugins.tools: ToolOutput.kind, carpetas en la opción de llamada outputs, y kind, files, conflicts y conflictCount en los outputs del resultado de una llamada
+
 # v2.4.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/16
 
 * `Función` Autocompletado para plugins.tools, que llama a las herramientas que describen los propios plugins de AutoJs6: list / providers / call / callAsync, opciones de llamada, información de herramientas y objetos de resultado
-
-# v2.2.0
-
-###### 2026/10/15
-
-* `Función` Autocompletado de files.batchRename (plugin Batch Rename): plan / apply / undo / history y sus formas Async, opciones, objetos de plan y de resultado
 
 ##### Para ver más historial de versiones
 

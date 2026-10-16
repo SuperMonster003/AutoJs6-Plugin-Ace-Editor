@@ -4,6 +4,12 @@
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `기능` plugins.tools 디렉터리 출력의 자동 완성과 힌트: ToolOutput.kind, 호출 옵션 outputs 의 폴더, 호출 결과 outputs 항목의 kind, files, conflicts, conflictCount
+
 # v2.4.0
 
 ###### 2026/10/16

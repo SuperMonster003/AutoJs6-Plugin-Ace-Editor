@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-un
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `新增` plugins.tools 目錄輸出的補全與提示: ToolOutput.kind, 呼叫選項 outputs 的目錄路徑, 以及呼叫結果 outputs 項目中的 kind, files, conflicts 與 conflictCount
+
 # v2.4.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-un
 ###### 2026/10/16
 
 * `新增` plugins.tools 的智慧提示, 用於呼叫 AutoJs6 外掛自我描述的工具, 包括 list / providers / call / callAsync, 呼叫選項, 工具資訊與結果物件
-
-# v2.2.0
-
-###### 2026/10/15
-
-* `新增` files.batchRename (Batch Rename 外掛) 的智慧提示, 包括 plan / apply / undo / history 及其 Async 形態, 選項, 方案與結果物件
 
 ##### 更多發行歷史可參閱
 

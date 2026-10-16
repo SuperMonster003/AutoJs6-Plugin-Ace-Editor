@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-un
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `ميزة` إكمال وتلميحات لمخرجات المجلدات في plugins.tools: ToolOutput.kind والمجلدات في خيار الاستدعاء outputs والحقول kind و files و conflicts و conflictCount في outputs لنتيجة الاستدعاء
+
 # v2.4.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-un
 ###### 2026/10/16
 
 * `ميزة` إكمال تلقائي لـ plugins.tools, الذي يستدعي الأدوات التي تصفها إضافات AutoJs6 بنفسها: list / providers / call / callAsync, وخيارات الاستدعاء, ومعلومات الأدوات وكائنات النتائج
-
-# v2.2.0
-
-###### 2026/10/15
-
-* `ميزة` الإكمال التلقائي لـ files.batchRename (ملحق Batch Rename): plan / apply / undo / history وأشكالها Async والخيارات وكائنات الخطة والنتائج
 
 ##### لمزيد من سجل الإصدارات
 

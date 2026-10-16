@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -184,6 +184,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.5.0
+
+###### 2026/10/16
+
+* `Feature` Completion and hints for the directory outputs of plugins.tools: ToolOutput.kind, folders in the outputs call option, and kind, files, conflicts and conflictCount in the outputs of a call result
+
 # v2.4.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/16
 
 * `Feature` Completion for plugins.tools, which calls the tools AutoJs6 plugins describe themselves: list / providers / call / callAsync, call options, tool information and result objects
-
-# v2.2.0
-
-###### 2026/10/15
-
-* `Feature` Completion for files.batchRename (Batch Rename plugin): plan / apply / undo / history and their Async forms, options, plan and result objects
 
 ##### Complete release history
 
