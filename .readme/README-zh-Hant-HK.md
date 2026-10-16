@@ -171,7 +171,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-un
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `新增` files.batchRename (Batch Rename 插件 1.1.0) 新成員的智能提示, 包括 preview / presets / importPresets 及其 Async 形態, deleteHistory / clearHistory, 拼音, 相片中繼資料與命名預設選項
+
 # v2.3.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-un
 ###### 2026/10/15
 
 * `新增` files.batchRename (Batch Rename 插件) 的智能提示, 包括 plan / apply / undo / history 及其 Async 形態, 選項, 方案與結果物件
-
-# v2.1.0
-
-###### 2026/10/15
-
-* `新增` gallery 模組 (3-Maple Image 插件) 的智能提示, 包括 pick / view / edit / convert 及其 Async 形態, 選項, 結果物件與檢視器會話
 
 ##### 更多發行歷史可參閱
 

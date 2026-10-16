@@ -4,6 +4,12 @@
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `機能` files.batchRename (Batch Rename プラグイン 1.1.0) の新しいメンバーの補完: preview / presets / importPresets と Async 形式, deleteHistory / clearHistory, ピンイン, 写真メタデータ, プリセットのオプション
+
 # v2.3.0
 
 ###### 2026/10/16

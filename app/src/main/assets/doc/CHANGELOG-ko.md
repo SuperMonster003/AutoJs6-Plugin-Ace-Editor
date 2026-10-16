@@ -4,6 +4,12 @@
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `기능` files.batchRename (Batch Rename 플러그인 1.1.0) 새 멤버 자동 완성: preview / presets / importPresets 및 Async 형태, deleteHistory / clearHistory, 병음, 사진 메타데이터, 프리셋 옵션
+
 # v2.3.0
 
 ###### 2026/10/16

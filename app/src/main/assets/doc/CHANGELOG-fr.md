@@ -4,6 +4,12 @@
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `Fonctionnalité` Complétion des nouveaux membres de files.batchRename (plugin Batch Rename 1.1.0): preview / presets / importPresets et leurs formes Async, deleteHistory / clearHistory et les options de pinyin, de métadonnées des photos et de préréglage
+
 # v2.3.0
 
 ###### 2026/10/16

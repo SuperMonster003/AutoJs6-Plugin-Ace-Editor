@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.4.0": {
+      "released_date": "2026/10/16",
+      "feature": [
+        "Автодополнение новых членов files.batchRename (плагин Batch Rename 1.1.0): preview / presets / importPresets и их формы Async, deleteHistory / clearHistory, параметры пиньиня, метаданных фотографий и пресетов"
+      ]
+    },
     "v2.3.0": {
       "released_date": "2026/10/16",
       "feature": [

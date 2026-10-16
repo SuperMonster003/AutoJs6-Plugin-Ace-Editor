@@ -4,6 +4,12 @@
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `新增` files.batchRename (Batch Rename 插件 1.1.0) 新成员的智能提示, 包括 preview / presets / importPresets 及其 Async 形态, deleteHistory / clearHistory, 拼音, 照片元数据与命名预设选项
+
 # v2.3.0
 
 ###### 2026/10/16

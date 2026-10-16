@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v2.4.0": {
+      "released_date": "2026/10/16",
+      "feature": [
+        "files.batchRename (Batch Rename 外掛 1.1.0) 新成員的智慧提示, 包括 preview / presets / importPresets 及其 Async 形態, deleteHistory / clearHistory, 拼音, 相片中繼資料與命名預設選項"
+      ]
+    },
     "v2.3.0": {
       "released_date": "2026/10/16",
       "feature": [

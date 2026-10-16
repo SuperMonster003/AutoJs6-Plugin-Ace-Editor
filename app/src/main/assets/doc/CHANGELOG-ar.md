@@ -4,6 +4,12 @@
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `ميزة` الإكمال التلقائي للأعضاء الجدد في files.batchRename (ملحق Batch Rename 1.1.0): preview / presets / importPresets وأشكالها Async و deleteHistory / clearHistory وخيارات البينيين وبيانات الصور الوصفية والإعدادات المسبقة
+
 # v2.3.0
 
 ###### 2026/10/16

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `Функция` Автодополнение новых членов files.batchRename (плагин Batch Rename 1.1.0): preview / presets / importPresets и их формы Async, deleteHistory / clearHistory, параметры пиньиня, метаданных фотографий и пресетов
+
 # v2.3.0
 
 ###### 2026/10/16

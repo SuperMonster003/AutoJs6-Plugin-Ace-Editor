@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -184,6 +184,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `Fonctionnalité` Complétion des nouveaux membres de files.batchRename (plugin Batch Rename 1.1.0): preview / presets / importPresets et leurs formes Async, deleteHistory / clearHistory et les options de pinyin, de métadonnées des photos et de préréglage
+
 # v2.3.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/15
 
 * `Fonctionnalité` Complétion de files.batchRename (plugin Batch Rename): plan / apply / undo / history et leurs formes Async, options, objets de plan et de résultat
-
-# v2.1.0
-
-###### 2026/10/15
-
-* `Fonctionnalité` Complétion du module gallery (plugin 3-Maple Image): pick / view / edit / convert et leurs formes Async, options, objets de résultat et sessions de visionneuse
 
 ##### Pour plus d'historique des versions
 

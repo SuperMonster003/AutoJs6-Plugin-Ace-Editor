@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.4.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-un
 
 ******
 
+# v2.4.0
+
+###### 2026/10/16
+
+* `機能` files.batchRename (Batch Rename プラグイン 1.1.0) の新しいメンバーの補完: preview / presets / importPresets と Async 形式, deleteHistory / clearHistory, ピンイン, 写真メタデータ, プリセットのオプション
+
 # v2.3.0
 
 ###### 2026/10/16
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-un
 ###### 2026/10/15
 
 * `機能` files.batchRename (Batch Rename プラグイン) の補完: plan / apply / undo / history と Async 形式, オプション, プランと結果オブジェクト
-
-# v2.1.0
-
-###### 2026/10/15
-
-* `機能` gallery モジュール (3-Maple Image プラグイン) の補完: pick / view / edit / convert と Async 形式, オプション, 結果オブジェクト, ビューアセッション
 
 ##### その他のリリース履歴
 

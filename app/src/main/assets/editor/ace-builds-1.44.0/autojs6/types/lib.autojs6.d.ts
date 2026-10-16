@@ -1876,13 +1876,23 @@ declare namespace AutoJs6 {
 
     interface Files_batchRename {
         plan(paths: string | string[], options: FilesBatchRename.Options): FilesBatchRename.Plan;
+        preview(item: string | FilesBatchRename.PreviewItem, options: FilesBatchRename.Options): FilesBatchRename.PreviewResult;
+        preview(items: (string | FilesBatchRename.PreviewItem)[], options: FilesBatchRename.Options): FilesBatchRename.PreviewResult[];
         apply(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): FilesBatchRename.Result;
         undo(target: FilesBatchRename.Result | string): FilesBatchRename.UndoResult;
         history(limit?: number): FilesBatchRename.HistoryEntry[];
+        deleteHistory(target: FilesBatchRename.Result | FilesBatchRename.HistoryEntry | string): boolean;
+        clearHistory(options?: FilesBatchRename.ClearHistoryOptions): number;
+        presets(): FilesBatchRename.Preset[];
+        importPresets(json: string | FilesBatchRename.PresetDocument, options?: FilesBatchRename.ImportPresetsOptions): FilesBatchRename.ImportPresetsResult;
         isAvailable(): boolean;
         planAsync(paths: string | string[], options: FilesBatchRename.Options): Promise<FilesBatchRename.Plan>;
+        previewAsync(item: string | FilesBatchRename.PreviewItem, options: FilesBatchRename.Options): Promise<FilesBatchRename.PreviewResult>;
+        previewAsync(items: (string | FilesBatchRename.PreviewItem)[], options: FilesBatchRename.Options): Promise<FilesBatchRename.PreviewResult[]>;
         applyAsync(plan: FilesBatchRename.Plan, options?: FilesBatchRename.ApplyOptions): Promise<FilesBatchRename.Result>;
         undoAsync(target: FilesBatchRename.Result | string): Promise<FilesBatchRename.UndoResult>;
+        presetsAsync(): Promise<FilesBatchRename.Preset[]>;
+        importPresetsAsync(json: string | FilesBatchRename.PresetDocument, options?: FilesBatchRename.ImportPresetsOptions): Promise<FilesBatchRename.ImportPresetsResult>;
         BatchRenameError(message: string, code?: FilesBatchRename.ErrorCode | string): FilesBatchRename.BatchRenameError;
     }
 
