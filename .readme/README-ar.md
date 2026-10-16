@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.2.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.3.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.2.0-un
 
 ******
 
+# v2.3.0
+
+###### 2026/10/16
+
+* `ميزة` إكمال تلقائي لـ plugins.tools, الذي يستدعي الأدوات التي تصفها إضافات AutoJs6 بنفسها: list / providers / call / callAsync, وخيارات الاستدعاء, ومعلومات الأدوات وكائنات النتائج
+
 # v2.2.0
 
 ###### 2026/10/15
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.2.0-un
 ###### 2026/10/15
 
 * `ميزة` الإكمال التلقائي لوحدة gallery (ملحق 3-Maple Image): pick / view / edit / convert وأشكالها Async والخيارات وكائنات النتائج وجلسات العارض
-
-# v2.0.4
-
-###### 2026/10/15
-
-* `إصلاح` تغطية تلميحات التوثيق للاقتراحات عند فتح قائمة الإكمال لأول مرة
 
 ##### لمزيد من سجل الإصدارات
 

@@ -1,7 +1,7 @@
 # Bundled AutoJs6 TypeScript Declarations
 
 - Source package: @sm003/autojs6-dts
-- Version: 4.40.0
+- Version: 4.41.0
 - License: MPL-2.0
 - Source location: local AutoJs6-TypeScript-Declarations checkout at import time.
 - Core files: `aj6-declarations.d.ts`, `aj6-int-*.d.ts` and `aj6-jsx-element-extension.d.ts`.

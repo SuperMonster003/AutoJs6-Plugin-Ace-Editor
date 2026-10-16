@@ -5305,11 +5305,19 @@ declare namespace AutoJs6 {
         extendAll(): void;
         extendAllBut(...names: Plugins.ExtensionName[]): void;
         load(name: string): any;
+        tools: Plugins.Tools;
     }
 
     interface Plugins_extend {
         exclude(...names: ExtensionName[]): void;
         registerModule(module: Record<string, { extendJsBuildInObjects(): void; }>): void;
+    }
+
+    interface Plugins_tools {
+        list(): ToolInfo[];
+        providers(): ToolProviderInfo[];
+        call(name: string, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;
+        callAsync(name: string, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;
     }
 
     interface Power_manager {

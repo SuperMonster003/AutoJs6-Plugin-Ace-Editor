@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.3.0": {
+      "released_date": "2026/10/16",
+      "feature": [
+        "Complétion pour plugins.tools, qui appelle les outils que les plugins AutoJs6 décrivent eux-mêmes: list / providers / call / callAsync, options d'appel, informations sur les outils et objets de résultat"
+      ]
+    },
     "v2.2.0": {
       "released_date": "2026/10/15",
       "feature": [

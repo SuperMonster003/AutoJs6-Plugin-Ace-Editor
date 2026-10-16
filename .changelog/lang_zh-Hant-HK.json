@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.3.0": {
+      "released_date": "2026/10/16",
+      "feature": [
+        "plugins.tools 的智能提示, 用於調用 AutoJs6 插件自我描述的工具, 包括 list / providers / call / callAsync, 調用選項, 工具資訊與結果物件"
+      ]
+    },
     "v2.2.0": {
       "released_date": "2026/10/15",
       "feature": [

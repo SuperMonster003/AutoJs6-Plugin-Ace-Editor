@@ -32827,6 +32827,12 @@
                     "type": "function",
                     "doc": "load(name: string): any;",
                     "signature": "load(name: string): any;"
+                },
+                {
+                    "name": "tools",
+                    "type": "variable",
+                    "doc": "tools: Plugins.Tools;",
+                    "signature": "tools: Plugins.Tools;"
                 }
             ],
             "plugins.extend": [
@@ -32841,6 +32847,32 @@
                     "type": "function",
                     "doc": "registerModule(module: Record<string, { extendJsBuildInObjects(): void; }>): void;",
                     "signature": "registerModule(module: Record<string, { extendJsBuildInObjects(): void; }>): void;"
+                }
+            ],
+            "plugins.tools": [
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(): ToolInfo[];",
+                    "signature": "list(): ToolInfo[];"
+                },
+                {
+                    "name": "providers",
+                    "type": "function",
+                    "doc": "providers(): ToolProviderInfo[];",
+                    "signature": "providers(): ToolProviderInfo[];"
+                },
+                {
+                    "name": "call",
+                    "type": "function",
+                    "doc": "call(name: string, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;",
+                    "signature": "call(name: string, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;"
+                },
+                {
+                    "name": "callAsync",
+                    "type": "function",
+                    "doc": "callAsync(name: string, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;",
+                    "signature": "callAsync(name: string, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;"
                 }
             ],
             "power_manager": [

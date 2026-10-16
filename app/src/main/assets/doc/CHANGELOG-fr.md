@@ -4,6 +4,12 @@
 
 ******
 
+# v2.3.0
+
+###### 2026/10/16
+
+* `Fonctionnalité` Complétion pour plugins.tools, qui appelle les outils que les plugins AutoJs6 décrivent eux-mêmes: list / providers / call / callAsync, options d'appel, informations sur les outils et objets de résultat
+
 # v2.2.0
 
 ###### 2026/10/15
