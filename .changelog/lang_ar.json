@@ -5,6 +5,15 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.11.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "يحفظ Bun screenRecorder ملفات H.264 MP4 مع صوت AAC اختياري من الميكروفون أو التطبيقات أو مزيجهما ولقطات أثناء التسجيل, مع أذونات صوت مستقلة وتنظيف عند الإلغاء (API / TypeScript / Ace)"
+      ],
+      "fix": [
+        "تعرض تلميحات الخصائص الاختيارية أنواعها بدلا من معدلات التعريف فقط"
+      ]
+    },
     "v2.10.0": {
       "released_date": "2026/10/17",
       "feature": [

@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-u
 ### リリース履歴
 
 ******
+
+# v2.11.0
+
+###### 2026/10/17
+
+* `機能` Bun screenRecorder が H.264 MP4 録画, マイク/アプリ再生/ミックスの AAC 音声と録画中の画面取得に対応し, 個別の音声許可とキャンセル時の削除を提供 (API / TypeScript / Ace)
+* `修正` 任意プロパティの補完ポップアップに型が表示されず宣言修飾子だけが表示される問題
 
 # v2.10.0
 
@@ -197,12 +204,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-u
 
 * `機能` Node.js Worker が親ランタイム経由の OpenCC と画像モジュールに対応し, CJS, ESM, 入れ子の Worker と画像バイナリ転送を提供 (API / TypeScript / Ace)
 * `機能` Bun が個別許可による画面キャプチャ, Android の同意, タイムアウト/キャンセル時の解放と再申請に対応 (API / TypeScript / Ace)
-
-# v2.8.0
-
-###### 2026/10/17
-
-* `機能` Node.js と Bun の OpenCC と画像 API の型宣言と補完を追加し, 非同期の戻り値型と実行環境ごとの API を明確化
 
 ##### その他のリリース履歴
 

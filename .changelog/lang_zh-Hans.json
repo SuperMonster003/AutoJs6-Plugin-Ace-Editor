@@ -5,6 +5,15 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.11.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Bun screenRecorder 支持 H.264 MP4 录屏, 可选麦克风/应用播放/混合 AAC 音轨及录制期间截图, 包含独立音频授权和取消清理 (API / TypeScript / Ace)"
+      ],
+      "fix": [
+        "可选属性补全弹窗只显示声明修饰符而缺少类型的问题"
+      ]
+    },
     "v2.10.0": {
       "released_date": "2026/10/17",
       "feature": [

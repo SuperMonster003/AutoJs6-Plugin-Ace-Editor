@@ -4,6 +4,13 @@
 
 ******
 
+# v2.11.0
+
+###### 2026/10/17
+
+* `Feature` Bun screenRecorder writes H.264 MP4 with optional microphone, app-playback or mixed AAC audio and screenshots during recording, with independent audio grants and cancellation cleanup (API / TypeScript / Ace)
+* `Fix` Completion popups for optional properties display their types instead of only declaration modifiers
+
 # v2.10.0
 
 ###### 2026/10/17

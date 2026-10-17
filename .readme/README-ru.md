@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-u
 ### История выпусков
 
 ******
+
+# v2.11.0
+
+###### 2026/10/17
+
+* `Функция` Bun screenRecorder сохраняет H.264 MP4 с выбором AAC микрофона, приложений или микширования и снимками во время записи, отдельными разрешениями звука и очисткой при отмене (API / TypeScript / Ace)
+* `Исправление` Подсказки необязательных свойств отображают тип вместо одних модификаторов объявления
 
 # v2.10.0
 
@@ -197,12 +204,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-u
 
 * `Функция` Worker Node.js поддерживают OpenCC и изображения через родительскую среду, включая CJS, ESM, вложенные Worker и двоичные данные (API / TypeScript / Ace)
 * `Функция` Bun поддерживает захват экрана с отдельным разрешением, согласием Android, очисткой при отмене/тайм-ауте и повторным запросом (API / TypeScript / Ace)
-
-# v2.8.0
-
-###### 2026/10/17
-
-* `Функция` Типы и автодополнение OpenCC и изображений для Node.js и Bun, с типизированными асинхронными результатами и разделением API сред выполнения
 
 ##### Подробнее об истории выпусков
 

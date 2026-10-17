@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.11.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Bun screenRecorder produit des MP4 H.264 avec audio AAC du microphone, des applications ou mixé et captures pendant la vidéo, avec autorisations audio distinctes et nettoyage après annulation (API / TypeScript / Ace)"
+      ],
+      "fix": [
+        "Les infobulles des propriétés facultatives affichent leur type au lieu des seuls modificateurs de déclaration"
+      ]
+    },
     "v2.10.0": {
       "released_date": "2026/10/17",
       "feature": [

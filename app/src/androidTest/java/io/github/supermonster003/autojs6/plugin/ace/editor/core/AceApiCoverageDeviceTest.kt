@@ -45,7 +45,9 @@ class AceApiCoverageDeviceTest {
                 assertTrue(recording.toString(),semanticNames(recording).containsAll(setOf("start","stop","cancel","getStatus")))
                 showPopup(editor,header+"host.screenRecorder.sta","start",evidence,"bun-video-popup","Promise<ScreenRecordingActive>")
                 val movie=query(editor,header+"async function check() {const movie=await host.screenRecorder.stop();if(movie) movie.","",evidence)
-                assertTrue(movie.toString(),semanticNames(movie).containsAll(setOf("durationMs","path","size","width","height","audio")))
+                assertTrue(movie.toString(),semanticNames(movie).containsAll(setOf("durationMs","path","size","width","height","audio","audioSource","audioCodec","audioSampleRate","audioChannels")))
+                val options=header+"/** @type {import('autojs6:bun-host').ScreenRecordingOptions} */\nconst options={};\n"
+                showPopup(editor,options+"options.aud","audio",evidence,"bun-audio-popup","ScreenRecordingAudioSource")
             }
             val inspect = header + "const image = {id:'typed-handle',width:2,height:2};\nasync function inspect() {\n"
             val bytes = query(editor, inspect + "const bytes = await ${receiver}images.toBytes(image);\nbytes.sub", "sub", evidence)

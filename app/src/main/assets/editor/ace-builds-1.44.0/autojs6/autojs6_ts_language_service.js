@@ -1039,7 +1039,8 @@
         }
 
         function signatureForCompletionEntry(entry, offset) {
-            if (!entry || !isFunctionLikeKind(entry.kind) || typeof service.getCompletionEntryDetails !== "function") {
+            if (!entry || (!isFunctionLikeKind(entry.kind) && entry.kind !== "property") ||
+                typeof service.getCompletionEntryDetails !== "function") {
                 return "";
             }
             try {

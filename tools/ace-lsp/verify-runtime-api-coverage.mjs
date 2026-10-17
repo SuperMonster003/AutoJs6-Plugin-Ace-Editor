@@ -33,7 +33,7 @@ for (const [name, hash] of Object.entries(manifest.files)) {
 }
 const staticCompleter = context.AutoJsAceCompleter.createCompleter(context.AutoJsAceIndices);
 let queries = 0;
-function query(service, text, prefix, uri, staticOnly = false) {
+function query(service, text, prefix, uri, staticOnly = false, includeDetails = false) {
     const lines = text.split('\n');
     const position = { row: lines.length - 1, column: lines.at(-1).length };
     const session = { getValue: () => text, getLine: row => lines[row] || '', getLength: () => lines.length,
@@ -43,7 +43,7 @@ function query(service, text, prefix, uri, staticOnly = false) {
     if (staticOnly) staticCompleter.getCompletions(null, session, position, prefix, callback);
     else service.getCompletions(session, position, prefix, callback, text);
     queries++;
-    return items.map(item => item.caption);
+    return includeDetails ? items : items.map(item => item.caption);
 }
 const routes = [
     ['main.js', '"nodejs";\n', 'node'], ['main.js', '/* comment */\n"node, auto";\n', 'node'],
@@ -125,7 +125,15 @@ for (const [file, header, opencc, images] of [
     } else if(file.endsWith('.bun.ts')) {
         for(const name of ['start','stop','cancel','getStatus'])assert(query(current,header+'host.screenRecorder.','',documentUri).includes(name),`Bun recording ${name}`);
         const members=query(current,header+'async function test() {const movie=await host.screenRecorder.stop();if(movie) movie.','',documentUri);
-        for(const name of ['path','size','durationMs','width','height','audio'])assert(members.includes(name),`Movie metadata ${name}`);
+        for(const name of ['path','size','durationMs','width','height','audio','audioSource','audioCodec','audioSampleRate','audioChannels'])assert(members.includes(name),`Movie metadata ${name}`);
+        const options=query(current,header+'declare const options: import("autojs6:bun-host").ScreenRecordingOptions;\noptions.','',documentUri);
+        assert(options.includes('audio'),'Bun recording audio option is missing');
+        const entries=query(current,header+'declare const options: import("autojs6:bun-host").ScreenRecordingOptions;\noptions.aud','aud',documentUri,false,true);
+        const audio=entries.find(item=>item.caption==='audio');
+        assert(audio.docText.includes('ScreenRecordingAudioSource'),'Optional property documentation lost its type');
+        assert(!audio.snippet,'Property completion must not insert a function call');
+        const modes=query(current,header+'const options: import("autojs6:bun-host").ScreenRecordingOptions = {audio: "','',documentUri);
+        for(const mode of ['none','microphone','playback','mixed'])assert(modes.includes(mode),`Bun audio mode ${mode} missing`);
     }
     const conversions = query(current, header + opencc + '.', '', documentUri);
     for (const name of new Set(openccMethods)) assert(conversions.includes(name), `${file}: missing OpenCC method ${name}`);

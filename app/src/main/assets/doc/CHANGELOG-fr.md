@@ -4,6 +4,13 @@
 
 ******
 
+# v2.11.0
+
+###### 2026/10/17
+
+* `Fonctionnalité` Bun screenRecorder produit des MP4 H.264 avec audio AAC du microphone, des applications ou mixé et captures pendant la vidéo, avec autorisations audio distinctes et nettoyage après annulation (API / TypeScript / Ace)
+* `Correctif` Les infobulles des propriétés facultatives affichent leur type au lieu des seuls modificateurs de déclaration
+
 # v2.10.0
 
 ###### 2026/10/17

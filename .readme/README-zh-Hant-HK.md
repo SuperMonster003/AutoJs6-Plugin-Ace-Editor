@@ -171,7 +171,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-u
 ### 發行歷史
 
 ******
+
+# v2.11.0
+
+###### 2026/10/17
+
+* `新增` Bun screenRecorder 支援 H.264 MP4 螢幕錄製, 可選麥克風/應用程式播放/混合 AAC 音軌及錄製期間擷取畫面, 包含獨立音訊授權和取消清理 (API / TypeScript / Ace)
+* `修復` 可選屬性補全彈出視窗只顯示宣告修飾詞而缺少類型的問題
 
 # v2.10.0
 
@@ -197,12 +204,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-u
 
 * `新增` Node.js Worker 支援透過父運行時呼叫 OpenCC 與圖像模組, 包含 CJS, ESM, 巢狀 Worker 和圖像二進制傳輸 (API / TypeScript / Ace)
 * `新增` Bun 支援獨立授權的螢幕擷取, Android 錄製權限申請, 逾時/取消清理和重新申請 (API / TypeScript / Ace)
-
-# v2.8.0
-
-###### 2026/10/17
-
-* `新增` Node.js 和 Bun 的 OpenCC 與圖像類型聲明及補全, 提供準確的非同步回傳類型並區分各運行時 API
 
 ##### 更多發行歷史可參閱
 
