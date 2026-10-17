@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.14.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "Node.js/Bun UI et Compose prennent en charge les interfaces natives, composants de données, états réactifs et événements, avec autorisations distinctes et fermeture automatique"
+      ]
+    },
     "v2.13.0": {
       "released_date": "2026/10/17",
       "feature": [

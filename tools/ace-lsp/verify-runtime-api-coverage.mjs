@@ -74,7 +74,7 @@ for (const [file, directive, runtime] of routes) {
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {
         assert(!query(service, directive + 'selector', 'selector', uri, useStatic).includes('selector'), `${file}: selector leaked`);
-        for (const name of ['speech', '$speech', 'opencc', 'images']) {
+        for (const name of ['speech', '$speech', 'opencc', 'images', 'ui', 'compose']) {
             assert(!query(service, directive + name, name, uri, useStatic).includes(name), `${file}: Rhino global ${name} leaked`);
         }
         assert(!query(service, directive + 'jsox.extendAll();\nMath.su', 'su', uri, useStatic).includes('sum'), `${file}: JSOX leaked`);
@@ -173,6 +173,19 @@ for (const [file, header, opencc, images] of [
     const matMembers=query(current,prefix+`const mat=await ${images}.imread('image.png');\nmat.`,'',documentUri);
     for(const name of ['id','channels','depth','width','height'])assert(matMembers.includes(name),`${file}: Mat ${name}`);
     assert(!matMembers.includes('getNativeObjAddr'),`${file}: native Mat pointer leaked`);
+    const uiHeader = file.endsWith('.bun.ts') ? header + 'const ui=host.ui;const compose=host.compose;\n'
+      : header + (file.endsWith('.mjs') ? 'import ui from "autojs6:ui";import compose from "autojs6:compose";\n' : 'const ui=require("ui"),compose=require("compose");\n');
+    const factories=query(current,uiHeader+'compose.','',documentUri);
+    const composeNames=fs.readFileSync(path.join(assets,'types/autojs6-node/compose.d.ts'),'utf8')
+      .match(/type Compose(?:CatalogNodeName|V2NodeName) = [^;]+/g).flatMap(line=>[...line.matchAll(/"([^"\n]+)"/g)].map(value=>value[1]));
+    for(const name of [...composeNames,'mount','dialog','floaty','state','memo','modifier'])assert(factories.includes(name),`${file}: Compose ${name}`);
+    assert(query(current,uiHeader+'ui.showL','showL',documentUri).includes('showLayout'),`${file}: UI layout`);
+    const uiSession=query(current,uiHeader+'async function f(){const s=await compose.mount(compose.Text({text:"a"}));s.','',documentUri);
+    for(const name of ['root','close','render','flush','setTheme','isClosed'])assert(uiSession.includes(name),`${file}: Compose session ${name}`);
+    const propSource=file.endsWith('.ts') ? 'const props: NonNullable<Parameters<typeof compose.Text>[0]>={};props.'
+      : '/** @type {NonNullable<Parameters<typeof compose.Text>[0]>} */\nconst props={};props.';
+    const fields=query(current,uiHeader+propSource,'',documentUri);
+    for(const name of ['text','color','fontSize','modifier','ref'])assert(fields.includes(name),`${file}: Compose props ${name}`);
     newApiChecks.push({ file, openccMethods: new Set(openccMethods).size, imageMethods: commonImages.length });
     current.dispose();
 }

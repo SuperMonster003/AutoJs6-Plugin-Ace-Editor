@@ -20,6 +20,22 @@ import org.junit.runner.RunWith
 class AceApiCoverageDeviceTest {
 
     @Test
+    fun uiAndComposeUseTypedRuntimePopups() = withEvidence("runtime-ui-compose") { editor, evidence ->
+        for ((kind, header) in listOf(
+            "node" to "\"nodejs\";\nconst compose=require('autojs6:compose'),ui=require('ui');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const compose=host.compose,ui=host.ui;\n")) {
+            val factories=query(editor,header+"compose.","",evidence)
+            assertTrue(factories.toString(),semanticNames(factories).containsAll(setOf("Text","Button","Column","TextField","TimePicker","mount","dialog","floaty","state","modifier","memo")))
+            showPopup(editor,header+"compose.mou","mount",evidence,"$kind-compose-popup","Promise<")
+            showPopup(editor,header+"ui.showL","showLayout",evidence,"$kind-ui-popup","Promise<")
+            val session=query(editor,header+"async function f(){const s=await compose.mount(compose.Text({text:'fixture'}));s.","",evidence)
+            assertTrue(session.toString(),semanticNames(session).containsAll(setOf("close","render","flush","setTheme","root","isClosed")))
+        }
+    }
+
+
+
+    @Test
     fun openccAndImageApisHaveTypedRuntimePopups() = withEvidence("runtime-opencc-image") { editor, evidence ->
         val node = "\"nodejs\";\nconst cc = require('autojs6:opencc');\nconst images = require('autojs6:images');\n"
         val bun = "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host = {};\n"

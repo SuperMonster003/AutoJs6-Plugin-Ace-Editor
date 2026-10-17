@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.13.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.13.0-u
 ### リリース履歴
 
 ******
+
+# v2.14.0
+
+###### 2026/10/18
+
+* `機能` Node.js/Bun UI と Compose がネイティブレイアウト, データコンポーネント, リアクティブ状態, ウィンドウイベント, 個別権限と自動クリーンアップに対応
 
 # v2.13.0
 
@@ -197,13 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.13.0-u
 ###### 2026/10/17
 
 * `機能` Node.js のメインスレッドと Worker が H.264 MP4 画面録画, マイク/再生/ミックス AAC 音声, 録画中のスクリーンショット, Worker の未保存録画の破棄に対応 (API / TypeScript / Ace)
-
-# v2.11.0
-
-###### 2026/10/17
-
-* `機能` Bun screenRecorder が H.264 MP4 録画, マイク/アプリ再生/ミックスの AAC 音声と録画中の画面取得に対応し, 個別の音声許可とキャンセル時の削除を提供 (API / TypeScript / Ace)
-* `修正` 任意プロパティの補完ポップアップに型が表示されず宣言修飾子だけが表示される問題
 
 ##### その他のリリース履歴
 

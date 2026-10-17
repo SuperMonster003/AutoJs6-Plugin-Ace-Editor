@@ -4,6 +4,12 @@
 
 ******
 
+# v2.14.0
+
+###### 2026/10/18
+
+* `Fonctionnalité` Node.js/Bun UI et Compose prennent en charge les interfaces natives, composants de données, états réactifs et événements, avec autorisations distinctes et fermeture automatique
+
 # v2.13.0
 
 ###### 2026/10/17

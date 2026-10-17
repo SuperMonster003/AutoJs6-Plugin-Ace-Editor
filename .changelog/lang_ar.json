@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.14.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "يدعم Node.js/Bun UI و Compose التخطيطات الأصلية ومكونات البيانات والحالة التفاعلية وأحداث النوافذ مع أذونات مستقلة وإغلاق تلقائي للنوافذ"
+      ]
+    },
     "v2.13.0": {
       "released_date": "2026/10/17",
       "feature": [
