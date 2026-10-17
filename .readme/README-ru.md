@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.15.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-u
 ### История выпусков
 
 ******
+
+# v2.15.0
+
+###### 2026/10/18
+
+* `Функция` Node.js/Bun поддерживают дескрипторы View в пределах выполнения, асинхронные фабрики AndroidView, контейнеры XML Compose, очистку Workers и упакованные приложения
 
 # v2.14.0
 
@@ -197,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-u
 * `Функция` Node.js/Bun images поддерживает расширенные фильтры, преобразование цвета, поиск нескольких цветов, окружности, метрики сходства и загрузку URL
 * `Функция` Node.js/Bun images поддерживает SIFT/ORB с координатами сцены, геометрией ObjectFrame и дескрипторами Mat/признаков в пределах выполнения
 * `Функция` Node.js/Bun images поддерживает квантование PNG и сжатие с метриками качества/памяти, двоичными результатами и выводом через файловый дескриптор
-
-# v2.12.0
-
-###### 2026/10/17
-
-* `Функция` Основной поток Node.js и Workers поддерживают запись H.264 MP4 со звуком AAC микрофона, воспроизведения или их смеси, параллельные снимки экрана и удаление несохраненных записей Worker (API / TypeScript / Ace)
 
 ##### Подробнее об истории выпусков
 

@@ -25,7 +25,12 @@ class AceApiCoverageDeviceTest {
             "node" to "\"nodejs\";\nconst compose=require('autojs6:compose'),ui=require('ui');\n",
             "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const compose=host.compose,ui=host.ui;\n")) {
             val factories=query(editor,header+"compose.","",evidence)
-            assertTrue(factories.toString(),semanticNames(factories).containsAll(setOf("Text","Button","Column","TextField","TimePicker","mount","dialog","floaty","state","modifier","memo")))
+            assertTrue(factories.toString(),semanticNames(factories).containsAll(setOf("AndroidView","attach","Text","Button","Column","TextField","TimePicker","mount","dialog","floaty","state","modifier","memo")))
+            showPopup(editor,header+"compose.att","attach",evidence,"$kind-attach-popup","Promise<")
+            showPopup(editor,header+"ui.inf","inflate",evidence,"$kind-inflate-popup","NativeViewHandle>")
+            val native=query(editor,header+"async function f(){const view=await ui.inflate('<text/>');view.","",evidence)
+            assertTrue(native.toString(),semanticNames(native).containsAll(setOf("get","set","findView","dispose","on","once","off","context")))
+            assertFalse(semanticNames(native).contains("getContext"))
             showPopup(editor,header+"compose.mou","mount",evidence,"$kind-compose-popup","Promise<")
             showPopup(editor,header+"ui.showL","showLayout",evidence,"$kind-ui-popup","Promise<")
             val session=query(editor,header+"async function f(){const s=await compose.mount(compose.Text({text:'fixture'}));s.","",evidence)

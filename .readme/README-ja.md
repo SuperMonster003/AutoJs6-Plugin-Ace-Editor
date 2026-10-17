@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.15.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-u
 ### リリース履歴
 
 ******
+
+# v2.15.0
+
+###### 2026/10/18
+
+* `機能` Node.js/Bun が実行に属する View ハンドル, 非同期 AndroidView ファクトリー, XML Compose コンテナへの接続, Worker 終了時の解放とパッケージ化アプリに対応
 
 # v2.14.0
 
@@ -197,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-u
 * `機能` Node.js/Bun images が高度なフィルター, 色空間変換, 複数色検索, 円検出, 類似度指標と URL 読み込みに対応
 * `機能` Node.js/Bun images が SIFT/ORB 特徴抽出と照合, シーン座標と ObjectFrame の幾何情報, 実行単位の Mat/特徴ハンドル管理に対応
 * `機能` Node.js/Bun images が PNG 量子化と圧縮, 品質/メモリ指標, バイナリ結果とファイル記述子への出力に対応
-
-# v2.12.0
-
-###### 2026/10/17
-
-* `機能` Node.js のメインスレッドと Worker が H.264 MP4 画面録画, マイク/再生/ミックス AAC 音声, 録画中のスクリーンショット, Worker の未保存録画の破棄に対応 (API / TypeScript / Ace)
 
 ##### その他のリリース履歴
 

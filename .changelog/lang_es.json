@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.15.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "Node.js/Bun admiten identificadores View de cada ejecución, fábricas AndroidView asíncronas, contenedores XML Compose, limpieza de Workers y aplicaciones empaquetadas"
+      ]
+    },
     "v2.14.0": {
       "released_date": "2026/10/18",
       "feature": [

@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.15.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.15.0
+
+###### 2026/10/18
+
+* `ميزة` يدعم Node.js/Bun مقابض View الخاصة بالتنفيذ ومصانع AndroidView غير المتزامنة وحاويات XML Compose مع تنظيف Worker والتطبيقات المعبأة
 
 # v2.14.0
 
@@ -197,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-u
 * `ميزة` يدعم Node.js/Bun images المرشحات المتقدمة وتحويل الألوان والبحث متعدد الألوان والدوائر ومقاييس التشابه وتحميل URL
 * `ميزة` يدعم Node.js/Bun images استخراج ومطابقة SIFT/ORB مع إحداثيات المشهد وهندسة ObjectFrame ومقابض Mat/الميزات الخاصة بكل تنفيذ
 * `ميزة` يدعم Node.js/Bun images تكميم PNG والضغط مع مقاييس الجودة/الذاكرة والنتائج الثنائية والإخراج عبر واصف ملف
-
-# v2.12.0
-
-###### 2026/10/17
-
-* `ميزة` يدعم خيط Node.js الرئيسي وWorkers تسجيل H.264 MP4 مع صوت AAC من الميكروفون او التشغيل او المزج, ولقطات متزامنة وتنظيف تسجيلات Worker غير المحفوظة (API / TypeScript / Ace)
 
 ##### لمزيد من سجل الإصدارات
 

@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.14.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.15.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -183,6 +183,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v2.15.0
+
+###### 2026/10/18
+
+* `Fonctionnalité` Node.js/Bun prennent en charge les handles View propres à une exécution, les fabriques AndroidView asynchrones, les conteneurs XML Compose, la fermeture des Workers et les applications empaquetées
 
 # v2.14.0
 
@@ -197,12 +203,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 * `Fonctionnalité` Node.js/Bun images prend en charge les filtres avancés, la conversion des couleurs, les recherches multicolores, les cercles, les mesures de similarité et les URL
 * `Fonctionnalité` Node.js/Bun images prend en charge SIFT/ORB avec coordonnées de scène, géométrie ObjectFrame et handles Mat/caractéristiques propres à chaque exécution
 * `Fonctionnalité` Node.js/Bun images prend en charge la quantification PNG et la compression avec mesures de qualité/mémoire, résultats binaires et sortie par descripteur de fichier
-
-# v2.12.0
-
-###### 2026/10/17
-
-* `Fonctionnalité` Le thread principal Node.js et les Workers prennent en charge la capture H.264 MP4 avec audio AAC du microphone, de lecture ou mixte, les captures simultanees et la suppression des enregistrements Worker non sauvegardes (API / TypeScript / Ace)
 
 ##### Pour plus d'historique des versions
 

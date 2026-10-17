@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v2.15.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "Node.js/Bun support execution-owned View handles, asynchronous AndroidView factories and XML Compose container attachments, with Worker cleanup and packaged application support"
+      ]
+    },
     "v2.14.0": {
       "released_date": "2026/10/18",
       "feature": [

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.15.0
+
+###### 2026/10/18
+
+* `Feature` Node.js/Bun support execution-owned View handles, asynchronous AndroidView factories and XML Compose container attachments, with Worker cleanup and packaged application support
+
 # v2.14.0
 
 ###### 2026/10/18

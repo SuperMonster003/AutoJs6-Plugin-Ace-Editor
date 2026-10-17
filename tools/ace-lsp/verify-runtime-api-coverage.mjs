@@ -178,7 +178,14 @@ for (const [file, header, opencc, images] of [
     const factories=query(current,uiHeader+'compose.','',documentUri);
     const composeNames=fs.readFileSync(path.join(assets,'types/autojs6-node/compose.d.ts'),'utf8')
       .match(/type Compose(?:CatalogNodeName|V2NodeName) = [^;]+/g).flatMap(line=>[...line.matchAll(/"([^"\n]+)"/g)].map(value=>value[1]));
-    for(const name of [...composeNames,'mount','dialog','floaty','state','memo','modifier'])assert(factories.includes(name),`${file}: Compose ${name}`);
+    for(const name of [...composeNames,'AndroidView','attach','mount','dialog','floaty','state','memo','modifier'])assert(factories.includes(name),`${file}: Compose ${name}`);
+    const uiMembers=query(current,uiHeader+'ui.','',documentUri);
+    for(const name of ['inflate','createView','context','findView','view'])assert(uiMembers.includes(name),`${file}: UI ${name}`);
+    const nativeView=query(current,uiHeader+'async function f(){const view=await ui.inflate("<text/>");view.','',documentUri);
+    for(const name of ['get','set','findView','dispose','on','once','off','context'])assert(nativeView.includes(name),`${file}: native View ${name}`);
+    assert(!nativeView.includes('getContext'),`${file}: Java View must not leak`);
+    const nativeContext=query(current,uiHeader+'async function f(){const context=await ui.context();context.','',documentUri);
+    for(const name of ['createView','inflate','packageName','runtimeVersionCode'])assert(nativeContext.includes(name),`${file}: native context ${name}`);
     assert(query(current,uiHeader+'ui.showL','showL',documentUri).includes('showLayout'),`${file}: UI layout`);
     const uiSession=query(current,uiHeader+'async function f(){const s=await compose.mount(compose.Text({text:"a"}));s.','',documentUri);
     for(const name of ['root','close','render','flush','setTheme','isClosed'])assert(uiSession.includes(name),`${file}: Compose session ${name}`);
