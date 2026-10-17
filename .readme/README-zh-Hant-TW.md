@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-un
 ### 發行歷史
 
 ******
+
+# v2.8.0
+
+###### 2026/10/17
+
+* `新增` Node.js 和 Bun 的 OpenCC 與影像型別宣告及補全, 提供準確的非同步回傳型別並區分各執行環境 API
 
 # v2.7.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-un
 
 * `新增` 依執行階段隔離 Node.js 和 Bun 智慧提示, 避免混入 Rhino 全域與 JSOX 原型擴充
 * `修復` 長補全簽章在螢幕內自動換行, 無需橫向拖曳即可查看 Promise 回傳型別, 保持程式碼與候選清單可見
-
-# v2.5.0
-
-###### 2026/10/16
-
-* `新增` plugins.tools 目錄輸出的補全與提示: ToolOutput.kind, 呼叫選項 outputs 的目錄路徑, 以及呼叫結果 outputs 項目中的 kind, files, conflicts 與 conflictCount
 
 ##### 更多發行歷史可參閱
 

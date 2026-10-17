@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.8.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Node.js 和 Bun 的 OpenCC 與圖像類型聲明及補全, 提供準確的非同步回傳類型並區分各運行時 API"
+      ]
+    },
     "v2.7.0": {
       "released_date": "2026/10/17",
       "feature": [

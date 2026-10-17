@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-un
 ### История выпусков
 
 ******
+
+# v2.8.0
+
+###### 2026/10/17
+
+* `Функция` Типы и автодополнение OpenCC и изображений для Node.js и Bun, с типизированными асинхронными результатами и разделением API сред выполнения
 
 # v2.7.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-un
 
 * `Функция` Дополнение Node.js и Bun с учетом среды, изоляцией объявлений без глобальных объектов Rhino и расширений прототипов JSOX
 * `Исправление` Длинные сигнатуры переносятся по ширине экрана: тип Promise виден без перекрытия кода и списка
-
-# v2.5.0
-
-###### 2026/10/16
-
-* `Функция` Автодополнение и подсказки для вывода в папку plugins.tools: ToolOutput.kind, папки в параметре вызова outputs, а также kind, files, conflicts и conflictCount в outputs результата вызова
 
 ##### Подробнее об истории выпусков
 

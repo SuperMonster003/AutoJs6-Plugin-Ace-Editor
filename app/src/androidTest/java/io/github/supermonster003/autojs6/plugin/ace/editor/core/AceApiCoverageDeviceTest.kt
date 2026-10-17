@@ -20,6 +20,35 @@ import org.junit.runner.RunWith
 class AceApiCoverageDeviceTest {
 
     @Test
+    fun openccAndImageApisHaveTypedRuntimePopups() = withEvidence("runtime-opencc-image") { editor, evidence ->
+        val node = "\"nodejs\";\nconst cc = require('autojs6:opencc');\nconst images = require('images');\n"
+        val bun = "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host = {};\n"
+        val conversions = setOf("convert", "hk2s", "hk2t", "jp2t", "s2hk", "s2t", "s2tw", "s2twp", "t2hk", "t2s",
+            "t2tw", "t2jp", "tw2s", "tw2t", "tw2sp", "s2twi", "twi2s", "s2jp", "t2twi", "hk2tw", "hk2twi", "hk2jp",
+            "tw2hk", "tw2twi", "tw2jp", "twi2t", "twi2hk", "twi2tw", "twi2jp", "jp2s", "jp2hk", "jp2tw", "jp2twi")
+        val imageMethods = setOf("fromBase64", "fromBytes", "toBase64", "toBytes", "pixel", "readPixels", "copy", "scale",
+            "rotate", "flip", "blur", "gaussianBlur", "medianBlur", "invert", "detectsColor", "findAllPointsForColor")
+        for ((header, receiver, runtime) in listOf(Triple(node, "", "node"), Triple(bun, "host.", "bun"))) {
+            val opencc = if (runtime == "node") "cc" else "host.opencc"
+            val conversionsResult = query(editor, header + "$opencc.", "", evidence)
+            assertTrue("Missing OpenCC conversions: $conversionsResult", semanticNames(conversionsResult).containsAll(conversions))
+            val imagesResult = query(editor, header + receiver + "images.", "", evidence)
+            assertTrue("Missing image operations: $imagesResult", semanticNames(imagesResult).containsAll(imageMethods))
+            assertFalse("Unimplemented Rhino feature extraction leaked", semanticNames(imagesResult).contains("detectAndComputeFeatures"))
+            assertRuntimeDeclarations(imagesResult, runtime)
+            showPopup(editor, header + "$opencc.con", "convert", evidence, "$runtime-opencc-popup", "Promise<string>")
+            showPopup(editor, header + receiver + "images.readPix", "readPixels", evidence, "$runtime-image-popup", "Promise<")
+            val inspect = header + "const image = {id:'typed-handle',width:2,height:2};\nasync function inspect() {\n"
+            val bytes = query(editor, inspect + "const bytes = await ${receiver}images.toBytes(image);\nbytes.sub", "sub", evidence)
+            assertTrue("Byte result has no Uint8Array methods: $bytes", semanticNames(bytes).contains("subarray"))
+            val pixels = query(editor, inspect + "const pixels = await ${receiver}images.readPixels(image);\npixels.data.sli", "sli", evidence)
+            assertTrue("Pixel result has no typed array data: $pixels", semanticNames(pixels).contains("slice"))
+            val leaked = query(editor, (if (runtime == "node") "\"nodejs\";\n" else "\"bun\";\n") + "images", "images", evidence)
+            assertFalse("Rhino images global leaked", semanticNames(leaked).contains("images"))
+        }
+    }
+
+    @Test
     fun runtimeModulesUseIsolatedDeclarationsAndRealPopups() = withEvidence("runtime-api") { editor, evidence ->
         val node = "\"nodejs\";\n"
         for ((body, expected) in listOf(
@@ -191,7 +220,7 @@ class AceApiCoverageDeviceTest {
         assertTrue("Real TypeScript service is not ready: $state", state.getJSONObject("tsService").getBoolean("ready"))
     }
 
-    private fun showPopup(editor: AceDeviceTestHarness, text: String, expected: String, evidence: JSONObject, name: String) {
+    private fun showPopup(editor: AceDeviceTestHarness, text: String, expected: String, evidence: JSONObject, name: String, expectedType: String? = null) {
         val prefix = text.substringAfterLast('.')
         val result = query(editor, text, prefix, evidence)
         assertTrue("Popup test lacks the expected semantic candidate: $result", semanticNames(result).contains(expected))
@@ -233,6 +262,9 @@ class AceApiCoverageDeviceTest {
                 documentation.getInt("scrollWidth") <= documentation.getInt("clientWidth") + 1)
             if (name.endsWith("coordinate-popup")) {
                 assertTrue("Coordinate return type is missing: $documentation", documentation.getString("text").contains("Promise<number>"))
+            }
+            if (expectedType != null) {
+                assertTrue("Expected return type is missing: $documentation", documentation.getString("text").contains(expectedType))
             }
         }
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()

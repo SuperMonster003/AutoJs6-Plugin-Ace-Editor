@@ -4,6 +4,12 @@
 
 ******
 
+# v2.8.0
+
+###### 2026/10/17
+
+* `Fonctionnalité` Déclarations et complétion OpenCC et images pour Node.js et Bun, avec résultats asynchrones typés et API distinctes par environnement
+
 # v2.7.0
 
 ###### 2026/10/17

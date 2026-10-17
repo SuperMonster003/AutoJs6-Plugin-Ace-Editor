@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v2.8.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Node.js and Bun OpenCC and image declarations and completion, with typed asynchronous results and separate runtime API surfaces"
+      ]
+    },
     "v2.7.0": {
       "released_date": "2026/10/17",
       "feature": [

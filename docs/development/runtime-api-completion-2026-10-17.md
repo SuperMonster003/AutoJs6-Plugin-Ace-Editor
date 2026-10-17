@@ -65,3 +65,23 @@ queries and 112 runtime-isolation queries. The speech additions were validated a
 the source contract and declaration/completion fixtures; this does not claim new audio
 model or recognition execution tests. The three speech completion cases and runtime
 isolation assertions are also included in `AceApiCoverageDeviceTest` for subsequent runs.
+
+The final 2.7.0/build 282 APK passed all three device methods on the same Sony XQ-DQ72
+in 36.613 seconds, including the new Speech queries, Node/Bun isolation and wrapped
+long signatures. The coordinating task retains `ace-2.7-acceptance.log`.
+
+## OpenCC and common images
+
+The 2.8.0 development build includes all 33 OpenCC members and typed image results
+from the plugin-owned Node and Bun declarations. The desktop runtime suite passes
+174 queries across 11 routing cases, including CJS, ESM and typed Bun completion.
+The real device suite passes all four methods on the same Sony API 33 device in
+47.029 seconds. It checks every OpenCC member, 16 common image entry points,
+Uint8Array methods and pixel array inference, isolated Rhino globals, and the
+painted OpenCC/readPixels popups. The existing default Rhino and JSOX cases pass
+in that same run. Node OpenCC and Bun image popup screenshots were visually
+reviewed: signatures wrap fully without obscuring candidates or the cursor row.
+
+The coordinating host retains the log and `runtime-opencc-image.json` under its
+ignored `.bak/opencc-images-20261017` evidence directory. This is development APK
+acceptance on one physical device, not a publication or a full Rhino image parity claim.

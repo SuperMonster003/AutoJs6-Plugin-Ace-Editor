@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.8.0
+
+###### 2026/10/17
+
+* `Función` Declaraciones y autocompletado de OpenCC e imágenes para Node.js y Bun, con resultados asíncronos tipados y API separadas por entorno
 
 # v2.7.0
 
@@ -196,12 +202,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 * `Función` Autocompletado de Node.js y Bun segun el entorno, con declaraciones aisladas sin globales de Rhino ni extensiones de prototipos JSOX
 * `Corrección` Las firmas largas se ajustan a la pantalla para mostrar el tipo Promise sin ocultar el código ni la lista
-
-# v2.5.0
-
-###### 2026/10/16
-
-* `Función` Autocompletado e indicaciones para las salidas de carpeta de plugins.tools: ToolOutput.kind, carpetas en la opción de llamada outputs, y kind, files, conflicts y conflictCount en los outputs del resultado de una llamada
 
 ##### Para ver más historial de versiones
 

@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-un
 ### 릴리스 기록
 
 ******
+
+# v2.8.0
+
+###### 2026/10/17
+
+* `기능` Node.js와 Bun의 OpenCC 및 이미지 형식 선언과 자동 완성, 정확한 비동기 반환 형식 및 런타임별 API 구분
 
 # v2.7.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-un
 
 * `기능` 런타임별 Node.js와 Bun 자동 완성 및 선언 분리로 Rhino 전역과 JSOX 프로토타입 확장 혼입 방지
 * `수정` 긴 자동 완성 서명을 화면 안에서 줄 바꿈하여 코드와 후보 목록을 가리지 않고 Promise 반환 형식 표시
-
-# v2.5.0
-
-###### 2026/10/16
-
-* `기능` plugins.tools 디렉터리 출력의 자동 완성과 힌트: ToolOutput.kind, 호출 옵션 outputs 의 폴더, 호출 결과 outputs 항목의 kind, files, conflicts, conflictCount
 
 ##### 더 많은 릴리스 기록
 

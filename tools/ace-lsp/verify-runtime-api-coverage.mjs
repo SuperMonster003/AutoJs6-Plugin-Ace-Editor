@@ -74,8 +74,8 @@ for (const [file, directive, runtime] of routes) {
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {
         assert(!query(service, directive + 'selector', 'selector', uri, useStatic).includes('selector'), `${file}: selector leaked`);
-        for (const name of ['speech', '$speech']) {
-            assert(!query(service, directive + name, name, uri, useStatic).includes(name), `${file}: Rhino speech leaked`);
+        for (const name of ['speech', '$speech', 'opencc', 'images']) {
+            assert(!query(service, directive + name, name, uri, useStatic).includes(name), `${file}: Rhino global ${name} leaked`);
         }
         assert(!query(service, directive + 'jsox.extendAll();\nMath.su', 'su', uri, useStatic).includes('sum'), `${file}: JSOX leaked`);
     }
@@ -100,5 +100,35 @@ for (const [source, prefix, expected] of [
 ]) assert(query(service, source, prefix, uri).includes(expected), `Missing ${expected}: ${source}`);
 assert.equal(service.getState().apiRuntime, 'rhino', 'Removing a runtime directive must restore Rhino');
 service.dispose();
+const openccMethods = fs.readFileSync(path.join(assets, 'types/autojs6/aj6-int-opencc.d.ts'), 'utf8')
+    .match(/\b(?:convert|[a-z]+2[a-z]+)\(/g).map(name => name.slice(0, -1));
+const commonImages = ['fromBase64', 'fromBytes', 'toBase64', 'toBytes', 'pixel', 'readPixels', 'copy', 'scale',
+    'rotate', 'flip', 'blur', 'gaussianBlur', 'medianBlur', 'invert', 'detectsColor', 'findAllPointsForColor'];
+const newApiChecks = [];
+for (const [file, header, opencc, images] of [
+    ['api.cjs', 'const cc = require("autojs6:opencc");\nconst images = require("images");\n', 'cc', 'images'],
+    ['api.mjs', 'import cc from "autojs6:opencc";\nimport images from "images";\n', 'cc', 'images'],
+    ['api.bun.ts', 'declare const host: import("autojs6:bun-host").HostClient;\n', 'host.opencc', 'host.images'],
+]) {
+    const documentUri = `file:///autojs6/editor/${file}`;
+    const current = context.AutoJsAceTsLanguageService.create({ documentUri, libraryTextByUri: texts });
+    const conversions = query(current, header + opencc + '.', '', documentUri);
+    for (const name of new Set(openccMethods)) assert(conversions.includes(name), `${file}: missing OpenCC method ${name}`);
+    const imageNames = query(current, header + images + '.', '', documentUri);
+    for (const name of commonImages) assert(imageNames.includes(name), `${file}: missing image method ${name}`);
+    assert(!imageNames.includes('detectAndComputeFeatures'), `${file}: unimplemented Rhino feature API leaked`);
+    const prefix = header + 'const handle = {id:"typed-handle",width:2,height:2};\nasync function inspect() {\n';
+    assert(query(current, prefix + `const bytes = await ${images}.toBytes(handle);\nbytes.sub`, 'sub', documentUri).includes('subarray'),
+        `${file}: image bytes lost Uint8Array methods`);
+    assert(query(current, prefix + `const pixels = await ${images}.readPixels(handle);\npixels.data.sli`, 'sli', documentUri).includes('slice'),
+        `${file}: pixel data lost array methods`);
+    const pixelBytes = query(current, prefix + `const pixels = await ${images}.readPixels(handle);\npixels.data.sub`, 'sub', documentUri);
+    assert(!pixelBytes.includes('subarray'), `${file}: ARGB32 number arrays were confused with byte arrays`);
+    const handles = query(current, prefix + `const copy = await ${images}.copy(handle);\ncopy.`, '', documentUri);
+    assert(handles.includes('id') && handles.includes('width') && handles.includes('height'), `${file}: untyped image handle`);
+    assert(!handles.includes('getBitmap') && !handles.includes('getMat'), `${file}: Rhino ImageWrapper methods leaked`);
+    newApiChecks.push({ file, openccMethods: new Set(openccMethods).size, imageMethods: commonImages.length });
+    current.dispose();
+}
 console.log(JSON.stringify({ typescript: ts.version, routeCases: routes.length, queries,
-    isolatedRuntimeDeclarations: true, copiedDeclarations: Object.keys(manifest.files).length }, null, 2));
+    isolatedRuntimeDeclarations: true, copiedDeclarations: Object.keys(manifest.files).length, newApiChecks }, null, 2));

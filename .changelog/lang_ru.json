@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.8.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Типы и автодополнение OpenCC и изображений для Node.js и Bun, с типизированными асинхронными результатами и разделением API сред выполнения"
+      ]
+    },
     "v2.7.0": {
       "released_date": "2026/10/17",
       "feature": [

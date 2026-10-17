@@ -4,6 +4,12 @@
 
 ******
 
+# v2.8.0
+
+###### 2026/10/17
+
+* `Feature` Node.js and Bun OpenCC and image declarations and completion, with typed asynchronous results and separate runtime API surfaces
+
 # v2.7.0
 
 ###### 2026/10/17

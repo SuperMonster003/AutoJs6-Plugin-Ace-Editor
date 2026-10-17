@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.8.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "تعريفات الأنواع والإكمال لواجهات OpenCC والصور في Node.js و Bun, مع نتائج غير متزامنة محددة الأنواع وواجهات منفصلة لكل بيئة"
+      ]
+    },
     "v2.7.0": {
       "released_date": "2026/10/17",
       "feature": [

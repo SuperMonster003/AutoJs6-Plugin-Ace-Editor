@@ -4,6 +4,12 @@
 
 ******
 
+# v2.8.0
+
+###### 2026/10/17
+
+* `Función` Declaraciones y autocompletado de OpenCC e imágenes para Node.js y Bun, con resultados asíncronos tipados y API separadas por entorno
+
 # v2.7.0
 
 ###### 2026/10/17
