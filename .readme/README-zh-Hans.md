@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.12.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-u
 ### 发行历史
 
 ******
+
+# v2.12.0
+
+###### 2026/10/17
+
+* `新增` Node.js 主线程与 Worker 支持 H.264 MP4 录屏, 麦克风/播放/混合 AAC 音频, 录制期间并行截图及 Worker 未保存录屏清理 (API / TypeScript / Ace)
 
 # v2.11.0
 
@@ -197,13 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-u
 
 * `新增` Node.js Worker 支持 pinyin, pinyin4j, 控制台窗口和坐标换算, 共享父执行状态并保留原生输出流 (API / TypeScript / Ace)
 * `新增` Bun screenRecorder 支持无声 H.264 MP4 录屏文件, 独立授权, 固定输出尺寸, 显式收尾及取消清理 (API / TypeScript / Ace)
-
-# v2.9.0
-
-###### 2026/10/17
-
-* `新增` Node.js Worker 支持通过父运行时调用 OpenCC 与图像模块, 包含 CJS, ESM, 嵌套 Worker 和图像二进制传输 (API / TypeScript / Ace)
-* `新增` Bun 支持独立授权的屏幕截图, Android 录屏权限申请, 超时/取消清理和重新申请 (API / TypeScript / Ace)
 
 ##### 更多发行历史可参阅
 

@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.12.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.12.0
+
+###### 2026/10/17
+
+* `ميزة` يدعم خيط Node.js الرئيسي وWorkers تسجيل H.264 MP4 مع صوت AAC من الميكروفون او التشغيل او المزج, ولقطات متزامنة وتنظيف تسجيلات Worker غير المحفوظة (API / TypeScript / Ace)
 
 # v2.11.0
 
@@ -197,13 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-u
 
 * `ميزة` تدعم Workers في Node.js وحدات pinyin و pinyin4j والتحكم في وحدة التحكم وتحويل الإحداثيات مع مشاركة حالة التنفيذ والإبقاء على تدفقات الإخراج الأصلية (API / TypeScript / Ace)
 * `ميزة` يسجل Bun screenRecorder الشاشة في ملفات H.264 MP4 بدون صوت مع إذن مستقل وأبعاد ثابتة وإنهاء صريح وتنظيف عند الإلغاء (API / TypeScript / Ace)
-
-# v2.9.0
-
-###### 2026/10/17
-
-* `ميزة` تدعم Workers في Node.js وحدات OpenCC والصور عبر بيئة التشغيل الأم, مع CJS و ESM والتداخل ونقل البيانات الثنائية (API / TypeScript / Ace)
-* `ميزة` يدعم Bun التقاط الشاشة بإذن مستقل وموافقة Android والتنظيف عند الإلغاء أو انتهاء المهلة وإعادة الطلب (API / TypeScript / Ace)
 
 ##### لمزيد من سجل الإصدارات
 

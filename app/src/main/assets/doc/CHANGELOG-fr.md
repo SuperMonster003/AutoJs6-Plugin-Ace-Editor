@@ -4,6 +4,12 @@
 
 ******
 
+# v2.12.0
+
+###### 2026/10/17
+
+* `Fonctionnalité` Le thread principal Node.js et les Workers prennent en charge la capture H.264 MP4 avec audio AAC du microphone, de lecture ou mixte, les captures simultanees et la suppression des enregistrements Worker non sauvegardes (API / TypeScript / Ace)
+
 # v2.11.0
 
 ###### 2026/10/17

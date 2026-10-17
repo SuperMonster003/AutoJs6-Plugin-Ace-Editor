@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.12.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Node.js 主线程与 Worker 支持 H.264 MP4 录屏, 麦克风/播放/混合 AAC 音频, 录制期间并行截图及 Worker 未保存录屏清理 (API / TypeScript / Ace)"
+      ]
+    },
     "v2.11.0": {
       "released_date": "2026/10/17",
       "feature": [

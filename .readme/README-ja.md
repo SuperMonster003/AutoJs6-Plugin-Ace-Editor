@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.12.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-u
 ### リリース履歴
 
 ******
+
+# v2.12.0
+
+###### 2026/10/17
+
+* `機能` Node.js のメインスレッドと Worker が H.264 MP4 画面録画, マイク/再生/ミックス AAC 音声, 録画中のスクリーンショット, Worker の未保存録画の破棄に対応 (API / TypeScript / Ace)
 
 # v2.11.0
 
@@ -197,13 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-u
 
 * `機能` Node.js Worker が pinyin, pinyin4j, コンソール操作と座標変換に対応し, 親の実行状態を共有しながらネイティブ出力を維持 (API / TypeScript / Ace)
 * `機能` Bun screenRecorder が個別許可, 固定寸法, 明示的な終了処理とキャンセル時の削除を備えた音声なし H.264 MP4 画面録画に対応 (API / TypeScript / Ace)
-
-# v2.9.0
-
-###### 2026/10/17
-
-* `機能` Node.js Worker が親ランタイム経由の OpenCC と画像モジュールに対応し, CJS, ESM, 入れ子の Worker と画像バイナリ転送を提供 (API / TypeScript / Ace)
-* `機能` Bun が個別許可による画面キャプチャ, Android の同意, タイムアウト/キャンセル時の解放と再申請に対応 (API / TypeScript / Ace)
 
 ##### その他のリリース履歴
 

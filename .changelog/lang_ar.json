@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.12.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "يدعم خيط Node.js الرئيسي وWorkers تسجيل H.264 MP4 مع صوت AAC من الميكروفون او التشغيل او المزج, ولقطات متزامنة وتنظيف تسجيلات Worker غير المحفوظة (API / TypeScript / Ace)"
+      ]
+    },
     "v2.11.0": {
       "released_date": "2026/10/17",
       "feature": [

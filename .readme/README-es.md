@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.11.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.12.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.12.0
+
+###### 2026/10/17
+
+* `Función` El hilo principal de Node.js y los Workers admiten grabacion H.264 MP4 con audio AAC de microfono, reproduccion o mixto, capturas simultaneas y limpieza de grabaciones Worker sin guardar (API / TypeScript / Ace)
 
 # v2.11.0
 
@@ -197,13 +203,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 * `Función` Los Workers de Node.js ofrecen pinyin, pinyin4j, controles de consola y coordenadas, compartiendo el estado padre y conservando los flujos nativos (API / TypeScript / Ace)
 * `Función` Bun screenRecorder graba vídeos de pantalla H.264 MP4 sin audio con permiso independiente, dimensiones fijas, finalización explícita y limpieza al cancelar (API / TypeScript / Ace)
-
-# v2.9.0
-
-###### 2026/10/17
-
-* `Función` Los Workers de Node.js usan OpenCC e imágenes mediante el runtime padre, con CJS, ESM, Workers anidados y transferencia binaria (API / TypeScript / Ace)
-* `Función` Bun ofrece captura de pantalla con permiso independiente, consentimiento de Android, limpieza al cancelar o expirar y nueva solicitud (API / TypeScript / Ace)
 
 ##### Para ver más historial de versiones
 

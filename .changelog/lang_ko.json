@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v2.12.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Node.js 메인 스레드와 Worker에서 H.264 MP4 화면 녹화, 마이크/재생/혼합 AAC 오디오, 녹화 중 동시 스크린샷 및 Worker의 미저장 녹화 정리 지원 (API / TypeScript / Ace)"
+      ]
+    },
     "v2.11.0": {
       "released_date": "2026/10/17",
       "feature": [

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.12.0
+
+###### 2026/10/17
+
+* `Función` El hilo principal de Node.js y los Workers admiten grabacion H.264 MP4 con audio AAC de microfono, reproduccion o mixto, capturas simultaneas y limpieza de grabaciones Worker sin guardar (API / TypeScript / Ace)
+
 # v2.11.0
 
 ###### 2026/10/17

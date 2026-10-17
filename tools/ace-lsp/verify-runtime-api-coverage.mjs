@@ -84,6 +84,17 @@ for (const [file, directive, runtime] of routes) {
 const uri = 'file:///autojs6/editor/main.js';
 const service = context.AutoJsAceTsLanguageService.create({ documentUri: uri, libraryTextByUri: texts });
 for (const [source, prefix, expected] of [
+    ["\"nodejs\";\nconst api = require(\"screen_recorder\");\napi.st", "st", "start"],
+    ["\"nodejs\";\nconst api = require(\"screen_recorder\");\napi.st", "st", "stop"],
+    ["\"nodejs\";\nconst api = require(\"screen_recorder\");\napi.ca", "ca", "cancel"],
+    ["\"nodejs\";\nconst api = require(\"screen_recorder\");\napi.ge", "ge", "getStatus"],
+    ["\"nodejs\";\nimport api from \"autojs6:screen_recorder\";\napi.st", "st", "start"],
+    ["\"nodejs\";\nimport api from \"autojs6:screen_recorder\";\napi.st", "st", "stop"],
+    ["\"nodejs\";\nimport api from \"autojs6:screen_recorder\";\napi.ca", "ca", "cancel"],
+    ["\"nodejs\";\nimport api from \"autojs6:screen_recorder\";\napi.ge", "ge", "getStatus"],
+    ["\"nodejs\";\nconst projection=require(\"autojs6:media_projection\");\nasync function f(){const cap=await projection.requestScreenCapture();cap.ne", "ne", "nextImage"],
+    ["\"nodejs\";\nimport recorder from \"autojs6:recorder\";\nrecorder.sta", "sta", "start"],
+    ["\"nodejs\";\nconst screen=require(\"screen_recorder\");\nasync function f(){const movie=await screen.stop();if(movie) movie.audioS", "audioS", "audioSource"],
     ['"nodejs";\nconst p = require("pinyin");\np.si', 'si', 'simple'],
     ['"nodejs";\nconst p = require("pinyin4j");\np.re', 're', 'readings'],
     ['"nodejs";\nconsole.setTi', 'setTi', 'setTitle'],

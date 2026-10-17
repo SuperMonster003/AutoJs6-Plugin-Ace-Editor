@@ -49,6 +49,16 @@ class AceApiCoverageDeviceTest {
                 val options=header+"/** @type {import('autojs6:bun-host').ScreenRecordingOptions} */\nconst options={};\n"
                 showPopup(editor,options+"options.aud","audio",evidence,"bun-audio-popup","ScreenRecordingAudioSource")
             }
+            if (runtime == "node") {
+                val recordingHeader=header+"const screen=require('autojs6:screen_recorder');\n"
+                val recording=query(editor,recordingHeader+"screen.","",evidence)
+                assertTrue(recording.toString(),semanticNames(recording).containsAll(setOf("start","stop","cancel","getStatus")))
+                showPopup(editor,recordingHeader+"screen.sta","start",evidence,"node-video-popup","ActiveRecording>")
+                val options=header+"/** @type {import('screen_recorder').StartOptions} */\nconst options={};\n"
+                showPopup(editor,options+"options.aud","audio",evidence,"node-audio-popup","AudioSource")
+                val movie=query(editor,recordingHeader+"async function f(){const movie=await screen.stop();if(movie) movie.","",evidence)
+                assertTrue(movie.toString(),semanticNames(movie).containsAll(setOf("durationMs","audioSource","audioCodec","audioSampleRate","audioChannels")))
+            }
             val inspect = header + "const image = {id:'typed-handle',width:2,height:2};\nasync function inspect() {\n"
             val bytes = query(editor, inspect + "const bytes = await ${receiver}images.toBytes(image);\nbytes.sub", "sub", evidence)
             assertTrue("Byte result has no Uint8Array methods: $bytes", semanticNames(bytes).contains("subarray"))
