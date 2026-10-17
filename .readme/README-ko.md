@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ### 릴리스 기록
 
 ******
+
+# v2.10.0
+
+###### 2026/10/17
+
+* `기능` Node.js Worker에서 pinyin, pinyin4j, 콘솔 창 및 좌표 변환 지원, 부모 실행 상태 공유와 네이티브 출력 스트림 유지 (API / TypeScript / Ace)
+* `기능` Bun screenRecorder에서 별도 허용, 고정 출력 크기, 명시적 마무리 및 취소 정리를 갖춘 무음 H.264 MP4 화면 녹화 지원 (API / TypeScript / Ace)
 
 # v2.9.0
 
@@ -196,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ###### 2026/10/17
 
 * `기능` Node.js와 Bun의 OpenCC 및 이미지 형식 선언과 자동 완성, 정확한 비동기 반환 형식 및 런타임별 API 구분
-
-# v2.7.0
-
-###### 2026/10/17
-
-* `기능` Rhino speech 및 speech.models 선언과 자동 완성. 세션, 이벤트, 모델 관리 및 형식화된 결과를 지원하고 Node.js/Bun과 분리
 
 ##### 더 많은 릴리스 기록
 

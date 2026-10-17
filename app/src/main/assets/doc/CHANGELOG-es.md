@@ -4,6 +4,13 @@
 
 ******
 
+# v2.10.0
+
+###### 2026/10/17
+
+* `Función` Los Workers de Node.js ofrecen pinyin, pinyin4j, controles de consola y coordenadas, compartiendo el estado padre y conservando los flujos nativos (API / TypeScript / Ace)
+* `Función` Bun screenRecorder graba vídeos de pantalla H.264 MP4 sin audio con permiso independiente, dimensiones fijas, finalización explícita y limpieza al cancelar (API / TypeScript / Ace)
+
 # v2.9.0
 
 ###### 2026/10/17

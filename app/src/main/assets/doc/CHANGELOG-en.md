@@ -4,6 +4,13 @@
 
 ******
 
+# v2.10.0
+
+###### 2026/10/17
+
+* `Feature` Node.js Workers support pinyin, pinyin4j, console controls and coordinate conversion, sharing the parent execution while retaining native output streams (API / TypeScript / Ace)
+* `Feature` Bun screenRecorder records silent H.264 MP4 files with a separate opt-in grant, fixed output dimensions, explicit finalization and cancellation cleanup (API / TypeScript / Ace)
+
 # v2.9.0
 
 ###### 2026/10/17

@@ -5,6 +5,13 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.10.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Node.js Worker 支持 pinyin, pinyin4j, 控制台窗口和坐标换算, 共享父执行状态并保留原生输出流 (API / TypeScript / Ace)",
+        "Bun screenRecorder 支持无声 H.264 MP4 录屏文件, 独立授权, 固定输出尺寸, 显式收尾及取消清理 (API / TypeScript / Ace)"
+      ]
+    },
     "v2.9.0": {
       "released_date": "2026/10/17",
       "feature": [

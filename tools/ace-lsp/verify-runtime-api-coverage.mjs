@@ -115,6 +115,18 @@ for (const [file, header, opencc, images] of [
 ]) {
     const documentUri = `file:///autojs6/editor/${file}`;
     const current = context.AutoJsAceTsLanguageService.create({ documentUri, libraryTextByUri: texts });
+    if(file.startsWith('worker.')) {
+        for(const [module,expected] of [['pinyin',['convert','simple','compact','STYLE_NORMAL','MODE_SURNAME']],['pinyin4j',['of','as','readings']],
+            ['console',['show','hide','setTitle','log']],['screen_metrics',['cX','cY','cXy','cYx','setScaleBases']]]) {
+            const code=file.endsWith('.mjs')?`import api from "autojs6:${module}";\napi.`:`const api=require("autojs6:${module}");\napi.`;
+            const names=query(current,code,'',documentUri);
+            for(const name of expected)assert(names.includes(name),`${file}: ${module}.${name} missing`);
+        }
+    } else if(file.endsWith('.bun.ts')) {
+        for(const name of ['start','stop','cancel','getStatus'])assert(query(current,header+'host.screenRecorder.','',documentUri).includes(name),`Bun recording ${name}`);
+        const members=query(current,header+'async function test() {const movie=await host.screenRecorder.stop();if(movie) movie.','',documentUri);
+        for(const name of ['path','size','durationMs','width','height','audio'])assert(members.includes(name),`Movie metadata ${name}`);
+    }
     const conversions = query(current, header + opencc + '.', '', documentUri);
     for (const name of new Set(openccMethods)) assert(conversions.includes(name), `${file}: missing OpenCC method ${name}`);
     const imageNames = query(current, header + images + '.', '', documentUri);

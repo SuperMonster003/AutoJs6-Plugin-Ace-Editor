@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ### 發行歷史
 
 ******
+
+# v2.10.0
+
+###### 2026/10/17
+
+* `新增` Node.js Worker 支援 pinyin, pinyin4j, 主控台視窗和座標換算, 共用父執行狀態並保留原生輸出串流 (API / TypeScript / Ace)
+* `新增` Bun screenRecorder 支援無聲 H.264 MP4 螢幕錄製檔案, 獨立授權, 固定輸出尺寸, 明確完成及取消清理 (API / TypeScript / Ace)
 
 # v2.9.0
 
@@ -196,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ###### 2026/10/17
 
 * `新增` Node.js 和 Bun 的 OpenCC 與影像型別宣告及補全, 提供準確的非同步回傳型別並區分各執行環境 API
-
-# v2.7.0
-
-###### 2026/10/17
-
-* `新增` Rhino speech 與 speech.models 宣告及補全, 涵蓋工作階段, 事件, 模型管理與具型別結果, 與 Node.js/Bun 保持隔離
 
 ##### 更多發行歷史可參閱
 

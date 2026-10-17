@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ### リリース履歴
 
 ******
+
+# v2.10.0
+
+###### 2026/10/17
+
+* `機能` Node.js Worker が pinyin, pinyin4j, コンソール操作と座標変換に対応し, 親の実行状態を共有しながらネイティブ出力を維持 (API / TypeScript / Ace)
+* `機能` Bun screenRecorder が個別許可, 固定寸法, 明示的な終了処理とキャンセル時の削除を備えた音声なし H.264 MP4 画面録画に対応 (API / TypeScript / Ace)
 
 # v2.9.0
 
@@ -196,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ###### 2026/10/17
 
 * `機能` Node.js と Bun の OpenCC と画像 API の型宣言と補完を追加し, 非同期の戻り値型と実行環境ごとの API を明確化
-
-# v2.7.0
-
-###### 2026/10/17
-
-* `機能` Rhino の speech と speech.models の型宣言と補完. セッション, イベント, モデル管理と型付き結果に対応し, Node.js/Bun と分離
 
 ##### その他のリリース履歴
 

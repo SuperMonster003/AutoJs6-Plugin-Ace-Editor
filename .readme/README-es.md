@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,13 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.10.0
+
+###### 2026/10/17
+
+* `Función` Los Workers de Node.js ofrecen pinyin, pinyin4j, controles de consola y coordenadas, compartiendo el estado padre y conservando los flujos nativos (API / TypeScript / Ace)
+* `Función` Bun screenRecorder graba vídeos de pantalla H.264 MP4 sin audio con permiso independiente, dimensiones fijas, finalización explícita y limpieza al cancelar (API / TypeScript / Ace)
 
 # v2.9.0
 
@@ -196,12 +203,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/17
 
 * `Función` Declaraciones y autocompletado de OpenCC e imágenes para Node.js y Bun, con resultados asíncronos tipados y API separadas por entorno
-
-# v2.7.0
-
-###### 2026/10/17
-
-* `Función` Declaraciones y autocompletado de speech y speech.models para Rhino: sesiones, eventos, modelos y resultados tipados, separados de Node.js y Bun
 
 ##### Para ver más historial de versiones
 

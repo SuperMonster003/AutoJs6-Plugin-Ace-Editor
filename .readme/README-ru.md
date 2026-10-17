@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.10.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ### История выпусков
 
 ******
+
+# v2.10.0
+
+###### 2026/10/17
+
+* `Функция` Worker Node.js поддерживают pinyin, pinyin4j, управление консолью и координаты с общим состоянием выполнения и собственными потоками вывода (API / TypeScript / Ace)
+* `Функция` Bun screenRecorder записывает экран в H.264 MP4 без звука с отдельным разрешением, фиксированным размером, явным завершением и очисткой при отмене (API / TypeScript / Ace)
 
 # v2.9.0
 
@@ -196,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-un
 ###### 2026/10/17
 
 * `Функция` Типы и автодополнение OpenCC и изображений для Node.js и Bun, с типизированными асинхронными результатами и разделением API сред выполнения
-
-# v2.7.0
-
-###### 2026/10/17
-
-* `Функция` Объявления и дополнение speech и speech.models для Rhino: сеансы, события, модели и типизированные результаты отдельно от Node.js и Bun
 
 ##### Подробнее об истории выпусков
 

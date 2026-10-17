@@ -39,7 +39,14 @@ class AceApiCoverageDeviceTest {
             assertRuntimeDeclarations(imagesResult, runtime)
             showPopup(editor, header + "$opencc.con", "convert", evidence, "$runtime-opencc-popup", "Promise<string>")
             showPopup(editor, header + receiver + "images.readPix", "readPixels", evidence, "$runtime-image-popup", "Promise<")
-            if (runtime == "bun") showPopup(editor, header + "host.images.requestScr", "requestScreenCapture", evidence, "bun-capture-popup", "Promise<boolean>")
+            if (runtime == "bun") {
+                showPopup(editor, header + "host.images.requestScr", "requestScreenCapture", evidence, "bun-capture-popup", "Promise<boolean>")
+                val recording=query(editor,header+"host.screenRecorder.","",evidence)
+                assertTrue(recording.toString(),semanticNames(recording).containsAll(setOf("start","stop","cancel","getStatus")))
+                showPopup(editor,header+"host.screenRecorder.sta","start",evidence,"bun-video-popup","Promise<ScreenRecordingActive>")
+                val movie=query(editor,header+"async function check() {const movie=await host.screenRecorder.stop();if(movie) movie.","",evidence)
+                assertTrue(movie.toString(),semanticNames(movie).containsAll(setOf("durationMs","path","size","width","height","audio")))
+            }
             val inspect = header + "const image = {id:'typed-handle',width:2,height:2};\nasync function inspect() {\n"
             val bytes = query(editor, inspect + "const bytes = await ${receiver}images.toBytes(image);\nbytes.sub", "sub", evidence)
             assertTrue("Byte result has no Uint8Array methods: $bytes", semanticNames(bytes).contains("subarray"))
@@ -62,6 +69,10 @@ class AceApiCoverageDeviceTest {
             "const keys = require('input_observer');\nkeys.ob" to "observeKeys",
             "const math = require('jsox.mathx');\nmath.su" to "sum",
             "const screen = require('screen_metrics');\nscreen.c" to "cYx",
+            "const p = require('autojs6:pinyin');\np.STYLE_" to "STYLE_NORMAL",
+            "const p = require('autojs6:pinyin4j');\np.re" to "readings",
+            "import c from 'autojs6:console';\nc.setTi" to "setTitle",
+            "import s from 'autojs6:screen_metrics';\ns.c" to "cYx",
         )) {
             val result = query(editor, node + body, body.substringAfterLast('.'), evidence)
             assertTrue("Missing Node module completion: $result", semanticNames(result).contains(expected))

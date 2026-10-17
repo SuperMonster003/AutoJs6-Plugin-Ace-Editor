@@ -4,6 +4,13 @@
 
 ******
 
+# v2.10.0
+
+###### 2026/10/17
+
+* `新增` Node.js Worker 支援 pinyin, pinyin4j, 主控台視窗和座標換算, 共用父執行狀態並保留原生輸出串流 (API / TypeScript / Ace)
+* `新增` Bun screenRecorder 支援無聲 H.264 MP4 螢幕錄製檔案, 獨立授權, 固定輸出尺寸, 明確完成及取消清理 (API / TypeScript / Ace)
+
 # v2.9.0
 
 ###### 2026/10/17
