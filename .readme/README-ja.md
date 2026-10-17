@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-un
 
 ******
 
+# v2.6.0
+
+###### 2026/10/17
+
+* `機能` Node.js と Bun の実行環境別補完. 型宣言を分離し, Rhino のグローバルと JSOX プロトタイプ拡張の混入を防止
+* `修正` 長い補完シグネチャを画面内で折り返し, コードや候補一覧を隠さずに Promise の戻り値型を表示
+
 # v2.5.0
 
 ###### 2026/10/16
@@ -195,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-un
 ###### 2026/10/16
 
 * `機能` files.batchRename (Batch Rename プラグイン 1.1.0) の新しいメンバーの補完: preview / presets / importPresets と Async 形式, deleteHistory / clearHistory, ピンイン, 写真メタデータ, プリセットのオプション
-
-# v2.3.0
-
-###### 2026/10/16
-
-* `機能` plugins.tools の入力補完. AutoJs6 プラグインが自ら記述するツールを呼び出す list / providers / call / callAsync, 呼び出しオプション, ツール情報と結果オブジェクトを含む
 
 ##### その他のリリース履歴
 

@@ -17,12 +17,25 @@ class AceTypeScriptExecutionProfilesTest {
         listOf("main.ts", "main.tsx", "types.d.ts").forEach { path ->
             assertEquals(AceTypeScriptExecutionProfiles.RHINO, AceTypeScriptExecutionProfiles.resolve(path))
         }
-        listOf("main.mts", "main.cts", "types.d.mts", "types.d.cts").forEach { path ->
+        listOf("main.mts", "main.cts", "types.d.mts", "types.d.cts", "main.node.js", "main.cjs", "main.mjs").forEach { path ->
             assertEquals(AceTypeScriptExecutionProfiles.NODE, AceTypeScriptExecutionProfiles.resolve(path))
         }
-        listOf("main.js", "main.node.js", "project.json", null).forEach { path ->
+        listOf("main.bun.js", "main.bun.ts", "main.bun.tsx").forEach { path ->
+            assertEquals(AceTypeScriptExecutionProfiles.BUN, AceTypeScriptExecutionProfiles.resolve(path))
+        }
+        listOf("main.js", "project.json", null).forEach { path ->
             assertNull(AceTypeScriptExecutionProfiles.resolve(path))
         }
+    }
+
+    @Test
+    fun bunProjectMetadataDoesNotInventAHostEngineRoute() {
+        val root = temporaryFolder.newFolder("bun-project")
+        File(root, "project.json").writeText("""{"type":"bun"}""")
+        val javascript = File(root, "main.js").apply { writeText("export const value = 1") }
+        val typescript = File(root, "main.ts").apply { writeText("export const value = 1") }
+        assertNull(AceTypeScriptExecutionProfiles.resolve(javascript.path))
+        assertEquals(AceTypeScriptExecutionProfiles.RHINO, AceTypeScriptExecutionProfiles.resolve(typescript.path))
     }
 
     @Test

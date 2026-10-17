@@ -1330,8 +1330,14 @@
     }
 
     function sourceWithLocalContext(source, localContext, session) {
+        var runtimeResolver = global.AutoJsAceLocalSymbols && global.AutoJsAceLocalSymbols.apiRuntimeForSession;
+        var rhino = !isJavaScriptFamilyLanguage(source.language) || !runtimeResolver || runtimeResolver(session) === "rhino";
+        if (!rhino) {
+            source = appendEcmascriptBuiltins({ globals: [], modules: Object.create(null),
+                aliases: Object.create(null), snippets: [], language: source.language });
+        }
         var detector = global.AutoJsAceLocalSymbols && global.AutoJsAceLocalSymbols.detectJsoxModules;
-        var enabled = detector && session && session.getValue ? detector(session.getValue()) : [];
+        var enabled = rhino && detector && session && session.getValue ? detector(session.getValue()) : [];
         var modules = source.modules;
         if (enabled.length && source.conditionalModules) {
             modules = Object.create(null);
@@ -1539,8 +1545,8 @@
             }
             callback(null, dedupe(
                 collect(localContext.globals, prefix, 1100)
-                    .concat(collect(source.snippets, prefix, 950))
-                    .concat(collect(source.globals, prefix, 900))
+                    .concat(collect(querySource.snippets, prefix, 950))
+                    .concat(collect(querySource.globals, prefix, 900))
             ));
         });
     };

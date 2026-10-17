@@ -5,11 +5,14 @@
     var CURRENT_DIR = "file:///autojs6/editor";
     var AUTOJS6_CORE_LIB = "file:///autojs6/types/generated/lib.autojs6.core.d.ts";
     var AUTOJS6_COMPATIBILITY_LIB = "file:///autojs6/types/lib.autojs6.extra.d.ts";
+    var AUTOJS6_NODE_LIB = "file:///autojs6/types/generated/lib.autojs6.runtime-node.d.ts";
+    var AUTOJS6_BUN_LIB = "file:///autojs6/types/generated/lib.autojs6.runtime-bun.d.ts";
     var TS_LIB_ROOT = "file:///autojs6/typescript/";
     var AUTOJS6_ASSET_ROOT = "./autojs6/";
     var TYPESCRIPT_VERSION = "6.0.3";
     var PROFILE_RHINO = "rhino";
     var PROFILE_NODE = "node";
+    var PROFILE_BUN = "bun";
     var PROFILE_JAVASCRIPT = "javascript";
     var EXECUTION_PROFILE_REVISION = 2;
     var EDITOR_DEFAULT_LIB = "lib.es2022.d.ts";
@@ -124,7 +127,7 @@
 
     function normalizeExecutionProfile(profile, documentUri) {
         profile = String(profile || "").toLowerCase();
-        if (profile === PROFILE_RHINO || profile === PROFILE_NODE) {
+        if (profile === PROFILE_RHINO || profile === PROFILE_NODE || profile === PROFILE_BUN) {
             return profile;
         }
         return inferredProfileForDocumentUri(documentUri);
@@ -135,7 +138,13 @@
             EXECUTION_DEFAULT_LIB : EDITOR_DEFAULT_LIB;
     }
 
-    function defaultLibraryUrisForProfile(profile) {
+    function defaultLibraryUrisForProfile(profile, apiRuntime) {
+        if (apiRuntime === PROFILE_NODE || apiRuntime === PROFILE_BUN) {
+            var libraries = [TS_LIB_ROOT + defaultLibForProfile(profile),
+                apiRuntime === PROFILE_NODE ? AUTOJS6_NODE_LIB : AUTOJS6_BUN_LIB];
+            if (apiRuntime === PROFILE_BUN) libraries.push(TS_LIB_ROOT + "lib.dom.d.ts");
+            return libraries;
+        }
         return [
             TS_LIB_ROOT + defaultLibForProfile(profile),
             AUTOJS6_CORE_LIB,
@@ -431,6 +440,7 @@
         var currentText = "";
         var currentFile = normalizeDocumentUri(config.documentUri);
         var executionProfile = normalizeExecutionProfile(config.executionProfile, currentFile);
+        var apiRuntime = resolveApiRuntime("");
         var expectedTypeScriptVersion = String(config.typescriptVersion || TYPESCRIPT_VERSION);
         var defaultLib = defaultLibForProfile(executionProfile);
         var libraryUris = [];
@@ -467,9 +477,32 @@
         var completionLimit = Math.max(1, Number(config.completionLimit) || 300);
         var activeJsoxModules = "";
 
+        function resolveApiRuntime(text) {
+            var resolver = global.AutoJsAceLocalSymbols && global.AutoJsAceLocalSymbols.resolveApiRuntime;
+            return resolver ? resolver(text, currentFile, config.executionProfile) :
+                executionProfile === PROFILE_NODE ? PROFILE_NODE : PROFILE_RHINO;
+        }
+
+        function updateApiRuntime(text) {
+            var next = resolveApiRuntime(text);
+            if (next === apiRuntime) return;
+            apiRuntime = next;
+            if (service) service.dispose();
+            service = null;
+            ready = false;
+            reason = "";
+            files = Object.create(null);
+            versions = Object.create(null);
+            libraryUris = [];
+            rootLibraryUris = [];
+            libraryAssetUrls = Object.create(null);
+            activeJsoxModules = "";
+            currentText = "";
+        }
+
         function updateJsoxLibraries(text) {
             var detector = global.AutoJsAceLocalSymbols && global.AutoJsAceLocalSymbols.detectJsoxModules;
-            var modules = detector ? detector(text) : [];
+            var modules = apiRuntime === PROFILE_RHINO && detector ? detector(text) : [];
             var key = modules.join(",");
             if (key === activeJsoxModules) return;
             activeJsoxModules = key;
@@ -484,7 +517,22 @@
         }
 
         function compilerOptions() {
-            if (executionProfile === PROFILE_RHINO) {
+            if (apiRuntime === PROFILE_BUN) {
+                return {
+                    allowJs: true,
+                    allowSyntheticDefaultImports: true,
+                    checkJs: !!config.checkJs,
+                    noEmit: true,
+                    target: ts.ScriptTarget.ES2022,
+                    module: ts.ModuleKind.ESNext,
+                    moduleResolution: ts.ModuleResolutionKind.Bundler,
+                    jsx: ts.JsxEmit.Preserve,
+                    strict: true,
+                    skipLibCheck: true,
+                    types: dependencyTypeNames.slice(0)
+                };
+            }
+            if (executionProfile === PROFILE_RHINO && apiRuntime === PROFILE_RHINO) {
                 return {
                     allowJs: false,
                     allowSyntheticDefaultImports: true,
@@ -514,12 +562,12 @@
                     types: dependencyTypeNames.slice(0)
                 };
             }
-            if (executionProfile === PROFILE_NODE) {
+            if (apiRuntime === PROFILE_NODE) {
                 return {
-                    allowJs: false,
+                    allowJs: /\.(?:js|mjs|cjs|jsx)$/.test(cleanFileNameForKind(currentFile)),
                     allowSyntheticDefaultImports: true,
                     alwaysStrict: true,
-                    checkJs: false,
+                    checkJs: !!config.checkJs,
                     esModuleInterop: true,
                     forceConsistentCasingInFileNames: true,
                     ignoreDeprecations: "6.0",
@@ -707,8 +755,8 @@
 
         function configureRootLibraries() {
             var configured = copyArray(config.libraryUris);
-            if (!configured.length) {
-                configured = defaultLibraryUrisForProfile(executionProfile);
+            if (!configured.length || apiRuntime !== PROFILE_RHINO) {
+                configured = defaultLibraryUrisForProfile(executionProfile, apiRuntime);
             }
             configured.forEach(function(uri) {
                 var normalized = normalizeFileName(uri);
@@ -766,12 +814,17 @@
                     reason = "TypeScript default lib missing: " + defaultLib;
                     return false;
                 }
-                if (!hasOwn(files, AUTOJS6_CORE_LIB)) {
+                if (apiRuntime === PROFILE_RHINO && !hasOwn(files, AUTOJS6_CORE_LIB)) {
                     reason = "AutoJs6 core declaration lib missing";
                     return false;
                 }
-                if (!hasOwn(files, AUTOJS6_COMPATIBILITY_LIB)) {
+                if (apiRuntime === PROFILE_RHINO && !hasOwn(files, AUTOJS6_COMPATIBILITY_LIB)) {
                     reason = "AutoJs6 compatibility declaration lib missing";
+                    return false;
+                }
+                if (apiRuntime !== PROFILE_RHINO && !hasOwn(files,
+                    apiRuntime === PROFILE_NODE ? AUTOJS6_NODE_LIB : AUTOJS6_BUN_LIB)) {
+                    reason = "AutoJs6 " + apiRuntime + " declaration lib missing";
                     return false;
                 }
                 service = ts.createLanguageService({
@@ -886,10 +939,11 @@
             if (documentUri) {
                 setDocumentUri(documentUri);
             }
+            text = String(text || "");
+            updateApiRuntime(text);
             if (!initialize()) {
                 return false;
             }
-            text = String(text || "");
             if (text !== currentText) {
                 currentText = text;
                 files[currentFile] = currentText;
@@ -1593,6 +1647,8 @@
                 version: ts && ts.version || "",
                 expectedVersion: expectedTypeScriptVersion,
                 executionProfile: executionProfile,
+                apiRuntime: apiRuntime,
+                rootLibraryUris: rootLibraryUris.slice(0),
                 executionProfileRevision: executionProfile === PROFILE_JAVASCRIPT ?
                     null : EXECUTION_PROFILE_REVISION,
                 compilerOptions: compilerOptions(),
@@ -1694,6 +1750,7 @@
             typescriptVersion: TYPESCRIPT_VERSION,
             profileRhino: PROFILE_RHINO,
             profileNode: PROFILE_NODE,
+            profileBun: PROFILE_BUN,
             executionProfileRevision: EXECUTION_PROFILE_REVISION,
             defaultLib: EDITOR_DEFAULT_LIB,
             executionDefaultLib: EXECUTION_DEFAULT_LIB,

@@ -4,6 +4,13 @@
 
 ******
 
+# v2.6.0
+
+###### 2026/10/17
+
+* `Fonctionnalité` Completion Node.js et Bun adaptee au moteur, avec declarations isolees sans globaux Rhino ni extensions de prototype JSOX
+* `Correctif` Les longues signatures de complétion reviennent à la ligne pour afficher le type Promise sans masquer le code ni la liste
+
 # v2.5.0
 
 ###### 2026/10/16

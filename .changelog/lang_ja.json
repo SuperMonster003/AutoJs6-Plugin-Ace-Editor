@@ -5,6 +5,15 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v2.6.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Node.js と Bun の実行環境別補完. 型宣言を分離し, Rhino のグローバルと JSOX プロトタイプ拡張の混入を防止"
+      ],
+      "fix": [
+        "長い補完シグネチャを画面内で折り返し, コードや候補一覧を隠さずに Promise の戻り値型を表示"
+      ]
+    },
     "v2.5.0": {
       "released_date": "2026/10/16",
       "feature": [

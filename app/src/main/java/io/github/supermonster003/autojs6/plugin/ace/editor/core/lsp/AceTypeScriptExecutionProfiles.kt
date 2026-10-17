@@ -22,6 +22,7 @@ internal object AceTypeScriptExecutionProfiles {
     const val TYPESCRIPT_VERSION = "6.0.3"
     const val PROFILE_RHINO = "rhino"
     const val PROFILE_NODE = "node"
+    const val PROFILE_BUN = "bun"
     const val RHINO_PROFILE_REVISION = 2
     const val NODE_PROFILE_REVISION = 2
 
@@ -35,6 +36,11 @@ internal object AceTypeScriptExecutionProfiles {
         revision = NODE_PROFILE_REVISION,
         defaultLibraryUri = AceLspServerManager.TYPESCRIPT_ES2018_LIBRARY_URI,
     )
+    val BUN = AceTypeScriptExecutionProfile(
+        id = PROFILE_BUN,
+        revision = 1,
+        defaultLibraryUri = AceLspServerManager.TYPESCRIPT_DEFAULT_LIBRARY_URI,
+    )
 
     fun resolve(documentPath: String?): AceTypeScriptExecutionProfile? {
         val fileName = documentPath
@@ -45,13 +51,21 @@ internal object AceTypeScriptExecutionProfiles {
             ?.lowercase()
             ?.takeIf(String::isNotBlank)
             ?: return null
-        if (!isTypeScriptFileName(fileName)) {
+        if (!isTypeScriptFileName(fileName) &&
+            !fileName.endsWith(".js") && !fileName.endsWith(".mjs") && !fileName.endsWith(".cjs")) {
             return null
         }
-        if (fileName.endsWith(".mts") || fileName.endsWith(".cts")) {
+        if (fileName.endsWith(".bun.js") || fileName.endsWith(".bun.ts") || fileName.endsWith(".bun.tsx")) {
+            return BUN
+        }
+        if (fileName.endsWith(".mts") || fileName.endsWith(".cts") ||
+            fileName.endsWith(".node.js") || fileName.endsWith(".cjs") || fileName.endsWith(".mjs")) {
             return NODE
         }
-        return if (isNodeProjectDocument(documentPath)) NODE else RHINO
+        return when (projectTypeForDocument(documentPath)?.lowercase()) {
+            PROFILE_NODE -> NODE
+            else -> if (isTypeScriptFileName(fileName)) RHINO else null
+        }
     }
 
     private fun isTypeScriptFileName(fileName: String): Boolean =
@@ -60,14 +74,14 @@ internal object AceTypeScriptExecutionProfiles {
             fileName.endsWith(".mts") ||
             fileName.endsWith(".cts")
 
-    private fun isNodeProjectDocument(documentPath: String): Boolean {
-        var directory = localDocumentFile(documentPath)?.parentFile ?: return false
+    private fun projectTypeForDocument(documentPath: String): String? {
+        var directory = localDocumentFile(documentPath)?.parentFile ?: return null
         while (true) {
             val projectConfig = File(directory, PROJECT_CONFIG_NAME)
             if (projectConfig.isFile) {
-                return readProjectType(projectConfig).equals(PROJECT_TYPE_NODE, ignoreCase = true)
+                return readProjectType(projectConfig)
             }
-            directory = directory.parentFile ?: return false
+            directory = directory.parentFile ?: return null
         }
     }
 
@@ -97,7 +111,6 @@ internal object AceTypeScriptExecutionProfiles {
     }
 
     private const val PROJECT_CONFIG_NAME = "project.json"
-    private const val PROJECT_TYPE_NODE = "node"
     private const val MAX_PROJECT_CONFIG_BYTES = 1024L * 1024L
     private val PROJECT_TYPE_PATTERN = Regex(
         "\"(?:type|projectType)\"\\s*:\\s*\"([^\"]+)\"",

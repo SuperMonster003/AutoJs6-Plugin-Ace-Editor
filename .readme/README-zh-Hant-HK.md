@@ -171,7 +171,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -184,6 +184,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-un
 
 ******
 
+# v2.6.0
+
+###### 2026/10/17
+
+* `新增` 按執行階段隔離 Node.js 和 Bun 智能提示, 避免混入 Rhino 全域與 JSOX 原型擴充
+* `修復` 長補全簽名在螢幕內自動換行, 無需橫向拖動即可查看 Promise 回傳類型, 保持程式碼與候選清單可見
+
 # v2.5.0
 
 ###### 2026/10/16
@@ -195,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.5.0-un
 ###### 2026/10/16
 
 * `新增` files.batchRename (Batch Rename 插件 1.1.0) 新成員的智能提示, 包括 preview / presets / importPresets 及其 Async 形態, deleteHistory / clearHistory, 拼音, 相片中繼資料與命名預設選項
-
-# v2.3.0
-
-###### 2026/10/16
-
-* `新增` plugins.tools 的智能提示, 用於調用 AutoJs6 插件自我描述的工具, 包括 list / providers / call / callAsync, 調用選項, 工具資訊與結果物件
 
 ##### 更多發行歷史可參閱
 

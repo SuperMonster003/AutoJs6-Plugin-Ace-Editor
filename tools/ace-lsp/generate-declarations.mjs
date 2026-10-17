@@ -41,6 +41,8 @@ const GROUP_ORDER = [
     "jsox-array",
     "jsox-number",
     "jsox-math",
+    "runtime-node",
+    "runtime-bun",
 ];
 
 function fail(message) {
@@ -402,6 +404,13 @@ function buildGroups(sourceDirectory, declarationPaths, sourceTextByPath) {
     ]);
 
     const groupBySourcePath = new Map();
+    for (const runtime of ["node", "bun"]) {
+        groups.set(`runtime-${runtime}`, {
+            defaultEnabled: false,
+            dependencies: [],
+            sourceFiles: declarationPaths.filter(sourcePath => sourcePath.startsWith(`autojs6-${runtime}/`)),
+        });
+    }
     for (const module of ["array", "number", "math"]) {
         groups.set(`jsox-${module}`, {
             defaultEnabled: false,
@@ -556,8 +565,22 @@ function writeGeneratedAssets(
         const group = groups.get(groupId);
         const fileName = `lib.autojs6.${groupId}.d.ts`;
         const generatedBundle = buildBundle(groupId, group, sourceTextByPath, sourcePackage);
-        const bundle = generatedBundle.text + (groupId === "core" ?
+        let bundle = generatedBundle.text + (groupId === "core" ?
             buildCoreRuntimeBridges(ts, sourceTextByPath.get("autojs6/aj6-main-app.d.ts")) : "");
+        if (groupId === "runtime-node") {
+            // The editor is offline and does not bundle @types/node. Keep the
+            // host-owned require overloads precise without importing Rhino globals.
+            const names = [...new Set([...bundle.matchAll(/^declare module ["']([^"']+)["']/gm)]
+                .map(match => match[1]))].sort();
+            bundle += "\n// Offline editor bindings for the host's public modules.\n" +
+                names.map(name => `declare function require(id: ${JSON.stringify(name)}): typeof import(${JSON.stringify(name)});`).join("\n") +
+                '\ndeclare function require(id: string): any;\n' +
+                '\ndeclare const console: typeof import("console");\n';
+        }
+        if (groupId === "runtime-bun") {
+            bundle += '\n// Runtime-provided path; the SDK is loaded explicitly.\n' +
+                'declare const process: { readonly env: { readonly AUTOJS6_HOST_CLIENT_MODULE: string; readonly [name: string]: string | undefined } };\n';
+        }
         for (const libName of generatedBundle.requiredLibs) {
             const libFile = join(typescriptLibDirectory, `lib.${libName}.d.ts`);
             if (!existsSync(libFile) || !statSync(libFile).isFile()) {

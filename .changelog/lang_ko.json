@@ -5,6 +5,15 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v2.6.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "런타임별 Node.js와 Bun 자동 완성 및 선언 분리로 Rhino 전역과 JSOX 프로토타입 확장 혼입 방지"
+      ],
+      "fix": [
+        "긴 자동 완성 서명을 화면 안에서 줄 바꿈하여 코드와 후보 목록을 가리지 않고 Promise 반환 형식 표시"
+      ]
+    },
     "v2.5.0": {
       "released_date": "2026/10/16",
       "feature": [

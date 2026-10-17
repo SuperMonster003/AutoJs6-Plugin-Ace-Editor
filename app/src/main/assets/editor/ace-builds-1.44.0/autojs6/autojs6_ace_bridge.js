@@ -334,6 +334,12 @@
     }
 
     global.AutoJsAceLanguageRouting = {
+        apiRuntimeForSession: function(activeSession) {
+            var symbols = global.AutoJsAceLocalSymbols;
+            var state = lspClient && typeof lspClient.getState === "function" ? lspClient.getState() : {};
+            return symbols.resolveApiRuntime(activeSession && activeSession.getValue ? activeSession.getValue() : "",
+                documentPath, state.typescriptProfile);
+        },
         resolveAceMode: resolveAceMode,
         isJavaScriptFamilyMode: isJavaScriptFamilyMode,
         isJavaScriptFamilySession: isJavaScriptFamilySession,
@@ -2277,7 +2283,11 @@
         node.style.maxWidth = "calc(100vw - 16px)";
         node.style.maxHeight = "45vh";
         node.style.overflow = "auto";
-        node.style.whiteSpace = "pre";
+        // Preserve line breaks while showing long qualified signatures and their
+        // Promise return types without requiring an undiscoverable horizontal drag.
+        node.style.whiteSpace = "pre-wrap";
+        node.style.overflowWrap = "anywhere";
+        node.style.wordBreak = "break-word";
         node.style.touchAction = "pan-x pan-y";
         node.style.webkitOverflowScrolling = "touch";
         fitDocTooltipToViewport(node);

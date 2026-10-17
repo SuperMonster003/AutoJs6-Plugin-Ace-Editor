@@ -1812,6 +1812,8 @@ test("the completion documentation stays off the popup on a narrow screen", asyn
         };
         const below = show(true);
         assert.equal(below.display, "block");
+        assert.equal(below.node.style.whiteSpace, "pre-wrap", "qualified signatures wrap on narrow screens");
+        assert.equal(below.node.style.overflowWrap, "anywhere", "long namespace tokens can wrap");
         assert.ok(!overlaps(below.rect, popupRect), `the tooltip covers the popup ${JSON.stringify(below.rect)}`);
         assert.ok(below.rect.top >= popupRect.bottom, "a popup below the cursor gets its documentation below it");
         const above = show(false);

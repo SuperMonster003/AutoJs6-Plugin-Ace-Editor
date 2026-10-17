@@ -20,6 +20,52 @@ import org.junit.runner.RunWith
 class AceApiCoverageDeviceTest {
 
     @Test
+    fun runtimeModulesUseIsolatedDeclarationsAndRealPopups() = withEvidence("runtime-api") { editor, evidence ->
+        val node = "\"nodejs\";\n"
+        for ((body, expected) in listOf(
+            "const p = require('pinyin');\np.si" to "simple",
+            "const p = require('pinyin4j');\np.re" to "readings",
+            "console.setTi" to "setTitle",
+            "const a = require('accessibility');\na.sw" to "swipe",
+            "const a = require('accessibility');\na.ge" to "gesture",
+            "const keys = require('input_observer');\nkeys.ob" to "observeKeys",
+            "const math = require('jsox.mathx');\nmath.su" to "sum",
+            "const screen = require('screen_metrics');\nscreen.c" to "cYx",
+        )) {
+            val result = query(editor, node + body, body.substringAfterLast('.'), evidence)
+            assertTrue("Missing Node module completion: $result", semanticNames(result).contains(expected))
+            assertRuntimeDeclarations(result, "node")
+        }
+        showPopup(editor, node + "const screen = require('screen_metrics');\nscreen.cX", "cX", evidence, "node-coordinate-popup")
+        val bun = "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host = {};\n"
+        for ((body, expected) in listOf(
+            "host.pinyin.si" to "simple", "host.pinyin4j.re" to "readings",
+            "host.console.setTi" to "setTitle", "host.coordinates.c" to "cYx",
+        )) {
+            val result = query(editor, bun + body, body.substringAfterLast('.'), evidence)
+            assertTrue("Missing Bun SDK completion: $result", semanticNames(result).contains(expected))
+            assertRuntimeDeclarations(result, "bun")
+        }
+        showPopup(editor, bun + "host.coordinates.cX", "cX", evidence, "bun-coordinate-popup")
+        for (directive in listOf("\"nodejs\";\n", "\"bun\";\n")) {
+            val selector = query(editor, directive + "selector", "selector", evidence)
+            assertFalse("Rhino selector leaked into another runtime", semanticNames(selector).contains("selector"))
+            val jsox = query(editor, directive + "jsox.extendAll();\nMath.su", "su", evidence)
+            assertFalse("Rhino JSOX extension leaked into another runtime", semanticNames(jsox).contains("sum"))
+        }
+        val restored = query(editor, "jsox.extendAll();\nMath.su", "su", evidence)
+        assertTrue("Removing runtime selection did not restore Rhino", semanticNames(restored).contains("sum"))
+    }
+
+    private fun assertRuntimeDeclarations(result: JSONObject, runtime: String) {
+        val state = result.getJSONObject("state").getJSONObject("tsService")
+        assertEquals("Wrong runtime: $state", runtime, state.getString("apiRuntime"))
+        val libraries = state.getJSONArray("rootLibraryUris").toString()
+        assertTrue("Runtime declaration layer missing: $state", libraries.contains("runtime-$runtime.d.ts"))
+        assertFalse("Rhino declaration layer leaked: $state", Regex("\\.(core|extra|android)\\.d\\.ts|\\.jsox-").containsMatchIn(libraries))
+    }
+
+    @Test
     fun defaultGroupsExposeRegisteredApisAndTypedReturnChains() = withEvidence("default-api") { editor, evidence ->
         val cases = linkedMapOf(
             "Arrayx.differ" to "differ", "Arrayx.subtract" to "subtract",
@@ -163,6 +209,7 @@ class AceApiCoverageDeviceTest {
                 "({ open: p.isOpen, display: s.display, visibility: s.visibility, opacity: s.opacity, " +
                 "bounds: { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height }, " +
                 "documentation: d ? { top: d.top, bottom: d.bottom, left: d.left, right: d.right, position: ds.position, display: ds.display, " +
+                "clientWidth: t.clientWidth, scrollWidth: t.scrollWidth, clientHeight: t.clientHeight, scrollHeight: t.scrollHeight, text: t.textContent, whiteSpace: ds.whiteSpace, " +
                 "css: t.style.cssText, parent: t.parentNode.className, overlaps: ds.display !== 'none' && d.left < r.right && d.right > r.left && d.top < r.bottom && d.bottom > r.top } : null, " +
                 "renderedText: p.container.textContent, " +
                 "items: (window.editor.completer.completions.filtered || []).map(function(item) { return {caption: item.caption, ts: item.autojs6Ts === true}; }), " +
@@ -176,6 +223,13 @@ class AceApiCoverageDeviceTest {
         assertTrue("Popup has no visible rectangle: $snapshot", snapshot.getJSONObject("bounds").getDouble("width") > 0 &&
             snapshot.getJSONObject("bounds").getDouble("height") > 0)
         assertFalse("Completion documentation covers candidates: $snapshot", snapshot.optJSONObject("documentation")?.optBoolean("overlaps") == true)
+        snapshot.optJSONObject("documentation")?.takeIf { it.optString("display") != "none" }?.let { documentation ->
+            assertTrue("Signature is horizontally clipped: $documentation",
+                documentation.getInt("scrollWidth") <= documentation.getInt("clientWidth") + 1)
+            if (name.endsWith("coordinate-popup")) {
+                assertTrue("Coordinate return type is missing: $documentation", documentation.getString("text").contains("Promise<number>"))
+            }
+        }
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         SystemClock.sleep(150L)
         screenshot(name)

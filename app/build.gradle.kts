@@ -319,7 +319,7 @@ tasks.register("generateAutoJs6EditorAssets") {
 val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
     group = "verification"
     description = "Verifies execution-profile diagnostics, declaration groups, and old-WebView fallback."
-    dependsOn(generateAutoJs6LspDeclarations, verifyAutoJs6LanguageIndices, "verifyAutoJs6ApiCoverage")
+    dependsOn(generateAutoJs6LspDeclarations, verifyAutoJs6LanguageIndices, "verifyAutoJs6ApiCoverage", "verifyRuntimeApiCoverage")
 
     val verifier = rootProject.layout.projectDirectory.file("tools/ace-lsp/verify-runtime.mjs")
     val runtime = autoJs6TypeScriptDirectory.file("typescript.js")
@@ -417,6 +417,15 @@ val verifyAutoJs6LspRuntime = tasks.register<Exec>("verifyAutoJs6LspRuntime") {
             settings.asFile.absolutePath,
         )
     }
+}
+
+tasks.register<Exec>("verifyRuntimeApiCoverage") {
+    group = "verification"
+    description = "Checks isolated Node and Bun module completion and rejects Rhino API leakage."
+    dependsOn(generateAutoJs6LspDeclarations)
+    workingDir(rootProject.projectDir)
+    executable(autoJs6NodeExecutable.get())
+    args("tools/ace-lsp/verify-runtime-api-coverage.mjs")
 }
 
 val verifyAutoJs6ApiCoverage = tasks.register<Exec>("verifyAutoJs6ApiCoverage") {

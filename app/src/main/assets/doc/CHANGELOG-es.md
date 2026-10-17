@@ -4,6 +4,13 @@
 
 ******
 
+# v2.6.0
+
+###### 2026/10/17
+
+* `Función` Autocompletado de Node.js y Bun segun el entorno, con declaraciones aisladas sin globales de Rhino ni extensiones de prototipos JSOX
+* `Corrección` Las firmas largas se ajustan a la pantalla para mostrar el tipo Promise sin ocultar el código ni la lista
+
 # v2.5.0
 
 ###### 2026/10/16

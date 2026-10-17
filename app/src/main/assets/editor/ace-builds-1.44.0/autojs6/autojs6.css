@@ -257,7 +257,9 @@ body.ace-ready #editor {
     max-width: calc(100vw - 16px);
     max-height: 45vh;
     overflow: auto;
-    white-space: pre;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
     -webkit-overflow-scrolling: touch;
 }
 

@@ -5,6 +5,15 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.6.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "按运行时隔离 Node.js 和 Bun 智能提示, 避免混入 Rhino 全局与 JSOX 原型扩展"
+      ],
+      "fix": [
+        "长补全签名在屏幕内自动换行, 无需横向拖动即可查看 Promise 返回类型, 保持代码与候选列表可见"
+      ]
+    },
     "v2.5.0": {
       "released_date": "2026/10/16",
       "feature": [

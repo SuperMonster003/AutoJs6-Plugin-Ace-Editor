@@ -277,6 +277,11 @@ function typeScriptLibraryTextByUri(paths) {
                 readFileSync(join(libraryDirectory, name), "utf8");
         }
     }
+    for (const runtime of ["node", "bun"]) {
+        const name = `lib.autojs6.runtime-${runtime}.d.ts`;
+        libraryTextByUri[`file:///autojs6/types/generated/${name}`] =
+            readFileSync(join(dirname(paths.core), name), "utf8");
+    }
     return libraryTextByUri;
 }
 

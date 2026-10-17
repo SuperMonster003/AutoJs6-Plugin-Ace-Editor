@@ -4,6 +4,13 @@
 
 ******
 
+# v2.6.0
+
+###### 2026/10/17
+
+* `Feature` Runtime-aware Node.js and Bun completion, with isolated declarations and no Rhino global or JSOX prototype leakage
+* `Fix` Long completion signatures wrap within the screen so Promise return types remain readable without covering code or the completion list
+
 # v2.5.0
 
 ###### 2026/10/16

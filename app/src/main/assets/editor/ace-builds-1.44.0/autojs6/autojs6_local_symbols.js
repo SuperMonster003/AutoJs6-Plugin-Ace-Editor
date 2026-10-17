@@ -15,6 +15,35 @@
         "ace/mode/text": "text"
     };
 
+    function resolveApiRuntime(text, documentUri, executionProfile) {
+        // Match the host's first string statement, allowing leading comments and
+        // whitespace. A mention inside a comment, a template or a later statement
+        // must not change the runtime (or enable Rhino's prototype extensions).
+        var prologue = String(text || "").replace(/^\uFEFF/, "")
+            .replace(/^#![^\r\n]*(?:\r?\n|$)/, "")
+            .replace(/^(?:(?:\s+)|(?:\/\/[^\r\n]*(?:\r?\n|$))|(?:\/\*[\s\S]*?\*\/))*/, "");
+        var directive = /^(["'])([^"'\\\r\n]*)\1[ \t]*(?:;|\r?\n)/.exec(prologue);
+        if (directive) {
+            var modes = directive[2].toLowerCase().split(/\s*[,;|]\s*|\s+/);
+            if (modes.indexOf("bun") >= 0) return "bun";
+            if (modes.indexOf("nodejs") >= 0 || modes.indexOf("node") >= 0) return "node";
+            if (modes.indexOf("rhino") >= 0) return "rhino";
+        }
+        var path = String(documentUri || "").replace(/[?#].*$/, "").toLowerCase();
+        if (/\.bun\.(?:js|ts|tsx)$/.test(path)) return "bun";
+        if (/\.(?:node\.js|cjs|mjs|mts|cts)$/.test(path)) return "node";
+        return executionProfile === "node" || executionProfile === "bun" ? executionProfile : "rhino";
+    }
+
+    function apiRuntimeForSession(session) {
+        var routing = global.AutoJsAceLanguageRouting;
+        if (routing && typeof routing.apiRuntimeForSession === "function") {
+            return routing.apiRuntimeForSession(session);
+        }
+        return resolveApiRuntime(session && session.getValue ? session.getValue() : "",
+            session && session.$autojs6DocumentUri, session && session.$autojs6ExecutionProfile);
+    }
+
     function languageIdForSession(session) {
         var routing = global.AutoJsAceLanguageRouting;
         if (routing && typeof routing.languageIdForSession === "function") {
@@ -784,6 +813,8 @@
     }
 
     global.AutoJsAceLocalSymbols = {
+        resolveApiRuntime: resolveApiRuntime,
+        apiRuntimeForSession: apiRuntimeForSession,
         detectJsoxModules: detectJsoxModules,
         register: register,
         extract: extract,

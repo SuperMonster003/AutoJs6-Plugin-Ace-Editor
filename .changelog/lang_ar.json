@@ -5,6 +5,15 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.6.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "إكمال Node.js وBun حسب بيئة التشغيل مع عزل التعريفات ومنع تسرب متغيرات Rhino العامة وامتدادات JSOX"
+      ],
+      "fix": [
+        "التفاف تواقيع الإكمال الطويلة داخل الشاشة لعرض نوع Promise دون تغطية الشفرة أو قائمة الاقتراحات"
+      ]
+    },
     "v2.5.0": {
       "released_date": "2026/10/16",
       "feature": [
