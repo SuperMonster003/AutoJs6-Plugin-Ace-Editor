@@ -50,6 +50,8 @@ class AceApiCoverageDeviceTest {
         for (directive in listOf("\"nodejs\";\n", "\"bun\";\n")) {
             val selector = query(editor, directive + "selector", "selector", evidence)
             assertFalse("Rhino selector leaked into another runtime", semanticNames(selector).contains("selector"))
+            val speech = query(editor, directive + "speech", "speech", evidence)
+            assertFalse("Rhino speech leaked into another runtime", semanticNames(speech).contains("speech"))
             val jsox = query(editor, directive + "jsox.extendAll();\nMath.su", "su", evidence)
             assertFalse("Rhino JSOX extension leaked into another runtime", semanticNames(jsox).contains("sum"))
         }
@@ -77,6 +79,9 @@ class AceApiCoverageDeviceTest {
             "util.versionCodes.searchAll" to "searchAll", "util.versionCodes.summary" to "summary",
             "randomFloat" to "randomFloat", "randomInt" to "randomInt", "verbose" to "verbose",
             "console.setContentTextColors" to "setContentTextColors",
+            "speech.models.installAsync" to "installAsync",
+            "speech.listen().feed" to "feed",
+            "\$speech.recognizeAsync" to "recognizeAsync",
             "selector().findOne" to "findOne", "selector().findOne().click" to "click",
             "selector().findOne().children().findOne" to "findOne",
             "floaty.rawWindow('<frame/>').getWidth" to "getWidth",

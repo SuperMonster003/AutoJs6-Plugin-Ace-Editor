@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ### 릴리스 기록
 
 ******
+
+# v2.7.0
+
+###### 2026/10/17
+
+* `기능` Rhino speech 및 speech.models 선언과 자동 완성. 세션, 이벤트, 모델 관리 및 형식화된 결과를 지원하고 Node.js/Bun과 분리
 
 # v2.6.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ###### 2026/10/16
 
 * `기능` plugins.tools 디렉터리 출력의 자동 완성과 힌트: ToolOutput.kind, 호출 옵션 outputs 의 폴더, 호출 결과 outputs 항목의 kind, files, conflicts, conflictCount
-
-# v2.4.0
-
-###### 2026/10/16
-
-* `기능` files.batchRename (Batch Rename 플러그인 1.1.0) 새 멤버 자동 완성: preview / presets / importPresets 및 Async 형태, deleteHistory / clearHistory, 병음, 사진 메타데이터, 프리셋 옵션
 
 ##### 더 많은 릴리스 기록
 

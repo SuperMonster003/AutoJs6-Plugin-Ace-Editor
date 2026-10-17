@@ -4,6 +4,12 @@
 
 ******
 
+# v2.7.0
+
+###### 2026/10/17
+
+* `Feature` Rhino speech and speech.models declarations and completion, including sessions, events, model management and typed results; kept separate from Node.js and Bun
+
 # v2.6.0
 
 ###### 2026/10/17

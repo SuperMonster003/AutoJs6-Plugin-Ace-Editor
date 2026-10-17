@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.7.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Declaraciones y autocompletado de speech y speech.models para Rhino: sesiones, eventos, modelos y resultados tipados, separados de Node.js y Bun"
+      ]
+    },
     "v2.6.0": {
       "released_date": "2026/10/17",
       "feature": [

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v2.7.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Rhino speech 및 speech.models 선언과 자동 완성. 세션, 이벤트, 모델 관리 및 형식화된 결과를 지원하고 Node.js/Bun과 분리"
+      ]
+    },
     "v2.6.0": {
       "released_date": "2026/10/17",
       "feature": [

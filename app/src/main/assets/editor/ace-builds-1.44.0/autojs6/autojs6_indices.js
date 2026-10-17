@@ -345,6 +345,11 @@
                 "doc": "AutoJs6 species API"
             },
             {
+                "name": "speech",
+                "type": "module",
+                "doc": "AutoJs6 Speech API"
+            },
+            {
                 "name": "sqlite",
                 "type": "module",
                 "doc": "AutoJs6 SQLite API"
@@ -3511,6 +3516,11 @@
                 "name": "$gallery",
                 "type": "module",
                 "doc": "Alias of gallery"
+            },
+            {
+                "name": "$speech",
+                "type": "module",
+                "doc": "Alias of speech"
             },
             {
                 "name": "$terminal",
@@ -33971,6 +33981,138 @@
                     "signature": "isXMLList(o: any): boolean;"
                 }
             ],
+            "speech": [
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "capabilities",
+                    "type": "function",
+                    "doc": "capabilities(): Speech.Capabilities;",
+                    "signature": "capabilities(): Speech.Capabilities;"
+                },
+                {
+                    "name": "listen",
+                    "type": "function",
+                    "doc": "listen(options?: Speech.ListenOptions | null): Speech.Session;",
+                    "signature": "listen(options?: Speech.ListenOptions | null): Speech.Session;"
+                },
+                {
+                    "name": "recognize",
+                    "type": "function",
+                    "doc": "recognize(source: Speech.AudioSource, options?: Speech.RecognizeOptions | null): Speech.Recognition;",
+                    "signature": "recognize(source: Speech.AudioSource, options?: Speech.RecognizeOptions | null): Speech.Recognition;"
+                },
+                {
+                    "name": "recognizeAsync",
+                    "type": "function",
+                    "doc": "recognizeAsync(source: Speech.AudioSource, options?: Speech.RecognizeOptions | null): Promise<Speech.Recognition>;",
+                    "signature": "recognizeAsync(source: Speech.AudioSource, options?: Speech.RecognizeOptions | null): Promise<Speech.Recognition>;"
+                },
+                {
+                    "name": "detectVoice",
+                    "type": "function",
+                    "doc": "detectVoice(source: Speech.AudioSource, options?: Speech.VadOptions | null): Speech.VadResult;",
+                    "signature": "detectVoice(source: Speech.AudioSource, options?: Speech.VadOptions | null): Speech.VadResult;"
+                },
+                {
+                    "name": "wake",
+                    "type": "function",
+                    "doc": "wake(keywords: Speech.KeywordInput | readonly Speech.KeywordInput[], options?: Speech.WakeOptions | null): Speech.WakeSession;",
+                    "signature": "wake(keywords: Speech.KeywordInput | readonly Speech.KeywordInput[], options?: Speech.WakeOptions | null): Speech.WakeSession;"
+                },
+                {
+                    "name": "synthesize",
+                    "type": "function",
+                    "doc": "synthesize(text: string, path: string, options?: Speech.SynthesisOptions | null): Speech.SynthesisResult;",
+                    "signature": "synthesize(text: string, path: string, options?: Speech.SynthesisOptions | null): Speech.SynthesisResult;"
+                },
+                {
+                    "name": "synthesizeAsync",
+                    "type": "function",
+                    "doc": "synthesizeAsync(text: string, path: string, options?: Speech.SynthesisOptions | null): Promise<Speech.SynthesisResult>;",
+                    "signature": "synthesizeAsync(text: string, path: string, options?: Speech.SynthesisOptions | null): Promise<Speech.SynthesisResult>;"
+                },
+                {
+                    "name": "speak",
+                    "type": "function",
+                    "doc": "speak(text: string, options?: Speech.SpeakOptions | null): Promise<Tts.Result>;",
+                    "signature": "speak(text: string, options?: Speech.SpeakOptions | null): Promise<Tts.Result>;"
+                },
+                {
+                    "name": "models",
+                    "type": "variable",
+                    "doc": "models: Speech.Models;",
+                    "signature": "models: Speech.Models;"
+                },
+                {
+                    "name": "SpeechError",
+                    "type": "variable",
+                    "doc": "SpeechError: Speech.ErrorConstructor;",
+                    "signature": "SpeechError: Speech.ErrorConstructor;"
+                }
+            ],
+            "speech.models": [
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(filter?: ModelFilter | null): ModelInfo[];",
+                    "signature": "list(filter?: ModelFilter | null): ModelInfo[];"
+                },
+                {
+                    "name": "install",
+                    "type": "function",
+                    "doc": "install(id: string, options?: InstallOptions | null): ModelInfo;",
+                    "signature": "install(id: string, options?: InstallOptions | null): ModelInfo;"
+                },
+                {
+                    "name": "installAsync",
+                    "type": "function",
+                    "doc": "installAsync(id: string, options?: InstallOptions | null): Promise<ModelInfo>;",
+                    "signature": "installAsync(id: string, options?: InstallOptions | null): Promise<ModelInfo>;"
+                },
+                {
+                    "name": "importFile",
+                    "type": "function",
+                    "doc": "importFile(path: string, options?: ImportOptions | null): ModelInfo;",
+                    "signature": "importFile(path: string, options?: ImportOptions | null): ModelInfo;"
+                },
+                {
+                    "name": "remove",
+                    "type": "function",
+                    "doc": "remove(id: string): boolean;",
+                    "signature": "remove(id: string): boolean;"
+                },
+                {
+                    "name": "setDefault",
+                    "type": "function",
+                    "doc": "setDefault(kind: Kind, id: string): ModelInfo;",
+                    "signature": "setDefault(kind: Kind, id: string): ModelInfo;"
+                },
+                {
+                    "name": "getDefault",
+                    "type": "function",
+                    "doc": "getDefault(kind: Kind): ModelInfo | null;",
+                    "signature": "getDefault(kind: Kind): ModelInfo | null;"
+                },
+                {
+                    "name": "refreshCatalog",
+                    "type": "function",
+                    "doc": "refreshCatalog(): { version: number; updated: boolean; };",
+                    "signature": "refreshCatalog(): { version: number; updated: boolean; };"
+                }
+            ],
+            "speech.SpeechError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: SpeechError;",
+                    "signature": "prototype: SpeechError;"
+                }
+            ],
             "sqlite": [
                 {
                     "name": "open",
@@ -35928,6 +36070,7 @@
             "$mail": "mail",
             "$epub": "epub",
             "$gallery": "gallery",
+            "$speech": "speech",
             "$terminal": "terminal",
             "$media": "media",
             "$notice": "notice",

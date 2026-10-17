@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.7.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Rhino speech 與 speech.models 聲明及補全, 涵蓋會話, 事件, 模型管理與類型化結果, 與 Node.js/Bun 保持隔離"
+      ]
+    },
     "v2.6.0": {
       "released_date": "2026/10/17",
       "feature": [

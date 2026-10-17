@@ -4,6 +4,12 @@
 
 ******
 
+# v2.7.0
+
+###### 2026/10/17
+
+* `Función` Declaraciones y autocompletado de speech y speech.models para Rhino: sesiones, eventos, modelos y resultados tipados, separados de Node.js y Bun
+
 # v2.6.0
 
 ###### 2026/10/17

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.7.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "تعريفات وإكمال speech وspeech.models في Rhino, مع الجلسات والأحداث وإدارة النماذج والنتائج ذات الأنواع, بمعزل عن Node.js وBun"
+      ]
+    },
     "v2.6.0": {
       "released_date": "2026/10/17",
       "feature": [

@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.7.0
+
+###### 2026/10/17
+
+* `Feature` Rhino speech and speech.models declarations and completion, including sessions, events, model management and typed results; kept separate from Node.js and Bun
 
 # v2.6.0
 
@@ -196,12 +202,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/16
 
 * `Feature` Completion and hints for the directory outputs of plugins.tools: ToolOutput.kind, folders in the outputs call option, and kind, files, conflicts and conflictCount in the outputs of a call result
-
-# v2.4.0
-
-###### 2026/10/16
-
-* `Feature` Completion for the new members of files.batchRename (Batch Rename plugin 1.1.0): preview / presets / importPresets and their Async forms, deleteHistory / clearHistory, and the pinyin, photo metadata and preset options
 
 ##### Complete release history
 

@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ### リリース履歴
 
 ******
+
+# v2.7.0
+
+###### 2026/10/17
+
+* `機能` Rhino の speech と speech.models の型宣言と補完. セッション, イベント, モデル管理と型付き結果に対応し, Node.js/Bun と分離
 
 # v2.6.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ###### 2026/10/16
 
 * `機能` plugins.tools のディレクトリ出力の補完とヒント: ToolOutput.kind, 呼び出しオプション outputs のフォルダー, 呼び出し結果の outputs 項目の kind, files, conflicts, conflictCount
-
-# v2.4.0
-
-###### 2026/10/16
-
-* `機能` files.batchRename (Batch Rename プラグイン 1.1.0) の新しいメンバーの補完: preview / presets / importPresets と Async 形式, deleteHistory / clearHistory, ピンイン, 写真メタデータ, プリセットのオプション
 
 ##### その他のリリース履歴
 

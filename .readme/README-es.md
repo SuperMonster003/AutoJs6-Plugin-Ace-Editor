@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.7.0
+
+###### 2026/10/17
+
+* `Función` Declaraciones y autocompletado de speech y speech.models para Rhino: sesiones, eventos, modelos y resultados tipados, separados de Node.js y Bun
 
 # v2.6.0
 
@@ -196,12 +202,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/16
 
 * `Función` Autocompletado e indicaciones para las salidas de carpeta de plugins.tools: ToolOutput.kind, carpetas en la opción de llamada outputs, y kind, files, conflicts y conflictCount en los outputs del resultado de una llamada
-
-# v2.4.0
-
-###### 2026/10/16
-
-* `Función` Autocompletado de los nuevos miembros de files.batchRename (plugin Batch Rename 1.1.0): preview / presets / importPresets y sus formas Async, deleteHistory / clearHistory y las opciones de pinyin, metadatos de fotos y ajustes predefinidos
 
 ##### Para ver más historial de versiones
 

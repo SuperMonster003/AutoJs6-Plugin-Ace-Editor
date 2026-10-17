@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ### سجل الإصدارات
 
 ******
+
+# v2.7.0
+
+###### 2026/10/17
+
+* `ميزة` تعريفات وإكمال speech وspeech.models في Rhino, مع الجلسات والأحداث وإدارة النماذج والنتائج ذات الأنواع, بمعزل عن Node.js وBun
 
 # v2.6.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ###### 2026/10/16
 
 * `ميزة` إكمال وتلميحات لمخرجات المجلدات في plugins.tools: ToolOutput.kind والمجلدات في خيار الاستدعاء outputs والحقول kind و files و conflicts و conflictCount في outputs لنتيجة الاستدعاء
-
-# v2.4.0
-
-###### 2026/10/16
-
-* `ميزة` الإكمال التلقائي للأعضاء الجدد في files.batchRename (ملحق Batch Rename 1.1.0): preview / presets / importPresets وأشكالها Async و deleteHistory / clearHistory وخيارات البينيين وبيانات الصور الوصفية والإعدادات المسبقة
 
 ##### لمزيد من سجل الإصدارات
 

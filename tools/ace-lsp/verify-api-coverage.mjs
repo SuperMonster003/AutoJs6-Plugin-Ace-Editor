@@ -60,6 +60,10 @@ for (const allGroups of [false, true]) {
         ["util.versionCodes.searchA", "searchA", "searchAll"],
         ["engines.getE", "getE", "getEngines"],
         ["threads.disposable().blockedG", "blockedG", "blockedGet"],
+        ["speech.models.ins", "ins", "installAsync"],
+        ["$speech.recognizeA", "recognizeA", "recognizeAsync"],
+        ["speech.listen().fee", "fee", "feed"],
+        ["speech.wake('hello').isA", "isA", "isActive"],
     ]) {
         assert(completions(service, text, prefix).includes(expected), `${allGroups ? "all" : "default"}: missing ${text} -> ${expected}`);
         queryCount++;

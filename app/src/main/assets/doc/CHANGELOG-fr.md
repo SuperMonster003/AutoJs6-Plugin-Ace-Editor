@@ -4,6 +4,12 @@
 
 ******
 
+# v2.7.0
+
+###### 2026/10/17
+
+* `Fonctionnalité` Déclarations et complétion de speech et speech.models pour Rhino: sessions, événements, modèles et résultats typés, séparés de Node.js et Bun
+
 # v2.6.0
 
 ###### 2026/10/17

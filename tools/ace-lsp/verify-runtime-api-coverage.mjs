@@ -74,6 +74,9 @@ for (const [file, directive, runtime] of routes) {
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {
         assert(!query(service, directive + 'selector', 'selector', uri, useStatic).includes('selector'), `${file}: selector leaked`);
+        for (const name of ['speech', '$speech']) {
+            assert(!query(service, directive + name, name, uri, useStatic).includes(name), `${file}: Rhino speech leaked`);
+        }
         assert(!query(service, directive + 'jsox.extendAll();\nMath.su', 'su', uri, useStatic).includes('sum'), `${file}: JSOX leaked`);
     }
     service.dispose();

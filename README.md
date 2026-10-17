@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ### 发行历史
 
 ******
+
+# v2.7.0
+
+###### 2026/10/17
+
+* `新增` Rhino speech 与 speech.models 声明和补全, 覆盖会话, 事件, 模型管理与类型化结果, 与 Node.js/Bun 保持隔离
 
 # v2.6.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ###### 2026/10/16
 
 * `新增` plugins.tools 目录输出的补全与提示: ToolOutput.kind, 调用选项 outputs 的目录路径, 以及调用结果 outputs 项中的 kind, files, conflicts 与 conflictCount
-
-# v2.4.0
-
-###### 2026/10/16
-
-* `新增` files.batchRename (Batch Rename 插件 1.1.0) 新成员的智能提示, 包括 preview / presets / importPresets 及其 Async 形态, deleteHistory / clearHistory, 拼音, 照片元数据与命名预设选项
 
 ##### 更多发行历史可参阅
 

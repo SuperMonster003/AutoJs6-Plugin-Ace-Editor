@@ -50,3 +50,18 @@ Device artifacts are under the application's external files directory in
 `node-coordinate-popup.png`, `bun-coordinate-popup.png`, `selector-popup.png` and
 `jsox-popup.png`. The coordinating task retains the instrumentation log and pulled artifacts.
 No APK, generated test report or private device file is committed here.
+
+## Follow-up: complete host surface gate
+
+The complete host gate exposed an additional Rhino `speech` module and inline nested
+mounts of `plugins.tools`, `files.batchRename` and `speech.models`. The host extractor now
+binds explicit `also` receivers to their parent mount and still rejects unrecognized
+registration forms. The public `speech` declarations include model management, sessions,
+events and results. Node/Bun bundles continue to exclude these Rhino globals.
+
+The resulting host gate checks 91 mounts, 1351 explicit exports and 1522 TypeScript/Ace
+paths with no missing paths or documentation names. The editor checks now cover 226 Rhino
+queries and 112 runtime-isolation queries. The speech additions were validated against
+the source contract and declaration/completion fixtures; this does not claim new audio
+model or recognition execution tests. The three speech completion cases and runtime
+isolation assertions are also included in `AceApiCoverageDeviceTest` for subsequent runs.

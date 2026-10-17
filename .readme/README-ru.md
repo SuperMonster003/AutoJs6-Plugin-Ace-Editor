@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.7.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ### История выпусков
 
 ******
+
+# v2.7.0
+
+###### 2026/10/17
+
+* `Функция` Объявления и дополнение speech и speech.models для Rhino: сеансы, события, модели и типизированные результаты отдельно от Node.js и Bun
 
 # v2.6.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.6.0-un
 ###### 2026/10/16
 
 * `Функция` Автодополнение и подсказки для вывода в папку plugins.tools: ToolOutput.kind, папки в параметре вызова outputs, а также kind, files, conflicts и conflictCount в outputs результата вызова
-
-# v2.4.0
-
-###### 2026/10/16
-
-* `Функция` Автодополнение новых членов files.batchRename (плагин Batch Rename 1.1.0): preview / presets / importPresets и их формы Async, deleteHistory / clearHistory, параметры пиньиня, метаданных фотографий и пресетов
 
 ##### Подробнее об истории выпусков
 
