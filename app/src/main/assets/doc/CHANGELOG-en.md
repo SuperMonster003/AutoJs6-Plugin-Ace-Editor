@@ -4,6 +4,14 @@
 
 ******
 
+# v2.13.0
+
+###### 2026/10/17
+
+* `Feature` Node.js/Bun images supports advanced filters, color conversion, multi-color searches, circles, similarity metrics and URL loading
+* `Feature` Node.js/Bun images supports SIFT/ORB extraction and matching with scene coordinates, ObjectFrame geometry and execution-owned Mat/feature handles
+* `Feature` Node.js/Bun images supports PNG quantization and compression with quality/memory metrics, binary results and descriptor-backed file output
+
 # v2.12.0
 
 ###### 2026/10/17

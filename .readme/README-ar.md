@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.12.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.13.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.12.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.13.0
+
+###### 2026/10/17
+
+* `ميزة` يدعم Node.js/Bun images المرشحات المتقدمة وتحويل الألوان والبحث متعدد الألوان والدوائر ومقاييس التشابه وتحميل URL
+* `ميزة` يدعم Node.js/Bun images استخراج ومطابقة SIFT/ORB مع إحداثيات المشهد وهندسة ObjectFrame ومقابض Mat/الميزات الخاصة بكل تنفيذ
+* `ميزة` يدعم Node.js/Bun images تكميم PNG والضغط مع مقاييس الجودة/الذاكرة والنتائج الثنائية والإخراج عبر واصف ملف
 
 # v2.12.0
 
@@ -196,13 +204,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.12.0-u
 
 * `ميزة` يحفظ Bun screenRecorder ملفات H.264 MP4 مع صوت AAC اختياري من الميكروفون أو التطبيقات أو مزيجهما ولقطات أثناء التسجيل, مع أذونات صوت مستقلة وتنظيف عند الإلغاء (API / TypeScript / Ace)
 * `إصلاح` تعرض تلميحات الخصائص الاختيارية أنواعها بدلا من معدلات التعريف فقط
-
-# v2.10.0
-
-###### 2026/10/17
-
-* `ميزة` تدعم Workers في Node.js وحدات pinyin و pinyin4j والتحكم في وحدة التحكم وتحويل الإحداثيات مع مشاركة حالة التنفيذ والإبقاء على تدفقات الإخراج الأصلية (API / TypeScript / Ace)
-* `ميزة` يسجل Bun screenRecorder الشاشة في ملفات H.264 MP4 بدون صوت مع إذن مستقل وأبعاد ثابتة وإنهاء صريح وتنظيف عند الإلغاء (API / TypeScript / Ace)
 
 ##### لمزيد من سجل الإصدارات
 

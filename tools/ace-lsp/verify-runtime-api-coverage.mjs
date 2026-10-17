@@ -113,9 +113,10 @@ assert.equal(service.getState().apiRuntime, 'rhino', 'Removing a runtime directi
 service.dispose();
 const openccMethods = fs.readFileSync(path.join(assets, 'types/autojs6/aj6-int-opencc.d.ts'), 'utf8')
     .match(/\b(?:convert|[a-z]+2[a-z]+)\(/g).map(name => name.slice(0, -1));
-const commonImages = ['fromBase64', 'fromBytes', 'toBase64', 'toBytes', 'pixel', 'readPixels', 'copy', 'scale',
-    'rotate', 'flip', 'blur', 'gaussianBlur', 'medianBlur', 'invert', 'detectsColor', 'findAllPointsForColor',
-    'requestScreenCapture', 'captureScreen', 'stopScreenCapture'];
+const imageSource=ts.createSourceFile('image.d.ts',fs.readFileSync(path.join(assets,'types/autojs6-node/image.d.ts'),'utf8'),ts.ScriptTarget.Latest,true);
+const commonImages=[];
+function collectImages(node){if(ts.isInterfaceDeclaration(node)&&node.name.text==='ImageModule')for(const member of node.members)if(member.name)commonImages.push(member.name.getText(imageSource));ts.forEachChild(node,collectImages);}
+collectImages(imageSource);
 const newApiChecks = [];
 for (const [file, header, opencc, images] of [
     ['api.cjs', 'const cc = require("autojs6:opencc");\nconst images = require("images");\n', 'cc', 'images'],
@@ -150,7 +151,7 @@ for (const [file, header, opencc, images] of [
     for (const name of new Set(openccMethods)) assert(conversions.includes(name), `${file}: missing OpenCC method ${name}`);
     const imageNames = query(current, header + images + '.', '', documentUri);
     for (const name of commonImages) assert(imageNames.includes(name), `${file}: missing image method ${name}`);
-    assert(!imageNames.includes('detectAndComputeFeatures'), `${file}: unimplemented Rhino feature API leaked`);
+    assert(imageNames.includes('detectAndComputeFeatures'), `${file}: feature extraction missing`);
     const prefix = header + 'const handle = {id:"typed-handle",width:2,height:2};\nasync function inspect() {\n';
     assert(query(current, prefix + `const bytes = await ${images}.toBytes(handle);\nbytes.sub`, 'sub', documentUri).includes('subarray'),
         `${file}: image bytes lost Uint8Array methods`);
@@ -161,6 +162,17 @@ for (const [file, header, opencc, images] of [
     const handles = query(current, prefix + `const copy = await ${images}.copy(handle);\ncopy.`, '', documentUri);
     assert(handles.includes('id') && handles.includes('width') && handles.includes('height'), `${file}: untyped image handle`);
     assert(!handles.includes('getBitmap') && !handles.includes('getMat'), `${file}: Rhino ImageWrapper methods leaked`);
+    const featureMembers=query(current,prefix+`const features=await ${images}.detectAndComputeFeatures(handle);\nfeatures.`,'',documentUri);
+    for(const name of ['id','count','method','scale','region'])assert(featureMembers.includes(name),`${file}: feature ${name}`);
+    assert(!featureMembers.includes('javaObject'),`${file}: native feature pointer leaked`);
+    const frameMembers=query(current,prefix+`const frame=await ${images}.matchFeatures(handle,handle);if(frame) frame.`,'',documentUri);
+    for(const name of ['topLeft','center','bounds','angle','inliers','points','summary'])assert(frameMembers.includes(name),`${file}: frame ${name}`);
+    const quantMembers=query(current,prefix+`const quant=await ${images}.quantize(handle);\nquant.`,'',documentUri);
+    for(const name of ['bytes','quality','quantizationError','peakWorkingMemoryBytes'])assert(quantMembers.includes(name),`${file}: quantization ${name}`);
+    assert(query(current,prefix+`const quant=await ${images}.quantize(handle);\nquant.bytes.sub`,'sub',documentUri).includes('subarray'),`${file}: quantized bytes`);
+    const matMembers=query(current,prefix+`const mat=await ${images}.imread('image.png');\nmat.`,'',documentUri);
+    for(const name of ['id','channels','depth','width','height'])assert(matMembers.includes(name),`${file}: Mat ${name}`);
+    assert(!matMembers.includes('getNativeObjAddr'),`${file}: native Mat pointer leaked`);
     newApiChecks.push({ file, openccMethods: new Set(openccMethods).size, imageMethods: commonImages.length });
     current.dispose();
 }

@@ -35,10 +35,17 @@ class AceApiCoverageDeviceTest {
             assertTrue("Missing OpenCC conversions: $conversionsResult", semanticNames(conversionsResult).containsAll(conversions))
             val imagesResult = query(editor, header + receiver + "images.", "", evidence)
             assertTrue("Missing image operations: $imagesResult", semanticNames(imagesResult).containsAll(imageMethods))
-            assertFalse("Unimplemented Rhino feature extraction leaked", semanticNames(imagesResult).contains("detectAndComputeFeatures"))
+            assertTrue("Advanced images are missing", semanticNames(imagesResult).containsAll(setOf("detectAndComputeFeatures","matchFeatures","quantize","cvtColor","findCircles","imread","matToImage","ObjectFrame")))
             assertRuntimeDeclarations(imagesResult, runtime)
             showPopup(editor, header + "$opencc.con", "convert", evidence, "$runtime-opencc-popup", "Promise<string>")
             showPopup(editor, header + receiver + "images.readPix", "readPixels", evidence, "$runtime-image-popup", "Promise<")
+            showPopup(editor,header+receiver+"images.detectAndComp","detectAndComputeFeatures",evidence,"$runtime-feature-popup","ImageFeaturesHandle>")
+            showPopup(editor,header+receiver+"images.quanti","quantize",evidence,"$runtime-quantize-popup","QuantizationResult>")
+            val advanced=header+"async function advanced(){const image={id:'fixture',width:8,height:8};\n"
+            val descriptor=query(editor,advanced+"const features=await ${receiver}images.detectAndComputeFeatures(image);features.","",evidence)
+            assertTrue(descriptor.toString(),semanticNames(descriptor).containsAll(setOf("id","count","method","scale","region")))
+            val frame=query(editor,advanced+"const frame=await ${receiver}images.matchFeatures(image,image);if(frame) frame.","",evidence)
+            assertTrue(frame.toString(),semanticNames(frame).containsAll(setOf("center","bounds","inliers","summary")))
             if (runtime == "bun") {
                 showPopup(editor, header + "host.images.requestScr", "requestScreenCapture", evidence, "bun-capture-popup", "Promise<boolean>")
                 val recording=query(editor,header+"host.screenRecorder.","",evidence)
