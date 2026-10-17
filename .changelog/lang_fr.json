@@ -5,6 +5,13 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.9.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Les Workers Node.js utilisent OpenCC et les images via le runtime parent, avec CJS, ESM, Workers imbriqués et transfert binaire (API / TypeScript / Ace)",
+        "Bun propose la capture écran avec autorisation distincte, consentement Android, nettoyage après expiration/annulation et nouvelle demande (API / TypeScript / Ace)"
+      ]
+    },
     "v2.8.0": {
       "released_date": "2026/10/17",
       "feature": [

@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-un
 
 ******
 
+# v2.9.0
+
+###### 2026/10/17
+
+* `Функция` Worker Node.js поддерживают OpenCC и изображения через родительскую среду, включая CJS, ESM, вложенные Worker и двоичные данные (API / TypeScript / Ace)
+* `Функция` Bun поддерживает захват экрана с отдельным разрешением, согласием Android, очисткой при отмене/тайм-ауте и повторным запросом (API / TypeScript / Ace)
+
 # v2.8.0
 
 ###### 2026/10/17
@@ -195,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-un
 ###### 2026/10/17
 
 * `Функция` Объявления и дополнение speech и speech.models для Rhino: сеансы, события, модели и типизированные результаты отдельно от Node.js и Bun
-
-# v2.6.0
-
-###### 2026/10/17
-
-* `Функция` Дополнение Node.js и Bun с учетом среды, изоляцией объявлений без глобальных объектов Rhino и расширений прототипов JSOX
-* `Исправление` Длинные сигнатуры переносятся по ширине экрана: тип Promise виден без перекрытия кода и списка
 
 ##### Подробнее об истории выпусков
 

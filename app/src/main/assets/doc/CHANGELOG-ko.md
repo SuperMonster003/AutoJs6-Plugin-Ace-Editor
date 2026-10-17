@@ -4,6 +4,13 @@
 
 ******
 
+# v2.9.0
+
+###### 2026/10/17
+
+* `기능` Node.js Worker에서 부모 런타임을 통한 OpenCC 및 이미지 모듈 지원, CJS, ESM, 중첩 Worker와 이미지 바이너리 전송 포함 (API / TypeScript / Ace)
+* `기능` Bun에서 별도 허용이 필요한 화면 캡처, Android 승인, 시간 초과/취소 정리 및 재요청 지원 (API / TypeScript / Ace)
+
 # v2.8.0
 
 ###### 2026/10/17

@@ -5,6 +5,13 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.9.0": {
+      "released_date": "2026/10/17",
+      "feature": [
+        "Worker Node.js поддерживают OpenCC и изображения через родительскую среду, включая CJS, ESM, вложенные Worker и двоичные данные (API / TypeScript / Ace)",
+        "Bun поддерживает захват экрана с отдельным разрешением, согласием Android, очисткой при отмене/тайм-ауте и повторным запросом (API / TypeScript / Ace)"
+      ]
+    },
     "v2.8.0": {
       "released_date": "2026/10/17",
       "feature": [

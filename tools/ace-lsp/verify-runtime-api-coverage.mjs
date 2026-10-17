@@ -103,11 +103,14 @@ service.dispose();
 const openccMethods = fs.readFileSync(path.join(assets, 'types/autojs6/aj6-int-opencc.d.ts'), 'utf8')
     .match(/\b(?:convert|[a-z]+2[a-z]+)\(/g).map(name => name.slice(0, -1));
 const commonImages = ['fromBase64', 'fromBytes', 'toBase64', 'toBytes', 'pixel', 'readPixels', 'copy', 'scale',
-    'rotate', 'flip', 'blur', 'gaussianBlur', 'medianBlur', 'invert', 'detectsColor', 'findAllPointsForColor'];
+    'rotate', 'flip', 'blur', 'gaussianBlur', 'medianBlur', 'invert', 'detectsColor', 'findAllPointsForColor',
+    'requestScreenCapture', 'captureScreen', 'stopScreenCapture'];
 const newApiChecks = [];
 for (const [file, header, opencc, images] of [
     ['api.cjs', 'const cc = require("autojs6:opencc");\nconst images = require("images");\n', 'cc', 'images'],
     ['api.mjs', 'import cc from "autojs6:opencc";\nimport images from "images";\n', 'cc', 'images'],
+    ['worker.cjs', 'const cc = require("autojs6:opencc");\nconst images = require("images");\n', 'cc', 'images'],
+    ['worker.mjs', 'import cc from "autojs6:opencc";\nimport images from "autojs6:images";\n', 'cc', 'images'],
     ['api.bun.ts', 'declare const host: import("autojs6:bun-host").HostClient;\n', 'host.opencc', 'host.images'],
 ]) {
     const documentUri = `file:///autojs6/editor/${file}`;

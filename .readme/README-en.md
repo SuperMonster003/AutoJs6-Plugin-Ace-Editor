@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.8.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.9.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -184,6 +184,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.9.0
+
+###### 2026/10/17
+
+* `Feature` Node.js Workers support OpenCC and image modules through the parent runtime, including CJS, ESM, nested Workers and binary image data (API / TypeScript / Ace)
+* `Feature` Bun supports screen capture with a separate opt-in grant, Android consent, timeout/cancellation cleanup and repeated authorization (API / TypeScript / Ace)
+
 # v2.8.0
 
 ###### 2026/10/17
@@ -195,13 +202,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/17
 
 * `Feature` Rhino speech and speech.models declarations and completion, including sessions, events, model management and typed results; kept separate from Node.js and Bun
-
-# v2.6.0
-
-###### 2026/10/17
-
-* `Feature` Runtime-aware Node.js and Bun completion, with isolated declarations and no Rhino global or JSOX prototype leakage
-* `Fix` Long completion signatures wrap within the screen so Promise return types remain readable without covering code or the completion list
 
 ##### Complete release history
 

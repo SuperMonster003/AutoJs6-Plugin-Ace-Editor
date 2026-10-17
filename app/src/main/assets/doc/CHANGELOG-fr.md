@@ -4,6 +4,13 @@
 
 ******
 
+# v2.9.0
+
+###### 2026/10/17
+
+* `Fonctionnalité` Les Workers Node.js utilisent OpenCC et les images via le runtime parent, avec CJS, ESM, Workers imbriqués et transfert binaire (API / TypeScript / Ace)
+* `Fonctionnalité` Bun propose la capture écran avec autorisation distincte, consentement Android, nettoyage après expiration/annulation et nouvelle demande (API / TypeScript / Ace)
+
 # v2.8.0
 
 ###### 2026/10/17

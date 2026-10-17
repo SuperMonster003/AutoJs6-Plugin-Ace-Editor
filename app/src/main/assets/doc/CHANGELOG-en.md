@@ -4,6 +4,13 @@
 
 ******
 
+# v2.9.0
+
+###### 2026/10/17
+
+* `Feature` Node.js Workers support OpenCC and image modules through the parent runtime, including CJS, ESM, nested Workers and binary image data (API / TypeScript / Ace)
+* `Feature` Bun supports screen capture with a separate opt-in grant, Android consent, timeout/cancellation cleanup and repeated authorization (API / TypeScript / Ace)
+
 # v2.8.0
 
 ###### 2026/10/17

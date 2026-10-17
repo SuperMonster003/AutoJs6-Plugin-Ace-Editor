@@ -4,6 +4,13 @@
 
 ******
 
+# v2.9.0
+
+###### 2026/10/17
+
+* `新增` Node.js Worker 支援透過父執行環境呼叫 OpenCC 與影像模組, 包含 CJS, ESM, 巢狀 Worker 和影像二進位傳輸 (API / TypeScript / Ace)
+* `新增` Bun 支援獨立授權的螢幕擷取, Android 錄製權限申請, 逾時/取消清理和重新申請 (API / TypeScript / Ace)
+
 # v2.8.0
 
 ###### 2026/10/17
