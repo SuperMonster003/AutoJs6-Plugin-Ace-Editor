@@ -182,11 +182,15 @@ for (const [file, header, opencc, images] of [
     const uiMembers=query(current,uiHeader+'ui.','',documentUri);
     for(const name of ['inflate','createView','context','findView','view'])assert(uiMembers.includes(name),`${file}: UI ${name}`);
     const nativeView=query(current,uiHeader+'async function f(){const view=await ui.inflate("<text/>");view.','',documentUri);
-    for(const name of ['get','set','flush','text','checked','progress','selectedIndex','checkedId','rating','cardCornerRadius','items','visibility','loadUrl','loadHtml','evaluateJavascript','evaluateJavascriptAsync','openDrawer','closeDrawer','menu','currentItem','pageCount','setCurrentItem','xmlId','findView','dispose','on','once','off','context'])assert(nativeView.includes(name),`${file}: native View ${name}`);
+    for(const name of ['get','set','flush','text','checked','progress','selectedIndex','checkedId','rating','cardCornerRadius','items','visibility','loadUrl','loadHtml','evaluateJavascript','evaluateJavascriptAsync','enableDisplayCapture','disableDisplayCapture','stopMediaCapture','startBackgroundRecording','stopBackgroundRecording','getBackgroundRecording','cancelBackgroundRecording','openDrawer','closeDrawer','menu','currentItem','pageCount','setCurrentItem','xmlId','findView','dispose','on','once','off','context'])assert(nativeView.includes(name),`${file}: native View ${name}`);
     for(const name of ['setWebViewClient','setWebChromeClient','setDownloadListener','chooseFiles','cancelFileChooser','download','getDownload','readDownload','cancelDownload','exitFullscreen'])assert(nativeView.includes(name),`${file}: ${name}`);
     const webHeader=uiHeader+"async function f(){const web=await ui.createView('WebView');";
+    const sharing=query(current,webHeader+"web.enableDisplayCapture({",'',documentUri);
+    for(const name of ['origin','maxWidth','maxHeight','frameRate','timeoutMs'])assert(sharing.includes(name),`${file}: display option ${name}`);
+    const background=query(current,webHeader+"web.startBackgroundRecording({",'',documentUri);
+    for(const name of ['cameraId','facing','width','height','frameRate','audio','durationLimitSeconds'])assert(background.includes(name),`${file}: camera option ${name}`);
     const mediaResponse=query(current,webHeader+"web.setWebChromeClient({onPermissionRequest:e=>({resources:e.resources,",'',documentUri);
-    assert(mediaResponse.includes('requestAndroidPermissions'),`${file}: explicit Android media permission response`);
+    assert(mediaResponse.includes('requestAndroidPermissions')&&mediaResponse.includes('backgroundCapture'),`${file}: explicit Android media permission response`);
     const callbacks=query(current,webHeader+'web.setWebChromeClient({onJs','onJs',documentUri);
     for(const name of ['onJsAlert','onJsConfirm','onJsPrompt','onJsBeforeUnload'])assert(callbacks.includes(name),`${file}: ${name} callback`);
     const picker=query(current,webHeader+'web.setWebChromeClient({onShowFileChooser(e){e.','',documentUri);

@@ -53,6 +53,12 @@ class AceApiCoverageDeviceTest {
             showPopup(editor,webHeader+"web.evaluateJavascriptA","evaluateJavascriptAsync",evidence,"$kind-web-promise-popup","Promise<")
             val permissionType=if(kind=="node")"import('ui').WebPermissionResponse" else "import('autojs6:bun-host').RuntimeUi.WebPermissionResponse"
             showPopup(editor,header+"/** @type {$permissionType} */\nconst mediaReply={resources:[]};\nmediaReply.requestA","requestAndroidPermissions",evidence,"$kind-web-media-permission-popup","boolean")
+            showPopup(editor,webHeader+"web.enableDisplayC","enableDisplayCapture",evidence,"$kind-display-popup","Promise<")
+            showPopup(editor,webHeader+"web.startBackgroundR","startBackgroundRecording",evidence,"$kind-background-camera-popup","Promise<")
+            val screenOptions=query(editor,webHeader+"web.enableDisplayCapture({","",evidence)
+            assertTrue(screenOptions.toString(),semanticNames(screenOptions).containsAll(setOf("origin","maxWidth","maxHeight","frameRate","timeoutMs")))
+            val cameraOptions=query(editor,webHeader+"web.startBackgroundRecording({","",evidence)
+            assertTrue(cameraOptions.toString(),semanticNames(cameraOptions).containsAll(setOf("facing","cameraId","audio","width","height","frameRate")))
             val choices=query(editor,webHeader+"web.chooseFiles({","",evidence)
             assertTrue(choices.toString(),semanticNames(choices).containsAll(setOf("mode","captureEnabled","captureKind","videoQuality","durationLimitSeconds","sizeLimitBytes","timeoutMs","fileName","writable","initialUri")))
             showPopup(editor,webHeader+"web.chooseFiles({captureEnabled:true,videoQ","videoQuality",evidence,"$kind-video-capture-popup","0 | 1")

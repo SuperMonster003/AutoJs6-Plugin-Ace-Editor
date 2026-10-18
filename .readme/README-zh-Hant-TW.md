@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.21.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.22.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.21.0-u
 
 ******
 
+# v2.22.0
+
+###### 2026/10/18
+
+* `新增` Node.js/Bun 的 WebView 螢幕共享適配, 前景服務背景錄音及原生背景攝影機錄影, 包括 Node Worker 封裝
+
 # v2.21.0
 
 ###### 2026/10/18
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.21.0-u
 ###### 2026/10/18
 
 * `新增` Node.js/Bun: WebView 影片拍攝與前景 AAC/M4A 錄音, 支援媒體參數, 可設定選擇等待時限及暫存檔案清理
-
-# v2.19.0
-
-###### 2026/10/18
-
-* `新增` Node.js/Bun: WebView 完整照片拍攝, 儲存和目錄選擇, 文件位元組讀取, blob/data 分塊下載及所選位置輸出
 
 ##### 更多發行歷史可參閱
 
