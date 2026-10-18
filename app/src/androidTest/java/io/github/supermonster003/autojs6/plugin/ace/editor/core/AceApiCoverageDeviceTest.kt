@@ -18,6 +18,20 @@ import org.junit.runner.RunWith
 /** Uses the real page's public LSP wrapper and popup, with the normal provider budgets and native asset bridge. */
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
+    @Test
+    fun bunAutomationUsesTypedPopups() = withEvidence("bun-automation") { editor, evidence ->
+        val header="\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};\n"
+        for((module,names) in listOf("app" to setOf("packageName","intent","parseUri","launchPackage","getPackageInfo","startService","sendBroadcast"),
+            "accessibility" to setOf("isEnabled","ensureEnabled","findOne","findAll","textMatches","click","setText","swipe","gesture"),"clipboard" to setOf("getText","setText","hasText"))) {
+            val result=query(editor,header+"host.$module.","",evidence)
+            assertTrue(result.toString(),semanticNames(result).containsAll(names))
+        }
+        showPopup(editor,header+"host.accessibility.findO","findOne",evidence,"bun-selector-popup","Promise<")
+        showPopup(editor,header+"host.app.getPackageI","getPackageInfo",evidence,"bun-app-popup","Promise<")
+        showPopup(editor,header+"host.clipboard.getT","getText",evidence,"bun-clipboard-popup","Promise<string>")
+        val intent=query(editor,header+"host.app.startActivity({","",evidence)
+        assertTrue(intent.toString(),semanticNames(intent).containsAll(setOf("action","data","packageName","className","extras")))
+    }
 
     @Test
     fun uiAndComposeUseTypedRuntimePopups() = withEvidence("runtime-ui-compose") { editor, evidence ->

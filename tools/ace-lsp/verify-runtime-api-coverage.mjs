@@ -135,6 +135,12 @@ for (const [file, header, opencc, images] of [
             for(const name of expected)assert(names.includes(name),`${file}: ${module}.${name} missing`);
         }
     } else if(file.endsWith('.bun.ts')) {
+        for(const [module,names] of [['app',['packageName','intent','parseUri','launchPackage','openAppSetting','startActivity','startService','sendBroadcast','getInstalledApps','getPackageInfo']],['accessibility',['isEnabled','ensureEnabled','textMatches','click','longClick','setText','findOne','findAll','scrollForward','swipe','gesture']],['clipboard',['getText','setText','hasText']]]) {
+            const members=query(current,header+'host.'+module+'.','',documentUri);
+            for(const name of names)assert(members.includes(name),`Bun ${module}.${name}`);
+        }
+        const appIntent=query(current,header+'host.app.startActivity({','',documentUri);
+        for(const name of ['action','data','packageName','className','extras'])assert(appIntent.includes(name),`Bun Intent ${name}`);
         for(const name of ['start','stop','cancel','getStatus'])assert(query(current,header+'host.screenRecorder.','',documentUri).includes(name),`Bun recording ${name}`);
         const members=query(current,header+'async function test() {const movie=await host.screenRecorder.stop();if(movie) movie.','',documentUri);
         for(const name of ['path','size','durationMs','width','height','audio','audioSource','audioCodec','audioSampleRate','audioChannels'])assert(members.includes(name),`Movie metadata ${name}`);
