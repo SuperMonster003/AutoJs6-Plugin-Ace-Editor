@@ -191,7 +191,7 @@ for (const [file, header, opencc, images] of [
     for(const name of ['acceptTypes','multiple','mode','captureEnabled','filenameHint'])assert(picker.includes(name),`${file}: chooser ${name}`);
     assert(nativeView.includes('readDocument'),`${file}: readDocument`);
     const chooserOptions=query(current,webHeader+'web.chooseFiles({','',documentUri);
-    for(const name of ['mode','captureEnabled','fileName','writable','initialUri'])assert(chooserOptions.includes(name),`${file}: chooser option ${name}`);
+    for(const name of ['mode','captureEnabled','captureKind','videoQuality','durationLimitSeconds','sizeLimitBytes','timeoutMs','fileName','writable','initialUri'])assert(chooserOptions.includes(name),`${file}: chooser option ${name}`);
     const downloadOptions=query(current,webHeader+"web.download({url:'data:text/plain,hi',",'',documentUri);
     for(const name of ['destinationUri','directoryUri','timeoutMs'])assert(downloadOptions.includes(name),`${file}: download option ${name}`);
     const httpError=query(current,webHeader+'web.setWebViewClient({onReceivedHttpError(e){e.','',documentUri);

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.20.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "Node.js/Bun: Captura de vídeo WebView y audio AAC/M4A en primer plano, con opciones multimedia, plazos configurables y limpieza de archivos temporales"
+      ]
+    },
     "v2.19.0": {
       "released_date": "2026/10/18",
       "feature": [
