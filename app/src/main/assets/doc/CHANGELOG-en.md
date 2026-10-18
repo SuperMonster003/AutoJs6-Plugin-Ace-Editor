@@ -4,6 +4,12 @@
 
 ******
 
+# v2.18.0
+
+###### 2026/10/18
+
+* `Feature` Node.js/Bun: WebView HTTP(S) downloads, system file selection and asynchronous WebViewClient/WebChromeClient callbacks with native navigation and resource rules
+
 # v2.17.0
 
 ###### 2026/10/18

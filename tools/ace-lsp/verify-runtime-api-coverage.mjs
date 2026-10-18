@@ -183,6 +183,14 @@ for (const [file, header, opencc, images] of [
     for(const name of ['inflate','createView','context','findView','view'])assert(uiMembers.includes(name),`${file}: UI ${name}`);
     const nativeView=query(current,uiHeader+'async function f(){const view=await ui.inflate("<text/>");view.','',documentUri);
     for(const name of ['get','set','flush','text','checked','progress','selectedIndex','checkedId','rating','cardCornerRadius','items','visibility','loadUrl','loadHtml','evaluateJavascript','openDrawer','closeDrawer','menu','currentItem','pageCount','setCurrentItem','xmlId','findView','dispose','on','once','off','context'])assert(nativeView.includes(name),`${file}: native View ${name}`);
+    for(const name of ['setWebViewClient','setWebChromeClient','setDownloadListener','chooseFiles','cancelFileChooser','download','getDownload','readDownload','cancelDownload','exitFullscreen'])assert(nativeView.includes(name),`${file}: ${name}`);
+    const webHeader=uiHeader+"async function f(){const web=await ui.createView('WebView');";
+    const callbacks=query(current,webHeader+'web.setWebChromeClient({onJs','onJs',documentUri);
+    for(const name of ['onJsAlert','onJsConfirm','onJsPrompt','onJsBeforeUnload'])assert(callbacks.includes(name),`${file}: ${name} callback`);
+    const picker=query(current,webHeader+'web.setWebChromeClient({onShowFileChooser(e){e.','',documentUri);
+    for(const name of ['acceptTypes','multiple','mode','captureEnabled','filenameHint'])assert(picker.includes(name),`${file}: chooser ${name}`);
+    const httpError=query(current,webHeader+'web.setWebViewClient({onReceivedHttpError(e){e.','',documentUri);
+    for(const name of ['url','statusCode','responseHeaders','mainFrame'])assert(httpError.includes(name),`${file}: HTTP callback ${name}`);
     const xmlTags=query(current,uiHeader+"ui.inflate('<sp",'sp',documentUri);
     assert(xmlTags.includes('spinner')&&xmlTags.includes('space'),`${file}: XML component tags`);
     for(const tag of ['webview','drawer','toolbar','viewpager'])assert(query(current,uiHeader+"ui.inflate('<"+tag.slice(0,2),tag.slice(0,2),documentUri).includes(tag),`${file}: ${tag} XML tag`);

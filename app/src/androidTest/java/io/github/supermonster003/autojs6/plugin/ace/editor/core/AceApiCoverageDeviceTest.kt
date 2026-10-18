@@ -43,6 +43,12 @@ class AceApiCoverageDeviceTest {
                 assertTrue(result.toString(),semanticNames(result).contains(tag))
             }
             showPopup(editor,header+"ui.inflate('<webview javaS","javaScriptEnabled",evidence,"$kind-web-attribute-popup","ui.inflate attribute: javaScriptEnabled")
+            assertTrue(native.toString(),semanticNames(native).containsAll(setOf("setWebViewClient","setWebChromeClient","setDownloadListener","chooseFiles","cancelFileChooser","download","getDownload","readDownload","cancelDownload","exitFullscreen")))
+            val webHeader=header+"async function f(){const web=await ui.createView('WebView');"
+            showPopup(editor,webHeader+"web.chooseF","chooseFiles",evidence,"$kind-chooser-popup","Promise<")
+            showPopup(editor,webHeader+"web.setWebChromeClient({onJsP","onJsPrompt",evidence,"$kind-prompt-callback-popup","WebDialogRequest")
+            val picker=query(editor,webHeader+"web.setWebChromeClient({onShowFileChooser(e){e.","",evidence)
+            assertTrue(picker.toString(),semanticNames(picker).containsAll(setOf("acceptTypes","mode","multiple","captureEnabled","filenameHint")))
             assertFalse(semanticNames(native).contains("getContext"))
             showPopup(editor,header+"compose.mou","mount",evidence,"$kind-compose-popup","Promise<")
             showPopup(editor,header+"ui.showL","showLayout",evidence,"$kind-ui-popup","Promise<")
@@ -287,7 +293,7 @@ class AceApiCoverageDeviceTest {
     }
 
     private fun showPopup(editor: AceDeviceTestHarness, text: String, expected: String, evidence: JSONObject, name: String, expectedType: String? = null) {
-        val prefix = text.substringAfterLast('.')
+        val prefix = Regex("[A-Za-z0-9_$]*$").find(text)!!.value
         val result = query(editor, text, prefix, evidence)
         assertTrue("Popup test lacks the expected semantic candidate: $result", semanticNames(result).contains(expected))
         editor.focusEditor()

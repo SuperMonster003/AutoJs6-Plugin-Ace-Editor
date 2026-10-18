@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.18.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "Node.js/Bun: Descargas HTTP(S) de WebView, selección de archivos del sistema y callbacks asíncronos WebViewClient/WebChromeClient con reglas nativas de navegación y recursos"
+      ]
+    },
     "v2.17.0": {
       "released_date": "2026/10/18",
       "feature": [
