@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.18.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.19.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.18.0-u
 
 ******
 
+# v2.19.0
+
+###### 2026/10/18
+
+* `新增` Node.js/Bun: WebView 完整照片拍摄, 保存和目录选择, 文档字节读取, blob/data 分块下载及所选位置输出
+
 # v2.18.0
 
 ###### 2026/10/18
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.18.0-u
 ###### 2026/10/18
 
 * `新增` Node.js/Bun: WebView 页面加载与 JavaScript 返回值, Drawer 侧栏, Toolbar 导航与菜单, ViewPager 页面及异步原生事件
-
-# v2.16.0
-
-###### 2026/10/18
-
-* `新增` Node.js/Bun 支持常用 XML 表单与布局组件及原生 View 异步属性代理, 包含顺序赋值, 错误恢复与 Worker 调用
 
 ##### 更多发行历史可参阅
 

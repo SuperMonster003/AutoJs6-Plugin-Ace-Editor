@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.18.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.19.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.18.0-u
 
 ******
 
+# v2.19.0
+
+###### 2026/10/18
+
+* `기능` Node.js/Bun: WebView 원본 크기 사진 촬영, 저장 및 디렉터리 선택, 문서 바이트 읽기, blob/data 분할 다운로드와 선택한 위치로 출력
+
 # v2.18.0
 
 ###### 2026/10/18
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.18.0-u
 ###### 2026/10/18
 
 * `기능` Node.js/Bun: WebView 페이지 로딩과 JavaScript 반환값, Drawer 패널, Toolbar 탐색과 메뉴, ViewPager 페이지 및 비동기 네이티브 이벤트
-
-# v2.16.0
-
-###### 2026/10/18
-
-* `기능` Node.js/Bun에서 일반 XML 양식과 레이아웃, 네이티브 View 비동기 속성, 순차 대입, 오류 복구 및 Worker 호출 지원
 
 ##### 더 많은 릴리스 기록
 
