@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.16.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.17.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.16.0-u
 
 ******
 
+# v2.17.0
+
+###### 2026/10/18
+
+* `Функция` Node.js/Bun: Загрузка WebView и результаты JavaScript, панели Drawer, навигация и меню Toolbar, страницы ViewPager и асинхронные события
+
 # v2.16.0
 
 ###### 2026/10/18
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.16.0-u
 ###### 2026/10/18
 
 * `Функция` Node.js/Bun поддерживают дескрипторы View в пределах выполнения, асинхронные фабрики AndroidView, контейнеры XML Compose, очистку Workers и упакованные приложения
-
-# v2.14.0
-
-###### 2026/10/18
-
-* `Функция` Node.js/Bun UI и Compose поддерживают нативные макеты, компоненты данных, реактивное состояние и события с отдельными разрешениями и автоматическим закрытием окон
 
 ##### Подробнее об истории выпусков
 

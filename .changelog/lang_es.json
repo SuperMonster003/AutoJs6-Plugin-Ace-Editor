@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.17.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "Node.js/Bun: Carga WebView y resultados JavaScript, paneles Drawer, navegación y menús Toolbar, páginas ViewPager y eventos nativos asíncronos"
+      ]
+    },
     "v2.16.0": {
       "released_date": "2026/10/18",
       "feature": [

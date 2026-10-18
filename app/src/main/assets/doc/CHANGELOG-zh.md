@@ -4,6 +4,12 @@
 
 ******
 
+# v2.17.0
+
+###### 2026/10/18
+
+* `新增` Node.js/Bun: WebView 页面加载与 JavaScript 返回值, Drawer 侧栏, Toolbar 导航与菜单, ViewPager 页面及异步原生事件
+
 # v2.16.0
 
 ###### 2026/10/18

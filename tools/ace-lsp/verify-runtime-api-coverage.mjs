@@ -182,9 +182,12 @@ for (const [file, header, opencc, images] of [
     const uiMembers=query(current,uiHeader+'ui.','',documentUri);
     for(const name of ['inflate','createView','context','findView','view'])assert(uiMembers.includes(name),`${file}: UI ${name}`);
     const nativeView=query(current,uiHeader+'async function f(){const view=await ui.inflate("<text/>");view.','',documentUri);
-    for(const name of ['get','set','flush','text','checked','progress','selectedIndex','checkedId','rating','cardCornerRadius','items','visibility','xmlId','findView','dispose','on','once','off','context'])assert(nativeView.includes(name),`${file}: native View ${name}`);
+    for(const name of ['get','set','flush','text','checked','progress','selectedIndex','checkedId','rating','cardCornerRadius','items','visibility','loadUrl','loadHtml','evaluateJavascript','openDrawer','closeDrawer','menu','currentItem','pageCount','setCurrentItem','xmlId','findView','dispose','on','once','off','context'])assert(nativeView.includes(name),`${file}: native View ${name}`);
     const xmlTags=query(current,uiHeader+"ui.inflate('<sp",'sp',documentUri);
     assert(xmlTags.includes('spinner')&&xmlTags.includes('space'),`${file}: XML component tags`);
+    for(const tag of ['webview','drawer','toolbar','viewpager'])assert(query(current,uiHeader+"ui.inflate('<"+tag.slice(0,2),tag.slice(0,2),documentUri).includes(tag),`${file}: ${tag} XML tag`);
+    assert(query(current,uiHeader+"ui.inflate('<webview javaS",'javaS',documentUri).includes('javaScriptEnabled'),`${file}: WebView attribute`);
+
     assert(query(current,uiHeader+"ui.inflate('<spinner selectedI",'selectedI',documentUri).includes('selectedIndex'),`${file}: XML native attributes`);
     assert(!query(current,uiHeader+"const fake={inflate(value){return value;}};fake.inflate('<sp",'sp',documentUri).includes('spinner'),`${file}: unrelated string got XML suggestions`);
     const propertyDetails=query(current,uiHeader+"async function f(){const view=await ui.createView('Text');view.tex",'tex',documentUri,false,true);

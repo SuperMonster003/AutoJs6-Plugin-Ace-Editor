@@ -36,6 +36,13 @@ class AceApiCoverageDeviceTest {
             showPopup(editor,header+"ui.inflate('<sp","spinner",evidence,"$kind-xml-tag-popup","ui.inflate XML component")
             val attributes=query(editor,header+"ui.inflate('<spinner selectedI","selectedI",evidence)
             assertTrue(attributes.toString(),semanticNames(attributes).contains("selectedIndex"))
+            assertTrue(native.toString(),semanticNames(native).containsAll(setOf("loadUrl","loadHtml","evaluateJavascript","menu","openDrawer","closeDrawer","currentItem","setCurrentItem","pageCount")))
+            showPopup(editor,header+"async function f(){const view=await ui.createView('WebView');view.eval","evaluateJavascript",evidence,"$kind-web-script-popup","Promise<")
+            for(tag in listOf("webview","drawer","toolbar","viewpager")) {
+                val result=query(editor,header+"ui.inflate('<"+tag.take(2),tag.take(2),evidence)
+                assertTrue(result.toString(),semanticNames(result).contains(tag))
+            }
+            showPopup(editor,header+"ui.inflate('<webview javaS","javaScriptEnabled",evidence,"$kind-web-attribute-popup","ui.inflate attribute: javaScriptEnabled")
             assertFalse(semanticNames(native).contains("getContext"))
             showPopup(editor,header+"compose.mou","mount",evidence,"$kind-compose-popup","Promise<")
             showPopup(editor,header+"ui.showL","showLayout",evidence,"$kind-ui-popup","Promise<")

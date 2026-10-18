@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.16.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.17.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.16.0-u
 
 ******
 
+# v2.17.0
+
+###### 2026/10/18
+
+* `新增` Node.js/Bun: WebView 頁面載入與 JavaScript 回傳值, Drawer 側欄, Toolbar 導覽與選單, ViewPager 頁面及非同步原生事件
+
 # v2.16.0
 
 ###### 2026/10/18
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.16.0-u
 ###### 2026/10/18
 
 * `新增` Node.js/Bun 支援執行所屬 View 控制代碼, 非同步 AndroidView 工廠與 XML Compose 容器掛載, 同步支援 Worker 清理及打包應用程式
-
-# v2.14.0
-
-###### 2026/10/18
-
-* `新增` Node.js/Bun UI 與 Compose 支援原生版面配置, 資料元件, 響應式狀態及視窗事件, 提供獨立授權與視窗自動清理
 
 ##### 更多發行歷史可參閱
 
