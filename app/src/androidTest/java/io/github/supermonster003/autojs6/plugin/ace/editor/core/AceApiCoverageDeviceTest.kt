@@ -50,6 +50,9 @@ class AceApiCoverageDeviceTest {
             val picker=query(editor,webHeader+"web.setWebChromeClient({onShowFileChooser(e){e.","",evidence)
             assertTrue(picker.toString(),semanticNames(picker).containsAll(setOf("acceptTypes","mode","multiple","captureEnabled","filenameHint")))
             showPopup(editor,webHeader+"web.readDoc","readDocument",evidence,"$kind-document-popup","Uint8Array")
+            showPopup(editor,webHeader+"web.evaluateJavascriptA","evaluateJavascriptAsync",evidence,"$kind-web-promise-popup","Promise<")
+            val permissionType=if(kind=="node")"import('ui').WebPermissionResponse" else "import('autojs6:bun-host').RuntimeUi.WebPermissionResponse"
+            showPopup(editor,header+"/** @type {$permissionType} */\nconst mediaReply={resources:[]};\nmediaReply.requestA","requestAndroidPermissions",evidence,"$kind-web-media-permission-popup","boolean")
             val choices=query(editor,webHeader+"web.chooseFiles({","",evidence)
             assertTrue(choices.toString(),semanticNames(choices).containsAll(setOf("mode","captureEnabled","captureKind","videoQuality","durationLimitSeconds","sizeLimitBytes","timeoutMs","fileName","writable","initialUri")))
             showPopup(editor,webHeader+"web.chooseFiles({captureEnabled:true,videoQ","videoQuality",evidence,"$kind-video-capture-popup","0 | 1")

@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.20.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.21.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.20.0-u
 
 ******
 
+# v2.21.0
+
+###### 2026/10/18
+
+* `機能` WebView の getUserMedia/MediaRecorder による音声と動画のストリーミング, ページの Promise 待機, Android メディア権限の明示的な要求と Worker のライフサイクル管理
+
 # v2.20.0
 
 ###### 2026/10/18
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.20.0-u
 ###### 2026/10/18
 
 * `機能` Node.js/Bun: WebView のフルサイズ写真撮影, 保存先とディレクトリの選択, 文書バイトの読み取り, blob/data の分割ダウンロードと選択先への出力
-
-# v2.18.0
-
-###### 2026/10/18
-
-* `機能` Node.js/Bun: WebView の HTTP(S) ダウンロード, システムファイル選択, 非同期 WebViewClient/WebChromeClient コールバックとネイティブのナビゲーションおよびリソース規則
 
 ##### その他のリリース履歴
 

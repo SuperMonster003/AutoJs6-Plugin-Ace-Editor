@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.20.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.21.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -184,6 +184,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v2.21.0
+
+###### 2026/10/18
+
+* `Fonctionnalité` Flux audio et video WebView getUserMedia/MediaRecorder, attente des Promise de page, demandes explicites de permissions multimedia Android et cycle de vie des Worker
+
 # v2.20.0
 
 ###### 2026/10/18
@@ -195,12 +201,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/18
 
 * `Fonctionnalité` Node.js/Bun: Capture photo WebView en pleine résolution, sélection de fichiers et dossiers, lecture des octets et téléchargements blob/data vers les emplacements choisis
-
-# v2.18.0
-
-###### 2026/10/18
-
-* `Fonctionnalité` Node.js/Bun: Téléchargements HTTP(S) WebView, sélection de fichiers système et rappels WebViewClient/WebChromeClient asynchrones avec règles natives de navigation et de ressources
 
 ##### Pour plus d'historique des versions
 
