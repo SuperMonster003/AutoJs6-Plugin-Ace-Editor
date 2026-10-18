@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.16.0": {
+      "released_date": "2026/10/18",
+      "feature": [
+        "Node.js/Bun prennent en charge les formulaires et interfaces XML courants, les propriétés View asynchrones, les affectations ordonnées, la reprise après erreur et les Workers"
+      ]
+    },
     "v2.15.0": {
       "released_date": "2026/10/18",
       "feature": [

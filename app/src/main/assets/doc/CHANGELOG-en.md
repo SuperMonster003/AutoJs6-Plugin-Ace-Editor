@@ -4,6 +4,12 @@
 
 ******
 
+# v2.16.0
+
+###### 2026/10/18
+
+* `Feature` Node.js/Bun support common XML form and layout widgets and asynchronous native View property access, including ordered assignments, error recovery and Worker use
+
 # v2.15.0
 
 ###### 2026/10/18

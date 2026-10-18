@@ -4,6 +4,12 @@
 
 ******
 
+# v2.16.0
+
+###### 2026/10/18
+
+* `Fonctionnalité` Node.js/Bun prennent en charge les formulaires et interfaces XML courants, les propriétés View asynchrones, les affectations ordonnées, la reprise après erreur et les Workers
+
 # v2.15.0
 
 ###### 2026/10/18

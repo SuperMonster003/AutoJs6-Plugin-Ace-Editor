@@ -4,6 +4,12 @@
 
 ******
 
+# v2.16.0
+
+###### 2026/10/18
+
+* `Función` Node.js/Bun admiten formularios y diseños XML comunes, propiedades View asíncronas, asignaciones ordenadas, recuperación de errores y Workers
+
 # v2.15.0
 
 ###### 2026/10/18

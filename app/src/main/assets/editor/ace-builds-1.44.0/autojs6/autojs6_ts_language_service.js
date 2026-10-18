@@ -1039,7 +1039,7 @@
         }
 
         function signatureForCompletionEntry(entry, offset) {
-            if (!entry || (!isFunctionLikeKind(entry.kind) && entry.kind !== "property") ||
+            if (!entry || (!isFunctionLikeKind(entry.kind) && entry.kind !== "property" && entry.kind !== "getter" && entry.kind !== "setter") ||
                 typeof service.getCompletionEntryDetails !== "function") {
                 return "";
             }
@@ -1058,6 +1058,59 @@
             }
         }
 
+        function runtimeXmlCompletions(offset) {
+            if (apiRuntime !== PROFILE_NODE && apiRuntime !== PROFILE_BUN) return null;
+            if (!/<[^<>]*$/.test(currentText.substring(0, offset))) return null;
+            var program = service.getProgram();
+            var source = program && program.getSourceFile(currentFile);
+            if (!source) return null;
+            var literal = null;
+            function visit(node) {
+                if (offset < node.getStart(source) || offset > node.end) return;
+                if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) literal = node;
+                ts.forEachChild(node, visit);
+            }
+            visit(source);
+            if (!literal || !ts.isCallExpression(literal.parent) || literal.parent.arguments[0] !== literal) return null;
+            var call = literal.parent.expression;
+            if (!ts.isPropertyAccessExpression(call) || call.name.text !== "inflate") return null;
+            var runtimeFile = apiRuntime === PROFILE_NODE ? AUTOJS6_NODE_LIB : AUTOJS6_BUN_LIB;
+            var symbol = program.getTypeChecker().getSymbolAtLocation(call.name);
+            if (!symbol || !(symbol.getDeclarations() || []).some(function(declaration) {
+                return declaration.getSourceFile().fileName === runtimeFile;
+            })) return null;
+            var fragment = currentText.substring(literal.getStart(source) + 1, offset).replace(/\\(["'`\\])/g, "$1");
+            var quote = "", start = -1;
+            for (var index = 0; index < fragment.length; index++) {
+                var character = fragment.charAt(index);
+                if (quote) { if (character === quote) quote = ""; continue; }
+                if (start >= 0 && (character === '"' || character === "'")) { quote = character; continue; }
+                if (character === "<") start = index;
+                else if (character === ">") start = -1;
+            }
+            if (quote || start < 0) return null;
+            var inside = fragment.substring(start + 1), name, partial;
+            var tag = /^\/?([A-Za-z][\w-]*|)$/.exec(inside);
+            if (tag) { name = "XmlTagName"; partial = tag[1]; }
+            else {
+                // Only complete an attribute name, never a value or an already written assignment.
+                var suffix = /(?:\s|^)(?:android:)?([A-Za-z_][\w]*|)$/.exec(inside);
+                if (!/^[A-Za-z][\w.-]*\s/.test(inside) || !suffix) return null;
+                name = "XmlAttributeName"; partial = suffix[1];
+            }
+            var declaration = new RegExp("type " + name + " = ([^;]+);").exec(files[runtimeFile] || "");
+            if (!declaration) return null;
+            var values = declaration[1].match(/"[^"]+"/g) || [];
+            return values.map(function(value) { return value.slice(1, -1); }).filter(function(value) {
+                return value.toLowerCase().indexOf(partial.toLowerCase()) === 0;
+            }).map(function(value, index) {
+                return { caption: value, value: value, meta: tag ? "XML tag" : "XML attribute", score: 1300 - index,
+                    docText: tag ? "ui.inflate XML component: " + value : "ui.inflate attribute: " + value + ". Support depends on the component.",
+                    autojs6Ts: true, autojs6Incomplete: false,
+                    replaceRange: { start: positionFromIndex(currentText, offset - partial.length), end: positionFromIndex(currentText, offset) } };
+            });
+        }
+
         function getCompletions(session, pos, prefix, callback, documentText) {
             callback = typeof callback === "function" ? callback : noop;
             try {
@@ -1066,6 +1119,8 @@
                     return false;
                 }
                 var offset = positionToIndex(session, pos);
+                var xml = runtimeXmlCompletions(offset);
+                if (xml !== null) { callback(null, xml); return true; }
                 var memberContext = memberContextFromText(currentText, offset);
                 var result = service.getCompletionsAtPosition(currentFile, offset, {
                     includeExternalModuleExports: false,
