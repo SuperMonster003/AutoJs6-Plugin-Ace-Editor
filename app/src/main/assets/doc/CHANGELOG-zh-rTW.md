@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.1
+
+###### 2026/10/19
+
+* `修復` 全域相容函式 Tap, Swipe, KeyCode 等的型別註解未說明 setDefaultOptions({ adb: true }) 後改經 Shizuku 執行
+
 # v2.30.0
 
 ###### 2026/10/19

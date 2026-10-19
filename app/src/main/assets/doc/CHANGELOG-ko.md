@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.1
+
+###### 2026/10/19
+
+* `수정` Tap, Swipe, KeyCode 등 전역 호환 함수의 타입 주석에 setDefaultOptions({ adb: true }) 이후 Shizuku 경유 실행 설명 누락
+
 # v2.30.0
 
 ###### 2026/10/19

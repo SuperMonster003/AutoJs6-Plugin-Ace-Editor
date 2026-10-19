@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.1
+
+###### 2026/10/19
+
+* `Fix` Type comments of global compatibility functions such as Tap, Swipe and KeyCode not mentioning that they run through Shizuku after setDefaultOptions({ adb: true })
+
 # v2.30.0
 
 ###### 2026/10/19

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.30.1": {
+      "released_date": "2026/10/19",
+      "fix": [
+        "Commentaires de types des fonctions globales de compatibilité telles que Tap, Swipe et KeyCode n'indiquant pas leur exécution via Shizuku après setDefaultOptions({ adb: true })"
+      ]
+    },
     "v2.30.0": {
       "released_date": "2026/10/19",
       "feature": [

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.30.1": {
+      "released_date": "2026/10/19",
+      "fix": [
+        "تعليقات أنواع دوال التوافق العامة مثل Tap و Swipe و KeyCode لم تذكر تنفيذها عبر Shizuku بعد setDefaultOptions({ adb: true })"
+      ]
+    },
     "v2.30.0": {
       "released_date": "2026/10/19",
       "feature": [

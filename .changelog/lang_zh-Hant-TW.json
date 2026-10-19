@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v2.30.1": {
+      "released_date": "2026/10/19",
+      "fix": [
+        "全域相容函式 Tap, Swipe, KeyCode 等的型別註解未說明 setDefaultOptions({ adb: true }) 後改經 Shizuku 執行"
+      ]
+    },
     "v2.30.0": {
       "released_date": "2026/10/19",
       "feature": [

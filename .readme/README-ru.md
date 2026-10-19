@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.0-u
 ### История выпусков
 
 ******
+
+# v2.30.1
+
+###### 2026/10/19
+
+* `Исправление` Комментарии типов глобальных функций совместимости Tap, Swipe, KeyCode и других не упоминали выполнение через Shizuku после setDefaultOptions({ adb: true })
 
 # v2.30.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.0-u
 ###### 2026/10/19
 
 * `Функция` Управление устройством и диалоги для Bun и Node.js Workers с яркостью, громкостью и независимой очисткой окон
-
-# v2.28.0
-
-###### 2026/10/19
-
-* `Функция` События и уведомления хоста для Bun и Node.js Workers с независимой очисткой подписок и уведомлений
 
 ##### Подробнее об истории выпусков
 
