@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.25.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -184,6 +184,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.25.0
+
+###### 2026/10/19
+
+* `Feature` Host database/sqlite APIs for Bun and Node.js Workers with parameterized queries, transactions and persistence
+
 # v2.24.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/19
 
 * `Feature` Bun accessibility, app operations and clipboard APIs aligned with the Node.js interfaces, with independent grants and packaged-app support
-
-# v2.22.0
-
-###### 2026/10/18
-
-* `Feature` WebView screen sharing adapter, foreground-service audio capture and native background camera recording in Node.js/Bun, including Node Workers
 
 ##### Complete release history
 

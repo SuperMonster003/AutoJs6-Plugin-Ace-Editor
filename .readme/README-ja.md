@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.25.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-u
 
 ******
 
+# v2.25.0
+
+###### 2026/10/19
+
+* `機能` Node.js Worker と Bun の database/sqlite API. パラメーター付きクエリ, トランザクション, 永続化に対応
+
 # v2.24.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-u
 ###### 2026/10/19
 
 * `機能` Bun のユーザー補助, アプリ操作, クリップボード API を Node.js の対応インターフェースに合わせ, 個別の許可とパッケージ化アプリに対応
-
-# v2.22.0
-
-###### 2026/10/18
-
-* `機能` Node.js/Bun の WebView 画面共有アダプター, フォアグラウンドサービスによる録音とネイティブのバックグラウンド動画録画, Node Worker にも対応
 
 ##### その他のリリース履歴
 

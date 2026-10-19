@@ -128,6 +128,9 @@ for (const [file, header, opencc, images] of [
     const documentUri = `file:///autojs6/editor/${file}`;
     const current = context.AutoJsAceTsLanguageService.create({ documentUri, libraryTextByUri: texts });
     if(file.startsWith('worker.')) {
+        const dbHeader=file.endsWith('.mjs')?'import database from "autojs6:database";\n':'const database=require("autojs6:database");\n';
+        const db=query(current,dbHeader+'async function f(){const db=await database.open("owned");db.','',documentUri);
+        for(const name of ['id','name','exec','run','get','all','transaction','close'])assert(db.includes(name),`Worker database.${name}`);
         for(const [module,expected] of [['pinyin',['convert','simple','compact','STYLE_NORMAL','MODE_SURNAME']],['pinyin4j',['of','as','readings']],
             ['console',['show','hide','setTitle','log']],['screen_metrics',['cX','cY','cXy','cYx','setScaleBases']]]) {
             const code=file.endsWith('.mjs')?`import api from "autojs6:${module}";\napi.`:`const api=require("autojs6:${module}");\napi.`;
@@ -135,6 +138,10 @@ for (const [file, header, opencc, images] of [
             for(const name of expected)assert(names.includes(name),`${file}: ${module}.${name} missing`);
         }
     } else if(file.endsWith('.bun.ts')) {
+        for(const entry of ['host.database.open("owned")','host.sqlite({name:"owned"})']) {
+            const db=query(current,header+`async function f(){const db=await ${entry};db.`,'',documentUri);
+            for(const name of ['id','name','exec','run','get','all','transaction','close'])assert(db.includes(name),`Bun database.${name}`);
+        }
         const files=query(current,header+'host.files.','',documentUri);
         for(const name of ['path','join','read','write','append','exists','listDir','remove','copy','move','ensureDir','isFile','isDir','getName','getExtension'])assert(files.includes(name),`Bun files.${name}`);
         for(const module of ['storage','storages']) {

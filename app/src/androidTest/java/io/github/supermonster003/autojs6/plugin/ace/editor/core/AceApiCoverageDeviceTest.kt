@@ -43,6 +43,21 @@ class AceApiCoverageDeviceTest {
     }
 
     @Test
+    fun databasesUseTypedMainWorkerAndBunPopups() = withEvidence("runtime-database") { editor, evidence ->
+        for((mode,header,open) in listOf(
+            Triple("node","\"nodejs\";\nconst database=require('autojs6:database'),sqlite=require('autojs6:sqlite');\n","database.open({name:'owned'})"),
+            Triple("bun","\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const database=host.database,sqlite=host.sqlite;\n","sqlite({name:'owned'})"))) {
+            val code=header+"async function f(){const db=await $open;"
+            val methods=query(editor,code+"db.","",evidence)
+            assertTrue(methods.toString(),semanticNames(methods).containsAll(setOf("id","name","exec","run","get","all","transaction","close")))
+            showPopup(editor,code+"db.trans","transaction",evidence,"$mode-database-transaction","Promise<")
+            showPopup(editor,code+"db.ge","get",evidence,"$mode-database-get","Promise<")
+            val options=query(editor,header+"database.open({","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("name","timeoutMs","signal")))
+        }
+    }
+
+    @Test
     fun uiAndComposeUseTypedRuntimePopups() = withEvidence("runtime-ui-compose") { editor, evidence ->
         for ((kind, header) in listOf(
             "node" to "\"nodejs\";\nconst compose=require('autojs6:compose'),ui=require('ui');\n",

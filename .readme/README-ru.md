@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.25.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-u
 
 ******
 
+# v2.25.0
+
+###### 2026/10/19
+
+* `Функция` API database/sqlite хоста для Bun и Workers Node.js с параметризованными запросами, транзакциями и сохранением данных
+
 # v2.24.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-u
 ###### 2026/10/19
 
 * `Функция` API доступности, операций с приложениями и буфера обмена Bun согласованы с Node.js, с отдельными разрешениями и поддержкой упакованных приложений
-
-# v2.22.0
-
-###### 2026/10/18
-
-* `Функция` Адаптер демонстрации экрана WebView, запись звука через foreground service и нативная фоновая запись камеры для Node.js/Bun и Node Worker
 
 ##### Подробнее об истории выпусков
 

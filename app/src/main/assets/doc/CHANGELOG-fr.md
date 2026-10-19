@@ -4,6 +4,12 @@
 
 ******
 
+# v2.25.0
+
+###### 2026/10/19
+
+* `Fonctionnalité` API hôtes database/sqlite pour Bun et les Workers Node.js, avec requêtes paramétrées, transactions et persistance
+
 # v2.24.0
 
 ###### 2026/10/19
