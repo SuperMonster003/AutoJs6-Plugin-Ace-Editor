@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.1-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -184,6 +184,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v2.26.1
+
+###### 2026/10/19
+
+* `Correctif` Déclarations et complétions manquantes des processus shell/shizuku, dont les paramètres des événements et les constructeurs Shell avec tubes
+
 # v2.26.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/19
 
 * `Fonctionnalité` API hôtes database/sqlite pour Bun et les Workers Node.js, avec requêtes paramétrées, transactions et persistance
-
-# v2.24.0
-
-###### 2026/10/19
-
-* `Fonctionnalité` API Bun de fichiers et de stockage persistant, avec autorisations distinctes et stockage partagé avec Node.js
 
 ##### Pour plus d'historique des versions
 

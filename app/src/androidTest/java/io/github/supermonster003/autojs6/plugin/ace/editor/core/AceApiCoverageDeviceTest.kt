@@ -19,6 +19,29 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun shellProcessesUseTypedDefaultPopups() = withEvidence("shell-process") { editor, evidence ->
+        for(module in listOf("shell","shizuku","${'$'}shell","${'$'}shizuku")) {
+            val code="let child=$module.spawn('echo owned');\n"
+            val result=query(editor,code+"child.","",evidence)
+            assertTrue(result.toString(),semanticNames(result).containsAll(setOf("pid","command","mode","exitCode","readLine","readErrorLine","write","writeLine","closeInput","waitFor","kill","on","off","once","removeAllListeners")))
+            assertFalse(semanticNames(result).contains("emit"))
+            showPopup(editor,"$module.spa","spawn",evidence,"$module-spawn-popup","Shell.Process")
+            showPopup(editor,code+"child.readL","readLine",evidence,"$module-readline-popup","string | null")
+            val options=query(editor,"$module.spawn('echo owned', {","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("root","adb","pty","env","cwd")))
+            assertFalse(semanticNames(options).contains("cmd"))
+            assertTrue(semanticNames(query(editor,code+"child.on('output',line=>line.toU","toU",evidence)).contains("toUpperCase"))
+            assertTrue(semanticNames(query(editor,code+"child.on('exit',code=>code.toF","toF",evidence)).contains("toFixed"))
+        }
+        showPopup(editor,"${'$'}shell.checkA","checkAccess",evidence,"shell-access-popup","boolean")
+        val options=query(editor,"new Shell({","",evidence)
+        assertTrue(options.toString(),semanticNames(options).containsAll(setOf("cmd","root","adb","pty","env","cwd")))
+        val result=query(editor,"let pipe=new Shell({cmd:'sh'});pipe.execForResult('echo owned').","",evidence)
+        assertTrue(result.toString(),semanticNames(result).containsAll(setOf("code","result","error")))
+        showPopup(editor,"let pipe=new Shell({cmd:'sh'});pipe.execForR","execForResult",evidence,"shell-result-popup","Result")
+    }
+
+    @Test
     fun sensorsHaveTypedMainWorkerAndBunPopups() = withEvidence("runtime-sensors") { editor, evidence ->
         for((mode,header) in listOf(
             "node" to "\"nodejs\";\nconst sensors=require('autojs6:sensors');\n",

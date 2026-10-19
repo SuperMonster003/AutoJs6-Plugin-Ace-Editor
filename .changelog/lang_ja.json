@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v2.26.1": {
+      "released_date": "2026/10/19",
+      "fix": [
+        "shell/shizuku プロセスの型宣言と補完の不足, イベント引数とパイプ型 Shell コンストラクターを含む"
+      ]
+    },
     "v2.26.0": {
       "released_date": "2026/10/19",
       "feature": [

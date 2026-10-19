@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.26.1": {
+      "released_date": "2026/10/19",
+      "fix": [
+        "Недостающие объявления типов и дополнения процессов shell/shizuku, включая параметры событий и конструкторы Shell с каналами"
+      ]
+    },
     "v2.26.0": {
       "released_date": "2026/10/19",
       "feature": [

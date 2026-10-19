@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.0-u
 
 ******
 
+# v2.26.1
+
+###### 2026/10/19
+
+* `إصلاح` إكمال تعريفات أنواع عمليات shell/shizuku واقتراحاتها بما يشمل معاملات الأحداث ومنشئات Shell ذات الأنابيب
+
 # v2.26.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.0-u
 ###### 2026/10/19
 
 * `ميزة` واجهات database/sqlite للمضيف في Bun وWorkers من Node.js مع استعلامات بمعاملات ومعاملات ذرية وتخزين دائم
-
-# v2.24.0
-
-###### 2026/10/19
-
-* `ميزة` واجهات Bun للملفات والتخزين الدائم مع أذونات مستقلة وبيانات تخزين مشتركة مع Node.js
 
 ##### لمزيد من سجل الإصدارات
 

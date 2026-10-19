@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.26.1": {
+      "released_date": "2026/10/19",
+      "fix": [
+        "shell/shizuku 進程介面的類型宣告與補全遺漏, 包含事件參數及管道 Shell 建構器"
+      ]
+    },
     "v2.26.0": {
       "released_date": "2026/10/19",
       "feature": [

@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.1-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.0-u
 
 ******
 
+# v2.26.1
+
+###### 2026/10/19
+
+* `수정` shell/shizuku 프로세스 타입 선언과 자동 완성 누락, 이벤트 인수 및 파이프 Shell 생성자 포함
+
 # v2.26.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.26.0-u
 ###### 2026/10/19
 
 * `기능` Node.js Worker 및 Bun의 database/sqlite API, 매개변수 쿼리, 트랜잭션 및 데이터베이스 영속성 지원
-
-# v2.24.0
-
-###### 2026/10/19
-
-* `기능` Bun 파일 및 영구 저장소 API, 별도의 호스트 파일 권한과 Node.js 저장소 공유 지원
 
 ##### 더 많은 릴리스 기록
 

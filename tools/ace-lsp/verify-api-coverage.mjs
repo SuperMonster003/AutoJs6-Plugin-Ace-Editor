@@ -68,6 +68,28 @@ for (const allGroups of [false, true]) {
         assert(completions(service, text, prefix).includes(expected), `${allGroups ? "all" : "default"}: missing ${text} -> ${expected}`);
         queryCount++;
     }
+    for (const module of ['shell','shizuku','$shell','$shizuku']) {
+        const header=`let child=${module}.spawn('echo owned');\n`;
+        const members=completions(service,header+'child.','');
+        for(const name of ['pid','command','mode','exitCode','isAlive','readLine','readErrorLine','write','writeLine','closeInput','waitFor','kill','getInputStream','getErrorStream','getOutputStream','on','addListener','once','prependListener','prependOnceListener','off','removeListener','removeAllListeners','listenerCount','toString'])assert(members.includes(name),`${module} process ${name}`);
+        assert(!members.includes('emit'),'ShellProcess has no emit method');queryCount++;
+        const options=completions(service,`${module}.spawn('echo owned',{`,'');
+        for(const name of ['root','adb','pty','env','cwd'])assert(options.includes(name),`${module} option ${name}`);
+        assert(!options.includes('cmd'),'cmd is constructor-only');queryCount++;
+        assert(completions(service,header+"child.on('output',line=>line.toU",'toU').includes('toUpperCase'),'Output callback must be a string');
+        assert(completions(service,header+"child.on('exit',code=>code.toF",'toF').includes('toFixed'),'Exit callback must be a number');queryCount+=2;
+    }
+    const constructorOptions=completions(service,"new Shell({",'');
+    for(const name of ['cmd','root','adb','pty','env','cwd'])assert(constructorOptions.includes(name),`${allGroups?'all':'default'} Shell constructor option ${name}`);
+    queryCount++;
+    const pipe=completions(service,"let pipe=new Shell({cmd:'sh'});pipe.",'');
+    for(const name of ['isAdb','execForResult','getInputStream','getErrorStream','getOutputStream','waitFor','exitCode','exitAndReadOutput','raw'])assert(pipe.includes(name),`Shell instance ${name}`);
+    queryCount++;
+    for(const expression of ["shell('echo owned')","shizuku('echo owned')","new Shell({cmd:'sh'}).execForResult('echo owned')"]){
+        const fields=completions(service,expression+'.','');
+        for(const name of ['code','result','error'])assert(fields.includes(name),`${allGroups?'all':'default'} Shell result ${name}`);
+        queryCount++;
+    }
     for (const [module, text, prefix, expected] of [
         ["Math", "Math.su", "su", "sum"],
         ["Array", "[1,2,2].di", "di", "distinct"],
@@ -109,6 +131,14 @@ for (const [text, prefix, expected] of [
 // Check real inferred return types, so merely restoring member names cannot satisfy this gate.
 const probeName = path.join(generated, "__core_api_probe.ts");
 const probe = [
+    "const auditShellResult = new Shell({cmd:'sh'}).execForResult('echo owned');",
+    "const auditShellCode = auditShellResult.code;",
+    "const auditShellOutput = auditShellResult.result;",
+    "const auditProcess = shell.spawn('echo owned');",
+    "const auditProcessLine = auditProcess.readLine();",
+    "const auditProcessExit = auditProcess.exitCode;",
+    "const auditProcessWait = auditProcess.waitFor();",
+    "const auditProcessTimed = auditProcess.waitFor(100);",
     "const auditNode = selector().findOne();",
     "const auditChild = auditNode.child(0);",
     "const auditClick = auditChild.click();",

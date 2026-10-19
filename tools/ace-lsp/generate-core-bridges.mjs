@@ -11,6 +11,7 @@ const ROOTS = [
     "org.autojs.autojs.runtime.api.Floaty.JsResizableWindow",
     "org.autojs.autojs.runtime.api.Media",
     "org.autojs.autojs.runtime.api.Files",
+    "org.autojs.autojs.runtime.api.AbstractShell.Result",
 ];
 
 export function buildCoreRuntimeBridges(ts, sourceText) {

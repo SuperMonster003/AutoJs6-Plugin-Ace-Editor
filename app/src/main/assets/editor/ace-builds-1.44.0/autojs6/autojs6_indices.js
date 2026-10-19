@@ -33639,6 +33639,30 @@
                     ]
                 },
                 {
+                    "name": "spawn",
+                    "type": "function",
+                    "doc": "spawn(command: Shell.Command, options?: Shell.SpawnOptions | boolean | null): Shell.Process;",
+                    "signature": "spawn(command: Shell.Command, options?: Shell.SpawnOptions | boolean | null): Shell.Process;"
+                },
+                {
+                    "name": "setDefaultOptions",
+                    "type": "function",
+                    "doc": "setDefaultOptions(options: Shell.DefaultOptions | null | undefined): void;",
+                    "signature": "setDefaultOptions(options: Shell.DefaultOptions | null | undefined): void;"
+                },
+                {
+                    "name": "checkAccess",
+                    "type": "function",
+                    "doc": "checkAccess(type: 'root' | 'adb'): boolean;",
+                    "signature": "checkAccess(type: 'root' | 'adb'): boolean;"
+                },
+                {
+                    "name": "isRootAvailable",
+                    "type": "function",
+                    "doc": "isRootAvailable(): boolean;",
+                    "signature": "isRootAvailable(): boolean;"
+                },
+                {
                     "name": "fromIntent",
                     "type": "function",
                     "doc": "fromIntent(i: Intent.Common): string;",
@@ -33699,6 +33723,12 @@
                         "getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): string;",
                         "getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments, withRoot: boolean | number): string;"
                     ]
+                },
+                {
+                    "name": "spawn",
+                    "type": "function",
+                    "doc": "spawn(command: Shell.Command, options?: Shell.SpawnOptions | boolean | null): Shell.Process;",
+                    "signature": "spawn(command: Shell.Command, options?: Shell.SpawnOptions | boolean | null): Shell.Process;"
                 },
                 {
                     "name": "kill",

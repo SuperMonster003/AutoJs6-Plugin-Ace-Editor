@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v2.26.1": {
+      "released_date": "2026/10/19",
+      "fix": [
+        "shell/shizuku 프로세스 타입 선언과 자동 완성 누락, 이벤트 인수 및 파이프 Shell 생성자 포함"
+      ]
+    },
     "v2.26.0": {
       "released_date": "2026/10/19",
       "feature": [

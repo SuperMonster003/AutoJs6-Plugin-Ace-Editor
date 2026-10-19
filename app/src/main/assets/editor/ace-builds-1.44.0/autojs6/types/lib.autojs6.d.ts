@@ -5521,6 +5521,10 @@ declare namespace AutoJs6 {
         getCommand(command: Shell.Command, withRoot: boolean | number): string;
         getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): string;
         getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments, withRoot: boolean | number): string;
+        spawn(command: Shell.Command, options?: Shell.SpawnOptions | boolean | null): Shell.Process;
+        setDefaultOptions(options: Shell.DefaultOptions | null | undefined): void;
+        checkAccess(type: 'root' | 'adb'): boolean;
+        isRootAvailable(): boolean;
         fromIntent(i: Intent.Common): string;
         kill(app: org.autojs.autojs.util.App | string): boolean;
         currentPackage(): string;
@@ -5538,6 +5542,7 @@ declare namespace AutoJs6 {
         getCommand(command: Shell.Command, withRoot: boolean | number): string;
         getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): string;
         getCommand(command: Shell.Command, commandArgument: Shell.CommandArguments, withRoot: boolean | number): string;
+        spawn(command: Shell.Command, options?: Shell.SpawnOptions | boolean | null): Shell.Process;
         kill(app: org.autojs.autojs.util.App | string): boolean;
         currentPackage(): string;
         currentActivity(): string;
@@ -5590,6 +5595,36 @@ declare namespace AutoJs6 {
         isWindow(o: any): boolean;
         isXML(o: any): boolean;
         isXMLList(o: any): boolean;
+    }
+
+    interface Speech {
+        isAvailable(): boolean;
+        capabilities(): Speech.Capabilities;
+        listen(options?: Speech.ListenOptions | null): Speech.Session;
+        recognize(source: Speech.AudioSource, options?: Speech.RecognizeOptions | null): Speech.Recognition;
+        recognizeAsync(source: Speech.AudioSource, options?: Speech.RecognizeOptions | null): Promise<Speech.Recognition>;
+        detectVoice(source: Speech.AudioSource, options?: Speech.VadOptions | null): Speech.VadResult;
+        wake(keywords: Speech.KeywordInput | readonly Speech.KeywordInput[], options?: Speech.WakeOptions | null): Speech.WakeSession;
+        synthesize(text: string, path: string, options?: Speech.SynthesisOptions | null): Speech.SynthesisResult;
+        synthesizeAsync(text: string, path: string, options?: Speech.SynthesisOptions | null): Promise<Speech.SynthesisResult>;
+        speak(text: string, options?: Speech.SpeakOptions | null): Promise<Tts.Result>;
+        models: Speech.Models;
+        SpeechError: Speech.ErrorConstructor;
+    }
+
+    interface Speech_models {
+        list(filter?: ModelFilter | null): ModelInfo[];
+        install(id: string, options?: InstallOptions | null): ModelInfo;
+        installAsync(id: string, options?: InstallOptions | null): Promise<ModelInfo>;
+        importFile(path: string, options?: ImportOptions | null): ModelInfo;
+        remove(id: string): boolean;
+        setDefault(kind: Kind, id: string): ModelInfo;
+        getDefault(kind: Kind): ModelInfo | null;
+        refreshCatalog(): { version: number; updated: boolean; };
+    }
+
+    interface Speech_SpeechError {
+        prototype: SpeechError;
     }
 
     interface Sqlite {
@@ -6073,6 +6108,7 @@ declare const settings: AutoJs6.Settings;
 declare const shell: AutoJs6.Shell;
 declare const shizuku: AutoJs6.Shizuku;
 declare const species: AutoJs6.Species;
+declare const speech: AutoJs6.Speech;
 declare const sqlite: AutoJs6.Sqlite;
 declare const storages: AutoJs6.Storages;
 declare const sysprops: AutoJs6.Sysprops;
