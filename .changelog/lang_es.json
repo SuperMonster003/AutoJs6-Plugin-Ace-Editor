@@ -8,7 +8,8 @@
     "v2.30.0": {
       "released_date": "2026/10/19",
       "feature": [
-        "Objetos Android para Node.js, Bun y Workers, con Paint, ColorStateList, colores del tema y URI FileProvider"
+        "Objetos Android para Node.js, Bun y Workers, con Paint, ColorStateList, colores del tema y URI FileProvider",
+        "API persistentes de calendario e IntentTask para Node.js y Bun, con tareas diarias, semanales, mensuales, anuales, únicas, de cuenta atrás y de difusión"
       ]
     },
     "v2.29.0": {

@@ -66,3 +66,4 @@
 /// <reference path="./plugins.d.ts" />
 
 /// <reference path="./android.d.ts" />
+/// <reference path="./tasks.d.ts" />

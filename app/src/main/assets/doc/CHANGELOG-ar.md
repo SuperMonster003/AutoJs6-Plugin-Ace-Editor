@@ -9,6 +9,7 @@
 ###### 2026/10/19
 
 * `ميزة` مساعدات كائنات Android في Node.js وBun وWorkers مع Paint وColorStateList وألوان السمة وURI FileProvider
+* `ميزة` واجهات التقويم وIntentTask الدائمة في Node.js وBun للمهام اليومية والأسبوعية والشهرية والسنوية والفردية والتنازلية ومهام البث
 
 # v2.29.0
 

@@ -189,6 +189,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.0-u
 ###### 2026/10/19
 
 * `Функция` Объекты Android для Node.js, Bun и Workers, включая Paint, ColorStateList, цвета темы и URI FileProvider
+* `Функция` Постоянные календарные задачи и IntentTask для Node.js и Bun, включая ежедневные, еженедельные, ежемесячные, ежегодные, разовые, отложенные и широковещательные задачи
 
 # v2.29.0
 

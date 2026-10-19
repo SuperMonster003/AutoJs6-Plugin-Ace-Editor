@@ -19,14 +19,19 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
-    fun androidObjectsHaveTypedDefaultPopups() = withEvidence("runtime-android") { editor, evidence ->
+    fun androidObjectsAndCalendarTasksHaveTypedDefaultPopups() = withEvidence("runtime-android-tasks") { editor, evidence ->
         for((mode,header) in listOf(
-            "node" to "\"nodejs\";\nconst android=require('autojs6:android');\n",
-            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const android=host.android;\n")) {
+            "node" to "\"nodejs\";\nconst android=require('autojs6:android'),tasks=require('autojs6:tasks');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const android=host.android,tasks=host.tasks;\n")) {
+            val methods=query(editor,header+"tasks.","",evidence)
+            assertTrue(methods.toString(),semanticNames(methods).containsAll(setOf("addDailyTask","addWeeklyTask","addMonthlyTask","addYearlyTask","addCountdownTask","addIntentTask","updateTask","queryTimedTasks","queryIntentTasks","removeTask")))
+            showPopup(editor,header+"tasks.addDai","addDailyTask",evidence,"$mode-daily-task",if(mode=="node")"Promise<tasks.TimedTask>" else "Promise<RuntimeTasks.TimedTask>")
             val prefix=header+"async function inspect(){const paint=await android.createPaint();\n"
             val members=query(editor,prefix+"paint.","",evidence)
             assertTrue(members.toString(),semanticNames(members).containsAll(setOf("id","color","getInfo","setColor","measureText","close","toJSON")))
             showPopup(editor,prefix+"paint.measureT","measureText",evidence,"$mode-paint-width","Promise<number>")
+            val options=query(editor,header+"tasks.addIntentTask({","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("path","action","category","dataType","local")))
         }
     }
 

@@ -3,7 +3,7 @@
 declare module "autojs6:bun-host" {
     /** Types for the explicit SDK module at process.env.AUTOJS6_HOST_CLIENT_MODULE. */
     export const SDK_VERSION: 1;
-    export type HostCapability = "android.objects" | "device.control" | "device.power" | "device.audio" | "dialogs.control" | "events.observe" | "events.notification" | "events.toast" | "events.key" | "notifications.post" | "notifications.settings" | "database.control" | "shell.control" | "shell.root" | "shell.shizuku" | "sensors.control" | "files.control" | "storage.control" | "app.control" | "accessibility.control" | "accessibility.gesture" | "clipboard.control" | "ui.layout" | "ui.compose" | "screen.record.microphone" | "screen.record.playback" | "ui.toast" | "device.info" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control";
+    export type HostCapability = "android.objects" | "tasks.control" | "device.control" | "device.power" | "device.audio" | "dialogs.control" | "events.observe" | "events.notification" | "events.toast" | "events.key" | "notifications.post" | "notifications.settings" | "database.control" | "shell.control" | "shell.root" | "shell.shizuku" | "sensors.control" | "files.control" | "storage.control" | "app.control" | "accessibility.control" | "accessibility.gesture" | "clipboard.control" | "ui.layout" | "ui.compose" | "screen.record.microphone" | "screen.record.playback" | "ui.toast" | "device.info" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control";
     export type JsonValue = null | boolean | number | string | readonly JsonValue[] | { readonly [key: string]: JsonValue };
     export class HostCallError extends Error {
       readonly code: string;
@@ -11,7 +11,7 @@ declare module "autojs6:bun-host" {
       readonly status: number;
       constructor(code: string, message: string, capability?: string | null, status?: number);
     }
-    export const HOST_API_METHODS: Readonly<Record<"android.objects" | "device.control" | "device.audio" | "dialogs.control" | "events.observe" | "notifications.post" | "database.control" | "shell.control" | "sensors.control" | "files.control" | "storage.control" | "app.control" | "accessibility.control" | "clipboard.control" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control", readonly string[]>>;
+    export const HOST_API_METHODS: Readonly<Record<"android.objects" | "tasks.control" | "device.control" | "device.audio" | "dialogs.control" | "events.observe" | "notifications.post" | "database.control" | "shell.control" | "sensors.control" | "files.control" | "storage.control" | "app.control" | "accessibility.control" | "clipboard.control" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control", readonly string[]>>;
     export const OPENCC_CONVERSION_TYPES: readonly [
       "hk2s", "hk2t", "jp2t", "s2hk", "s2t", "s2tw", "s2twp", "t2hk", "t2s", "t2tw", "t2jp", "tw2s", "tw2t", "tw2sp",
       "s2twi", "twi2s", "s2jp", "t2twi", "hk2tw", "hk2twi", "hk2jp", "tw2hk", "tw2twi", "tw2jp",
@@ -1230,7 +1230,7 @@ declare module "autojs6:bun-host" {
       }
     // END GENERATED DEVICE DIALOG TYPES
 
-    // BEGIN GENERATED ANDROID TYPES
+    // BEGIN GENERATED ANDROID TASK TYPES
     export namespace RuntimeAndroid {
         export type ColorInput = RuntimeColors.ColorInput;
         export type StateName = "enabled" | "pressed" | "focused" | "checked" | "selected" | "activated" | "window_focused";
@@ -1272,6 +1272,77 @@ declare module "autojs6:bun-host" {
           getThemeColor(options?: AutomationCallOptions): Promise<ThemeColor>;
           getUriForFile(path: string, options?: AutomationCallOptions): Promise<UriSnapshot>;
           parseUri(uri: string | null | undefined, options?: AutomationCallOptions): Promise<UriSnapshot | null>;
+        }
+      }
+    export namespace RuntimeTasks {
+        export type RepeatMode = "disposable" | "once" | "daily" | "weekly" | "monthly" | "yearly" | "countdown" | 0 | 1 | 2 | 3 | 4 | 5;
+        export type DateInput = Date | number | string;
+        export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
+        export interface TimedTaskOptions extends AutomationCallOptions {
+          path?: string; scriptPath?: string; entry?: string;
+          repeatMode?: RepeatMode;
+          date?: DateInput;
+          /** Local HH:mm[:ss[.SSS]], Date or epoch milliseconds. */
+          time?: DateInput;
+          delayMs?: number;
+          daysOfWeek?: readonly Weekday[];
+          dayOfMonth?: number; monthOfYear?: number;
+          endMode?: "forever" | "count" | "until_date" | "date";
+          times?: number; untilDate?: string;
+          delay?: number; interval?: number; loopTimes?: number;
+        }
+        export interface IntentTaskOptions extends AutomationCallOptions {
+          path?: string; scriptPath?: string; entry?: string;
+          action: string; category?: string | null; dataType?: string | null; local?: boolean; isLocal?: boolean;
+        }
+        export interface TimedTask {
+          readonly id: number; readonly kind: "timed"; readonly path: string;
+          readonly repeatMode: Exclude<RepeatMode, number | "once">;
+          readonly millis: number; readonly timeFlag: number; readonly nextTime: number; readonly scheduled: boolean;
+          readonly finishedTimes: number; readonly sourceKind: string | null; readonly projectRoot: string | null;
+          readonly options: Readonly<TimedTaskOptions>;
+        }
+        export interface TriggerIntent {
+          readonly action: string | null; readonly data: string | null; readonly type: string | null;
+          readonly packageName: string | null; readonly flags: number; readonly categories: readonly string[];
+          readonly extras: Readonly<Record<string, JsonValue>>; readonly receivedAt: number;
+        }
+        export interface IntentTask {
+          readonly id: number; readonly kind: "intent"; readonly path: string; readonly action: string;
+          readonly category: string | null; readonly dataType: string | null; readonly local: boolean;
+          readonly options: Readonly<IntentTaskOptions>; readonly lastIntent: TriggerIntent | null;
+        }
+        export type Task = TimedTask | IntentTask;
+        export interface QueryOptions extends AutomationCallOptions { path?: string; scriptPath?: string; repeatMode?: RepeatMode; action?: string; }
+        export interface LocalIntent {
+          action: string; category?: string | null; categories?: readonly string[]; type?: string | null; data?: string | null;
+          extras?: Readonly<Record<string, string | number | boolean | null>>;
+        }
+        export interface TasksModule {
+          addTask(options: TimedTaskOptions | IntentTaskOptions): Promise<Task>;
+          addTimedTask(options: TimedTaskOptions & { repeatMode: RepeatMode }): Promise<TimedTask>;
+          addDailyTask(options: TimedTaskOptions): Promise<TimedTask>;
+          addWeeklyTask(options: TimedTaskOptions & { daysOfWeek: readonly Weekday[] }): Promise<TimedTask>;
+          addMonthlyTask(options: TimedTaskOptions & { dayOfMonth: number }): Promise<TimedTask>;
+          addYearlyTask(options: TimedTaskOptions & { dayOfMonth: number; monthOfYear: number }): Promise<TimedTask>;
+          addDisposableTask(options: TimedTaskOptions): Promise<TimedTask>;
+          addCountdownTask(options: TimedTaskOptions & { delayMs: number }): Promise<TimedTask>;
+          addIntentTask(options: IntentTaskOptions): Promise<IntentTask>;
+          addBroadcastIntentTask(options: IntentTaskOptions): Promise<IntentTask>;
+          queryTasks(options?: QueryOptions): Promise<readonly Task[]>;
+          queryTimedTasks(options?: QueryOptions): Promise<readonly TimedTask[]>;
+          queryIntentTasks(options?: QueryOptions): Promise<readonly IntentTask[]>;
+          getTimedTask(id: number | string | TimedTask, options?: AutomationCallOptions): Promise<TimedTask | null>;
+          getIntentTask(id: number | string | IntentTask, options?: AutomationCallOptions): Promise<IntentTask | null>;
+          removeTask(task: Task | number | string, options?: AutomationCallOptions): Promise<boolean>;
+          removeTimedTask(id: number | string | TimedTask, options?: AutomationCallOptions): Promise<boolean>;
+          removeIntentTask(id: number | string | IntentTask, options?: AutomationCallOptions): Promise<boolean>;
+          updateTask(task: TimedTask, patch?: TimedTaskOptions): Promise<TimedTask | null>;
+          updateTask(task: IntentTask, patch?: Partial<IntentTaskOptions>): Promise<IntentTask | null>;
+          updateTask(task: Task, patch?: TimedTaskOptions | Partial<IntentTaskOptions>): Promise<Task | null>;
+          sendLocalBroadcastSync(action: string | LocalIntent, options?: AutomationCallOptions): Promise<boolean>;
+          daysToTimeFlag(days: readonly (0 | 1 | 2 | 3 | 4 | 5 | 6)[]): number;
+          timeFlagToDays(flag: number): readonly number[];
         }
       }
     export namespace RuntimeColors {
@@ -1365,11 +1436,12 @@ declare module "autojs6:bun-host" {
           setPaintColor(paint: RuntimeAndroid.PaintHandle, color: ColorInput, options?: AutomationCallOptions): Promise<void>;
         }
       }
-    // END GENERATED ANDROID TYPES
+    // END GENERATED ANDROID TASK TYPES
 
     export interface HostClient {
       readonly android: RuntimeAndroid.AndroidModule;
       readonly colors: RuntimeColors.ColorsModule;
+      readonly tasks: RuntimeTasks.TasksModule;
       readonly events: RuntimeEvents.EventsModule;
       readonly notifications: RuntimeNotifications.NotificationsModule;
       readonly shell: RuntimeShell.ShellModule;
