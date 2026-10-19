@@ -4,6 +4,12 @@
 
 ******
 
+# v2.26.0
+
+###### 2026/10/19
+
+* `Fonctionnalité` Mesures et abonnements aux capteurs pour Bun et les Workers Node.js, avec annulation et libération automatique des écouteurs
+
 # v2.25.0
 
 ###### 2026/10/19

@@ -19,6 +19,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun sensorsHaveTypedMainWorkerAndBunPopups() = withEvidence("runtime-sensors") { editor, evidence ->
+        for((mode,header) in listOf(
+            "node" to "\"nodejs\";\nconst sensors=require('autojs6:sensors');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const sensors=host.sensors;\n")) {
+            val methods=query(editor,header+"sensors.","",evidence)
+            assertTrue(methods.toString(),semanticNames(methods).containsAll(setOf("policy","getAvailableSensors","once","subscribe")))
+            showPopup(editor,header+"sensors.getAvail","getAvailableSensors",evidence,"$mode-sensors-inventory","Promise<")
+            val code=header+"const sub=sensors.subscribe('accelerometer');\n"
+            val members=query(editor,code+"sub.","",evidence)
+            assertTrue(members.toString(),semanticNames(members).containsAll(setOf("id","type","ready","closed","on","once","off","close")))
+            showPopup(editor,code+"sub.clo","close",evidence,"$mode-sensors-close","Promise<void>")
+            val options=query(editor,header+"sensors.subscribe('light',undefined,{","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("signal","timeoutMs","samplingIntervalMs","intervalMs","maxQueueSize","drainIntervalMs")))
+        }
+    }
+
+    @Test
     fun bunAutomationUsesTypedPopups() = withEvidence("bun-automation") { editor, evidence ->
         val header="\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};\n"
         for((module,names) in listOf("app" to setOf("packageName","intent","parseUri","launchPackage","getPackageInfo","startService","sendBroadcast"),

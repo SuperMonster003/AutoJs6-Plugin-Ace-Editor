@@ -192,6 +192,13 @@ for (const [file, header, opencc, images] of [
     const matMembers=query(current,prefix+`const mat=await ${images}.imread('image.png');\nmat.`,'',documentUri);
     for(const name of ['id','channels','depth','width','height'])assert(matMembers.includes(name),`${file}: Mat ${name}`);
     assert(!matMembers.includes('getNativeObjAddr'),`${file}: native Mat pointer leaked`);
+    const sensorHeader=file.endsWith('.bun.ts')?header+'const sensors=host.sensors;\n':header+(file.endsWith('.mjs')?'import sensors from "autojs6:sensors";\n':'const sensors=require("autojs6:sensors");\n');
+    const sensorNames=query(current,sensorHeader+'sensors.','',documentUri);
+    for(const name of ['policy','getAvailableSensors','once','subscribe'])assert(sensorNames.includes(name),`${file}: sensors ${name}`);
+    const subscription=query(current,sensorHeader+"const sub=sensors.subscribe('light');sub.",'',documentUri);
+    for(const name of ['id','type','closed','ready','on','once','off','close'])assert(subscription.includes(name),`${file}: subscription ${name}`);
+    const sensorOptions=query(current,sensorHeader+"sensors.subscribe('light',undefined,{",'',documentUri);
+    for(const name of ['signal','timeoutMs','samplingIntervalMs','intervalMs','maxQueueSize','drainIntervalMs'])assert(sensorOptions.includes(name),`${file}: sensor option ${name}`);
     const uiHeader = file.endsWith('.bun.ts') ? header + 'const ui=host.ui;const compose=host.compose;\n'
       : header + (file.endsWith('.mjs') ? 'import ui from "autojs6:ui";import compose from "autojs6:compose";\n' : 'const ui=require("ui"),compose=require("compose");\n');
     const factories=query(current,uiHeader+'compose.','',documentUri);
