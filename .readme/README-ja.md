@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-u
 ### リリース履歴
 
 ******
+
+# v2.31.0
+
+###### 2026/10/20
+
+* `機能` Node.js/Bun/Worker の Java/Android 相互運用で公開コンストラクターとメンバー, 配列, 正確な long 値, 明示的なオーバーロードとアプリの Context ハンドルに対応
 
 # v2.30.1
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-u
 
 * `機能` Node.js, Bun と Worker の Android オブジェクトヘルパー, Paint, ColorStateList, テーマ色と FileProvider URI
 * `機能` Node.js と Bun の永続的なカレンダーと IntentTask API, 毎日, 毎週, 毎月, 毎年, 単発, カウントダウンとブロードキャストのタスク
-
-# v2.29.0
-
-###### 2026/10/19
-
-* `機能` Bun と Node.js Worker のデバイス制御とダイアログ API, 明るさ, 音量と独立したウィンドウ解放
 
 ##### その他のリリース履歴
 

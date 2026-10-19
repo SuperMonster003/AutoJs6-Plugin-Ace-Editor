@@ -171,7 +171,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-u
 ### 發行歷史
 
 ******
+
+# v2.31.0
+
+###### 2026/10/20
+
+* `新增` Node.js/Bun/Worker 的 Java/Android 物件互操作, 支援公開建構函式和成員, 陣列, 精確 long 值, 明確多載及應用程式 Context 控制代碼
 
 # v2.30.1
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-u
 
 * `新增` Node.js/Bun 的 Android 物件輔助介面及 Worker 封裝, 支援 Paint, ColorStateList, 主題色和 FileProvider URI
 * `新增` Node.js/Bun 的持久日曆與 IntentTask API, 支援每日, 每週, 每月, 每年, 單次, 倒數計時和廣播任務
-
-# v2.29.0
-
-###### 2026/10/19
-
-* `新增` Bun 與 Node.js Worker 的裝置控制及對話框 API, 支援亮度, 音量和獨立視窗清理
 
 ##### 更多發行歷史可參閱
 

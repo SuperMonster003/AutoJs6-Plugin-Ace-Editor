@@ -70,6 +70,13 @@ for (const [file, directive, runtime] of routes) {
         assert(!(service.getDiagnostics(nativeSession, native) || []).some(item => item.raw === '2769'),
             'Host require overloads must not reject native or installed modules');
     }
+    const javaHeader = directive + (runtime==='node' ? 'const java=require("autojs6:java");\n' : /\.tsx?$/.test(file) ? 'declare const host: import("autojs6:bun-host").HostClient;const java=host.java;\n' : '/** @type {import("autojs6:bun-host").HostClient} */\nconst host={};const java=host.java;\n');
+    const javaMethods=query(service,javaHeader+'java.','',uri);
+    for(const method of ['type','findClass','cast','new','create','callStatic','call','callInstance','getField','setField','getStatic','setStatic','describe','getContext','newArray','arrayLength','getArrayItem','setArrayItem','toArray','instanceOf','getClassName','release','dispose'])assert(javaMethods.includes(method),`${file}: Java ${method}`);
+    const javaHandle=query(service,javaHeader+"async function f(){const object=await java.new('android.os.Bundle');object.",'',uri);
+    for(const method of ['call','getField','setField','instanceOf','getClassName','arrayLength','toArray','release'])assert(javaHandle.includes(method),`${file}: Java handle ${method}`);
+    const javaOptions=query(service,javaHeader+"java.new('android.widget.TextView',[],{",'',uri);
+    for(const name of ['thread','parameterTypes','timeoutMs','signal'])assert(javaOptions.includes(name),`${file}: Java call option ${name}`);
     const loaded = service.getState().rootLibraryUris;
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {

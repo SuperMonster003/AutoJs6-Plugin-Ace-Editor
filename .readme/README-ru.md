@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-u
 ### История выпусков
 
 ******
+
+# v2.31.0
+
+###### 2026/10/20
+
+* `Функция` Взаимодействие Java/Android для Node.js, Bun и Workers: открытые конструкторы и члены, массивы, точные значения long, явные перегрузки и ссылки Context приложения
 
 # v2.30.1
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.1-u
 
 * `Функция` Объекты Android для Node.js, Bun и Workers, включая Paint, ColorStateList, цвета темы и URI FileProvider
 * `Функция` Постоянные календарные задачи и IntentTask для Node.js и Bun, включая ежедневные, еженедельные, ежемесячные, ежегодные, разовые, отложенные и широковещательные задачи
-
-# v2.29.0
-
-###### 2026/10/19
-
-* `Функция` Управление устройством и диалоги для Bun и Node.js Workers с яркостью, громкостью и независимой очисткой окон
 
 ##### Подробнее об истории выпусков
 

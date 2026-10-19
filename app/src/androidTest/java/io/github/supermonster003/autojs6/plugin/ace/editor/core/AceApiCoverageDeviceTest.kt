@@ -19,6 +19,21 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun javaInteropHasTypedMethodsHandlesAndOptionsByDefault() = withEvidence("runtime-java-interop") { editor, evidence ->
+        for ((mode,header) in listOf(
+            "node" to "\"nodejs\";\nconst java=require('autojs6:java');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const java=host.java;\n")) {
+            val methods=query(editor,header+"java.","",evidence)
+            for(name in listOf("cast","newArray","getContext","setField","setStatic","getArrayItem","instanceOf"))assertTrue(name,semanticNames(methods).contains(name))
+            showPopup(editor,header+"java.newArr","newArray",evidence,"$mode-java-array",if(mode=="node")"Promise<java.ObjectHandle>" else "Promise<RuntimeJava.ObjectHandle>")
+            val handle=query(editor,header+"async function inspect(){const value=await java.getContext();value.","",evidence)
+            for(name in listOf("call","setField","instanceOf","release"))assertTrue(name,semanticNames(handle).contains(name))
+            val options=query(editor,header+"java.new('android.widget.TextView',[],{","",evidence)
+            for(name in listOf("thread","parameterTypes","signal","timeoutMs"))assertTrue(name,semanticNames(options).contains(name))
+        }
+    }
+
+    @Test
     fun androidObjectsAndCalendarTasksHaveTypedDefaultPopups() = withEvidence("runtime-android-tasks") { editor, evidence ->
         for((mode,header) in listOf(
             "node" to "\"nodejs\";\nconst android=require('autojs6:android'),tasks=require('autojs6:tasks');\n",
