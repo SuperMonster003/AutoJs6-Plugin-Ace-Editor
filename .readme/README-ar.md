@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.1-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.32.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.1-u
 ### سجل الإصدارات
 
 ******
+
+# v2.32.0
+
+###### 2026/10/20
+
+* `ميزة` ردود نداء Java وإنشاء الأصناف الفرعية وتحميل JAR/DEX في Node.js وBun وWorkers مع نتائج Promise واستدعاءات الصنف الأب والتنظيف عند انتهاء التنفيذ
 
 # v2.31.1
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.1-u
 ###### 2026/10/20
 
 * `ميزة` تكامل Java/Android في Node.js وBun وWorkers مع المنشئات والأعضاء العامة والمصفوفات وقيم long الدقيقة والتحميل الزائد الصريح ومراجع Context للتطبيق
-
-# v2.30.1
-
-###### 2026/10/19
-
-* `إصلاح` تعليقات أنواع دوال التوافق العامة مثل Tap و Swipe و KeyCode لم تذكر تنفيذها عبر Shizuku بعد setDefaultOptions({ adb: true })
 
 ##### لمزيد من سجل الإصدارات
 

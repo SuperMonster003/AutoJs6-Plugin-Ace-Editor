@@ -4,6 +4,12 @@
 
 ******
 
+# v2.32.0
+
+###### 2026/10/20
+
+* `Fonctionnalité` Callbacks Java, sous-classes générées et chargement JAR/DEX pour Node.js, Bun et Workers, avec retours Promise, appels de la superclasse et libération en fin de session
+
 # v2.31.1
 
 ###### 2026/10/20

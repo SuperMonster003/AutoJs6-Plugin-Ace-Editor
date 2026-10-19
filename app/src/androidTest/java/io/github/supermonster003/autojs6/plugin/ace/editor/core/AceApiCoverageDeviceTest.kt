@@ -19,6 +19,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun javaCallbacksSubclassAndLoadersHaveDefaultTypedPopups() = withEvidence("runtime-java-callbacks") { editor, evidence ->
+        for ((mode,header) in listOf(
+            "node" to "\"nodejs\";\nconst java=require('autojs6:java');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const java=host.java;\n")) {
+            val methods=query(editor,header+"java.","",evidence)
+            assertTrue(methods.toString(),semanticNames(methods).containsAll(setOf("proxy","defineClass","loadDex","loadJar","closeCallbacks")))
+            showPopup(editor,header+"java.defineCl","defineClass",evidence,"$mode-java-subclass",if(mode=="node")"Promise<java.GeneratedClass>" else "Promise<RuntimeJava.GeneratedClass>")
+            val prefix=header+"java.proxy('java.lang.Runnable',{run:async function(){this."
+            val scope=query(editor,prefix,"",evidence)
+            assertTrue(scope.toString(),semanticNames(scope).containsAll(setOf("receiver","method","signature","callSuper","java")))
+            showPopup(editor,prefix+"callSup","callSuper",evidence,"$mode-java-super","Promise<T>")
+            val options=query(editor,header+"java.proxy('java.lang.Runnable',()=>{},{","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("callbackTimeoutMs","onError","signal")))
+        }
+    }
+
+    @Test
     fun javaInteropHasTypedMethodsHandlesAndOptionsByDefault() = withEvidence("runtime-java-interop") { editor, evidence ->
         for ((mode,header) in listOf(
             "node" to "\"nodejs\";\nconst java=require('autojs6:java');\n",

@@ -77,6 +77,15 @@ for (const [file, directive, runtime] of routes) {
     for(const method of ['call','getField','setField','instanceOf','getClassName','arrayLength','toArray','release'])assert(javaHandle.includes(method),`${file}: Java handle ${method}`);
     const javaOptions=query(service,javaHeader+"java.new('android.widget.TextView',[],{",'',uri);
     for(const name of ['thread','parameterTypes','timeoutMs','signal'])assert(javaOptions.includes(name),`${file}: Java call option ${name}`);
+    for(const name of ['proxy','wrap','defineClass','loadDex','loadJar','retain','closeCallbacks'])assert(javaMethods.includes(name),`${file}: Java callback API ${name}`);
+    const callbackContext=query(service,javaHeader+"java.proxy('java.lang.Runnable',{run:async function(){this.",'',uri);
+    for(const name of ['java','receiver','method','signature','callSuper'])assert(callbackContext.includes(name),`${file}: callback this.${name}`);
+    const definition=query(service,javaHeader+'java.defineClass({','',uri);
+    for(const name of ['name','extends','interfaces','methods'])assert(definition.includes(name),`${file}: class definition ${name}`);
+    const generated=query(service,javaHeader+"async function f(){const cls=await java.defineClass({});cls.",'',uri);
+    for(const name of ['new','create','release','describe','callStatic'])assert(generated.includes(name),`${file}: generated class ${name}`);
+    const callbackOptions=query(service,javaHeader+"java.proxy('java.lang.Runnable',()=>{},{",'',uri);
+    for(const name of ['callbackTimeoutMs','onError','signal','timeoutMs'])assert(callbackOptions.includes(name),`${file}: callback option ${name}`);
     const loaded = service.getState().rootLibraryUris;
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {
