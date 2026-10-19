@@ -19,6 +19,25 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun hostShellStreamsAndShizukuHaveRuntimePopups() = withEvidence("runtime-shell") { editor, evidence ->
+        for((mode,header) in listOf(
+            "node" to "\"nodejs\";\nconst shell=require('autojs6:shell'),shizuku=require('autojs6:shizuku');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const shell=host.shell,shizuku=host.shizuku;\n")) {
+            val methods=query(editor,header+"shell.","",evidence)
+            assertTrue(methods.toString(),semanticNames(methods).containsAll(setOf("exec","execRoot","execShizuku","execFile","checkAccess","getAccess","requestShizukuPermission","setDefaultTimeout","spawn","open")))
+            showPopup(editor,header+"shizuku.requestP","requestPermission",evidence,"$mode-shizuku-permission","Promise<boolean>")
+            val code=header+"const child=shell.spawn('cat');\n"
+            val process=query(editor,code+"child.","",evidence)
+            assertTrue(process.toString(),semanticNames(process).containsAll(setOf("ready","exited","stdout","stderr","stdin","readLine","writeLine","closeInput","waitFor","kill","close")))
+            assertFalse(semanticNames(process).contains("getInputStream"))
+            showPopup(editor,code+"child.readL","readLine",evidence,"$mode-shell-line","Promise<string | null>")
+            showPopup(editor,code+"child.clo","close",evidence,"$mode-shell-close","Promise<boolean>")
+            val options=query(editor,header+"shell.open({","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("cmd","root","shizuku","pty","cwd","env","timeoutMs","signal")))
+        }
+    }
+
+    @Test
     fun shellProcessesUseTypedDefaultPopups() = withEvidence("shell-process") { editor, evidence ->
         for(module in listOf("shell","shizuku","${'$'}shell","${'$'}shizuku")) {
             val code="let child=$module.spawn('echo owned');\n"

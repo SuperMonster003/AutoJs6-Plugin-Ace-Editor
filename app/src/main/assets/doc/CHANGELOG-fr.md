@@ -4,6 +4,12 @@
 
 ******
 
+# v2.27.0
+
+###### 2026/10/19
+
+* `Fonctionnalité` Shell hôte avec flux, autorisation Shizuku et nettoyage des processus pour Bun, Node.js et les Workers
+
 # v2.26.1
 
 ###### 2026/10/19

@@ -192,6 +192,16 @@ for (const [file, header, opencc, images] of [
     const matMembers=query(current,prefix+`const mat=await ${images}.imread('image.png');\nmat.`,'',documentUri);
     for(const name of ['id','channels','depth','width','height'])assert(matMembers.includes(name),`${file}: Mat ${name}`);
     assert(!matMembers.includes('getNativeObjAddr'),`${file}: native Mat pointer leaked`);
+    const shellHeader=file.endsWith('.bun.ts')?header+'const shell=host.shell,shizuku=host.shizuku;\n':header+(file.endsWith('.mjs')?'import shell from "autojs6:shell";import shizuku from "autojs6:shizuku";\n':'const shell=require("autojs6:shell"),shizuku=require("autojs6:shizuku");\n');
+    const shellMethods=query(current,shellHeader+'shell.','',documentUri);
+    for(const name of ['exec','execRoot','execShizuku','execFile','checkAccess','getAccess','requestShizukuPermission','setDefaultTimeout','spawn','open'])assert(shellMethods.includes(name),`${file}: shell ${name}`);
+    const processMembers=query(current,shellHeader+"const child=shell.spawn('cat');child.",'',documentUri);
+    for(const name of ['ready','exited','stdout','stderr','stdin','pid','exitCode','readLine','writeLine','closeInput','waitFor','kill','close'])assert(processMembers.includes(name),`${file}: host shell process ${name}`);
+    assert(!processMembers.includes('getInputStream'),`${file}: Java stream leaked`);
+    const shellOptions=query(current,shellHeader+"shell.spawn('cat',{",'',documentUri);
+    for(const name of ['root','shizuku','adb','pty','cwd','env','timeoutMs','signal','drainIntervalMs'])assert(shellOptions.includes(name),`${file}: shell option ${name}`);
+    const shellResult=query(current,shellHeader+"async function f(){const result=await shell.exec('echo');result.",'',documentUri);
+    for(const name of ['code','stdout','stderr','timedOut','truncated'])assert(shellResult.includes(name),`${file}: shell result ${name}`);
     const sensorHeader=file.endsWith('.bun.ts')?header+'const sensors=host.sensors;\n':header+(file.endsWith('.mjs')?'import sensors from "autojs6:sensors";\n':'const sensors=require("autojs6:sensors");\n');
     const sensorNames=query(current,sensorHeader+'sensors.','',documentUri);
     for(const name of ['policy','getAvailableSensors','once','subscribe'])assert(sensorNames.includes(name),`${file}: sensors ${name}`);
