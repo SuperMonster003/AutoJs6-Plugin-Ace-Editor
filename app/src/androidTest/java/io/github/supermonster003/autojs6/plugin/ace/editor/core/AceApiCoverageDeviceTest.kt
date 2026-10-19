@@ -29,6 +29,15 @@ class AceApiCoverageDeviceTest {
         showPopup(editor,header+"host.accessibility.findO","findOne",evidence,"bun-selector-popup","Promise<")
         showPopup(editor,header+"host.app.getPackageI","getPackageInfo",evidence,"bun-app-popup","Promise<")
         showPopup(editor,header+"host.clipboard.getT","getText",evidence,"bun-clipboard-popup","Promise<string>")
+        val files=query(editor,header+"host.files.","",evidence)
+        assertTrue(files.toString(),semanticNames(files).containsAll(setOf("path","join","read","write","append","exists","listDir","remove","copy","move","ensureDir","isFile","isDir","getName","getExtension")))
+        showPopup(editor,header+"host.files.rea","read",evidence,"bun-files-popup","Promise<string>")
+        for(module in listOf("storage","storages")) {
+            val storeHeader=header+"const store=host.$module.open('owned');\n"
+            val members=query(editor,storeHeader+"store.","",evidence)
+            assertTrue(members.toString(),semanticNames(members).containsAll(setOf("get","put","putSync","remove","clear","keys","contains","selfRemove")))
+            showPopup(editor,storeHeader+"store.putS","putSync",evidence,"bun-$module-put-popup","Promise<void>")
+        }
         val intent=query(editor,header+"host.app.startActivity({","",evidence)
         assertTrue(intent.toString(),semanticNames(intent).containsAll(setOf("action","data","packageName","className","extras")))
     }

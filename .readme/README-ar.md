@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.23.0-u
 
 ******
 
+# v2.24.0
+
+###### 2026/10/19
+
+* `ميزة` واجهات Bun للملفات والتخزين الدائم مع أذونات مستقلة وبيانات تخزين مشتركة مع Node.js
+
 # v2.23.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.23.0-u
 ###### 2026/10/18
 
 * `ميزة` مهايئ مشاركة شاشة WebView وتسجيل الصوت عبر خدمة أمامية وتسجيل الكاميرا الأصلي في الخلفية في Node.js/Bun مع دعم Node Worker
-
-# v2.21.0
-
-###### 2026/10/18
-
-* `ميزة` بث الصوت والفيديو عبر WebView getUserMedia/MediaRecorder, وانتظار Promise للصفحة, وطلب أذونات الوسائط في Android صراحة, وإدارة دورة حياة Worker
 
 ##### لمزيد من سجل الإصدارات
 

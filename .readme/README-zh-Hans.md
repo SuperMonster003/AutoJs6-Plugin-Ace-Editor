@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.23.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.24.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.23.0-u
 
 ******
 
+# v2.24.0
+
+###### 2026/10/19
+
+* `新增` Bun 文件与持久化存储 API, 支持独立授权的宿主文件读写及 Node.js 存储互通
+
 # v2.23.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.23.0-u
 ###### 2026/10/18
 
 * `新增` Node.js/Bun 的 WebView 屏幕共享适配, 前台服务后台录音及原生后台摄像头录像, 包括 Node Worker 封装
-
-# v2.21.0
-
-###### 2026/10/18
-
-* `新增` WebView getUserMedia/MediaRecorder 流式音视频, 支持等待网页 Promise, 显式申请 Android 媒体权限及 Worker 生命周期管理
 
 ##### 更多发行历史可参阅
 

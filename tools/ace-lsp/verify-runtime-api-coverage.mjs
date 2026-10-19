@@ -135,6 +135,12 @@ for (const [file, header, opencc, images] of [
             for(const name of expected)assert(names.includes(name),`${file}: ${module}.${name} missing`);
         }
     } else if(file.endsWith('.bun.ts')) {
+        const files=query(current,header+'host.files.','',documentUri);
+        for(const name of ['path','join','read','write','append','exists','listDir','remove','copy','move','ensureDir','isFile','isDir','getName','getExtension'])assert(files.includes(name),`Bun files.${name}`);
+        for(const module of ['storage','storages']) {
+            const store=query(current,header+`const store=host.${module}.open('owned');\nstore.`,'',documentUri);
+            for(const name of ['name','get','put','putSync','remove','removeSync','clear','clearSync','keys','contains','selfRemove','selfRemoveSync'])assert(store.includes(name),`Bun ${module} store.${name}`);
+        }
         for(const [module,names] of [['app',['packageName','intent','parseUri','launchPackage','openAppSetting','startActivity','startService','sendBroadcast','getInstalledApps','getPackageInfo']],['accessibility',['isEnabled','ensureEnabled','textMatches','click','longClick','setText','findOne','findAll','scrollForward','swipe','gesture']],['clipboard',['getText','setText','hasText']]]) {
             const members=query(current,header+'host.'+module+'.','',documentUri);
             for(const name of names)assert(members.includes(name),`Bun ${module}.${name}`);
