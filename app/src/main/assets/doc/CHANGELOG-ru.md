@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.0
+
+###### 2026/10/19
+
+* `Функция` Объекты Android для Node.js, Bun и Workers, включая Paint, ColorStateList, цвета темы и URI FileProvider
+
 # v2.29.0
 
 ###### 2026/10/19

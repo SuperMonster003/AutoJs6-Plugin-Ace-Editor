@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.0
+
+###### 2026/10/19
+
+* `Fonctionnalité` Objets Android pour Node.js, Bun et les Workers, avec Paint, ColorStateList, couleurs du thème et URI FileProvider
+
 # v2.29.0
 
 ###### 2026/10/19

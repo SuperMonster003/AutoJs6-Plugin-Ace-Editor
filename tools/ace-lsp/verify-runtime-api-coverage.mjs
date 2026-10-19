@@ -201,6 +201,11 @@ for (const [file, header, opencc, images] of [
     for(const name of ['id','shown','max','value','update','dismiss'])assert(progressMembers.includes(name),`${file}: progress ${name}`);
     const progressOptions=query(current,deviceHeader+'dialogs.progress.show({','',documentUri);
     for(const name of ['title','message','max','value','indeterminate'])assert(progressOptions.includes(name),`${file}: progress option ${name}`);
+    const androidHeader=file.endsWith('.bun.ts')?header+'const android=host.android;\n':header+(file.endsWith('.mjs')?'import android from "autojs6:android";\n':'const android=require("autojs6:android");\n');
+    const androidMethods=query(current,androidHeader+'android.','',documentUri);
+    for(const name of ['createPaint','createColorStateList','setPaintColor','getThemeColor','getUriForFile','parseUri'])assert(androidMethods.includes(name),`${file}: android ${name}`);
+    const paintMembers=query(current,androidHeader+'async function f(){const paint=await android.createPaint();paint.','',documentUri);
+    for(const name of ['id','color','getInfo','setColor','measureText','close','toJSON'])assert(paintMembers.includes(name),`${file}: Paint ${name}`);
     const eventsHeader=file.endsWith('.bun.ts')?header+'const events=host.events,notifications=host.notifications;\n':header+(file.endsWith('.mjs')?'import events from "autojs6:events";import notifications from "autojs6:notifications";\n':'const events=require("autojs6:events"),notifications=require("autojs6:notifications");\n');
     const eventMethods=query(current,eventsHeader+'events.','',documentUri);
     for(const name of ['observeBroadcasts','observeNotification','observeToast','observeKey','on','once','off','close'])assert(eventMethods.includes(name),`${file}: events ${name}`);

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.30.0": {
+      "released_date": "2026/10/19",
+      "feature": [
+        "Objetos Android para Node.js, Bun y Workers, con Paint, ColorStateList, colores del tema y URI FileProvider"
+      ]
+    },
     "v2.29.0": {
       "released_date": "2026/10/19",
       "feature": [

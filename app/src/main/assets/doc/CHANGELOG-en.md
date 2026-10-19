@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.0
+
+###### 2026/10/19
+
+* `Feature` Android object helpers for Node.js, Bun and Workers, including Paint, ColorStateList, theme colors and FileProvider URIs
+
 # v2.29.0
 
 ###### 2026/10/19

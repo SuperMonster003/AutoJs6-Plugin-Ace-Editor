@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.0
+
+###### 2026/10/19
+
+* `ميزة` مساعدات كائنات Android في Node.js وBun وWorkers مع Paint وColorStateList وألوان السمة وURI FileProvider
+
 # v2.29.0
 
 ###### 2026/10/19

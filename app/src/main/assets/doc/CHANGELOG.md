@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.0
+
+###### 2026/10/19
+
+* `新增` Node.js/Bun 的 Android 对象辅助接口及 Worker 封装, 支持 Paint, ColorStateList, 主题色和 FileProvider URI
+
 # v2.29.0
 
 ###### 2026/10/19

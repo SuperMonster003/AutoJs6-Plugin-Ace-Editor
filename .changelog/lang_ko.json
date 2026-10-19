@@ -5,6 +5,12 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v2.30.0": {
+      "released_date": "2026/10/19",
+      "feature": [
+        "Node.js, Bun 및 Worker의 Android 객체 도우미, Paint, ColorStateList, 테마 색상 및 FileProvider URI 지원"
+      ]
+    },
     "v2.29.0": {
       "released_date": "2026/10/19",
       "feature": [

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.30.0
+
+###### 2026/10/19
+
+* `機能` Node.js, Bun と Worker の Android オブジェクトヘルパー, Paint, ColorStateList, テーマ色と FileProvider URI
+
 # v2.29.0
 
 ###### 2026/10/19

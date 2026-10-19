@@ -19,6 +19,18 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun androidObjectsHaveTypedDefaultPopups() = withEvidence("runtime-android") { editor, evidence ->
+        for((mode,header) in listOf(
+            "node" to "\"nodejs\";\nconst android=require('autojs6:android');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const android=host.android;\n")) {
+            val prefix=header+"async function inspect(){const paint=await android.createPaint();\n"
+            val members=query(editor,prefix+"paint.","",evidence)
+            assertTrue(members.toString(),semanticNames(members).containsAll(setOf("id","color","getInfo","setColor","measureText","close","toJSON")))
+            showPopup(editor,prefix+"paint.measureT","measureText",evidence,"$mode-paint-width","Promise<number>")
+        }
+    }
+
+    @Test
     fun deviceAndDialogMethodsHaveTypedDefaultPopups() = withEvidence("runtime-device-dialogs") { editor, evidence ->
         for((mode,header) in listOf(
             "node" to "\"nodejs\";\nconst device=require('autojs6:device'),dialogs=require('autojs6:dialogs');\n",

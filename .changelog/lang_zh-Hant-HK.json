@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.30.0": {
+      "released_date": "2026/10/19",
+      "feature": [
+        "Node.js/Bun 的 Android 物件輔助介面及 Worker 封裝, 支援 Paint, ColorStateList, 主題色和 FileProvider URI"
+      ]
+    },
     "v2.29.0": {
       "released_date": "2026/10/19",
       "feature": [

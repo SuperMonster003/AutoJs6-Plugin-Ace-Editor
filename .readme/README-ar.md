@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.29.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.30.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.29.0-u
 
 ******
 
+# v2.30.0
+
+###### 2026/10/19
+
+* `ميزة` مساعدات كائنات Android في Node.js وBun وWorkers مع Paint وColorStateList وألوان السمة وURI FileProvider
+
 # v2.29.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.29.0-u
 ###### 2026/10/19
 
 * `ميزة` أحداث وإشعارات المضيف في Bun وNode.js Workers مع تنظيف مستقل للاشتراكات والإشعارات
-
-# v2.27.0
-
-###### 2026/10/19
-
-* `ميزة` Shell المضيف مع تدفق الإدخال والإخراج وتفويض Shizuku وتنظيف العمليات في Bun وNode.js وWorkers
 
 ##### لمزيد من سجل الإصدارات
 
