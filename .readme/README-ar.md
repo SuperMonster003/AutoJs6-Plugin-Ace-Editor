@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-u
 
 ******
 
+# v2.31.1
+
+###### 2026/10/20
+
+* `إصلاح` نتائج التعرف في speech تفتقد الخاصية language, وأسباب انتهاء الجلسة تفتقد overflow, ونتائج detectVoice تذكر modelId وwarnings خطأ
+* `تحسين` تعريفات speech وspeech.models توثق كل دالة وخيار وحدث ونتيجة مع القيم الافتراضية والنطاقات, ويمكن إكمال رموز الأخطاء وأسماء الميزات كقيم حرفية
+
 # v2.31.0
 
 ###### 2026/10/20
@@ -195,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-u
 ###### 2026/10/19
 
 * `إصلاح` تعليقات أنواع دوال التوافق العامة مثل Tap و Swipe و KeyCode لم تذكر تنفيذها عبر Shizuku بعد setDefaultOptions({ adb: true })
-
-# v2.30.0
-
-###### 2026/10/19
-
-* `ميزة` مساعدات كائنات Android في Node.js وBun وWorkers مع Paint وColorStateList وألوان السمة وURI FileProvider
-* `ميزة` واجهات التقويم وIntentTask الدائمة في Node.js وBun للمهام اليومية والأسبوعية والشهرية والسنوية والفردية والتنازلية ومهام البث
 
 ##### لمزيد من سجل الإصدارات
 

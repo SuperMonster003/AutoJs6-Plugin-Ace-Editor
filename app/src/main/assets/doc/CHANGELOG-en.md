@@ -4,6 +4,13 @@
 
 ******
 
+# v2.31.1
+
+###### 2026/10/20
+
+* `Fix` speech recognition results missing the language property, session end reasons missing overflow, and detectVoice results wrongly listing modelId and warnings
+* `Improvement` speech and speech.models declarations document every method, option, event and result with defaults and ranges; error codes and feature names complete as literals
+
 # v2.31.0
 
 ###### 2026/10/20

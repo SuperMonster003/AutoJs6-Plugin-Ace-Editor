@@ -4,6 +4,13 @@
 
 ******
 
+# v2.31.1
+
+###### 2026/10/20
+
+* `Correctif` Résultats de reconnaissance de speech sans la propriété language, raisons de fin de session sans overflow, et résultats de detectVoice listant à tort modelId et warnings
+* `Amélioration` Les déclarations de speech et speech.models documentent chaque méthode, option, événement et résultat avec valeurs par défaut et plages; les codes d'erreur et noms de fonctionnalités se complètent comme littéraux
+
 # v2.31.0
 
 ###### 2026/10/20

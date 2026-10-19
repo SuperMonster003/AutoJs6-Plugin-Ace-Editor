@@ -4,6 +4,13 @@
 
 ******
 
+# v2.31.1
+
+###### 2026/10/20
+
+* `修復` speech 識別結果的類型缺少 language 屬性, 會話結束原因缺少 overflow, detectVoice 結果誤列 modelId 與 warnings
+* `優化` speech 與 speech.models 聲明為各方法, 選項, 事件和結果補充說明, 預設值與取值範圍, 錯誤碼與功能名提供字面量補全
+
 # v2.31.0
 
 ###### 2026/10/20

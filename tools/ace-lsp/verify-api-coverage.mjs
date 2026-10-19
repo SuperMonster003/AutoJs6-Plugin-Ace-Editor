@@ -64,6 +64,10 @@ for (const allGroups of [false, true]) {
         ["$speech.recognizeA", "recognizeA", "recognizeAsync"],
         ["speech.listen().fee", "fee", "feed"],
         ["speech.wake('hello').isA", "isA", "isActive"],
+        ["speech.recognize('voice.wav').lang", "lang", "language"],
+        ["speech.listen().on('final', event => event.ta", "ta", "tags"],
+        ["speech.wake('hello').on('wake', event => event.lis", "lis", "listen"],
+        ["speech.models.refreshCatalog().upd", "upd", "updated"],
     ]) {
         assert(completions(service, text, prefix).includes(expected), `${allGroups ? "all" : "default"}: missing ${text} -> ${expected}`);
         queryCount++;

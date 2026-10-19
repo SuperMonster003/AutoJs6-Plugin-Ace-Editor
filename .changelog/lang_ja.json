@@ -5,6 +5,15 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v2.31.1": {
+      "released_date": "2026/10/20",
+      "fix": [
+        "speech の認識結果の型に language プロパティがなく, セッション終了理由に overflow がなく, detectVoice の結果に modelId と warnings が誤って含まれていた"
+      ],
+      "improvement": [
+        "speech と speech.models の型宣言に各メソッド, オプション, イベント, 結果の説明と既定値, 値の範囲を追加し, エラーコードと機能名をリテラルで補完"
+      ]
+    },
     "v2.31.0": {
       "released_date": "2026/10/20",
       "feature": [

@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.1-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -184,6 +184,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-u
 
 ******
 
+# v2.31.1
+
+###### 2026/10/20
+
+* `修復` speech 辨識結果的型別缺少 language 屬性, 工作階段結束原因缺少 overflow, detectVoice 結果誤列 modelId 與 warnings
+* `優化` speech 與 speech.models 宣告為各方法, 選項, 事件和結果補充說明, 預設值與取值範圍, 錯誤碼與功能名稱提供字面值補全
+
 # v2.31.0
 
 ###### 2026/10/20
@@ -195,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-u
 ###### 2026/10/19
 
 * `修復` 全域相容函式 Tap, Swipe, KeyCode 等的型別註解未說明 setDefaultOptions({ adb: true }) 後改經 Shizuku 執行
-
-# v2.30.0
-
-###### 2026/10/19
-
-* `新增` Node.js/Bun 的 Android 物件輔助介面及 Worker 封裝, 支援 Paint, ColorStateList, 主題色和 FileProvider URI
-* `新增` Node.js/Bun 的持久日曆與 IntentTask API, 支援每日, 每週, 每月, 每年, 單次, 倒數計時和廣播工作
 
 ##### 更多發行歷史可參閱
 

@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.1-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -184,6 +184,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.31.1
+
+###### 2026/10/20
+
+* `Fix` speech recognition results missing the language property, session end reasons missing overflow, and detectVoice results wrongly listing modelId and warnings
+* `Improvement` speech and speech.models declarations document every method, option, event and result with defaults and ranges; error codes and feature names complete as literals
+
 # v2.31.0
 
 ###### 2026/10/20
@@ -195,13 +202,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/19
 
 * `Fix` Type comments of global compatibility functions such as Tap, Swipe and KeyCode not mentioning that they run through Shizuku after setDefaultOptions({ adb: true })
-
-# v2.30.0
-
-###### 2026/10/19
-
-* `Feature` Android object helpers for Node.js, Bun and Workers, including Paint, ColorStateList, theme colors and FileProvider URIs
-* `Feature` Persistent calendar and IntentTask APIs for Node.js and Bun, with daily, weekly, monthly, yearly, one-shot, countdown and broadcast tasks
 
 ##### Complete release history
 

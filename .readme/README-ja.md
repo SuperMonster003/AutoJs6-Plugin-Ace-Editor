@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.1-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-u
 
 ******
 
+# v2.31.1
+
+###### 2026/10/20
+
+* `修正` speech の認識結果の型に language プロパティがなく, セッション終了理由に overflow がなく, detectVoice の結果に modelId と warnings が誤って含まれていた
+* `改善` speech と speech.models の型宣言に各メソッド, オプション, イベント, 結果の説明と既定値, 値の範囲を追加し, エラーコードと機能名をリテラルで補完
+
 # v2.31.0
 
 ###### 2026/10/20
@@ -195,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.31.0-u
 ###### 2026/10/19
 
 * `修正` Tap, Swipe, KeyCode などのグローバル互換関数の型コメントに setDefaultOptions({ adb: true }) 後の Shizuku 経由実行が未記載
-
-# v2.30.0
-
-###### 2026/10/19
-
-* `機能` Node.js, Bun と Worker の Android オブジェクトヘルパー, Paint, ColorStateList, テーマ色と FileProvider URI
-* `機能` Node.js と Bun の永続的なカレンダーと IntentTask API, 毎日, 毎週, 毎月, 毎年, 単発, カウントダウンとブロードキャストのタスク
 
 ##### その他のリリース履歴
 
