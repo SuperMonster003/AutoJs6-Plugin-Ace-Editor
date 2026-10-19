@@ -19,6 +19,24 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun hostEventsAndNotificationsHaveTypedDefaultPopups() = withEvidence("runtime-events") { editor, evidence ->
+        for((mode,header) in listOf(
+            "node" to "\"nodejs\";\nconst events=require('autojs6:events'),notifications=require('autojs6:notifications');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const events=host.events,notifications=host.notifications;\n")) {
+            val methods=query(editor,header+"events.","",evidence)
+            assertTrue(methods.toString(),semanticNames(methods).containsAll(setOf("observeBroadcasts","observeNotification","observeToast","observeKey","on","once","off","close")))
+            showPopup(editor,header+"notifications.not","notify",evidence,"$mode-notify",
+                if(mode=="node")"Promise<notifications.NotificationId>" else "Promise<RuntimeNotifications.NotificationId>")
+            val prefix=header+"async function inspect(){const subscription=await events.observeNotification();\n"
+            val members=query(editor,prefix+"subscription.","",evidence)
+            assertTrue(members.toString(),semanticNames(members).containsAll(setOf("id","source","closed","on","once","off","drainEvents","close")))
+            showPopup(editor,prefix+"subscription.clo","close",evidence,"$mode-event-close","Promise<boolean>")
+            val options=query(editor,header+"events.observeBroadcasts({","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("drainIntervalMs","timeoutMs","signal")))
+        }
+    }
+
+    @Test
     fun hostShellStreamsAndShizukuHaveRuntimePopups() = withEvidence("runtime-shell") { editor, evidence ->
         for((mode,header) in listOf(
             "node" to "\"nodejs\";\nconst shell=require('autojs6:shell'),shizuku=require('autojs6:shizuku');\n",

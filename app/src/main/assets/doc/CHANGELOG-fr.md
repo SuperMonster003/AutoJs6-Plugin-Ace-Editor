@@ -4,6 +4,12 @@
 
 ******
 
+# v2.28.0
+
+###### 2026/10/19
+
+* `Fonctionnalité` Événements et notifications hôtes pour Bun et les Workers Node.js, avec nettoyage indépendant des abonnements et notifications
+
 # v2.27.0
 
 ###### 2026/10/19

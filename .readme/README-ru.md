@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.27.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.28.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.27.0-u
 
 ******
 
+# v2.28.0
+
+###### 2026/10/19
+
+* `Функция` События и уведомления хоста для Bun и Node.js Workers с независимой очисткой подписок и уведомлений
+
 # v2.27.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.27.0-u
 ###### 2026/10/19
 
 * `Исправление` Недостающие объявления типов и дополнения процессов shell/shizuku, включая параметры событий и конструкторы Shell с каналами
-
-# v2.26.0
-
-###### 2026/10/19
-
-* `Функция` Измерения и подписки датчиков для Bun и Workers Node.js с отменой и автоматическим освобождением слушателей
 
 ##### Подробнее об истории выпусков
 

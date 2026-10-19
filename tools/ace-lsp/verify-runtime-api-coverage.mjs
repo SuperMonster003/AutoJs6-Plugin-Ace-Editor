@@ -192,6 +192,17 @@ for (const [file, header, opencc, images] of [
     const matMembers=query(current,prefix+`const mat=await ${images}.imread('image.png');\nmat.`,'',documentUri);
     for(const name of ['id','channels','depth','width','height'])assert(matMembers.includes(name),`${file}: Mat ${name}`);
     assert(!matMembers.includes('getNativeObjAddr'),`${file}: native Mat pointer leaked`);
+    const eventsHeader=file.endsWith('.bun.ts')?header+'const events=host.events,notifications=host.notifications;\n':header+(file.endsWith('.mjs')?'import events from "autojs6:events";import notifications from "autojs6:notifications";\n':'const events=require("autojs6:events"),notifications=require("autojs6:notifications");\n');
+    const eventMethods=query(current,eventsHeader+'events.','',documentUri);
+    for(const name of ['observeBroadcasts','observeNotification','observeToast','observeKey','on','once','off','close'])assert(eventMethods.includes(name),`${file}: events ${name}`);
+    const eventOptions=query(current,eventsHeader+'events.observeBroadcasts({','',documentUri);
+    for(const name of ['drainIntervalMs','timeoutMs','signal'])assert(eventOptions.includes(name),`${file}: event option ${name}`);
+    const eventSubscription=query(current,eventsHeader+'async function f(){const sub=await events.observeBroadcasts();sub.','',documentUri);
+    for(const name of ['id','source','closed','on','once','off','drainEvents','close'])assert(eventSubscription.includes(name),`${file}: subscription ${name}`);
+    const notificationMethods=query(current,eventsHeader+'notifications.','',documentUri);
+    for(const name of ['notify','cancel','cancelAll','getPermissionStatus','openSettings','openNotificationSettings'])assert(notificationMethods.includes(name),`${file}: notifications ${name}`);
+    const notificationOptions=query(current,eventsHeader+'notifications.notify({','',documentUri);
+    for(const name of ['id','title','text','channel','channelName','ongoing','priority'])assert(notificationOptions.includes(name),`${file}: notification option ${name}`);
     const shellHeader=file.endsWith('.bun.ts')?header+'const shell=host.shell,shizuku=host.shizuku;\n':header+(file.endsWith('.mjs')?'import shell from "autojs6:shell";import shizuku from "autojs6:shizuku";\n':'const shell=require("autojs6:shell"),shizuku=require("autojs6:shizuku");\n');
     const shellMethods=query(current,shellHeader+'shell.','',documentUri);
     for(const name of ['exec','execRoot','execShizuku','execFile','checkAccess','getAccess','requestShizukuPermission','setDefaultTimeout','spawn','open'])assert(shellMethods.includes(name),`${file}: shell ${name}`);
