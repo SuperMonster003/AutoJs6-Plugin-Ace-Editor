@@ -192,6 +192,15 @@ for (const [file, header, opencc, images] of [
     const matMembers=query(current,prefix+`const mat=await ${images}.imread('image.png');\nmat.`,'',documentUri);
     for(const name of ['id','channels','depth','width','height'])assert(matMembers.includes(name),`${file}: Mat ${name}`);
     assert(!matMembers.includes('getNativeObjAddr'),`${file}: native Mat pointer leaked`);
+    const deviceHeader=file.endsWith('.bun.ts')?header+'const device=host.device,dialogs=host.dialogs;\n':header+(file.endsWith('.mjs')?'import device from "autojs6:device";import dialogs from "autojs6:dialogs";\n':'const device=require("autojs6:device"),dialogs=require("autojs6:dialogs");\n');
+    const deviceMethods=query(current,deviceHeader+'device.','',documentUri);
+    for(const name of ['getInfo','getWidth','setBrightness','setBrightnessMode','keepScreenOn','cancelKeepingAwake','getMusicVolume','setMusicVolume','openBatteryOptimizationSettings'])assert(deviceMethods.includes(name),`${file}: device ${name}`);
+    const dialogMethods=query(current,deviceHeader+'dialogs.','',documentUri);
+    for(const name of ['alert','confirm','input','prompt','rawInput','select','singleChoice','multiChoice','progress'])assert(dialogMethods.includes(name),`${file}: dialogs ${name}`);
+    const progressMembers=query(current,deviceHeader+'async function f(){const p=await dialogs.progress.show();p.','',documentUri);
+    for(const name of ['id','shown','max','value','update','dismiss'])assert(progressMembers.includes(name),`${file}: progress ${name}`);
+    const progressOptions=query(current,deviceHeader+'dialogs.progress.show({','',documentUri);
+    for(const name of ['title','message','max','value','indeterminate'])assert(progressOptions.includes(name),`${file}: progress option ${name}`);
     const eventsHeader=file.endsWith('.bun.ts')?header+'const events=host.events,notifications=host.notifications;\n':header+(file.endsWith('.mjs')?'import events from "autojs6:events";import notifications from "autojs6:notifications";\n':'const events=require("autojs6:events"),notifications=require("autojs6:notifications");\n');
     const eventMethods=query(current,eventsHeader+'events.','',documentUri);
     for(const name of ['observeBroadcasts','observeNotification','observeToast','observeKey','on','once','off','close'])assert(eventMethods.includes(name),`${file}: events ${name}`);

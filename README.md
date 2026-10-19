@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.28.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.29.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.28.0-u
 
 ******
 
+# v2.29.0
+
+###### 2026/10/19
+
+* `新增` Bun 与 Node.js Worker 的设备控制和对话框 API, 支持亮度, 音量和独立窗口清理
+
 # v2.28.0
 
 ###### 2026/10/19
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.28.0-u
 ###### 2026/10/19
 
 * `新增` Bun, Node.js 及 Worker 的宿主 Shell API, 支持流式输入输出, Shizuku 授权与进程清理
-
-# v2.26.1
-
-###### 2026/10/19
-
-* `修复` shell/shizuku 进程接口的类型声明与补全缺漏, 包含事件参数及管道 Shell 构造器
 
 ##### 更多发行历史可参阅
 

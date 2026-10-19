@@ -4,6 +4,12 @@
 
 ******
 
+# v2.29.0
+
+###### 2026/10/19
+
+* `Fonctionnalité` Commandes de périphérique et dialogues pour Bun et les Workers Node.js, avec luminosité, volume et nettoyage indépendant des fenêtres
+
 # v2.28.0
 
 ###### 2026/10/19

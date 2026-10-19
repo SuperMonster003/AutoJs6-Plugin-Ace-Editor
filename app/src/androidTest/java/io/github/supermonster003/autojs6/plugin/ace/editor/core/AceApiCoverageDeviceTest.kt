@@ -19,6 +19,24 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun deviceAndDialogMethodsHaveTypedDefaultPopups() = withEvidence("runtime-device-dialogs") { editor, evidence ->
+        for((mode,header) in listOf(
+            "node" to "\"nodejs\";\nconst device=require('autojs6:device'),dialogs=require('autojs6:dialogs');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const device=host.device,dialogs=host.dialogs;\n")) {
+            val methods=query(editor,header+"device.","",evidence)
+            assertTrue(methods.toString(),semanticNames(methods).containsAll(setOf("getInfo","getWidth","setBrightness","keepScreenOn","cancelKeepingAwake","getMusicVolume","setMusicVolume")))
+            showPopup(editor,header+"device.getW","getWidth",evidence,"$mode-device-width","Promise<number>")
+            showPopup(editor,header+"dialogs.conf","confirm",evidence,"$mode-confirm","Promise<boolean>")
+            val prefix=header+"async function inspect(){const progress=await dialogs.progress.show();\n"
+            val members=query(editor,prefix+"progress.","",evidence)
+            assertTrue(members.toString(),semanticNames(members).containsAll(setOf("id","shown","max","value","update","dismiss")))
+            showPopup(editor,prefix+"progress.dism","dismiss",evidence,"$mode-progress-dismiss","Promise<boolean>")
+            val options=query(editor,header+"dialogs.progress.show({","",evidence)
+            assertTrue(options.toString(),semanticNames(options).containsAll(setOf("title","message","max","value","indeterminate")))
+        }
+    }
+
+    @Test
     fun hostEventsAndNotificationsHaveTypedDefaultPopups() = withEvidence("runtime-events") { editor, evidence ->
         for((mode,header) in listOf(
             "node" to "\"nodejs\";\nconst events=require('autojs6:events'),notifications=require('autojs6:notifications');\n",
