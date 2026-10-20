@@ -188,6 +188,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 
 ###### 2026/10/21
 
+* `إصلاح` قد يعود الإكمال الدلالي إلى الاقتراحات الأساسية عند تبديل توجيهات بيئة التشغيل Node.js/Bun/Rhino
 * `تحسين` إكمال الشيفرة - Node.js/Bun/Worker: قراءة كتب EPUB وتصدير الموارد والبحث وجلسات القارئ مع الأحداث
 
 # v2.34.0

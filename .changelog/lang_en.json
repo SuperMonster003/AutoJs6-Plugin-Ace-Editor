@@ -7,6 +7,9 @@
   "$data": {
     "v2.35.0": {
       "released_date": "2026/10/21",
+      "fix": [
+        "Semantic completion could fall back to basic hints when switching Node.js/Bun/Rhino runtime directives"
+      ],
       "improvement": [
         "Completion - Node.js/Bun/Worker: EPUB book reading, resource export, search and reader sessions with events"
       ]

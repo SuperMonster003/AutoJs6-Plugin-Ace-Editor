@@ -7,6 +7,9 @@
   "$data": {
     "v2.35.0": {
       "released_date": "2026/10/21",
+      "fix": [
+        "切换 Node.js/Bun/Rhino 运行时指令时, 语义补全可能退回基础提示的问题"
+      ],
       "improvement": [
         "代码补全 - Node.js/Bun/Worker: EPUB 书籍读取, 资源导出, 搜索及带事件的阅读器会话"
       ]

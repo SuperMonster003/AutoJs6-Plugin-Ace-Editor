@@ -7,6 +7,9 @@
   "$data": {
     "v2.35.0": {
       "released_date": "2026/10/21",
+      "fix": [
+        "La complétion sémantique pouvait revenir aux suggestions de base lors du changement de directive Node.js/Bun/Rhino"
+      ],
       "improvement": [
         "Complétion - Node.js/Bun/Worker: Lecture EPUB, export des ressources, recherche et sessions du lecteur avec événements"
       ]

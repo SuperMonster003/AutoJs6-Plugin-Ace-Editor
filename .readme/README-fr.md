@@ -188,6 +188,7 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ###### 2026/10/21
 
+* `Correctif` La complétion sémantique pouvait revenir aux suggestions de base lors du changement de directive Node.js/Bun/Rhino
 * `Amélioration` Complétion - Node.js/Bun/Worker: Lecture EPUB, export des ressources, recherche et sessions du lecteur avec événements
 
 # v2.34.0

@@ -7,6 +7,9 @@
   "$data": {
     "v2.35.0": {
       "released_date": "2026/10/21",
+      "fix": [
+        "El autocompletado semántico podía volver a sugerencias básicas al cambiar la directiva de Node.js/Bun/Rhino"
+      ],
       "improvement": [
         "Autocompletado - Node.js/Bun/Worker: Lectura de EPUB, exportación de recursos, búsqueda y sesiones del lector con eventos"
       ]

@@ -3433,6 +3433,61 @@ function verifySemanticProviderFramework(paths) {
         `Per-language semantic switch bypassed M2 or instantiated TypeScript: ${JSON.stringify(disabledState)}`,
     );
 
+    // A runtime directive replaces the compiler program and needs one new cold operation.
+    // Ordinary edits in the same runtime must retain the normal budget.
+    let runtimeNow = 0;
+    let runtimeCost = 2500;
+    let runtimeCreates = 0;
+    let runtimeDisposes = 0;
+    let runtimeText = '"nodejs";\nvalue(';
+    context.Date = { now: () => runtimeNow };
+    vm.runInContext(readFileSync(paths["local-symbols"], "utf8"), context);
+    context.AutoJsAceTsLanguageService = {
+        create: () => {
+            runtimeCreates++;
+            return {
+                getState: () => ({ ready: true, version: "6.0.3" }),
+                getSignatureHelp() {
+                    runtimeNow += runtimeCost;
+                    return { runtimeTest: true };
+                },
+                dispose() { runtimeDisposes++; },
+            };
+        },
+    };
+    const runtimeSession = languageSession("ace/mode/javascript", runtimeText);
+    runtimeSession.getValue = () => runtimeText;
+    const runtimeClient = context.AutoJsAceLspClient.createClient({
+        getOptions: () => JSON.stringify({
+            enabled: true,
+            documentUri: "file:///autojs6/editor/runtime-switch.js",
+            rootUri: "file:///autojs6/editor",
+            typescriptVersion: "6.0.3",
+        }),
+        session: runtimeSession,
+    });
+    try {
+        for (const directive of ['"nodejs";\n', '"bun";\n', ""]) {
+            runtimeText = directive + "value(";
+            runtimeCost = 2500;
+            assert(runtimeClient.getSignatureHelp({ row: 0, column: 0 })?.runtimeTest === true,
+                `Runtime switch lost its cold budget: ${directive} ${JSON.stringify(runtimeClient.getState())}`);
+            runtimeText = directive + "other(";
+            runtimeCost = 1;
+            runtimeClient.getSignatureHelp({ row: 0, column: 0 });
+        }
+        assert(runtimeCreates === 3 && runtimeDisposes === 2,
+            `Runtime changes must replace one provider each; ordinary edits must reuse it: ${runtimeCreates}/${runtimeDisposes}`);
+        runtimeCost = 2001;
+        runtimeClient.getSignatureHelp({ row: 0, column: 0 });
+        assert(runtimeClient.getState().semanticProvider.timeoutCount === 1,
+            "Runtime reset relaxed the normal operation timeout");
+    } finally {
+        runtimeClient.destroy();
+        context.Date = Date;
+    }
+    assert(runtimeDisposes === 3, "Runtime reset leaked a provider");
+
     return {
         capabilityCount: runtime.CAPABILITY_NAMES.length,
         providerFailureCount: failedState.failureCount,
@@ -3444,6 +3499,7 @@ function verifySemanticProviderFramework(paths) {
         clientProviderCreateCount,
         clientStaticFallbackChecks: clientResults.length,
         semanticDisabledStaticFallbackCount: disabledResults.length,
+        runtimeSwitchColdStarts: runtimeCreates,
     };
 }
 

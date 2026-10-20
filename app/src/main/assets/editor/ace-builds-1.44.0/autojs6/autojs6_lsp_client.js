@@ -1178,6 +1178,7 @@
         var tsRetryTimer = null;
         var lastAnnotations = [];
         var tsService = null;
+        var tsServiceApiRuntime = "";
         var pythonService = null;
         var luaService = null;
         var javaService = null;
@@ -1278,6 +1279,17 @@
                 state.semanticLanguages.javascript === false) {
                 return null;
             }
+            var runtimeResolver = global.AutoJsAceLocalSymbols &&
+                global.AutoJsAceLocalSymbols.resolveApiRuntime;
+            var apiRuntime = runtimeResolver ?
+                runtimeResolver(textFromSession(session), state.documentUri, state.typescriptProfile) : "";
+            if (tsService && apiRuntime !== tsServiceApiRuntime) {
+                // A directive switch replaces the compiler program and its libraries.
+                // Replace the provider too, so the first operation uses its cold budget.
+                disposeTsService();
+                tsServiceInitAttempts = 0;
+                consecutiveSlowSemanticOperations = 0;
+            }
             if (!tsService && hasTsLanguageService()) {
                 tsServiceInitAttempts++;
                 if (!semanticRuntime ||
@@ -1323,6 +1335,7 @@
                     }
                 });
                 semanticHost.setProvider(tsService, false);
+                tsServiceApiRuntime = apiRuntime;
                 tsServiceInstanceRevision++;
                 semanticColdStartPending = true;
             }
@@ -1534,6 +1547,7 @@
         function disposeTsService() {
             var service = tsService;
             tsService = null;
+            tsServiceApiRuntime = "";
             if (semanticHost && semanticHost.getProvider() === service) {
                 semanticHost.clearProvider(false);
             }

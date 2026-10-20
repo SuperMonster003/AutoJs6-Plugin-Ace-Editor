@@ -8,6 +8,7 @@
 
 ###### 2026/10/21
 
+* `Corrección` El autocompletado semántico podía volver a sugerencias básicas al cambiar la directiva de Node.js/Bun/Rhino
 * `Mejora` Autocompletado - Node.js/Bun/Worker: Lectura de EPUB, exportación de recursos, búsqueda y sesiones del lector con eventos
 
 # v2.34.0

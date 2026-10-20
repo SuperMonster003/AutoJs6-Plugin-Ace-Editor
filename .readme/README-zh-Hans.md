@@ -188,6 +188,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 
 ###### 2026/10/21
 
+* `修复` 切换 Node.js/Bun/Rhino 运行时指令时, 语义补全可能退回基础提示的问题
 * `优化` 代码补全 - Node.js/Bun/Worker: EPUB 书籍读取, 资源导出, 搜索及带事件的阅读器会话
 
 # v2.34.0

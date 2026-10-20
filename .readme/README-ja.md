@@ -188,6 +188,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 
 ###### 2026/10/21
 
+* `修正` Node.js/Bun/Rhino のランタイム指定を切り替えると, セマンティック補完が基本候補に戻る問題
 * `改善` コード補完 - Node.js/Bun/Worker: EPUB 書籍の読み込み, リソース出力, 検索とイベント付きリーダーセッション
 
 # v2.34.0

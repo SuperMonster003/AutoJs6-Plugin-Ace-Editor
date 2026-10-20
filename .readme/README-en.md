@@ -188,6 +188,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ###### 2026/10/21
 
+* `Fix` Semantic completion could fall back to basic hints when switching Node.js/Bun/Rhino runtime directives
 * `Improvement` Completion - Node.js/Bun/Worker: EPUB book reading, resource export, search and reader sessions with events
 
 # v2.34.0
