@@ -19,6 +19,22 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun ttsTasksAndAudioEventsHaveTypedDefaultPopups() = withEvidence("runtime-tts") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst tts=require('autojs6:tts');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const tts=host.tts;\n")) {
+            val names=query(editor,header+"tts.","",evidence)
+            assertTrue(names.toString(),semanticNames(names).containsAll(setOf("ready","voices","synthesis","silenceTask","close")))
+            showPopup(editor,header+"tts.synthe","synthesis",evidence,"$mode-tts-task",if(mode=="node")"Promise<tts.Utterance>" else "Promise<RuntimeTts.Utterance>")
+            val prefix=header+"async function run(){const task=await tts.synthesis('hello','out.wav');task."
+            assertTrue(semanticNames(query(editor,prefix,"",evidence)).containsAll(setOf("result","state","isDone","on","stop")))
+            val audio=prefix+"on('audio',value=>{value."
+            assertTrue(semanticNames(query(editor,audio,"",evidence)).containsAll(setOf("data","chunk","id")))
+            showPopup(editor,audio+"da","data",evidence,"$mode-tts-audio","Uint8Array")
+        }
+    }
+
+    @Test
     fun javaCallbacksSubclassAndLoadersHaveDefaultTypedPopups() = withEvidence("runtime-java-callbacks") { editor, evidence ->
         for ((mode,header) in listOf(
             "node" to "\"nodejs\";\nconst java=require('autojs6:java');\n",

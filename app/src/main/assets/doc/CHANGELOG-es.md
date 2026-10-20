@@ -4,6 +4,12 @@
 
 ******
 
+# v2.33.0
+
+###### 2026/10/20
+
+* `Función` API de síntesis de voz para Node.js, Bun y Workers con consultas de motores y voces, lectura, silencio, archivos de audio y eventos de tareas
+
 # v2.32.0
 
 ###### 2026/10/20

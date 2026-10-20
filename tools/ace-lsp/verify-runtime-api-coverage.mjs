@@ -86,6 +86,13 @@ for (const [file, directive, runtime] of routes) {
     for(const name of ['new','create','release','describe','callStatic'])assert(generated.includes(name),`${file}: generated class ${name}`);
     const callbackOptions=query(service,javaHeader+"java.proxy('java.lang.Runnable',()=>{},{",'',uri);
     for(const name of ['callbackTimeoutMs','onError','signal','timeoutMs'])assert(callbackOptions.includes(name),`${file}: callback option ${name}`);
+    const ttsHeader = directive + (runtime === 'node' ? "const tts=require('autojs6:tts');\n" : /\.tsx?$/.test(file) ? "declare const host: import('autojs6:bun-host').HostClient;const tts=host.tts;\n" : "/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const tts=host.tts;\n");
+    const ttsMethods=query(service,ttsHeader+'tts.','',uri);
+    for(const name of ['ready','voices','synthesis','speak','silenceTask','stopAll','configure','close'])assert(ttsMethods.includes(name),`${file}: TTS ${name}`);
+    const taskHeader=ttsHeader+"async function run(){const task=await tts.synthesis('hello','out.wav');task.";
+    for(const name of ['result','state','isDone','stop','cancel','on'])assert(query(service,taskHeader,'',uri).includes(name),`${file}: TTS task ${name}`);
+    const audio=query(service,taskHeader+"on('audio',value=>{value.",'',uri);
+    for(const name of ['data','id','chunk'])assert(audio.includes(name),`${file}: TTS audio ${name}`);
     const loaded = service.getState().rootLibraryUris;
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {

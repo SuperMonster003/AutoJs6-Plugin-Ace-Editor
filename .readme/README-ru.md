@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.32.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.33.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.32.0-u
 ### История выпусков
 
 ******
+
+# v2.33.0
+
+###### 2026/10/20
+
+* `Функция` API синтеза речи для Node.js, Bun и Workers с запросами движков и голосов, озвучиванием, тишиной, аудиофайлами и событиями задач
 
 # v2.32.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.32.0-u
 
 * `Исправление` В результатах распознавания speech отсутствовало свойство language, среди причин завершения сеанса не было overflow, а результаты detectVoice ошибочно содержали modelId и warnings
 * `Улучшение` Объявления speech и speech.models описывают каждый метод, параметр, событие и результат со значениями по умолчанию и диапазонами; коды ошибок и названия возможностей дополняются как литералы
-
-# v2.31.0
-
-###### 2026/10/20
-
-* `Функция` Взаимодействие Java/Android для Node.js, Bun и Workers: открытые конструкторы и члены, массивы, точные значения long, явные перегрузки и ссылки Context приложения
 
 ##### Подробнее об истории выпусков
 

@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.32.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.33.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.33.0
+
+###### 2026/10/20
+
+* `Función` API de síntesis de voz para Node.js, Bun y Workers con consultas de motores y voces, lectura, silencio, archivos de audio y eventos de tareas
 
 # v2.32.0
 
@@ -196,12 +202,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 * `Corrección` Resultados de reconocimiento de speech sin la propiedad language, motivos de fin de sesión sin overflow y resultados de detectVoice que listaban por error modelId y warnings
 * `Mejora` Las declaraciones de speech y speech.models documentan cada método, opción, evento y resultado con valores predeterminados y rangos; los códigos de error y nombres de funciones se autocompletan como literales
-
-# v2.31.0
-
-###### 2026/10/20
-
-* `Función` Interoperabilidad Java/Android para Node.js, Bun y Workers, con constructores y miembros públicos, matrices, valores long exactos, sobrecargas explícitas y referencias Context
 
 ##### Para ver más historial de versiones
 
