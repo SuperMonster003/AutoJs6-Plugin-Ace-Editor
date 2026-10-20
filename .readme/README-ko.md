@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 
 ******
 
+# v2.35.0
+
+###### 2026/10/21
+
+* `개선` 코드 완성 - Node.js/Bun/Worker: EPUB 도서 읽기, 리소스 내보내기, 검색 및 이벤트를 지원하는 리더 세션
+
 # v2.34.0
 
 ###### 2026/10/20
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 ###### 2026/10/20
 
 * `기능` Node.js/Bun/Worker의 음성 합성 API로 엔진과 음성 조회, 읽기, 무음, 오디오 파일 합성 및 작업 이벤트 지원
-
-# v2.32.0
-
-###### 2026/10/20
-
-* `기능` Node.js/Bun/Worker의 Java 콜백, 하위 클래스 생성 및 JAR/DEX 로드로 Promise 반환값, 부모 클래스 호출 및 실행 종료 정리 지원
 
 ##### 더 많은 릴리스 기록
 

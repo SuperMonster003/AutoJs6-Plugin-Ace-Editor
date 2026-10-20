@@ -108,11 +108,25 @@ for (const [file, directive, runtime] of routes) {
     for(const name of ['text','segmentIndex','startMillis','endMillis'])assert(recognitionEvent.includes(name),`${file}: speech final ${name}`);
     const modelOptions=query(service,speechHeader+"speech.models.install('model',{",'',uri);
     for(const name of ['acceptLicense','onProgress'])assert(modelOptions.includes(name),`${file}: speech install ${name}`);
+    const epubHeader=ttsHeader.replaceAll('tts','epub');
+    const epubMethods=query(service,epubHeader+'epub.','',uri);
+    for(const name of ['open','metadata','toc','readingOrder','text','cover','search','annotations','read','isAvailable'])
+        for(const suffix of ['', 'Async'])assert(epubMethods.includes(name+suffix),`${file}: EPUB ${name+suffix}`);
+    const bookHeader=epubHeader+"async function f(){const book=await epub.open('book.epub');book.";
+    const bookFields=query(service,bookHeader,'',uri);
+    for(const name of ['metadata','toc','readingOrder','positions','text','textAll','cover','resource','search','annotations','close'])
+        assert(bookFields.includes(name),`${file}: EPUB book ${name}`);
+    const readerHeader=epubHeader+"async function f(){const reader=await epub.read('book.epub');reader.";
+    const readerFields=query(service,readerHeader,'',uri);
+    for(const name of ['goTo','next','prev','nextChapter','prevChapter','setPreferences','bookmarks','close','state','on'])
+        assert(readerFields.includes(name),`${file}: EPUB reader ${name}`);
+    const epubProgress=query(service,readerHeader+"on('progress',event=>{event.",'',uri);
+    for(const name of ['locator','totalProgression','chapterTitle','href'])assert(epubProgress.includes(name),`${file}: EPUB progress ${name}`);
     const loaded = service.getState().rootLibraryUris;
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {
         assert(!query(service, directive + 'selector', 'selector', uri, useStatic).includes('selector'), `${file}: selector leaked`);
-        for (const name of ['speech', '$speech', 'opencc', 'images', 'ui', 'compose']) {
+        for (const name of ['epub', '$epub', 'speech', '$speech', 'opencc', 'images', 'ui', 'compose']) {
             assert(!query(service, directive + name, name, uri, useStatic).includes(name), `${file}: Rhino global ${name} leaked`);
         }
         assert(!query(service, directive + 'jsox.extendAll();\nMath.su', 'su', uri, useStatic).includes('sum'), `${file}: JSOX leaked`);

@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 
 ******
 
+# v2.35.0
+
+###### 2026/10/21
+
+* `Улучшение` Дополнение кода - Node.js/Bun/Worker: Чтение EPUB, экспорт ресурсов, поиск и сеансы чтения с событиями
+
 # v2.34.0
 
 ###### 2026/10/20
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 ###### 2026/10/20
 
 * `Функция` API синтеза речи для Node.js, Bun и Workers с запросами движков и голосов, озвучиванием, тишиной, аудиофайлами и событиями задач
-
-# v2.32.0
-
-###### 2026/10/20
-
-* `Функция` Обратные вызовы Java, создание подклассов и загрузка JAR/DEX для Node.js, Bun и Workers с результатами Promise, вызовами суперкласса и очисткой при завершении
 
 ##### Подробнее об истории выпусков
 

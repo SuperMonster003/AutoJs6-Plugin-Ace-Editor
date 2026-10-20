@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 
 ******
 
+# v2.35.0
+
+###### 2026/10/21
+
+* `تحسين` إكمال الشيفرة - Node.js/Bun/Worker: قراءة كتب EPUB وتصدير الموارد والبحث وجلسات القارئ مع الأحداث
+
 # v2.34.0
 
 ###### 2026/10/20
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 ###### 2026/10/20
 
 * `ميزة` واجهات تحويل النص إلى كلام في Node.js وBun وWorkers مع استعلامات المحركات والأصوات والنطق والصمت وملفات الصوت وأحداث المهام
-
-# v2.32.0
-
-###### 2026/10/20
-
-* `ميزة` ردود نداء Java وإنشاء الأصناف الفرعية وتحميل JAR/DEX في Node.js وBun وWorkers مع نتائج Promise واستدعاءات الصنف الأب والتنظيف عند انتهاء التنفيذ
 
 ##### لمزيد من سجل الإصدارات
 

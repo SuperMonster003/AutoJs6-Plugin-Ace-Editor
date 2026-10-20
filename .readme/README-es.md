@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -184,6 +184,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v2.35.0
+
+###### 2026/10/21
+
+* `Mejora` Autocompletado - Node.js/Bun/Worker: Lectura de EPUB, exportación de recursos, búsqueda y sesiones del lector con eventos
+
 # v2.34.0
 
 ###### 2026/10/20
@@ -195,12 +201,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/20
 
 * `Función` API de síntesis de voz para Node.js, Bun y Workers con consultas de motores y voces, lectura, silencio, archivos de audio y eventos de tareas
-
-# v2.32.0
-
-###### 2026/10/20
-
-* `Función` Callbacks Java, subclases generadas y carga de JAR/DEX para Node.js, Bun y Workers, con resultados Promise, llamadas a la superclase y limpieza al terminar
 
 ##### Para ver más historial de versiones
 

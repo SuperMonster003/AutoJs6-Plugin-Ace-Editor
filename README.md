@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 
 ******
 
+# v2.35.0
+
+###### 2026/10/21
+
+* `优化` 代码补全 - Node.js/Bun/Worker: EPUB 书籍读取, 资源导出, 搜索及带事件的阅读器会话
+
 # v2.34.0
 
 ###### 2026/10/20
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 ###### 2026/10/20
 
 * `新增` Node.js/Bun/Worker 的文字转语音接口, 支持引擎与音色查询, 朗读, 静音任务, 音频文件合成和任务事件
-
-# v2.32.0
-
-###### 2026/10/20
-
-* `新增` Node.js/Bun/Worker 的 Java 回调代理, 子类生成和 JAR/DEX 加载, 支持 Promise 返回值, 父类调用及执行结束清理
 
 ##### 更多发行历史可参阅
 

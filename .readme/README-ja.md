@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 
 ******
 
+# v2.35.0
+
+###### 2026/10/21
+
+* `改善` コード補完 - Node.js/Bun/Worker: EPUB 書籍の読み込み, リソース出力, 検索とイベント付きリーダーセッション
+
 # v2.34.0
 
 ###### 2026/10/20
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-u
 ###### 2026/10/20
 
 * `機能` Node.js/Bun/Worker の音声合成 API でエンジンと音声の照会, 読み上げ, 無音, 音声ファイル合成とタスクイベントに対応
-
-# v2.32.0
-
-###### 2026/10/20
-
-* `機能` Node.js/Bun/Worker の Java コールバック, サブクラス生成と JAR/DEX 読み込みで Promise の戻り値, 親クラス呼び出しと終了時の解放に対応
 
 ##### その他のリリース履歴
 

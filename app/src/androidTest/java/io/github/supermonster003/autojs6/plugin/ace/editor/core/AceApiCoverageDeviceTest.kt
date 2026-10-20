@@ -19,6 +19,25 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun epubBooksAndReaderEventsHaveTypedRuntimePopups() = withEvidence("runtime-epub") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst epub=require('autojs6:epub');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const epub=host.epub;\n")) {
+            assertTrue(semanticNames(query(editor, header+"epub.", "", evidence))
+                .containsAll(setOf("open", "text", "cover", "search", "annotations", "read", "EpubError")))
+            showPopup(editor, header+"epub.ope", "open", evidence, "$mode-epub-book",
+                if (mode=="node") "Promise<epub.Book>" else "Promise<RuntimeEpub.Book>")
+            val book=header+"async function f(){const book=await epub.open('book.epub');book."
+            assertTrue(semanticNames(query(editor, book, "", evidence)).containsAll(setOf("metadata", "readingOrder", "textAll", "cover", "resource", "close")))
+            val reader=header+"async function f(){const reader=await epub.read('book.epub');reader."
+            assertTrue(semanticNames(query(editor, reader, "", evidence)).containsAll(setOf("goTo", "nextChapter", "setPreferences", "bookmarks", "on")))
+            val event=reader+"on('progress',event=>{event."
+            showPopup(editor, event+"chapterT", "chapterTitle", evidence, "$mode-epub-progress", "string")
+            assertTrue(semanticNames(query(editor, event, "", evidence)).containsAll(setOf("locator", "totalProgression", "chapterTitle", "href")))
+        }
+    }
+
+    @Test
     fun speechSessionsModelsAndCallbacksHaveTypedDefaultPopups() = withEvidence("runtime-speech") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst speech=require('autojs6:speech');\n",
