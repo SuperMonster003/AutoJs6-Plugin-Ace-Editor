@@ -171,7 +171,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.33.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.34.0-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.33.0-u
 
 ******
 
+# v2.34.0
+
+###### 2026/10/20
+
+* `新增` Node.js/Bun/Worker 的 speech 語音識別與模型管理介面, 支援 WAV/PCM, 聽寫與喚醒工作階段, 模型安裝/匯入, 語音合成及取消清理
+
 # v2.33.0
 
 ###### 2026/10/20
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.33.0-u
 ###### 2026/10/20
 
 * `新增` Node.js/Bun/Worker 的 Java 回調代理, 子類別產生和 JAR/DEX 載入, 支援 Promise 回傳值, 父類別呼叫及執行結束清理
-
-# v2.31.1
-
-###### 2026/10/20
-
-* `修復` speech 識別結果的類型缺少 language 屬性, 會話結束原因缺少 overflow, detectVoice 結果誤列 modelId 與 warnings
-* `優化` speech 與 speech.models 聲明為各方法, 選項, 事件和結果補充說明, 預設值與取值範圍, 錯誤碼與功能名提供字面量補全
 
 ##### 更多發行歷史可參閱
 

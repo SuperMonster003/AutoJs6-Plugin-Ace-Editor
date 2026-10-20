@@ -4,6 +4,12 @@
 
 ******
 
+# v2.34.0
+
+###### 2026/10/20
+
+* `Fonctionnalité` API speech de reconnaissance vocale et de gestion des modèles pour Node.js, Bun et Workers avec WAV/PCM, dictée et activation vocale, installation/importation, synthèse et annulation
+
 # v2.33.0
 
 ###### 2026/10/20

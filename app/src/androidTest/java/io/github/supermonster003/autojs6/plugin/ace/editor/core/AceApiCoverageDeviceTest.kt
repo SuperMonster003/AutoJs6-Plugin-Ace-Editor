@@ -19,6 +19,26 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun speechSessionsModelsAndCallbacksHaveTypedDefaultPopups() = withEvidence("runtime-speech") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst speech=require('autojs6:speech');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const speech=host.speech;\n")) {
+            assertTrue(semanticNames(query(editor, header+"speech.", "", evidence))
+                .containsAll(setOf("recognize", "listen", "wake", "models", "SpeechError", "close")))
+            showPopup(editor, header+"speech.recogni", "recognize", evidence, "$mode-speech-result",
+                if (mode=="node") "Promise<speech.Recognition>" else "Promise<RuntimeSpeech.Recognition>")
+            assertTrue(semanticNames(query(editor, header+"speech.models.", "", evidence))
+                .containsAll(setOf("install", "importFile", "setDefault", "refreshCatalog")))
+            val prefix=header+"async function f(){const session=await speech.listen();session."
+            assertTrue(semanticNames(query(editor, prefix, "", evidence)).containsAll(setOf("feed", "stop", "cancel", "state", "isEnded")))
+            val event=prefix+"on('final',value=>{value."
+            showPopup(editor, event+"tex", "text", evidence, "$mode-speech-final", "string")
+            assertTrue(semanticNames(query(editor, header+"speech.models.install('model',{", "", evidence))
+                .containsAll(setOf("acceptLicense", "onProgress")))
+        }
+    }
+
+    @Test
     fun ttsTasksAndAudioEventsHaveTypedDefaultPopups() = withEvidence("runtime-tts") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst tts=require('autojs6:tts');\n",

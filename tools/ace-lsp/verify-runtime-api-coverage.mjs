@@ -93,6 +93,21 @@ for (const [file, directive, runtime] of routes) {
     for(const name of ['result','state','isDone','stop','cancel','on'])assert(query(service,taskHeader,'',uri).includes(name),`${file}: TTS task ${name}`);
     const audio=query(service,taskHeader+"on('audio',value=>{value.",'',uri);
     for(const name of ['data','id','chunk'])assert(audio.includes(name),`${file}: TTS audio ${name}`);
+    const speechHeader=ttsHeader.replaceAll('tts','speech');
+    const speechMethods=query(service,speechHeader+'speech.','',uri);
+    for(const name of ['isAvailable','capabilities','recognize','recognizeAsync','detectVoice','listen','wake','synthesize','synthesizeAsync','speak','models','SpeechError','close'])
+        assert(speechMethods.includes(name),`${file}: speech ${name}`);
+    const speechModels=query(service,speechHeader+'speech.models.','',uri);
+    for(const name of ['list','install','installAsync','importFile','remove','setDefault','getDefault','refreshCatalog'])
+        assert(speechModels.includes(name),`${file}: speech.models.${name}`);
+    const sessionHeader=speechHeader+"async function f(){const session=await speech.listen();session.";
+    const sessionFields=query(service,sessionHeader,'',uri);
+    for(const name of ['feed','stop','cancel','result','isActive','isEnded','state','on','off'])
+        assert(sessionFields.includes(name),`${file}: speech session ${name}`);
+    const recognitionEvent=query(service,sessionHeader+"on('final',value=>{value.",'',uri);
+    for(const name of ['text','segmentIndex','startMillis','endMillis'])assert(recognitionEvent.includes(name),`${file}: speech final ${name}`);
+    const modelOptions=query(service,speechHeader+"speech.models.install('model',{",'',uri);
+    for(const name of ['acceptLicense','onProgress'])assert(modelOptions.includes(name),`${file}: speech install ${name}`);
     const loaded = service.getState().rootLibraryUris;
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {

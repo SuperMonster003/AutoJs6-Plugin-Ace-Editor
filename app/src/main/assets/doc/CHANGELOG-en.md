@@ -4,6 +4,12 @@
 
 ******
 
+# v2.34.0
+
+###### 2026/10/20
+
+* `Feature` Speech recognition and model management APIs for Node.js, Bun and Workers, with WAV/PCM, dictation and wake sessions, model installation/import, synthesis and cancellation cleanup
+
 # v2.33.0
 
 ###### 2026/10/20
