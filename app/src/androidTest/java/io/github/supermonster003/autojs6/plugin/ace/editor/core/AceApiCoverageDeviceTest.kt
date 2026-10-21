@@ -26,7 +26,7 @@ class AceApiCoverageDeviceTest {
             val chain = header + "flow.of(3)."
             assertTrue(semanticNames(query(editor, chain, "", evidence)).containsAll(setOf("within", "scope", "press", "swipe", "gesture", "gestures")))
             showPopup(editor, chain+"withi", "within", evidence, "$mode-flow-scope-within", "NodeSnapshot")
-            showPopup(editor, chain+"pres", "press", evidence, "$mode-flow-scope-press", "GestureCall")
+            showPopup(editor, chain+"pres", "press", evidence, "$mode-flow-scope-press", "Flow<number")
             val scoped = header+"async function f(){const text=await flow.of(0).scope({resultType:'text'}).sleep(1).wait({text:'ready'});text."
             assertTrue(semanticNames(query(editor, scoped, "", evidence)).containsAll(setOf("toUpperCase", "substring")))
             showPopup(editor, scoped+"toUpperC", "toUpperCase", evidence, "$mode-flow-scope-text", "string")
