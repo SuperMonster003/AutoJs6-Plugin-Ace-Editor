@@ -188,7 +188,7 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ###### 2026/10/22
 
-* `Fonctionnalité` Génération de texte IA, flux, catalogue de modèles et sessions persistantes pour Node.js, Bun et Workers, avec annulation et autorisation Android des applications générées
+* `Fonctionnalité` Génération de texte IA, flux, catalogue de modèles et sessions persistantes pour Node.js, Bun et Workers, avec annulation et consentement par application dans 3-Stone AI
 
 # v2.40.0
 

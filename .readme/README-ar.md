@@ -188,7 +188,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-u
 
 ###### 2026/10/22
 
-* `ميزة` توليد النصوص والبث وفهرس النماذج والجلسات المستمرة في Node.js وBun وWorkers, مع الإلغاء وإذن Android للتطبيقات المجمعة
+* `ميزة` توليد النصوص والبث وفهرس النماذج والجلسات المستمرة في Node.js وBun وWorkers, مع الإلغاء وموافقة مستقلة لكل تطبيق في 3-Stone AI
 
 # v2.40.0
 
