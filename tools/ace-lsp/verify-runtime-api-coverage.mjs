@@ -113,7 +113,14 @@ for (const [file, directive, runtime] of routes) {
     for(const name of ['wait','waitAsync','waitUntil','waitForStable','waitForVisible','waitForHidden','Flow','FlowError','defaults','pending','repeatUntil'])assert(flowMethods.includes(name),file+': flow '+name);
     const flowChain=query(service,flowHeader+'flow.of(3).map(value=>value+1).','',uri);
     for(const name of ['then','catch','finally','retry','timeout','cancel','toPromise','value','state'])assert(flowChain.includes(name),file+': Flow chain '+name);
-    for(const name of ['sync','await','within','scope','press','gesture'])assert(!flowChain.includes(name),file+': unsupported Flow method '+name);
+    for(const name of ['sync','await'])assert(!flowChain.includes(name),file+': unsupported Flow method '+name);
+    for(const name of ['within','scope','press','swipe','gesture','gestures'])assert(flowChain.includes(name),file+': scoped Flow method '+name);
+    const scopedText=query(service,flowHeader+"async function f(){const text=await flow.of(0).scope({resultType:'text'}).sleep(1).wait({text:'ready'});text.",'',uri);
+    for(const name of ['toUpperCase','substring'])assert(scopedText.includes(name),file+': scoped string result '+name);
+    const scopedPoints=query(service,flowHeader+"async function f(){const points=await flow.wait({text:'ready'},{resultType:'points'});points[0].",'',uri);
+    for(const name of ['x','y'])assert(scopedPoints.includes(name),file+': scoped point result '+name);
+    const scopeOptions=query(service,flowHeader+'flow.of(0).scope({','',uri);
+    for(const name of ['root','compass','resultType'])assert(scopeOptions.includes(name),file+': scope option '+name);
     for(const name of ['click','performAction','typeInto','smartClick','collectList','toggle','waitForEvent','waitForNotification'])assert(flowChain.includes(name),file+': Flow tool chain '+name);
     for(const name of ['waitThenClick','clickWhenStableAfter','smartClick','findAny','scrollUntil','collectList','toggle','waitForIdle','waitForEvent','waitForToast','waitForNotification','dispose'])assert(flowMethods.includes(name),file+': Flow tool '+name);
     const clickOptions=query(service,flowHeader+"flow.smartClick({text:'ready'},{",'',uri);

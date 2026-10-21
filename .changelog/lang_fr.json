@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.40.0": {
+      "released_date": "2026/10/21",
+      "feature": [
+        "Flow within/scope pour Node.js, Bun et les Workers, avec racines de recherche héritées, navigation par boussole, projections typées et surcharges press/swipe/gesture/gestures"
+      ]
+    },
     "v2.39.0": {
       "released_date": "2026/10/21",
       "feature": [

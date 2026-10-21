@@ -4,6 +4,12 @@
 
 ******
 
+# v2.40.0
+
+###### 2026/10/21
+
+* `新增` Node.js, Bun 與 Worker 的 Flow within/scope 範圍繼承, 羅盤導覽和結果投影, 以及 press/swipe/gesture/gestures 手勢多載
+
 # v2.39.0
 
 ###### 2026/10/21

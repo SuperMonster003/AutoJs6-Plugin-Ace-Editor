@@ -19,6 +19,24 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun flowScopesAndGesturesHaveTypedRuntimePopups() = withEvidence("runtime-flow-scope") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst flow=require('autojs6:flow');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const flow=host.flow;\n")) {
+            val chain = header + "flow.of(3)."
+            assertTrue(semanticNames(query(editor, chain, "", evidence)).containsAll(setOf("within", "scope", "press", "swipe", "gesture", "gestures")))
+            showPopup(editor, chain+"withi", "within", evidence, "$mode-flow-scope-within", "NodeSnapshot")
+            showPopup(editor, chain+"pres", "press", evidence, "$mode-flow-scope-press", "GestureCall")
+            val scoped = header+"async function f(){const text=await flow.of(0).scope({resultType:'text'}).sleep(1).wait({text:'ready'});text."
+            assertTrue(semanticNames(query(editor, scoped, "", evidence)).containsAll(setOf("toUpperCase", "substring")))
+            showPopup(editor, scoped+"toUpperC", "toUpperCase", evidence, "$mode-flow-scope-text", "string")
+            val points = header+"async function f(){const points=await flow.wait({text:'ready'},{resultType:'points'});points[0]."
+            assertTrue(semanticNames(query(editor, points, "", evidence)).containsAll(setOf("x", "y")))
+            showPopup(editor, points+"x", "x", evidence, "$mode-flow-scope-point", "number")
+        }
+    }
+
+    @Test
     fun flowToolsAndEventsHaveTypedRuntimePopups() = withEvidence("runtime-flow-tools") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst flow=require('autojs6:flow');\n",
@@ -47,7 +65,7 @@ class AceApiCoverageDeviceTest {
             val chain = header+"flow.of(3).map(value=>value+1)."
             assertTrue(semanticNames(query(editor, chain, "", evidence)).containsAll(setOf("retry", "timeout", "cancel", "then", "value", "state")))
             assertFalse(semanticNames(query(editor, chain, "", evidence)).contains("sync"))
-            showPopup(editor, chain+"retr", "retry", evidence, "$mode-flow-chain", "Flow<number>")
+            showPopup(editor, chain+"retr", "retry", evidence, "$mode-flow-chain", "Flow<number")
             val node = header+"async function f(){const node=await flow.wait({text:'ready'});node."
             assertTrue(semanticNames(query(editor, node, "", evidence)).containsAll(setOf("text", "bounds", "visibleToUser", "packageName")))
             showPopup(editor, node+"visibleTo", "visibleToUser", evidence, "$mode-flow-node", "boolean")
