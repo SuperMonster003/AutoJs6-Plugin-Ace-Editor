@@ -19,6 +19,25 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun aiCoreHasTypedRuntimePopups() = withEvidence("runtime-ai-core") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst ai=require('autojs6:ai');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const ai=host.ai;\n")) {
+            val methods = semanticNames(query(editor, header+"ai.", "", evidence))
+            assertTrue(methods.containsAll(setOf("ask", "chat", "stream", "session", "catalog", "requestAccess")))
+            assertFalse(methods.contains("agent"))
+            showPopup(editor, header+"ai.cha", "chat", evidence, "$mode-ai-core-chat", "Response")
+            showPopup(editor, header+"ai.requestAcc", "requestAccess", evidence, "$mode-ai-core-access", "Promise<boolean>")
+            val stream = header+"ai.stream('hello')."
+            assertTrue(semanticNames(query(editor, stream, "", evidence)).containsAll(setOf("ready", "result", "cancel")))
+            showPopup(editor, stream+"resu", "result", evidence, "$mode-ai-core-result", "Response")
+            val delta = header+"ai.stream('hello').on('delta',(text,chunk)=>{chunk."
+            assertTrue(semanticNames(query(editor, delta, "", evidence)).containsAll(setOf("text", "reasoning")))
+            showPopup(editor, delta+"reason", "reasoning", evidence, "$mode-ai-core-delta", "string")
+        }
+    }
+
+    @Test
     fun flowScopesAndGesturesHaveTypedRuntimePopups() = withEvidence("runtime-flow-scope") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst flow=require('autojs6:flow');\n",

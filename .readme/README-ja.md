@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-u
 
 ******
 
+# v2.41.0
+
+###### 2026/10/22
+
+* `機能` Node.js, Bun と Worker の AI テキスト生成, ストリーミング, モデル一覧と永続セッション, キャンセルとパッケージアプリの Android アクセス許可に対応
+
 # v2.40.0
 
 ###### 2026/10/21
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-u
 ###### 2026/10/21
 
 * `機能` AutoJs6 プロセスのメモリ診断データを読み取る memory モジュールの型宣言: メモリスナップショット, 強制ガベージコレクション, 終了後も回収されていないスクリプトのランタイム, hprof ヒープダンプと LeakCanary による監視 (TypeScript / Ace)
-
-# v2.38.0
-
-###### 2026/10/21
-
-* `機能` Node.js, Bun と Worker の Flow 高度なクリック, スクロール, 入力, リスト収集と実際のイベント待機, 監視準備完了, スナップショット検証とキャンセルに対応 (TypeScript / Ace)
 
 ##### その他のリリース履歴
 

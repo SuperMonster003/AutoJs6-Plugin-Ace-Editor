@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-u
 
 ******
 
+# v2.41.0
+
+###### 2026/10/22
+
+* `新增` Node.js, Bun 和 Worker 的 AI 文本生成, 流式结果, 模型目录与持久会话, 支持取消及打包应用的 Android 访问授权
+
 # v2.40.0
 
 ###### 2026/10/21
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-u
 ###### 2026/10/21
 
 * `新增` memory 模块的类型声明, 用于读取 AutoJs6 进程的内存诊断数据: 内存快照, 强制回收, 已结束未回收的脚本运行时, hprof 堆转储与 LeakCanary 监视 (TypeScript / Ace)
-
-# v2.38.0
-
-###### 2026/10/21
-
-* `新增` Node.js, Bun 及 Worker 的 Flow 高级点击, 滚动, 输入, 列表采集与真实事件等待, 支持监听就绪, 快照校验和取消 (TypeScript / Ace)
 
 ##### 更多发行历史可参阅
 

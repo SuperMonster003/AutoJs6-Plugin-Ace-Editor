@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-u
 
 ******
 
+# v2.41.0
+
+###### 2026/10/22
+
+* `Функция` Генерация текста ИИ, потоковые ответы, каталог моделей и постоянные сеансы для Node.js, Bun и Workers, с отменой и разрешением Android для собранных приложений
+
 # v2.40.0
 
 ###### 2026/10/21
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.40.0-u
 ###### 2026/10/21
 
 * `Функция` Объявления типов модуля memory для чтения диагностики памяти процесса AutoJs6: снимки памяти, принудительная сборка мусора, завершенные, но не освобожденные среды выполнения скриптов, дампы кучи hprof и наблюдение LeakCanary (TypeScript / Ace)
-
-# v2.38.0
-
-###### 2026/10/21
-
-* `Функция` Расширенные нажатия, прокрутка, ввод, сбор списков и ожидание реальных событий Flow для Node.js, Bun и Workers, с готовностью подписки, проверкой снимков и отменой (TypeScript / Ace)
 
 ##### Подробнее об истории выпусков
 

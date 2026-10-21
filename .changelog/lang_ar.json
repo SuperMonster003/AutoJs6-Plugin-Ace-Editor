@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.41.0": {
+      "released_date": "2026/10/22",
+      "feature": [
+        "توليد النصوص والبث وفهرس النماذج والجلسات المستمرة في Node.js وBun وWorkers, مع الإلغاء وإذن Android للتطبيقات المجمعة"
+      ]
+    },
     "v2.40.0": {
       "released_date": "2026/10/21",
       "feature": [
