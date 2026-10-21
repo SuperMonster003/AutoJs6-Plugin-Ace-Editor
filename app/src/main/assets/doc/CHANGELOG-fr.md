@@ -4,6 +4,12 @@
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `Fonctionnalité` Déclarations du module memory pour lire les diagnostics mémoire du processus AutoJs6: instantanés de la mémoire, ramasse-miettes forcé, environnements d'exécution de scripts terminés mais non libérés, vidages du tas hprof et surveillance LeakCanary (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21

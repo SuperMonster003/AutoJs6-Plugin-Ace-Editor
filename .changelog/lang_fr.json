@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.39.0": {
+      "released_date": "2026/10/21",
+      "feature": [
+        "Déclarations du module memory pour lire les diagnostics mémoire du processus AutoJs6: instantanés de la mémoire, ramasse-miettes forcé, environnements d'exécution de scripts terminés mais non libérés, vidages du tas hprof et surveillance LeakCanary (TypeScript / Ace)"
+      ]
+    },
     "v2.38.0": {
       "released_date": "2026/10/21",
       "feature": [

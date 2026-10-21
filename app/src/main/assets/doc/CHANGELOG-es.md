@@ -4,6 +4,12 @@
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `Función` Declaraciones del módulo memory para leer el diagnóstico de memoria del proceso AutoJs6: instantáneas de memoria, recolección de basura forzada, entornos de ejecución de scripts finalizados pero no liberados, volcados del heap hprof y vigilancia con LeakCanary (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21

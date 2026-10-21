@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.39.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `ميزة` تعريفات أنواع وحدة memory لقراءة تشخيص ذاكرة عملية AutoJs6: لقطات الذاكرة, وجمع البيانات المهملة القسري, وبيئات تشغيل البرامج النصية المنتهية غير المحررة, وتفريغات الكومة hprof ومراقبة LeakCanary (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 ###### 2026/10/21
 
 * `ميزة` سلاسل flow غير المتزامنة وانتظار الشروط والاستقرار في Node.js وBun وWorker, مع إلغاء الفروع وإعادة محاولة الخطوات ولقطات واجهة المضيف
-
-# v2.36.0
-
-###### 2026/10/21
-
-* `إصلاح` غياب القيم tts.control, speech.control و epub.control من نوع قدرات Bun
-* `تحسين` إكمال الشفرة: اتصالات حسابات البريد وعمليات الرسائل والمرفقات ومراقبة البريد مع الإلغاء والتنظيف عند خروج Worker
 
 ##### لمزيد من سجل الإصدارات
 

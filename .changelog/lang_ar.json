@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.39.0": {
+      "released_date": "2026/10/21",
+      "feature": [
+        "تعريفات أنواع وحدة memory لقراءة تشخيص ذاكرة عملية AutoJs6: لقطات الذاكرة, وجمع البيانات المهملة القسري, وبيئات تشغيل البرامج النصية المنتهية غير المحررة, وتفريغات الكومة hprof ومراقبة LeakCanary (TypeScript / Ace)"
+      ]
+    },
     "v2.38.0": {
       "released_date": "2026/10/21",
       "feature": [

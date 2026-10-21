@@ -4,6 +4,12 @@
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `Feature` Declarations of the memory module for reading the memory diagnostics of the AutoJs6 process: memory snapshots, forced garbage collection, finished but unreclaimed script runtimes, hprof heap dumps and LeakCanary watching (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21

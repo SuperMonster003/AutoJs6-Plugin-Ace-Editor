@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.39.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `기능` AutoJs6 프로세스의 메모리 진단 데이터를 읽는 memory 모듈의 타입 선언: 메모리 스냅샷, 강제 가비지 컬렉션, 종료 후 회수되지 않은 스크립트 런타임, hprof 힙 덤프와 LeakCanary 감시 (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 ###### 2026/10/21
 
 * `기능` Node.js, Bun, Worker의 flow 비동기 체인 및 조건/안정성 대기, 분기 취소, 단계 재시도, 호스트 화면 스냅샷 지원
-
-# v2.36.0
-
-###### 2026/10/21
-
-* `수정` Bun 기능 이름 타입에서 tts.control, speech.control 및 epub.control이 누락된 문제
-* `개선` 코드 자동 완성: 메일 계정 연결, 메시지 작업, 첨부 파일 및 메일함 감시, 취소와 Worker 종료 시 정리
 
 ##### 더 많은 릴리스 기록
 

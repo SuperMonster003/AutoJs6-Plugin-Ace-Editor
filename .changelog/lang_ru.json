@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.39.0": {
+      "released_date": "2026/10/21",
+      "feature": [
+        "Объявления типов модуля memory для чтения диагностики памяти процесса AutoJs6: снимки памяти, принудительная сборка мусора, завершенные, но не освобожденные среды выполнения скриптов, дампы кучи hprof и наблюдение LeakCanary (TypeScript / Ace)"
+      ]
+    },
     "v2.38.0": {
       "released_date": "2026/10/21",
       "feature": [

@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.39.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -184,6 +184,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `Función` Declaraciones del módulo memory para leer el diagnóstico de memoria del proceso AutoJs6: instantáneas de memoria, recolección de basura forzada, entornos de ejecución de scripts finalizados pero no liberados, volcados del heap hprof y vigilancia con LeakCanary (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21
@@ -195,13 +201,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/21
 
 * `Función` Cadenas asíncronas flow y esperas de condición/estabilidad para Node.js, Bun y Workers, con cancelación de ramas, reintentos por paso e instantáneas de la interfaz del anfitrión
-
-# v2.36.0
-
-###### 2026/10/21
-
-* `Corrección` Valores tts.control, speech.control y epub.control ausentes del tipo de capacidades de Bun
-* `Mejora` Autocompletado: Conexiones de correo, mensajes, adjuntos y vigilancia de buzones, con cancelación y limpieza de Workers
 
 ##### Para ver más historial de versiones
 

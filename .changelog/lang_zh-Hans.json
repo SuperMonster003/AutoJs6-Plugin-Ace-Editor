@@ -5,6 +5,12 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.39.0": {
+      "released_date": "2026/10/21",
+      "feature": [
+        "memory 模块的类型声明, 用于读取 AutoJs6 进程的内存诊断数据: 内存快照, 强制回收, 已结束未回收的脚本运行时, hprof 堆转储与 LeakCanary 监视 (TypeScript / Ace)"
+      ]
+    },
     "v2.38.0": {
       "released_date": "2026/10/21",
       "feature": [

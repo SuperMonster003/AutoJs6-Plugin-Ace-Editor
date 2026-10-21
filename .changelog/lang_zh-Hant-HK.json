@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.39.0": {
+      "released_date": "2026/10/21",
+      "feature": [
+        "memory 模組的類型聲明, 用於讀取 AutoJs6 進程的記憶體診斷數據: 記憶體快照, 強制回收, 已結束未回收的腳本運行時, hprof 堆轉儲與 LeakCanary 監視 (TypeScript / Ace)"
+      ]
+    },
     "v2.38.0": {
       "released_date": "2026/10/21",
       "feature": [

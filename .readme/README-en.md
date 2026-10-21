@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.39.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -184,6 +184,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `Feature` Declarations of the memory module for reading the memory diagnostics of the AutoJs6 process: memory snapshots, forced garbage collection, finished but unreclaimed script runtimes, hprof heap dumps and LeakCanary watching (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21
@@ -195,13 +201,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/21
 
 * `Feature` Flow asynchronous chains and condition/stability waits for Node.js, Bun and Workers, with branch cancellation, step retries and host UI snapshots
-
-# v2.36.0
-
-###### 2026/10/21
-
-* `Fix` Missing tts.control, speech.control and epub.control values in the Bun capability type
-* `Improvement` Code completion: Mail account connections, message operations, attachments and mailbox watches, with cancellation and Worker cleanup
 
 ##### Complete release history
 

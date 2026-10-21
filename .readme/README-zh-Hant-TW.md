@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.39.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `新增` memory 模組的型別宣告, 用於讀取 AutoJs6 處理程序的記憶體診斷資料: 記憶體快照, 強制回收, 已結束未回收的指令碼執行時, hprof 堆積傾印與 LeakCanary 監視 (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 ###### 2026/10/21
 
 * `新增` Node.js, Bun 及 Worker 的 flow 非同步鏈與條件/穩定性等待, 支援分支取消, 單一步驟重試及宿主介面快照
-
-# v2.36.0
-
-###### 2026/10/21
-
-* `修復` Bun 能力名稱型別遺漏 tts.control, speech.control 和 epub.control 的問題
-* `優化` 程式碼提示: 郵件帳戶連線, 郵件操作, 附件與信箱監聽, 支援取消及 Worker 結束清理
 
 ##### 更多發行歷史可參閱
 

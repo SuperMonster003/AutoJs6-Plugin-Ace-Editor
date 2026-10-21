@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.39.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 
 ******
 
+# v2.39.0
+
+###### 2026/10/21
+
+* `機能` AutoJs6 プロセスのメモリ診断データを読み取る memory モジュールの型宣言: メモリスナップショット, 強制ガベージコレクション, 終了後も回収されていないスクリプトのランタイム, hprof ヒープダンプと LeakCanary による監視 (TypeScript / Ace)
+
 # v2.38.0
 
 ###### 2026/10/21
@@ -195,13 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-u
 ###### 2026/10/21
 
 * `機能` Node.js, Bun, Worker 向けの flow 非同期チェーンと条件/安定性待機, 分岐のキャンセル, ステップの再試行, ホスト画面のスナップショットに対応
-
-# v2.36.0
-
-###### 2026/10/21
-
-* `修正` Bun の機能名の型に tts.control, speech.control と epub.control が欠落する問題
-* `改善` コード補完: メールアカウント接続, メール操作, 添付ファイルとメールボックス監視, キャンセルと Worker 終了時の解放
 
 ##### その他のリリース履歴
 

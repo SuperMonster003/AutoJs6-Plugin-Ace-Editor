@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v2.39.0": {
+      "released_date": "2026/10/21",
+      "feature": [
+        "AutoJs6 プロセスのメモリ診断データを読み取る memory モジュールの型宣言: メモリスナップショット, 強制ガベージコレクション, 終了後も回収されていないスクリプトのランタイム, hprof ヒープダンプと LeakCanary による監視 (TypeScript / Ace)"
+      ]
+    },
     "v2.38.0": {
       "released_date": "2026/10/21",
       "feature": [
