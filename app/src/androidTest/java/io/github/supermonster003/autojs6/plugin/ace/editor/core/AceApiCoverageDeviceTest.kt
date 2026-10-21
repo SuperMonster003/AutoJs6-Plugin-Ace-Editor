@@ -19,6 +19,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun flowChainsAndNodeSnapshotsHaveTypedRuntimePopups() = withEvidence("runtime-flow") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst flow=require('autojs6:flow');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const flow=host.flow;\n")) {
+            assertTrue(semanticNames(query(editor, header+"flow.", "", evidence))
+                .containsAll(setOf("wait", "waitForStable", "repeatUntil", "Flow", "defaults", "pending")))
+            val chain = header+"flow.of(3).map(value=>value+1)."
+            assertTrue(semanticNames(query(editor, chain, "", evidence)).containsAll(setOf("retry", "timeout", "cancel", "then", "value", "state")))
+            assertFalse(semanticNames(query(editor, chain, "", evidence)).contains("sync"))
+            showPopup(editor, chain+"retr", "retry", evidence, "$mode-flow-chain", "Flow<number>")
+            val node = header+"async function f(){const node=await flow.wait({text:'ready'});node."
+            assertTrue(semanticNames(query(editor, node, "", evidence)).containsAll(setOf("text", "bounds", "visibleToUser", "packageName")))
+            showPopup(editor, node+"visibleTo", "visibleToUser", evidence, "$mode-flow-node", "boolean")
+        }
+    }
+
+    @Test
     fun mailClientsMessagesAndWatchEventsHaveTypedRuntimePopups() = withEvidence("runtime-mail") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst mail=require('autojs6:mail');\n",

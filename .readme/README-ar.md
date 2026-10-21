@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.37.0
+
+###### 2026/10/21
+
+* `ميزة` سلاسل flow غير المتزامنة وانتظار الشروط والاستقرار في Node.js وBun وWorker, مع إلغاء الفروع وإعادة محاولة الخطوات ولقطات واجهة المضيف
 
 # v2.36.0
 
@@ -197,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-u
 
 * `إصلاح` قد يعود الإكمال الدلالي إلى الاقتراحات الأساسية عند تبديل توجيهات بيئة التشغيل Node.js/Bun/Rhino
 * `تحسين` إكمال الشيفرة - Node.js/Bun/Worker: قراءة كتب EPUB وتصدير الموارد والبحث وجلسات القارئ مع الأحداث
-
-# v2.34.0
-
-###### 2026/10/20
-
-* `ميزة` واجهات speech للتعرف على الكلام وإدارة النماذج في Node.js وBun وWorkers مع WAV/PCM والإملاء وكلمات التنبيه وتثبيت النماذج واستيرادها والتوليف والتنظيف عند الإلغاء
 
 ##### لمزيد من سجل الإصدارات
 

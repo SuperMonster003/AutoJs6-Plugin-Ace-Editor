@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-u
 ### リリース履歴
 
 ******
+
+# v2.37.0
+
+###### 2026/10/21
+
+* `機能` Node.js, Bun, Worker 向けの flow 非同期チェーンと条件/安定性待機, 分岐のキャンセル, ステップの再試行, ホスト画面のスナップショットに対応
 
 # v2.36.0
 
@@ -197,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-u
 
 * `修正` Node.js/Bun/Rhino のランタイム指定を切り替えると, セマンティック補完が基本候補に戻る問題
 * `改善` コード補完 - Node.js/Bun/Worker: EPUB 書籍の読み込み, リソース出力, 検索とイベント付きリーダーセッション
-
-# v2.34.0
-
-###### 2026/10/20
-
-* `機能` Node.js/Bun/Worker の speech 音声認識とモデル管理 API で WAV/PCM, 書き起こしとウェイクワードのセッション, モデルのインストールとインポート, 音声合成とキャンセル時の解放に対応
 
 ##### その他のリリース履歴
 

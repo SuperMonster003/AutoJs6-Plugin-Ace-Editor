@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-u
 ### История выпусков
 
 ******
+
+# v2.37.0
+
+###### 2026/10/21
+
+* `Функция` Асинхронные цепочки flow и ожидание условий/стабильности для Node.js, Bun и Worker с отменой ветвей, повтором шагов и снимками интерфейса хоста
 
 # v2.36.0
 
@@ -197,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-u
 
 * `Исправление` При переключении директив Node.js/Bun/Rhino семантическое автодополнение могло заменяться базовыми подсказками
 * `Улучшение` Дополнение кода - Node.js/Bun/Worker: Чтение EPUB, экспорт ресурсов, поиск и сеансы чтения с событиями
-
-# v2.34.0
-
-###### 2026/10/20
-
-* `Функция` API speech для Node.js, Bun и Workers: распознавание WAV/PCM, диктовка и ключевые слова, установка и импорт моделей, синтез и освобождение ресурсов при отмене
 
 ##### Подробнее об истории выпусков
 

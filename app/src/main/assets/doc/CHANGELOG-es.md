@@ -4,6 +4,12 @@
 
 ******
 
+# v2.37.0
+
+###### 2026/10/21
+
+* `Función` Cadenas asíncronas flow y esperas de condición/estabilidad para Node.js, Bun y Workers, con cancelación de ramas, reintentos por paso e instantáneas de la interfaz del anfitrión
+
 # v2.36.0
 
 ###### 2026/10/21

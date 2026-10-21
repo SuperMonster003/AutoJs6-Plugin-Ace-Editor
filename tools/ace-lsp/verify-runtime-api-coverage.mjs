@@ -108,6 +108,16 @@ for (const [file, directive, runtime] of routes) {
     for(const name of ['text','segmentIndex','startMillis','endMillis'])assert(recognitionEvent.includes(name),`${file}: speech final ${name}`);
     const modelOptions=query(service,speechHeader+"speech.models.install('model',{",'',uri);
     for(const name of ['acceptLicense','onProgress'])assert(modelOptions.includes(name),`${file}: speech install ${name}`);
+    const flowHeader=ttsHeader.replaceAll('tts','flow');
+    const flowMethods=query(service,flowHeader+'flow.','',uri);
+    for(const name of ['wait','waitAsync','waitUntil','waitForStable','waitForVisible','waitForHidden','Flow','FlowError','defaults','pending','repeatUntil'])assert(flowMethods.includes(name),file+': flow '+name);
+    const flowChain=query(service,flowHeader+'flow.of(3).map(value=>value+1).','',uri);
+    for(const name of ['then','catch','finally','retry','timeout','cancel','toPromise','value','state'])assert(flowChain.includes(name),file+': Flow chain '+name);
+    for(const name of ['sync','await','click','within','scope'])assert(!flowChain.includes(name),file+': unsupported Flow method '+name);
+    const flowNode=query(service,flowHeader+"async function f(){const node=await flow.wait({text:'ready'});node.",'',uri);
+    for(const name of ['text','bounds','visibleToUser','packageName'])assert(flowNode.includes(name),file+': Flow node '+name);
+    const flowOptions=query(service,flowHeader+'flow.waitForStable(()=>1,{','',uri);
+    for(const name of ['timeout','interval','times','stableFor','snapshot','compare','missing','recoverService'])assert(flowOptions.includes(name),file+': Flow options '+name);
     const mailHeader=ttsHeader.replaceAll('tts','mail');
     const mailMethods=query(service,mailHeader+'mail.','',uri);
     for(const name of ['connect','connectAsync','setDefault','close','dispose','providers','accounts','watch','folder'])
