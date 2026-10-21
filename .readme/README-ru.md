@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 ### История выпусков
 
 ******
+
+# v2.38.0
+
+###### 2026/10/21
+
+* `Функция` Расширенные нажатия, прокрутка, ввод, сбор списков и ожидание реальных событий Flow для Node.js, Bun и Workers, с готовностью подписки, проверкой снимков и отменой (TypeScript / Ace)
 
 # v2.37.0
 
@@ -196,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 
 * `Исправление` Отсутствующие значения tts.control, speech.control и epub.control в типе возможностей Bun
 * `Улучшение` Автодополнение: Подключение почтовых аккаунтов, операции с письмами, вложения и наблюдение за почтой с отменой и очисткой при выходе Worker
-
-# v2.35.0
-
-###### 2026/10/21
-
-* `Исправление` При переключении директив Node.js/Bun/Rhino семантическое автодополнение могло заменяться базовыми подсказками
-* `Улучшение` Дополнение кода - Node.js/Bun/Worker: Чтение EPUB, экспорт ресурсов, поиск и сеансы чтения с событиями
 
 ##### Подробнее об истории выпусков
 

@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.38.0
+
+###### 2026/10/21
+
+* `ميزة` نقرات Flow المتقدمة والتمرير والإدخال وجمع القوائم وانتظار الأحداث الفعلية في Node.js وBun وWorkers, مع جاهزية الاشتراك والتحقق من اللقطات والإلغاء (TypeScript / Ace)
 
 # v2.37.0
 
@@ -196,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 
 * `إصلاح` غياب القيم tts.control, speech.control و epub.control من نوع قدرات Bun
 * `تحسين` إكمال الشفرة: اتصالات حسابات البريد وعمليات الرسائل والمرفقات ومراقبة البريد مع الإلغاء والتنظيف عند خروج Worker
-
-# v2.35.0
-
-###### 2026/10/21
-
-* `إصلاح` قد يعود الإكمال الدلالي إلى الاقتراحات الأساسية عند تبديل توجيهات بيئة التشغيل Node.js/Bun/Rhino
-* `تحسين` إكمال الشيفرة - Node.js/Bun/Worker: قراءة كتب EPUB وتصدير الموارد والبحث وجلسات القارئ مع الأحداث
 
 ##### لمزيد من سجل الإصدارات
 

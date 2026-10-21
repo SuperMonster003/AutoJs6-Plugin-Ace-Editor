@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 ### 發行歷史
 
 ******
+
+# v2.38.0
+
+###### 2026/10/21
+
+* `新增` Node.js, Bun 及 Worker 的 Flow 進階點擊, 捲動, 輸入, 清單擷取與真實事件等待, 支援監聽就緒, 快照驗證和取消 (TypeScript / Ace)
 
 # v2.37.0
 
@@ -196,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 
 * `修復` Bun 能力名稱型別遺漏 tts.control, speech.control 和 epub.control 的問題
 * `優化` 程式碼提示: 郵件帳戶連線, 郵件操作, 附件與信箱監聽, 支援取消及 Worker 結束清理
-
-# v2.35.0
-
-###### 2026/10/21
-
-* `修復` 切換 Node.js/Bun/Rhino 執行環境指令時, 語意補全可能退回基本提示的問題
-* `優化` 程式碼補全 - Node.js/Bun/Worker: EPUB 書籍讀取, 資源匯出, 搜尋及含事件的閱讀器工作階段
 
 ##### 更多發行歷史可參閱
 

@@ -113,7 +113,15 @@ for (const [file, directive, runtime] of routes) {
     for(const name of ['wait','waitAsync','waitUntil','waitForStable','waitForVisible','waitForHidden','Flow','FlowError','defaults','pending','repeatUntil'])assert(flowMethods.includes(name),file+': flow '+name);
     const flowChain=query(service,flowHeader+'flow.of(3).map(value=>value+1).','',uri);
     for(const name of ['then','catch','finally','retry','timeout','cancel','toPromise','value','state'])assert(flowChain.includes(name),file+': Flow chain '+name);
-    for(const name of ['sync','await','click','within','scope'])assert(!flowChain.includes(name),file+': unsupported Flow method '+name);
+    for(const name of ['sync','await','within','scope','press','gesture'])assert(!flowChain.includes(name),file+': unsupported Flow method '+name);
+    for(const name of ['click','performAction','typeInto','smartClick','collectList','toggle','waitForEvent','waitForNotification'])assert(flowChain.includes(name),file+': Flow tool chain '+name);
+    for(const name of ['waitThenClick','clickWhenStableAfter','smartClick','findAny','scrollUntil','collectList','toggle','waitForIdle','waitForEvent','waitForToast','waitForNotification','dispose'])assert(flowMethods.includes(name),file+': Flow tool '+name);
+    const clickOptions=query(service,flowHeader+"flow.smartClick({text:'ready'},{",'',uri);
+    for(const name of ['gestureFallback','verify','verifyTimeout','climb','maxClimb','humanize','root'])assert(clickOptions.includes(name),file+': smart click options '+name);
+    const notificationWait=query(service,flowHeader+"flow.waitForNotification({text:'ready'}).",'',uri);
+    for(const name of ['ready','cancel','then','toPromise'])assert(notificationWait.includes(name),file+': event wait '+name);
+    const toggleResult=query(service,flowHeader+"async function f(){const result=await flow.toggle({text:'ready'},true);result.",'',uri);
+    for(const name of ['node','changed','checked','method'])assert(toggleResult.includes(name),file+': toggle result '+name);
     const flowNode=query(service,flowHeader+"async function f(){const node=await flow.wait({text:'ready'});node.",'',uri);
     for(const name of ['text','bounds','visibleToUser','packageName'])assert(flowNode.includes(name),file+': Flow node '+name);
     const flowOptions=query(service,flowHeader+'flow.waitForStable(()=>1,{','',uri);

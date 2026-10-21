@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 ### リリース履歴
 
 ******
+
+# v2.38.0
+
+###### 2026/10/21
+
+* `機能` Node.js, Bun と Worker の Flow 高度なクリック, スクロール, 入力, リスト収集と実際のイベント待機, 監視準備完了, スナップショット検証とキャンセルに対応 (TypeScript / Ace)
 
 # v2.37.0
 
@@ -196,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 
 * `修正` Bun の機能名の型に tts.control, speech.control と epub.control が欠落する問題
 * `改善` コード補完: メールアカウント接続, メール操作, 添付ファイルとメールボックス監視, キャンセルと Worker 終了時の解放
-
-# v2.35.0
-
-###### 2026/10/21
-
-* `修正` Node.js/Bun/Rhino のランタイム指定を切り替えると, セマンティック補完が基本候補に戻る問題
-* `改善` コード補完 - Node.js/Bun/Worker: EPUB 書籍の読み込み, リソース出力, 検索とイベント付きリーダーセッション
 
 ##### その他のリリース履歴
 

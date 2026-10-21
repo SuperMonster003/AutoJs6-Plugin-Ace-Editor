@@ -19,6 +19,25 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun flowToolsAndEventsHaveTypedRuntimePopups() = withEvidence("runtime-flow-tools") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst flow=require('autojs6:flow');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const flow=host.flow;\n")) {
+            assertTrue(semanticNames(query(editor, header+"flow.", "", evidence)).containsAll(setOf("smartClick", "collectList", "toggle", "waitForIdle", "waitForEvent", "waitForToast", "waitForNotification")))
+            showPopup(editor, header+"flow.smartCli", "smartClick", evidence, "$mode-flow-tools-click", "ClickResult")
+            val wait = header+"flow.waitForNotification({text:'ready'})."
+            assertTrue(semanticNames(query(editor, wait, "", evidence)).containsAll(setOf("ready", "cancel", "toPromise")))
+            showPopup(editor, wait+"rea", "ready", evidence, "$mode-flow-tools-ready", "Promise<void>")
+            val toggle = header+"async function f(){const result=await flow.toggle({text:'ready'},true);result."
+            assertTrue(semanticNames(query(editor, toggle, "", evidence)).containsAll(setOf("node", "changed", "checked", "method")))
+            showPopup(editor, toggle+"chang", "changed", evidence, "$mode-flow-tools-toggle", "boolean")
+            val node = header+"async function f(){const rows=await flow.collectList(null,{textContains:'row'},{resultType:'#'});rows[0]."
+            assertTrue(semanticNames(query(editor, node, "", evidence)).containsAll(setOf("text", "bounds", "windowId", "checkable")))
+            showPopup(editor, node+"windowI", "windowId", evidence, "$mode-flow-tools-collection", "number")
+        }
+    }
+
+    @Test
     fun flowChainsAndNodeSnapshotsHaveTypedRuntimePopups() = withEvidence("runtime-flow") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst flow=require('autojs6:flow');\n",

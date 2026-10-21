@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 ### 릴리스 기록
 
 ******
+
+# v2.38.0
+
+###### 2026/10/21
+
+* `기능` Node.js, Bun 및 Worker의 Flow 고급 클릭, 스크롤, 입력, 목록 수집 및 실제 이벤트 대기, 구독 준비, 스냅샷 검증 및 취소 지원 (TypeScript / Ace)
 
 # v2.37.0
 
@@ -196,13 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-u
 
 * `수정` Bun 기능 이름 타입에서 tts.control, speech.control 및 epub.control이 누락된 문제
 * `개선` 코드 자동 완성: 메일 계정 연결, 메시지 작업, 첨부 파일 및 메일함 감시, 취소와 Worker 종료 시 정리
-
-# v2.35.0
-
-###### 2026/10/21
-
-* `수정` Node.js/Bun/Rhino 런타임 지시문을 전환할 때 의미 기반 자동 완성이 기본 제안으로 전환될 수 있는 문제
-* `개선` 코드 완성 - Node.js/Bun/Worker: EPUB 도서 읽기, 리소스 내보내기, 검색 및 이벤트를 지원하는 리더 세션
 
 ##### 더 많은 릴리스 기록
 

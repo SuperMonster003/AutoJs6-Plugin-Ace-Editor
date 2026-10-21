@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.38.0
+
+###### 2026/10/21
+
+* `Función` Clics avanzados, desplazamiento, entrada, recopilación de listas y espera de eventos reales de Flow para Node.js, Bun y Workers, con suscripciones listas, validación de instantáneas y cancelación (TypeScript / Ace)
 
 # v2.37.0
 
@@ -196,13 +202,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 * `Corrección` Valores tts.control, speech.control y epub.control ausentes del tipo de capacidades de Bun
 * `Mejora` Autocompletado: Conexiones de correo, mensajes, adjuntos y vigilancia de buzones, con cancelación y limpieza de Workers
-
-# v2.35.0
-
-###### 2026/10/21
-
-* `Corrección` El autocompletado semántico podía volver a sugerencias básicas al cambiar la directiva de Node.js/Bun/Rhino
-* `Mejora` Autocompletado - Node.js/Bun/Worker: Lectura de EPUB, exportación de recursos, búsqueda y sesiones del lector con eventos
 
 ##### Para ver más historial de versiones
 

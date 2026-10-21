@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.37.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.38.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.38.0
+
+###### 2026/10/21
+
+* `Feature` Flow advanced clicks, scrolling, text entry, list collection and real event waits for Node.js, Bun and Workers, with subscription readiness, snapshot validation and cancellation (TypeScript / Ace)
 
 # v2.37.0
 
@@ -196,13 +202,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 * `Fix` Missing tts.control, speech.control and epub.control values in the Bun capability type
 * `Improvement` Code completion: Mail account connections, message operations, attachments and mailbox watches, with cancellation and Worker cleanup
-
-# v2.35.0
-
-###### 2026/10/21
-
-* `Fix` Semantic completion could fall back to basic hints when switching Node.js/Bun/Rhino runtime directives
-* `Improvement` Completion - Node.js/Bun/Worker: EPUB book reading, resource export, search and reader sessions with events
 
 ##### Complete release history
 

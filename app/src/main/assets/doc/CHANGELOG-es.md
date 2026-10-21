@@ -4,6 +4,12 @@
 
 ******
 
+# v2.38.0
+
+###### 2026/10/21
+
+* `Función` Clics avanzados, desplazamiento, entrada, recopilación de listas y espera de eventos reales de Flow para Node.js, Bun y Workers, con suscripciones listas, validación de instantáneas y cancelación (TypeScript / Ace)
+
 # v2.37.0
 
 ###### 2026/10/21
