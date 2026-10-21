@@ -5,6 +5,15 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.36.0": {
+      "released_date": "2026/10/21",
+      "fix": [
+        "Bun 能力名稱類型遺漏 tts.control, speech.control 和 epub.control 的問題"
+      ],
+      "improvement": [
+        "程式碼提示: 郵件帳戶連線, 郵件操作, 附件與郵箱監聽, 支援取消及 Worker 結束清理"
+      ]
+    },
     "v2.35.0": {
       "released_date": "2026/10/21",
       "fix": [

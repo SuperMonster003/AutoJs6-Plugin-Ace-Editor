@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 ### 发行历史
 
 ******
+
+# v2.36.0
+
+###### 2026/10/21
+
+* `修复` Bun 能力名称类型遗漏 tts.control, speech.control 和 epub.control 的问题
+* `优化` 代码提示: 邮件账户连接, 邮件操作, 附件与邮箱监听, 支持取消及 Worker 退出清理
 
 # v2.35.0
 
@@ -196,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 ###### 2026/10/20
 
 * `新增` Node.js/Bun/Worker 的 speech 语音识别与模型管理接口, 支持 WAV/PCM, 听写与唤醒会话, 模型安装/导入, 语音合成和取消清理
-
-# v2.33.0
-
-###### 2026/10/20
-
-* `新增` Node.js/Bun/Worker 的文字转语音接口, 支持引擎与音色查询, 朗读, 静音任务, 音频文件合成和任务事件
 
 ##### 更多发行历史可参阅
 

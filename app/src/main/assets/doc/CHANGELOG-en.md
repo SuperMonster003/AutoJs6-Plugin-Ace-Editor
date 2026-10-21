@@ -4,6 +4,13 @@
 
 ******
 
+# v2.36.0
+
+###### 2026/10/21
+
+* `Fix` Missing tts.control, speech.control and epub.control values in the Bun capability type
+* `Improvement` Code completion: Mail account connections, message operations, attachments and mailbox watches, with cancellation and Worker cleanup
+
 # v2.35.0
 
 ###### 2026/10/21

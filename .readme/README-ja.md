@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 ### リリース履歴
 
 ******
+
+# v2.36.0
+
+###### 2026/10/21
+
+* `修正` Bun の機能名の型に tts.control, speech.control と epub.control が欠落する問題
+* `改善` コード補完: メールアカウント接続, メール操作, 添付ファイルとメールボックス監視, キャンセルと Worker 終了時の解放
 
 # v2.35.0
 
@@ -196,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 ###### 2026/10/20
 
 * `機能` Node.js/Bun/Worker の speech 音声認識とモデル管理 API で WAV/PCM, 書き起こしとウェイクワードのセッション, モデルのインストールとインポート, 音声合成とキャンセル時の解放に対応
-
-# v2.33.0
-
-###### 2026/10/20
-
-* `機能` Node.js/Bun/Worker の音声合成 API でエンジンと音声の照会, 読み上げ, 無音, 音声ファイル合成とタスクイベントに対応
 
 ##### その他のリリース履歴
 

@@ -4,6 +4,13 @@
 
 ******
 
+# v2.36.0
+
+###### 2026/10/21
+
+* `Correctif` Valeurs tts.control, speech.control et epub.control manquantes dans le type des capacités Bun
+* `Amélioration` Complétion de code: Connexions aux comptes mail, messages, pièces jointes et surveillance des boîtes, avec annulation et nettoyage des Workers
+
 # v2.35.0
 
 ###### 2026/10/21

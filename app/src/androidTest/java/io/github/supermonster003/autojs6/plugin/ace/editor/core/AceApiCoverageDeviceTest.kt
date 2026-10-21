@@ -19,6 +19,28 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun mailClientsMessagesAndWatchEventsHaveTypedRuntimePopups() = withEvidence("runtime-mail") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst mail=require('autojs6:mail');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const mail=host.mail;\n")) {
+            assertTrue(semanticNames(query(editor, header+"mail.", "", evidence))
+                .containsAll(setOf("connect", "send", "fetch", "watch", "providers", "accounts", "MailError")))
+            showPopup(editor, header+"mail.connec", "connect", evidence, "$mode-mail-client",
+                if (mode=="node") "Promise<mail.Client>" else "Promise<RuntimeMail.Client>")
+            val client=header+"async function f(){const client=await mail.connect('fixture');client."
+            assertTrue(semanticNames(query(editor, client, "", evidence))
+                .containsAll(setOf("account", "isConnected", "get", "watch", "close")))
+            val result=client+"get(1).then(message=>{message."
+            assertTrue(semanticNames(query(editor, result, "", evidence))
+                .containsAll(setOf("uid", "date", "subject", "attachments", "load")))
+            val event=client+"watch().then(watch=>watch.on('message',(message,watch)=>{message."
+            showPopup(editor, event+"sub", "subject", evidence, "$mode-mail-message", "string")
+            assertTrue(semanticNames(query(editor, header+"mail.connect({", "", evidence))
+                .containsAll(setOf("address", "password", "accessToken", "tokenProvider", "imap", "smtp")))
+        }
+    }
+
+    @Test
     fun epubBooksAndReaderEventsHaveTypedRuntimePopups() = withEvidence("runtime-epub") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst epub=require('autojs6:epub');\n",

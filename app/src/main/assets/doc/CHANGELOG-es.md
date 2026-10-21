@@ -4,6 +4,13 @@
 
 ******
 
+# v2.36.0
+
+###### 2026/10/21
+
+* `Corrección` Valores tts.control, speech.control y epub.control ausentes del tipo de capacidades de Bun
+* `Mejora` Autocompletado: Conexiones de correo, mensajes, adjuntos y vigilancia de buzones, con cancelación y limpieza de Workers
+
 # v2.35.0
 
 ###### 2026/10/21

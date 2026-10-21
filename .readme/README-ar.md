@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.36.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.36.0
+
+###### 2026/10/21
+
+* `إصلاح` غياب القيم tts.control, speech.control و epub.control من نوع قدرات Bun
+* `تحسين` إكمال الشفرة: اتصالات حسابات البريد وعمليات الرسائل والمرفقات ومراقبة البريد مع الإلغاء والتنظيف عند خروج Worker
 
 # v2.35.0
 
@@ -196,12 +203,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.35.0-u
 ###### 2026/10/20
 
 * `ميزة` واجهات speech للتعرف على الكلام وإدارة النماذج في Node.js وBun وWorkers مع WAV/PCM والإملاء وكلمات التنبيه وتثبيت النماذج واستيرادها والتوليف والتنظيف عند الإلغاء
-
-# v2.33.0
-
-###### 2026/10/20
-
-* `ميزة` واجهات تحويل النص إلى كلام في Node.js وBun وWorkers مع استعلامات المحركات والأصوات والنطق والصمت وملفات الصوت وأحداث المهام
 
 ##### لمزيد من سجل الإصدارات
 

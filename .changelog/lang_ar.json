@@ -5,6 +5,15 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.36.0": {
+      "released_date": "2026/10/21",
+      "fix": [
+        "غياب القيم tts.control, speech.control و epub.control من نوع قدرات Bun"
+      ],
+      "improvement": [
+        "إكمال الشفرة: اتصالات حسابات البريد وعمليات الرسائل والمرفقات ومراقبة البريد مع الإلغاء والتنظيف عند خروج Worker"
+      ]
+    },
     "v2.35.0": {
       "released_date": "2026/10/21",
       "fix": [

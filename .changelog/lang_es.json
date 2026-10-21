@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.36.0": {
+      "released_date": "2026/10/21",
+      "fix": [
+        "Valores tts.control, speech.control y epub.control ausentes del tipo de capacidades de Bun"
+      ],
+      "improvement": [
+        "Autocompletado: Conexiones de correo, mensajes, adjuntos y vigilancia de buzones, con cancelación y limpieza de Workers"
+      ]
+    },
     "v2.35.0": {
       "released_date": "2026/10/21",
       "fix": [

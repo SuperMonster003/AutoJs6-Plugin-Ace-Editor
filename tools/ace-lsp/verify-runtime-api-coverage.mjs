@@ -108,6 +108,25 @@ for (const [file, directive, runtime] of routes) {
     for(const name of ['text','segmentIndex','startMillis','endMillis'])assert(recognitionEvent.includes(name),`${file}: speech final ${name}`);
     const modelOptions=query(service,speechHeader+"speech.models.install('model',{",'',uri);
     for(const name of ['acceptLicense','onProgress'])assert(modelOptions.includes(name),`${file}: speech install ${name}`);
+    const mailHeader=ttsHeader.replaceAll('tts','mail');
+    const mailMethods=query(service,mailHeader+'mail.','',uri);
+    for(const name of ['connect','connectAsync','setDefault','close','dispose','providers','accounts','watch','folder'])
+        assert(mailMethods.includes(name),file+': mail '+name);
+    for(const name of ['test','send','folders','folderStatus','createFolder','deleteFolder','renameFolder',
+        'fetch','search','get','fetchBody','download','raw','setFlags','markRead','markUnread','flag','unflag',
+        'move','copy','delete','expunge','append'])
+        for(const suffix of ['', 'Async'])assert(mailMethods.includes(name+suffix),file+': mail '+name+suffix);
+    const mailClientHeader=mailHeader+"async function f(){const client=await mail.connect('fixture');client.";
+    const mailClient=query(service,mailClientHeader,'',uri);
+    for(const name of ['account','isConnected','isClosed','get','watch','close'])assert(mailClient.includes(name),file+': mail client '+name);
+    const mailMessage=query(service,mailClientHeader+"get(1).then(message=>{message.",'',uri);
+    for(const name of ['uid','date','subject','attachments','load'])assert(mailMessage.includes(name),file+': mail result '+name);
+    const mailAttachment=query(service,mailClientHeader+"get(1).then(message=>{message.attachments[0].",'',uri);
+    for(const name of ['partId','uid','folder','download'])assert(mailAttachment.includes(name),file+': mail attachment '+name);
+    const mailEvent=query(service,mailClientHeader+"watch().then(watch=>watch.on('message',(message,watch)=>{message.",'',uri);
+    for(const name of ['uid','subject','load'])assert(mailEvent.includes(name),file+': mail event '+name);
+    const mailOptions=query(service,mailHeader+'mail.connect({','',uri);
+    for(const name of ['address','password','accessToken','tokenProvider','imap','smtp','timeout'])assert(mailOptions.includes(name),file+': mail options '+name);
     const epubHeader=ttsHeader.replaceAll('tts','epub');
     const epubMethods=query(service,epubHeader+'epub.','',uri);
     for(const name of ['open','metadata','toc','readingOrder','text','cover','search','annotations','read','isAvailable'])
@@ -126,7 +145,7 @@ for (const [file, directive, runtime] of routes) {
     assert(!loaded.some(name => /\.core\.|\.extra\.|\.android\.|\.jsox-/.test(name)), `${file}: Rhino declarations leaked`);
     for (const useStatic of [false, true]) {
         assert(!query(service, directive + 'selector', 'selector', uri, useStatic).includes('selector'), `${file}: selector leaked`);
-        for (const name of ['epub', '$epub', 'speech', '$speech', 'opencc', 'images', 'ui', 'compose']) {
+        for (const name of ['mail', '$mail', 'epub', '$epub', 'speech', '$speech', 'opencc', 'images', 'ui', 'compose']) {
             assert(!query(service, directive + name, name, uri, useStatic).includes(name), `${file}: Rhino global ${name} leaked`);
         }
         assert(!query(service, directive + 'jsox.extendAll();\nMath.su', 'su', uri, useStatic).includes('sum'), `${file}: JSOX leaked`);
