@@ -4,6 +4,12 @@
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `新增` settings.export 與 settings.categories 宣告: 將 AutoJs6 設定按分類匯出為設定封存檔 (不含憑證) 並列出分類與項目數, 含 Settings.CategoryId, Settings.ExportResult 與 Settings.Category 類型
+
 # v2.42.0
 
 ###### 2026/10/22

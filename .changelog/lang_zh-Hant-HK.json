@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.43.0": {
+      "released_date": "2026/10/22",
+      "feature": [
+        "settings.export 與 settings.categories 宣告: 將 AutoJs6 設定按分類匯出為設定封存檔 (不含憑證) 並列出分類與項目數, 含 Settings.CategoryId, Settings.ExportResult 與 Settings.Category 類型"
+      ]
+    },
     "v2.42.0": {
       "released_date": "2026/10/22",
       "feature": [

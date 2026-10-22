@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v2.43.0": {
+      "released_date": "2026/10/22",
+      "feature": [
+        "settings.export and settings.categories declarations: export AutoJs6 settings by category to a settings archive (without credentials) and list the categories with their entry counts, with the Settings.CategoryId, Settings.ExportResult and Settings.Category types"
+      ]
+    },
     "v2.42.0": {
       "released_date": "2026/10/22",
       "feature": [

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `機能` settings.export と settings.categories の宣言: AutoJs6 の設定をカテゴリ別に設定アーカイブへエクスポートし (認証情報を除く), カテゴリと項目数を一覧表示; Settings.CategoryId, Settings.ExportResult, Settings.Category 型を追加
+
 # v2.42.0
 
 ###### 2026/10/22

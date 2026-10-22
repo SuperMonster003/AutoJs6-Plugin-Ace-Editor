@@ -4,6 +4,12 @@
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `ميزة` تعريفات settings.export و settings.categories: تصدير إعدادات AutoJs6 حسب الفئة إلى أرشيف إعدادات (دون بيانات الاعتماد) وسرد الفئات مع عدد عناصرها, مع الأنواع Settings.CategoryId و Settings.ExportResult و Settings.Category
+
 # v2.42.0
 
 ###### 2026/10/22

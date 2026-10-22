@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.43.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `기능` settings.export 및 settings.categories 선언: AutoJs6 설정을 분류별로 설정 아카이브로 내보내고 (자격 증명 제외), 분류와 항목 수를 나열; Settings.CategoryId, Settings.ExportResult, Settings.Category 타입 추가
+
 # v2.42.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 ###### 2026/10/22
 
 * `개선` speech 선언에서 WAV 이외의 오디오 파일을 설명: 플러그인이 audioDecode 기능을 선언하면 (3-Macaw Speech 1.2.0 이상) recognize, recognizeAsync, detectVoice가 MP3, AAC, Ogg, FLAC 등 기기가 디코딩할 수 있는 형식과 동영상 파일의 오디오 트랙을 받음; Speech.Feature에 'audioDecode' 추가
-
-# v2.41.0
-
-###### 2026/10/22
-
-* `기능` Node.js, Bun 및 Worker의 AI 텍스트 생성, 스트리밍, 모델 목록 및 영구 세션, 취소와 3-Stone AI의 패키지 앱별 접근 승인 지원
 
 ##### 더 많은 릴리스 기록
 

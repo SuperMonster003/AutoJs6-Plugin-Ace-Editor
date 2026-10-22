@@ -4,6 +4,12 @@
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `Feature` settings.export and settings.categories declarations: export AutoJs6 settings by category to a settings archive (without credentials) and list the categories with their entry counts, with the Settings.CategoryId, Settings.ExportResult and Settings.Category types
+
 # v2.42.0
 
 ###### 2026/10/22

@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.43.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `ميزة` تعريفات settings.export و settings.categories: تصدير إعدادات AutoJs6 حسب الفئة إلى أرشيف إعدادات (دون بيانات الاعتماد) وسرد الفئات مع عدد عناصرها, مع الأنواع Settings.CategoryId و Settings.ExportResult و Settings.Category
+
 # v2.42.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 ###### 2026/10/22
 
 * `تحسين` تشرح تعريفات speech الملفات الصوتية غير WAV: مع إضافة تعلن الميزة audioDecode (⁨3-Macaw Speech⁩ 1.2.0 أو أحدث) تقبل recognize و recognizeAsync و detectVoice صيغ MP3 و AAC و Ogg و FLAC وغيرها مما يفك الجهاز ترميزه, ومسار الصوت في ملفات الفيديو; وتضيف Speech.Feature القيمة 'audioDecode'
-
-# v2.41.0
-
-###### 2026/10/22
-
-* `ميزة` توليد النصوص والبث وفهرس النماذج والجلسات المستمرة في Node.js وBun وWorkers, مع الإلغاء وموافقة مستقلة لكل تطبيق في 3-Stone AI
 
 ##### لمزيد من سجل الإصدارات
 

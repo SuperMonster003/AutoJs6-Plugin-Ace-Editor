@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.43.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `新增` settings.export 与 settings.categories 声明: 将 AutoJs6 设置按分类导出为设置归档 (不含凭据) 并列出分类与条目数, 含 Settings.CategoryId, Settings.ExportResult 与 Settings.Category 类型
+
 # v2.42.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 ###### 2026/10/22
 
 * `优化` speech 声明说明 WAV 以外的音频文件: 插件声明 audioDecode 功能时 (3-Macaw Speech 1.2.0 起) recognize, recognizeAsync 与 detectVoice 接受 MP3, AAC, Ogg, FLAC 等设备能解码的格式与视频文件的音轨; Speech.Feature 增加 'audioDecode'
-
-# v2.41.0
-
-###### 2026/10/22
-
-* `新增` Node.js, Bun 和 Worker 的 AI 文本生成, 流式结果, 模型目录与持久会话, 支持取消及 3-Stone AI 对打包应用的逐应用授权
 
 ##### 更多发行历史可参阅
 

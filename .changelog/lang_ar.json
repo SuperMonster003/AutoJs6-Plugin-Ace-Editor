@@ -5,6 +5,12 @@
   "changelog_label_improvement": "تحسين",
   "changelog_label_dependency": "تبعية",
   "$data": {
+    "v2.43.0": {
+      "released_date": "2026/10/22",
+      "feature": [
+        "تعريفات settings.export و settings.categories: تصدير إعدادات AutoJs6 حسب الفئة إلى أرشيف إعدادات (دون بيانات الاعتماد) وسرد الفئات مع عدد عناصرها, مع الأنواع Settings.CategoryId و Settings.ExportResult و Settings.Category"
+      ]
+    },
     "v2.42.0": {
       "released_date": "2026/10/22",
       "feature": [

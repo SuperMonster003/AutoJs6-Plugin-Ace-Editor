@@ -4,6 +4,12 @@
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `Функция` Объявления settings.export и settings.categories: экспорт настроек AutoJs6 по категориям в архив настроек (без учётных данных) и список категорий с числом записей, с типами Settings.CategoryId, Settings.ExportResult и Settings.Category
+
 # v2.42.0
 
 ###### 2026/10/22

@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.43.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `機能` settings.export と settings.categories の宣言: AutoJs6 の設定をカテゴリ別に設定アーカイブへエクスポートし (認証情報を除く), カテゴリと項目数を一覧表示; Settings.CategoryId, Settings.ExportResult, Settings.Category 型を追加
+
 # v2.42.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.42.0-u
 ###### 2026/10/22
 
 * `改善` speech の宣言で WAV 以外の音声ファイルを説明: プラグインが audioDecode 機能を宣言している場合 (3-Macaw Speech 1.2.0 以降), recognize, recognizeAsync, detectVoice は MP3, AAC, Ogg, FLAC などデバイスがデコードできる形式と動画ファイルの音声トラックを受け付ける; Speech.Feature に 'audioDecode' を追加
-
-# v2.41.0
-
-###### 2026/10/22
-
-* `機能` Node.js, Bun と Worker の AI テキスト生成, ストリーミング, モデル一覧と永続セッション, キャンセルと 3-Stone AI によるパッケージアプリごとの許可に対応
 
 ##### その他のリリース履歴
 

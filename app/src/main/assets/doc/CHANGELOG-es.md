@@ -4,6 +4,12 @@
 
 ******
 
+# v2.43.0
+
+###### 2026/10/22
+
+* `Función` Declaraciones de settings.export y settings.categories: exportar la configuración de AutoJs6 por categorías a un archivo de configuración (sin credenciales) y listar las categorías con su número de entradas, con los tipos Settings.CategoryId, Settings.ExportResult y Settings.Category
+
 # v2.42.0
 
 ###### 2026/10/22
