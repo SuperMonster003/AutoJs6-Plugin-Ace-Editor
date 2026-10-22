@@ -111,7 +111,22 @@ for (const [file, directive, runtime] of routes) {
     const aiHeader=ttsHeader.replaceAll('tts','ai');
     const aiMethods=query(service,aiHeader+'ai.','',uri);
     for(const name of ['ask','chat','stream','session','catalog','hasAccess','requestAccess','close','AiError'])assert(aiMethods.includes(name),file+': AI '+name);
-    assert(!aiMethods.includes('agent'),file+': AI Agent is outside the portable core');
+    assert(aiMethods.includes('agent'),file+': AI Agent facade');
+    const agentMethods=query(service,aiHeader+'ai.agent.','',uri);
+    for(const name of ['run','create','get','list','catalog','presets','status','result','context','hasAccess','requestAccess','close'])
+        assert(agentMethods.includes(name),file+': Agent '+name);
+    const agentRunHeader=aiHeader+"async function f(){const run=await ai.agent.run('hello');run.";
+    const agentRun=query(service,agentRunHeader,'',uri);
+    for(const name of ['id','goal','state','startedAt','detached','error','result','on','once','off','respond','confirm','cancel','join'])
+        assert(agentRun.includes(name),file+': AgentRun '+name);
+    const agentInput=query(service,agentRunHeader+"on('input',event=>{event.",'',uri);
+    for(const name of ['requestId','kind','question','choices','steps','readOnly','timeoutMs'])
+        assert(agentInput.includes(name),file+': Agent input '+name);
+    const agentOptions=query(service,aiHeader+"ai.agent.run('hello',{",'',uri);
+    for(const name of ['target','tools','budget','confirm','interaction','detached','parameters','plan'])
+        assert(agentOptions.includes(name),file+': Agent option '+name);
+    const agentResult=query(service,aiHeader+"async function f(){const run=await ai.agent.run('hello');const result=await run.join();result.",'',uri);
+    for(const name of ['status','summary','usage','error','unfinished'])assert(agentResult.includes(name),file+': Agent result '+name);
     const aiOptions=query(service,aiHeader+"ai.ask('hello',{",'',uri);
     for(const name of ['plugin','target','temperature','maxTokens','backend','timeout','reasoning','responseSchema'])assert(aiOptions.includes(name),file+': AI option '+name);
     const aiStream=query(service,aiHeader+"ai.stream('hello').",'',uri);

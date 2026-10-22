@@ -4,6 +4,12 @@
 
 ******
 
+# v2.42.0
+
+###### 2026/10/22
+
+* `Función` Declaraciones tipadas y autocompletado de ai.agent para Node.js, Bun y Workers, con control de tareas, eventos, canales de scripts registrados y resultados asíncronos
+
 # v2.41.1
 
 ###### 2026/10/22

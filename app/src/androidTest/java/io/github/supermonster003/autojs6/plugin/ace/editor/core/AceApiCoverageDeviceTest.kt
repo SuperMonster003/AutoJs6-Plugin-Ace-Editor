@@ -19,13 +19,33 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AceApiCoverageDeviceTest {
     @Test
+    fun aiAgentHasTypedRuntimePopups() = withEvidence("runtime-ai-agent") { editor, evidence ->
+        for ((mode, header) in listOf(
+            "node" to "\"nodejs\";\nconst ai=require('autojs6:ai');\n",
+            "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const ai=host.ai;\n")) {
+            val methods = semanticNames(query(editor, header+"ai.agent.", "", evidence))
+            assertTrue(methods.containsAll(setOf("run", "create", "get", "list", "catalog", "presets", "status", "context", "result", "requestAccess")))
+            showPopup(editor, header+"ai.agent.ru", "run", evidence, "$mode-ai-agent-run", "AgentRun")
+            val run = header+"async function f(){const run=await ai.agent.run('goal');run."
+            assertTrue(semanticNames(query(editor, run, "", evidence)).containsAll(setOf("state", "result", "respond", "confirm", "cancel", "join")))
+            showPopup(editor, run+"joi", "join", evidence, "$mode-ai-agent-join", "AgentResult")
+            val input = run+"on('input',event=>{event."
+            assertTrue(semanticNames(query(editor, input, "", evidence)).containsAll(setOf("requestId", "kind", "choices", "steps", "readOnly")))
+            showPopup(editor, input+"requestI", "requestId", evidence, "$mode-ai-agent-input", "string")
+            val budget = header+"ai.agent.run('goal',{budget:{"
+            assertTrue(semanticNames(query(editor, budget, "", evidence)).containsAll(setOf("maxSteps", "maxModelCalls", "maxDurationMs", "maxTotalTokens")))
+            showPopup(editor, budget+"maxSt", "maxSteps", evidence, "$mode-ai-agent-budget", "number")
+        }
+    }
+
+    @Test
     fun aiCoreHasTypedRuntimePopups() = withEvidence("runtime-ai-core") { editor, evidence ->
         for ((mode, header) in listOf(
             "node" to "\"nodejs\";\nconst ai=require('autojs6:ai');\n",
             "bun" to "\"bun\";\n/** @type {import('autojs6:bun-host').HostClient} */\nconst host={};const ai=host.ai;\n")) {
             val methods = semanticNames(query(editor, header+"ai.", "", evidence))
             assertTrue(methods.containsAll(setOf("ask", "chat", "stream", "session", "catalog", "requestAccess")))
-            assertFalse(methods.contains("agent"))
+            assertTrue(methods.contains("agent"))
             showPopup(editor, header+"ai.cha", "chat", evidence, "$mode-ai-core-chat", "Response")
             showPopup(editor, header+"ai.requestAcc", "requestAccess", evidence, "$mode-ai-core-access", "Promise<boolean>")
             val stream = header+"ai.stream('hello')."

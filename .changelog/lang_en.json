@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Improvement",
   "changelog_label_dependency": "Dependency",
   "$data": {
+    "v2.42.0": {
+      "released_date": "2026/10/22",
+      "feature": [
+        "Typed ai.agent declarations and completion for Node.js, Bun and Workers, including task controls, events, registered-script channels and asynchronous results"
+      ]
+    },
     "v2.41.1": {
       "released_date": "2026/10/22",
       "improvement": [

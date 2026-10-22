@@ -4,6 +4,12 @@
 
 ******
 
+# v2.42.0
+
+###### 2026/10/22
+
+* `Fonctionnalité` Déclarations typées et complétion ai.agent pour Node.js, Bun et Workers, avec contrôle des tâches, événements, canaux des scripts enregistrés et résultats asynchrones
+
 # v2.41.1
 
 ###### 2026/10/22

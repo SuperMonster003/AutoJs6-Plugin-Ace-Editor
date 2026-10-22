@@ -4,6 +4,12 @@
 
 ******
 
+# v2.42.0
+
+###### 2026/10/22
+
+* `Feature` Typed ai.agent declarations and completion for Node.js, Bun and Workers, including task controls, events, registered-script channels and asynchronous results
+
 # v2.41.1
 
 ###### 2026/10/22

@@ -5,6 +5,12 @@
   "changelog_label_improvement": "Mejora",
   "changelog_label_dependency": "Dependencia",
   "$data": {
+    "v2.42.0": {
+      "released_date": "2026/10/22",
+      "feature": [
+        "Declaraciones tipadas y autocompletado de ai.agent para Node.js, Bun y Workers, con control de tareas, eventos, canales de scripts registrados y resultados asíncronos"
+      ]
+    },
     "v2.41.1": {
       "released_date": "2026/10/22",
       "improvement": [
