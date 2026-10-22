@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.1-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -184,6 +184,12 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `Mejora` las declaraciones de speech describen archivos de audio además de WAV: con un complemento que declara la función audioDecode (3-Macaw Speech 1.2.0 o posterior), recognize, recognizeAsync y detectVoice aceptan MP3, AAC, Ogg, FLAC y otros formatos que el dispositivo decodifica, y la pista de audio de archivos de vídeo; Speech.Feature añade 'audioDecode'
+
 # v2.41.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/21
 
 * `Función` Flow within/scope para Node.js, Bun y Workers, con raíces de búsqueda heredadas, navegación por brújula, proyecciones tipadas y sobrecargas press/swipe/gesture/gestures
-
-# v2.39.0
-
-###### 2026/10/21
-
-* `Función` Declaraciones del módulo memory para leer el diagnóstico de memoria del proceso AutoJs6: instantáneas de memoria, recolección de basura forzada, entornos de ejecución de scripts finalizados pero no liberados, volcados del heap hprof y vigilancia con LeakCanary (TypeScript / Ace)
 
 ##### Para ver más historial de versiones
 

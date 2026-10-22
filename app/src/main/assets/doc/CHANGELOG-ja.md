@@ -4,6 +4,12 @@
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `改善` speech の宣言で WAV 以外の音声ファイルを説明: プラグインが audioDecode 機能を宣言している場合 (3-Macaw Speech 1.2.0 以降), recognize, recognizeAsync, detectVoice は MP3, AAC, Ogg, FLAC などデバイスがデコードできる形式と動画ファイルの音声トラックを受け付ける; Speech.Feature に 'audioDecode' を追加
+
 # v2.41.0
 
 ###### 2026/10/22

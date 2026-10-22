@@ -171,7 +171,7 @@ Release 構建:
 安裝構建後生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.1-universal.apk
 ```
 
 隨後在 AutoJs6 插件中心啟用 `ace-editor`, 完全退出並重新啟動 AutoJs6. 安裝, 更新或回滾插件後都應重新啟動宿主.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-u
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `優化` speech 聲明說明 WAV 以外的音訊檔案: 插件聲明 audioDecode 功能時 (3-Macaw Speech 1.2.0 起) recognize, recognizeAsync 與 detectVoice 接受 MP3, AAC, Ogg, FLAC 等裝置能解碼的格式與影片檔案的音軌; Speech.Feature 增加 'audioDecode'
+
 # v2.41.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-u
 ###### 2026/10/21
 
 * `新增` Node.js, Bun 與 Worker 的 Flow within/scope 範圍繼承, 羅盤導航和結果投影, 以及 press/swipe/gesture/gestures 手勢重載
-
-# v2.39.0
-
-###### 2026/10/21
-
-* `新增` memory 模組的類型聲明, 用於讀取 AutoJs6 進程的記憶體診斷數據: 記憶體快照, 強制回收, 已結束未回收的腳本運行時, hprof 堆轉儲與 LeakCanary 監視 (TypeScript / Ace)
 
 ##### 更多發行歷史可參閱
 

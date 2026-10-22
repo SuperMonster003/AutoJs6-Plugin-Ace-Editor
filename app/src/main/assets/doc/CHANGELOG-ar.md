@@ -4,6 +4,12 @@
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `تحسين` تشرح تعريفات speech الملفات الصوتية غير WAV: مع إضافة تعلن الميزة audioDecode (⁨3-Macaw Speech⁩ 1.2.0 أو أحدث) تقبل recognize و recognizeAsync و detectVoice صيغ MP3 و AAC و Ogg و FLAC وغيرها مما يفك الجهاز ترميزه, ومسار الصوت في ملفات الفيديو; وتضيف Speech.Feature القيمة 'audioDecode'
+
 # v2.41.0
 
 ###### 2026/10/22

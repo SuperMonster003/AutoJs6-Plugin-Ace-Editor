@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.1-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -184,6 +184,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `Improvement` speech declarations cover audio files beyond WAV: with a plugin that declares the audioDecode feature (3-Macaw Speech 1.2.0 or later), recognize, recognizeAsync and detectVoice take MP3, AAC, Ogg, FLAC and other formats the device decodes, and the audio track of video files; Speech.Feature gains 'audioDecode'
+
 # v2.41.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/21
 
 * `Feature` Flow within/scope with inherited search roots, compass navigation and typed result projections, plus press/swipe/gesture/gestures overloads for Node.js, Bun and Workers
-
-# v2.39.0
-
-###### 2026/10/21
-
-* `Feature` Declarations of the memory module for reading the memory diagnostics of the AutoJs6 process: memory snapshots, forced garbage collection, finished but unreclaimed script runtimes, hprof heap dumps and LeakCanary watching (TypeScript / Ace)
 
 ##### Complete release history
 

@@ -4,6 +4,12 @@
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `Mejora` las declaraciones de speech describen archivos de audio además de WAV: con un complemento que declara la función audioDecode (3-Macaw Speech 1.2.0 o posterior), recognize, recognizeAsync y detectVoice aceptan MP3, AAC, Ogg, FLAC y otros formatos que el dispositivo decodifica, y la pista de audio de archivos de vídeo; Speech.Feature añade 'audioDecode'
+
 # v2.41.0
 
 ###### 2026/10/22

@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.1-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-u
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `Улучшение` объявления speech описывают аудиофайлы помимо WAV: если плагин объявляет функцию audioDecode (3-Macaw Speech 1.2.0 или новее), recognize, recognizeAsync и detectVoice принимают MP3, AAC, Ogg, FLAC и другие форматы, которые декодирует устройство, а также звуковую дорожку видеофайлов; в Speech.Feature добавлено 'audioDecode'
+
 # v2.41.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-u
 ###### 2026/10/21
 
 * `Функция` Flow within/scope для Node.js, Bun и Worker: наследование корня поиска, навигация по компасу, типизированные проекции и перегрузки press/swipe/gesture/gestures
-
-# v2.39.0
-
-###### 2026/10/21
-
-* `Функция` Объявления типов модуля memory для чтения диагностики памяти процесса AutoJs6: снимки памяти, принудительная сборка мусора, завершенные, но не освобожденные среды выполнения скриптов, дампы кучи hprof и наблюдение LeakCanary (TypeScript / Ace)
 
 ##### Подробнее об истории выпусков
 

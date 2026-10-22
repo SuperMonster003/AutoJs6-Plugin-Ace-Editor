@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.1-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -184,6 +184,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-u
 
 ******
 
+# v2.41.1
+
+###### 2026/10/22
+
+* `تحسين` تشرح تعريفات speech الملفات الصوتية غير WAV: مع إضافة تعلن الميزة audioDecode (⁨3-Macaw Speech⁩ 1.2.0 أو أحدث) تقبل recognize و recognizeAsync و detectVoice صيغ MP3 و AAC و Ogg و FLAC وغيرها مما يفك الجهاز ترميزه, ومسار الصوت في ملفات الفيديو; وتضيف Speech.Feature القيمة 'audioDecode'
+
 # v2.41.0
 
 ###### 2026/10/22
@@ -195,12 +201,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.41.0-u
 ###### 2026/10/21
 
 * `ميزة` Flow within/scope في Node.js وBun وWorker مع وراثة جذور البحث والتنقل بالبوصلة وإسقاط النتائج ودعم صيغ press/swipe/gesture/gestures
-
-# v2.39.0
-
-###### 2026/10/21
-
-* `ميزة` تعريفات أنواع وحدة memory لقراءة تشخيص ذاكرة عملية AutoJs6: لقطات الذاكرة, وجمع البيانات المهملة القسري, وبيئات تشغيل البرامج النصية المنتهية غير المحررة, وتفريغات الكومة hprof ومراقبة LeakCanary (TypeScript / Ace)
 
 ##### لمزيد من سجل الإصدارات
 
