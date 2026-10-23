@@ -4,6 +4,13 @@
 
 ******
 
+# v2.44.0
+
+###### 2026/10/23
+
+* `ميزة` تعريفات memory لجلسات الجسر: يعطي Snapshot.bridgeSessions عدد جلسات الجسر المنتهية التي لم تُستعَد بعد لكل محرك إضافات (Node.js و Bun و QuickJS و Lua و Python), ويميز RetainedRuntime.engine بين rhino و node, مع النوعين Memory.BridgeSessions و Memory.RetainedEngine
+* `تحسين` تكمل تعريفات speech الخيار punctuation: تبقى علامات الترقيم الخاصة بالنموذج (SenseVoice), وتحصل نتائج النماذج المتدفقة على علامات الترقيم من نموذج ترقيم مثبت (⁨3-Macaw Speech⁩ 1.2.0 أو أحدث, الصينية والإنجليزية), ويزيل false كل علامات الترقيم
+
 # v2.43.0
 
 ###### 2026/10/22

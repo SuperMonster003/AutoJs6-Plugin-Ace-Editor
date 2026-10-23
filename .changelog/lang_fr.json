@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Amélioration",
   "changelog_label_dependency": "Dépendance",
   "$data": {
+    "v2.44.0": {
+      "released_date": "2026/10/23",
+      "feature": [
+        "Déclarations de memory pour les sessions de pont: Snapshot.bridgeSessions donne les sessions de pont terminées mais pas encore récupérées de chaque moteur de plugins (Node.js, Bun, QuickJS, Lua et Python), et RetainedRuntime.engine distingue rhino de node, avec les types Memory.BridgeSessions et Memory.RetainedEngine"
+      ],
+      "improvement": [
+        "les déclarations de speech complètent l'option punctuation: la ponctuation propre au modèle (SenseVoice) est conservée, les résultats des modèles en continu sont ponctués par un modèle de ponctuation installé (3-Macaw Speech 1.2.0 ou ultérieur, chinois et anglais) et false supprime toute la ponctuation"
+      ]
+    },
     "v2.43.0": {
       "released_date": "2026/10/22",
       "feature": [

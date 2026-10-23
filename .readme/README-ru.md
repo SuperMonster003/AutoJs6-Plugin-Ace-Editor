@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.43.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -184,6 +184,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.43.0-u
 
 ******
 
+# v2.44.0
+
+###### 2026/10/23
+
+* `Функция` Объявления memory для сеансов моста: Snapshot.bridgeSessions даёт число завершённых, но ещё не освобождённых сеансов моста каждого движка плагинов (Node.js, Bun, QuickJS, Lua и Python), а RetainedRuntime.engine отличает rhino от node, с типами Memory.BridgeSessions и Memory.RetainedEngine
+* `Улучшение` объявления speech дополняют параметр punctuation: собственная пунктуация модели (SenseVoice) сохраняется, результаты потоковых моделей получают пунктуацию от установленной модели пунктуации (3-Macaw Speech 1.2.0 или новее, китайский и английский), а false удаляет всю пунктуацию
+
 # v2.43.0
 
 ###### 2026/10/22
@@ -195,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.43.0-u
 ###### 2026/10/22
 
 * `Функция` Типизированные объявления и дополнения ai.agent для Node.js, Bun и Workers, включая управление задачами, события, каналы зарегистрированных скриптов и асинхронные результаты
-
-# v2.41.1
-
-###### 2026/10/22
-
-* `Улучшение` объявления speech описывают аудиофайлы помимо WAV: если плагин объявляет функцию audioDecode (3-Macaw Speech 1.2.0 или новее), recognize, recognizeAsync и detectVoice принимают MP3, AAC, Ogg, FLAC и другие форматы, которые декодирует устройство, а также звуковую дорожку видеофайлов; в Speech.Feature добавлено 'audioDecode'
 
 ##### Подробнее об истории выпусков
 

@@ -4,6 +4,13 @@
 
 ******
 
+# v2.44.0
+
+###### 2026/10/23
+
+* `Función` Declaraciones de memory para las sesiones de puente: Snapshot.bridgeSessions da las sesiones de puente terminadas pero aún no recuperadas de cada motor de plugins (Node.js, Bun, QuickJS, Lua y Python), y RetainedRuntime.engine distingue rhino de node, con los tipos Memory.BridgeSessions y Memory.RetainedEngine
+* `Mejora` las declaraciones de speech completan la opción punctuation: se conserva la puntuación propia del modelo (SenseVoice), los resultados de los modelos en streaming reciben puntuación de un modelo de puntuación instalado (3-Macaw Speech 1.2.0 o posterior, chino e inglés) y false elimina toda la puntuación
+
 # v2.43.0
 
 ###### 2026/10/22

@@ -4,6 +4,13 @@
 
 ******
 
+# v2.44.0
+
+###### 2026/10/23
+
+* `新增` memory 宣告補全橋接會話: Snapshot.bridgeSessions 給出 Node.js, Bun, QuickJS, Lua 與 Python 各插件引擎已結束但未回收的橋接會話數, RetainedRuntime.engine 區分 rhino 與 node, 含 Memory.BridgeSessions 與 Memory.RetainedEngine 類型
+* `優化` speech 聲明補全 punctuation 選項: 模型自帶標點 (SenseVoice) 時保留, 串流模型的結果由已安裝的標點模型補上標點 (3-Macaw Speech 1.2.0 起, 中文與英文), false 去掉所有標點
+
 # v2.43.0
 
 ###### 2026/10/22

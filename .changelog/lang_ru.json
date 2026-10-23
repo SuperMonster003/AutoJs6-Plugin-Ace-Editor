@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.44.0": {
+      "released_date": "2026/10/23",
+      "feature": [
+        "Объявления memory для сеансов моста: Snapshot.bridgeSessions даёт число завершённых, но ещё не освобождённых сеансов моста каждого движка плагинов (Node.js, Bun, QuickJS, Lua и Python), а RetainedRuntime.engine отличает rhino от node, с типами Memory.BridgeSessions и Memory.RetainedEngine"
+      ],
+      "improvement": [
+        "объявления speech дополняют параметр punctuation: собственная пунктуация модели (SenseVoice) сохраняется, результаты потоковых моделей получают пунктуацию от установленной модели пунктуации (3-Macaw Speech 1.2.0 или новее, китайский и английский), а false удаляет всю пунктуацию"
+      ]
+    },
     "v2.43.0": {
       "released_date": "2026/10/22",
       "feature": [
