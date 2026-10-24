@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.45.0
+
+###### 2026/10/24
+
+* `ميزة` تعريفات sqlite مع رد النداء onDowngrade: يُستدعى عندما تكون version المطلوبة أقل من إصدار قاعدة البيانات الحالية (AutoJs6 6.8.0 أو أحدث); وبدونه لا يفعل خفض الإصدار شيئا ويحتفظ بالجداول والبيانات
 
 # v2.44.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ###### 2026/10/22
 
 * `ميزة` تعريفات settings.export و settings.categories: تصدير إعدادات AutoJs6 حسب الفئة إلى أرشيف إعدادات (دون بيانات الاعتماد) وسرد الفئات مع عدد عناصرها, مع الأنواع Settings.CategoryId و Settings.ExportResult و Settings.Category
-
-# v2.42.0
-
-###### 2026/10/22
-
-* `ميزة` تعريفات وإكمال ai.agent ذات الأنواع في Node.js وBun وWorker, بما يشمل التحكم في المهام والأحداث وقنوات النصوص المسجلة والنتائج غير المتزامنة
 
 ##### لمزيد من سجل الإصدارات
 

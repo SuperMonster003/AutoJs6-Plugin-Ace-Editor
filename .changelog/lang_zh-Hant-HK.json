@@ -5,6 +5,12 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.45.0": {
+      "released_date": "2026/10/24",
+      "feature": [
+        "sqlite 宣告補全 onDowngrade 回調: 打開數據庫時請求的 version 低於現有版本時調用 (AutoJs6 6.8.0 起), 未實現時降級不執行任何操作, 保留表與數據"
+      ]
+    },
     "v2.44.0": {
       "released_date": "2026/10/23",
       "feature": [

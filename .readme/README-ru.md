@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ### История выпусков
 
 ******
+
+# v2.45.0
+
+###### 2026/10/24
+
+* `Функция` Объявления sqlite с обратным вызовом onDowngrade: вызывается, когда запрошенная version ниже версии существующей базы данных (AutoJs6 6.8.0 и новее); без него понижение версии ничего не делает и сохраняет таблицы и данные
 
 # v2.44.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ###### 2026/10/22
 
 * `Функция` Объявления settings.export и settings.categories: экспорт настроек AutoJs6 по категориям в архив настроек (без учётных данных) и список категорий с числом записей, с типами Settings.CategoryId, Settings.ExportResult и Settings.Category
-
-# v2.42.0
-
-###### 2026/10/22
-
-* `Функция` Типизированные объявления и дополнения ai.agent для Node.js, Bun и Workers, включая управление задачами, события, каналы зарегистрированных скриптов и асинхронные результаты
 
 ##### Подробнее об истории выпусков
 

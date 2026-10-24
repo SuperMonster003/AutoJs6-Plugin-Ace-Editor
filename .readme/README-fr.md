@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -183,6 +183,12 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v2.45.0
+
+###### 2026/10/24
+
+* `Fonctionnalité` Déclarations de sqlite avec le rappel onDowngrade: appelé lorsque la version demandée est inférieure à celle de la base de données existante (AutoJs6 6.8.0 ou ultérieur); sans lui, la rétrogradation ne fait rien et conserve les tables et les données
 
 # v2.44.0
 
@@ -196,12 +202,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ###### 2026/10/22
 
 * `Fonctionnalité` Déclarations de settings.export et settings.categories: exporter les paramètres d'AutoJs6 par catégorie dans une archive de paramètres (sans les identifiants) et lister les catégories avec leur nombre d'entrées, avec les types Settings.CategoryId, Settings.ExportResult et Settings.Category
-
-# v2.42.0
-
-###### 2026/10/22
-
-* `Fonctionnalité` Déclarations typées et complétion ai.agent pour Node.js, Bun et Workers, avec contrôle des tâches, événements, canaux des scripts enregistrés et résultats asynchrones
 
 ##### Pour plus d'historique des versions
 

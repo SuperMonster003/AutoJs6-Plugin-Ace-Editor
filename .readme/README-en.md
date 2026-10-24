@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,12 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.45.0
+
+###### 2026/10/24
+
+* `Feature` sqlite declarations add the onDowngrade callback: called when the requested version is lower than the version of the existing database (AutoJs6 6.8.0 or later); without it, the downgrade does nothing and keeps the tables and data
 
 # v2.44.0
 
@@ -196,12 +202,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/22
 
 * `Feature` settings.export and settings.categories declarations: export AutoJs6 settings by category to a settings archive (without credentials) and list the categories with their entry counts, with the Settings.CategoryId, Settings.ExportResult and Settings.Category types
-
-# v2.42.0
-
-###### 2026/10/22
-
-* `Feature` Typed ai.agent declarations and completion for Node.js, Bun and Workers, including task controls, events, registered-script channels and asynchronous results
 
 ##### Complete release history
 

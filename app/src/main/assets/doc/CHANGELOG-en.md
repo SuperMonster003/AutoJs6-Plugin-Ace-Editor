@@ -4,6 +4,12 @@
 
 ******
 
+# v2.45.0
+
+###### 2026/10/24
+
+* `Feature` sqlite declarations add the onDowngrade callback: called when the requested version is lower than the version of the existing database (AutoJs6 6.8.0 or later); without it, the downgrade does nothing and keeps the tables and data
+
 # v2.44.0
 
 ###### 2026/10/23

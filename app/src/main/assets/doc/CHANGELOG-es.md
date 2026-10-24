@@ -4,6 +4,12 @@
 
 ******
 
+# v2.45.0
+
+###### 2026/10/24
+
+* `Función` Declaraciones de sqlite con la devolución de llamada onDowngrade: se llama cuando la version solicitada es inferior a la de la base de datos existente (AutoJs6 6.8.0 o posterior); sin ella, la degradación no hace nada y conserva las tablas y los datos
+
 # v2.44.0
 
 ###### 2026/10/23

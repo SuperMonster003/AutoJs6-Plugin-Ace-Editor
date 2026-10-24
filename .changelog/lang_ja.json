@@ -5,6 +5,12 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v2.45.0": {
+      "released_date": "2026/10/24",
+      "feature": [
+        "sqlite の宣言に onDowngrade コールバックを追加: 要求した version が既存データベースのバージョンより低いときに呼ばれる (AutoJs6 6.8.0 以降); 未実装の場合, ダウングレードは何もせず, テーブルとデータを保持"
+      ]
+    },
     "v2.44.0": {
       "released_date": "2026/10/23",
       "feature": [

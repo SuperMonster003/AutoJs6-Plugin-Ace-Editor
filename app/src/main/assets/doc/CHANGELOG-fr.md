@@ -4,6 +4,12 @@
 
 ******
 
+# v2.45.0
+
+###### 2026/10/24
+
+* `Fonctionnalité` Déclarations de sqlite avec le rappel onDowngrade: appelé lorsque la version demandée est inférieure à celle de la base de données existante (AutoJs6 6.8.0 ou ultérieur); sans lui, la rétrogradation ne fait rien et conserve les tables et les données
+
 # v2.44.0
 
 ###### 2026/10/23

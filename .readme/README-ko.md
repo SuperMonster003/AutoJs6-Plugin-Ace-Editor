@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ### 릴리스 기록
 
 ******
+
+# v2.45.0
+
+###### 2026/10/24
+
+* `기능` sqlite 선언에 onDowngrade 콜백 추가: 요청한 version 이 기존 데이터베이스 버전보다 낮을 때 호출 (AutoJs6 6.8.0 이상); 구현하지 않으면 다운그레이드는 아무 작업도 하지 않고 테이블과 데이터를 유지
 
 # v2.44.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ###### 2026/10/22
 
 * `기능` settings.export 및 settings.categories 선언: AutoJs6 설정을 분류별로 설정 아카이브로 내보내고 (자격 증명 제외), 분류와 항목 수를 나열; Settings.CategoryId, Settings.ExportResult, Settings.Category 타입 추가
-
-# v2.42.0
-
-###### 2026/10/22
-
-* `기능` 작업 제어, 이벤트, 등록된 스크립트 채널과 비동기 결과를 포함하는 Node.js/Bun/Worker ai.agent 타입 선언 및 완성
 
 ##### 더 많은 릴리스 기록
 

@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -183,6 +183,12 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ### 發行歷史
 
 ******
+
+# v2.45.0
+
+###### 2026/10/24
+
+* `新增` sqlite 宣告補全 onDowngrade 回呼: 開啟資料庫時請求的 version 低於現有版本時呼叫 (AutoJs6 6.8.0 起), 未實作時降級不執行任何操作, 保留資料表與資料
 
 # v2.44.0
 
@@ -196,12 +202,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.44.0-u
 ###### 2026/10/22
 
 * `新增` settings.export 與 settings.categories 宣告: 將 AutoJs6 設定依分類匯出為設定封存檔 (不含憑證) 並列出分類與項目數, 含 Settings.CategoryId, Settings.ExportResult 與 Settings.Category 型別
-
-# v2.42.0
-
-###### 2026/10/22
-
-* `新增` Node.js/Bun/Worker 的 ai.agent 宣告與補全, 包含任務控制, 事件, 註冊指令碼通道和非同步傳回值
 
 ##### 更多發行歷史可參閱
 
