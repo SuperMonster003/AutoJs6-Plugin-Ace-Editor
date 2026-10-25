@@ -115,3 +115,13 @@ On 2026-10-25 the matrix (2724 rows) gave 759 covered rows and 1887 entry querie
 main 676, Worker 502, `$autojs` globals 186, Bun 523), all passing; with the existing 1172
 hand-written queries the verifier runs 3059. The host's `Script API coverage` workflow runs
 the generator with `--check` and the verifier with `--fresh` after its matrix step.
+
+Since the host's P1.5 (Q27) the matrix also covers members of returned handles (Flow,
+MailClient, ShellProcess, AgentRun, EpubBook, Storage, AiSession) through their runtime
+handle types: such a cell carries `type` (`Flow<unknown>`, `RuntimeMail.Client`), and the
+generator puts it in the `node_handle` / `bun_handle` routes, which the verifier completes
+on a value of that type (a JSDoc-typed `handle` in a `.cjs` file, `declare const handle` in
+a `.bun.ts` file). Entries that only reject (`never`) are pending in the matrix (Q26) and no
+longer queried. On 2026-10-25 (host 6c62786b5) the matrix gave 981 covered rows and 2291
+entry queries (Node main 652, Worker 499, `$autojs` globals 186, Bun 512, Node handles 221,
+Bun handles 221), all passing; the verifier runs 3463 in total.

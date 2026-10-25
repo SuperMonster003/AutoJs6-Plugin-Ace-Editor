@@ -446,6 +446,10 @@ const matrixRoutes = {
     node_global: { file: 'matrix-global.cjs', header: () => '', receiver: entry => entry.global },
     bun: { file: 'matrix.bun.ts', header: () => 'declare const host: import("autojs6:bun-host").HostClient;\n',
         receiver: entry => entry.namespace ? `host.${entry.namespace}` : 'host' },
+    // Returned-object members, on a value of the runtime handle type (Flow, MailClient, ShellProcess, ...).
+    node_handle: { file: 'matrix-handle.cjs', receiver: 'handle',
+        header: entry => `/** @type {import(${JSON.stringify(entry.module)}).${entry.type}} */\nconst handle = /** @type {any} */ (null);\n` },
+    bun_handle: { file: 'matrix-handle.bun.ts', receiver: 'handle', header: entry => `declare const handle: import("autojs6:bun-host").${entry.type};\n` },
 };
 const matrixCounts = {};
 const matrixFailures = [];
@@ -457,7 +461,7 @@ for (const [route, entries] of Object.entries(matrixQueries.routes)) {
     const before = queries;
     for (const entry of entries) {
         const receiver = typeof spec.receiver === 'function' ? spec.receiver(entry) : spec.receiver;
-        const label = `${route} ${receiver === 'api' ? entry.module : receiver}${entry.member === '()' ? '()' : '.' + entry.member} (${entry.rows.join(', ')})`;
+        const label = `${route} ${receiver === 'api' ? entry.module : receiver === 'handle' ? entry.type : receiver}${entry.member === '()' ? '()' : '.' + entry.member} (${entry.rows.join(', ')})`;
         if (entry.member === '()') {
             // The module value itself is the callable entry: calling it must type-check.
             const text = spec.header(entry) + `${receiver}();\n`;

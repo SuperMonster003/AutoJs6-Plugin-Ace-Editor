@@ -5,7 +5,9 @@
 //
 // Every row whose Node main, Node Worker or Bun cell is bridged, local-shim or capability-gated gets a
 // completion query for its entry: the Node cell's module / member (and its explicit $autojs global),
-// the Bun cell's namespace / member. Entries shared by several rows (aliases) are queried once.
+// the Bun cell's namespace / member. A returned-object member found through its runtime handle type
+// (cell `type`, the host's runtime-policy.json returnedObjects) is queried on a value of that type
+// (routes node_handle / bun_handle). Entries shared by several rows (aliases) are queried once.
 //
 //   node tools/ace-lsp/generate-runtime-api-queries.mjs [--matrix <runtime-matrix.json> | --host <AutoJs6 checkout>] [--check]
 //
@@ -52,7 +54,7 @@ if (!fs.existsSync(matrixPath)) {
 const matrix = JSON.parse(fs.readFileSync(matrixPath, 'utf8'));
 if (matrix.schema !== MATRIX_SCHEMA) fail(`${matrixPath}: schema ${matrix.schema}, expected ${MATRIX_SCHEMA}`);
 
-const routes = { node_main: new Map(), node_worker: new Map(), node_global: new Map(), bun: new Map() };
+const routes = { node_main: new Map(), node_worker: new Map(), node_global: new Map(), bun: new Map(), node_handle: new Map(), bun_handle: new Map() };
 function add(route, entry, id) {
     const key = JSON.stringify(entry);
     if (!routes[route].has(key)) routes[route].set(key, { ...entry, rows: [] });
@@ -66,6 +68,10 @@ for (const row of matrix.rows) {
         if (!COVERED.has(cell?.status)) continue;
         if (!cell.module || !cell.member) fail(`${row.id}: ${column} cell without module / member`);
         covered = true;
+        if (cell.type) {
+            add('node_handle', { module: cell.module, type: cell.type, member: cell.member }, row.id);
+            continue;
+        }
         add(column, { module: cell.module, member: cell.member }, row.id);
         if (column === 'node_main' && cell.explicitGlobal) add('node_global', { global: cell.explicitGlobal, member: cell.member }, row.id);
     }
@@ -73,12 +79,13 @@ for (const row of matrix.rows) {
     if (COVERED.has(cell?.status)) {
         if (!cell.member || cell.namespace === undefined) fail(`${row.id}: bun cell without namespace / member`);
         covered = true;
-        add('bun', { namespace: cell.namespace, member: cell.member }, row.id);
+        if (cell.type) add('bun_handle', { type: cell.type, member: cell.member }, row.id);
+        else add('bun', { namespace: cell.namespace, member: cell.member }, row.id);
     }
     if (covered) rows++;
 }
 
-const order = entry => [entry.module ?? entry.global ?? entry.namespace ?? '', entry.member].join('\0');
+const order = entry => [entry.module ?? entry.global ?? entry.namespace ?? '', entry.type ?? '', entry.member].join('\0');
 const sorted = Object.fromEntries(Object.entries(routes).map(([route, entries]) =>
     [route, [...entries.values()].sort((a, b) => order(a) < order(b) ? -1 : order(a) > order(b) ? 1 : 0)]));
 const counts = { rows, ...Object.fromEntries(Object.entries(sorted).map(([route, entries]) => [route, entries.length])) };
