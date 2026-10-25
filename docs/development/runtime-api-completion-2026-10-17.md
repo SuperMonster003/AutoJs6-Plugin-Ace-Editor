@@ -85,3 +85,33 @@ reviewed: signatures wrap fully without obscuring candidates or the cursor row.
 The coordinating host retains the log and `runtime-opencc-image.json` under its
 ignored `.bak/opencc-images-20261017` evidence directory. This is development APK
 acceptance on one physical device, not a publication or a full Rhino image parity claim.
+
+## Matrix-generated entry queries (2026-10-25)
+
+AutoJs6 api-coverage roadmap P0.6 (decision D16) adds a generated query list to
+`verify-runtime-api-coverage.mjs`. `tools/ace-lsp/generate-runtime-api-queries.mjs` reads
+the host's runtime coverage matrix (`build/reports/api-coverage/runtime-matrix.json`,
+written by the host's `python tools/api-coverage/check.py --matrix`) and writes the
+checked-in `tools/ace-lsp/runtime-api-queries.json`: one entry for every Node main, Node
+Worker and Bun cell that the matrix counts as covered (bridged, local-shim or
+capability-gated), taken from the Node cell's `module` / `member` (plus its
+`explicitGlobal`, such as `$autojs.flow`) and the Bun cell's `namespace` / `member`.
+Aliased rows that share an entry are queried once.
+
+```text
+node tools/ace-lsp/generate-runtime-api-queries.mjs [--matrix <runtime-matrix.json> | --host <AutoJs6 checkout>] [--check]
+node tools/ace-lsp/verify-runtime-api-coverage.mjs [--fresh] [--queries <file>]
+```
+
+The matrix defaults to `AUTOJS6_RUNTIME_MATRIX`, else the sibling `AutoJs6` checkout's
+report; without one the generator explains how to produce it and exits with code 2.
+`--check` fails when the checked-in list differs from the matrix. The verifier queries each
+entry at the point of typing it (`require` in a `.cjs` file for Node main, `import` in a
+`.mjs` file for Workers, the `$autojs` global, `host.<namespace>` in a `.bun.ts` file) and
+lists every entry that does not complete. `--fresh`, also used when the Gradle output is
+absent, generates the LSP declarations into a temporary directory.
+
+On 2026-10-25 the matrix (2724 rows) gave 759 covered rows and 1887 entry queries (Node
+main 676, Worker 502, `$autojs` globals 186, Bun 523), all passing; with the existing 1172
+hand-written queries the verifier runs 3059. The host's `Script API coverage` workflow runs
+the generator with `--check` and the verifier with `--fresh` after its matrix step.

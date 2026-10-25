@@ -1,16 +1,33 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
+// --fresh generates the LSP declarations into a temporary directory instead of reading the
+// :app:generateAutoJs6LspDeclarations output (also the fallback when that output is absent, as in
+// the host's Script API coverage job). --queries selects another runtime-api-queries.json.
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const args = process.argv.slice(2);
+const queriesAt = args.indexOf('--queries');
+const queriesFile = queriesAt < 0 ? path.join(repository, 'tools/ace-lsp/runtime-api-queries.json') : path.resolve(args[queriesAt + 1]);
 const lock = JSON.parse(fs.readFileSync(path.join(repository, 'tools/ace-lsp/ace-builds-lock.json')));
 const assets = path.join(repository, lock.assetRoot, 'autojs6');
-const generated = path.join(repository, 'app/build/generated/aceLspAssets',
+let generated = path.join(repository, 'app/build/generated/aceLspAssets',
     lock.assetRoot.replace(/^app\/src\/main\/assets\//, ''), 'autojs6/types/generated');
+let temporary = null;
+if (args.includes('--fresh') || !fs.existsSync(generated)) {
+    temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'autojs6-ace-runtime-'));
+    process.on('exit', () => fs.rmSync(temporary, { recursive: true, force: true }));
+    const generator = spawnSync(process.execPath, [path.join(repository, 'tools/ace-lsp/generate-declarations.mjs'),
+        '--source', path.join(assets, 'types'), '--output', temporary, '--typescript', path.join(assets, 'typescript/typescript.js')], { encoding: 'utf8' });
+    assert.equal(generator.status, 0, `LSP declaration generation failed:\n${generator.stdout}\n${generator.stderr}`);
+    generated = path.join(temporary, 'editor', path.basename(path.dirname(assets)), 'autojs6/types/generated');
+}
 const ts = createRequire(import.meta.url)(path.join(assets, 'typescript/typescript.js'));
 const context = { console, setTimeout, clearTimeout, ts };
 context.window = context;
@@ -418,5 +435,49 @@ for (const [file, header, opencc, images] of [
     newApiChecks.push({ file, openccMethods: new Set(openccMethods).size, imageMethods: commonImages.length });
     current.dispose();
 }
+// Matrix entries (runtime-api-queries.json, generated from the host's runtime-matrix.json): every Node / Bun
+// entry the matrix counts as covered must complete at the point of typing it, in its own route.
+assert(fs.existsSync(queriesFile), `${queriesFile} is missing; run node tools/ace-lsp/generate-runtime-api-queries.mjs`);
+const matrixQueries = JSON.parse(fs.readFileSync(queriesFile, 'utf8'));
+assert.equal(matrixQueries.schema, 'autojs6-ace-runtime-queries-v1', `${queriesFile}: unexpected schema`);
+const matrixRoutes = {
+    node_main: { file: 'matrix-main.cjs', header: entry => `const api = require(${JSON.stringify(entry.module)});\n`, receiver: 'api' },
+    node_worker: { file: 'matrix-worker.mjs', header: entry => `import api from ${JSON.stringify(entry.module)};\n`, receiver: 'api' },
+    node_global: { file: 'matrix-global.cjs', header: () => '', receiver: entry => entry.global },
+    bun: { file: 'matrix.bun.ts', header: () => 'declare const host: import("autojs6:bun-host").HostClient;\n',
+        receiver: entry => entry.namespace ? `host.${entry.namespace}` : 'host' },
+};
+const matrixCounts = {};
+const matrixFailures = [];
+for (const [route, entries] of Object.entries(matrixQueries.routes)) {
+    const spec = matrixRoutes[route];
+    assert(spec, `${queriesFile}: unknown route ${route}`);
+    const documentUri = `file:///autojs6/editor/${spec.file}`;
+    const current = context.AutoJsAceTsLanguageService.create({ documentUri, libraryTextByUri: texts });
+    const before = queries;
+    for (const entry of entries) {
+        const receiver = typeof spec.receiver === 'function' ? spec.receiver(entry) : spec.receiver;
+        const label = `${route} ${receiver === 'api' ? entry.module : receiver}${entry.member === '()' ? '()' : '.' + entry.member} (${entry.rows.join(', ')})`;
+        if (entry.member === '()') {
+            // The module value itself is the callable entry: calling it must type-check.
+            const text = spec.header(entry) + `${receiver}();\n`;
+            queries++;
+            if ((current.getDiagnostics({ getValue: () => text, getLine: row => text.split('\n')[row] || '' }, text) || []).some(item => item.raw === '2349'))
+                matrixFailures.push(`${label}: not callable`);
+            continue;
+        }
+        const parts = entry.member.split('.');
+        const name = parts.pop();
+        const access = [receiver, ...parts].join('.') + '.';
+        const names = query(current, spec.header(entry) + access + name, name, documentUri);
+        if (!names.includes(name)) matrixFailures.push(`${label}: no completion for ${name}`);
+    }
+    matrixCounts[route] = queries - before;
+    current.dispose();
+}
+matrixCounts.total = Object.values(matrixCounts).reduce((sum, count) => sum + count, 0);
+assert.equal(matrixFailures.length, 0, `${matrixFailures.length} matrix entries do not complete:\n` + matrixFailures.slice(0, 40).join('\n')
+    + (matrixFailures.length > 40 ? `\n... and ${matrixFailures.length - 40} more` : ''));
 console.log(JSON.stringify({ typescript: ts.version, routeCases: routes.length, queries,
+    matrixQueries: matrixCounts, matrixRows: matrixQueries.counts.rows, lspDeclarations: temporary ? 'temporary' : 'build',
     isolatedRuntimeDeclarations: true, copiedDeclarations: Object.keys(manifest.files).length, newApiChecks }, null, 2));
