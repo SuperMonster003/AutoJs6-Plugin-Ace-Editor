@@ -2483,6 +2483,14 @@ declare namespace AutoJs6 {
         capabilities(): Mediainfo.Capabilities;
     }
 
+    interface Memory {
+        snapshot(): Memory.Snapshot;
+        collect(timeout?: number): Memory.Snapshot;
+        retained(): Memory.RetainedRuntime[];
+        dumpHeap(path?: string): string;
+        watch(obj: object, name?: string): boolean;
+    }
+
     interface Mime {
         getMediaType(mediaType: string): okhttp3.MediaType;
         getMediaType(mimeType: string): string;
@@ -5510,6 +5518,8 @@ declare namespace AutoJs6 {
     interface Settings {
         isEnabled(key: Settings.Key | string): boolean;
         setEnabled(key: Settings.Key | string, enabled: boolean): void;
+        export(path?: string | null, categories?: Settings.CategoryId | string | (Settings.CategoryId | string)[] | null): Settings.ExportResult;
+        categories(): Settings.Category[];
     }
 
     interface Shell {
@@ -6085,6 +6095,7 @@ declare const mail: AutoJs6.Mail;
 declare const Mathx: AutoJs6.Mathx;
 declare const media: AutoJs6.Media;
 declare const mediainfo: AutoJs6.Mediainfo;
+declare const memory: AutoJs6.Memory;
 declare const mime: AutoJs6.Mime;
 declare const notice: AutoJs6.Notice;
 declare const Numberx: AutoJs6.Numberx;

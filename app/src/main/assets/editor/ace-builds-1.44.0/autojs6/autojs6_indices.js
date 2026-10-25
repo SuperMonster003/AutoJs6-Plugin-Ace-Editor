@@ -230,6 +230,11 @@
                 "doc": "AutoJs6 Mediainfo API"
             },
             {
+                "name": "memory",
+                "type": "module",
+                "doc": "AutoJs6 Memory API"
+            },
+            {
                 "name": "mime",
                 "type": "module",
                 "doc": "AutoJs6 Mime API"
@@ -3706,6 +3711,11 @@
                 "name": "$mediainfo",
                 "type": "module",
                 "doc": "Alias of mediainfo"
+            },
+            {
+                "name": "$memory",
+                "type": "module",
+                "doc": "Alias of memory"
             },
             {
                 "name": "$tts",
@@ -16445,6 +16455,38 @@
                     "type": "function",
                     "doc": "capabilities(): Mediainfo.Capabilities;",
                     "signature": "capabilities(): Mediainfo.Capabilities;"
+                }
+            ],
+            "memory": [
+                {
+                    "name": "snapshot",
+                    "type": "function",
+                    "doc": "snapshot(): Memory.Snapshot;",
+                    "signature": "snapshot(): Memory.Snapshot;"
+                },
+                {
+                    "name": "collect",
+                    "type": "function",
+                    "doc": "collect(timeout?: number): Memory.Snapshot;",
+                    "signature": "collect(timeout?: number): Memory.Snapshot;"
+                },
+                {
+                    "name": "retained",
+                    "type": "function",
+                    "doc": "retained(): Memory.RetainedRuntime[];",
+                    "signature": "retained(): Memory.RetainedRuntime[];"
+                },
+                {
+                    "name": "dumpHeap",
+                    "type": "function",
+                    "doc": "dumpHeap(path?: string): string;",
+                    "signature": "dumpHeap(path?: string): string;"
+                },
+                {
+                    "name": "watch",
+                    "type": "function",
+                    "doc": "watch(obj: object, name?: string): boolean;",
+                    "signature": "watch(obj: object, name?: string): boolean;"
                 }
             ],
             "mime": [
@@ -33611,6 +33653,18 @@
                     "type": "function",
                     "doc": "setEnabled(key: Settings.Key | string, enabled: boolean): void;",
                     "signature": "setEnabled(key: Settings.Key | string, enabled: boolean): void;"
+                },
+                {
+                    "name": "export",
+                    "type": "function",
+                    "doc": "export(path?: string | null, categories?: Settings.CategoryId | string | (Settings.CategoryId | string)[] | null): Settings.ExportResult;",
+                    "signature": "export(path?: string | null, categories?: Settings.CategoryId | string | (Settings.CategoryId | string)[] | null): Settings.ExportResult;"
+                },
+                {
+                    "name": "categories",
+                    "type": "function",
+                    "doc": "categories(): Settings.Category[];",
+                    "signature": "categories(): Settings.Category[];"
                 }
             ],
             "shell": [
@@ -36138,6 +36192,7 @@
             "$power_manager": "power_manager",
             "$settings": "settings",
             "$mediainfo": "mediainfo",
+            "$memory": "memory",
             "$tts": "tts",
             "$workManager": "workManager",
             "$work_manager": "work_manager",
