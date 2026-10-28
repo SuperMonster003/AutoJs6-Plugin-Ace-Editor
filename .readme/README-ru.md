@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-u
 ### История выпусков
 
 ******
+
+# v2.46.0
+
+###### 2026/10/29
+
+* `Функция` Объявления селекторов normalize и prefer: глобальные функции, методы цепочки и ключи объектного селектора, с типами Selector.NormalizeOptions и Selector.PreferKey (AutoJs6 6.8.0 и новее)
+* `Функция` Объявления auto: метод clearFlags, префикс ! в setFlags и флаги noFastPath / noRefreshOnHit; explain принимает компас и тип результата, а его результат содержит поля target / trail / result и другие; stats содержит fastPath и queries.refinds (AutoJs6 6.8.0 и новее)
+* `Улучшение` Типы результатов pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) генерируются из реестра методов узлов AutoJs6: все 206 вызываемых имён методов и их перегрузки с параметрами, а также типы результатов ## / $$ / .. и формы массивов
 
 # v2.45.0
 
@@ -196,12 +204,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-u
 
 * `Функция` Объявления memory для сеансов моста: Snapshot.bridgeSessions даёт число завершённых, но ещё не освобождённых сеансов моста каждого движка плагинов (Node.js, Bun, QuickJS, Lua и Python), а RetainedRuntime.engine отличает rhino от node, с типами Memory.BridgeSessions и Memory.RetainedEngine
 * `Улучшение` объявления speech дополняют параметр punctuation: собственная пунктуация модели (SenseVoice) сохраняется, результаты потоковых моделей получают пунктуацию от установленной модели пунктуации (3-Macaw Speech 1.2.0 или новее, китайский и английский), а false удаляет всю пунктуацию
-
-# v2.43.0
-
-###### 2026/10/22
-
-* `Функция` Объявления settings.export и settings.categories: экспорт настроек AutoJs6 по категориям в архив настроек (без учётных данных) и список категорий с числом записей, с типами Settings.CategoryId, Settings.ExportResult и Settings.Category
 
 ##### Подробнее об истории выпусков
 

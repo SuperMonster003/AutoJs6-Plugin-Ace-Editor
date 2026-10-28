@@ -205,12 +205,14 @@ declare namespace AutoJs6 {
         state: Automator.AutoState;
         waitFor(timeout?: number | null): void;
         setMode(modeStr: Automator.Mode): void;
-        setFlags(flags: Automator.Flags | Automator.Flags[]): void;
+        setFlags(flags: Automator.FlagSetting | Automator.FlagSetting[]): void;
+        clearFlags(flags: Automator.Flags | Automator.Flags[]): void;
         setWindowFilter(filter?: Automator.WindowFilterLike | null): void;
         wait: Flow.WaitFunction<UiObject>;
         findWindows(filter?: Automator.WindowFilterLike | null): android.view.accessibility.AccessibilityWindowInfo[];
         findWindowRoots(filter?: Automator.WindowFilterLike | null): UiObject[];
-        explain(selector: Automator.Target, root?: UiObject | null): Automator.ExplainResult;
+        explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;
+        explain(selector: Automator.Target, compassOrResultType: Detect.Compass | Pickup.ResultType, resultType?: Pickup.ResultType): Automator.ExplainResult;
         dump(options?: Automator.DumpFormat | Automator.DumpOptions): string;
         stats: Automator.StatsSnapshot;
         launchSettings(): void;
@@ -234,6 +236,7 @@ declare namespace AutoJs6 {
         elapsed: number;
         searches: Timing;
         queries: QueryTiming;
+        fastPath: FastPathCounts;
         selectors: SelectorStats[];
         slowest: SelectorStats | null;
         steps: StepStats[];
@@ -242,10 +245,19 @@ declare namespace AutoJs6 {
         toString(): string;
     }
 
+    interface Auto_stats_fastPath {
+        hits: number;
+        misses: number;
+        fallbacks: number;
+        mismatches: number;
+        walks: number;
+    }
+
     interface Auto_stats_queries {
         found: number;
         missed: number;
         attempts: number;
+        refinds: number;
         count: number;
         totalMillis: number;
         averageMillis: number;
@@ -6563,6 +6575,8 @@ declare function clickWhenStableAfter(...args: any[]): any;
 declare function clickBoundsWhenStableAfter(...args: any[]): any;
 declare function nanoid(...args: any[]): any;
 declare function sync(...args: any[]): any;
+declare function normalize(...args: any[]): any;
+declare function prefer(...args: any[]): any;
 declare const context: any;
 declare const isAutoJs6: any;
 declare const HEIGHT: any;

@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-u
 ### 發行歷史
 
 ******
+
+# v2.46.0
+
+###### 2026/10/29
+
+* `新增` 選擇器宣告補全 normalize 與 prefer: 全域函式, 鏈式方法與物件選擇器的鍵, 含 Selector.NormalizeOptions 與 Selector.PreferKey 型別 (AutoJs6 6.8.0 起)
+* `新增` auto 宣告補全 clearFlags 方法, setFlags 的 ! 前綴與 noFastPath / noRefreshOnHit 旗標; explain 可傳入羅盤與結果型別, 結果含 target / trail / result 等欄位; stats 補全 fastPath 與 queries.refinds (AutoJs6 6.8.0 起)
+* `優化` pickup / detect 的結果型別 Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams 改由 AutoJs6 的節點方法登錄表產生, 包含全部 206 個可呼叫的方法名稱及帶參數的多載, 並補全 ## / $$ / .. 與陣列形式的結果型別
 
 # v2.45.0
 
@@ -196,12 +204,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-u
 
 * `新增` memory 宣告補全橋接工作階段: Snapshot.bridgeSessions 提供 Node.js, Bun, QuickJS, Lua 與 Python 各外掛引擎已結束但未回收的橋接工作階段數, RetainedRuntime.engine 區分 rhino 與 node, 含 Memory.BridgeSessions 與 Memory.RetainedEngine 型別
 * `優化` speech 宣告補全 punctuation 選項: 模型自帶標點 (SenseVoice) 時保留, 串流模型的結果由已安裝的標點模型補上標點 (3-Macaw Speech 1.2.0 起, 中文與英文), false 去掉所有標點
-
-# v2.43.0
-
-###### 2026/10/22
-
-* `新增` settings.export 與 settings.categories 宣告: 將 AutoJs6 設定依分類匯出為設定封存檔 (不含憑證) 並列出分類與項目數, 含 Settings.CategoryId, Settings.ExportResult 與 Settings.Category 型別
 
 ##### 更多發行歷史可參閱
 

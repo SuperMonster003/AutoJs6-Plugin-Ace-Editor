@@ -4,6 +4,14 @@
 
 ******
 
+# v2.46.0
+
+###### 2026/10/29
+
+* `ميزة` تعريفات المحددات normalize و prefer: الدوال العامة وطرق السلسلة ومفاتيح محدد الكائن, مع النوعين Selector.NormalizeOptions و Selector.PreferKey (AutoJs6 6.8.0 أو أحدث)
+* `ميزة` تعريفات auto: الطريقة clearFlags والبادئة ! في setFlags والعلمان noFastPath / noRefreshOnHit; تقبل explain بوصلة ونوع نتيجة, وتتضمن نتيجتها الحقول target / trail / result وغيرها; وتتضمن stats الحقلين fastPath و queries.refinds (AutoJs6 6.8.0 أو أحدث)
+* `تحسين` تُولَّد أنواع نتائج pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) من سجل طرق العقد في AutoJs6: جميع أسماء الطرق القابلة للاستدعاء وعددها 206 وأحمالها الزائدة ذات المعاملات, بالإضافة إلى أنواع النتائج ## / $$ / .. وصيغ المصفوفات
+
 # v2.45.0
 
 ###### 2026/10/24

@@ -2418,6 +2418,16 @@
                 "doc": ""
             },
             {
+                "name": "normalize",
+                "type": "function",
+                "doc": ""
+            },
+            {
+                "name": "prefer",
+                "type": "function",
+                "doc": ""
+            },
+            {
                 "name": "context",
                 "type": "variable",
                 "doc": ""
@@ -4998,8 +5008,14 @@
                 {
                     "name": "setFlags",
                     "type": "function",
-                    "doc": "setFlags(flags: Automator.Flags | Automator.Flags[]): void;",
-                    "signature": "setFlags(flags: Automator.Flags | Automator.Flags[]): void;"
+                    "doc": "setFlags(flags: Automator.FlagSetting | Automator.FlagSetting[]): void;",
+                    "signature": "setFlags(flags: Automator.FlagSetting | Automator.FlagSetting[]): void;"
+                },
+                {
+                    "name": "clearFlags",
+                    "type": "function",
+                    "doc": "clearFlags(flags: Automator.Flags | Automator.Flags[]): void;",
+                    "signature": "clearFlags(flags: Automator.Flags | Automator.Flags[]): void;"
                 },
                 {
                     "name": "setWindowFilter",
@@ -5028,8 +5044,12 @@
                 {
                     "name": "explain",
                     "type": "function",
-                    "doc": "explain(selector: Automator.Target, root?: UiObject | null): Automator.ExplainResult;",
-                    "signature": "explain(selector: Automator.Target, root?: UiObject | null): Automator.ExplainResult;"
+                    "doc": "explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
+                    "signature": "explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
+                    "signatures": [
+                        "explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
+                        "explain(selector: Automator.Target, compassOrResultType: Detect.Compass | Pickup.ResultType, resultType?: Pickup.ResultType): Automator.ExplainResult;"
+                    ]
                 },
                 {
                     "name": "dump",
@@ -5138,6 +5158,12 @@
                     "signature": "queries: QueryTiming;"
                 },
                 {
+                    "name": "fastPath",
+                    "type": "variable",
+                    "doc": "fastPath: FastPathCounts;",
+                    "signature": "fastPath: FastPathCounts;"
+                },
+                {
                     "name": "selectors",
                     "type": "variable",
                     "doc": "selectors: SelectorStats[];",
@@ -5174,6 +5200,38 @@
                     "signature": "toString(): string;"
                 }
             ],
+            "auto.stats.fastPath": [
+                {
+                    "name": "hits",
+                    "type": "variable",
+                    "doc": "hits: number;",
+                    "signature": "hits: number;"
+                },
+                {
+                    "name": "misses",
+                    "type": "variable",
+                    "doc": "misses: number;",
+                    "signature": "misses: number;"
+                },
+                {
+                    "name": "fallbacks",
+                    "type": "variable",
+                    "doc": "fallbacks: number;",
+                    "signature": "fallbacks: number;"
+                },
+                {
+                    "name": "mismatches",
+                    "type": "variable",
+                    "doc": "mismatches: number;",
+                    "signature": "mismatches: number;"
+                },
+                {
+                    "name": "walks",
+                    "type": "variable",
+                    "doc": "walks: number;",
+                    "signature": "walks: number;"
+                }
+            ],
             "auto.stats.queries": [
                 {
                     "name": "found",
@@ -5192,6 +5250,12 @@
                     "type": "variable",
                     "doc": "attempts: number;",
                     "signature": "attempts: number;"
+                },
+                {
+                    "name": "refinds",
+                    "type": "variable",
+                    "doc": "refinds: number;",
+                    "signature": "refinds: number;"
                 },
                 {
                     "name": "count",

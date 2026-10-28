@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,14 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.46.0
+
+###### 2026/10/29
+
+* `Feature` Selector declarations for normalize and prefer: global functions, chained methods and object selector keys, with the Selector.NormalizeOptions and Selector.PreferKey types (AutoJs6 6.8.0 or later)
+* `Feature` auto declarations add the clearFlags method, the ! prefix of setFlags and the noFastPath / noRefreshOnHit flags; explain takes a compass and a result type, and its result declares target / trail / result and more; stats declares fastPath and queries.refinds (AutoJs6 6.8.0 or later)
+* `Improvement` The result types of pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) are generated from the node method registry of AutoJs6: all 206 callable method names and their overloads with parameters, plus the ## / $$ / .. result types and the array forms
 
 # v2.45.0
 
@@ -196,12 +204,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 * `Feature` memory declarations for bridge sessions: Snapshot.bridgeSessions gives the finished but unreclaimed bridge sessions of each plugin engine (Node.js, Bun, QuickJS, Lua and Python), and RetainedRuntime.engine tells rhino from node, with the Memory.BridgeSessions and Memory.RetainedEngine types
 * `Improvement` speech declarations complete the punctuation option: the model's own punctuation (SenseVoice) is kept, results of streaming models get punctuation from an installed punctuation model (3-Macaw Speech 1.2.0 or later, Chinese and English), and false removes all punctuation
-
-# v2.43.0
-
-###### 2026/10/22
-
-* `Feature` settings.export and settings.categories declarations: export AutoJs6 settings by category to a settings archive (without credentials) and list the categories with their entry counts, with the Settings.CategoryId, Settings.ExportResult and Settings.Category types
 
 ##### Complete release history
 

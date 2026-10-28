@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.46.0
+
+###### 2026/10/29
+
+* `ميزة` تعريفات المحددات normalize و prefer: الدوال العامة وطرق السلسلة ومفاتيح محدد الكائن, مع النوعين Selector.NormalizeOptions و Selector.PreferKey (AutoJs6 6.8.0 أو أحدث)
+* `ميزة` تعريفات auto: الطريقة clearFlags والبادئة ! في setFlags والعلمان noFastPath / noRefreshOnHit; تقبل explain بوصلة ونوع نتيجة, وتتضمن نتيجتها الحقول target / trail / result وغيرها; وتتضمن stats الحقلين fastPath و queries.refinds (AutoJs6 6.8.0 أو أحدث)
+* `تحسين` تُولَّد أنواع نتائج pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) من سجل طرق العقد في AutoJs6: جميع أسماء الطرق القابلة للاستدعاء وعددها 206 وأحمالها الزائدة ذات المعاملات, بالإضافة إلى أنواع النتائج ## / $$ / .. وصيغ المصفوفات
 
 # v2.45.0
 
@@ -196,12 +204,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-u
 
 * `ميزة` تعريفات memory لجلسات الجسر: يعطي Snapshot.bridgeSessions عدد جلسات الجسر المنتهية التي لم تُستعَد بعد لكل محرك إضافات (Node.js و Bun و QuickJS و Lua و Python), ويميز RetainedRuntime.engine بين rhino و node, مع النوعين Memory.BridgeSessions و Memory.RetainedEngine
 * `تحسين` تكمل تعريفات speech الخيار punctuation: تبقى علامات الترقيم الخاصة بالنموذج (SenseVoice), وتحصل نتائج النماذج المتدفقة على علامات الترقيم من نموذج ترقيم مثبت (⁨3-Macaw Speech⁩ 1.2.0 أو أحدث, الصينية والإنجليزية), ويزيل false كل علامات الترقيم
-
-# v2.43.0
-
-###### 2026/10/22
-
-* `ميزة` تعريفات settings.export و settings.categories: تصدير إعدادات AutoJs6 حسب الفئة إلى أرشيف إعدادات (دون بيانات الاعتماد) وسرد الفئات مع عدد عناصرها, مع الأنواع Settings.CategoryId و Settings.ExportResult و Settings.Category
 
 ##### لمزيد من سجل الإصدارات
 

@@ -171,7 +171,7 @@ L'assemblage APK normal empaquette la distribution LuaLS versionnée et vérifi�
 Installez l'APK généré après la compilation:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.45.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
 ```
 
 Activez ensuite `ace-editor` dans le centre de plugins AutoJs6, quittez complètement AutoJs6, puis redémarrez-le. Redémarrez l'hôte après chaque installation, mise à jour ou retour à une version antérieure du plugin.
@@ -183,6 +183,14 @@ Les installations de production doivent utiliser une signature approuvée par Au
 ### Historique des versions
 
 ******
+
+# v2.46.0
+
+###### 2026/10/29
+
+* `Fonctionnalité` Déclarations des sélecteurs normalize et prefer: fonctions globales, méthodes chaînées et clés du sélecteur objet, avec les types Selector.NormalizeOptions et Selector.PreferKey (AutoJs6 6.8.0 ou ultérieur)
+* `Fonctionnalité` Déclarations de auto: la méthode clearFlags, le préfixe ! de setFlags et les drapeaux noFastPath / noRefreshOnHit; explain accepte une boussole et un type de résultat, et son résultat déclare target / trail / result et d'autres champs; stats déclare fastPath et queries.refinds (AutoJs6 6.8.0 ou ultérieur)
+* `Amélioration` Les types de résultat de pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) sont générés à partir du registre des méthodes de nœud d'AutoJs6: les 206 noms de méthodes appelables et leurs surcharges avec paramètres, ainsi que les types de résultat ## / $$ / .. et les formes de tableau
 
 # v2.45.0
 
@@ -196,12 +204,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 * `Fonctionnalité` Déclarations de memory pour les sessions de pont: Snapshot.bridgeSessions donne les sessions de pont terminées mais pas encore récupérées de chaque moteur de plugins (Node.js, Bun, QuickJS, Lua et Python), et RetainedRuntime.engine distingue rhino de node, avec les types Memory.BridgeSessions et Memory.RetainedEngine
 * `Amélioration` les déclarations de speech complètent l'option punctuation: la ponctuation propre au modèle (SenseVoice) est conservée, les résultats des modèles en continu sont ponctués par un modèle de ponctuation installé (3-Macaw Speech 1.2.0 ou ultérieur, chinois et anglais) et false supprime toute la ponctuation
-
-# v2.43.0
-
-###### 2026/10/22
-
-* `Fonctionnalité` Déclarations de settings.export et settings.categories: exporter les paramètres d'AutoJs6 par catégorie dans une archive de paramètres (sans les identifiants) et lister les catégories avec leur nombre d'entrées, avec les types Settings.CategoryId, Settings.ExportResult et Settings.Category
 
 ##### Pour plus d'historique des versions
 

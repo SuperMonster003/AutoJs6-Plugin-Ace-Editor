@@ -4,6 +4,14 @@
 
 ******
 
+# v2.46.0
+
+###### 2026/10/29
+
+* `機能` セレクターの宣言に normalize と prefer を追加: グローバル関数, チェーンメソッド, オブジェクトセレクターのキー; Selector.NormalizeOptions, Selector.PreferKey 型を追加 (AutoJs6 6.8.0 以降)
+* `機能` auto の宣言に clearFlags メソッド, setFlags の ! プレフィックス, noFastPath / noRefreshOnHit フラグを追加; explain はコンパスと結果タイプを受け取り, 結果に target / trail / result などのフィールドを追加; stats に fastPath と queries.refinds を追加 (AutoJs6 6.8.0 以降)
+* `改善` pickup / detect の結果タイプ Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams を AutoJs6 のノードメソッドレジストリから生成し, 呼び出し可能な 206 個のメソッド名と引数付きオーバーロードをすべて収録; ## / $$ / .. と配列形式の結果タイプも追加
+
 # v2.45.0
 
 ###### 2026/10/24
