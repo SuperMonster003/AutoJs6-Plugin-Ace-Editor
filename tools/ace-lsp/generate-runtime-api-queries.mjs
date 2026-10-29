@@ -7,7 +7,8 @@
 // completion query for its entry: the Node cell's module / member (and its explicit $autojs global),
 // the Bun cell's namespace / member. A returned-object member found through its runtime handle type
 // (cell `type`, the host's runtime-policy.json returnedObjects) is queried on a value of that type
-// (routes node_handle / bun_handle). Entries shared by several rows (aliases) are queried once.
+// (routes node_handle / bun_handle; a Node type with typeScope "global" is a global type, not an export of its
+// module). Entries shared by several rows (aliases) are queried once.
 //
 //   node tools/ace-lsp/generate-runtime-api-queries.mjs [--matrix <runtime-matrix.json> | --host <AutoJs6 checkout>] [--check]
 //
@@ -69,7 +70,7 @@ for (const row of matrix.rows) {
         if (!cell.module || !cell.member) fail(`${row.id}: ${column} cell without module / member`);
         covered = true;
         if (cell.type) {
-            add('node_handle', { module: cell.module, type: cell.type, member: cell.member }, row.id);
+            add('node_handle', { module: cell.module, type: cell.type, ...(cell.typeScope ? { typeScope: cell.typeScope } : {}), member: cell.member }, row.id);
             continue;
         }
         add(column, { module: cell.module, member: cell.member }, row.id);

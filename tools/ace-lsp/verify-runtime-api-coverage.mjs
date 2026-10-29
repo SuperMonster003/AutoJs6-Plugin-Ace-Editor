@@ -452,7 +452,7 @@ const matrixRoutes = {
         receiver: entry => entry.namespace ? `host.${entry.namespace}` : 'host' },
     // Returned-object members, on a value of the runtime handle type (Flow, MailClient, ShellProcess, ...).
     node_handle: { file: 'matrix-handle.cjs', receiver: 'handle',
-        header: entry => `/** @type {import(${JSON.stringify(entry.module)}).${entry.type}} */\nconst handle = /** @type {any} */ (null);\n` },
+        header: entry => `/** @type {${entry.typeScope === 'global' ? '' : `import(${JSON.stringify(entry.module)}).`}${entry.type}} */\nconst handle = /** @type {any} */ (null);\n` },
     bun_handle: { file: 'matrix-handle.bun.ts', receiver: 'handle', header: entry => `declare const handle: import("autojs6:bun-host").${entry.type};\n` },
 };
 const matrixCounts = {};
