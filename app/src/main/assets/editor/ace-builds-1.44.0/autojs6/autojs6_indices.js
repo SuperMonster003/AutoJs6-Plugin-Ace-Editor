@@ -672,8 +672,8 @@
             {
                 "name": "gestures",
                 "type": "function",
-                "doc": "gestures(...stroke: StrokeParams[]): boolean;",
-                "signature": "gestures(...stroke: StrokeParams[]): boolean;"
+                "doc": "gestures(stroke: StrokeParams, ...strokes: StrokeParams[]): boolean;",
+                "signature": "gestures(stroke: StrokeParams, ...strokes: StrokeParams[]): boolean;"
             },
             {
                 "name": "gesturesAsync",
@@ -691,7 +691,7 @@
                     "gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, callback: GestureResultCallbackLike): void;",
                     "gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, strokeI: StrokeParams, callback: GestureResultCallbackLike): void;",
                     "gesturesAsync(strokesGroup: [...StrokeParams[]], callback?: GestureResultCallbackLike): void;",
-                    "gesturesAsync(...stroke: StrokeParams[]): void;"
+                    "gesturesAsync(stroke: StrokeParams, ...strokes: StrokeParams[]): void;"
                 ]
             },
             {
@@ -4916,20 +4916,20 @@
                 {
                     "name": "registerEvent",
                     "type": "function",
-                    "doc": "registerEvent(name: string, listener?: Automator.AccessibilityEventListener | null): void;",
-                    "signature": "registerEvent(name: string, listener?: Automator.AccessibilityEventListener | null): void;",
+                    "doc": "registerEvent(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;",
+                    "signature": "registerEvent(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;",
                     "signatures": [
-                        "registerEvent(name: string, listener?: Automator.AccessibilityEventListener | null): void;",
+                        "registerEvent(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;",
                         "registerEvent(name: string, listener: Automator.AccessibilityEventListener, options: Automator.RegisterEventOptions): void;"
                     ]
                 },
                 {
                     "name": "registerEvents",
                     "type": "function",
-                    "doc": "registerEvents(name: string, listener?: Automator.AccessibilityEventListener | null): void;",
-                    "signature": "registerEvents(name: string, listener?: Automator.AccessibilityEventListener | null): void;",
+                    "doc": "registerEvents(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;",
+                    "signature": "registerEvents(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;",
                     "signatures": [
-                        "registerEvents(name: string, listener?: Automator.AccessibilityEventListener | null): void;",
+                        "registerEvents(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;",
                         "registerEvents(name: string, listener: Automator.AccessibilityEventListener, options: Automator.RegisterEventOptions): void;"
                     ]
                 },
@@ -5629,8 +5629,8 @@
                 {
                     "name": "gestures",
                     "type": "function",
-                    "doc": "gestures(...stroke: StrokeParams[]): boolean;",
-                    "signature": "gestures(...stroke: StrokeParams[]): boolean;"
+                    "doc": "gestures(stroke: StrokeParams, ...strokes: StrokeParams[]): boolean;",
+                    "signature": "gestures(stroke: StrokeParams, ...strokes: StrokeParams[]): boolean;"
                 },
                 {
                     "name": "gesturesAsync",
@@ -5648,7 +5648,7 @@
                         "gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, callback: GestureResultCallbackLike): void;",
                         "gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, strokeI: StrokeParams, callback: GestureResultCallbackLike): void;",
                         "gesturesAsync(strokesGroup: [...StrokeParams[]], callback?: GestureResultCallbackLike): void;",
-                        "gesturesAsync(...stroke: StrokeParams[]): void;"
+                        "gesturesAsync(stroke: StrokeParams, ...strokes: StrokeParams[]): void;"
                     ]
                 },
                 {
@@ -10970,8 +10970,8 @@
                 {
                     "name": "toColorStateList",
                     "type": "function",
-                    "doc": "toColorStateList(...color: (OmniColor)[]): android.content.res.ColorStateList;",
-                    "signature": "toColorStateList(...color: (OmniColor)[]): android.content.res.ColorStateList;"
+                    "doc": "toColorStateList(color: OmniColor, ...colors: (OmniColor)[]): android.content.res.ColorStateList;",
+                    "signature": "toColorStateList(color: OmniColor, ...colors: (OmniColor)[]): android.content.res.ColorStateList;"
                 },
                 {
                     "name": "setPaintColor",
@@ -11252,12 +11252,8 @@
                 {
                     "name": "trace",
                     "type": "function",
-                    "doc": "trace(message: string, ...args): void;",
-                    "signature": "trace(message: string, ...args): void;",
-                    "signatures": [
-                        "trace(message: string, ...args): void;",
-                        "trace(message: string, level: 'verbose' | 'debug' | 'info' | 'warn' | 'error' | number): void;"
-                    ]
+                    "doc": "trace(message?: string, level?: 'verbose' | 'debug' | 'info' | 'warn' | 'error' | number): void;",
+                    "signature": "trace(message?: string, level?: 'verbose' | 'debug' | 'info' | 'warn' | 'error' | number): void;"
                 },
                 {
                     "name": "setGlobalLogConfig",
@@ -11394,7 +11390,7 @@
                         "setContentTextColor(colors: OmniColor): this;",
                         "setContentTextColor(colors: OmniColor[]): this;",
                         "setContentTextColor(colors: { verbose?: OmniColor; log?: OmniColor; info?: OmniColor; warn?: OmniColor; error?: OmniColor; assert?: OmniColor; }): this;",
-                        "setContentTextColor(verbose: OmniColor, log?: OmniColor, info?: OmniColor, warn?: OmniColor, error?: OmniColor, assert?: OmniColor): this;"
+                        "setContentTextColor(verbose?: OmniColor, log?: OmniColor, info?: OmniColor, warn?: OmniColor, error?: OmniColor, assert?: OmniColor): this;"
                     ]
                 },
                 {
@@ -13052,8 +13048,8 @@
                 {
                     "name": "build",
                     "type": "function",
-                    "doc": "build(properties: Dialogs.Build.Properties): Dialogs.JsDialog;",
-                    "signature": "build(properties: Dialogs.Build.Properties): Dialogs.JsDialog;"
+                    "doc": "build(properties?: Dialogs.Build.Properties): Dialogs.JsDialog;",
+                    "signature": "build(properties?: Dialogs.Build.Properties): Dialogs.JsDialog;"
                 }
             ],
             "engines": [
@@ -13090,20 +13086,20 @@
                 {
                     "name": "execScript",
                     "type": "function",
-                    "doc": "execScript(name: string, script: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;",
-                    "signature": "execScript(name: string, script: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;"
+                    "doc": "execScript(name: string, script: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;",
+                    "signature": "execScript(name: string, script: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;"
                 },
                 {
                     "name": "execScriptFile",
                     "type": "function",
-                    "doc": "execScriptFile(path: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;",
-                    "signature": "execScriptFile(path: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;"
+                    "doc": "execScriptFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;",
+                    "signature": "execScriptFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;"
                 },
                 {
                     "name": "execAutoFile",
                     "type": "function",
-                    "doc": "execAutoFile(path: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;",
-                    "signature": "execAutoFile(path: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;"
+                    "doc": "execAutoFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;",
+                    "signature": "execAutoFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;"
                 }
             ],
             "epub": [
@@ -14438,14 +14434,14 @@
                 {
                     "name": "postJson",
                     "type": "function",
-                    "doc": "postJson(url: string, data?: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;",
-                    "signature": "postJson(url: string, data?: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;"
+                    "doc": "postJson(url: string, data: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;",
+                    "signature": "postJson(url: string, data: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;"
                 },
                 {
                     "name": "postJsonAsync",
                     "type": "function",
-                    "doc": "postJsonAsync(url: string, data?: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;",
-                    "signature": "postJsonAsync(url: string, data?: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;"
+                    "doc": "postJsonAsync(url: string, data: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;",
+                    "signature": "postJsonAsync(url: string, data: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;"
                 },
                 {
                     "name": "postMultipart",
@@ -14462,14 +14458,14 @@
                 {
                     "name": "request",
                     "type": "function",
-                    "doc": "request(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;",
-                    "signature": "request(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;"
+                    "doc": "request(url: string, options: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;",
+                    "signature": "request(url: string, options: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;"
                 },
                 {
                     "name": "requestAsync",
                     "type": "function",
-                    "doc": "requestAsync(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;",
-                    "signature": "requestAsync(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;"
+                    "doc": "requestAsync(url: string, options: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;",
+                    "signature": "requestAsync(url: string, options: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;"
                 },
                 {
                     "name": "put",
@@ -14510,8 +14506,8 @@
                 {
                     "name": "buildRequest",
                     "type": "function",
-                    "doc": "buildRequest(url: string, options?: Http.RequestBuilderOptions): okhttp3.Request;",
-                    "signature": "buildRequest(url: string, options?: Http.RequestBuilderOptions): okhttp3.Request;"
+                    "doc": "buildRequest(url: string, options: Http.RequestBuilderOptions): okhttp3.Request;",
+                    "signature": "buildRequest(url: string, options: Http.RequestBuilderOptions): okhttp3.Request;"
                 }
             ],
             "i18n": [
@@ -35783,40 +35779,40 @@
                     "signature": "array(type: Java.LangAbbr | java.lang.Class<any> | any, length: number): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;",
                     "signatures": [
                         "array(type: Java.LangAbbr | java.lang.Class<any> | any, length: number): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;",
-                        "array(type: Java.LangAbbr | java.lang.Class<any> | any, ...dimensions: number[]): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;"
+                        "array(type: Java.LangAbbr | java.lang.Class<any> | any, dimension: number, ...dimensions: number[]): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;"
                     ]
                 },
                 {
                     "name": "toJsArray",
                     "type": "function",
-                    "doc": "toJsArray(list?: java.util.List<any>, nullListToEmptyArray?: boolean): any[];",
-                    "signature": "toJsArray(list?: java.util.List<any>, nullListToEmptyArray?: boolean): any[];"
+                    "doc": "toJsArray(list: java.util.List<any> | null | undefined, nullListToEmptyArray?: boolean): any[];",
+                    "signature": "toJsArray(list: java.util.List<any> | null | undefined, nullListToEmptyArray?: boolean): any[];"
                 },
                 {
                     "name": "objectToMap",
                     "type": "function",
-                    "doc": "objectToMap(obj?: object): java.util.HashMap<any, any> | null;",
-                    "signature": "objectToMap(obj?: object): java.util.HashMap<any, any> | null;"
+                    "doc": "objectToMap(obj: object | null | undefined): java.util.HashMap<any, any> | null;",
+                    "signature": "objectToMap(obj: object | null | undefined): java.util.HashMap<any, any> | null;"
                 },
                 {
                     "name": "mapToObject",
                     "type": "function",
-                    "doc": "mapToObject(map?: java.util.HashMap<any, any>): object | null;",
-                    "signature": "mapToObject(map?: java.util.HashMap<any, any>): object | null;"
+                    "doc": "mapToObject(map: java.util.HashMap<any, any> | null | undefined): object | null;",
+                    "signature": "mapToObject(map: java.util.HashMap<any, any> | null | undefined): object | null;"
                 }
             ],
             "util.morseCode": [
                 {
                     "name": "getPattern",
                     "type": "function",
-                    "doc": "getPattern(text: string): number[];",
-                    "signature": "getPattern(text: string): number[];"
+                    "doc": "getPattern(text: string, timeUnit?: number): number[];",
+                    "signature": "getPattern(text: string, timeUnit?: number): number[];"
                 },
                 {
                     "name": "getCode",
                     "type": "function",
-                    "doc": "getCode(text: string): string;",
-                    "signature": "getCode(text: string): string;"
+                    "doc": "getCode(text: string, timeUnit?: number): string;",
+                    "signature": "getCode(text: string, timeUnit?: number): string;"
                 },
                 {
                     "name": "vibrate",

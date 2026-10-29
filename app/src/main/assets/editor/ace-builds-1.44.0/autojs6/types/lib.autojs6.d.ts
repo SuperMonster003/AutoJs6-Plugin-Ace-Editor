@@ -189,9 +189,9 @@ declare namespace AutoJs6 {
         isRunning(): boolean;
         isOperational(): boolean;
         stateListener(listener?: Automator.StateListener | null): void;
-        registerEvent(name: string, listener?: Automator.AccessibilityEventListener | null): void;
+        registerEvent(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;
         registerEvent(name: string, listener: Automator.AccessibilityEventListener, options: Automator.RegisterEventOptions): void;
-        registerEvents(name: string, listener?: Automator.AccessibilityEventListener | null): void;
+        registerEvents(name: string, listener: Automator.AccessibilityEventListener | null | undefined): void;
         registerEvents(name: string, listener: Automator.AccessibilityEventListener, options: Automator.RegisterEventOptions): void;
         removeEvent(name: string): void;
         removeEvents(name: string): void;
@@ -358,7 +358,7 @@ declare namespace AutoJs6 {
         gestureAsync(duration: number, pointsGroup: [...[x: number, y: number][]], callback?: GestureResultCallbackLike): void;
         gestureAsync(duration: number, points: [...number[]], callback?: GestureResultCallbackLike): void;
         gestureAsync(duration: number, ...point: [x: number, y: number][]): void;
-        gestures(...stroke: StrokeParams[]): boolean;
+        gestures(stroke: StrokeParams, ...strokes: StrokeParams[]): boolean;
         gesturesAsync(stroke: StrokeParams, callback: GestureResultCallbackLike): void;
         gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, callback: GestureResultCallbackLike): void;
         gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, callback: GestureResultCallbackLike): void;
@@ -369,7 +369,7 @@ declare namespace AutoJs6 {
         gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, callback: GestureResultCallbackLike): void;
         gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, strokeI: StrokeParams, callback: GestureResultCallbackLike): void;
         gesturesAsync(strokesGroup: [...StrokeParams[]], callback?: GestureResultCallbackLike): void;
-        gesturesAsync(...stroke: StrokeParams[]): void;
+        gesturesAsync(stroke: StrokeParams, ...strokes: StrokeParams[]): void;
         scrollDown(): boolean;
         scrollDown(index: number): boolean;
         scrollDown(text: string, index?: number): boolean;
@@ -1354,7 +1354,7 @@ declare namespace AutoJs6 {
         extract(image: ImageWrapper, options?: Colors.ExtractOptions): ColorInt[];
         equals(colorA: OmniColor, colorB: OmniColor): boolean;
         luminance(color: OmniColor): number;
-        toColorStateList(...color: (OmniColor)[]): android.content.res.ColorStateList;
+        toColorStateList(color: OmniColor, ...colors: (OmniColor)[]): android.content.res.ColorStateList;
         setPaintColor(paint: Paint, color: OmniColor): void;
         build(): Color;
         build(color: OmniColor): Color;
@@ -1417,8 +1417,7 @@ declare namespace AutoJs6 {
         print(data?: any, ...text): void;
         time(label?: string): void;
         timeEnd(label?: string): void;
-        trace(message: string, ...args): void;
-        trace(message: string, level: 'verbose' | 'debug' | 'info' | 'warn' | 'error' | number): void;
+        trace(message?: string, level?: 'verbose' | 'debug' | 'info' | 'warn' | 'error' | number): void;
         setGlobalLogConfig(config: Console.GlobalLogConfig): void;
         resetGlobalLogConfig(): void;
         show(isAutoExpand?: boolean): this;
@@ -1443,7 +1442,7 @@ declare namespace AutoJs6 {
         setContentTextColor(colors: OmniColor): this;
         setContentTextColor(colors: OmniColor[]): this;
         setContentTextColor(colors: { verbose?: OmniColor; log?: OmniColor; info?: OmniColor; warn?: OmniColor; error?: OmniColor; assert?: OmniColor; }): this;
-        setContentTextColor(verbose: OmniColor, log?: OmniColor, info?: OmniColor, warn?: OmniColor, error?: OmniColor, assert?: OmniColor): this;
+        setContentTextColor(verbose?: OmniColor, log?: OmniColor, info?: OmniColor, warn?: OmniColor, error?: OmniColor, assert?: OmniColor): this;
         setContentTextColors: Console['setContentTextColor'];
         setContentBackgroundColor(color: OmniColor): this;
         setContentBackgroundTint(color: OmniColor): this;
@@ -1758,7 +1757,7 @@ declare namespace AutoJs6 {
         singleChoice(title: string, items: any[], defaultIndex?: number, callback?: (selectedIndex: number) => void): number | Promise<any>;
         multiChoice(title: string, items: any[], defaultIndices?: number[]): number[] | Promise<number[]>;
         multiChoice( title: string, items: any[], defaultIndices: number[] | null | undefined, callback: (selectedIndices: number[]) => void, ): number[] | null;
-        build(properties: Dialogs.Build.Properties): Dialogs.JsDialog;
+        build(properties?: Dialogs.Build.Properties): Dialogs.JsDialog;
     }
 
     interface Engines {
@@ -1767,9 +1766,9 @@ declare namespace AutoJs6 {
         all(): org.autojs.autojs.engine.ScriptEngine<any>[];
         stopAll(): number;
         stopAllAndToast(): void;
-        execScript(name: string, script: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
-        execScriptFile(path: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
-        execAutoFile(path: string, config: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
+        execScript(name: string, script: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
+        execScriptFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
+        execAutoFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
     }
 
     interface Epub {
@@ -2052,19 +2051,19 @@ declare namespace AutoJs6 {
         headAsync(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
         post(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
         postAsync(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
-        postJson(url: string, data?: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
-        postJsonAsync(url: string, data?: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
+        postJson(url: string, data: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
+        postJsonAsync(url: string, data: any, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
         postMultipart(url: string, files: Http.MultipartFiles, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
         postMultipartAsync(url: string, files: Http.MultipartFiles, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
-        request(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
-        requestAsync(url: string, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
+        request(url: string, options: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
+        requestAsync(url: string, options: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
         put(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
         putAsync(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
         delete(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
         del(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Http.WrappedResponse | void;
         deleteAsync(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
         delAsync(url: string, data?: Http.RequestData, options?: Http.RequestBuilderOptions, callback?: Http.Callback): Promise<Http.WrappedResponse>;
-        buildRequest(url: string, options?: Http.RequestBuilderOptions): okhttp3.Request;
+        buildRequest(url: string, options: Http.RequestBuilderOptions): okhttp3.Request;
     }
 
     interface I18n {
@@ -5954,15 +5953,15 @@ declare namespace AutoJs6 {
         instanceof(obj: any, clazz: java.lang.Class<any> | string | object): boolean;
         instanceOf(obj: any, clazz: java.lang.Class<any> | string | object): boolean;
         array(type: Java.LangAbbr | java.lang.Class<any> | any, length: number): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;
-        array(type: Java.LangAbbr | java.lang.Class<any> | any, ...dimensions: number[]): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;
-        toJsArray(list?: java.util.List<any>, nullListToEmptyArray?: boolean): any[];
-        objectToMap(obj?: object): java.util.HashMap<any, any> | null;
-        mapToObject(map?: java.util.HashMap<any, any>): object | null;
+        array(type: Java.LangAbbr | java.lang.Class<any> | any, dimension: number, ...dimensions: number[]): Array<java.lang.Integer | java.lang.Long | java.lang.Double | java.lang.Character | java.lang.Byte | java.lang.Float | java.lang.String | any>;
+        toJsArray(list: java.util.List<any> | null | undefined, nullListToEmptyArray?: boolean): any[];
+        objectToMap(obj: object | null | undefined): java.util.HashMap<any, any> | null;
+        mapToObject(map: java.util.HashMap<any, any> | null | undefined): object | null;
     }
 
     interface Util_morseCode {
-        getPattern(text: string): number[];
-        getCode(text: string): string;
+        getPattern(text: string, timeUnit?: number): number[];
+        getCode(text: string, timeUnit?: number): string;
         vibrate(text: string, delay?: number): void;
     }
 
@@ -6230,7 +6229,7 @@ declare function gestureAsync(duration: number, pointA: [x: number, y: number], 
 declare function gestureAsync(duration: number, pointsGroup: [...[x: number, y: number][]], callback?: GestureResultCallbackLike): void;
 declare function gestureAsync(duration: number, points: [...number[]], callback?: GestureResultCallbackLike): void;
 declare function gestureAsync(duration: number, ...point: [x: number, y: number][]): void;
-declare function gestures(...stroke: StrokeParams[]): boolean;
+declare function gestures(stroke: StrokeParams, ...strokes: StrokeParams[]): boolean;
 declare function gesturesAsync(stroke: StrokeParams, callback: GestureResultCallbackLike): void;
 declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, callback: GestureResultCallbackLike): void;
 declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, callback: GestureResultCallbackLike): void;
@@ -6241,7 +6240,7 @@ declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, str
 declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, callback: GestureResultCallbackLike): void;
 declare function gesturesAsync(strokeA: StrokeParams, strokeB: StrokeParams, strokeC: StrokeParams, strokeD: StrokeParams, strokeE: StrokeParams, strokeF: StrokeParams, strokeG: StrokeParams, strokeH: StrokeParams, strokeI: StrokeParams, callback: GestureResultCallbackLike): void;
 declare function gesturesAsync(strokesGroup: [...StrokeParams[]], callback?: GestureResultCallbackLike): void;
-declare function gesturesAsync(...stroke: StrokeParams[]): void;
+declare function gesturesAsync(stroke: StrokeParams, ...strokes: StrokeParams[]): void;
 declare function scrollDown(): boolean;
 declare function scrollDown(index: number): boolean;
 declare function scrollDown(text: string, index?: number): boolean;
