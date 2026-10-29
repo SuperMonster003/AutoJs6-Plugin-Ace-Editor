@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,14 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.47.0
+
+###### 2026/10/29
+
+* `Función` las declaraciones de speech añaden diarize, detectLanguage y tag con sus formas Async: diarización de hablantes (quién habla y cuándo, con nombre opcional según las huellas de voz registradas), identificación del idioma y etiquetado de audio (las 527 etiquetas de AudioSet); las opciones aceptan un callback onProgress, con tipos de resultado como Speech.Diarization, Speech.LanguageDetection y Speech.Tagging (AutoJs6 6.8.0 o posterior, requiere 3-Macaw Speech 1.3.0)
+* `Función` las declaraciones de speech añaden speech.speaker para el reconocimiento de hablantes: enroll, verify e identify con sus formas Async, list y remove, y los códigos de error SPEAKER_NOT_FOUND y AUDIO_TOO_SHORT (AutoJs6 6.8.0 o posterior, requiere 3-Macaw Speech 1.3.0)
+* `Mejora` Speech.Feature añade 'speaker', 'diarization', 'languageId' y 'audioTagging'; Speech.Kind añade los tipos de modelo 'speaker', 'segment', 'langid' y 'tagger', que aceptan models.list, setDefault y getDefault
 
 # v2.46.0
 
@@ -197,13 +205,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ###### 2026/10/24
 
 * `Función` Declaraciones de sqlite con la devolución de llamada onDowngrade: se llama cuando la version solicitada es inferior a la de la base de datos existente (AutoJs6 6.8.0 o posterior); sin ella, la degradación no hace nada y conserva las tablas y los datos
-
-# v2.44.0
-
-###### 2026/10/23
-
-* `Función` Declaraciones de memory para las sesiones de puente: Snapshot.bridgeSessions da las sesiones de puente terminadas pero aún no recuperadas de cada motor de plugins (Node.js, Bun, QuickJS, Lua y Python), y RetainedRuntime.engine distingue rhino de node, con los tipos Memory.BridgeSessions y Memory.RetainedEngine
-* `Mejora` las declaraciones de speech completan la opción punctuation: se conserva la puntuación propia del modelo (SenseVoice), los resultados de los modelos en streaming reciben puntuación de un modelo de puntuación instalado (3-Macaw Speech 1.2.0 o posterior, chino e inglés) y false elimina toda la puntuación
 
 ##### Para ver más historial de versiones
 

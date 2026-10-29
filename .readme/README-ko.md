@@ -171,7 +171,7 @@ Ace 자산, 모바일 오버레이 또는 브리지 스크립트를 변경한 �
 빌드 후 생성된 APK를 설치합니다:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-universal.apk
 ```
 
 그런 다음 AutoJs6 플러그인 센터에서 `ace-editor`를 활성화하고 AutoJs6를 완전히 종료한 후 다시 시작합니다. 플러그인을 설치, 업데이트 또는 롤백한 후에는 호스트를 다시 시작하십시오.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ### 릴리스 기록
 
 ******
+
+# v2.47.0
+
+###### 2026/10/29
+
+* `기능` speech 선언에 diarize, detectLanguage, tag와 그 Async 형식 추가: 화자 분리 (누가 언제 말했는지, 등록된 성문으로 화자 이름 지정 가능), 언어 식별, 오디오 태깅 (AudioSet의 527개 레이블); 옵션에 onProgress 진행 콜백을 지정할 수 있고 Speech.Diarization, Speech.LanguageDetection, Speech.Tagging 등의 결과 타입 포함 (AutoJs6 6.8.0 이상, 3-Macaw Speech 1.3.0 필요)
+* `기능` speech 선언에 화자 인식 speech.speaker 추가: enroll, verify, identify와 그 Async 형식, list, remove, 오류 코드 SPEAKER_NOT_FOUND와 AUDIO_TOO_SHORT (AutoJs6 6.8.0 이상, 3-Macaw Speech 1.3.0 필요)
+* `개선` Speech.Feature에 'speaker', 'diarization', 'languageId', 'audioTagging' 추가; Speech.Kind에 모델 종류 'speaker', 'segment', 'langid', 'tagger'를 추가하여 models.list, setDefault, getDefault에서 사용 가능
 
 # v2.46.0
 
@@ -197,13 +205,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ###### 2026/10/24
 
 * `기능` sqlite 선언에 onDowngrade 콜백 추가: 요청한 version 이 기존 데이터베이스 버전보다 낮을 때 호출 (AutoJs6 6.8.0 이상); 구현하지 않으면 다운그레이드는 아무 작업도 하지 않고 테이블과 데이터를 유지
-
-# v2.44.0
-
-###### 2026/10/23
-
-* `기능` memory 선언에 브리지 세션 추가: Snapshot.bridgeSessions 는 플러그인 엔진 (Node.js, Bun, QuickJS, Lua, Python) 별로 종료 후 회수되지 않은 브리지 세션 수를 제공하고, RetainedRuntime.engine 으로 rhino 와 node 를 구분; Memory.BridgeSessions, Memory.RetainedEngine 타입 추가
-* `개선` speech 선언에서 punctuation 옵션 보완: 모델 자체의 문장 부호 (SenseVoice)는 유지하고, 스트리밍 모델 결과에는 설치된 문장 부호 모델로 문장 부호를 붙이며 (3-Macaw Speech 1.2.0 이상, 중국어와 영어), false는 모든 문장 부호를 제거
 
 ##### 더 많은 릴리스 기록
 

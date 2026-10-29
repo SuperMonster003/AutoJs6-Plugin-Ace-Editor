@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ### История выпусков
 
 ******
+
+# v2.47.0
+
+###### 2026/10/29
+
+* `Функция` объявления speech добавляют diarize, detectLanguage и tag с их формами Async: разделение по говорящим (кто и когда говорил, по желанию с именами по зарегистрированным голосовым отпечаткам), определение языка и разметку звуков (527 меток AudioSet); параметры принимают обратный вызов onProgress, добавлены типы результатов, такие как Speech.Diarization, Speech.LanguageDetection и Speech.Tagging (AutoJs6 6.8.0 или новее, нужен 3-Macaw Speech 1.3.0)
+* `Функция` объявления speech добавляют speech.speaker для распознавания говорящего: enroll, verify и identify с их формами Async, list и remove, а также коды ошибок SPEAKER_NOT_FOUND и AUDIO_TOO_SHORT (AutoJs6 6.8.0 или новее, нужен 3-Macaw Speech 1.3.0)
+* `Улучшение` в Speech.Feature добавлены 'speaker', 'diarization', 'languageId' и 'audioTagging'; в Speech.Kind добавлены типы моделей 'speaker', 'segment', 'langid' и 'tagger', которые принимают models.list, setDefault и getDefault
 
 # v2.46.0
 
@@ -197,13 +205,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ###### 2026/10/24
 
 * `Функция` Объявления sqlite с обратным вызовом onDowngrade: вызывается, когда запрошенная version ниже версии существующей базы данных (AutoJs6 6.8.0 и новее); без него понижение версии ничего не делает и сохраняет таблицы и данные
-
-# v2.44.0
-
-###### 2026/10/23
-
-* `Функция` Объявления memory для сеансов моста: Snapshot.bridgeSessions даёт число завершённых, но ещё не освобождённых сеансов моста каждого движка плагинов (Node.js, Bun, QuickJS, Lua и Python), а RetainedRuntime.engine отличает rhino от node, с типами Memory.BridgeSessions и Memory.RetainedEngine
-* `Улучшение` объявления speech дополняют параметр punctuation: собственная пунктуация модели (SenseVoice) сохраняется, результаты потоковых моделей получают пунктуацию от установленной модели пунктуации (3-Macaw Speech 1.2.0 или новее, китайский и английский), а false удаляет всю пунктуацию
 
 ##### Подробнее об истории выпусков
 

@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,14 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.47.0
+
+###### 2026/10/29
+
+* `Feature` speech declarations add diarize, detectLanguage and tag with their Async forms: speaker diarization (who spoke when, optionally named after enrolled voiceprints), language identification and audio tagging (the 527 AudioSet labels); the options take an onProgress callback, with result types such as Speech.Diarization, Speech.LanguageDetection and Speech.Tagging (AutoJs6 6.8.0 or later, needs 3-Macaw Speech 1.3.0)
+* `Feature` speech declarations add speech.speaker for speaker recognition: enroll, verify and identify with their Async forms, list and remove, and the SPEAKER_NOT_FOUND and AUDIO_TOO_SHORT error codes (AutoJs6 6.8.0 or later, needs 3-Macaw Speech 1.3.0)
+* `Improvement` Speech.Feature gains 'speaker', 'diarization', 'languageId' and 'audioTagging'; Speech.Kind gains the model kinds 'speaker', 'segment', 'langid' and 'tagger', which models.list, setDefault and getDefault accept
 
 # v2.46.0
 
@@ -197,13 +205,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/10/24
 
 * `Feature` sqlite declarations add the onDowngrade callback: called when the requested version is lower than the version of the existing database (AutoJs6 6.8.0 or later); without it, the downgrade does nothing and keeps the tables and data
-
-# v2.44.0
-
-###### 2026/10/23
-
-* `Feature` memory declarations for bridge sessions: Snapshot.bridgeSessions gives the finished but unreclaimed bridge sessions of each plugin engine (Node.js, Bun, QuickJS, Lua and Python), and RetainedRuntime.engine tells rhino from node, with the Memory.BridgeSessions and Memory.RetainedEngine types
-* `Improvement` speech declarations complete the punctuation option: the model's own punctuation (SenseVoice) is kept, results of streaming models get punctuation from an installed punctuation model (3-Macaw Speech 1.2.0 or later, Chinese and English), and false removes all punctuation
 
 ##### Complete release history
 

@@ -5670,6 +5670,12 @@ declare namespace AutoJs6 {
         synthesize(text: string, path: string, options?: Speech.SynthesisOptions | null): Speech.SynthesisResult;
         synthesizeAsync(text: string, path: string, options?: Speech.SynthesisOptions | null): Promise<Speech.SynthesisResult>;
         speak(text: string, options?: Speech.SpeakOptions | null): Promise<Tts.Result>;
+        diarize(file: string, options?: Speech.DiarizeOptions | null): Speech.Diarization;
+        diarizeAsync(file: string, options?: Speech.DiarizeOptions | null): Promise<Speech.Diarization>;
+        detectLanguage(file: string, options?: Speech.DetectLanguageOptions | null): Speech.LanguageDetection;
+        detectLanguageAsync(file: string, options?: Speech.DetectLanguageOptions | null): Promise<Speech.LanguageDetection>;
+        tag(file: string, options?: Speech.TagOptions | null): Speech.Tagging;
+        tagAsync(file: string, options?: Speech.TagOptions | null): Promise<Speech.Tagging>;
         models: Speech.Models;
         speaker: Speech.Speaker;
         SpeechError: Speech.ErrorConstructor;

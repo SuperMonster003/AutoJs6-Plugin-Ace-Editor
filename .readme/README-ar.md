@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.47.0
+
+###### 2026/10/29
+
+* `ميزة` تضيف تعريفات speech الدوال diarize و detectLanguage و tag مع صيغها Async: فصل المتحدثين (من تحدث ومتى, مع تسميتهم اختياريا حسب البصمات الصوتية المسجلة), وتحديد اللغة, ووسم الأصوات (تسميات AudioSet البالغة 527); وتقبل الخيارات دالة الاستدعاء onProgress, مع أنواع نتائج مثل Speech.Diarization و Speech.LanguageDetection و Speech.Tagging (AutoJs6 6.8.0 أو أحدث, يتطلب ⁨3-Macaw Speech⁩ 1.3.0)
+* `ميزة` تضيف تعريفات speech الكائن speech.speaker للتعرف على المتحدث: enroll و verify و identify مع صيغها Async, و list و remove, ورمزي الخطأ SPEAKER_NOT_FOUND و AUDIO_TOO_SHORT (AutoJs6 6.8.0 أو أحدث, يتطلب ⁨3-Macaw Speech⁩ 1.3.0)
+* `تحسين` تضيف Speech.Feature القيم 'speaker' و 'diarization' و 'languageId' و 'audioTagging'; وتضيف Speech.Kind أنواع النماذج 'speaker' و 'segment' و 'langid' و 'tagger' التي تقبلها models.list و setDefault و getDefault
 
 # v2.46.0
 
@@ -197,13 +205,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ###### 2026/10/24
 
 * `ميزة` تعريفات sqlite مع رد النداء onDowngrade: يُستدعى عندما تكون version المطلوبة أقل من إصدار قاعدة البيانات الحالية (AutoJs6 6.8.0 أو أحدث); وبدونه لا يفعل خفض الإصدار شيئا ويحتفظ بالجداول والبيانات
-
-# v2.44.0
-
-###### 2026/10/23
-
-* `ميزة` تعريفات memory لجلسات الجسر: يعطي Snapshot.bridgeSessions عدد جلسات الجسر المنتهية التي لم تُستعَد بعد لكل محرك إضافات (Node.js و Bun و QuickJS و Lua و Python), ويميز RetainedRuntime.engine بين rhino و node, مع النوعين Memory.BridgeSessions و Memory.RetainedEngine
-* `تحسين` تكمل تعريفات speech الخيار punctuation: تبقى علامات الترقيم الخاصة بالنموذج (SenseVoice), وتحصل نتائج النماذج المتدفقة على علامات الترقيم من نموذج ترقيم مثبت (⁨3-Macaw Speech⁩ 1.2.0 أو أحدث, الصينية والإنجليزية), ويزيل false كل علامات الترقيم
 
 ##### لمزيد من سجل الإصدارات
 

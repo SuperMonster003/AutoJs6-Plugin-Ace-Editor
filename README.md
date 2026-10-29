@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,14 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ### 发行历史
 
 ******
+
+# v2.47.0
+
+###### 2026/10/29
+
+* `新增` speech 声明补全 diarize, detectLanguage 与 tag 及其 Async 形态: 说话人分离 (谁在何时说话, 可按已注册的声纹认人), 语种识别与音频标签 (AudioSet 的 527 个标签), 选项可带 onProgress 进度回调, 含 Speech.Diarization, Speech.LanguageDetection 与 Speech.Tagging 等结果类型 (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
+* `新增` speech 声明补全 speech.speaker 说话人识别: enroll, verify, identify 及其 Async 形态, list 与 remove, 以及错误码 SPEAKER_NOT_FOUND 与 AUDIO_TOO_SHORT (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
+* `优化` Speech.Feature 增加 'speaker', 'diarization', 'languageId' 与 'audioTagging'; Speech.Kind 增加 'speaker', 'segment', 'langid' 与 'tagger' 四种模型类别, models.list, setDefault 与 getDefault 可使用这些类别
 
 # v2.46.0
 
@@ -197,13 +205,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.46.0-u
 ###### 2026/10/24
 
 * `新增` sqlite 声明补全 onDowngrade 回调: 打开数据库时请求的 version 低于现有版本时调用 (AutoJs6 6.8.0 起), 未实现时降级不执行任何操作, 保留表与数据
-
-# v2.44.0
-
-###### 2026/10/23
-
-* `新增` memory 声明补全桥接会话: Snapshot.bridgeSessions 给出 Node.js, Bun, QuickJS, Lua 与 Python 各插件引擎已结束但未回收的桥接会话数, RetainedRuntime.engine 区分 rhino 与 node, 含 Memory.BridgeSessions 与 Memory.RetainedEngine 类型
-* `优化` speech 声明补全 punctuation 选项: 模型自带标点 (SenseVoice) 时保留, 流式模型的结果由已安装的标点模型补上标点 (3-Macaw Speech 1.2.0 起, 中文与英文), false 去掉所有标点
 
 ##### 更多发行历史可参阅
 
