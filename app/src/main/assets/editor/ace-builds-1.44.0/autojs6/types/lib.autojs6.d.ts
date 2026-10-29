@@ -606,6 +606,7 @@ declare namespace AutoJs6 {
     }
 
     interface Color {
+        toStringReadable(): string;
         argb(): number[];
         rgb(): number[];
         rgba(): number[];
@@ -1405,6 +1406,9 @@ declare namespace AutoJs6 {
     }
 
     interface Console {
+        isShowing(): boolean;
+        setGravity(gravity: number | string): void;
+        setTouchThrough(touchThrough?: boolean): void;
         assert(value: boolean | (() => boolean), message?: string): void;
         rawInput(): string;
         rawInput(data: any, ...args: any[]): string;
@@ -1663,6 +1667,19 @@ declare namespace AutoJs6 {
     }
 
     interface Device {
+        brands: org.autojs.autojs.util.RomUtils.Brand;
+        manufacturers: org.autojs.autojs.runtime.api.Device.Manufacturers;
+        roms: org.autojs.autojs.util.RomUtils;
+        ensureReadPhoneStatePermission(): void;
+        getMarketName(): string;
+        getOrientation(): number;
+        getRotation(): number;
+        hasReadPhoneStatePermission(): boolean;
+        isManufacturer(manufacturer: string): boolean;
+        isPowerSourceAC(): boolean;
+        isPowerSourceDock(): boolean;
+        isPowerSourceUSB(): boolean;
+        isPowerSourceWireless(): boolean;
         width: number;
         height: number;
         rotation: number;
@@ -1802,6 +1819,23 @@ declare namespace AutoJs6 {
     }
 
     interface Events {
+        addListener(eventName: string, listener: any): this;
+        emit(eventName: string, ...args: any[]): boolean;
+        emitSticky(eventName: string, ...args: any[]): boolean;
+        eventNames(): string[];
+        getMaxListeners(): number;
+        getTimer(): org.autojs.autojs.core.looper.Timer;
+        listenerCount(eventName: string): number;
+        listeners(eventName: string): any[];
+        on(eventName: string, listener: any): this;
+        once(eventName: string, listener: any): this;
+        prependListener(eventName: string, listener: any): this;
+        prependOnceListener(eventName: string, listener: any): this;
+        removeAllListeners(eventName?: string): this;
+        removeListener(eventName: string, listener: any): this;
+        removeNotificationObserver(): void;
+        removeToastObserver(): void;
+        setMaxListeners(maxListeners: number): this;
         broadcast: org.autojs.autojs.core.broadcast.BroadcastEmitter;
         emitter(): EventEmitter$;
         emitter(thread: java.lang.Thread): EventEmitter$;
@@ -1811,9 +1845,7 @@ declare namespace AutoJs6 {
         observeKey(): void;
         observeTouch(): void;
         observeNotification(): void;
-        removeNotificationObserver(): void;
         observeToast(): void;
-        removeToastObserver(): void;
         onceKeyDown(keyName: Keys.Name, listener: (event: android.view.KeyEvent) => void): org.autojs.autojs.runtime.api.Events;
         onceKeyUp(keyName: Keys.Name, listener: (event: android.view.KeyEvent) => void): org.autojs.autojs.runtime.api.Events;
         onKeyDown(keyName: Keys.Name, listener: (event: android.view.KeyEvent) => void): org.autojs.autojs.runtime.api.Events;
@@ -1829,20 +1861,7 @@ declare namespace AutoJs6 {
         removeAllTouchListeners(): org.autojs.autojs.runtime.api.Events;
         setKeyInterceptionEnabled(interceptionEnabled: boolean): void;
         setKeyInterceptionEnabled(keyName: Keys.Name, interceptionEnabled: boolean): void;
-        on(...args: any[]): any;
-        once(...args: any[]): any;
-        emit(...args: any[]): any;
         getListeners(...args: any[]): any;
-        addListener(...args: any[]): any;
-        eventNames(...args: any[]): any;
-        listenerCount(...args: any[]): any;
-        listeners(...args: any[]): any;
-        prependListener(...args: any[]): any;
-        prependOnceListener(...args: any[]): any;
-        removeAllListeners(...args: any[]): any;
-        removeListener(...args: any[]): any;
-        setMaxListeners(...args: any[]): any;
-        getMaxListeners(...args: any[]): any;
         defaultMaxListeners(...args: any[]): any;
     }
 
@@ -5523,7 +5542,24 @@ declare namespace AutoJs6 {
         register(sensorName: 'relative_humidity', delay?: number): Sensors.RelativeHumidity | null;
         register(sensorName: string, delay?: number): Sensors.EventEmitter | null;
         unregister(emitter: Sensors.EventEmitter | null): void;
-        unregisterAll(...args: any[]): any;
+        delay: org.autojs.autojs.runtime.api.Sensors.Delay;
+        addListener(eventName: string, listener: (...args: unknown[]) => void): this;
+        emit(eventName: string, ...args: unknown[]): boolean;
+        emitSticky(eventName: string, ...args: unknown[]): boolean;
+        eventNames(): string[];
+        getMaxListeners(): number;
+        getSensor(sensorName: string): android.hardware.Sensor | null;
+        getTimer(): org.autojs.autojs.core.looper.Timer;
+        listenerCount(eventName: string): number;
+        listeners(eventName: string): Function[];
+        on(eventName: string, listener: (...args: unknown[]) => void): this;
+        once(eventName: string, listener: (...args: unknown[]) => void): this;
+        prependListener(eventName: string, listener: (...args: unknown[]) => void): this;
+        prependOnceListener(eventName: string, listener: (...args: unknown[]) => void): this;
+        removeAllListeners(eventName?: string): this;
+        removeListener(eventName: string, listener: Function): this;
+        setMaxListeners(maxListeners: number): this;
+        unregisterAll(): void;
     }
 
     interface Settings {
@@ -5555,6 +5591,11 @@ declare namespace AutoJs6 {
 
     interface Shizuku {
         state: Shizuku.State;
+        hasPermission(): boolean;
+        hasService(): boolean;
+        isInstalled(context: android.content.Context): boolean;
+        isOperational(): boolean;
+        isRunning(): boolean;
         execCommand(command: Shell.Command): AbstractShell.Result;
         execCommand(command: Shell.Command, withRoot: boolean | number): AbstractShell.Result;
         execCommand(command: Shell.Command, commandArgument: Shell.CommandArguments): AbstractShell.Result;
@@ -5743,6 +5784,7 @@ declare namespace AutoJs6 {
     }
 
     interface Threads {
+        shutDownAll(): void;
         start(runnable: java.lang.Runnable | Func): org.autojs.autojs.runtime.api.Threads.Companion.TimerThread | undefined;
         pool(options?: Threads.PoolOptions | null): java.util.concurrent.ThreadPoolExecutor;
         lock(): java.util.concurrent.locks.Lock;
@@ -5750,12 +5792,17 @@ declare namespace AutoJs6 {
         disposable<T = unknown>(): Threads.Disposable<T>;
         currentThread(): any;
         interrupt(thread: org.autojs.autojs.core.looper.TimerThread | any): void;
-        shutDownAll(...args: any[]): any;
     }
 
     interface Timers {
         setIntervalExt(timeoutCallback: Function, interval?: number, timeout?: number | (() => any), resultCallback?: (result: any) => void): number;
         keepAlive(timeout?: number | null): number;
+        clearImmediate(id: number): boolean;
+        clearInterval(id: number): boolean;
+        clearTimeout(id: number): boolean;
+        setImmediate(callback: any, ...args: any[]): number;
+        setInterval(callback: Function, interval?: number, ...args: any[]): number;
+        setTimeout(callback: Function, delay?: number, ...args: any[]): number;
         addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
         addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
         addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
@@ -5766,12 +5813,6 @@ declare namespace AutoJs6 {
         removeTimedTask(id: number): boolean | null;
         queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
         queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
-        setTimeout(...args: any[]): any;
-        clearTimeout(...args: any[]): any;
-        setInterval(...args: any[]): any;
-        clearInterval(...args: any[]): any;
-        setImmediate(...args: any[]): any;
-        clearImmediate(...args: any[]): any;
     }
 
     interface Toast {
@@ -5817,6 +5858,7 @@ declare namespace AutoJs6 {
     }
 
     interface Ui {
+        view: android.view.View;
         layoutInflater: org.autojs.autojs.core.ui.inflater.DynamicLayoutInflater;
         bindingContext: object;
         R: org.autojs.autojs6.R;
@@ -6502,12 +6544,12 @@ declare function Text(...args: any[]): any;
 declare function Input(...args: any[]): any;
 declare function loop(...args: any[]): any;
 declare function keepAlive(timeout?: number | null): number;
-declare function clearImmediate(...args: any[]): any;
-declare function clearInterval(...args: any[]): any;
-declare function clearTimeout(...args: any[]): any;
-declare function setImmediate(...args: any[]): any;
-declare function setTimeout(...args: any[]): any;
-declare function setInterval(...args: any[]): any;
+declare function clearImmediate(id: number): boolean;
+declare function clearInterval(id: number): boolean;
+declare function clearTimeout(id: number): boolean;
+declare function setImmediate(callback: any, ...args: any[]): number;
+declare function setTimeout(callback: Function, delay?: number, ...args: any[]): number;
+declare function setInterval(callback: Function, interval?: number, ...args: any[]): number;
 declare function isUiThread(...args: any[]): any;
 declare function newInjectableWebClient(...args: any[]): any;
 declare function newInjectableWebView(...args: any[]): any;

@@ -395,6 +395,23 @@ declare namespace org {
                     /* Empty body. */
                 }
 
+                /* Instance members merged into the forward above (and, in the Ace editor, into the main-app class). */
+                // @ts-ignore
+                export interface App {
+                    readonly alias: string;
+                    readonly packageName: string;
+                    getAlias(): string;
+                    getPackageName(): string;
+                    getAppName(): string;
+                    getAppNameZh(): string;
+                    getAppNameEn(): string;
+                    isInstalled(): boolean;
+                    ensureInstalled(): void;
+                    launch(): boolean;
+                    launchSettings(): boolean;
+                    uninstall(): void;
+                }
+
             }
 
         }

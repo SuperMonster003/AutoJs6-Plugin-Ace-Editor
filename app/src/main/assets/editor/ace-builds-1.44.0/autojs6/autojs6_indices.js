@@ -1984,32 +1984,38 @@
             {
                 "name": "clearImmediate",
                 "type": "function",
-                "doc": ""
+                "doc": "clearImmediate(id: number): boolean;",
+                "signature": "clearImmediate(id: number): boolean;"
             },
             {
                 "name": "clearInterval",
                 "type": "function",
-                "doc": ""
+                "doc": "clearInterval(id: number): boolean;",
+                "signature": "clearInterval(id: number): boolean;"
             },
             {
                 "name": "clearTimeout",
                 "type": "function",
-                "doc": ""
+                "doc": "clearTimeout(id: number): boolean;",
+                "signature": "clearTimeout(id: number): boolean;"
             },
             {
                 "name": "setImmediate",
                 "type": "function",
-                "doc": ""
+                "doc": "setImmediate(callback: any, ...args: any[]): number;",
+                "signature": "setImmediate(callback: any, ...args: any[]): number;"
             },
             {
                 "name": "setTimeout",
                 "type": "function",
-                "doc": ""
+                "doc": "setTimeout(callback: Function, delay?: number, ...args: any[]): number;",
+                "signature": "setTimeout(callback: Function, delay?: number, ...args: any[]): number;"
             },
             {
                 "name": "setInterval",
                 "type": "function",
-                "doc": ""
+                "doc": "setInterval(callback: Function, interval?: number, ...args: any[]): number;",
+                "signature": "setInterval(callback: Function, interval?: number, ...args: any[]): number;"
             },
             {
                 "name": "isUiThread",
@@ -6650,6 +6656,12 @@
             ],
             "Color": [
                 {
+                    "name": "toStringReadable",
+                    "type": "function",
+                    "doc": "toStringReadable(): string;",
+                    "signature": "toStringReadable(): string;"
+                },
+                {
                     "name": "argb",
                     "type": "function",
                     "doc": "argb(): number[];",
@@ -11180,6 +11192,24 @@
             ],
             "console": [
                 {
+                    "name": "isShowing",
+                    "type": "function",
+                    "doc": "isShowing(): boolean;",
+                    "signature": "isShowing(): boolean;"
+                },
+                {
+                    "name": "setGravity",
+                    "type": "function",
+                    "doc": "setGravity(gravity: number | string): void;",
+                    "signature": "setGravity(gravity: number | string): void;"
+                },
+                {
+                    "name": "setTouchThrough",
+                    "type": "function",
+                    "doc": "setTouchThrough(touchThrough?: boolean): void;",
+                    "signature": "setTouchThrough(touchThrough?: boolean): void;"
+                },
+                {
                     "name": "assert",
                     "type": "function",
                     "doc": "assert(value: boolean | (() => boolean), message?: string): void;",
@@ -12518,6 +12548,84 @@
             ],
             "device": [
                 {
+                    "name": "brands",
+                    "type": "variable",
+                    "doc": "brands: org.autojs.autojs.util.RomUtils.Brand;",
+                    "signature": "brands: org.autojs.autojs.util.RomUtils.Brand;"
+                },
+                {
+                    "name": "manufacturers",
+                    "type": "variable",
+                    "doc": "manufacturers: org.autojs.autojs.runtime.api.Device.Manufacturers;",
+                    "signature": "manufacturers: org.autojs.autojs.runtime.api.Device.Manufacturers;"
+                },
+                {
+                    "name": "roms",
+                    "type": "variable",
+                    "doc": "roms: org.autojs.autojs.util.RomUtils;",
+                    "signature": "roms: org.autojs.autojs.util.RomUtils;"
+                },
+                {
+                    "name": "ensureReadPhoneStatePermission",
+                    "type": "function",
+                    "doc": "ensureReadPhoneStatePermission(): void;",
+                    "signature": "ensureReadPhoneStatePermission(): void;"
+                },
+                {
+                    "name": "getMarketName",
+                    "type": "function",
+                    "doc": "getMarketName(): string;",
+                    "signature": "getMarketName(): string;"
+                },
+                {
+                    "name": "getOrientation",
+                    "type": "function",
+                    "doc": "getOrientation(): number;",
+                    "signature": "getOrientation(): number;"
+                },
+                {
+                    "name": "getRotation",
+                    "type": "function",
+                    "doc": "getRotation(): number;",
+                    "signature": "getRotation(): number;"
+                },
+                {
+                    "name": "hasReadPhoneStatePermission",
+                    "type": "function",
+                    "doc": "hasReadPhoneStatePermission(): boolean;",
+                    "signature": "hasReadPhoneStatePermission(): boolean;"
+                },
+                {
+                    "name": "isManufacturer",
+                    "type": "function",
+                    "doc": "isManufacturer(manufacturer: string): boolean;",
+                    "signature": "isManufacturer(manufacturer: string): boolean;"
+                },
+                {
+                    "name": "isPowerSourceAC",
+                    "type": "function",
+                    "doc": "isPowerSourceAC(): boolean;",
+                    "signature": "isPowerSourceAC(): boolean;"
+                },
+                {
+                    "name": "isPowerSourceDock",
+                    "type": "function",
+                    "doc": "isPowerSourceDock(): boolean;",
+                    "signature": "isPowerSourceDock(): boolean;"
+                },
+                {
+                    "name": "isPowerSourceUSB",
+                    "type": "function",
+                    "doc": "isPowerSourceUSB(): boolean;",
+                    "signature": "isPowerSourceUSB(): boolean;"
+                },
+                {
+                    "name": "isPowerSourceWireless",
+                    "type": "function",
+                    "doc": "isPowerSourceWireless(): boolean;",
+                    "signature": "isPowerSourceWireless(): boolean;"
+                },
+                {
                     "name": "width",
                     "type": "variable",
                     "doc": "width: number;",
@@ -13248,6 +13356,108 @@
             ],
             "events": [
                 {
+                    "name": "addListener",
+                    "type": "function",
+                    "doc": "addListener(eventName: string, listener: any): this;",
+                    "signature": "addListener(eventName: string, listener: any): this;"
+                },
+                {
+                    "name": "emit",
+                    "type": "function",
+                    "doc": "emit(eventName: string, ...args: any[]): boolean;",
+                    "signature": "emit(eventName: string, ...args: any[]): boolean;"
+                },
+                {
+                    "name": "emitSticky",
+                    "type": "function",
+                    "doc": "emitSticky(eventName: string, ...args: any[]): boolean;",
+                    "signature": "emitSticky(eventName: string, ...args: any[]): boolean;"
+                },
+                {
+                    "name": "eventNames",
+                    "type": "function",
+                    "doc": "eventNames(): string[];",
+                    "signature": "eventNames(): string[];"
+                },
+                {
+                    "name": "getMaxListeners",
+                    "type": "function",
+                    "doc": "getMaxListeners(): number;",
+                    "signature": "getMaxListeners(): number;"
+                },
+                {
+                    "name": "getTimer",
+                    "type": "function",
+                    "doc": "getTimer(): org.autojs.autojs.core.looper.Timer;",
+                    "signature": "getTimer(): org.autojs.autojs.core.looper.Timer;"
+                },
+                {
+                    "name": "listenerCount",
+                    "type": "function",
+                    "doc": "listenerCount(eventName: string): number;",
+                    "signature": "listenerCount(eventName: string): number;"
+                },
+                {
+                    "name": "listeners",
+                    "type": "function",
+                    "doc": "listeners(eventName: string): any[];",
+                    "signature": "listeners(eventName: string): any[];"
+                },
+                {
+                    "name": "on",
+                    "type": "function",
+                    "doc": "on(eventName: string, listener: any): this;",
+                    "signature": "on(eventName: string, listener: any): this;"
+                },
+                {
+                    "name": "once",
+                    "type": "function",
+                    "doc": "once(eventName: string, listener: any): this;",
+                    "signature": "once(eventName: string, listener: any): this;"
+                },
+                {
+                    "name": "prependListener",
+                    "type": "function",
+                    "doc": "prependListener(eventName: string, listener: any): this;",
+                    "signature": "prependListener(eventName: string, listener: any): this;"
+                },
+                {
+                    "name": "prependOnceListener",
+                    "type": "function",
+                    "doc": "prependOnceListener(eventName: string, listener: any): this;",
+                    "signature": "prependOnceListener(eventName: string, listener: any): this;"
+                },
+                {
+                    "name": "removeAllListeners",
+                    "type": "function",
+                    "doc": "removeAllListeners(eventName?: string): this;",
+                    "signature": "removeAllListeners(eventName?: string): this;"
+                },
+                {
+                    "name": "removeListener",
+                    "type": "function",
+                    "doc": "removeListener(eventName: string, listener: any): this;",
+                    "signature": "removeListener(eventName: string, listener: any): this;"
+                },
+                {
+                    "name": "removeNotificationObserver",
+                    "type": "function",
+                    "doc": "removeNotificationObserver(): void;",
+                    "signature": "removeNotificationObserver(): void;"
+                },
+                {
+                    "name": "removeToastObserver",
+                    "type": "function",
+                    "doc": "removeToastObserver(): void;",
+                    "signature": "removeToastObserver(): void;"
+                },
+                {
+                    "name": "setMaxListeners",
+                    "type": "function",
+                    "doc": "setMaxListeners(maxListeners: number): this;",
+                    "signature": "setMaxListeners(maxListeners: number): this;"
+                },
+                {
                     "name": "broadcast",
                     "type": "variable",
                     "doc": "broadcast: org.autojs.autojs.core.broadcast.BroadcastEmitter;",
@@ -13295,22 +13505,10 @@
                     "signature": "observeNotification(): void;"
                 },
                 {
-                    "name": "removeNotificationObserver",
-                    "type": "function",
-                    "doc": "removeNotificationObserver(): void;",
-                    "signature": "removeNotificationObserver(): void;"
-                },
-                {
                     "name": "observeToast",
                     "type": "function",
                     "doc": "observeToast(): void;",
                     "signature": "observeToast(): void;"
-                },
-                {
-                    "name": "removeToastObserver",
-                    "type": "function",
-                    "doc": "removeToastObserver(): void;",
-                    "signature": "removeToastObserver(): void;"
                 },
                 {
                     "name": "onceKeyDown",
@@ -13395,72 +13593,7 @@
                     ]
                 },
                 {
-                    "name": "on",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "once",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "emit",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
                     "name": "getListeners",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "addListener",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "eventNames",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "listenerCount",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "listeners",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "prependListener",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "prependOnceListener",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "removeAllListeners",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "removeListener",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "setMaxListeners",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "getMaxListeners",
                     "type": "function",
                     "doc": ""
                 },
@@ -33696,9 +33829,112 @@
                     "signature": "unregister(emitter: Sensors.EventEmitter | null): void;"
                 },
                 {
+                    "name": "delay",
+                    "type": "variable",
+                    "doc": "delay: org.autojs.autojs.runtime.api.Sensors.Delay;",
+                    "signature": "delay: org.autojs.autojs.runtime.api.Sensors.Delay;"
+                },
+                {
+                    "name": "addListener",
+                    "type": "function",
+                    "doc": "addListener(eventName: string, listener: (...args: unknown[]) => void): this;",
+                    "signature": "addListener(eventName: string, listener: (...args: unknown[]) => void): this;"
+                },
+                {
+                    "name": "emit",
+                    "type": "function",
+                    "doc": "emit(eventName: string, ...args: unknown[]): boolean;",
+                    "signature": "emit(eventName: string, ...args: unknown[]): boolean;"
+                },
+                {
+                    "name": "emitSticky",
+                    "type": "function",
+                    "doc": "emitSticky(eventName: string, ...args: unknown[]): boolean;",
+                    "signature": "emitSticky(eventName: string, ...args: unknown[]): boolean;"
+                },
+                {
+                    "name": "eventNames",
+                    "type": "function",
+                    "doc": "eventNames(): string[];",
+                    "signature": "eventNames(): string[];"
+                },
+                {
+                    "name": "getMaxListeners",
+                    "type": "function",
+                    "doc": "getMaxListeners(): number;",
+                    "signature": "getMaxListeners(): number;"
+                },
+                {
+                    "name": "getSensor",
+                    "type": "function",
+                    "doc": "getSensor(sensorName: string): android.hardware.Sensor | null;",
+                    "signature": "getSensor(sensorName: string): android.hardware.Sensor | null;"
+                },
+                {
+                    "name": "getTimer",
+                    "type": "function",
+                    "doc": "getTimer(): org.autojs.autojs.core.looper.Timer;",
+                    "signature": "getTimer(): org.autojs.autojs.core.looper.Timer;"
+                },
+                {
+                    "name": "listenerCount",
+                    "type": "function",
+                    "doc": "listenerCount(eventName: string): number;",
+                    "signature": "listenerCount(eventName: string): number;"
+                },
+                {
+                    "name": "listeners",
+                    "type": "function",
+                    "doc": "listeners(eventName: string): Function[];",
+                    "signature": "listeners(eventName: string): Function[];"
+                },
+                {
+                    "name": "on",
+                    "type": "function",
+                    "doc": "on(eventName: string, listener: (...args: unknown[]) => void): this;",
+                    "signature": "on(eventName: string, listener: (...args: unknown[]) => void): this;"
+                },
+                {
+                    "name": "once",
+                    "type": "function",
+                    "doc": "once(eventName: string, listener: (...args: unknown[]) => void): this;",
+                    "signature": "once(eventName: string, listener: (...args: unknown[]) => void): this;"
+                },
+                {
+                    "name": "prependListener",
+                    "type": "function",
+                    "doc": "prependListener(eventName: string, listener: (...args: unknown[]) => void): this;",
+                    "signature": "prependListener(eventName: string, listener: (...args: unknown[]) => void): this;"
+                },
+                {
+                    "name": "prependOnceListener",
+                    "type": "function",
+                    "doc": "prependOnceListener(eventName: string, listener: (...args: unknown[]) => void): this;",
+                    "signature": "prependOnceListener(eventName: string, listener: (...args: unknown[]) => void): this;"
+                },
+                {
+                    "name": "removeAllListeners",
+                    "type": "function",
+                    "doc": "removeAllListeners(eventName?: string): this;",
+                    "signature": "removeAllListeners(eventName?: string): this;"
+                },
+                {
+                    "name": "removeListener",
+                    "type": "function",
+                    "doc": "removeListener(eventName: string, listener: Function): this;",
+                    "signature": "removeListener(eventName: string, listener: Function): this;"
+                },
+                {
+                    "name": "setMaxListeners",
+                    "type": "function",
+                    "doc": "setMaxListeners(maxListeners: number): this;",
+                    "signature": "setMaxListeners(maxListeners: number): this;"
+                },
+                {
                     "name": "unregisterAll",
                     "type": "function",
-                    "doc": ""
+                    "doc": "unregisterAll(): void;",
+                    "signature": "unregisterAll(): void;"
                 }
             ],
             "settings": [
@@ -33813,6 +34049,36 @@
                     "type": "variable",
                     "doc": "state: Shizuku.State;",
                     "signature": "state: Shizuku.State;"
+                },
+                {
+                    "name": "hasPermission",
+                    "type": "function",
+                    "doc": "hasPermission(): boolean;",
+                    "signature": "hasPermission(): boolean;"
+                },
+                {
+                    "name": "hasService",
+                    "type": "function",
+                    "doc": "hasService(): boolean;",
+                    "signature": "hasService(): boolean;"
+                },
+                {
+                    "name": "isInstalled",
+                    "type": "function",
+                    "doc": "isInstalled(context: android.content.Context): boolean;",
+                    "signature": "isInstalled(context: android.content.Context): boolean;"
+                },
+                {
+                    "name": "isOperational",
+                    "type": "function",
+                    "doc": "isOperational(): boolean;",
+                    "signature": "isOperational(): boolean;"
+                },
+                {
+                    "name": "isRunning",
+                    "type": "function",
+                    "doc": "isRunning(): boolean;",
+                    "signature": "isRunning(): boolean;"
                 },
                 {
                     "name": "execCommand",
@@ -34670,6 +34936,12 @@
             ],
             "threads": [
                 {
+                    "name": "shutDownAll",
+                    "type": "function",
+                    "doc": "shutDownAll(): void;",
+                    "signature": "shutDownAll(): void;"
+                },
+                {
                     "name": "start",
                     "type": "function",
                     "doc": "start(runnable: java.lang.Runnable | Func): org.autojs.autojs.runtime.api.Threads.Companion.TimerThread | undefined;",
@@ -34710,11 +34982,6 @@
                     "type": "function",
                     "doc": "interrupt(thread: org.autojs.autojs.core.looper.TimerThread | any): void;",
                     "signature": "interrupt(thread: org.autojs.autojs.core.looper.TimerThread | any): void;"
-                },
-                {
-                    "name": "shutDownAll",
-                    "type": "function",
-                    "doc": ""
                 }
             ],
             "timers": [
@@ -34729,6 +34996,42 @@
                     "type": "function",
                     "doc": "keepAlive(timeout?: number | null): number;",
                     "signature": "keepAlive(timeout?: number | null): number;"
+                },
+                {
+                    "name": "clearImmediate",
+                    "type": "function",
+                    "doc": "clearImmediate(id: number): boolean;",
+                    "signature": "clearImmediate(id: number): boolean;"
+                },
+                {
+                    "name": "clearInterval",
+                    "type": "function",
+                    "doc": "clearInterval(id: number): boolean;",
+                    "signature": "clearInterval(id: number): boolean;"
+                },
+                {
+                    "name": "clearTimeout",
+                    "type": "function",
+                    "doc": "clearTimeout(id: number): boolean;",
+                    "signature": "clearTimeout(id: number): boolean;"
+                },
+                {
+                    "name": "setImmediate",
+                    "type": "function",
+                    "doc": "setImmediate(callback: any, ...args: any[]): number;",
+                    "signature": "setImmediate(callback: any, ...args: any[]): number;"
+                },
+                {
+                    "name": "setInterval",
+                    "type": "function",
+                    "doc": "setInterval(callback: Function, interval?: number, ...args: any[]): number;",
+                    "signature": "setInterval(callback: Function, interval?: number, ...args: any[]): number;"
+                },
+                {
+                    "name": "setTimeout",
+                    "type": "function",
+                    "doc": "setTimeout(callback: Function, delay?: number, ...args: any[]): number;",
+                    "signature": "setTimeout(callback: Function, delay?: number, ...args: any[]): number;"
                 },
                 {
                     "name": "addDailyTask",
@@ -34789,36 +35092,6 @@
                     "type": "function",
                     "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
                     "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
-                },
-                {
-                    "name": "setTimeout",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "clearTimeout",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "setInterval",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "clearInterval",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "setImmediate",
-                    "type": "function",
-                    "doc": ""
-                },
-                {
-                    "name": "clearImmediate",
-                    "type": "function",
-                    "doc": ""
                 }
             ],
             "toast": [
@@ -35042,6 +35315,12 @@
                 }
             ],
             "ui": [
+                {
+                    "name": "view",
+                    "type": "variable",
+                    "doc": "view: android.view.View;",
+                    "signature": "view: android.view.View;"
+                },
                 {
                     "name": "layoutInflater",
                     "type": "variable",
