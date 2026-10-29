@@ -1394,6 +1394,61 @@ declare namespace AutoJs6 {
         post(callback: () => void, delay?: number): void;
         theme(): ComposeThemeSnapshot;
         theme(theme: ComposeTheme | null | undefined): ComposeThemeSnapshot;
+        AlertDialog(props: Internal.ComposeProps<"AlertDialog">): Internal.ComposeNodeHandle<"AlertDialog"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); open: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        Box(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"Box"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"Box"> & Internal.ComposeNodeShortcuts & { alignment: "bottomCenter" | "bottomEnd" | "bottomStart" | "center" | "centerEnd" | "centerStart" | "topCenter" | "topEnd" | "topStart"; contentAlignment: "bottomCenter" | "bottomEnd" | "bottomStart" | "center" | "centerEnd" | "centerStart" | "topCenter" | "topEnd" | "topStart"; };
+        Button(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"Button"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"Button"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); enabled: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        Card(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"Card"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"Card"> & Internal.ComposeNodeShortcuts & { get color(): number | null | undefined; set color(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); get elevation(): number | undefined; set elevation(value: Internal.ComposeDpInput); get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        Checkbox(...args: [] | [props?: Internal.ComposeProps<"Checkbox"> | null | undefined]): Internal.ComposeNodeHandle<"Checkbox"> & Internal.ComposeNodeShortcuts & { checked: boolean; enabled: boolean; };
+        CircularProgressIndicator(...args: [] | [props?: Internal.ComposeProps<"CircularProgressIndicator"> | null | undefined]): Internal.ComposeNodeHandle<"CircularProgressIndicator"> & Internal.ComposeNodeShortcuts & { get color(): number | null | undefined; set color(value: Internal.ComposeColorInput | null); progress: null | number; get trackColor(): number | null | undefined; set trackColor(value: Internal.ComposeColorInput | null); };
+        Column(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"Column"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"Column"> & Internal.ComposeNodeShortcuts & { alignment: "center" | "end" | "start"; horizontalAlignment: "center" | "end" | "start"; arrangement: "bottom" | "center" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "top"; verticalArrangement: "bottom" | "center" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "top"; get spacing(): number; set spacing(value: Internal.ComposeDpInput); };
+        ElevatedButton(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"ElevatedButton"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"ElevatedButton"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); enabled: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        FilledTonalButton(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"FilledTonalButton"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"FilledTonalButton"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); enabled: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        HorizontalDivider(...args: [] | [props?: Internal.ComposeProps<"HorizontalDivider"> | null | undefined]): Internal.ComposeNodeHandle<"HorizontalDivider"> & Internal.ComposeNodeShortcuts & { get color(): number | null | undefined; set color(value: Internal.ComposeColorInput | null); get thickness(): number; set thickness(value: Internal.ComposeDpInput); };
+        Icon(props: Internal.ComposeProps<"Icon">): Internal.ComposeNodeHandle<"Icon"> & Internal.ComposeNodeShortcuts & { name: Internal.ComposeIconNameInput; get tint(): number | null | undefined; set tint(value: Internal.ComposeColorInput | null); };
+        IconButton(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"IconButton"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"IconButton"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); enabled: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        Image(props: Internal.ComposeProps<"Image">): Internal.ComposeNodeHandle<"Image"> & Internal.ComposeNodeShortcuts & { contentScale: "crop" | "fillBounds" | "fillHeight" | "fillWidth" | "fit" | "inside" | "none"; get src(): Internal.ComposeBitmap | null; set src(value: Internal.ComposeImageInput); };
+        LazyColumn(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"LazyColumn"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"LazyColumn"> & Internal.ComposeNodeShortcuts & { alignment: "center" | "end" | "start"; horizontalAlignment: "center" | "end" | "start"; arrangement: "bottom" | "center" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "top"; verticalArrangement: "bottom" | "center" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "top"; get contentPadding(): number | Array<number>; set contentPadding(value: Internal.ComposePaddingInput); reverseLayout: boolean; get spacing(): number; set spacing(value: Internal.ComposeDpInput); userScrollEnabled: boolean; };
+        LazyRow(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"LazyRow"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"LazyRow"> & Internal.ComposeNodeShortcuts & { alignment: "bottom" | "center" | "top"; verticalAlignment: "bottom" | "center" | "top"; arrangement: "center" | "end" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "start"; horizontalArrangement: "center" | "end" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "start"; get contentPadding(): number | Array<number>; set contentPadding(value: Internal.ComposePaddingInput); reverseLayout: boolean; get spacing(): number; set spacing(value: Internal.ComposeDpInput); userScrollEnabled: boolean; };
+        LinearProgressIndicator(...args: [] | [props?: Internal.ComposeProps<"LinearProgressIndicator"> | null | undefined]): Internal.ComposeNodeHandle<"LinearProgressIndicator"> & Internal.ComposeNodeShortcuts & { get color(): number | null | undefined; set color(value: Internal.ComposeColorInput | null); progress: null | number; get trackColor(): number | null | undefined; set trackColor(value: Internal.ComposeColorInput | null); };
+        OutlinedButton(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"OutlinedButton"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"OutlinedButton"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); enabled: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        OutlinedTextField(...args: [] | [props?: Internal.ComposeProps<"OutlinedTextField"> | null | undefined]): Internal.ComposeNodeHandle<"OutlinedTextField"> & Internal.ComposeNodeShortcuts & { enabled: boolean; imeAction: "default" | "done" | "go" | "next" | "none" | "previous" | "search" | "send"; isError: boolean; keyboardType: "ascii" | "decimal" | "email" | "number" | "numberPassword" | "password" | "phone" | "text" | "uri"; maxLines: number; minLines: number; readOnly: boolean; singleLine: boolean; get style(): "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleValue | undefined; set style(value: "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleInput); text: string; value: string; visualTransformation: "none" | "password"; } & { edit(edit: Internal.ComposeEdit): Internal.ComposeNodeHandle<"OutlinedTextField"> & Internal.ComposeNodeShortcuts & { enabled: boolean; imeAction: "default" | "done" | "go" | "next" | "none" | "previous" | "search" | "send"; isError: boolean; keyboardType: "ascii" | "decimal" | "email" | "number" | "numberPassword" | "password" | "phone" | "text" | "uri"; maxLines: number; minLines: number; readOnly: boolean; singleLine: boolean; get style(): "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleValue | undefined; set style(value: "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleInput); text: string; value: string; visualTransformation: "none" | "password"; } & any; };
+        RadioButton(...args: [] | [props?: Internal.ComposeProps<"RadioButton"> | null | undefined]): Internal.ComposeNodeHandle<"RadioButton"> & Internal.ComposeNodeShortcuts & { checked: boolean; selected: boolean; enabled: boolean; };
+        Row(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"Row"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"Row"> & Internal.ComposeNodeShortcuts & { alignment: "bottom" | "center" | "top"; verticalAlignment: "bottom" | "center" | "top"; arrangement: "center" | "end" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "start"; horizontalArrangement: "center" | "end" | "spaceAround" | "spaceBetween" | "spaceEvenly" | "start"; get spacing(): number; set spacing(value: Internal.ComposeDpInput); };
+        Scaffold(...args: [child?: Internal.ComposeSlotInput] | [props?: Internal.ComposeProps<"Scaffold"> | null | undefined, child?: Internal.ComposeSlotInput]): Internal.ComposeNodeHandle<"Scaffold"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); };
+        Slider(...args: [] | [props?: Internal.ComposeProps<"Slider"> | null | undefined]): Internal.ComposeNodeHandle<"Slider"> & Internal.ComposeNodeShortcuts & { enabled: boolean; get range(): [number, number]; set range(value: readonly [number, number]); steps: number; value: number; };
+        Spacer(...args: [] | [props?: Internal.ComposeProps<"Spacer"> | null | undefined]): Internal.ComposeNodeHandle<"Spacer"> & Internal.ComposeNodeShortcuts;
+        Surface(...args: [child?: Internal.ComposeSlotInput] | [props?: Internal.ComposeProps<"Surface"> | null | undefined, child?: Internal.ComposeSlotInput]): Internal.ComposeNodeHandle<"Surface"> & Internal.ComposeNodeShortcuts & { get color(): number | null | undefined; set color(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); get shape(): Internal.ComposeShapeValue; set shape(value: Internal.ComposeShapeInput); get tonalElevation(): number; set tonalElevation(value: Internal.ComposeDpInput); };
+        Switch(...args: [] | [props?: Internal.ComposeProps<"Switch"> | null | undefined]): Internal.ComposeNodeHandle<"Switch"> & Internal.ComposeNodeShortcuts & { checked: boolean; enabled: boolean; };
+        Text(...args: [] | [props?: Internal.ComposeProps<"Text"> | null | undefined]): Internal.ComposeNodeHandle<"Text"> & Internal.ComposeNodeShortcuts & { get color(): number | null | undefined; set color(value: Internal.ComposeColorInput | null); get fontSize(): number | undefined; set fontSize(value: Internal.ComposeSpInput); get fontWeight(): number | undefined; set fontWeight(value: number); maxLines: number; overflow: "clip" | "ellipsis" | "visible"; selectable: boolean; get style(): "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleValue | undefined; set style(value: "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleInput); text: string; textAlign: "center" | "end" | "justify" | "left" | "right" | "start"; };
+        TextButton(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"TextButton"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"TextButton"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); enabled: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        TextField(...args: [] | [props?: Internal.ComposeProps<"TextField"> | null | undefined]): Internal.ComposeNodeHandle<"TextField"> & Internal.ComposeNodeShortcuts & { enabled: boolean; imeAction: "default" | "done" | "go" | "next" | "none" | "previous" | "search" | "send"; isError: boolean; keyboardType: "ascii" | "decimal" | "email" | "number" | "numberPassword" | "password" | "phone" | "text" | "uri"; maxLines: number; minLines: number; readOnly: boolean; singleLine: boolean; get style(): "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleValue | undefined; set style(value: "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleInput); text: string; value: string; visualTransformation: "none" | "password"; } & { edit(edit: Internal.ComposeEdit): Internal.ComposeNodeHandle<"TextField"> & Internal.ComposeNodeShortcuts & { enabled: boolean; imeAction: "default" | "done" | "go" | "next" | "none" | "previous" | "search" | "send"; isError: boolean; keyboardType: "ascii" | "decimal" | "email" | "number" | "numberPassword" | "password" | "phone" | "text" | "uri"; maxLines: number; minLines: number; readOnly: boolean; singleLine: boolean; get style(): "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleValue | undefined; set style(value: "bodyLarge" | "bodyMedium" | "bodySmall" | "displayLarge" | "displayMedium" | "displaySmall" | "headlineLarge" | "headlineMedium" | "headlineSmall" | "labelLarge" | "labelMedium" | "labelSmall" | "titleLarge" | "titleMedium" | "titleSmall" | Internal.ComposeTextStyleInput); text: string; value: string; visualTransformation: "none" | "password"; } & any; };
+        TopAppBar(...args: [] | [props?: Internal.ComposeProps<"TopAppBar"> | null | undefined]): Internal.ComposeNodeHandle<"TopAppBar"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); };
+        AndroidView(props: Internal.ComposeProps<"AndroidView">): Internal.ComposeNodeHandle<"AndroidView"> & Internal.ComposeNodeShortcuts & { get view(): Internal.ComposeNativeView; set view(value: Internal.ComposeViewInput); };
+        AssistChip(props: Internal.ComposeProps<"AssistChip">): Internal.ComposeNodeHandle<"AssistChip"> & Internal.ComposeNodeShortcuts & { enabled: boolean; };
+        Badge(...args: [child?: Internal.ComposeSlotInput] | [props?: Internal.ComposeProps<"Badge"> | null | undefined, child?: Internal.ComposeSlotInput]): Internal.ComposeNodeHandle<"Badge"> & Internal.ComposeNodeShortcuts & { text: string; visible: boolean; };
+        DatePicker(...args: [] | [props?: Internal.ComposeProps<"DatePicker"> | null | undefined]): Internal.ComposeNodeHandle<"DatePicker"> & Internal.ComposeNodeShortcuts & { displayMode: "input" | "picker"; selectedDateMillis: null | number; showModeToggle: boolean; yearEnd: number; yearStart: number; };
+        DropdownMenu(props: Internal.ComposeProps<"DropdownMenu">, ...children: Internal.ComposeChild[]): Internal.ComposeNodeHandle<"DropdownMenu"> & Internal.ComposeNodeShortcuts & { open: boolean; };
+        DropdownMenuItem(props: Internal.ComposeProps<"DropdownMenuItem">): Internal.ComposeNodeHandle<"DropdownMenuItem"> & Internal.ComposeNodeShortcuts & { enabled: boolean; };
+        FilterChip(props: Internal.ComposeProps<"FilterChip">): Internal.ComposeNodeHandle<"FilterChip"> & Internal.ComposeNodeShortcuts & { enabled: boolean; selected: boolean; };
+        FloatingActionButton(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"FloatingActionButton"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"FloatingActionButton"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        HorizontalPager(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"HorizontalPager"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"HorizontalPager"> & Internal.ComposeNodeShortcuts & { page: number; get pageSpacing(): number; set pageSpacing(value: Internal.ComposeDpInput); userScrollEnabled: boolean; };
+        InputChip(props: Internal.ComposeProps<"InputChip">): Internal.ComposeNodeHandle<"InputChip"> & Internal.ComposeNodeShortcuts & { enabled: boolean; selected: boolean; };
+        LazyVerticalGrid(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"LazyVerticalGrid"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"LazyVerticalGrid"> & Internal.ComposeNodeShortcuts & { columns: number; get contentPadding(): number | Array<number>; set contentPadding(value: Internal.ComposePaddingInput); reverseLayout: boolean; get spacing(): number; set spacing(value: Internal.ComposeDpInput); userScrollEnabled: boolean; };
+        ModalBottomSheet(...args: [child?: Internal.ComposeSlotInput] | [props?: Internal.ComposeProps<"ModalBottomSheet"> | null | undefined, child?: Internal.ComposeSlotInput]): Internal.ComposeNodeHandle<"ModalBottomSheet"> & Internal.ComposeNodeShortcuts & { cancelable: boolean; get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); open: boolean; get shape(): Internal.ComposeShapeValue | undefined; set shape(value: Internal.ComposeShapeInput); };
+        NavigationBar(...args: Internal.ComposeItemChild<"NavigationBarItem">[] | [props?: Internal.ComposeProps<"NavigationBar"> | null | undefined, ...children: Internal.ComposeItemChild<"NavigationBarItem">[]]): Internal.ComposeNodeHandle<"NavigationBar"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); };
+        NavigationBarItem(props: Internal.ComposeProps<"NavigationBarItem">): Internal.ComposeNodeHandle<"NavigationBarItem"> & Internal.ComposeNodeShortcuts & { alwaysShowLabel: boolean; enabled: boolean; selected: boolean; };
+        NavigationDrawer(props: Internal.ComposeProps<"NavigationDrawer">, child?: Internal.ComposeSlotInput): Internal.ComposeNodeHandle<"NavigationDrawer"> & Internal.ComposeNodeShortcuts & { gesturesEnabled: boolean; open: boolean; };
+        NavigationDrawerItem(props: Internal.ComposeProps<"NavigationDrawerItem">): Internal.ComposeNodeHandle<"NavigationDrawerItem"> & Internal.ComposeNodeShortcuts & { enabled: boolean; selected: boolean; };
+        NavigationRail(...args: Internal.ComposeItemChild<"NavigationRailItem">[] | [props?: Internal.ComposeProps<"NavigationRail"> | null | undefined, ...children: Internal.ComposeItemChild<"NavigationRailItem">[]]): Internal.ComposeNodeHandle<"NavigationRail"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); };
+        NavigationRailItem(props: Internal.ComposeProps<"NavigationRailItem">): Internal.ComposeNodeHandle<"NavigationRailItem"> & Internal.ComposeNodeShortcuts & { alwaysShowLabel: boolean; enabled: boolean; selected: boolean; };
+        PullToRefresh(...args: [child?: Internal.ComposeSlotInput] | [props?: Internal.ComposeProps<"PullToRefresh"> | null | undefined, child?: Internal.ComposeSlotInput]): Internal.ComposeNodeHandle<"PullToRefresh"> & Internal.ComposeNodeShortcuts & { enabled: boolean; refreshing: boolean; };
+        SearchBar(...args: Internal.ComposeChild[] | [props?: Internal.ComposeProps<"SearchBar"> | null | undefined, ...children: Internal.ComposeChild[]]): Internal.ComposeNodeHandle<"SearchBar"> & Internal.ComposeNodeShortcuts & { enabled: boolean; expanded: boolean; query: string; };
+        SegmentedButton(...args: Internal.ComposeItemChild<"SegmentedButtonItem">[] | [props?: Internal.ComposeProps<"SegmentedButton"> | null | undefined, ...children: Internal.ComposeItemChild<"SegmentedButtonItem">[]]): Internal.ComposeNodeHandle<"SegmentedButton"> & Internal.ComposeNodeShortcuts & { mode: "multi" | "single"; };
+        SegmentedButtonItem(props: Internal.ComposeProps<"SegmentedButtonItem">): Internal.ComposeNodeHandle<"SegmentedButtonItem"> & Internal.ComposeNodeShortcuts & { enabled: boolean; selected: boolean; };
+        Tab(...args: [] | [props?: Internal.ComposeProps<"Tab"> | null | undefined]): Internal.ComposeNodeHandle<"Tab"> & Internal.ComposeNodeShortcuts & { enabled: boolean; };
+        TabRow(...args: Internal.ComposeItemChild<"Tab">[] | [props?: Internal.ComposeProps<"TabRow"> | null | undefined, ...children: Internal.ComposeItemChild<"Tab">[]]): Internal.ComposeNodeHandle<"TabRow"> & Internal.ComposeNodeShortcuts & { get containerColor(): number | null | undefined; set containerColor(value: Internal.ComposeColorInput | null); get contentColor(): number | null | undefined; set contentColor(value: Internal.ComposeColorInput | null); scrollable: boolean; selectedIndex: number; };
+        TimePicker(...args: [] | [props?: Internal.ComposeProps<"TimePicker"> | null | undefined]): Internal.ComposeNodeHandle<"TimePicker"> & Internal.ComposeNodeShortcuts & { displayMode: "input" | "picker"; hour: number; is24Hour: boolean; minute: number; };
+        Tooltip(props: Internal.ComposeProps<"Tooltip">, child?: Internal.ComposeSlotInput): Internal.ComposeNodeHandle<"Tooltip"> & Internal.ComposeNodeShortcuts & { open: boolean; };
     }
 
     interface Compose_ComposeError {
@@ -5136,10 +5191,10 @@ declare namespace AutoJs6 {
         recognizeText(region: OmniRegion): string[];
         recognizeText(img: ImageWrapper | string, options?: DetectOptionsAny): string[];
         recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
-        detect(options?: DetectOptionsAny): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, options?: DetectOptionsAny): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(options?: DetectOptionsAny): Ocr.Result[];
+        detect(region: OmniRegion): Ocr.Result[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsAny): Ocr.Result[];
+        detect(img: ImageWrapper | string, region: OmniRegion): Ocr.Result[];
         mode: ModeName;
         tap(mode: Mode): void;
         summary(): string;
@@ -5151,10 +5206,10 @@ declare namespace AutoJs6 {
         recognizeText(region: OmniRegion): string[];
         recognizeText(img: ImageWrapper | string, options?: DetectOptionsMLKit): string[];
         recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
-        detect(options?: DetectOptionsMLKit): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, options?: DetectOptionsMLKit): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(options?: DetectOptionsMLKit): Ocr.Result[];
+        detect(region: OmniRegion): Ocr.Result[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsMLKit): Ocr.Result[];
+        detect(img: ImageWrapper | string, region: OmniRegion): Ocr.Result[];
     }
 
     interface Ocr_paddle {
@@ -5162,10 +5217,10 @@ declare namespace AutoJs6 {
         recognizeText(region: OmniRegion): string[];
         recognizeText(img: ImageWrapper | string, options?: DetectOptionsPaddle): string[];
         recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
-        detect(options?: DetectOptionsPaddle): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, options?: DetectOptionsPaddle): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(options?: DetectOptionsPaddle): Ocr.Result[];
+        detect(region: OmniRegion): Ocr.Result[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsPaddle): Ocr.Result[];
+        detect(img: ImageWrapper | string, region: OmniRegion): Ocr.Result[];
     }
 
     interface Ocr_rapid {
@@ -5173,10 +5228,10 @@ declare namespace AutoJs6 {
         recognizeText(region: OmniRegion): string[];
         recognizeText(img: ImageWrapper | string, options?: DetectOptionsRapid): string[];
         recognizeText(img: ImageWrapper | string, region: OmniRegion): string[];
-        detect(options?: DetectOptionsRapid): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, options?: DetectOptionsRapid): org.autojs.autojs.runtime.api.OcrResult[];
-        detect(img: ImageWrapper | string, region: OmniRegion): org.autojs.autojs.runtime.api.OcrResult[];
+        detect(options?: DetectOptionsRapid): Ocr.Result[];
+        detect(region: OmniRegion): Ocr.Result[];
+        detect(img: ImageWrapper | string, options?: DetectOptionsRapid): Ocr.Result[];
+        detect(img: ImageWrapper | string, region: OmniRegion): Ocr.Result[];
     }
 
     interface Opencc {
@@ -6018,6 +6073,40 @@ declare namespace AutoJs6 {
     }
 
     interface Util_versionCodes {
+        UPSIDE_DOWN_CAKE: Util.VersionCodes.Info;
+        TIRAMISU: Util.VersionCodes.Info;
+        S_V2: Util.VersionCodes.Info;
+        S: Util.VersionCodes.Info;
+        R: Util.VersionCodes.Info;
+        Q: Util.VersionCodes.Info;
+        P: Util.VersionCodes.Info;
+        O_MR1: Util.VersionCodes.Info;
+        O: Util.VersionCodes.Info;
+        N_MR1: Util.VersionCodes.Info;
+        N: Util.VersionCodes.Info;
+        M: Util.VersionCodes.Info;
+        LOLLIPOP_MR1: Util.VersionCodes.Info;
+        LOLLIPOP: Util.VersionCodes.Info;
+        KITKAT_WATCH: Util.VersionCodes.Info;
+        KITKAT: Util.VersionCodes.Info;
+        JELLY_BEAN_MR2: Util.VersionCodes.Info;
+        JELLY_BEAN_MR1: Util.VersionCodes.Info;
+        JELLY_BEAN: Util.VersionCodes.Info;
+        ICE_CREAM_SANDWICH_MR1: Util.VersionCodes.Info;
+        ICE_CREAM_SANDWICH: Util.VersionCodes.Info;
+        HONEYCOMB_MR2: Util.VersionCodes.Info;
+        HONEYCOMB_MR1: Util.VersionCodes.Info;
+        HONEYCOMB: Util.VersionCodes.Info;
+        GINGERBREAD_MR1: Util.VersionCodes.Info;
+        GINGERBREAD: Util.VersionCodes.Info;
+        FROYO: Util.VersionCodes.Info;
+        ECLAIR_MR1: Util.VersionCodes.Info;
+        ECLAIR_0_1: Util.VersionCodes.Info;
+        ECLAIR: Util.VersionCodes.Info;
+        DONUT: Util.VersionCodes.Info;
+        CUPCAKE: Util.VersionCodes.Info;
+        BASE_1_1: Util.VersionCodes.Info;
+        BASE: Util.VersionCodes.Info;
         toString(isInDetail?: VersionCodes.IsInDetail): string;
         summary(isInDetail?: VersionCodes.IsInDetail): string;
         searchAll(value: string | number | Date | null): VersionCodes.Info[];
