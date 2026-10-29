@@ -5631,6 +5631,7 @@ declare namespace AutoJs6 {
         synthesizeAsync(text: string, path: string, options?: Speech.SynthesisOptions | null): Promise<Speech.SynthesisResult>;
         speak(text: string, options?: Speech.SpeakOptions | null): Promise<Tts.Result>;
         models: Speech.Models;
+        speaker: Speech.Speaker;
         SpeechError: Speech.ErrorConstructor;
     }
 
@@ -5643,6 +5644,17 @@ declare namespace AutoJs6 {
         setDefault(kind: Kind, id: string): ModelInfo;
         getDefault(kind: Kind): ModelInfo | null;
         refreshCatalog(): { version: number; updated: boolean; };
+    }
+
+    interface Speech_speaker {
+        enroll(name: string, files: string | string[], options?: EnrollOptions | null): Enrollment;
+        enrollAsync(name: string, files: string | string[], options?: EnrollOptions | null): Promise<Enrollment>;
+        verify(name: string, file: string, options?: VerifyOptions | null): Verification;
+        verifyAsync(name: string, file: string, options?: VerifyOptions | null): Promise<Verification>;
+        identify(file: string, options?: IdentifyOptions | null): Identification;
+        identifyAsync(file: string, options?: IdentifyOptions | null): Promise<Identification>;
+        list(): SpeakerInfo[];
+        remove(name: string): boolean;
     }
 
     interface Speech_SpeechError {

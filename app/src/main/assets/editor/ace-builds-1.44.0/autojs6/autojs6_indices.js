@@ -34197,6 +34197,12 @@
                     "signature": "models: Speech.Models;"
                 },
                 {
+                    "name": "speaker",
+                    "type": "variable",
+                    "doc": "speaker: Speech.Speaker;",
+                    "signature": "speaker: Speech.Speaker;"
+                },
+                {
                     "name": "SpeechError",
                     "type": "variable",
                     "doc": "SpeechError: Speech.ErrorConstructor;",
@@ -34251,6 +34257,56 @@
                     "type": "function",
                     "doc": "refreshCatalog(): { version: number; updated: boolean; };",
                     "signature": "refreshCatalog(): { version: number; updated: boolean; };"
+                }
+            ],
+            "speech.speaker": [
+                {
+                    "name": "enroll",
+                    "type": "function",
+                    "doc": "enroll(name: string, files: string | string[], options?: EnrollOptions | null): Enrollment;",
+                    "signature": "enroll(name: string, files: string | string[], options?: EnrollOptions | null): Enrollment;"
+                },
+                {
+                    "name": "enrollAsync",
+                    "type": "function",
+                    "doc": "enrollAsync(name: string, files: string | string[], options?: EnrollOptions | null): Promise<Enrollment>;",
+                    "signature": "enrollAsync(name: string, files: string | string[], options?: EnrollOptions | null): Promise<Enrollment>;"
+                },
+                {
+                    "name": "verify",
+                    "type": "function",
+                    "doc": "verify(name: string, file: string, options?: VerifyOptions | null): Verification;",
+                    "signature": "verify(name: string, file: string, options?: VerifyOptions | null): Verification;"
+                },
+                {
+                    "name": "verifyAsync",
+                    "type": "function",
+                    "doc": "verifyAsync(name: string, file: string, options?: VerifyOptions | null): Promise<Verification>;",
+                    "signature": "verifyAsync(name: string, file: string, options?: VerifyOptions | null): Promise<Verification>;"
+                },
+                {
+                    "name": "identify",
+                    "type": "function",
+                    "doc": "identify(file: string, options?: IdentifyOptions | null): Identification;",
+                    "signature": "identify(file: string, options?: IdentifyOptions | null): Identification;"
+                },
+                {
+                    "name": "identifyAsync",
+                    "type": "function",
+                    "doc": "identifyAsync(file: string, options?: IdentifyOptions | null): Promise<Identification>;",
+                    "signature": "identifyAsync(file: string, options?: IdentifyOptions | null): Promise<Identification>;"
+                },
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(): SpeakerInfo[];",
+                    "signature": "list(): SpeakerInfo[];"
+                },
+                {
+                    "name": "remove",
+                    "type": "function",
+                    "doc": "remove(name: string): boolean;",
+                    "signature": "remove(name: string): boolean;"
                 }
             ],
             "speech.SpeechError": [
