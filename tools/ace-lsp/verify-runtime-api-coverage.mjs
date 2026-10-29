@@ -372,7 +372,11 @@ for (const [file, header, opencc, images] of [
     for(const name of ['exec','execRoot','execShizuku','execFile','checkAccess','getAccess','requestShizukuPermission','setDefaultTimeout','spawn','open'])assert(shellMethods.includes(name),`${file}: shell ${name}`);
     const processMembers=query(current,shellHeader+"const child=shell.spawn('cat');child.",'',documentUri);
     for(const name of ['ready','exited','stdout','stderr','stdin','pid','exitCode','readLine','writeLine','closeInput','waitFor','kill','close'])assert(processMembers.includes(name),`${file}: host shell process ${name}`);
-    assert(!processMembers.includes('getInputStream'),`${file}: Java stream leaked`);
+    // Rhino's getInputStream / getErrorStream / getOutputStream (api-coverage Q31) name the runtime streams, never Java streams.
+    if(processMembers.includes('getInputStream')){
+      const streamMembers=query(current,shellHeader+"const child=shell.spawn('cat');child.getInputStream().",'',documentUri);
+      assert(streamMembers.includes('setEncoding')&&!streamMembers.includes('available'),`${file}: Java stream leaked`);
+    }
     const shellOptions=query(current,shellHeader+"shell.spawn('cat',{",'',documentUri);
     for(const name of ['root','shizuku','adb','pty','cwd','env','timeoutMs','signal','drainIntervalMs'])assert(shellOptions.includes(name),`${file}: shell option ${name}`);
     const shellResult=query(current,shellHeader+"async function f(){const result=await shell.exec('echo');result.",'',documentUri);
