@@ -162,7 +162,7 @@
     "origin": "AutoJs6-Plugin-Python-Runtime docs/python/types",
     "stubPath": "/autojs6-stubs",
     "fileCount": 17,
-    "contentSha256": "3ddde6a3828ef34adaf67672e819e0904acc6cafe2ca0d1114935152c24428f3"
+    "contentSha256": "325b97749de6feb7240009bfbae96ae99c153488dc9e9b934404acda88b10c3e"
   },
   "polyfills": {
     "buffer": "6.0.3",
@@ -189,8 +189,8 @@
     "nullish-coalescing"
   ],
   "workerFile": "autojs6-python-worker.js",
-  "workerBytes": 5014702,
-  "workerSha256": "c6b0e239aeffb66772dcd99ffe9bb8c5e5f2fc400a4d03c492ae6c969d253034",
+  "workerBytes": 5015413,
+  "workerSha256": "15a355ee617da88ccb0d7b45a74d697c65d74d20e9e37617d24b7250c7369790",
   "thirdPartyLicenses": {
     "file": "THIRD_PARTY_LICENSES.txt",
     "bytes": 31705,

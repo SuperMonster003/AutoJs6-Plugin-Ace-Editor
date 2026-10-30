@@ -212,7 +212,7 @@ const stubOpen = send({
             uri: stubUri,
             languageId: "python",
             version: 1,
-            text: ["import autojs6", "from autojs6 import dialogs", "autojs6.", "dialogs.", "autojs6.files.list()"].join("\n"),
+            text: ["import autojs6", "from autojs6 import dialogs", "autojs6.", "dialogs.", "autojs6.files.list()", "dialogs.MAX_ITEMS"].join("\n"),
         },
     },
 });
@@ -230,6 +230,7 @@ function labels(result) {
 const packageLabels = labels(stubRequest("textDocument/completion", { line: 2, character: 8 }));
 const dialogLabels = labels(stubRequest("textDocument/completion", { line: 3, character: 8 }));
 const listHover = JSON.stringify(stubRequest("textDocument/hover", { line: 4, character: 15 }) || {});
+const constantHover = JSON.stringify(stubRequest("textDocument/hover", { line: 5, character: 12 }) || {});
 const stubDiagnostics = stubOpen.messages.find(
     (message) => message.method === "textDocument/publishDiagnostics",
 )?.params?.diagnostics || [];
@@ -278,6 +279,8 @@ for (const name of ["confirm", "select", "MAX_ITEMS"]) {
     assert(dialogLabels.includes(name), `autojs6.dialogs completion is missing ${name}`);
 }
 assert(/list\[str\]/.test(listHover), `autojs6.files.list hover lacks list[str]: ${listHover}`);
+// The stubs carry the plugin's constant values (api-coverage Q142 (b)): hover shows dialogs.MAX_ITEMS = 64.
+assert(/MAX_ITEMS\b[^"]*\b64\b/.test(constantHover), `autojs6.dialogs.MAX_ITEMS hover lacks its value 64: ${constantHover}`);
 assert(
     !stubDiagnostics.some((diagnostic) => /autojs6/.test(String(diagnostic.message || ""))),
     `autojs6 stubs produced diagnostics: ${JSON.stringify(stubDiagnostics)}`,

@@ -309,7 +309,8 @@ sources (names, Python signatures):
 
 - Python: `python-worker/autojs6-stubs/autojs6/*.pyi` is a copy of the Python Runtime's `docs/python/types/autojs6`;
   the Worker mounts it as Pyright's `stubPath` (`/autojs6-stubs`, missing-module-source warnings off) and the
-  manifest records `autojs6Stubs` (file count and content digest, checked by `verify-python-worker.mjs`).
+  manifest records `autojs6Stubs` (file count and content digest, checked by `verify-python-worker.mjs`). The 54
+  constants carry the plugin's values (`MAX_ITEMS: Final = 64`, hover `(constant) MAX_ITEMS: Literal[64]`; Q142 (b)).
 - Lua: `app/src/main/assets/luals/autojs6/autojs.lua` is a copy of the Lua Runtime's `docs/types/autojs.lua`
   (`---@meta autojs`). `AceLuaLanguageServerRuntime` extracts it outside the pinned runtime and names the directory in
   `AUTOJS6_LUALS_LIBRARY`; the provider lists `${env:AUTOJS6_LUALS_LIBRARY}` in `Lua.workspace.library`.
