@@ -12,7 +12,7 @@
     "url": "https://docs.oracle.com/en/java/javase/17/docs/api/",
     "androidUrl": "https://developer.android.com/reference/packages",
     "license": "API names/signatures only; OpenJDK GPL-2.0-with-classpath-exception and Android SDK terms",
-    "scope": "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs and the AutoJs6 JVM Entry API 4; no variable type inference"
+    "scope": "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs and the AutoJs6 JVM Entry API 4; variable types come from the declarations of the document (autojs6_local_symbols.js)"
   },
   "globals": [
     {

@@ -2865,6 +2865,42 @@ function verifyM2StaticIndices(paths) {
     expectNames("ace/mode/java", `${javaBase}\nDEFAULT`, "DEFAULT", ["DEFAULT_COUNT"], "Java field extraction");
     expectNames("ace/mode/java", `${javaBase}\nlocal`, "local", ["localValue"], "Java variable extraction");
     expectNames("ace/mode/java", `${javaBase}\ncou`, "cou", ["count"], "Java parameter extraction");
+    const javaTypedBase = [
+        "import org.autojs.plugin.jvmsource.api.*;",
+        "import java.io.File;",
+        "import java.util.List;",
+        "public class Main implements AutoJsJvmEntry {",
+        "    private JvmConsoleApi output;",
+        "    public Object run(final JvmScriptContext context) {",
+        "        JvmAppApi app = context.app();",
+        "        var file = new File(\".\");",
+        "        List<String> names = new ArrayList<>();",
+        "        Object raw = context;",
+        "        JvmScriptContext casted = (JvmScriptContext) raw;",
+        "        String label = \"sample\";",
+        "        for (JvmCancellation token : tokens) {",
+        "        }",
+        "        return null;",
+        "    }",
+        "}",
+    ].join("\n");
+    for (const [query, prefix, expected, message] of [
+        ["context.", "", ["toast", "console", "cancellation", "args"], "Java parameter type"],
+        ["context.con", "con", ["console"], "Java parameter type with a member prefix"],
+        ["app.", "", ["launch"], "Java local variable type"],
+        ["output.", "", ["log", "error"], "Java field type"],
+        ["file.", "", ["exists", "listFiles"], "Java var initialized with new"],
+        ["names.", "", ["add", "size"], "Java List variable"],
+        ["casted.", "", ["toast"], "Java declared type of a cast"],
+        ["token.", "", ["isCancellationRequested"], "Java for-each variable type"],
+    ]) {
+        expectNames("ace/mode/java", `${javaTypedBase}\n${query}`, prefix, expected, message);
+    }
+    assert(
+        !names(complete("ace/mode/java", `${javaTypedBase}\nlabel.`)).has("valueOf") &&
+            !names(complete("ace/mode/java", `${javaTypedBase}\nraw.`)).has("toast"),
+        "Java variable types offered static String members or members of an undeclared type",
+    );
     assert(
         !names(complete("ace/mode/java", `${javaBase}\nlistO`, "listO")).has("listOf"),
         "Java received a Kotlin standard-library symbol",

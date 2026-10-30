@@ -224,6 +224,39 @@
         return "";
     }
 
+    // Java has no type inference of its own here: the declared type of a parameter, field or local variable (or the
+    // class of a `new` / cast initializer) aliases the variable to that type's index module. Index modules that list
+    // only static members are no instance types; List / Map variables complete the members of ArrayList / HashMap.
+    var JAVA_TYPE_TARGETS = {
+        "List": "java.util.ArrayList",
+        "Map": "java.util.HashMap",
+        "Uri": "android.net.Uri#instance"
+    };
+    var JAVA_STATIC_ONLY_TYPES = {
+        "Arrays": true, "Boolean": true, "Character": true, "Collections": true, "Color": true, "Double": true,
+        "Files": true, "Integer": true, "Log": true, "Long": true, "Math": true, "Objects": true, "Optional": true,
+        "Paths": true, "Set": true, "String": true, "System": true, "TextUtils": true, "Thread": true
+    };
+
+    function javaTypeTarget(typeText) {
+        typeText = String(typeText || "")
+            .replace(/@[A-Za-z_$][A-Za-z0-9_$.]*(?:\s*\([^()]*\))?/g, " ")
+            .replace(/\bfinal\b/g, " ")
+            .replace(/<[^;=(){}]*>/g, "")
+            .replace(/\s+/g, "");
+        var simpleName = typeText.split(".").pop();
+        if (!/^(?:[A-Za-z_$][A-Za-z0-9_$]*\.)*[A-Z][A-Za-z0-9_$]*$/.test(typeText) || JAVA_STATIC_ONLY_TYPES[simpleName]) {
+            return "";
+        }
+        return JAVA_TYPE_TARGETS[typeText] || JAVA_TYPE_TARGETS[simpleName] || typeText;
+    }
+
+    function javaInitializerTarget(expression) {
+        var match = /^\s*(?:new\s+([A-Za-z_$][A-Za-z0-9_$.]*)\s*(?:<[^;=(){}]*>)?\s*\(|\(\s*([A-Za-z_$][A-Za-z0-9_$.]*(?:\s*<[^;=(){}]*>)?)\s*\)\s*[A-Za-z_$(])/
+            .exec(String(expression || ""));
+        return match ? javaTypeTarget(match[1] || match[2]) : "";
+    }
+
     function splitTopLevel(value, separator) {
         value = String(value || "");
         separator = separator || ",";
@@ -299,6 +332,11 @@
                     var typedParameter = kotlinParameterType(parameter);
                     if (typedParameter && typedParameter.name === name && typedParameter.target) {
                         addAlias(result, name, typedParameter.target);
+                    }
+                } else if (language === "java") {
+                    var declarator = /[A-Za-z_$][A-Za-z0-9_$]*\s*(\[\s*\])?\s*$/.exec(parameter.trim());
+                    if (declarator && !declarator[1]) {
+                        addAlias(result, name, javaTypeTarget(parameter.trim().substring(0, declarator.index)));
                     }
                 }
             }
@@ -571,13 +609,16 @@
                     addParameters(result, match[2], "java");
                 }
             }
-            var variablePattern = /(?:^|[;{}])\s*(?:(?:public|protected|private|static|final|transient|volatile)\s+)*[A-Za-z_$][A-Za-z0-9_$.]*(?:\s*<[^;=(){}]+>)?(?:\s*\[\s*\])?\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*(?==|;|,|:)/g;
+            var variablePattern = /(?:^|[;{}])\s*(?:(?:public|protected|private|static|final|transient|volatile)\s+)*([A-Za-z_$][A-Za-z0-9_$.]*(?:\s*<[^;=(){}]+>)?(?:\s*\[\s*\])?)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*(?==|;|,|:)/g;
             while ((match = variablePattern.exec(line)) !== null) {
-                addSymbol(result, symbol(match[1], "variable"));
+                addSymbol(result, symbol(match[2], "variable"));
+                var initializer = /^\s*=\s*([^;]*)/.exec(line.substring(variablePattern.lastIndex));
+                addAlias(result, match[2], javaTypeTarget(match[1]) || javaInitializerTarget(initializer && initializer[1]));
             }
-            var loopPattern = /\b(?:for|catch)\s*\(\s*(?:final\s+)?[A-Za-z_$][A-Za-z0-9_$.<>?,\s\[\]]*\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*(?=[:;)])/g;
+            var loopPattern = /\b(?:for|catch)\s*\(\s*(?:final\s+)?([A-Za-z_$][A-Za-z0-9_$.<>?,\s\[\]]*)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*(?=[:;)])/g;
             while ((match = loopPattern.exec(line)) !== null) {
-                addSymbol(result, symbol(match[1], "variable"));
+                addSymbol(result, symbol(match[2], "variable"));
+                addAlias(result, match[2], javaTypeTarget(match[1]));
             }
         });
         return result;

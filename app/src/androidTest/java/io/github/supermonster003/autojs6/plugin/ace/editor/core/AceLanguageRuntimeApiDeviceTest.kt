@@ -5,6 +5,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -26,6 +27,23 @@ class AceLanguageRuntimeApiDeviceTest {
         "from autojs6 import dialogs\ndialogs." to "confirm",
     )
 
+    /** The stubs carry the plugin's constant values, so the hover of a constant shows it (api-coverage Q142 (b)). */
+    @Test
+    fun pythonHoverShowsTheConstantValue() {
+        val text = "from autojs6 import dialogs\ndialogs.MAX_ITEMS"
+        var hover = ""
+        AceDeviceTestHarness.open(text, "/data/local/tmp/autojs6-q142.py", PREFERENCES).use { editor ->
+            editor.setText(text)
+            repeat(SEMANTIC_ATTEMPTS) {
+                editor.evaluate("window.AutoJsAce.showLspTooltip(1, 12); true")
+                if (editor.waitFor(SEMANTIC_ATTEMPT_MS) { editor.evaluateString(HOVER_TEXT).also { hover = it }.contains("64") }) {
+                    return@use
+                }
+            }
+        }
+        assertTrue("dialogs.MAX_ITEMS hover lacks its value 64: $hover", Regex("MAX_ITEMS\\b.*\\b64\\b").containsMatchIn(hover))
+    }
+
     /** LuaLS scans the document's directory as its workspace; like AceLuaSemanticSmokeTest the document sits in the app's cache. */
     @Test
     fun luaCompletesTheAutoJsModule() = check(
@@ -44,6 +62,16 @@ class AceLanguageRuntimeApiDeviceTest {
         "import org.autojs.plugin.jvmsource.api.*;\nclass Main {\n    JvmScr" to "JvmScriptContext",
         "import org.autojs.plugin.jvmsource.api.*;\nclass Main implements AutoJsJv" to "AutoJsJvmEntry",
         "import org.autojs.plugin.jvmsource.api.*;\nclass Main {\n    void run() { JvmScriptContext." to "toast",
+    )
+
+    /** The declared type of a parameter or local variable gives its members (api-coverage Q141 (b)). */
+    @Test
+    fun javaCompletesTheEntryApiOfTypedVariables() = check(
+        "/data/local/tmp/AutoJs6Q141.java",
+        semantic = false,
+        "$JAVA_ENTRY\n        context." to "toast",
+        "$JAVA_ENTRY\n        context.can" to "cancellation",
+        "$JAVA_ENTRY\n        JvmConsoleApi output = context.console();\n        output." to "log",
     )
 
     @Test
@@ -132,6 +160,11 @@ class AceLanguageRuntimeApiDeviceTest {
     private companion object {
         const val SEMANTIC_ATTEMPTS = 12
         const val SEMANTIC_ATTEMPT_MS = 2_500L
+        const val HOVER_TEXT = "(document.querySelector('.autojs6_hover_tooltip_content') || {}).textContent || ''"
+
+        const val JAVA_ENTRY = "import org.autojs.plugin.jvmsource.api.*;\n" +
+            "public class Main implements AutoJsJvmEntry {\n" +
+            "    public Object run(final JvmScriptContext context) {"
 
         val PREFERENCES: Map<String, Any?> = mapOf(
             AceEditorLspPreferences.KEY_ACE_LSP_ENABLED to true,

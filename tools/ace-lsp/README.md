@@ -316,7 +316,11 @@ sources (names, Python signatures):
   `AUTOJS6_LUALS_LIBRARY`; the provider lists `${env:AUTOJS6_LUALS_LIBRARY}` in `Lua.workspace.library`.
 - Java: `app/src/main/assets/java/autojs6/jvm-entry-api.jar` holds the seven Entry API 4 classes of the Java Runtime's
   frozen `protocol/jvm-source-api.aar` (`build-jvm-entry-api-jar.mjs`, `--check` without the sibling checkout skips);
-  ECJ compiles against it after the Android stubs. Completion comes from the Java index (`jvmEntryApi`).
+  ECJ compiles against it after the Android stubs. Completion comes from the Java index (`jvmEntryApi`);
+  `autojs6_local_symbols.js` aliases parameters, fields and local variables to their declared type (or to the class
+  of a `new` / cast initializer), so `context.` completes the Entry API after `JvmScriptContext context` (api-coverage
+  Q141 (b)). Index types with static members only (`String`, `Set`, ...) are not aliased; `List` / `Map` variables use
+  the `ArrayList` / `HashMap` members.
 - Kotlin: there is no Kotlin classpath; the Kotlin index carries the Entry API 2 subset (no `args` / `clipboard`).
 
 ## M7 Kotlin P2+ and compiler rejection gate
