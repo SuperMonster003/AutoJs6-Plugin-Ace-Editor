@@ -81,9 +81,9 @@ declare namespace AutoJs6 {
         parseUri(uri: string | android.net.Uri | java.net.URI): android.net.Uri | null;
         getUriForFile(path: string): android.net.Uri | null;
         getAppByAlias(alias: App.Alias | string): org.autojs.autojs.util.App | null;
-        getInstalledApps(options?: App.PackageManagerOptions): App.AppInfo[];
-        getInstalledPackages(options?: App.PackageManagerOptions): App.InstalledPackageInfo[];
-        getApkInfo(path: string, options?: App.PackageManagerOptions): android.content.pm.PackageInfo | null;
+        getInstalledApps(options?: App.PackageManagerOptions | null): App.AppInfo[];
+        getInstalledPackages(options?: App.PackageManagerOptions | null): App.InstalledPackageInfo[];
+        getApkInfo(path: string, options?: App.PackageManagerOptions | null): android.content.pm.PackageInfo | null;
         launch(app: App.Preset | App.Alias | App.PackageName): boolean;
         launchDual(app: App.Preset | App.Alias | App.PackageName): boolean;
         intentToShell(i: Intent.Common): string;
@@ -157,7 +157,7 @@ declare namespace AutoJs6 {
         isHigherThan(otherVersion: string | number | Version): boolean;
         isLowerThan(otherVersion: string | number | Version): boolean;
         isEqual(otherVersion: string | number | Version): boolean;
-        isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;
+        isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean | null): boolean;
     }
 
     interface Arrayx {
@@ -311,7 +311,7 @@ declare namespace AutoJs6 {
         isHigherThan(otherVersion: string | number | Version): boolean;
         isLowerThan(otherVersion: string | number | Version): boolean;
         isEqual(otherVersion: string | number | Version): boolean;
-        isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;
+        isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean | null): boolean;
     }
 
     interface Automator {
@@ -1334,7 +1334,7 @@ declare namespace AutoJs6 {
         toHslaString(color: OmniColor, options?: boolean | StringOptions): string;
         isSimilar(colorA: OmniColor, colorB: OmniColor, threshold?: number, algorithm?: DetectionAlgorithm): boolean;
         isSimilar(colorA: OmniColor, colorB: OmniColor, options: { threshold?: number; similarity?: number; algorithm?: DetectionAlgorithm; }): boolean;
-        isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean): boolean;
+        isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean | null): boolean;
         distance(colorA: OmniColor, colorB: OmniColor, algorithm?: DetectionAlgorithm): number;
         distance(colorA: OmniColor, colorB: OmniColor, options: { algorithm?: DetectionAlgorithm; }): number;
         invert(color: OmniColor): ColorInt;
@@ -1664,7 +1664,7 @@ declare namespace AutoJs6 {
     }
 
     interface Continuation {
-        create(scope?: org.mozilla.javascript.Scriptable): Continuation.Creator;
+        create(scope?: org.mozilla.javascript.Scriptable | null): Continuation.Creator;
         await(promise: Promise<unknown> | any): any;
         delay(millis: number): void;
         enabled: boolean;
@@ -1837,7 +1837,7 @@ declare namespace AutoJs6 {
         myEngine(): org.autojs.autojs.engine.RhinoJavaScriptEngine;
         all(): org.autojs.autojs.engine.ScriptEngine<any>[];
         stopAll(): number;
-        stopAllAndToast(): void;
+        stopAllAndToast(): number;
         execScript(name: string, script: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
         execScriptFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
         execAutoFile(path: string, config?: org.autojs.autojs.execution.ExecutionConfig): org.autojs.autojs.execution.ScriptExecution;
@@ -1942,7 +1942,7 @@ declare namespace AutoJs6 {
         isFile(path: string): boolean;
         listDir(path: string, filter?: org.autojs.autojs.tool.Func1<string, java.lang.Boolean> | ((name: string) => boolean)): string[];
         move(pathFrom: string, pathTo: string): boolean;
-        open(path: string, mode?: 'r', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;
+        open(path: string, mode?: 'r' | null, encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;
         open(path: string, mode: 'w' | 'a', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PWritableTextFile;
         path(relativePath?: string | null): string | null;
         read(path: string, encoding?: StandardCharsets): string;
@@ -5425,12 +5425,12 @@ declare namespace AutoJs6 {
 
     interface Power_manager {
         isIgnoringBatteryOptimizations(packageName?: string | null): boolean;
-        requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;
+        requestIgnoreBatteryOptimizations(forceRequest?: boolean | null, packageName?: string | null): void;
     }
 
     interface PowerManager {
         isIgnoringBatteryOptimizations(packageName?: string | null): boolean;
-        requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;
+        requestIgnoreBatteryOptimizations(forceRequest?: boolean | null, packageName?: string | null): void;
     }
 
     interface Qrcode {
@@ -5775,9 +5775,9 @@ declare namespace AutoJs6 {
     }
 
     interface Sysprops {
-        get(propName: string, defaultValue?: string): string | null;
+        get(propName: string, defaultValue?: string | null): string | null;
         getInt(propName: string, defaultValue?: number): number | null;
-        getBoolean(propName: string, defaultValue?: boolean): boolean | null;
+        getBoolean(propName: string, defaultValue?: boolean | null): boolean | null;
         getAll(): SysProps.Properties;
         getAll(filter: SysProps.Filter | SysProps.FilterOptions): SysProps.Properties;
         getAll(keyFilter: SysProps.Filter, valueFilter: SysProps.Filter): SysProps.Properties;
@@ -5797,13 +5797,13 @@ declare namespace AutoJs6 {
         getTimedTask(id: number): TimedTask$ | null;
         getIntentTask(id: number): IntentTask$ | null;
         removeTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): T;
-        removeTimedTask(id: number): TimedTask$ | null;
+        removeTimedTask(id: number, options?: null): TimedTask$ | null;
         removeTimedTask<TResult = TimedTask$ | null>( id: number, options: Tasks.Fulfillment<TimedTask$ | null, TResult>, ): Tasks.FulfillmentResult<TimedTask$ | null, TResult>;
-        removeIntentTask(id: number): IntentTask$ | null;
+        removeIntentTask(id: number, options?: null): IntentTask$ | null;
         removeIntentTask<TResult = IntentTask$ | null>( id: number, options: Tasks.Fulfillment<IntentTask$ | null, TResult>, ): Tasks.FulfillmentResult<IntentTask$ | null, TResult>;
         updateTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;
-        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
-        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
+        queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];
+        queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];
         timeFlagToDays(flag: number): number[];
         daysToTimeFlag(days: number[]): number;
     }
@@ -5993,7 +5993,7 @@ declare namespace AutoJs6 {
         extend(subClass: Function | object, parentClass: Function | object | null): void;
         format(...args: any[]): string;
         log(...args: any[]): void;
-        deprecate(fn: Func, msg: string): Func;
+        deprecate(...args: any[]): void;
         debuglog(set): any;
         getClass(o: java.lang.Class<any> | object): java.lang.Class<any>;
         class(o: java.lang.Class<any> | object): java.lang.Class<any>;

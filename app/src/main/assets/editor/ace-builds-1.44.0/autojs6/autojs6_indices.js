@@ -4338,20 +4338,20 @@
                 {
                     "name": "getInstalledApps",
                     "type": "function",
-                    "doc": "getInstalledApps(options?: App.PackageManagerOptions): App.AppInfo[];",
-                    "signature": "getInstalledApps(options?: App.PackageManagerOptions): App.AppInfo[];"
+                    "doc": "getInstalledApps(options?: App.PackageManagerOptions | null): App.AppInfo[];",
+                    "signature": "getInstalledApps(options?: App.PackageManagerOptions | null): App.AppInfo[];"
                 },
                 {
                     "name": "getInstalledPackages",
                     "type": "function",
-                    "doc": "getInstalledPackages(options?: App.PackageManagerOptions): App.InstalledPackageInfo[];",
-                    "signature": "getInstalledPackages(options?: App.PackageManagerOptions): App.InstalledPackageInfo[];"
+                    "doc": "getInstalledPackages(options?: App.PackageManagerOptions | null): App.InstalledPackageInfo[];",
+                    "signature": "getInstalledPackages(options?: App.PackageManagerOptions | null): App.InstalledPackageInfo[];"
                 },
                 {
                     "name": "getApkInfo",
                     "type": "function",
-                    "doc": "getApkInfo(path: string, options?: App.PackageManagerOptions): android.content.pm.PackageInfo | null;",
-                    "signature": "getApkInfo(path: string, options?: App.PackageManagerOptions): android.content.pm.PackageInfo | null;"
+                    "doc": "getApkInfo(path: string, options?: App.PackageManagerOptions | null): android.content.pm.PackageInfo | null;",
+                    "signature": "getApkInfo(path: string, options?: App.PackageManagerOptions | null): android.content.pm.PackageInfo | null;"
                 },
                 {
                     "name": "launch",
@@ -4762,8 +4762,8 @@
                 {
                     "name": "isAtLeast",
                     "type": "function",
-                    "doc": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;",
-                    "signature": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;"
+                    "doc": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean | null): boolean;",
+                    "signature": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean | null): boolean;"
                 }
             ],
             "Arrayx": [
@@ -5536,8 +5536,8 @@
                 {
                     "name": "isAtLeast",
                     "type": "function",
-                    "doc": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;",
-                    "signature": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean): boolean;"
+                    "doc": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean | null): boolean;",
+                    "signature": "isAtLeast(otherVersion: string | number | Version, ignoreSuffix?: boolean | null): boolean;"
                 }
             ],
             "automator": [
@@ -10862,8 +10862,8 @@
                 {
                     "name": "isEqual",
                     "type": "function",
-                    "doc": "isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean): boolean;",
-                    "signature": "isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean): boolean;"
+                    "doc": "isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean | null): boolean;",
+                    "signature": "isEqual(colorA: OmniColor, colorB: OmniColor, alphaMatters?: boolean | null): boolean;"
                 },
                 {
                     "name": "distance",
@@ -12694,8 +12694,8 @@
                 {
                     "name": "create",
                     "type": "function",
-                    "doc": "create(scope?: org.mozilla.javascript.Scriptable): Continuation.Creator;",
-                    "signature": "create(scope?: org.mozilla.javascript.Scriptable): Continuation.Creator;"
+                    "doc": "create(scope?: org.mozilla.javascript.Scriptable | null): Continuation.Creator;",
+                    "signature": "create(scope?: org.mozilla.javascript.Scriptable | null): Continuation.Creator;"
                 },
                 {
                     "name": "await",
@@ -13518,8 +13518,8 @@
                 {
                     "name": "stopAllAndToast",
                     "type": "function",
-                    "doc": "stopAllAndToast(): void;",
-                    "signature": "stopAllAndToast(): void;"
+                    "doc": "stopAllAndToast(): number;",
+                    "signature": "stopAllAndToast(): number;"
                 },
                 {
                     "name": "execScript",
@@ -14063,10 +14063,10 @@
                 {
                     "name": "open",
                     "type": "function",
-                    "doc": "open(path: string, mode?: 'r', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;",
-                    "signature": "open(path: string, mode?: 'r', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;",
+                    "doc": "open(path: string, mode?: 'r' | null, encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;",
+                    "signature": "open(path: string, mode?: 'r' | null, encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;",
                     "signatures": [
-                        "open(path: string, mode?: 'r', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;",
+                        "open(path: string, mode?: 'r' | null, encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PReadableTextFile;",
                         "open(path: string, mode: 'w' | 'a', encoding?: StandardCharsets, bufferSize?: number): org.autojs.autojs.pio.PWritableTextFile;"
                     ]
                 },
@@ -33516,8 +33516,8 @@
                 {
                     "name": "requestIgnoreBatteryOptimizations",
                     "type": "function",
-                    "doc": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;",
-                    "signature": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;"
+                    "doc": "requestIgnoreBatteryOptimizations(forceRequest?: boolean | null, packageName?: string | null): void;",
+                    "signature": "requestIgnoreBatteryOptimizations(forceRequest?: boolean | null, packageName?: string | null): void;"
                 }
             ],
             "powerManager": [
@@ -33530,8 +33530,8 @@
                 {
                     "name": "requestIgnoreBatteryOptimizations",
                     "type": "function",
-                    "doc": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;",
-                    "signature": "requestIgnoreBatteryOptimizations(forceRequest?: boolean, packageName?: string | null): void;"
+                    "doc": "requestIgnoreBatteryOptimizations(forceRequest?: boolean | null, packageName?: string | null): void;",
+                    "signature": "requestIgnoreBatteryOptimizations(forceRequest?: boolean | null, packageName?: string | null): void;"
                 }
             ],
             "qrcode": [
@@ -34989,8 +34989,8 @@
                 {
                     "name": "get",
                     "type": "function",
-                    "doc": "get(propName: string, defaultValue?: string): string | null;",
-                    "signature": "get(propName: string, defaultValue?: string): string | null;"
+                    "doc": "get(propName: string, defaultValue?: string | null): string | null;",
+                    "signature": "get(propName: string, defaultValue?: string | null): string | null;"
                 },
                 {
                     "name": "getInt",
@@ -35001,8 +35001,8 @@
                 {
                     "name": "getBoolean",
                     "type": "function",
-                    "doc": "getBoolean(propName: string, defaultValue?: boolean): boolean | null;",
-                    "signature": "getBoolean(propName: string, defaultValue?: boolean): boolean | null;"
+                    "doc": "getBoolean(propName: string, defaultValue?: boolean | null): boolean | null;",
+                    "signature": "getBoolean(propName: string, defaultValue?: boolean | null): boolean | null;"
                 },
                 {
                     "name": "getAll",
@@ -35098,20 +35098,20 @@
                 {
                     "name": "removeTimedTask",
                     "type": "function",
-                    "doc": "removeTimedTask(id: number): TimedTask$ | null;",
-                    "signature": "removeTimedTask(id: number): TimedTask$ | null;",
+                    "doc": "removeTimedTask(id: number, options?: null): TimedTask$ | null;",
+                    "signature": "removeTimedTask(id: number, options?: null): TimedTask$ | null;",
                     "signatures": [
-                        "removeTimedTask(id: number): TimedTask$ | null;",
+                        "removeTimedTask(id: number, options?: null): TimedTask$ | null;",
                         "removeTimedTask<TResult = TimedTask$ | null>( id: number, options: Tasks.Fulfillment<TimedTask$ | null, TResult>, ): Tasks.FulfillmentResult<TimedTask$ | null, TResult>;"
                     ]
                 },
                 {
                     "name": "removeIntentTask",
                     "type": "function",
-                    "doc": "removeIntentTask(id: number): IntentTask$ | null;",
-                    "signature": "removeIntentTask(id: number): IntentTask$ | null;",
+                    "doc": "removeIntentTask(id: number, options?: null): IntentTask$ | null;",
+                    "signature": "removeIntentTask(id: number, options?: null): IntentTask$ | null;",
                     "signatures": [
-                        "removeIntentTask(id: number): IntentTask$ | null;",
+                        "removeIntentTask(id: number, options?: null): IntentTask$ | null;",
                         "removeIntentTask<TResult = IntentTask$ | null>( id: number, options: Tasks.Fulfillment<IntentTask$ | null, TResult>, ): Tasks.FulfillmentResult<IntentTask$ | null, TResult>;"
                     ]
                 },
@@ -35124,14 +35124,14 @@
                 {
                     "name": "queryTimedTasks",
                     "type": "function",
-                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
-                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
+                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];",
+                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];"
                 },
                 {
                     "name": "queryIntentTasks",
                     "type": "function",
-                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
-                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
+                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];",
+                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];"
                 },
                 {
                     "name": "timeFlagToDays",
@@ -36112,8 +36112,8 @@
                 {
                     "name": "deprecate",
                     "type": "function",
-                    "doc": "deprecate(fn: Func, msg: string): Func;",
-                    "signature": "deprecate(fn: Func, msg: string): Func;"
+                    "doc": "deprecate(...args: any[]): void;",
+                    "signature": "deprecate(...args: any[]): void;"
                 },
                 {
                     "name": "debuglog",
