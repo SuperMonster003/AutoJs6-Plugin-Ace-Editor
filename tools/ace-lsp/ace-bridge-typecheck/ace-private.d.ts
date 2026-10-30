@@ -15,6 +15,7 @@ interface Window {
     AutoJsAceCompleter: any;
     AutoJsAceIndices: any;
     AutoJsAceLanguageRouting: any;
+    AutoJsAceLocalSymbols: any;
     AutoJsAceLspClient: any;
     AutoJsAceMobile: any;
     AutoJsAceModePatches: any;
