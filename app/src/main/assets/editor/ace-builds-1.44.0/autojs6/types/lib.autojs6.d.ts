@@ -211,8 +211,8 @@ declare namespace AutoJs6 {
         wait: Flow.WaitFunction<UiObject>;
         findWindows(filter?: Automator.WindowFilterLike | null): android.view.accessibility.AccessibilityWindowInfo[];
         findWindowRoots(filter?: Automator.WindowFilterLike | null): UiObject[];
-        explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;
-        explain(selector: Automator.Target, compassOrResultType: Detect.Compass | Pickup.ResultType, resultType?: Pickup.ResultType): Automator.ExplainResult;
+        explain(selector: NonNullable<Automator.Target>, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;
+        explain(selector: NonNullable<Automator.Target>, compassOrResultType: Detect.Compass | Pickup.ResultType, resultType?: Pickup.ResultType): Automator.ExplainResult;
         dump(options?: Automator.DumpFormat | Automator.DumpOptions): string;
         stats: Automator.StatsSnapshot;
         launchSettings(): void;
@@ -5785,15 +5785,15 @@ declare namespace AutoJs6 {
 
     interface Tasks {
         addTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): Tasks.NullishToNull<T>;
-        addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;
-        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;
-        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;
+        addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;
+        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): Tasks.AddTaskResult<IntentTask$, TResult>;
+        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): Tasks.AddTaskResult<IntentTask$, TResult>;
         getTimedTask(id: number): TimedTask$ | null;
         getIntentTask(id: number): IntentTask$ | null;
         removeTask<T extends TimedTask$ | IntentTask$ | null | undefined>(task: T): T;
@@ -5864,16 +5864,16 @@ declare namespace AutoJs6 {
         setImmediate(callback: any, ...args: any[]): number;
         setInterval(callback: Function, interval?: number, ...args: any[]): number;
         setTimeout(callback: Function, delay?: number, ...args: any[]): number;
-        addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
-        addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
-        addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
-        addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;
+        addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;
+        addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;
+        addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;
         getTimedTask(id: number): TimedTask$ | null;
         getIntentTask(id: number): IntentTask$ | null;
         removeIntentTask(id: number): boolean | null;
         removeTimedTask(id: number): boolean | null;
-        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
-        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
+        queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];
+        queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];
     }
 
     interface Toast {
@@ -6166,31 +6166,31 @@ declare namespace AutoJs6 {
     }
 
     interface Work_manager {
-        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
-        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
-        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
-        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
-        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;
+        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;
+        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;
+        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;
+        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;
         getTimedTask(id: number): TimedTask$ | null;
         getIntentTask(id: number): IntentTask$ | null;
         removeTimedTask(id: number): boolean | null;
         removeIntentTask(id: number): boolean | null;
-        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
-        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
+        queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];
+        queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];
     }
 
     interface WorkManager {
-        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
-        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
-        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
-        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
-        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+        addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;
+        addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;
+        addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;
+        addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;
+        addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;
         getTimedTask(id: number): TimedTask$ | null;
         getIntentTask(id: number): IntentTask$ | null;
         removeTimedTask(id: number): boolean | null;
         removeIntentTask(id: number): boolean | null;
-        queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
-        queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
+        queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];
+        queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];
     }
 
     interface Yolo {
@@ -6935,16 +6935,16 @@ declare function accessibilityShortcut(): boolean;
 declare function accessibilityAllApps(): boolean;
 declare function dismissNotificationShade(): boolean;
 declare function setIntervalExt(timeoutCallback: Function, interval?: number, timeout?: number | (() => any), resultCallback?: (result: any) => void): number;
-declare function addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;
-declare function addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;
-declare function addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;
-declare function addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;
+declare function addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;
+declare function addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;
+declare function addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;
+declare function addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;
 declare function getTimedTask(id: number): TimedTask$ | null;
 declare function getIntentTask(id: number): IntentTask$ | null;
 declare function removeIntentTask(id: number): boolean | null;
 declare function removeTimedTask(id: number): boolean | null;
-declare function queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];
-declare function queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];
+declare function queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];
+declare function queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];
 declare const HOME: number;
 declare const menu: number;
 declare const MENU: number;

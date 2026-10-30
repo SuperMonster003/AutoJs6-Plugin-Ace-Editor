@@ -3851,26 +3851,26 @@
             {
                 "name": "addDailyTask",
                 "type": "function",
-                "doc": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;",
-                "signature": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;"
+                "doc": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;",
+                "signature": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;"
             },
             {
                 "name": "addWeeklyTask",
                 "type": "function",
-                "doc": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;",
-                "signature": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;"
+                "doc": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;",
+                "signature": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;"
             },
             {
                 "name": "addDisposableTask",
                 "type": "function",
-                "doc": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;",
-                "signature": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;"
+                "doc": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;",
+                "signature": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;"
             },
             {
                 "name": "addIntentTask",
                 "type": "function",
-                "doc": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
-                "signature": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                "doc": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;",
+                "signature": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;"
             },
             {
                 "name": "getTimedTask",
@@ -3899,14 +3899,14 @@
             {
                 "name": "queryIntentTasks",
                 "type": "function",
-                "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
-                "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
+                "doc": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];",
+                "signature": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];"
             },
             {
                 "name": "queryTimedTasks",
                 "type": "function",
-                "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
-                "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
+                "doc": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];",
+                "signature": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];"
             },
             {
                 "name": "home",
@@ -5050,11 +5050,11 @@
                 {
                     "name": "explain",
                     "type": "function",
-                    "doc": "explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
-                    "signature": "explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
+                    "doc": "explain(selector: NonNullable<Automator.Target>, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
+                    "signature": "explain(selector: NonNullable<Automator.Target>, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
                     "signatures": [
-                        "explain(selector: Automator.Target, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
-                        "explain(selector: Automator.Target, compassOrResultType: Detect.Compass | Pickup.ResultType, resultType?: Pickup.ResultType): Automator.ExplainResult;"
+                        "explain(selector: NonNullable<Automator.Target>, root?: UiObject | null, compass?: Detect.Compass | null, resultType?: Pickup.ResultType): Automator.ExplainResult;",
+                        "explain(selector: NonNullable<Automator.Target>, compassOrResultType: Detect.Compass | Pickup.ResultType, resultType?: Pickup.ResultType): Automator.ExplainResult;"
                     ]
                 },
                 {
@@ -35026,56 +35026,56 @@
                 {
                     "name": "addTimedTask",
                     "type": "function",
-                    "doc": "addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addTimedTask<TResult = TimedTask$>(options: Tasks.TimedTask.General<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addDailyTask",
                     "type": "function",
-                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addWeeklyTask",
                     "type": "function",
-                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addMonthlyTask",
                     "type": "function",
-                    "doc": "addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addMonthlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Monthly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addYearlyTask",
                     "type": "function",
-                    "doc": "addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addYearlyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Yearly<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addDisposableTask",
                     "type": "function",
-                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addCountdownTask",
                     "type": "function",
-                    "doc": "addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;",
-                    "signature": "addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult>): Tasks.AddTaskResult<TimedTask$, TResult>;"
+                    "doc": "addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;",
+                    "signature": "addCountdownTask<TResult = TimedTask$>(options: Tasks.TimedTask.Countdown<TResult> | null): Tasks.AddTaskResult<TimedTask$, TResult>;"
                 },
                 {
                     "name": "addIntentTask",
                     "type": "function",
-                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;",
-                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;"
+                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): Tasks.AddTaskResult<IntentTask$, TResult>;",
+                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): Tasks.AddTaskResult<IntentTask$, TResult>;"
                 },
                 {
                     "name": "addBroadcastIntentTask",
                     "type": "function",
-                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;",
-                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): Tasks.AddTaskResult<IntentTask$, TResult>;"
+                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): Tasks.AddTaskResult<IntentTask$, TResult>;",
+                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): Tasks.AddTaskResult<IntentTask$, TResult>;"
                 },
                 {
                     "name": "getTimedTask",
@@ -35402,26 +35402,26 @@
                 {
                     "name": "addDailyTask",
                     "type": "function",
-                    "doc": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;",
-                    "signature": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;"
+                    "doc": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;",
+                    "signature": "addDailyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addWeeklyTask",
                     "type": "function",
-                    "doc": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;",
-                    "signature": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;"
+                    "doc": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;",
+                    "signature": "addWeeklyTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addDisposableTask",
                     "type": "function",
-                    "doc": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;",
-                    "signature": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;"
+                    "doc": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;",
+                    "signature": "addDisposableTask<TResult = org.autojs.autojs.timing.TimedTask>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addIntentTask",
                     "type": "function",
-                    "doc": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
-                    "signature": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                    "doc": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;",
+                    "signature": "addIntentTask<TResult = org.autojs.autojs.timing.IntentTask>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;"
                 },
                 {
                     "name": "getTimedTask",
@@ -35450,14 +35450,14 @@
                 {
                     "name": "queryIntentTasks",
                     "type": "function",
-                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
-                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
+                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];",
+                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];"
                 },
                 {
                     "name": "queryTimedTasks",
                     "type": "function",
-                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
-                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
+                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];",
+                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];"
                 }
             ],
             "toast": [
@@ -36903,32 +36903,32 @@
                 {
                     "name": "addDailyTask",
                     "type": "function",
-                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;",
-                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;"
+                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;",
+                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addWeeklyTask",
                     "type": "function",
-                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;",
-                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;"
+                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;",
+                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addDisposableTask",
                     "type": "function",
-                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;",
-                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;"
+                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;",
+                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addIntentTask",
                     "type": "function",
-                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
-                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;",
+                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;"
                 },
                 {
                     "name": "addBroadcastIntentTask",
                     "type": "function",
-                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
-                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;",
+                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;"
                 },
                 {
                     "name": "getTimedTask",
@@ -36957,46 +36957,46 @@
                 {
                     "name": "queryTimedTasks",
                     "type": "function",
-                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
-                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
+                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];",
+                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];"
                 },
                 {
                     "name": "queryIntentTasks",
                     "type": "function",
-                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
-                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
+                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];",
+                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];"
                 }
             ],
             "workManager": [
                 {
                     "name": "addDailyTask",
                     "type": "function",
-                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;",
-                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult>): TimedTask$;"
+                    "doc": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;",
+                    "signature": "addDailyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Daily<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addWeeklyTask",
                     "type": "function",
-                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;",
-                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult>): TimedTask$;"
+                    "doc": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;",
+                    "signature": "addWeeklyTask<TResult = TimedTask$>(options: Tasks.TimedTask.Weekly<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addDisposableTask",
                     "type": "function",
-                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;",
-                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult>): TimedTask$;"
+                    "doc": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;",
+                    "signature": "addDisposableTask<TResult = TimedTask$>(options: Tasks.TimedTask.Disposable<TResult> | null): TimedTask$;"
                 },
                 {
                     "name": "addIntentTask",
                     "type": "function",
-                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
-                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                    "doc": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;",
+                    "signature": "addIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;"
                 },
                 {
                     "name": "addBroadcastIntentTask",
                     "type": "function",
-                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;",
-                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult>): IntentTask$;"
+                    "doc": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;",
+                    "signature": "addBroadcastIntentTask<TResult = IntentTask$>(options: Tasks.IntentTask.Basic<TResult> | null): IntentTask$;"
                 },
                 {
                     "name": "getTimedTask",
@@ -37025,14 +37025,14 @@
                 {
                     "name": "queryTimedTasks",
                     "type": "function",
-                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];",
-                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed): TimedTask$[];"
+                    "doc": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];",
+                    "signature": "queryTimedTasks(options?: Tasks.Query.Timed | null): TimedTask$[];"
                 },
                 {
                     "name": "queryIntentTasks",
                     "type": "function",
-                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];",
-                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent): IntentTask$[];"
+                    "doc": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];",
+                    "signature": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];"
                 }
             ],
             "yolo": [
