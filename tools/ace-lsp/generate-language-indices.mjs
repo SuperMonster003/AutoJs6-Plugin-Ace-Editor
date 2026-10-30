@@ -379,6 +379,48 @@ function luaIndex() {
     }, globals, modules);
 }
 
+// AutoJs6 JVM Entry API (org.autojs.plugin.jvmsource.api) as frozen by the Java Runtime plugin (Entry API 4) and the
+// Kotlin Runtime plugin (Entry API 2: no args / clipboard). AutoJs6 tools/api-coverage/language_runtimes.py checks these
+// modules and globals against the plugins' protocol/jvm-source-api.aar.
+function jvmEntryApi(language, label) {
+    const kotlin = language === "kotlin";
+    const [unit, bool, any, long] = kotlin ? ["Unit", "Boolean", "Any?", "Long"] : ["void", "boolean", "Object", "long"];
+    const types = {
+        AutoJsJvmEntry: [`run(context: JvmScriptContext): ${any}|function|Runs the script; the result is returned to the host.`],
+        JvmScriptContext: [
+            "app(): JvmAppApi",
+            ...(kotlin ? [] : [
+                "args(): Map|function|Returns the deeply immutable JSON-profile snapshot supplied by the host execution config.",
+                "clipboard(): JvmClipboardApi",
+            ]),
+            "console(): JvmConsoleApi",
+            "cancellation(): JvmCancellation",
+            `sleep(millis: ${long}): ${unit}|function|Sleeps in the disposable worker while remaining responsive to session cancellation.`,
+            `toast(message: String): ${unit}|function|Requests a short host-side toast.`,
+            `isCancellationRequested(): ${bool}`,
+            `throwIfCancellationRequested(): ${unit}`,
+        ],
+        JvmAppApi: [`launch(packageName: String): ${bool}|function|Requests that the host launch an already-installed application package.`],
+        ...(kotlin ? {} : {
+            JvmClipboardApi: [
+                "getText(): String|function|Returns the host clipboard's current plain-text value, or an empty string when absent.",
+                `setText(text: String): ${unit}|function|Replaces the host clipboard with a bounded plain-text value.`,
+            ],
+        }),
+        JvmConsoleApi: [
+            `log(message: String): ${unit}|function|Writes one UTF-8 line to the host console's normal output stream.`,
+            `error(message: String): ${unit}|function|Writes one UTF-8 line to the host console's error output stream.`,
+        ],
+        JvmCancellation: [`isCancellationRequested(): ${bool}`, `throwIfCancellationRequested(): ${unit}`],
+    };
+    const names = [...Object.keys(types), "JvmCancellationException"];
+    return {
+        modules: Object.fromEntries(Object.entries(types).map(([name, specs]) => [name, entries(name, specs, label)])),
+        globals: names.map((name) => classItem(name, label)),
+        aliases: Object.fromEntries(names.map((name) => [`org.autojs.plugin.jvmsource.api.${name}`, name])),
+    };
+}
+
 function javaIndex() {
     const label = "Java 17/Android API 35";
     const modules = {};
@@ -525,8 +567,10 @@ function javaIndex() {
         "Collections", "Arrays", "Objects", "Optional", "File", "InputStream", "OutputStream", "Reader", "Writer", "Path", "Files", "Paths",
         "Log", "TextUtils", "Color", "Uri", "Context", "Intent", "Bundle", "View",
     ];
-    const globals = classes.map((name) => classItem(name, label));
-    const aliases = {};
+    const entryApi = jvmEntryApi("java", "AutoJs6 JVM Entry API 4");
+    Object.assign(modules, entryApi.modules);
+    const globals = [...classes.map((name) => classItem(name, label)), ...entryApi.globals];
+    const aliases = { ...entryApi.aliases };
     const qualified = {
         "java.lang.Math": "Math", "java.lang.System": "System", "java.lang.Integer": "Integer", "java.lang.Long": "Long",
         "java.lang.Double": "Double", "java.lang.Boolean": "Boolean", "java.lang.Character": "Character", "java.lang.String": "String",
@@ -541,11 +585,11 @@ function javaIndex() {
     return makeIndex("java", {
         name: "OpenJDK and Android SDK API subset",
         languageVersion: "Java 17; Android API 35",
-        revision: "autojs6-java17-android35-subset-2",
+        revision: "autojs6-java17-android35-subset-3",
         url: "https://docs.oracle.com/en/java/javase/17/docs/api/",
         androidUrl: "https://developer.android.com/reference/packages",
         license: "API names/signatures only; OpenJDK GPL-2.0-with-classpath-exception and Android SDK terms",
-        scope: "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs; no variable type inference",
+        scope: "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs and the AutoJs6 JVM Entry API 4; no variable type inference",
     }, globals, modules, aliases);
 }
 
@@ -707,8 +751,13 @@ function kotlinIndex(java) {
         "File", "Path", "ArrayList", "HashMap", "Context", "Intent", "Bundle", "View",
     ]);
     java.globals.filter((item) => interopGlobals.has(item.name)).forEach((item) => globals.push({ ...item }));
+    const entryApi = jvmEntryApi("kotlin", "AutoJs6 JVM Entry API 2");
+    Object.assign(modules, entryApi.modules);
+    entryApi.globals.forEach((item) => globals.push(item));
+    const javaAliases = Object.fromEntries(Object.entries(java.aliases).filter(([alias]) => !alias.startsWith("org.autojs.")));
     const aliases = {
-        ...java.aliases,
+        ...javaAliases,
+        ...entryApi.aliases,
         "String": "kotlin.String",
         "Array": "kotlin.Array",
         "List": "kotlin.collections.List",
@@ -730,10 +779,10 @@ function kotlinIndex(java) {
     return makeIndex("kotlin", {
         name: "Kotlin standard library and Java/Android interop API subset",
         languageVersion: "Kotlin 2.2.21",
-        revision: "autojs6-kotlin-2.2.21-p2plus-2",
+        revision: "autojs6-kotlin-2.2.21-p2plus-3",
         url: "https://kotlinlang.org/api/core/kotlin-stdlib/",
         license: "Apache-2.0; API names/signatures only",
-        scope: "Kotlin top-level and instance APIs plus selected Java/Android interop; paired with conservative single-file type heuristics",
+        scope: "Kotlin top-level and instance APIs plus selected Java/Android interop and the AutoJs6 JVM Entry API 2; paired with conservative single-file type heuristics",
     }, globals, modules, aliases);
 }
 

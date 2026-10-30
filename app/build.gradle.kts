@@ -172,6 +172,7 @@ val verifyAutoJs6PythonWorker = tasks.register<Exec>("verifyAutoJs6PythonWorker"
         autoJs6PythonWorkerDirectory.file("manifest.json"),
         autoJs6PythonWorkerDirectory.file("THIRD_PARTY_LICENSES.txt"),
         autoJs6EditorAssetsDirectory.file("autojs6_python_provider.js"),
+        rootProject.fileTree("tools/ace-lsp/python-worker/autojs6-stubs"),
     )
     workingDir(rootProject.layout.projectDirectory)
     executable(autoJs6NodeExecutable.get())
@@ -257,6 +258,9 @@ val verifyAutoJs6JavaSemanticRuntime = tasks.register<Exec>("verifyAutoJs6JavaSe
         autoJs6JavaRuntimeDirectory.file("android-36-stubs.jar"),
         autoJs6JavaRuntimeDirectory.file("manifest.json"),
         autoJs6JavaRuntimeDirectory.file("THIRD_PARTY_LICENSES.txt"),
+        layout.projectDirectory.file("src/main/assets/java/autojs6/jvm-entry-api.jar"),
+        layout.projectDirectory.file("src/main/assets/java/autojs6/manifest.json"),
+        rootProject.layout.projectDirectory.file("tools/ace-lsp/build-jvm-entry-api-jar.mjs"),
         autoJs6EditorAssetsDirectory.file("autojs6_java_provider.js"),
         autoJs6EditorAssetsDirectory.file("autojs6_lsp_client.js"),
         layout.projectDirectory.file("src/main/assets/$aceBuildsAssetRoot/autojs6_editor.html"),

@@ -8,11 +8,11 @@
   "source": {
     "name": "OpenJDK and Android SDK API subset",
     "languageVersion": "Java 17; Android API 35",
-    "revision": "autojs6-java17-android35-subset-2",
+    "revision": "autojs6-java17-android35-subset-3",
     "url": "https://docs.oracle.com/en/java/javase/17/docs/api/",
     "androidUrl": "https://developer.android.com/reference/packages",
     "license": "API names/signatures only; OpenJDK GPL-2.0-with-classpath-exception and Android SDK terms",
-    "scope": "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs; no variable type inference"
+    "scope": "java.lang/java.util/java.io/java.nio.file plus selected android.* static and instance APIs and the AutoJs6 JVM Entry API 4; no variable type inference"
   },
   "globals": [
     {
@@ -26,6 +26,12 @@
       "type": "class",
       "signature": "class Arrays",
       "doc": "Java 17/Android API 35 type Arrays."
+    },
+    {
+      "name": "AutoJsJvmEntry",
+      "type": "class",
+      "signature": "class AutoJsJvmEntry",
+      "doc": "AutoJs6 JVM Entry API 4 type AutoJsJvmEntry."
     },
     {
       "name": "Boolean",
@@ -128,6 +134,42 @@
       "type": "class",
       "signature": "class Iterable",
       "doc": "Java 17/Android API 35 type Iterable."
+    },
+    {
+      "name": "JvmAppApi",
+      "type": "class",
+      "signature": "class JvmAppApi",
+      "doc": "AutoJs6 JVM Entry API 4 type JvmAppApi."
+    },
+    {
+      "name": "JvmCancellation",
+      "type": "class",
+      "signature": "class JvmCancellation",
+      "doc": "AutoJs6 JVM Entry API 4 type JvmCancellation."
+    },
+    {
+      "name": "JvmCancellationException",
+      "type": "class",
+      "signature": "class JvmCancellationException",
+      "doc": "AutoJs6 JVM Entry API 4 type JvmCancellationException."
+    },
+    {
+      "name": "JvmClipboardApi",
+      "type": "class",
+      "signature": "class JvmClipboardApi",
+      "doc": "AutoJs6 JVM Entry API 4 type JvmClipboardApi."
+    },
+    {
+      "name": "JvmConsoleApi",
+      "type": "class",
+      "signature": "class JvmConsoleApi",
+      "doc": "AutoJs6 JVM Entry API 4 type JvmConsoleApi."
+    },
+    {
+      "name": "JvmScriptContext",
+      "type": "class",
+      "signature": "class JvmScriptContext",
+      "doc": "AutoJs6 JVM Entry API 4 type JvmScriptContext."
     },
     {
       "name": "LinkedList",
@@ -329,6 +371,14 @@
         "type": "function",
         "signature": "Arrays.toString(array: Object): String",
         "doc": "Java 17/Android API 35 symbol Arrays.toString."
+      }
+    ],
+    "AutoJsJvmEntry": [
+      {
+        "name": "run",
+        "type": "function",
+        "signature": "AutoJsJvmEntry.run(context: JvmScriptContext): Object",
+        "doc": "Runs the script; the result is returned to the host."
       }
     ],
     "Boolean": [
@@ -811,6 +861,112 @@
         "type": "function",
         "signature": "Integer.valueOf(value: String): Integer",
         "doc": "Java 17/Android API 35 symbol Integer.valueOf."
+      }
+    ],
+    "JvmAppApi": [
+      {
+        "name": "launch",
+        "type": "function",
+        "signature": "JvmAppApi.launch(packageName: String): boolean",
+        "doc": "Requests that the host launch an already-installed application package."
+      }
+    ],
+    "JvmCancellation": [
+      {
+        "name": "isCancellationRequested",
+        "type": "function",
+        "signature": "JvmCancellation.isCancellationRequested(): boolean",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmCancellation.isCancellationRequested."
+      },
+      {
+        "name": "throwIfCancellationRequested",
+        "type": "function",
+        "signature": "JvmCancellation.throwIfCancellationRequested(): void",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmCancellation.throwIfCancellationRequested."
+      }
+    ],
+    "JvmClipboardApi": [
+      {
+        "name": "getText",
+        "type": "function",
+        "signature": "JvmClipboardApi.getText(): String",
+        "doc": "Returns the host clipboard's current plain-text value, or an empty string when absent."
+      },
+      {
+        "name": "setText",
+        "type": "function",
+        "signature": "JvmClipboardApi.setText(text: String): void",
+        "doc": "Replaces the host clipboard with a bounded plain-text value."
+      }
+    ],
+    "JvmConsoleApi": [
+      {
+        "name": "error",
+        "type": "function",
+        "signature": "JvmConsoleApi.error(message: String): void",
+        "doc": "Writes one UTF-8 line to the host console's error output stream."
+      },
+      {
+        "name": "log",
+        "type": "function",
+        "signature": "JvmConsoleApi.log(message: String): void",
+        "doc": "Writes one UTF-8 line to the host console's normal output stream."
+      }
+    ],
+    "JvmScriptContext": [
+      {
+        "name": "app",
+        "type": "function",
+        "signature": "JvmScriptContext.app(): JvmAppApi",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmScriptContext.app."
+      },
+      {
+        "name": "args",
+        "type": "function",
+        "signature": "JvmScriptContext.args(): Map",
+        "doc": "Returns the deeply immutable JSON-profile snapshot supplied by the host execution config."
+      },
+      {
+        "name": "cancellation",
+        "type": "function",
+        "signature": "JvmScriptContext.cancellation(): JvmCancellation",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmScriptContext.cancellation."
+      },
+      {
+        "name": "clipboard",
+        "type": "function",
+        "signature": "JvmScriptContext.clipboard(): JvmClipboardApi",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmScriptContext.clipboard."
+      },
+      {
+        "name": "console",
+        "type": "function",
+        "signature": "JvmScriptContext.console(): JvmConsoleApi",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmScriptContext.console."
+      },
+      {
+        "name": "isCancellationRequested",
+        "type": "function",
+        "signature": "JvmScriptContext.isCancellationRequested(): boolean",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmScriptContext.isCancellationRequested."
+      },
+      {
+        "name": "sleep",
+        "type": "function",
+        "signature": "JvmScriptContext.sleep(millis: long): void",
+        "doc": "Sleeps in the disposable worker while remaining responsive to session cancellation."
+      },
+      {
+        "name": "throwIfCancellationRequested",
+        "type": "function",
+        "signature": "JvmScriptContext.throwIfCancellationRequested(): void",
+        "doc": "AutoJs6 JVM Entry API 4 symbol JvmScriptContext.throwIfCancellationRequested."
+      },
+      {
+        "name": "toast",
+        "type": "function",
+        "signature": "JvmScriptContext.toast(message: String): void",
+        "doc": "Requests a short host-side toast."
       }
     ],
     "List": [
@@ -2119,6 +2275,13 @@
     "java.util.Objects": "Objects",
     "java.util.Optional": "Optional",
     "java.util.Set": "Set",
+    "org.autojs.plugin.jvmsource.api.AutoJsJvmEntry": "AutoJsJvmEntry",
+    "org.autojs.plugin.jvmsource.api.JvmAppApi": "JvmAppApi",
+    "org.autojs.plugin.jvmsource.api.JvmCancellation": "JvmCancellation",
+    "org.autojs.plugin.jvmsource.api.JvmCancellationException": "JvmCancellationException",
+    "org.autojs.plugin.jvmsource.api.JvmClipboardApi": "JvmClipboardApi",
+    "org.autojs.plugin.jvmsource.api.JvmConsoleApi": "JvmConsoleApi",
+    "org.autojs.plugin.jvmsource.api.JvmScriptContext": "JvmScriptContext",
     "Path": "java.nio.file.Path",
     "View": "android.view.View"
   }

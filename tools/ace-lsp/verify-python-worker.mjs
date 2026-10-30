@@ -101,6 +101,21 @@ assert(
 assert(workerBytes.length <= manifest.bundledAssetThresholdBytes, "Python Worker exceeds the bundled-asset threshold");
 assert(manifest.optionalDeliveryRequired === false, "Bundled Python Worker unexpectedly requires optional delivery");
 
+// The autojs6 package stubs (AutoJs6-Plugin-Python-Runtime docs/python/types) built into the Worker.
+const stubDirectory = path.join(REPOSITORY_ROOT, manifest.autojs6Stubs?.source || "");
+const stubFiles = fs.readdirSync(stubDirectory, { recursive: true })
+    .map((item) => String(item).split(path.sep).join("/"))
+    .filter((item) => item.endsWith(".pyi"))
+    .sort((left, right) => left.localeCompare(right));
+const stubDigest = crypto.createHash("sha256");
+for (const file of stubFiles) {
+    const content = fs.readFileSync(path.join(stubDirectory, file), "utf8").replace(/\r\n/g, "\n");
+    stubDigest.update(file).update("\0").update(content).update("\0");
+}
+assert(stubFiles.includes("autojs6/__init__.pyi"), "autojs6 package stubs are missing __init__.pyi");
+assert(manifest.autojs6Stubs.fileCount === stubFiles.length, "autojs6 stub file count does not match the manifest");
+assert(manifest.autojs6Stubs.contentSha256 === stubDigest.digest("hex"), "autojs6 stubs changed; rebuild the Python Worker");
+
 const messages = [];
 let messageListener = null;
 let closed = false;
@@ -188,6 +203,36 @@ const signature = request("textDocument/signatureHelp", { line: 7, character: 6 
 const definition = request("textDocument/definition", { line: 7, character: 2 });
 const documentHighlight = request("textDocument/documentHighlight", { line: 2, character: 10 });
 const status = request("autojs6/status", null);
+const stubUri = "file:///autojs6/editor/stubs.py";
+const stubOpen = send({
+    jsonrpc: "2.0",
+    method: "textDocument/didOpen",
+    params: {
+        textDocument: {
+            uri: stubUri,
+            languageId: "python",
+            version: 1,
+            text: ["import autojs6", "from autojs6 import dialogs", "autojs6.", "dialogs.", "autojs6.files.list()"].join("\n"),
+        },
+    },
+});
+
+function stubRequest(method, position) {
+    const id = ++requestId;
+    const result = send({ jsonrpc: "2.0", id, method, params: { textDocument: { uri: stubUri }, position } });
+    return result.messages.find((message) => message.id === id)?.result;
+}
+
+function labels(result) {
+    return (Array.isArray(result) ? result : result?.items || []).map((item) => item.label);
+}
+
+const packageLabels = labels(stubRequest("textDocument/completion", { line: 2, character: 8 }));
+const dialogLabels = labels(stubRequest("textDocument/completion", { line: 3, character: 8 }));
+const listHover = JSON.stringify(stubRequest("textDocument/hover", { line: 4, character: 15 }) || {});
+const stubDiagnostics = stubOpen.messages.find(
+    (message) => message.method === "textDocument/publishDiagnostics",
+)?.params?.diagnostics || [];
 const shutdownId = ++requestId;
 const shutdown = send({ jsonrpc: "2.0", id: shutdownId, method: "shutdown", params: {} });
 send({ jsonrpc: "2.0", method: "exit", params: {} });
@@ -226,6 +271,17 @@ assert(diagnosticMessages.some((message) => /missing_name.*not defined/i.test(me
 assert(diagnosticMessages.some((message) => /expected|unclosed|syntax/i.test(message)), "Syntax diagnostic is missing");
 assert(Array.isArray(definitions) && definitions.some((item) => item.uri === uri && item.range?.start?.line === 2), "Definition response does not point to greet");
 assert(status.response?.result?.pythonVersion === "3.12", "Worker status did not report Python 3.12");
+for (const name of ["toast", "notice", "app", "files", "AutoJs6Error"]) {
+    assert(packageLabels.includes(name), `autojs6 completion is missing ${name}`);
+}
+for (const name of ["confirm", "select", "MAX_ITEMS"]) {
+    assert(dialogLabels.includes(name), `autojs6.dialogs completion is missing ${name}`);
+}
+assert(/list\[str\]/.test(listHover), `autojs6.files.list hover lacks list[str]: ${listHover}`);
+assert(
+    !stubDiagnostics.some((diagnostic) => /autojs6/.test(String(diagnostic.message || ""))),
+    `autojs6 stubs produced diagnostics: ${JSON.stringify(stubDiagnostics)}`,
+);
 assert(shutdown.messages.some((message) => message.id === shutdownId), "Worker did not acknowledge shutdown");
 assert(closed, "Worker did not release its isolate on exit");
 

@@ -26,8 +26,12 @@ internal object AceLuaLanguageServerRuntime {
     const val VERSION = "3.18.2"
     const val NATIVE_LIBRARY_NAME = "libautojs6_luals.so"
 
+    /** Names the private copy of [LIBRARY_ASSET_ROOT]; the Lua provider lists `${env:AUTOJS6_LUALS_LIBRARY}` in `Lua.workspace.library`. */
+    const val LIBRARY_ENVIRONMENT = "AUTOJS6_LUALS_LIBRARY"
+
     private const val MANIFEST_ASSET = "luals/manifest.json"
     private const val RUNTIME_ASSET_ROOT = "luals/runtime"
+    private const val LIBRARY_ASSET_ROOT = "luals/autojs6"
     private const val MARKER_FILE = ".autojs6-runtime-sha256"
     private const val HANDSHAKE_TIMEOUT_MS = 15_000L
     private const val IDLE_TIMEOUT_MS = 5 * 60_000L
@@ -77,6 +81,7 @@ internal object AceLuaLanguageServerRuntime {
             workingDirectory = prepared.runtimeRoot,
             environment = mapOf(
                 "AUTOJS6_LUALS_ROOT" to prepared.runtimeRoot.path,
+                LIBRARY_ENVIRONMENT to prepared.libraryRoot.path,
                 "LLS_LOG_LEVEL" to "warn",
             ),
             handshakeTimeoutMs = HANDSHAKE_TIMEOUT_MS,
@@ -103,6 +108,7 @@ internal object AceLuaLanguageServerRuntime {
             "runtime-${manifest.version}-${manifest.runtimeSha256.take(16)}",
         )
         ensureRuntimeExtracted(context, runtimeRoot, manifest, storage.noBackupDirectory)
+        val libraryRoot = ensureLibraryExtracted(context, runtimeParent)
 
         val stateRoot = File(storage.cacheDirectory, "autojs6-luals/state-${manifest.version}")
         val logRoot = File(stateRoot, "log")
@@ -114,6 +120,7 @@ internal object AceLuaLanguageServerRuntime {
             storage = storage,
             nativeLibrary = nativeLibrary.file,
             runtimeRoot = runtimeRoot,
+            libraryRoot = libraryRoot,
             logRoot = logRoot,
             metaRoot = metaRoot,
         )
@@ -279,6 +286,29 @@ internal object AceLuaLanguageServerRuntime {
         }
     }
 
+    /**
+     * Copies the `---@meta` definitions of the Lua Runtime plugin's `autojs` module (AutoJs6-Plugin-Lua-Runtime
+     * docs/types) to a private directory named by their digest. Unlike the runtime they are not upstream bytes, so
+     * they stay outside the runtime inventory.
+     */
+    private fun ensureLibraryExtracted(context: Context, runtimeParent: File): File {
+        val files = context.assets.list(LIBRARY_ASSET_ROOT).orEmpty().filter { it.endsWith(".lua") }.sorted()
+            .associateWith { name -> context.assets.open("$LIBRARY_ASSET_ROOT/$name").use { it.readBytes() } }
+        require(files.isNotEmpty()) { "LuaLS AutoJs6 library is missing" }
+        val digest = MessageDigest.getInstance("SHA-256")
+        files.forEach { (name, bytes) ->
+            digest.update(name.toByteArray(Charsets.UTF_8))
+            digest.update(0.toByte())
+            digest.update(bytes)
+        }
+        val libraryRoot = File(runtimeParent, "library-${digest.digest().toLowerHex().take(16)}")
+        if (files.any { (name, bytes) -> !File(libraryRoot, name).let { it.isFile && it.readBytes().contentEquals(bytes) } }) {
+            require(libraryRoot.mkdirs() || libraryRoot.isDirectory) { "Unable to create LuaLS AutoJs6 library directory" }
+            files.forEach { (name, bytes) -> File(libraryRoot, name).writeBytes(bytes) }
+        }
+        return libraryRoot
+    }
+
     internal fun isSafeRuntimePath(path: String): Boolean {
         if (
             path.isBlank() || path.length > 512 || path.startsWith('/') || path.startsWith('\\') ||
@@ -355,6 +385,7 @@ internal object AceLuaLanguageServerRuntime {
         val storage: AceRuntimeStorage,
         val nativeLibrary: File,
         val runtimeRoot: File,
+        val libraryRoot: File,
         val logRoot: File,
         val metaRoot: File,
     )

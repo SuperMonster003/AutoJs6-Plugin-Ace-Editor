@@ -211,6 +211,8 @@
                 workspace: {
                     checkThirdParty: false,
                     ignoreSubmodules: true,
+                    // `require("autojs")` of the Lua Runtime plugin, extracted by AceLuaLanguageServerRuntime.
+                    library: ["${env:AUTOJS6_LUALS_LIBRARY}"],
                     useGitIgnore: true
                 },
                 diagnostics: {

@@ -8,10 +8,10 @@
   "source": {
     "name": "Kotlin standard library and Java/Android interop API subset",
     "languageVersion": "Kotlin 2.2.21",
-    "revision": "autojs6-kotlin-2.2.21-p2plus-2",
+    "revision": "autojs6-kotlin-2.2.21-p2plus-3",
     "url": "https://kotlinlang.org/api/core/kotlin-stdlib/",
     "license": "Apache-2.0; API names/signatures only",
-    "scope": "Kotlin top-level and instance APIs plus selected Java/Android interop; paired with conservative single-file type heuristics"
+    "scope": "Kotlin top-level and instance APIs plus selected Java/Android interop and the AutoJs6 JVM Entry API 2; paired with conservative single-file type heuristics"
   },
   "globals": [
     {
@@ -49,6 +49,12 @@
       "type": "class",
       "signature": "class Arrays",
       "doc": "Java 17/Android API 35 type Arrays."
+    },
+    {
+      "name": "AutoJsJvmEntry",
+      "type": "class",
+      "signature": "class AutoJsJvmEntry",
+      "doc": "AutoJs6 JVM Entry API 2 type AutoJsJvmEntry."
     },
     {
       "name": "Boolean",
@@ -283,6 +289,36 @@
       "type": "class",
       "signature": "class Iterator",
       "doc": "Kotlin 2.2.21 type Iterator."
+    },
+    {
+      "name": "JvmAppApi",
+      "type": "class",
+      "signature": "class JvmAppApi",
+      "doc": "AutoJs6 JVM Entry API 2 type JvmAppApi."
+    },
+    {
+      "name": "JvmCancellation",
+      "type": "class",
+      "signature": "class JvmCancellation",
+      "doc": "AutoJs6 JVM Entry API 2 type JvmCancellation."
+    },
+    {
+      "name": "JvmCancellationException",
+      "type": "class",
+      "signature": "class JvmCancellationException",
+      "doc": "AutoJs6 JVM Entry API 2 type JvmCancellationException."
+    },
+    {
+      "name": "JvmConsoleApi",
+      "type": "class",
+      "signature": "class JvmConsoleApi",
+      "doc": "AutoJs6 JVM Entry API 2 type JvmConsoleApi."
+    },
+    {
+      "name": "JvmScriptContext",
+      "type": "class",
+      "signature": "class JvmScriptContext",
+      "doc": "AutoJs6 JVM Entry API 2 type JvmScriptContext."
     },
     {
       "name": "lazy",
@@ -648,6 +684,14 @@
         "doc": "Java 17/Android API 35 symbol Arrays.toString."
       }
     ],
+    "AutoJsJvmEntry": [
+      {
+        "name": "run",
+        "type": "function",
+        "signature": "AutoJsJvmEntry.run(context: JvmScriptContext): Any?",
+        "doc": "Runs the script; the result is returned to the host."
+      }
+    ],
     "Collections": [
       {
         "name": "binarySearch",
@@ -910,6 +954,86 @@
         "type": "function",
         "signature": "Files.writeString(path: Path, text: CharSequence): Path",
         "doc": "Java 17/Android API 35 symbol Files.writeString."
+      }
+    ],
+    "JvmAppApi": [
+      {
+        "name": "launch",
+        "type": "function",
+        "signature": "JvmAppApi.launch(packageName: String): Boolean",
+        "doc": "Requests that the host launch an already-installed application package."
+      }
+    ],
+    "JvmCancellation": [
+      {
+        "name": "isCancellationRequested",
+        "type": "function",
+        "signature": "JvmCancellation.isCancellationRequested(): Boolean",
+        "doc": "AutoJs6 JVM Entry API 2 symbol JvmCancellation.isCancellationRequested."
+      },
+      {
+        "name": "throwIfCancellationRequested",
+        "type": "function",
+        "signature": "JvmCancellation.throwIfCancellationRequested(): Unit",
+        "doc": "AutoJs6 JVM Entry API 2 symbol JvmCancellation.throwIfCancellationRequested."
+      }
+    ],
+    "JvmConsoleApi": [
+      {
+        "name": "error",
+        "type": "function",
+        "signature": "JvmConsoleApi.error(message: String): Unit",
+        "doc": "Writes one UTF-8 line to the host console's error output stream."
+      },
+      {
+        "name": "log",
+        "type": "function",
+        "signature": "JvmConsoleApi.log(message: String): Unit",
+        "doc": "Writes one UTF-8 line to the host console's normal output stream."
+      }
+    ],
+    "JvmScriptContext": [
+      {
+        "name": "app",
+        "type": "function",
+        "signature": "JvmScriptContext.app(): JvmAppApi",
+        "doc": "AutoJs6 JVM Entry API 2 symbol JvmScriptContext.app."
+      },
+      {
+        "name": "cancellation",
+        "type": "function",
+        "signature": "JvmScriptContext.cancellation(): JvmCancellation",
+        "doc": "AutoJs6 JVM Entry API 2 symbol JvmScriptContext.cancellation."
+      },
+      {
+        "name": "console",
+        "type": "function",
+        "signature": "JvmScriptContext.console(): JvmConsoleApi",
+        "doc": "AutoJs6 JVM Entry API 2 symbol JvmScriptContext.console."
+      },
+      {
+        "name": "isCancellationRequested",
+        "type": "function",
+        "signature": "JvmScriptContext.isCancellationRequested(): Boolean",
+        "doc": "AutoJs6 JVM Entry API 2 symbol JvmScriptContext.isCancellationRequested."
+      },
+      {
+        "name": "sleep",
+        "type": "function",
+        "signature": "JvmScriptContext.sleep(millis: Long): Unit",
+        "doc": "Sleeps in the disposable worker while remaining responsive to session cancellation."
+      },
+      {
+        "name": "throwIfCancellationRequested",
+        "type": "function",
+        "signature": "JvmScriptContext.throwIfCancellationRequested(): Unit",
+        "doc": "AutoJs6 JVM Entry API 2 symbol JvmScriptContext.throwIfCancellationRequested."
+      },
+      {
+        "name": "toast",
+        "type": "function",
+        "signature": "JvmScriptContext.toast(message: String): Unit",
+        "doc": "Requests a short host-side toast."
       }
     ],
     "Log": [
@@ -3669,6 +3793,12 @@
     "MutableList": "kotlin.collections.MutableList",
     "MutableMap": "kotlin.collections.MutableMap",
     "MutableSet": "kotlin.collections.MutableSet",
+    "org.autojs.plugin.jvmsource.api.AutoJsJvmEntry": "AutoJsJvmEntry",
+    "org.autojs.plugin.jvmsource.api.JvmAppApi": "JvmAppApi",
+    "org.autojs.plugin.jvmsource.api.JvmCancellation": "JvmCancellation",
+    "org.autojs.plugin.jvmsource.api.JvmCancellationException": "JvmCancellationException",
+    "org.autojs.plugin.jvmsource.api.JvmConsoleApi": "JvmConsoleApi",
+    "org.autojs.plugin.jvmsource.api.JvmScriptContext": "JvmScriptContext",
     "Path": "java.nio.file.Path",
     "Sequence": "kotlin.sequences.Sequence",
     "Set": "kotlin.collections.Set",

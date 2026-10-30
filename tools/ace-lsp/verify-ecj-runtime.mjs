@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import vm from "node:vm";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -138,7 +139,28 @@ const sourceVersionText = readText(sourceVersionFile);
 const proguardText = readText(proguardFile);
 const licenseText = readText(licenseFile);
 
-const budgetedFiles = [classpathFile, manifestFile, licenseFile, providerFile];
+// AutoJs6 JVM Entry API 4 classes of the Java Runtime plugin, the second ECJ classpath entry
+// (tools/ace-lsp/build-jvm-entry-api-jar.mjs; --check skips without the sibling plugin checkout).
+const entryApiRoot = path.join(assetRoot, "java/autojs6");
+const entryApiManifestFile = path.join(entryApiRoot, "manifest.json");
+const entryApiManifest = JSON.parse(readText(entryApiManifestFile));
+const entryApiFile = path.join(entryApiRoot, entryApiManifest.classpathFile);
+const entryApiJar = fs.readFileSync(entryApiFile);
+assert(entryApiManifest.entryApiLevel === 4 && entryApiJar.length === entryApiManifest.classpathBytes &&
+    sha256(entryApiJar) === entryApiManifest.classpathSha256, "JVM Entry API jar does not match its manifest");
+const entryApiEntries = readZipCentralDirectory(entryApiJar);
+assert(JSON.stringify(entryApiEntries.map((entry) => entry.name)) === JSON.stringify(entryApiManifest.classes) &&
+    entryApiEntries.every((entry) => entry.dosTime === 0 && entry.dosDate === 0x21),
+"JVM Entry API jar entries are not the deterministic class list");
+assert(classpathRuntimeText.includes('ENTRY_API_ASSET = "java/autojs6/jvm-entry-api.jar"') &&
+    runtimeText.includes("AceJavaClasspathRuntime.ensureEntryApiInstalled"),
+"ECJ does not receive the JVM Entry API classpath");
+const entryApiCheck = spawnSync(process.execPath, [path.join(scriptDirectory, "build-jvm-entry-api-jar.mjs"), "--check"], {
+    encoding: "utf8",
+});
+assert(entryApiCheck.status === 0, `JVM Entry API jar check failed: ${entryApiCheck.stderr || entryApiCheck.stdout}`);
+
+const budgetedFiles = [classpathFile, manifestFile, licenseFile, providerFile, entryApiFile, entryApiManifestFile];
 const bundleBytes = manifest.ecjArtifactBytes + budgetedFiles.reduce(
     (total, file) => total + fs.statSync(file).size,
     0

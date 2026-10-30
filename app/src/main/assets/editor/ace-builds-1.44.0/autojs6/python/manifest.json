@@ -157,6 +157,13 @@
   ],
   "typeshedFileCount": 271,
   "typeshedContentSha256": "445a9fe6ef3f17fd847bf286dd432f61da300abbd9f5d850559da3c013106074",
+  "autojs6Stubs": {
+    "source": "tools/ace-lsp/python-worker/autojs6-stubs",
+    "origin": "AutoJs6-Plugin-Python-Runtime docs/python/types",
+    "stubPath": "/autojs6-stubs",
+    "fileCount": 17,
+    "contentSha256": "3ddde6a3828ef34adaf67672e819e0904acc6cafe2ca0d1114935152c24428f3"
+  },
   "polyfills": {
     "buffer": "6.0.3",
     "pathBrowserify": "1.0.1"
@@ -182,8 +189,8 @@
     "nullish-coalescing"
   ],
   "workerFile": "autojs6-python-worker.js",
-  "workerBytes": 4996365,
-  "workerSha256": "7cdff37fd4517df94182139b1a9b72d01e88d26f8f2013ef0505f7ff7e839b6d",
+  "workerBytes": 5014702,
+  "workerSha256": "c6b0e239aeffb66772dcd99ffe9bb8c5e5f2fc400a4d03c492ae6c969d253034",
   "thirdPartyLicenses": {
     "file": "THIRD_PARTY_LICENSES.txt",
     "bytes": 31705,

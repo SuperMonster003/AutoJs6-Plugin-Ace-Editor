@@ -301,6 +301,23 @@ index/current-document layer. See `M6_JAVA_SEMANTIC_ACCEPTANCE.md` for the ECJ
 version-selection history, ART measurements, JDT rejection evidence, exact
 artifact hashes, and fallback boundaries.
 
+## AutoJs6 language runtime APIs (AutoJs6 api-coverage P5.2e)
+
+The four AutoJs6 language runtime plugins expose their own script APIs; Ace bundles them so completion and
+diagnostics know them. AutoJs6 `tools/api-coverage/language_runtimes.py` checks every copy against the plugin
+sources (names, Python signatures):
+
+- Python: `python-worker/autojs6-stubs/autojs6/*.pyi` is a copy of the Python Runtime's `docs/python/types/autojs6`;
+  the Worker mounts it as Pyright's `stubPath` (`/autojs6-stubs`, missing-module-source warnings off) and the
+  manifest records `autojs6Stubs` (file count and content digest, checked by `verify-python-worker.mjs`).
+- Lua: `app/src/main/assets/luals/autojs6/autojs.lua` is a copy of the Lua Runtime's `docs/types/autojs.lua`
+  (`---@meta autojs`). `AceLuaLanguageServerRuntime` extracts it outside the pinned runtime and names the directory in
+  `AUTOJS6_LUALS_LIBRARY`; the provider lists `${env:AUTOJS6_LUALS_LIBRARY}` in `Lua.workspace.library`.
+- Java: `app/src/main/assets/java/autojs6/jvm-entry-api.jar` holds the seven Entry API 4 classes of the Java Runtime's
+  frozen `protocol/jvm-source-api.aar` (`build-jvm-entry-api-jar.mjs`, `--check` without the sibling checkout skips);
+  ECJ compiles against it after the Android stubs. Completion comes from the Java index (`jvmEntryApi`).
+- Kotlin: there is no Kotlin classpath; the Kotlin index carries the Entry API 2 subset (no `args` / `clipboard`).
+
 ## M7 Kotlin P2+ and compiler rejection gate
 
 `kotlin-compiler-spike/` locks Kotlin compiler `2.2.21` and R8/D8 `8.10.21` in
@@ -321,8 +338,8 @@ that are unsupported below API 26. The probe archive and dependencies are never
 packaged in the application.
 
 The completed fallback is the deterministic Kotlin revision
-`autojs6-kotlin-2.2.21-p2plus-2`: 95 globals, 44 module contexts, 492 members, and
-122,977 bytes. It recognizes explicit types, common collection/array factories,
+`autojs6-kotlin-2.2.21-p2plus-3`: 101 globals, 49 module contexts, 505 members, and
+127,631 bytes (revision 3 added the AutoJs6 JVM Entry API 2 types). It recognizes explicit types, common collection/array factories,
 constructors/import aliases, literals, ranges and casts, and resolves `?.` chains.
 Selected Java/Android modules are copied from the generated Java index rather than
 maintained twice.

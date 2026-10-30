@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "generator": "tools/ace-lsp/build-jvm-entry-api-jar.mjs",
+  "entryApiLevel": 4,
+  "source": {
+    "repository": "AutoJs6-Plugin-Java-Runtime",
+    "path": "protocol/jvm-source-api.aar",
+    "sha256": "77e57b6b04c09f79d29ccab6f3559d2ff76fdb44dd0481e496f5fcc7dffb6ff6"
+  },
+  "classpathFile": "jvm-entry-api.jar",
+  "classpathBytes": 8597,
+  "classpathSha256": "469d99b1e22e0408dc480c652028cfdbff68511aedbc47430b76382e19f158ce",
+  "classes": [
+    "org/autojs/plugin/jvmsource/api/AutoJsJvmEntry.class",
+    "org/autojs/plugin/jvmsource/api/JvmAppApi.class",
+    "org/autojs/plugin/jvmsource/api/JvmCancellation.class",
+    "org/autojs/plugin/jvmsource/api/JvmCancellationException.class",
+    "org/autojs/plugin/jvmsource/api/JvmClipboardApi.class",
+    "org/autojs/plugin/jvmsource/api/JvmConsoleApi.class",
+    "org/autojs/plugin/jvmsource/api/JvmScriptContext.class"
+  ]
+}

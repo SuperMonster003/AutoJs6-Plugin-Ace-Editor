@@ -18,6 +18,7 @@ import { SignatureHelpProvider } from 'pyright-internal/languageService/signatur
 import { convertFromPyrightDiagnostic } from 'pyright-internal/typeServer/diagnosticUtils';
 import { TestFileSystem } from 'pyright-internal/tests/harness/vfs/filesystem';
 
+import autojs6StubFiles from './autojs6-python-stubs.json';
 import typeshedFiles from './autojs6-python-typeshed.json';
 
 type JsonRpcId = number | string;
@@ -40,6 +41,8 @@ interface OpenDocument {
 const workerScope = self as DedicatedWorkerGlobalScope;
 const WORKSPACE_PATH = '/workspace';
 const TYPESHED_PATH = '/typeshed-fallback';
+// Type stubs of the AutoJs6 Python Runtime `autojs6` package, kept outside the workspace of the edited file.
+const AUTOJS6_STUBS_PATH = '/autojs6-stubs';
 
 function post(message: unknown) {
     workerScope.postMessage(message);
@@ -107,16 +110,25 @@ class PythonEngine {
         this.fs = new TestFileSystem(false, { cwd: '/' });
         this.fs.mkdirpSync(WORKSPACE_PATH);
         this.fs.mkdirpSync(TYPESHED_PATH);
+        this.fs.mkdirpSync(AUTOJS6_STUBS_PATH);
 
-        for (const [relativePath, content] of Object.entries(typeshedFiles as Record<string, string>)) {
-            const path = `${TYPESHED_PATH}/${relativePath.replace(/^\/+/, '')}`;
-            this.fs.mkdirpSync(getDirectoryPath(path));
-            this.fs.writeFileSync(UriEx.file(path), content, 'utf8');
+        for (const [root, files] of [
+            [TYPESHED_PATH, typeshedFiles],
+            [AUTOJS6_STUBS_PATH, autojs6StubFiles],
+        ] as const) {
+            for (const [relativePath, content] of Object.entries(files as Record<string, string>)) {
+                const path = `${root}/${relativePath.replace(/^\/+/, '')}`;
+                this.fs.mkdirpSync(getDirectoryPath(path));
+                this.fs.writeFileSync(UriEx.file(path), content, 'utf8');
+            }
         }
 
         const workspaceUri = UriEx.file(WORKSPACE_PATH);
         this.configOptions = new ConfigOptions(workspaceUri);
         this.configOptions.typeshedPath = UriEx.file(TYPESHED_PATH);
+        this.configOptions.stubPath = UriEx.file(AUTOJS6_STUBS_PATH);
+        // The plugin supplies the autojs6 sources at run time, so a stub without source here is expected.
+        this.configOptions.diagnosticRuleSet.reportMissingModuleSource = 'none';
         this.configOptions.defaultPythonVersion = pythonVersion3_12;
         this.configOptions.defaultPythonPlatform = PythonPlatform.Android;
         this.configOptions.checkOnlyOpenFiles = true;

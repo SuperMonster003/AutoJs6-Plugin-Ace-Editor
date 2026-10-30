@@ -346,6 +346,7 @@ function verifyFrontendWiring(paths) {
   [
     'var PROVIDER_ID = "lua-luals"',
     'runtime: { version: "Lua 5.4" }',
+    'library: ["${env:AUTOJS6_LUALS_LIBRARY}"]',
     "getWorkspaceConfiguration: workspaceConfiguration",
     "createStdioBridgeTransport",
     '"completion"',
@@ -553,6 +554,7 @@ function verifyProviderProtocol(paths) {
   const configurationResponse = sent.find((message) => message.id === 9001);
   const foldersResponse = sent.find((message) => message.id === 9002);
   assert(configurationResponse?.result?.[0]?.runtime?.version === "Lua 5.4" &&
+    configurationResponse.result[0].workspace?.library?.[0] === "${env:AUTOJS6_LUALS_LIBRARY}" &&
     configurationResponse.result[0].telemetry?.enable === false &&
     Object.keys(configurationResponse.result[1] || {}).length === 0,
   "LuaLS workspace/configuration response is incomplete");
@@ -677,13 +679,30 @@ function verifyProviderProtocol(paths) {
   };
 }
 
+// AutoJs6 `---@meta` definitions outside the pinned runtime (AutoJs6-Plugin-Lua-Runtime docs/types), extracted by
+// AceLuaLanguageServerRuntime and named through AUTOJS6_LUALS_LIBRARY in Lua.workspace.library.
+function verifyAutoJs6Library(paths) {
+  const libraryRoot = path.join(paths["asset-root"], "autojs6");
+  const files = walkFiles(libraryRoot);
+  assert(JSON.stringify(files) === JSON.stringify(["autojs.lua"]), `Unexpected AutoJs6 LuaLS library files: ${files}`);
+  const bytes = fs.readFileSync(path.join(libraryRoot, "autojs.lua"));
+  assert(bytes.toString("utf8").startsWith("---@meta autojs") && !bytes.includes(13),
+    "AutoJs6 LuaLS library is not an LF ---@meta autojs file");
+  const runtimeSource = fs.readFileSync(path.join(repositoryRoot, "app", "src", "main", "java", "io", "github",
+    "supermonster003", "autojs6", "plugin", "ace", "editor", "core", "lsp", "AceLuaLanguageServerRuntime.kt"), "utf8");
+  assert(runtimeSource.includes('LIBRARY_ENVIRONMENT = "AUTOJS6_LUALS_LIBRARY"') &&
+    runtimeSource.includes('LIBRARY_ASSET_ROOT = "luals/autojs6"'), "LuaLS runtime no longer extracts the AutoJs6 library");
+  return { files, bytes: bytes.length, sha256: sha256(bytes) };
+}
+
 function main() {
   const paths = parseArguments(process.argv.slice(2));
   Object.values(paths).forEach((file) => assert(fs.existsSync(file), `Required input is missing: ${file}`));
   const manifest = verifyManifest(paths);
+  const library = verifyAutoJs6Library(paths);
   const frontend = verifyFrontendWiring(paths);
   const protocol = verifyProviderProtocol(paths);
-  process.stdout.write(`${JSON.stringify({ manifest, frontend, protocol }, null, 2)}\n`);
+  process.stdout.write(`${JSON.stringify({ manifest, library, frontend, protocol }, null, 2)}\n`);
 }
 
 try {

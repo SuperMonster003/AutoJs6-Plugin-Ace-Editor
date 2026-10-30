@@ -17,7 +17,7 @@ internal fun interface AceJavaDiagnosticEngine {
 }
 
 internal class AceEcjDiagnosticCompiler(
-    private val classpathFileProvider: () -> File,
+    private val classpathFileProvider: () -> List<File>,
 ) : AceJavaDiagnosticEngine {
 
     override fun diagnose(documentUri: String, source: String): AceJavaDiagnosticResult {
@@ -25,7 +25,7 @@ internal class AceEcjDiagnosticCompiler(
         val classpath = classpathFileProvider()
         val fileName = sourceFileName(documentUri)
         val nameEnvironment = FileSystem(
-            arrayOf(classpath.absolutePath),
+            classpath.map { it.absolutePath }.toTypedArray(),
             arrayOf(fileName),
             Charsets.UTF_8.name(),
         )
@@ -83,7 +83,7 @@ internal class AceEcjDiagnosticCompiler(
         return AceJavaDiagnosticResult(
             diagnostics = diagnostics,
             durationMs = (System.nanoTime() - startedNanos) / 1_000_000.0,
-            classpathBytes = classpath.length(),
+            classpathBytes = classpath.first().length(),
         )
     }
 

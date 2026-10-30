@@ -11,7 +11,36 @@ class AceEcjDiagnosticCompilerTest {
         File("src/main/assets/java/ecj/android-36-stubs.jar"),
         File("app/src/main/assets/java/ecj/android-36-stubs.jar"),
     ).firstOrNull(File::isFile) ?: error("Bundled ECJ classpath is unavailable to unit tests")
-    private val compiler = AceEcjDiagnosticCompiler { classpath }
+    private val entryApi = listOf(
+        File("src/main/assets/java/autojs6/jvm-entry-api.jar"),
+        File("app/src/main/assets/java/autojs6/jvm-entry-api.jar"),
+    ).firstOrNull(File::isFile) ?: error("Bundled JVM Entry API classpath is unavailable to unit tests")
+    private val compiler = AceEcjDiagnosticCompiler { listOf(classpath) }
+
+    @Test
+    fun javaRuntimeEntryApiResolvesOnlyWithTheBundledEntryApiJar() {
+        val source = """
+            import org.autojs.plugin.jvmsource.api.AutoJsJvmEntry;
+            import org.autojs.plugin.jvmsource.api.JvmScriptContext;
+            public final class Main implements AutoJsJvmEntry {
+                @Override
+                public Object run(JvmScriptContext context) throws Exception {
+                    context.console().log("args: " + context.args().size());
+                    context.clipboard().setText("AutoJs6");
+                    context.sleep(1L);
+                    return context.app().launch("org.autojs.autojs6");
+                }
+            }
+        """.trimIndent()
+        val resolved = AceEcjDiagnosticCompiler { listOf(classpath, entryApi) }
+            .diagnose("file:///autojs6/editor/Main.java", source)
+        assertTrue(
+            resolved.diagnostics.joinToString("\n") { it.message },
+            resolved.diagnostics.none { it.severity == "error" },
+        )
+        val unresolved = compiler.diagnose("file:///autojs6/editor/Main.java", source)
+        assertTrue(unresolved.diagnostics.any { it.severity == "error" && "org.autojs" in it.message })
+    }
 
     @Test
     fun validJavaAndCommonAndroidTypesResolveAgainstBundledStubs() {

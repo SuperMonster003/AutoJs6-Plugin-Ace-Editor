@@ -24,6 +24,8 @@ internal object AceJavaClasspathRuntime {
         "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
     const val EXPECTED_CLASSPATH_SHA256 =
         "01c9cf8ee9de431c52ea71975f53859fe1888af7bd50a62dd49d3458bdfdbc17"
+    /** AutoJs6 JVM Entry API 4 types of the Java Runtime plugin (tools/ace-lsp/build-jvm-entry-api-jar.mjs). */
+    const val ENTRY_API_ASSET = "java/autojs6/jvm-entry-api.jar"
     val EXPECTED_EXCLUDED_CLASS_PREFIXES = listOf(
         "android/adservices/",
         "android/health/",
@@ -88,6 +90,34 @@ internal object AceJavaClasspathRuntime {
         } finally {
             if (temporary.exists()) {
                 temporary.delete()
+            }
+        }
+        installed
+    }
+
+    /**
+     * Installs the AutoJs6 JVM Entry API classes next to the Android classpath, named by their digest, so ECJ resolves
+     * `org.autojs.plugin.jvmsource.api` in Java Runtime scripts.
+     */
+    fun ensureEntryApiInstalled(context: Context, storage: AceRuntimeStorage): File = synchronized(installLock) {
+        val bytes = context.assets.open(ENTRY_API_ASSET).use { it.readBytes() }
+        val digest = bytes.inputStream().use(::sha256)
+        val installDirectory = File(storage.filesDirectory, "ace-java/autojs6")
+        check(installDirectory.isDirectory || installDirectory.mkdirs()) {
+            "Could not create Java Entry API directory: $installDirectory"
+        }
+        val installed = File(installDirectory, "jvm-entry-api-${digest.take(12)}.jar")
+        val current = installed.isFile && installed.length() == bytes.size.toLong() &&
+            installed.inputStream().buffered().use(::sha256) == digest
+        if (!current) {
+            val temporary = File(installDirectory, ".${installed.name}.${android.os.Process.myPid()}.${System.nanoTime()}.tmp")
+            try {
+                temporary.writeBytes(bytes)
+                check(temporary.renameTo(installed) || installed.inputStream().buffered().use(::sha256) == digest) {
+                    "Could not install the Java Entry API classpath"
+                }
+            } finally {
+                if (temporary.exists()) temporary.delete()
             }
         }
         installed

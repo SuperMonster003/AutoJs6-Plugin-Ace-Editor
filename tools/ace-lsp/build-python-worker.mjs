@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPOSITORY_ROOT = path.resolve(SCRIPT_DIR, "..", "..");
 const TEMPLATE_DIR = path.join(SCRIPT_DIR, "python-worker");
+const AUTOJS6_STUBS_DIR = path.join(TEMPLATE_DIR, "autojs6-stubs");
 const DEFAULT_OUTPUT_DIR = path.join(
     REPOSITORY_ROOT,
     "app",
@@ -333,6 +334,19 @@ function createTypeshedPayload(stdlibDir) {
     };
 }
 
+// Copy of docs/python/types/autojs6 of AutoJs6-Plugin-Python-Runtime; the Worker mounts it as Pyright's stubPath.
+function createAutoJs6StubPayload() {
+    const payload = {};
+    const digest = crypto.createHash("sha256");
+    for (const file of walkFiles(AUTOJS6_STUBS_DIR).filter((item) => item.endsWith(".pyi"))) {
+        const relativePath = relativePosix(AUTOJS6_STUBS_DIR, file);
+        const content = fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+        payload[relativePath] = content;
+        digest.update(relativePath).update("\0").update(content).update("\0");
+    }
+    return { payload, sha256: digest.digest("hex") };
+}
+
 function verifyCheckout(root) {
     const pyrightPackage = path.join(root, "packages", "pyright", "package.json");
     const typeshedCommit = path.join(
@@ -385,7 +399,7 @@ function acquireCheckout(explicitDirectory) {
     return { root, temporary: true };
 }
 
-function prepareBuildSources(root, typeshed) {
+function prepareBuildSources(root, typeshed, autojs6Stubs) {
     const pyrightDir = path.join(root, "packages", "pyright");
     const sourceDir = path.join(pyrightDir, "src");
     fs.copyFileSync(
@@ -403,6 +417,11 @@ function prepareBuildSources(root, typeshed) {
     fs.writeFileSync(
         path.join(sourceDir, "autojs6-python-typeshed.json"),
         JSON.stringify(typeshed.payload),
+        "utf8",
+    );
+    fs.writeFileSync(
+        path.join(sourceDir, "autojs6-python-stubs.json"),
+        JSON.stringify(autojs6Stubs.payload),
         "utf8",
     );
     return pyrightDir;
@@ -434,7 +453,8 @@ function build(root, outputDir) {
         "stdlib",
     );
     const typeshed = createTypeshedPayload(stdlibDir);
-    const pyrightDir = prepareBuildSources(root, typeshed);
+    const autojs6Stubs = createAutoJs6StubPayload();
+    const pyrightDir = prepareBuildSources(root, typeshed, autojs6Stubs);
     ensureBuildDependencies(root, pyrightDir);
     const licenses = createThirdPartyLicenseBundle(root, pyrightDir);
     const rspack = path.join(pyrightDir, "node_modules", "@rspack", "cli", "bin", "rspack.js");
@@ -473,6 +493,13 @@ function build(root, outputDir) {
         includedStdlibRoots: typeshed.selectedRoots,
         typeshedFileCount: Object.keys(typeshed.payload).length,
         typeshedContentSha256: typeshed.sha256,
+        autojs6Stubs: {
+            source: "tools/ace-lsp/python-worker/autojs6-stubs",
+            origin: "AutoJs6-Plugin-Python-Runtime docs/python/types",
+            stubPath: "/autojs6-stubs",
+            fileCount: Object.keys(autojs6Stubs.payload).length,
+            contentSha256: autojs6Stubs.sha256,
+        },
         polyfills: {
             buffer: BUFFER_VERSION,
             pathBrowserify: PATH_BROWSERIFY_VERSION,

@@ -81,9 +81,9 @@ const javaIndex = context.AutoJsAceLanguageIndices?.java;
 const kotlinIndex = context.AutoJsAceLanguageIndices?.kotlin;
 assert(javaIndex, "Java interop index did not register");
 assert(kotlinIndex, "Kotlin P2+ index did not register");
-assert(javaIndex.source?.revision === "autojs6-java17-android35-subset-2",
+assert(javaIndex.source?.revision === "autojs6-java17-android35-subset-3",
     `Unexpected Java source revision: ${javaIndex.source?.revision}`);
-assert(kotlinIndex.source?.revision === "autojs6-kotlin-2.2.21-p2plus-2",
+assert(kotlinIndex.source?.revision === "autojs6-kotlin-2.2.21-p2plus-3",
     `Unexpected Kotlin source revision: ${kotlinIndex.source?.revision}`);
 assert(Object.keys(kotlinIndex.modules).length >= 40, "Kotlin P2+ module inventory regressed");
 assert(Object.values(kotlinIndex.modules).flat().length >= 450, "Kotlin P2+ member inventory regressed");

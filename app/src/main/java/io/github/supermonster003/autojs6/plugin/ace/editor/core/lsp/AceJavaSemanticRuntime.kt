@@ -24,7 +24,10 @@ internal class AceJavaSemanticRuntime(
     storage: AceRuntimeStorage,
     private val listener: Listener,
     private val engine: AceJavaDiagnosticEngine = AceEcjDiagnosticCompiler {
-        AceJavaClasspathRuntime.ensureInstalled(context, storage)
+        listOf(
+            AceJavaClasspathRuntime.ensureInstalled(context, storage),
+            AceJavaClasspathRuntime.ensureEntryApiInstalled(context, storage),
+        )
     },
     private val runtimeMemory: Runtime = Runtime.getRuntime(),
 ) : AutoCloseable {
