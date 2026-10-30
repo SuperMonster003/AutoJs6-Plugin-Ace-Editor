@@ -33496,14 +33496,14 @@
                 {
                     "name": "call",
                     "type": "function",
-                    "doc": "call(name: string, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;",
-                    "signature": "call(name: string, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;"
+                    "doc": "call(name: ToolName, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;",
+                    "signature": "call(name: ToolName, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;"
                 },
                 {
                     "name": "callAsync",
                     "type": "function",
-                    "doc": "callAsync(name: string, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;",
-                    "signature": "callAsync(name: string, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;"
+                    "doc": "callAsync(name: ToolName, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;",
+                    "signature": "callAsync(name: ToolName, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;"
                 }
             ],
             "power_manager": [

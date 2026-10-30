@@ -5419,8 +5419,8 @@ declare namespace AutoJs6 {
     interface Plugins_tools {
         list(): ToolInfo[];
         providers(): ToolProviderInfo[];
-        call(name: string, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;
-        callAsync(name: string, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;
+        call(name: ToolName, args?: ToolArguments, options?: ToolCallOptions): ToolCallResult;
+        callAsync(name: ToolName, args?: ToolArguments, options?: ToolCallOptions): Promise<ToolCallResult>;
     }
 
     interface Power_manager {
