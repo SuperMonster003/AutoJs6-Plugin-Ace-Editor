@@ -84,7 +84,7 @@ AutoJs6 Ace Editor 플러그인은 Ace WebView 런타임, JavaScript 브리지, 
 | Java | 지원 | 지원 | 지원 | 지원 | 단일 파일 진단 |
 | Kotlin | 지원 | 지원 | 지원 | P2+ | 없음 |
 
-Python은 Python 3.12 표준 라이브러리 stub을 포함한 완전 오프라인 Pyright 1.1.413 Worker를 기본으로 사용하며 구형 WebView 비호환 또는 runtime 실패 시 조용히 P2로 전환합니다. Lua는 arm64-v8a, armeabi-v7a 및 x86_64에서 완전 오프라인 LuaLS 3.18.2 동반 프로세스를 기본으로 사용하며 네이티브 runtime을 사용할 수 없거나 실패하면 조용히 P2로 전환합니다. Java는 격리된 표준 라이브러리와 현재 문서 P2 자동 완성에 ECJ 단일 파일 진단을 결합합니다. Kotlin은 의미 Provider 없이 P2+ 자동 완성을 제공합니다.
+Python은 Python 3.12 표준 라이브러리 stub을 포함한 완전 오프라인 Pyright 1.1.413 Worker를 기본으로 사용하며 구형 WebView 비호환 또는 runtime 실패 시 조용히 P2로 전환합니다. Lua는 arm64-v8a, armeabi-v7a 및 x86_64에서 완전 오프라인 LuaLS 3.18.2 동반 프로세스를 기본으로 사용하며 네이티브 runtime을 사용할 수 없거나 실패하면 조용히 P2로 전환합니다. Java는 격리된 표준 라이브러리와 현재 문서 P2 자동 완성에 ECJ 단일 파일 진단을 결합합니다. Kotlin은 의미 Provider 없이 P2+ 자동 완성을 제공합니다. Rhino 스크립트의 `class` 구문 (Java 클래스 상속 포함)을 실행하려면 AutoJs6 6.8.0 이상이 필요합니다.
 
 AutoJs6 코드 편집기 설정은 동일한 9-mode matrix를 표시합니다. 전역 LSP switch가 모든 의미 서비스를 제어하고 TypeScript/JavaScript, Python, Lua 및 Java에는 언어별 switch가 있습니다; Kotlin은 표시되지만 사용할 수 없습니다. 파일 형식 목록이 먼저 평가됩니다: 인식된 suffix를 제거하면 해당 의미 기능이 꺼지고 custom suffix를 추가하면 파일이 LSP path에 들어갈 뿐 다른 언어로 재분류되거나 의미 Provider가 생성되지 않습니다.
 
