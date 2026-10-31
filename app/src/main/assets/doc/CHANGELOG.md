@@ -4,6 +4,20 @@
 
 ******
 
+# v2.48.0
+
+###### 2026/11/01
+
+* `新增` Node.js 与 Bun 脚本的补全跟随 Node.js Runtime 2.1.0 与 Bun Runtime 0.22.0: app, shell, 系统信息, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events 等模块与 AutoJs6 脚本一致的成员及其返回对象
+* `新增` Python, Lua, Java 和 Kotlin 脚本可以补全 AutoJs6 语言运行时的 API; Python 悬停显示 54 个常量的字面值
+* `新增` Java 的参数, 字段和局部变量按声明类型 (或 new / 强制转换的初始值的类型) 补全成员
+* `新增` Flow 对象的 await() 与 sync(timeout) 进入 Node.js 与 Bun 的补全
+* `新增` plugins.tools.call / callAsync 补全官方插件的 15 个工具名, 其他工具名仍可使用
+* `修复` ocr.detect 与 barcode / qrcode detect 的结果没有成员补全的问题
+* `修复` 部分参数与返回类型和 AutoJs6 脚本模块不一致的问题 (engines.stopAllAndToast, util.deprecate, Flow 的选择器条件, 可传 null 的参数与任务选项)
+* `优化` 捆绑声明升级至 @sm003/autojs6-dts 4.86.0
+* `优化` OCR 声明补全 extras, useCls, PP-OCRv3 的 variant / profile 与 mergeLine 的说明; 静态索引补全 55 个 compose 组件工厂与 util.versionCodes
+
 # v2.47.0
 
 ###### 2026/10/29

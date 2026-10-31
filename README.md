@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.48.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,20 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-u
 ### 发行历史
 
 ******
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `新增` Node.js 与 Bun 脚本的补全跟随 Node.js Runtime 2.1.0 与 Bun Runtime 0.22.0: app, shell, 系统信息, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events 等模块与 AutoJs6 脚本一致的成员及其返回对象
+* `新增` Python, Lua, Java 和 Kotlin 脚本可以补全 AutoJs6 语言运行时的 API; Python 悬停显示 54 个常量的字面值
+* `新增` Java 的参数, 字段和局部变量按声明类型 (或 new / 强制转换的初始值的类型) 补全成员
+* `新增` Flow 对象的 await() 与 sync(timeout) 进入 Node.js 与 Bun 的补全
+* `新增` plugins.tools.call / callAsync 补全官方插件的 15 个工具名, 其他工具名仍可使用
+* `修复` ocr.detect 与 barcode / qrcode detect 的结果没有成员补全的问题
+* `修复` 部分参数与返回类型和 AutoJs6 脚本模块不一致的问题 (engines.stopAllAndToast, util.deprecate, Flow 的选择器条件, 可传 null 的参数与任务选项)
+* `优化` 捆绑声明升级至 @sm003/autojs6-dts 4.86.0
+* `优化` OCR 声明补全 extras, useCls, PP-OCRv3 的 variant / profile 与 mergeLine 的说明; 静态索引补全 55 个 compose 组件工厂与 util.versionCodes
 
 # v2.47.0
 
@@ -199,12 +213,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.47.0-u
 * `新增` 选择器声明补全 normalize 与 prefer: 全局函数, 链式方法与对象选择器的键, 含 Selector.NormalizeOptions 与 Selector.PreferKey 类型 (AutoJs6 6.8.0 起)
 * `新增` auto 声明补全 clearFlags 方法, setFlags 的 ! 前缀与 noFastPath / noRefreshOnHit 标志; explain 可传入罗盘与结果类型, 结果含 target / trail / result 等字段; stats 补全 fastPath 与 queries.refinds (AutoJs6 6.8.0 起)
 * `优化` pickup / detect 的结果类型 Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams 改由 AutoJs6 的节点方法注册表生成, 包含全部 206 个可调用的方法名及带参数的重载, 并补全 ## / $$ / .. 与数组形式的结果类型
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `新增` sqlite 声明补全 onDowngrade 回调: 打开数据库时请求的 version 低于现有版本时调用 (AutoJs6 6.8.0 起), 未实现时降级不执行任何操作, 保留表与数据
 
 ##### 更多发行历史可参阅
 
