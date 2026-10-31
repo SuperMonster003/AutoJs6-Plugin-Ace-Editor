@@ -158,8 +158,7 @@ for (const [file, directive, runtime] of routes) {
     const flowMethods=query(service,flowHeader+'flow.','',uri);
     for(const name of ['wait','waitAsync','waitUntil','waitForStable','waitForVisible','waitForHidden','Flow','FlowError','defaults','pending','repeatUntil'])assert(flowMethods.includes(name),file+': flow '+name);
     const flowChain=query(service,flowHeader+'flow.of(3).map(value=>value+1).','',uri);
-    for(const name of ['then','catch','finally','retry','timeout','cancel','toPromise','value','state'])assert(flowChain.includes(name),file+': Flow chain '+name);
-    for(const name of ['sync','await'])assert(!flowChain.includes(name),file+': unsupported Flow method '+name);
+    for(const name of ['then','catch','finally','retry','timeout','cancel','toPromise','await','sync','value','state'])assert(flowChain.includes(name),file+': Flow chain '+name);
     for(const name of ['within','scope','press','swipe','gesture','gestures'])assert(flowChain.includes(name),file+': scoped Flow method '+name);
     const scopedText=query(service,flowHeader+"async function f(){const text=await flow.of(0).scope({resultType:'text'}).sleep(1).wait({text:'ready'});text.",'',uri);
     for(const name of ['toUpperCase','substring'])assert(scopedText.includes(name),file+': scoped string result '+name);
