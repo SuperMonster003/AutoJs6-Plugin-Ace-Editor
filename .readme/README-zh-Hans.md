@@ -171,7 +171,7 @@ Release 构建:
 构建后安装生成的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.48.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-universal.apk
 ```
 
 随后在 AutoJs6 插件中心启用 `ace-editor`, 完全退出并重新启动 AutoJs6. 安装, 更新或回滚插件后都应重启宿主.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.48.0-u
 ### 发行历史
 
 ******
+
+# v2.49.0
+
+###### 2026/11/02
+
+* `新增` Rhino 脚本可以补全 imgui 与 $imgui: 配合 AutoJs6 Plugin ImGui 1.18.x, 函数, 窗口会话和返回对象的成员都有补全与说明
+* `优化` 捆绑声明升级至 @sm003/autojs6-dts 4.87.0
 
 # v2.48.0
 
@@ -206,14 +213,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.48.0-u
 * `新增` speech 声明补全 diarize, detectLanguage 与 tag 及其 Async 形态: 说话人分离 (谁在何时说话, 可按已注册的声纹认人), 语种识别与音频标签 (AudioSet 的 527 个标签), 选项可带 onProgress 进度回调, 含 Speech.Diarization, Speech.LanguageDetection 与 Speech.Tagging 等结果类型 (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
 * `新增` speech 声明补全 speech.speaker 说话人识别: enroll, verify, identify 及其 Async 形态, list 与 remove, 以及错误码 SPEAKER_NOT_FOUND 与 AUDIO_TOO_SHORT (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
 * `优化` Speech.Feature 增加 'speaker', 'diarization', 'languageId' 与 'audioTagging'; Speech.Kind 增加 'speaker', 'segment', 'langid' 与 'tagger' 四种模型类别, models.list, setDefault 与 getDefault 可使用这些类别
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `新增` 选择器声明补全 normalize 与 prefer: 全局函数, 链式方法与对象选择器的键, 含 Selector.NormalizeOptions 与 Selector.PreferKey 类型 (AutoJs6 6.8.0 起)
-* `新增` auto 声明补全 clearFlags 方法, setFlags 的 ! 前缀与 noFastPath / noRefreshOnHit 标志; explain 可传入罗盘与结果类型, 结果含 target / trail / result 等字段; stats 补全 fastPath 与 queries.refinds (AutoJs6 6.8.0 起)
-* `优化` pickup / detect 的结果类型 Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams 改由 AutoJs6 的节点方法注册表生成, 包含全部 206 个可调用的方法名及带参数的重载, 并补全 ## / $$ / .. 与数组形式的结果类型
 
 ##### 更多发行历史可参阅
 

@@ -5,6 +5,15 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v2.49.0": {
+      "released_date": "2026/11/02",
+      "feature": [
+        "Rhino 脚本可以补全 imgui 与 $imgui: 配合 AutoJs6 Plugin ImGui 1.18.x, 函数, 窗口会话和返回对象的成员都有补全与说明"
+      ],
+      "improvement": [
+        "捆绑声明升级至 @sm003/autojs6-dts 4.87.0"
+      ]
+    },
     "v2.48.0": {
       "released_date": "2026/11/01",
       "feature": [
