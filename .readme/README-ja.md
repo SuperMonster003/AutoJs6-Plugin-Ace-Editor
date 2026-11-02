@@ -84,7 +84,7 @@ AutoJs6 Ace Editor Plugin は, Ace WebView ランタイム, JavaScript ブリッ
 | Java | 対応 | 対応 | 対応 | 対応 | 単一ファイル診断 |
 | Kotlin | 対応 | 対応 | 対応 | P2+ | なし |
 
-Python は Python 3.12 標準ライブラリ stub を含む完全オフラインの Pyright 1.1.413 Worker を既定で使い, 古い WebView の非互換や runtime 障害時は通知なしで P2 に戻ります. Lua は arm64-v8a, armeabi-v7a, x86_64 で完全オフラインの LuaLS 3.18.2 コンパニオンプロセスを既定で使い, ネイティブ runtime が利用不能または障害時は通知なしで P2 に戻ります. Java は分離された標準ライブラリと現在文書の P2 補完に ECJ 単一ファイル診断を組み合わせます. Kotlin はセマンティック Provider なしで P2+ 補完を提供します. Rhino スクリプトの `class` 構文 (Java クラスの継承を含む) の実行には AutoJs6 6.8.0 以降が必要です.
+Python は Python 3.12 標準ライブラリ stub を含む完全オフラインの Pyright 1.1.413 Worker を既定で使い, 古い WebView の非互換や runtime 障害時は通知なしで P2 に戻ります. Lua は arm64-v8a, armeabi-v7a, x86_64 で完全オフラインの LuaLS 3.18.2 コンパニオンプロセスを既定で使い, ネイティブ runtime が利用不能または障害時は通知なしで P2 に戻ります. Java は分離された標準ライブラリと現在文書の P2 補完に ECJ 単一ファイル診断を組み合わせます. Kotlin はセマンティック Provider なしで P2+ 補完を提供します. Rhino スクリプトの `class` 構文 (Java クラスの継承を含む) の実行には AutoJs6 6.8.0 以降が必要です. async 関数, async ジェネレーターと `for await` の要件も同じです.
 
 AutoJs6 のコードエディタ設定は同じ 9-mode matrix を表示します. グローバル LSP switch がすべてのセマンティックサービスを制御し, TypeScript/JavaScript, Python, Lua, Java には言語別 switch があります; Kotlin は表示されますが利用できません. ファイル種類リストが最初に判定されます: 認識済み suffix を外すとそのセマンティック機能は無効になり, custom suffix の追加はファイルを LSP path に通すだけで別言語への再分類や Provider 作成は行いません.
 

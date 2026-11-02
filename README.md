@@ -84,7 +84,7 @@ AutoJs6 Ace Editor Plugin 将 Ace WebView 运行时, JavaScript bridge, 输入�
 | Java | 支持 | 支持 | 支持 | 支持 | 单文件诊断 |
 | Kotlin | 支持 | 支持 | 支持 | P2+ | 无 |
 
-Python 默认使用完全离线的 Pyright 1.1.413 Worker 和 Python 3.12 标准库存根; 老 WebView 不兼容或运行失败时会静默降级至 P2. Lua 在 arm64-v8a, armeabi-v7a 与 x86_64 默认使用完全离线的 LuaLS 3.18.2 伴生进程; 原生运行时不可用或故障时会静默降级至 P2. Java 将相互隔离的标准库与当前文档 P2 补全和 ECJ 单文件诊断结合. Kotlin 提供 P2+ 补全, 但没有语义 Provider. Rhino 脚本的 `class` 语法 (含继承 Java 类) 需要 AutoJs6 6.8.0 及以上版本运行.
+Python 默认使用完全离线的 Pyright 1.1.413 Worker 和 Python 3.12 标准库存根; 老 WebView 不兼容或运行失败时会静默降级至 P2. Lua 在 arm64-v8a, armeabi-v7a 与 x86_64 默认使用完全离线的 LuaLS 3.18.2 伴生进程; 原生运行时不可用或故障时会静默降级至 P2. Java 将相互隔离的标准库与当前文档 P2 补全和 ECJ 单文件诊断结合. Kotlin 提供 P2+ 补全, 但没有语义 Provider. Rhino 脚本的 `class` 语法 (含继承 Java 类) 需要 AutoJs6 6.8.0 及以上版本运行. async 函数, async 生成器与 `for await` 的版本要求相同.
 
 AutoJs6 的代码编辑器设置会展示同一份 9-mode 矩阵. 全局 LSP 开关控制所有语义服务, TypeScript/JavaScript, Python, Lua 与 Java 另有逐语言开关; Kotlin 保持可见但不可启用. 文件类型列表最先作为白名单判断: 移除已识别后缀会关闭该语言的语义, 添加自定义后缀只允许文件进入 LSP 路径, 不会把它重新识别为其他语言或创建语义 Provider.
 
