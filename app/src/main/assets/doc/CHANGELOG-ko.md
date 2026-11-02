@@ -4,6 +4,28 @@
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `기능` Rhino 스크립트에서 imgui 및 $imgui 완성 지원: AutoJs6 Plugin ImGui 1.18.x와 함께 함수, 창 세션 및 반환 객체 멤버의 완성과 설명 제공
+* `개선` 번들 선언을 @sm003/autojs6-dts 4.87.0으로 업그레이드
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `기능` Node.js 및 Bun 스크립트 완성이 Node.js Runtime 2.1.0 및 Bun Runtime 0.22.0을 반영: app, shell, 시스템 정보, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events 등의 멤버와 반환 객체가 AutoJs6 스크립트와 일치
+* `기능` Python, Lua, Java 및 Kotlin 스크립트에서 AutoJs6 언어 런타임 API 완성 지원; Python 호버에 상수 54개의 리터럴 값 표시
+* `기능` Java 매개변수, 필드 및 지역 변수의 선언된 타입 또는 초기값인 new 표현식/형 변환의 타입에 따른 멤버 완성
+* `기능` Node.js 및 Bun에서 Flow 객체의 await() 및 sync(timeout) 완성
+* `기능` plugins.tools.call / callAsync에서 공식 플러그인의 도구 이름 15개 완성, 다른 도구 이름도 계속 사용 가능
+* `수정` ocr.detect 및 barcode / qrcode detect 결과에 멤버 완성이 없던 문제
+* `수정` 일부 매개변수 및 반환 타입이 AutoJs6 스크립트 모듈과 일치하지 않던 문제 (engines.stopAllAndToast, util.deprecate, Flow 선택자 조건, null 허용 매개변수 및 작업 옵션)
+* `개선` 번들 선언을 @sm003/autojs6-dts 4.86.0으로 업그레이드
+* `개선` OCR 선언에 extras, useCls, PP-OCRv3의 variant / profile 및 mergeLine 설명 보완; 정적 인덱스에 compose 구성 요소 팩터리 55개 및 util.versionCodes 추가
+* `개선` Node.js 및 Bun 스크립트의 speech.models.list 결과에서 updateAvailable 및 latestVersionCode 완성 (3-Macaw Speech 1.4.0 이상 필요)
+
 # v2.47.0
 
 ###### 2026/10/29

@@ -184,6 +184,28 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `Feature` Rhino scripts can complete imgui and $imgui: with AutoJs6 Plugin ImGui 1.18.x, completion and descriptions cover functions, window sessions and members of returned objects
+* `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `Feature` Node.js and Bun script completion follows Node.js Runtime 2.1.0 and Bun Runtime 0.22.0: members and returned objects of app, shell, system information, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events and other modules match AutoJs6 scripts
+* `Feature` Python, Lua, Java and Kotlin scripts can complete the AutoJs6 language runtime APIs; Python hovers show the literal values of 54 constants
+* `Feature` Java parameters, fields and local variables receive member completion based on their declared types, or the type of a new expression or cast used as their initializer
+* `Feature` Completion for await() and sync(timeout) on Flow objects in Node.js and Bun
+* `Feature` plugins.tools.call / callAsync complete the names of 15 tools from official plugins; other tool names remain supported
+* `Fix` Missing member completion on results of ocr.detect and barcode / qrcode detect
+* `Fix` Some parameter and return types differed from AutoJs6 script modules (engines.stopAllAndToast, util.deprecate, Flow selector conditions, nullable parameters and task options)
+* `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.86.0
+* `Improvement` OCR declarations describe extras, useCls, PP-OCRv3 variant / profile and mergeLine; the static index includes 55 compose component factories and util.versionCodes
+* `Improvement` Node.js and Bun scripts can complete updateAvailable and latestVersionCode in speech.models.list results (requires 3-Macaw Speech 1.4.0 or later)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Feature` speech declarations add diarize, detectLanguage and tag with their Async forms: speaker diarization (who spoke when, optionally named after enrolled voiceprints), language identification and audio tagging (the 527 AudioSet labels); the options take an onProgress callback, with result types such as Speech.Diarization, Speech.LanguageDetection and Speech.Tagging (AutoJs6 6.8.0 or later, needs 3-Macaw Speech 1.3.0)
 * `Feature` speech declarations add speech.speaker for speaker recognition: enroll, verify and identify with their Async forms, list and remove, and the SPEAKER_NOT_FOUND and AUDIO_TOO_SHORT error codes (AutoJs6 6.8.0 or later, needs 3-Macaw Speech 1.3.0)
 * `Improvement` Speech.Feature gains 'speaker', 'diarization', 'languageId' and 'audioTagging'; Speech.Kind gains the model kinds 'speaker', 'segment', 'langid' and 'tagger', which models.list, setDefault and getDefault accept
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `Feature` Selector declarations for normalize and prefer: global functions, chained methods and object selector keys, with the Selector.NormalizeOptions and Selector.PreferKey types (AutoJs6 6.8.0 or later)
-* `Feature` auto declarations add the clearFlags method, the ! prefix of setFlags and the noFastPath / noRefreshOnHit flags; explain takes a compass and a result type, and its result declares target / trail / result and more; stats declares fastPath and queries.refinds (AutoJs6 6.8.0 or later)
-* `Improvement` The result types of pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) are generated from the node method registry of AutoJs6: all 206 callable method names and their overloads with parameters, plus the ## / $$ / .. result types and the array forms
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `Feature` sqlite declarations add the onDowngrade callback: called when the requested version is lower than the version of the existing database (AutoJs6 6.8.0 or later); without it, the downgrade does nothing and keeps the tables and data
 
 ##### Complete release history
 

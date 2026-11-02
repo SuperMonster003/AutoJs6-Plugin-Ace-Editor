@@ -4,6 +4,28 @@
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `Función` Los scripts Rhino completan imgui y $imgui: con AutoJs6 Plugin ImGui 1.18.x, las funciones, sesiones de ventana y miembros de los objetos devueltos incluyen completado y descripciones
+* `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `Función` El completado de Node.js y Bun sigue Node.js Runtime 2.1.0 y Bun Runtime 0.22.0: los miembros y objetos devueltos de app, shell, información del sistema, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events y otros módulos coinciden con los scripts AutoJs6
+* `Función` Completado de las API de los entornos de lenguaje AutoJs6 en scripts Python, Lua, Java y Kotlin; la información al pasar el cursor en Python muestra los valores literales de 54 constantes
+* `Función` Completado de miembros de parámetros, campos y variables locales Java según el tipo declarado o el tipo de la expresión new o conversión usada como inicializador
+* `Función` Completado de await() y sync(timeout) de objetos Flow en Node.js y Bun
+* `Función` plugins.tools.call / callAsync completan los nombres de 15 herramientas de plugins oficiales; los demás nombres siguen siendo válidos
+* `Corrección` Faltaba el completado de miembros en los resultados de ocr.detect y barcode / qrcode detect
+* `Corrección` Algunos tipos de parámetros y retorno diferían de los módulos de scripts AutoJs6 (engines.stopAllAndToast, util.deprecate, condiciones de selectores Flow, parámetros que admiten null y opciones de tareas)
+* `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.86.0
+* `Mejora` Las declaraciones OCR describen extras, useCls, variant / profile de PP-OCRv3 y mergeLine; el índice estático incluye 55 fábricas de componentes compose y util.versionCodes
+* `Mejora` Completado de updateAvailable y latestVersionCode en resultados de speech.models.list de Node.js y Bun (requiere 3-Macaw Speech 1.4.0 o posterior)
+
 # v2.47.0
 
 ###### 2026/10/29

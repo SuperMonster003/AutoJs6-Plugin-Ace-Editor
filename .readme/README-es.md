@@ -184,6 +184,28 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `Función` Los scripts Rhino completan imgui y $imgui: con AutoJs6 Plugin ImGui 1.18.x, las funciones, sesiones de ventana y miembros de los objetos devueltos incluyen completado y descripciones
+* `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `Función` El completado de Node.js y Bun sigue Node.js Runtime 2.1.0 y Bun Runtime 0.22.0: los miembros y objetos devueltos de app, shell, información del sistema, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events y otros módulos coinciden con los scripts AutoJs6
+* `Función` Completado de las API de los entornos de lenguaje AutoJs6 en scripts Python, Lua, Java y Kotlin; la información al pasar el cursor en Python muestra los valores literales de 54 constantes
+* `Función` Completado de miembros de parámetros, campos y variables locales Java según el tipo declarado o el tipo de la expresión new o conversión usada como inicializador
+* `Función` Completado de await() y sync(timeout) de objetos Flow en Node.js y Bun
+* `Función` plugins.tools.call / callAsync completan los nombres de 15 herramientas de plugins oficiales; los demás nombres siguen siendo válidos
+* `Corrección` Faltaba el completado de miembros en los resultados de ocr.detect y barcode / qrcode detect
+* `Corrección` Algunos tipos de parámetros y retorno diferían de los módulos de scripts AutoJs6 (engines.stopAllAndToast, util.deprecate, condiciones de selectores Flow, parámetros que admiten null y opciones de tareas)
+* `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.86.0
+* `Mejora` Las declaraciones OCR describen extras, useCls, variant / profile de PP-OCRv3 y mergeLine; el índice estático incluye 55 fábricas de componentes compose y util.versionCodes
+* `Mejora` Completado de updateAvailable y latestVersionCode en resultados de speech.models.list de Node.js y Bun (requiere 3-Macaw Speech 1.4.0 o posterior)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Función` las declaraciones de speech añaden diarize, detectLanguage y tag con sus formas Async: diarización de hablantes (quién habla y cuándo, con nombre opcional según las huellas de voz registradas), identificación del idioma y etiquetado de audio (las 527 etiquetas de AudioSet); las opciones aceptan un callback onProgress, con tipos de resultado como Speech.Diarization, Speech.LanguageDetection y Speech.Tagging (AutoJs6 6.8.0 o posterior, requiere 3-Macaw Speech 1.3.0)
 * `Función` las declaraciones de speech añaden speech.speaker para el reconocimiento de hablantes: enroll, verify e identify con sus formas Async, list y remove, y los códigos de error SPEAKER_NOT_FOUND y AUDIO_TOO_SHORT (AutoJs6 6.8.0 o posterior, requiere 3-Macaw Speech 1.3.0)
 * `Mejora` Speech.Feature añade 'speaker', 'diarization', 'languageId' y 'audioTagging'; Speech.Kind añade los tipos de modelo 'speaker', 'segment', 'langid' y 'tagger', que aceptan models.list, setDefault y getDefault
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `Función` Declaraciones de los selectores normalize y prefer: funciones globales, métodos encadenados y claves del selector de objeto, con los tipos Selector.NormalizeOptions y Selector.PreferKey (AutoJs6 6.8.0 o posterior)
-* `Función` Declaraciones de auto: el método clearFlags, el prefijo ! de setFlags y los indicadores noFastPath / noRefreshOnHit; explain acepta una brújula y un tipo de resultado, y su resultado declara target / trail / result y otros campos; stats declara fastPath y queries.refinds (AutoJs6 6.8.0 o posterior)
-* `Mejora` Los tipos de resultado de pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) se generan a partir del registro de métodos de nodo de AutoJs6: los 206 nombres de métodos invocables y sus sobrecargas con parámetros, además de los tipos de resultado ## / $$ / .. y las formas de array
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `Función` Declaraciones de sqlite con la devolución de llamada onDowngrade: se llama cuando la version solicitada es inferior a la de la base de datos existente (AutoJs6 6.8.0 o posterior); sin ella, la degradación no hace nada y conserva las tablas y los datos
 
 ##### Para ver más historial de versiones
 

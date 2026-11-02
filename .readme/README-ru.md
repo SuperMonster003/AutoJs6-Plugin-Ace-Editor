@@ -184,6 +184,28 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `Функция` Дополнение imgui и $imgui в скриптах Rhino: с AutoJs6 Plugin ImGui 1.18.x доступны дополнение и описания функций, оконных сеансов и членов возвращаемых объектов
+* `Улучшение` Встроенные объявления обновлены до @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `Функция` Дополнение Node.js и Bun соответствует Node.js Runtime 2.1.0 и Bun Runtime 0.22.0: члены и возвращаемые объекты app, shell, системной информации, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events и других модулей согласованы со скриптами AutoJs6
+* `Функция` Дополнение API языковых сред AutoJs6 в скриптах Python, Lua, Java и Kotlin; подсказки Python показывают буквальные значения 54 констант
+* `Функция` Дополнение членов параметров, полей и локальных переменных Java по объявленному типу либо типу выражения new или приведения типа в инициализаторе
+* `Функция` Дополнение await() и sync(timeout) объектов Flow в Node.js и Bun
+* `Функция` plugins.tools.call / callAsync дополняют имена 15 инструментов официальных плагинов; другие имена по-прежнему допустимы
+* `Исправление` Отсутствовало дополнение членов результатов ocr.detect и barcode / qrcode detect
+* `Исправление` Некоторые типы параметров и результатов отличались от модулей скриптов AutoJs6 (engines.stopAllAndToast, util.deprecate, условия селекторов Flow, параметры с поддержкой null и параметры задач)
+* `Улучшение` Встроенные объявления обновлены до @sm003/autojs6-dts 4.86.0
+* `Улучшение` Объявления OCR описывают extras, useCls, variant / profile PP-OCRv3 и mergeLine; статический индекс включает 55 фабрик компонентов compose и util.versionCodes
+* `Улучшение` Дополнение updateAvailable и latestVersionCode в результатах speech.models.list в Node.js и Bun (требуется 3-Macaw Speech 1.4.0 или новее)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `Функция` объявления speech добавляют diarize, detectLanguage и tag с их формами Async: разделение по говорящим (кто и когда говорил, по желанию с именами по зарегистрированным голосовым отпечаткам), определение языка и разметку звуков (527 меток AudioSet); параметры принимают обратный вызов onProgress, добавлены типы результатов, такие как Speech.Diarization, Speech.LanguageDetection и Speech.Tagging (AutoJs6 6.8.0 или новее, нужен 3-Macaw Speech 1.3.0)
 * `Функция` объявления speech добавляют speech.speaker для распознавания говорящего: enroll, verify и identify с их формами Async, list и remove, а также коды ошибок SPEAKER_NOT_FOUND и AUDIO_TOO_SHORT (AutoJs6 6.8.0 или новее, нужен 3-Macaw Speech 1.3.0)
 * `Улучшение` в Speech.Feature добавлены 'speaker', 'diarization', 'languageId' и 'audioTagging'; в Speech.Kind добавлены типы моделей 'speaker', 'segment', 'langid' и 'tagger', которые принимают models.list, setDefault и getDefault
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `Функция` Объявления селекторов normalize и prefer: глобальные функции, методы цепочки и ключи объектного селектора, с типами Selector.NormalizeOptions и Selector.PreferKey (AutoJs6 6.8.0 и новее)
-* `Функция` Объявления auto: метод clearFlags, префикс ! в setFlags и флаги noFastPath / noRefreshOnHit; explain принимает компас и тип результата, а его результат содержит поля target / trail / result и другие; stats содержит fastPath и queries.refinds (AutoJs6 6.8.0 и новее)
-* `Улучшение` Типы результатов pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) генерируются из реестра методов узлов AutoJs6: все 206 вызываемых имён методов и их перегрузки с параметрами, а также типы результатов ## / $$ / .. и формы массивов
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `Функция` Объявления sqlite с обратным вызовом onDowngrade: вызывается, когда запрошенная version ниже версии существующей базы данных (AutoJs6 6.8.0 и новее); без него понижение версии ничего не делает и сохраняет таблицы и данные
 
 ##### Подробнее об истории выпусков
 

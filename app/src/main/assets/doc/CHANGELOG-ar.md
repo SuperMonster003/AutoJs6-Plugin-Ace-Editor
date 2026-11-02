@@ -4,6 +4,28 @@
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `ميزة` إكمال imgui و $imgui في سكربتات Rhino: مع AutoJs6 Plugin ImGui 1.18.x يتوفر الإكمال والوصف للدوال وجلسات النوافذ وأعضاء الكائنات المعادة
+* `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `ميزة` إكمال Node.js و Bun يواكب Node.js Runtime 2.1.0 و Bun Runtime 0.22.0: أعضاء وكائنات النتائج في app, shell, معلومات النظام, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events وغيرها تطابق سكربتات AutoJs6
+* `ميزة` إكمال واجهات بيئات لغات AutoJs6 في سكربتات Python و Lua و Java و Kotlin; تعرض تلميحات Python القيم الحرفية لـ 54 ثابتا
+* `ميزة` إكمال أعضاء معاملات Java وحقولها ومتغيراتها المحلية بحسب النوع المعلن أو نوع تعبير new أو تحويل النوع المستخدم للتهيئة
+* `ميزة` إكمال await() و sync(timeout) لكائنات Flow في Node.js و Bun
+* `ميزة` يكمل plugins.tools.call / callAsync أسماء 15 أداة من الإضافات الرسمية; تظل أسماء الأدوات الأخرى مقبولة
+* `إصلاح` غياب إكمال الأعضاء في نتائج ocr.detect و barcode / qrcode detect
+* `إصلاح` اختلاف بعض أنواع المعاملات والنتائج عن وحدات سكربتات AutoJs6 (engines.stopAllAndToast, util.deprecate, شروط محددات Flow, المعاملات التي تقبل null وخيارات المهام)
+* `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.86.0
+* `تحسين` تصريحات OCR توضح extras و useCls و variant / profile في PP-OCRv3 و mergeLine; يتضمن الفهرس الثابت 55 مصنعا لمكونات compose و util.versionCodes
+* `تحسين` إكمال updateAvailable و latestVersionCode في نتائج speech.models.list لسكربتات Node.js و Bun (يتطلب 3-Macaw Speech 1.4.0 أو أحدث)
+
 # v2.47.0
 
 ###### 2026/10/29

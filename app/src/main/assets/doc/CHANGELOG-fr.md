@@ -4,6 +4,28 @@
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `Fonctionnalité` Les scripts Rhino complètent imgui et $imgui: avec AutoJs6 Plugin ImGui 1.18.x, les fonctions, sessions de fenêtre et membres des objets retournés disposent de complétions et de descriptions
+* `Amélioration` Déclarations intégrées mises à niveau vers @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `Fonctionnalité` La complétion Node.js et Bun suit Node.js Runtime 2.1.0 et Bun Runtime 0.22.0: les membres et objets retournés de app, shell, des informations système, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events et autres modules correspondent aux scripts AutoJs6
+* `Fonctionnalité` Complétion des API des environnements linguistiques AutoJs6 dans les scripts Python, Lua, Java et Kotlin; le survol Python affiche les valeurs littérales de 54 constantes
+* `Fonctionnalité` Complétion des membres des paramètres, champs et variables locales Java selon leur type déclaré ou le type de leur initialisation par new ou conversion de type
+* `Fonctionnalité` Complétion de await() et sync(timeout) des objets Flow dans Node.js et Bun
+* `Fonctionnalité` plugins.tools.call / callAsync complètent les noms de 15 outils des plugins officiels; les autres noms restent utilisables
+* `Correctif` Absence de complétion des membres des résultats de ocr.detect et barcode / qrcode detect
+* `Correctif` Certains types de paramètres et de retours différaient des modules de script AutoJs6 (engines.stopAllAndToast, util.deprecate, conditions de sélecteur Flow, paramètres acceptant null et options de tâche)
+* `Amélioration` Déclarations intégrées mises à niveau vers @sm003/autojs6-dts 4.86.0
+* `Amélioration` Les déclarations OCR décrivent extras, useCls, variant / profile de PP-OCRv3 et mergeLine; l'index statique inclut 55 fabriques de composants compose et util.versionCodes
+* `Amélioration` Complétion de updateAvailable et latestVersionCode dans les résultats de speech.models.list pour Node.js et Bun (nécessite 3-Macaw Speech 1.4.0 ou ultérieur)
+
 # v2.47.0
 
 ###### 2026/10/29

@@ -4,6 +4,28 @@
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `Feature` Rhino scripts can complete imgui and $imgui: with AutoJs6 Plugin ImGui 1.18.x, completion and descriptions cover functions, window sessions and members of returned objects
+* `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `Feature` Node.js and Bun script completion follows Node.js Runtime 2.1.0 and Bun Runtime 0.22.0: members and returned objects of app, shell, system information, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events and other modules match AutoJs6 scripts
+* `Feature` Python, Lua, Java and Kotlin scripts can complete the AutoJs6 language runtime APIs; Python hovers show the literal values of 54 constants
+* `Feature` Java parameters, fields and local variables receive member completion based on their declared types, or the type of a new expression or cast used as their initializer
+* `Feature` Completion for await() and sync(timeout) on Flow objects in Node.js and Bun
+* `Feature` plugins.tools.call / callAsync complete the names of 15 tools from official plugins; other tool names remain supported
+* `Fix` Missing member completion on results of ocr.detect and barcode / qrcode detect
+* `Fix` Some parameter and return types differed from AutoJs6 script modules (engines.stopAllAndToast, util.deprecate, Flow selector conditions, nullable parameters and task options)
+* `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.86.0
+* `Improvement` OCR declarations describe extras, useCls, PP-OCRv3 variant / profile and mergeLine; the static index includes 55 compose component factories and util.versionCodes
+* `Improvement` Node.js and Bun scripts can complete updateAvailable and latestVersionCode in speech.models.list results (requires 3-Macaw Speech 1.4.0 or later)
+
 # v2.47.0
 
 ###### 2026/10/29

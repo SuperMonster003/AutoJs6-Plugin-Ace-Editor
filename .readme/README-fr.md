@@ -184,6 +184,28 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `Fonctionnalité` Les scripts Rhino complètent imgui et $imgui: avec AutoJs6 Plugin ImGui 1.18.x, les fonctions, sessions de fenêtre et membres des objets retournés disposent de complétions et de descriptions
+* `Amélioration` Déclarations intégrées mises à niveau vers @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `Fonctionnalité` La complétion Node.js et Bun suit Node.js Runtime 2.1.0 et Bun Runtime 0.22.0: les membres et objets retournés de app, shell, des informations système, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events et autres modules correspondent aux scripts AutoJs6
+* `Fonctionnalité` Complétion des API des environnements linguistiques AutoJs6 dans les scripts Python, Lua, Java et Kotlin; le survol Python affiche les valeurs littérales de 54 constantes
+* `Fonctionnalité` Complétion des membres des paramètres, champs et variables locales Java selon leur type déclaré ou le type de leur initialisation par new ou conversion de type
+* `Fonctionnalité` Complétion de await() et sync(timeout) des objets Flow dans Node.js et Bun
+* `Fonctionnalité` plugins.tools.call / callAsync complètent les noms de 15 outils des plugins officiels; les autres noms restent utilisables
+* `Correctif` Absence de complétion des membres des résultats de ocr.detect et barcode / qrcode detect
+* `Correctif` Certains types de paramètres et de retours différaient des modules de script AutoJs6 (engines.stopAllAndToast, util.deprecate, conditions de sélecteur Flow, paramètres acceptant null et options de tâche)
+* `Amélioration` Déclarations intégrées mises à niveau vers @sm003/autojs6-dts 4.86.0
+* `Amélioration` Les déclarations OCR décrivent extras, useCls, variant / profile de PP-OCRv3 et mergeLine; l'index statique inclut 55 fabriques de composants compose et util.versionCodes
+* `Amélioration` Complétion de updateAvailable et latestVersionCode dans les résultats de speech.models.list pour Node.js et Bun (nécessite 3-Macaw Speech 1.4.0 ou ultérieur)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ Les installations de production doivent utiliser une signature approuvée par Au
 * `Fonctionnalité` les déclarations de speech ajoutent diarize, detectLanguage et tag avec leurs formes Async: la segmentation en locuteurs (qui parle quand, avec en option le nom des empreintes vocales enregistrées), l'identification de la langue et l'étiquetage audio (les 527 étiquettes d'AudioSet); les options acceptent un rappel onProgress, avec des types de résultat comme Speech.Diarization, Speech.LanguageDetection et Speech.Tagging (AutoJs6 6.8.0 ou ultérieur, nécessite 3-Macaw Speech 1.3.0)
 * `Fonctionnalité` les déclarations de speech ajoutent speech.speaker pour la reconnaissance du locuteur: enroll, verify et identify avec leurs formes Async, list et remove, ainsi que les codes d'erreur SPEAKER_NOT_FOUND et AUDIO_TOO_SHORT (AutoJs6 6.8.0 ou ultérieur, nécessite 3-Macaw Speech 1.3.0)
 * `Amélioration` Speech.Feature ajoute 'speaker', 'diarization', 'languageId' et 'audioTagging'; Speech.Kind ajoute les types de modèles 'speaker', 'segment', 'langid' et 'tagger', acceptés par models.list, setDefault et getDefault
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `Fonctionnalité` Déclarations des sélecteurs normalize et prefer: fonctions globales, méthodes chaînées et clés du sélecteur objet, avec les types Selector.NormalizeOptions et Selector.PreferKey (AutoJs6 6.8.0 ou ultérieur)
-* `Fonctionnalité` Déclarations de auto: la méthode clearFlags, le préfixe ! de setFlags et les drapeaux noFastPath / noRefreshOnHit; explain accepte une boussole et un type de résultat, et son résultat déclare target / trail / result et d'autres champs; stats déclare fastPath et queries.refinds (AutoJs6 6.8.0 ou ultérieur)
-* `Amélioration` Les types de résultat de pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) sont générés à partir du registre des méthodes de nœud d'AutoJs6: les 206 noms de méthodes appelables et leurs surcharges avec paramètres, ainsi que les types de résultat ## / $$ / .. et les formes de tableau
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `Fonctionnalité` Déclarations de sqlite avec le rappel onDowngrade: appelé lorsque la version demandée est inférieure à celle de la base de données existante (AutoJs6 6.8.0 ou ultérieur); sans lui, la rétrogradation ne fait rien et conserve les tables et les données
 
 ##### Pour plus d'historique des versions
 

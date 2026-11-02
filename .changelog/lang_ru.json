@@ -5,6 +5,34 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.49.0": {
+      "released_date": "2026/11/02",
+      "feature": [
+        "Дополнение imgui и $imgui в скриптах Rhino: с AutoJs6 Plugin ImGui 1.18.x доступны дополнение и описания функций, оконных сеансов и членов возвращаемых объектов"
+      ],
+      "improvement": [
+        "Встроенные объявления обновлены до @sm003/autojs6-dts 4.87.0"
+      ]
+    },
+    "v2.48.0": {
+      "released_date": "2026/11/01",
+      "feature": [
+        "Дополнение Node.js и Bun соответствует Node.js Runtime 2.1.0 и Bun Runtime 0.22.0: члены и возвращаемые объекты app, shell, системной информации, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events и других модулей согласованы со скриптами AutoJs6",
+        "Дополнение API языковых сред AutoJs6 в скриптах Python, Lua, Java и Kotlin; подсказки Python показывают буквальные значения 54 констант",
+        "Дополнение членов параметров, полей и локальных переменных Java по объявленному типу либо типу выражения new или приведения типа в инициализаторе",
+        "Дополнение await() и sync(timeout) объектов Flow в Node.js и Bun",
+        "plugins.tools.call / callAsync дополняют имена 15 инструментов официальных плагинов; другие имена по-прежнему допустимы"
+      ],
+      "fix": [
+        "Отсутствовало дополнение членов результатов ocr.detect и barcode / qrcode detect",
+        "Некоторые типы параметров и результатов отличались от модулей скриптов AutoJs6 (engines.stopAllAndToast, util.deprecate, условия селекторов Flow, параметры с поддержкой null и параметры задач)"
+      ],
+      "improvement": [
+        "Встроенные объявления обновлены до @sm003/autojs6-dts 4.86.0",
+        "Объявления OCR описывают extras, useCls, variant / profile PP-OCRv3 и mergeLine; статический индекс включает 55 фабрик компонентов compose и util.versionCodes",
+        "Дополнение updateAvailable и latestVersionCode в результатах speech.models.list в Node.js и Bun (требуется 3-Macaw Speech 1.4.0 или новее)"
+      ]
+    },
     "v2.47.0": {
       "released_date": "2026/10/29",
       "feature": [

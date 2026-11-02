@@ -184,6 +184,28 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `ميزة` إكمال imgui و $imgui في سكربتات Rhino: مع AutoJs6 Plugin ImGui 1.18.x يتوفر الإكمال والوصف للدوال وجلسات النوافذ وأعضاء الكائنات المعادة
+* `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `ميزة` إكمال Node.js و Bun يواكب Node.js Runtime 2.1.0 و Bun Runtime 0.22.0: أعضاء وكائنات النتائج في app, shell, معلومات النظام, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events وغيرها تطابق سكربتات AutoJs6
+* `ميزة` إكمال واجهات بيئات لغات AutoJs6 في سكربتات Python و Lua و Java و Kotlin; تعرض تلميحات Python القيم الحرفية لـ 54 ثابتا
+* `ميزة` إكمال أعضاء معاملات Java وحقولها ومتغيراتها المحلية بحسب النوع المعلن أو نوع تعبير new أو تحويل النوع المستخدم للتهيئة
+* `ميزة` إكمال await() و sync(timeout) لكائنات Flow في Node.js و Bun
+* `ميزة` يكمل plugins.tools.call / callAsync أسماء 15 أداة من الإضافات الرسمية; تظل أسماء الأدوات الأخرى مقبولة
+* `إصلاح` غياب إكمال الأعضاء في نتائج ocr.detect و barcode / qrcode detect
+* `إصلاح` اختلاف بعض أنواع المعاملات والنتائج عن وحدات سكربتات AutoJs6 (engines.stopAllAndToast, util.deprecate, شروط محددات Flow, المعاملات التي تقبل null وخيارات المهام)
+* `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.86.0
+* `تحسين` تصريحات OCR توضح extras و useCls و variant / profile في PP-OCRv3 و mergeLine; يتضمن الفهرس الثابت 55 مصنعا لمكونات compose و util.versionCodes
+* `تحسين` إكمال updateAvailable و latestVersionCode في نتائج speech.models.list لسكربتات Node.js و Bun (يتطلب 3-Macaw Speech 1.4.0 أو أحدث)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `ميزة` تضيف تعريفات speech الدوال diarize و detectLanguage و tag مع صيغها Async: فصل المتحدثين (من تحدث ومتى, مع تسميتهم اختياريا حسب البصمات الصوتية المسجلة), وتحديد اللغة, ووسم الأصوات (تسميات AudioSet البالغة 527); وتقبل الخيارات دالة الاستدعاء onProgress, مع أنواع نتائج مثل Speech.Diarization و Speech.LanguageDetection و Speech.Tagging (AutoJs6 6.8.0 أو أحدث, يتطلب ⁨3-Macaw Speech⁩ 1.3.0)
 * `ميزة` تضيف تعريفات speech الكائن speech.speaker للتعرف على المتحدث: enroll و verify و identify مع صيغها Async, و list و remove, ورمزي الخطأ SPEAKER_NOT_FOUND و AUDIO_TOO_SHORT (AutoJs6 6.8.0 أو أحدث, يتطلب ⁨3-Macaw Speech⁩ 1.3.0)
 * `تحسين` تضيف Speech.Feature القيم 'speaker' و 'diarization' و 'languageId' و 'audioTagging'; وتضيف Speech.Kind أنواع النماذج 'speaker' و 'segment' و 'langid' و 'tagger' التي تقبلها models.list و setDefault و getDefault
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `ميزة` تعريفات المحددات normalize و prefer: الدوال العامة وطرق السلسلة ومفاتيح محدد الكائن, مع النوعين Selector.NormalizeOptions و Selector.PreferKey (AutoJs6 6.8.0 أو أحدث)
-* `ميزة` تعريفات auto: الطريقة clearFlags والبادئة ! في setFlags والعلمان noFastPath / noRefreshOnHit; تقبل explain بوصلة ونوع نتيجة, وتتضمن نتيجتها الحقول target / trail / result وغيرها; وتتضمن stats الحقلين fastPath و queries.refinds (AutoJs6 6.8.0 أو أحدث)
-* `تحسين` تُولَّد أنواع نتائج pickup / detect (Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams) من سجل طرق العقد في AutoJs6: جميع أسماء الطرق القابلة للاستدعاء وعددها 206 وأحمالها الزائدة ذات المعاملات, بالإضافة إلى أنواع النتائج ## / $$ / .. وصيغ المصفوفات
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `ميزة` تعريفات sqlite مع رد النداء onDowngrade: يُستدعى عندما تكون version المطلوبة أقل من إصدار قاعدة البيانات الحالية (AutoJs6 6.8.0 أو أحدث); وبدونه لا يفعل خفض الإصدار شيئا ويحتفظ بالجداول والبيانات
 
 ##### لمزيد من سجل الإصدارات
 

@@ -184,6 +184,28 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `新增` Rhino 腳本可以補全 imgui 與 $imgui: 配合 AutoJs6 Plugin ImGui 1.18.x, 函數, 窗口會話和返回對象的成員都有補全與説明
+* `優化` 捆綁聲明升級至 @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `新增` Node.js 與 Bun 腳本的補全跟隨 Node.js Runtime 2.1.0 與 Bun Runtime 0.22.0: app, shell, 系統信息, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events 等模塊與 AutoJs6 腳本一致的成員及其返回對象
+* `新增` Python, Lua, Java 和 Kotlin 腳本可以補全 AutoJs6 語言運行時的 API; Python 懸停顯示 54 個常量的字面值
+* `新增` Java 的參數, 字段和局部變量按聲明類型 (或 new / 強制轉換的初始值的類型) 補全成員
+* `新增` Flow 對象的 await() 與 sync(timeout) 進入 Node.js 與 Bun 的補全
+* `新增` plugins.tools.call / callAsync 補全官方插件的 15 個工具名, 其他工具名仍可使用
+* `修復` ocr.detect 與 barcode / qrcode detect 的結果沒有成員補全的問題
+* `修復` 部分參數與返回類型和 AutoJs6 腳本模塊不一致的問題 (engines.stopAllAndToast, util.deprecate, Flow 的選擇器條件, 可傳 null 的參數與任務選項)
+* `優化` 捆綁聲明升級至 @sm003/autojs6-dts 4.86.0
+* `優化` OCR 聲明補全 extras, useCls, PP-OCRv3 的 variant / profile 與 mergeLine 的説明; 靜態索引補全 55 個 compose 組件工廠與 util.versionCodes
+* `優化` Node.js 和 Bun 腳本的 speech.models.list 結果可以補全 updateAvailable 和 latestVersionCode (需要 3-Macaw Speech 1.4.0 或以上)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `新增` speech 聲明補全 diarize, detectLanguage 與 tag 及其 Async 形態: 說話人分離 (誰在何時說話, 可按已註冊的聲紋認人), 語種識別與音訊標籤 (AudioSet 的 527 個標籤), 選項可帶 onProgress 進度回調, 含 Speech.Diarization, Speech.LanguageDetection 與 Speech.Tagging 等結果類型 (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
 * `新增` speech 聲明補全 speech.speaker 說話人識別: enroll, verify, identify 及其 Async 形態, list 與 remove, 以及錯誤碼 SPEAKER_NOT_FOUND 與 AUDIO_TOO_SHORT (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
 * `優化` Speech.Feature 增加 'speaker', 'diarization', 'languageId' 與 'audioTagging'; Speech.Kind 增加 'speaker', 'segment', 'langid' 與 'tagger' 四種模型類別, models.list, setDefault 與 getDefault 可使用這些類別
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `新增` 選擇器宣告補全 normalize 與 prefer: 全局函數, 鏈式方法與對象選擇器的鍵, 含 Selector.NormalizeOptions 與 Selector.PreferKey 類型 (AutoJs6 6.8.0 起)
-* `新增` auto 宣告補全 clearFlags 方法, setFlags 的 ! 前綴與 noFastPath / noRefreshOnHit 標誌; explain 可傳入羅盤與結果類型, 結果含 target / trail / result 等字段; stats 補全 fastPath 與 queries.refinds (AutoJs6 6.8.0 起)
-* `優化` pickup / detect 的結果類型 Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams 改由 AutoJs6 的節點方法註冊表生成, 包含全部 206 個可調用的方法名及帶參數的重載, 並補全 ## / $$ / .. 與數組形式的結果類型
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `新增` sqlite 宣告補全 onDowngrade 回調: 打開數據庫時請求的 version 低於現有版本時調用 (AutoJs6 6.8.0 起), 未實現時降級不執行任何操作, 保留表與數據
 
 ##### 更多發行歷史可參閱
 

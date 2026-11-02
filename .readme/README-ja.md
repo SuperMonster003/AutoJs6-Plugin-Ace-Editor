@@ -184,6 +184,28 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `機能` Rhino スクリプトで imgui と $imgui を補完: AutoJs6 Plugin ImGui 1.18.x と組み合わせると, 関数, ウィンドウセッション, 戻り値オブジェクトのメンバーの補完と説明を利用可能
+* `改善` 同梱の宣言を @sm003/autojs6-dts 4.87.0 に更新
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `機能` Node.js と Bun の補完を Node.js Runtime 2.1.0 と Bun Runtime 0.22.0 に対応: app, shell, システム情報, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events などのメンバーと戻り値オブジェクトを AutoJs6 スクリプトと統一
+* `機能` Python, Lua, Java, Kotlin スクリプトで AutoJs6 言語ランタイムの API を補完; Python のホバー表示で 54 個の定数のリテラル値を表示
+* `機能` Java の引数, フィールド, ローカル変数のメンバーを宣言型, または初期値の new 式/キャストの型に基づいて補完
+* `機能` Node.js と Bun で Flow オブジェクトの await() と sync(timeout) を補完
+* `機能` plugins.tools.call / callAsync で公式プラグインの 15 個のツール名を補完; 他のツール名も使用可能
+* `修正` ocr.detect と barcode / qrcode detect の結果にメンバー補完がなかった問題
+* `修正` 一部の引数型と戻り値型が AutoJs6 スクリプトのモジュールと一致しなかった問題 (engines.stopAllAndToast, util.deprecate, Flow のセレクター条件, null を許容する引数とタスクオプション)
+* `改善` 同梱の宣言を @sm003/autojs6-dts 4.86.0 に更新
+* `改善` OCR 宣言に extras, useCls, PP-OCRv3 の variant / profile と mergeLine の説明を追加; 静的インデックスに 55 個の compose コンポーネントファクトリーと util.versionCodes を追加
+* `改善` Node.js と Bun の speech.models.list の結果で updateAvailable と latestVersionCode を補完 (3-Macaw Speech 1.4.0 以降が必要)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `機能` speech の宣言に diarize, detectLanguage, tag とその Async 形式を追加: 話者分離 (誰がいつ話したか, 登録済みの声紋で話者名も付けられる), 言語識別, 音声タグ付け (AudioSet の 527 ラベル); オプションに onProgress 進捗コールバックを指定でき, Speech.Diarization, Speech.LanguageDetection, Speech.Tagging などの結果型を追加 (AutoJs6 6.8.0 以降, 3-Macaw Speech 1.3.0 が必要)
 * `機能` speech の宣言に話者認識の speech.speaker を追加: enroll, verify, identify とその Async 形式, list, remove, エラーコード SPEAKER_NOT_FOUND と AUDIO_TOO_SHORT (AutoJs6 6.8.0 以降, 3-Macaw Speech 1.3.0 が必要)
 * `改善` Speech.Feature に 'speaker', 'diarization', 'languageId', 'audioTagging' を追加; Speech.Kind にモデル種別 'speaker', 'segment', 'langid', 'tagger' を追加し, models.list, setDefault, getDefault で使用可能
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `機能` セレクターの宣言に normalize と prefer を追加: グローバル関数, チェーンメソッド, オブジェクトセレクターのキー; Selector.NormalizeOptions, Selector.PreferKey 型を追加 (AutoJs6 6.8.0 以降)
-* `機能` auto の宣言に clearFlags メソッド, setFlags の ! プレフィックス, noFastPath / noRefreshOnHit フラグを追加; explain はコンパスと結果タイプを受け取り, 結果に target / trail / result などのフィールドを追加; stats に fastPath と queries.refinds を追加 (AutoJs6 6.8.0 以降)
-* `改善` pickup / detect の結果タイプ Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams を AutoJs6 のノードメソッドレジストリから生成し, 呼び出し可能な 206 個のメソッド名と引数付きオーバーロードをすべて収録; ## / $$ / .. と配列形式の結果タイプも追加
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `機能` sqlite の宣言に onDowngrade コールバックを追加: 要求した version が既存データベースのバージョンより低いときに呼ばれる (AutoJs6 6.8.0 以降); 未実装の場合, ダウングレードは何もせず, テーブルとデータを保持
 
 ##### その他のリリース履歴
 

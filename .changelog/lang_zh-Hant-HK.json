@@ -5,6 +5,34 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v2.49.0": {
+      "released_date": "2026/11/02",
+      "feature": [
+        "Rhino 腳本可以補全 imgui 與 $imgui: 配合 AutoJs6 Plugin ImGui 1.18.x, 函數, 窗口會話和返回對象的成員都有補全與説明"
+      ],
+      "improvement": [
+        "捆綁聲明升級至 @sm003/autojs6-dts 4.87.0"
+      ]
+    },
+    "v2.48.0": {
+      "released_date": "2026/11/01",
+      "feature": [
+        "Node.js 與 Bun 腳本的補全跟隨 Node.js Runtime 2.1.0 與 Bun Runtime 0.22.0: app, shell, 系統信息, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events 等模塊與 AutoJs6 腳本一致的成員及其返回對象",
+        "Python, Lua, Java 和 Kotlin 腳本可以補全 AutoJs6 語言運行時的 API; Python 懸停顯示 54 個常量的字面值",
+        "Java 的參數, 字段和局部變量按聲明類型 (或 new / 強制轉換的初始值的類型) 補全成員",
+        "Flow 對象的 await() 與 sync(timeout) 進入 Node.js 與 Bun 的補全",
+        "plugins.tools.call / callAsync 補全官方插件的 15 個工具名, 其他工具名仍可使用"
+      ],
+      "fix": [
+        "ocr.detect 與 barcode / qrcode detect 的結果沒有成員補全的問題",
+        "部分參數與返回類型和 AutoJs6 腳本模塊不一致的問題 (engines.stopAllAndToast, util.deprecate, Flow 的選擇器條件, 可傳 null 的參數與任務選項)"
+      ],
+      "improvement": [
+        "捆綁聲明升級至 @sm003/autojs6-dts 4.86.0",
+        "OCR 聲明補全 extras, useCls, PP-OCRv3 的 variant / profile 與 mergeLine 的説明; 靜態索引補全 55 個 compose 組件工廠與 util.versionCodes",
+        "Node.js 和 Bun 腳本的 speech.models.list 結果可以補全 updateAvailable 和 latestVersionCode (需要 3-Macaw Speech 1.4.0 或以上)"
+      ]
+    },
     "v2.47.0": {
       "released_date": "2026/10/29",
       "feature": [

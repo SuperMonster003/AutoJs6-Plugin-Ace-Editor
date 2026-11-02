@@ -184,6 +184,28 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `기능` Rhino 스크립트에서 imgui 및 $imgui 완성 지원: AutoJs6 Plugin ImGui 1.18.x와 함께 함수, 창 세션 및 반환 객체 멤버의 완성과 설명 제공
+* `개선` 번들 선언을 @sm003/autojs6-dts 4.87.0으로 업그레이드
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `기능` Node.js 및 Bun 스크립트 완성이 Node.js Runtime 2.1.0 및 Bun Runtime 0.22.0을 반영: app, shell, 시스템 정보, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events 등의 멤버와 반환 객체가 AutoJs6 스크립트와 일치
+* `기능` Python, Lua, Java 및 Kotlin 스크립트에서 AutoJs6 언어 런타임 API 완성 지원; Python 호버에 상수 54개의 리터럴 값 표시
+* `기능` Java 매개변수, 필드 및 지역 변수의 선언된 타입 또는 초기값인 new 표현식/형 변환의 타입에 따른 멤버 완성
+* `기능` Node.js 및 Bun에서 Flow 객체의 await() 및 sync(timeout) 완성
+* `기능` plugins.tools.call / callAsync에서 공식 플러그인의 도구 이름 15개 완성, 다른 도구 이름도 계속 사용 가능
+* `수정` ocr.detect 및 barcode / qrcode detect 결과에 멤버 완성이 없던 문제
+* `수정` 일부 매개변수 및 반환 타입이 AutoJs6 스크립트 모듈과 일치하지 않던 문제 (engines.stopAllAndToast, util.deprecate, Flow 선택자 조건, null 허용 매개변수 및 작업 옵션)
+* `개선` 번들 선언을 @sm003/autojs6-dts 4.86.0으로 업그레이드
+* `개선` OCR 선언에 extras, useCls, PP-OCRv3의 variant / profile 및 mergeLine 설명 보완; 정적 인덱스에 compose 구성 요소 팩터리 55개 및 util.versionCodes 추가
+* `개선` Node.js 및 Bun 스크립트의 speech.models.list 결과에서 updateAvailable 및 latestVersionCode 완성 (3-Macaw Speech 1.4.0 이상 필요)
+
 # v2.47.0
 
 ###### 2026/10/29
@@ -191,20 +213,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `기능` speech 선언에 diarize, detectLanguage, tag와 그 Async 형식 추가: 화자 분리 (누가 언제 말했는지, 등록된 성문으로 화자 이름 지정 가능), 언어 식별, 오디오 태깅 (AudioSet의 527개 레이블); 옵션에 onProgress 진행 콜백을 지정할 수 있고 Speech.Diarization, Speech.LanguageDetection, Speech.Tagging 등의 결과 타입 포함 (AutoJs6 6.8.0 이상, 3-Macaw Speech 1.3.0 필요)
 * `기능` speech 선언에 화자 인식 speech.speaker 추가: enroll, verify, identify와 그 Async 형식, list, remove, 오류 코드 SPEAKER_NOT_FOUND와 AUDIO_TOO_SHORT (AutoJs6 6.8.0 이상, 3-Macaw Speech 1.3.0 필요)
 * `개선` Speech.Feature에 'speaker', 'diarization', 'languageId', 'audioTagging' 추가; Speech.Kind에 모델 종류 'speaker', 'segment', 'langid', 'tagger'를 추가하여 models.list, setDefault, getDefault에서 사용 가능
-
-# v2.46.0
-
-###### 2026/10/29
-
-* `기능` 선택자 선언에 normalize 와 prefer 추가: 전역 함수, 체인 메서드, 객체 선택자 키; Selector.NormalizeOptions, Selector.PreferKey 타입 추가 (AutoJs6 6.8.0 이상)
-* `기능` auto 선언에 clearFlags 메서드, setFlags 의 ! 접두사, noFastPath / noRefreshOnHit 플래그 추가; explain 은 나침반과 결과 타입을 받고, 결과에 target / trail / result 등의 필드 추가; stats 에 fastPath 와 queries.refinds 추가 (AutoJs6 6.8.0 이상)
-* `개선` pickup / detect 의 결과 타입 Detect.ResultTypeFuncWithoutParams / ResultTypeFuncWithParams 를 AutoJs6 의 노드 메서드 레지스트리에서 생성하여 호출 가능한 206 개 메서드 이름과 매개변수가 있는 오버로드를 모두 수록; ## / $$ / .. 와 배열 형식의 결과 타입도 추가
-
-# v2.45.0
-
-###### 2026/10/24
-
-* `기능` sqlite 선언에 onDowngrade 콜백 추가: 요청한 version 이 기존 데이터베이스 버전보다 낮을 때 호출 (AutoJs6 6.8.0 이상); 구현하지 않으면 다운그레이드는 아무 작업도 하지 않고 테이블과 데이터를 유지
 
 ##### 더 많은 릴리스 기록
 

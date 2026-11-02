@@ -4,6 +4,28 @@
 
 ******
 
+# v2.49.0
+
+###### 2026/11/02
+
+* `新增` Rhino 指令碼可以補全 imgui 與 $imgui: 配合 AutoJs6 Plugin ImGui 1.18.x, 函式, 視窗會話和返回物件的成員都有補全與說明
+* `優化` 捆綁宣告升級至 @sm003/autojs6-dts 4.87.0
+
+# v2.48.0
+
+###### 2026/11/01
+
+* `新增` Node.js 與 Bun 指令碼的補全跟隨 Node.js Runtime 2.1.0 與 Bun Runtime 0.22.0: app, shell, 系統資訊, device, sensors, media, colors, files, zip, ui, floaty, web, terminal, compose, automator, auto, ocr, threads, timers, events 等模組與 AutoJs6 指令碼一致的成員及其返回物件
+* `新增` Python, Lua, Java 和 Kotlin 指令碼可以補全 AutoJs6 語言執行時的 API; Python 懸停顯示 54 個常量的字面值
+* `新增` Java 的引數, 欄位和區域性變數按宣告型別 (或 new / 強制轉換的初始值的型別) 補全成員
+* `新增` Flow 物件的 await() 與 sync(timeout) 進入 Node.js 與 Bun 的補全
+* `新增` plugins.tools.call / callAsync 補全官方外掛的 15 個工具名, 其他工具名仍可使用
+* `修復` ocr.detect 與 barcode / qrcode detect 的結果沒有成員補全的問題
+* `修復` 部分引數與返回型別和 AutoJs6 指令碼模組不一致的問題 (engines.stopAllAndToast, util.deprecate, Flow 的選擇器條件, 可傳 null 的引數與任務選項)
+* `優化` 捆綁宣告升級至 @sm003/autojs6-dts 4.86.0
+* `優化` OCR 宣告補全 extras, useCls, PP-OCRv3 的 variant / profile 與 mergeLine 的說明; 靜態索引補全 55 個 compose 元件工廠與 util.versionCodes
+* `優化` Node.js 和 Bun 指令碼的 speech.models.list 結果可以補全 updateAvailable 和 latestVersionCode (需要 3-Macaw Speech 1.4.0 或以上)
+
 # v2.47.0
 
 ###### 2026/10/29
