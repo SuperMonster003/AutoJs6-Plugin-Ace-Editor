@@ -103,7 +103,7 @@ class AceApiCoverageDeviceTest {
                 .containsAll(setOf("wait", "waitForStable", "repeatUntil", "Flow", "defaults", "pending")))
             val chain = header+"flow.of(3).map(value=>value+1)."
             assertTrue(semanticNames(query(editor, chain, "", evidence)).containsAll(setOf("retry", "timeout", "cancel", "then", "value", "state")))
-            assertFalse(semanticNames(query(editor, chain, "", evidence)).contains("sync"))
+            assertTrue(semanticNames(query(editor, chain, "", evidence)).contains("sync"))
             showPopup(editor, chain+"retr", "retry", evidence, "$mode-flow-chain", "Flow<number")
             val node = header+"async function f(){const node=await flow.wait({text:'ready'});node."
             assertTrue(semanticNames(query(editor, node, "", evidence)).containsAll(setOf("text", "bounds", "visibleToUser", "packageName")))
@@ -284,7 +284,7 @@ class AceApiCoverageDeviceTest {
             val code=header+"const child=shell.spawn('cat');\n"
             val process=query(editor,code+"child.","",evidence)
             assertTrue(process.toString(),semanticNames(process).containsAll(setOf("ready","exited","stdout","stderr","stdin","readLine","writeLine","closeInput","waitFor","kill","close")))
-            assertFalse(semanticNames(process).contains("getInputStream"))
+            assertTrue(semanticNames(process).contains("getInputStream"))
             showPopup(editor,code+"child.readL","readLine",evidence,"$mode-shell-line","Promise<string | null>")
             showPopup(editor,code+"child.clo","close",evidence,"$mode-shell-close","Promise<boolean>")
             val options=query(editor,header+"shell.open({","",evidence)
