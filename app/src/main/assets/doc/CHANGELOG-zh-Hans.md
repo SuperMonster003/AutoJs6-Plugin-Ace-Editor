@@ -17,6 +17,7 @@
 * `修复` 部分参数与返回类型和 AutoJs6 脚本模块不一致的问题 (engines.stopAllAndToast, util.deprecate, Flow 的选择器条件, 可传 null 的参数与任务选项)
 * `优化` 捆绑声明升级至 @sm003/autojs6-dts 4.86.0
 * `优化` OCR 声明补全 extras, useCls, PP-OCRv3 的 variant / profile 与 mergeLine 的说明; 静态索引补全 55 个 compose 组件工厂与 util.versionCodes
+* `优化` Node.js 和 Bun 脚本的 speech.models.list 结果可以补全 updateAvailable 和 latestVersionCode (需要 3-Macaw Speech 1.4.0 或以上)
 
 # v2.47.0
 

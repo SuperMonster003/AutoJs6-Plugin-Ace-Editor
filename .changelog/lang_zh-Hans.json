@@ -20,7 +20,8 @@
       ],
       "improvement": [
         "捆绑声明升级至 @sm003/autojs6-dts 4.86.0",
-        "OCR 声明补全 extras, useCls, PP-OCRv3 的 variant / profile 与 mergeLine 的说明; 静态索引补全 55 个 compose 组件工厂与 util.versionCodes"
+        "OCR 声明补全 extras, useCls, PP-OCRv3 的 variant / profile 与 mergeLine 的说明; 静态索引补全 55 个 compose 组件工厂与 util.versionCodes",
+        "Node.js 和 Bun 脚本的 speech.models.list 结果可以补全 updateAvailable 和 latestVersionCode (需要 3-Macaw Speech 1.4.0 或以上)"
       ]
     },
     "v2.47.0": {
