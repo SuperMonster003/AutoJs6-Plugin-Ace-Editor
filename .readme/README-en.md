@@ -171,7 +171,7 @@ Normal APK assembly packages the committed, verified LuaLS distribution and does
 Install the generated APK after building:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-universal.apk
 ```
 
 Then enable `ace-editor` in the AutoJs6 plugin center, fully exit AutoJs6, and restart it. Restart the host after installing, updating, or rolling back the plugin.
@@ -183,6 +183,13 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ### Release History
 
 ******
+
+# v2.50.0
+
+###### 2026/11/05
+
+* `Feature` Plugin category declarations of settings.categories and settings.export (AutoJs6 6.8.1): the category list includes the discovered official plugins, with kind `'plugin'`, label, available and reason, export accepts category ids made of `plugin:` and a package name, and skipped gains the reason `'unavailable'`, with the Settings.PluginCategoryId, Settings.PluginUnavailableReason types
+* `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.88.0
 
 # v2.49.0
 
@@ -205,14 +212,6 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 * `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.86.0
 * `Improvement` OCR declarations describe extras, useCls, PP-OCRv3 variant / profile and mergeLine; the static index includes 55 compose component factories and util.versionCodes
 * `Improvement` Node.js and Bun scripts can complete updateAvailable and latestVersionCode in speech.models.list results (requires 3-Macaw Speech 1.4.0 or later)
-
-# v2.47.0
-
-###### 2026/10/29
-
-* `Feature` speech declarations add diarize, detectLanguage and tag with their Async forms: speaker diarization (who spoke when, optionally named after enrolled voiceprints), language identification and audio tagging (the 527 AudioSet labels); the options take an onProgress callback, with result types such as Speech.Diarization, Speech.LanguageDetection and Speech.Tagging (AutoJs6 6.8.0 or later, needs 3-Macaw Speech 1.3.0)
-* `Feature` speech declarations add speech.speaker for speaker recognition: enroll, verify and identify with their Async forms, list and remove, and the SPEAKER_NOT_FOUND and AUDIO_TOO_SHORT error codes (AutoJs6 6.8.0 or later, needs 3-Macaw Speech 1.3.0)
-* `Improvement` Speech.Feature gains 'speaker', 'diarization', 'languageId' and 'audioTagging'; Speech.Kind gains the model kinds 'speaker', 'segment', 'langid' and 'tagger', which models.list, setDefault and getDefault accept
 
 ##### Complete release history
 

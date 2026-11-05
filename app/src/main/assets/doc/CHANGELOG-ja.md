@@ -4,6 +4,13 @@
 
 ******
 
+# v2.50.0
+
+###### 2026/11/05
+
+* `機能` settings.categories と settings.export のプラグインカテゴリ宣言 (AutoJs6 6.8.1): カテゴリ一覧に検出された公式プラグインを含め, kind は `'plugin'` で label, available, reason 付き, export は `plugin:` とパッケージ名からなるカテゴリ id を受け付け, skipped の理由に `'unavailable'` を追加; Settings.PluginCategoryId, Settings.PluginUnavailableReason 型を追加
+* `改善` 同梱の宣言を @sm003/autojs6-dts 4.88.0 に更新
+
 # v2.49.0
 
 ###### 2026/11/02

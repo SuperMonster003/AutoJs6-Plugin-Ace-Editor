@@ -171,7 +171,7 @@ Release 建置:
 建置完成後安裝產生的 APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-universal.apk
 ```
 
 接著在 AutoJs6 外掛中心啟用 `ace-editor`, 完全結束並重新啟動 AutoJs6. 安裝, 更新或回復至舊版外掛後都應重新啟動宿主.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 ### 發行歷史
 
 ******
+
+# v2.50.0
+
+###### 2026/11/05
+
+* `新增` settings.categories 與 settings.export 的外掛分類宣告 (AutoJs6 6.8.1): 分類清單包含已發現的官方外掛, kind 為 `'plugin'` 並帶 label, available 與 reason, export 接受 `plugin:` 加套件名稱的分類 id, skipped 的原因增加 `'unavailable'`, 含 Settings.PluginCategoryId, Settings.PluginUnavailableReason 型別
+* `優化` 捆綁宣告升級至 @sm003/autojs6-dts 4.88.0
 
 # v2.49.0
 
@@ -205,14 +212,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `優化` 捆綁宣告升級至 @sm003/autojs6-dts 4.86.0
 * `優化` OCR 宣告補全 extras, useCls, PP-OCRv3 的 variant / profile 與 mergeLine 的說明; 靜態索引補全 55 個 compose 元件工廠與 util.versionCodes
 * `優化` Node.js 和 Bun 指令碼的 speech.models.list 結果可以補全 updateAvailable 和 latestVersionCode (需要 3-Macaw Speech 1.4.0 或以上)
-
-# v2.47.0
-
-###### 2026/10/29
-
-* `新增` speech 宣告補全 diarize, detectLanguage 與 tag 及其 Async 形式: 語者分離 (誰在何時說話, 可依已註冊的聲紋辨認), 語言辨識與音訊標籤 (AudioSet 的 527 個標籤), 選項可帶 onProgress 進度回呼, 含 Speech.Diarization, Speech.LanguageDetection 與 Speech.Tagging 等結果型別 (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
-* `新增` speech 宣告補全 speech.speaker 語者辨識: enroll, verify, identify 及其 Async 形式, list 與 remove, 以及錯誤碼 SPEAKER_NOT_FOUND 與 AUDIO_TOO_SHORT (AutoJs6 6.8.0 起, 需要 3-Macaw Speech 1.3.0)
-* `優化` Speech.Feature 增加 'speaker', 'diarization', 'languageId' 與 'audioTagging'; Speech.Kind 增加 'speaker', 'segment', 'langid' 與 'tagger' 四種模型類別, models.list, setDefault 與 getDefault 可使用這些類別
 
 ##### 更多發行歷史可參閱
 

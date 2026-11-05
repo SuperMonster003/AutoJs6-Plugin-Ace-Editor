@@ -171,7 +171,7 @@ Ace アセット, モバイルオーバーレイ, ブリッジスクリプトを
 ビルド後に生成された APK をインストールします:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-universal.apk
 ```
 
 次に AutoJs6 のプラグインセンターで `ace-editor` を有効にし, AutoJs6 を完全に終了してから再起動します. プラグインのインストール, 更新, またはロールバック後はホストを再起動してください.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 ### リリース履歴
 
 ******
+
+# v2.50.0
+
+###### 2026/11/05
+
+* `機能` settings.categories と settings.export のプラグインカテゴリ宣言 (AutoJs6 6.8.1): カテゴリ一覧に検出された公式プラグインを含め, kind は `'plugin'` で label, available, reason 付き, export は `plugin:` とパッケージ名からなるカテゴリ id を受け付け, skipped の理由に `'unavailable'` を追加; Settings.PluginCategoryId, Settings.PluginUnavailableReason 型を追加
+* `改善` 同梱の宣言を @sm003/autojs6-dts 4.88.0 に更新
 
 # v2.49.0
 
@@ -205,14 +212,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `改善` 同梱の宣言を @sm003/autojs6-dts 4.86.0 に更新
 * `改善` OCR 宣言に extras, useCls, PP-OCRv3 の variant / profile と mergeLine の説明を追加; 静的インデックスに 55 個の compose コンポーネントファクトリーと util.versionCodes を追加
 * `改善` Node.js と Bun の speech.models.list の結果で updateAvailable と latestVersionCode を補完 (3-Macaw Speech 1.4.0 以降が必要)
-
-# v2.47.0
-
-###### 2026/10/29
-
-* `機能` speech の宣言に diarize, detectLanguage, tag とその Async 形式を追加: 話者分離 (誰がいつ話したか, 登録済みの声紋で話者名も付けられる), 言語識別, 音声タグ付け (AudioSet の 527 ラベル); オプションに onProgress 進捗コールバックを指定でき, Speech.Diarization, Speech.LanguageDetection, Speech.Tagging などの結果型を追加 (AutoJs6 6.8.0 以降, 3-Macaw Speech 1.3.0 が必要)
-* `機能` speech の宣言に話者認識の speech.speaker を追加: enroll, verify, identify とその Async 形式, list, remove, エラーコード SPEAKER_NOT_FOUND と AUDIO_TOO_SHORT (AutoJs6 6.8.0 以降, 3-Macaw Speech 1.3.0 が必要)
-* `改善` Speech.Feature に 'speaker', 'diarization', 'languageId', 'audioTagging' を追加; Speech.Kind にモデル種別 'speaker', 'segment', 'langid', 'tagger' を追加し, models.list, setDefault, getDefault で使用可能
 
 ##### その他のリリース履歴
 

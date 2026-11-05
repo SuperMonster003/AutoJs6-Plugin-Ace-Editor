@@ -171,7 +171,7 @@ Release-сборка:
 После сборки установите созданный APK:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-universal.apk
 ```
 
 Затем включите `ace-editor` в центре плагинов AutoJs6, полностью закройте AutoJs6 и запустите его снова. Перезапускайте хост после установки, обновления или отката плагина.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 ### История выпусков
 
 ******
+
+# v2.50.0
+
+###### 2026/11/05
+
+* `Функция` Объявления категорий плагинов settings.categories и settings.export (AutoJs6 6.8.1): список категорий включает найденные официальные плагины с kind `'plugin'`, label, available и reason, export принимает id категорий из `plugin:` и имени пакета, у skipped появилась причина `'unavailable'`, с типами Settings.PluginCategoryId, Settings.PluginUnavailableReason
+* `Улучшение` Встроенные объявления обновлены до @sm003/autojs6-dts 4.88.0
 
 # v2.49.0
 
@@ -205,14 +212,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `Улучшение` Встроенные объявления обновлены до @sm003/autojs6-dts 4.86.0
 * `Улучшение` Объявления OCR описывают extras, useCls, variant / profile PP-OCRv3 и mergeLine; статический индекс включает 55 фабрик компонентов compose и util.versionCodes
 * `Улучшение` Дополнение updateAvailable и latestVersionCode в результатах speech.models.list в Node.js и Bun (требуется 3-Macaw Speech 1.4.0 или новее)
-
-# v2.47.0
-
-###### 2026/10/29
-
-* `Функция` объявления speech добавляют diarize, detectLanguage и tag с их формами Async: разделение по говорящим (кто и когда говорил, по желанию с именами по зарегистрированным голосовым отпечаткам), определение языка и разметку звуков (527 меток AudioSet); параметры принимают обратный вызов onProgress, добавлены типы результатов, такие как Speech.Diarization, Speech.LanguageDetection и Speech.Tagging (AutoJs6 6.8.0 или новее, нужен 3-Macaw Speech 1.3.0)
-* `Функция` объявления speech добавляют speech.speaker для распознавания говорящего: enroll, verify и identify с их формами Async, list и remove, а также коды ошибок SPEAKER_NOT_FOUND и AUDIO_TOO_SHORT (AutoJs6 6.8.0 или новее, нужен 3-Macaw Speech 1.3.0)
-* `Улучшение` в Speech.Feature добавлены 'speaker', 'diarization', 'languageId' и 'audioTagging'; в Speech.Kind добавлены типы моделей 'speaker', 'segment', 'langid' и 'tagger', которые принимают models.list, setDefault и getDefault
 
 ##### Подробнее об истории выпусков
 

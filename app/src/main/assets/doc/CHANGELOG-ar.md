@@ -4,6 +4,13 @@
 
 ******
 
+# v2.50.0
+
+###### 2026/11/05
+
+* `ميزة` تعريفات فئات الإضافات في settings.categories و settings.export (AutoJs6 6.8.1): تتضمن قائمة الفئات الإضافات الرسمية المكتشفة, مع kind بالقيمة `'plugin'` و label و available و reason, وتقبل export معرفات فئات مكونة من `plugin:` واسم الحزمة, وتضاف إلى skipped القيمة `'unavailable'`, مع الأنواع Settings.PluginCategoryId, Settings.PluginUnavailableReason
+* `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.88.0
+
 # v2.49.0
 
 ###### 2026/11/02

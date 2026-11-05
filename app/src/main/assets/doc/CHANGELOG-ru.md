@@ -4,6 +4,13 @@
 
 ******
 
+# v2.50.0
+
+###### 2026/11/05
+
+* `Функция` Объявления категорий плагинов settings.categories и settings.export (AutoJs6 6.8.1): список категорий включает найденные официальные плагины с kind `'plugin'`, label, available и reason, export принимает id категорий из `plugin:` и имени пакета, у skipped появилась причина `'unavailable'`, с типами Settings.PluginCategoryId, Settings.PluginUnavailableReason
+* `Улучшение` Встроенные объявления обновлены до @sm003/autojs6-dts 4.88.0
+
 # v2.49.0
 
 ###### 2026/11/02

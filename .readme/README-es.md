@@ -171,7 +171,7 @@ El ensamblado normal del APK empaqueta la distribución LuaLS versionada y verif
 Instale el APK generado después de la compilación:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-universal.apk
 ```
 
 A continuación, active `ace-editor` en el centro de complementos de AutoJs6, cierre AutoJs6 por completo y reinícielo. Reinicie el anfitrión después de instalar, actualizar o revertir el complemento.
@@ -183,6 +183,13 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 ### Historial de versiones
 
 ******
+
+# v2.50.0
+
+###### 2026/11/05
+
+* `Función` Declaraciones de categorías de plugins de settings.categories y settings.export (AutoJs6 6.8.1): la lista de categorías incluye los plugins oficiales detectados, con kind `'plugin'`, label, available y reason, export acepta ids de categoría formados por `plugin:` y un nombre de paquete, y skipped añade el motivo `'unavailable'`, con los tipos Settings.PluginCategoryId, Settings.PluginUnavailableReason
+* `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.88.0
 
 # v2.49.0
 
@@ -205,14 +212,6 @@ Las instalaciones de producción deben utilizar una firma en la que confíe Auto
 * `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.86.0
 * `Mejora` Las declaraciones OCR describen extras, useCls, variant / profile de PP-OCRv3 y mergeLine; el índice estático incluye 55 fábricas de componentes compose y util.versionCodes
 * `Mejora` Completado de updateAvailable y latestVersionCode en resultados de speech.models.list de Node.js y Bun (requiere 3-Macaw Speech 1.4.0 o posterior)
-
-# v2.47.0
-
-###### 2026/10/29
-
-* `Función` las declaraciones de speech añaden diarize, detectLanguage y tag con sus formas Async: diarización de hablantes (quién habla y cuándo, con nombre opcional según las huellas de voz registradas), identificación del idioma y etiquetado de audio (las 527 etiquetas de AudioSet); las opciones aceptan un callback onProgress, con tipos de resultado como Speech.Diarization, Speech.LanguageDetection y Speech.Tagging (AutoJs6 6.8.0 o posterior, requiere 3-Macaw Speech 1.3.0)
-* `Función` las declaraciones de speech añaden speech.speaker para el reconocimiento de hablantes: enroll, verify e identify con sus formas Async, list y remove, y los códigos de error SPEAKER_NOT_FOUND y AUDIO_TOO_SHORT (AutoJs6 6.8.0 o posterior, requiere 3-Macaw Speech 1.3.0)
-* `Mejora` Speech.Feature añade 'speaker', 'diarization', 'languageId' y 'audioTagging'; Speech.Kind añade los tipos de modelo 'speaker', 'segment', 'langid' y 'tagger', que aceptan models.list, setDefault y getDefault
 
 ##### Para ver más historial de versiones
 

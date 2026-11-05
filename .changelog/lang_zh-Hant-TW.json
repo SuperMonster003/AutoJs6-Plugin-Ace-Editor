@@ -5,6 +5,15 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "相依性",
   "$data": {
+    "v2.50.0": {
+      "released_date": "2026/11/05",
+      "feature": [
+        "settings.categories 與 settings.export 的外掛分類宣告 (AutoJs6 6.8.1): 分類清單包含已發現的官方外掛, kind 為 `'plugin'` 並帶 label, available 與 reason, export 接受 `plugin:` 加套件名稱的分類 id, skipped 的原因增加 `'unavailable'`, 含 Settings.PluginCategoryId, Settings.PluginUnavailableReason 型別"
+      ],
+      "improvement": [
+        "捆綁宣告升級至 @sm003/autojs6-dts 4.88.0"
+      ]
+    },
     "v2.49.0": {
       "released_date": "2026/11/02",
       "feature": [

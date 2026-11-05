@@ -5,6 +5,15 @@
   "changelog_label_improvement": "Улучшение",
   "changelog_label_dependency": "Зависимость",
   "$data": {
+    "v2.50.0": {
+      "released_date": "2026/11/05",
+      "feature": [
+        "Объявления категорий плагинов settings.categories и settings.export (AutoJs6 6.8.1): список категорий включает найденные официальные плагины с kind `'plugin'`, label, available и reason, export принимает id категорий из `plugin:` и имени пакета, у skipped появилась причина `'unavailable'`, с типами Settings.PluginCategoryId, Settings.PluginUnavailableReason"
+      ],
+      "improvement": [
+        "Встроенные объявления обновлены до @sm003/autojs6-dts 4.88.0"
+      ]
+    },
     "v2.49.0": {
       "released_date": "2026/11/02",
       "feature": [

@@ -4,6 +4,13 @@
 
 ******
 
+# v2.50.0
+
+###### 2026/11/05
+
+* `Función` Declaraciones de categorías de plugins de settings.categories y settings.export (AutoJs6 6.8.1): la lista de categorías incluye los plugins oficiales detectados, con kind `'plugin'`, label, available y reason, export acepta ids de categoría formados por `plugin:` y un nombre de paquete, y skipped añade el motivo `'unavailable'`, con los tipos Settings.PluginCategoryId, Settings.PluginUnavailableReason
+* `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.88.0
+
 # v2.49.0
 
 ###### 2026/11/02

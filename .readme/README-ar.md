@@ -171,7 +171,7 @@
 ثبت ملف APK الناتج بعد البناء:
 
 ```powershell
-adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-universal.apk
+adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-universal.apk
 ```
 
 ثم فعل `ace-editor` في مركز المكونات الإضافية في AutoJs6, واخرج من AutoJs6 بالكامل ثم أعد تشغيله. أعد تشغيل المضيف بعد تثبيت المكون الإضافي أو تحديثه أو الرجوع إلى إصدار سابق منه.
@@ -183,6 +183,13 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 ### سجل الإصدارات
 
 ******
+
+# v2.50.0
+
+###### 2026/11/05
+
+* `ميزة` تعريفات فئات الإضافات في settings.categories و settings.export (AutoJs6 6.8.1): تتضمن قائمة الفئات الإضافات الرسمية المكتشفة, مع kind بالقيمة `'plugin'` و label و available و reason, وتقبل export معرفات فئات مكونة من `plugin:` واسم الحزمة, وتضاف إلى skipped القيمة `'unavailable'`, مع الأنواع Settings.PluginCategoryId, Settings.PluginUnavailableReason
+* `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.88.0
 
 # v2.49.0
 
@@ -205,14 +212,6 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.49.0-u
 * `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.86.0
 * `تحسين` تصريحات OCR توضح extras و useCls و variant / profile في PP-OCRv3 و mergeLine; يتضمن الفهرس الثابت 55 مصنعا لمكونات compose و util.versionCodes
 * `تحسين` إكمال updateAvailable و latestVersionCode في نتائج speech.models.list لسكربتات Node.js و Bun (يتطلب 3-Macaw Speech 1.4.0 أو أحدث)
-
-# v2.47.0
-
-###### 2026/10/29
-
-* `ميزة` تضيف تعريفات speech الدوال diarize و detectLanguage و tag مع صيغها Async: فصل المتحدثين (من تحدث ومتى, مع تسميتهم اختياريا حسب البصمات الصوتية المسجلة), وتحديد اللغة, ووسم الأصوات (تسميات AudioSet البالغة 527); وتقبل الخيارات دالة الاستدعاء onProgress, مع أنواع نتائج مثل Speech.Diarization و Speech.LanguageDetection و Speech.Tagging (AutoJs6 6.8.0 أو أحدث, يتطلب ⁨3-Macaw Speech⁩ 1.3.0)
-* `ميزة` تضيف تعريفات speech الكائن speech.speaker للتعرف على المتحدث: enroll و verify و identify مع صيغها Async, و list و remove, ورمزي الخطأ SPEAKER_NOT_FOUND و AUDIO_TOO_SHORT (AutoJs6 6.8.0 أو أحدث, يتطلب ⁨3-Macaw Speech⁩ 1.3.0)
-* `تحسين` تضيف Speech.Feature القيم 'speaker' و 'diarization' و 'languageId' و 'audioTagging'; وتضيف Speech.Kind أنواع النماذج 'speaker' و 'segment' و 'langid' و 'tagger' التي تقبلها models.list و setDefault و getDefault
 
 ##### لمزيد من سجل الإصدارات
 
