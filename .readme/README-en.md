@@ -189,6 +189,7 @@ Production installations should use a signature trusted by AutoJs6. In-process p
 ###### 2026/11/05
 
 * `Feature` Plugin category declarations of settings.categories and settings.export (AutoJs6 6.8.1): the category list includes the discovered official plugins, with kind `'plugin'`, label, available and reason, export accepts category ids made of `plugin:` and a package name, and skipped gains the reason `'unavailable'`, with the Settings.PluginCategoryId, Settings.PluginUnavailableReason types
+* `Feature` Optional property reason of the AgentLinkStatus returned by ai.agent.status (AutoJs6 6.8.1), which tells why the connection could not be made when errorCode is `'PLUGIN_UNAVAILABLE'`; includes the AgentUnavailableReason type
 * `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.88.0
 
 # v2.49.0

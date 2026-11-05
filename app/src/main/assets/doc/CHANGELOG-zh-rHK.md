@@ -9,6 +9,7 @@
 ###### 2026/11/05
 
 * `新增` settings.categories 與 settings.export 的插件分類宣告 (AutoJs6 6.8.1): 分類清單包含已發現的官方插件, kind 為 `'plugin'` 並帶 label, available 與 reason, export 接受 `plugin:` 加套件名稱的分類 id, skipped 的原因增加 `'unavailable'`, 含 Settings.PluginCategoryId, Settings.PluginUnavailableReason 類型
+* `新增` ai.agent.status 返回的 AgentLinkStatus 增加可選屬性 reason (AutoJs6 6.8.1), 在 errorCode 為 `'PLUGIN_UNAVAILABLE'` 時說明連接未能建立的原因; 含 AgentUnavailableReason 類型
 * `優化` 捆綁聲明升級至 @sm003/autojs6-dts 4.88.0
 
 # v2.49.0

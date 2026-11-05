@@ -9,6 +9,7 @@
 ###### 2026/11/05
 
 * `기능` settings.categories 및 settings.export 플러그인 분류 선언 (AutoJs6 6.8.1): 분류 목록에 발견된 공식 플러그인을 포함하며 kind는 `'plugin'`이고 label, available, reason 포함, export는 `plugin:`과 패키지 이름으로 된 분류 id를 받고 skipped 사유에 `'unavailable'` 추가; Settings.PluginCategoryId, Settings.PluginUnavailableReason 타입 추가
+* `기능` ai.agent.status가 반환하는 AgentLinkStatus의 선택 속성 reason (AutoJs6 6.8.1), errorCode가 `'PLUGIN_UNAVAILABLE'`일 때 연결하지 못한 이유를 나타냄; AgentUnavailableReason 타입 포함
 * `개선` 번들 선언을 @sm003/autojs6-dts 4.88.0으로 업그레이드
 
 # v2.49.0

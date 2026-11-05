@@ -189,6 +189,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 ###### 2026/11/05
 
 * `ميزة` تعريفات فئات الإضافات في settings.categories و settings.export (AutoJs6 6.8.1): تتضمن قائمة الفئات الإضافات الرسمية المكتشفة, مع kind بالقيمة `'plugin'` و label و available و reason, وتقبل export معرفات فئات مكونة من `plugin:` واسم الحزمة, وتضاف إلى skipped القيمة `'unavailable'`, مع الأنواع Settings.PluginCategoryId, Settings.PluginUnavailableReason
+* `ميزة` الخاصية الاختيارية reason في AgentLinkStatus الذي تعيده ai.agent.status (AutoJs6 6.8.1), وتوضح سبب تعذر إنشاء الاتصال عندما تكون قيمة errorCode هي `'PLUGIN_UNAVAILABLE'`; تتضمن النوع AgentUnavailableReason
 * `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.88.0
 
 # v2.49.0

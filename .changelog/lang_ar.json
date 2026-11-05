@@ -8,7 +8,8 @@
     "v2.50.0": {
       "released_date": "2026/11/05",
       "feature": [
-        "تعريفات فئات الإضافات في settings.categories و settings.export (AutoJs6 6.8.1): تتضمن قائمة الفئات الإضافات الرسمية المكتشفة, مع kind بالقيمة `'plugin'` و label و available و reason, وتقبل export معرفات فئات مكونة من `plugin:` واسم الحزمة, وتضاف إلى skipped القيمة `'unavailable'`, مع الأنواع Settings.PluginCategoryId, Settings.PluginUnavailableReason"
+        "تعريفات فئات الإضافات في settings.categories و settings.export (AutoJs6 6.8.1): تتضمن قائمة الفئات الإضافات الرسمية المكتشفة, مع kind بالقيمة `'plugin'` و label و available و reason, وتقبل export معرفات فئات مكونة من `plugin:` واسم الحزمة, وتضاف إلى skipped القيمة `'unavailable'`, مع الأنواع Settings.PluginCategoryId, Settings.PluginUnavailableReason",
+        "الخاصية الاختيارية reason في AgentLinkStatus الذي تعيده ai.agent.status (AutoJs6 6.8.1), وتوضح سبب تعذر إنشاء الاتصال عندما تكون قيمة errorCode هي `'PLUGIN_UNAVAILABLE'`; تتضمن النوع AgentUnavailableReason"
       ],
       "improvement": [
         "ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.88.0"

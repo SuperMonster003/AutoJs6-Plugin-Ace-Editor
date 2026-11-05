@@ -189,11 +189,19 @@ declare namespace Internal {
             limit?: number;
         }
 
+        /**
+         * Why the last connection to 3-Stove Agent could not be made, next to errorCode `'PLUGIN_UNAVAILABLE'` (AutoJs6 6.8.1).
+         * Unknown values are treated as missing.
+         */
+        type AgentUnavailableReason = 'NOT_INSTALLED' | 'NOT_TRUSTED' | 'DISABLED' | 'NOT_ACTIVATED' | 'INCOMPATIBLE' | 'NO_RESPONSE' | 'REQUEST_DROPPED';
+
         interface AgentLinkStatus {
             state: string;
             queuedCount: number;
             runningRunId?: string;
             errorCode?: string;
+            /** Present with errorCode `'PLUGIN_UNAVAILABLE'`; cleared once the plugin is usable again (AutoJs6 6.8.1). */
+            reason?: AgentUnavailableReason;
         }
 
         interface AgentScriptEntry {
