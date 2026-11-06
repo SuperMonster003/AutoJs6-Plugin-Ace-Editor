@@ -7,6 +7,8 @@ declare module "speech" {
         readonly SpeechError: ErrorConstructor;
         readonly models: Models;
         readonly speaker: Speaker;
+        /** Resident wake words the plugin listens for while no script runs (feature `speechResident`, AutoJs6 6.8.1 and later). */
+        readonly resident: Resident;
         isAvailable(callOptions?: CallOptions): Promise<boolean>;
         capabilities(callOptions?: CallOptions): Promise<Capabilities>;
         /** Returns a pending session. Attach ready/error/end listeners before feeding audio. */
@@ -27,6 +29,20 @@ declare module "speech" {
         synthesize(text: string, path: string, options?: SynthesisOptions | null, callOptions?: CallOptions): Promise<SynthesisResult>;
         synthesizeAsync(text: string, path: string, options?: SynthesisOptions | null, callOptions?: CallOptions): Promise<SynthesisResult>;
         speak(text: string, options?: SpeakOptions | null, callOptions?: CallOptions): Promise<import("tts").Result>;
+        /**
+         * Loads the engines of a model ahead of the first session and holds them with a lease of this client (feature
+         * `speechPrepare`, AutoJs6 6.8.1 and later); the host waits at most 2 minutes for the load. The lease lasts until
+         * {@link release}, {@link close} or the end of the execution.
+         */
+        prepare(options?: PrepareOptions | null, callOptions?: CallOptions): Promise<PrepareResult>;
+        prepareAsync(options?: PrepareOptions | null, callOptions?: CallOptions): Promise<PrepareResult>;
+        /**
+         * Returns a lease of this client (of `prepare`, or the `leaseId` of a `keepLoaded` session's `ready` event) and
+         * resolves whether the plugin still held it; false for a lease this client does not hold. Without an id it returns
+         * every lease of this client and resolves how many the plugin still held (0 without asking the plugin when none is held).
+         */
+        release(leaseId: string, callOptions?: CallOptions): Promise<boolean>;
+        release(leaseId?: null, callOptions?: CallOptions): Promise<number>;
         /** Cancels this facade's operations/sessions and releases resources. A later call opens a new client. */
         close(): Promise<boolean>;
     }
@@ -50,10 +66,14 @@ declare module "speech" {
             | 'ENGINE_FAILED'
             | 'IO_FAILED'
             | 'TIMEOUT'
+            | 'FEATURE_UNAVAILABLE'
+            | 'RESIDENT_UNAVAILABLE'
+            | 'LEASE_NOT_FOUND'
             | 'INTERNAL';
 
         /** What the plugin implements; a call whose feature is missing fails with `PLUGIN_INCOMPATIBLE`. */
-        type Feature = 'asr' | 'asrStreaming' | 'vad' | 'kws' | 'tts' | 'ttsSystemEngine' | 'models' | 'audioDecode' | 'speaker' | 'diarization' | 'languageId' | 'audioTagging';
+        type Feature = 'asr' | 'asrStreaming' | 'vad' | 'kws' | 'tts' | 'ttsSystemEngine' | 'models' | 'audioDecode' | 'speaker' | 'diarization' | 'languageId' | 'audioTagging'
+            | 'speechPrepare' | 'speechResident' | 'speechBackgroundWake';
 
         /** Model kinds: recognition, synthesis, keyword spotting (wake words) and voice activity detection. */
         type Kind = 'asr' | 'tts' | 'kws' | 'vad' | 'speaker' | 'segment' | 'langid' | 'tagger';
@@ -140,10 +160,16 @@ declare module "speech" {
             maxDurationMillis?: number;
             /** Ends the session when neither speech nor new text comes within it (audio time), 0 to 1800000, 0 never; default 15000. */
             timeoutMillis?: number;
+            /**
+             * Keeps the engines loaded after the session ends, as a lease of this client whose id the `ready` event carries
+             * (feature `speechPrepare`, AutoJs6 6.8.1 and later): `true` until {@link API.release} or the end of the
+             * execution, or 1 to 1440 minutes; `false`, `0` and absence keep nothing. Larger values are `LIMIT_EXCEEDED`.
+             */
+            keepLoaded?: boolean | number;
         }
 
         /** Dictation options of the rounds that follow wake word hits; they always record the microphone. */
-        interface RoundOptions extends Omit<ListenOptions, 'source'> {
+        interface RoundOptions extends Omit<ListenOptions, 'source' | 'keepLoaded'> {
             source?: 'mic';
         }
 
@@ -178,6 +204,98 @@ declare module "speech" {
             minIntervalMillis?: number;
             /** `true` or dictation options: each hit is followed by one dictation round, the `listen` of the `wake` event. */
             thenListen?: boolean | RoundOptions;
+            /** As {@link ListenOptions.keepLoaded}; never inside `thenListen`. */
+            keepLoaded?: boolean | number;
+            /**
+             * Yields the microphone to every other microphone session and resumes after it, with `paused` / `resumed`
+             * events (feature `speechBackgroundWake`, AutoJs6 6.8.1 and later); default false.
+             */
+            background?: boolean;
+        }
+
+        interface PrepareOptions {
+            /** Model id; default the default model of `kind`, as `listen` / `wake` would load. */
+            model?: string;
+            /** Language hint of the recognition model. */
+            language?: string;
+            /** `'asr'` (default) or `'kws'`. */
+            kind?: 'asr' | 'kws';
+        }
+
+        interface PrepareResult {
+            /** The lease to give to {@link API.release}. */
+            readonly leaseId: string;
+            readonly modelId: string | null;
+            /** How long the load took, 0 when the engines were loaded already. */
+            readonly loadMillis: number;
+        }
+
+        /** The action of a resident wake word: `'open'` the plugin's panel, run a `'script'`, send a `'broadcast'` or only `'notify'`. */
+        type ResidentAction = 'open' | 'script' | 'broadcast' | 'notify' | (string & {});
+
+        interface ResidentRuleObject {
+            /** 1 to 32 characters, not repeated (after trimming) within the rules. */
+            keyword: string;
+            /** Default `'open'`. */
+            action?: ResidentAction;
+            /** Exactly with `'script'`: the script to run, resolved against the working directory. */
+            script?: string;
+            /** Only with `'script'`: at most 1024 characters. */
+            arguments?: string;
+        }
+
+        /** A keyword (action `'open'`) or a rule object. */
+        type ResidentRule = string | ResidentRuleObject;
+
+        /** At most 10 rules; `set` replaces every rule. */
+        type ResidentConfigInput = { rules: readonly ResidentRule[] } | readonly ResidentRule[];
+
+        interface ResidentConfig {
+            readonly enabled: boolean;
+            readonly rules: StoredResidentRule[];
+        }
+
+        interface StoredResidentRule {
+            readonly keyword: string;
+            readonly action: ResidentAction;
+            readonly script?: string;
+            readonly arguments?: string;
+        }
+
+        interface ResidentSwitch {
+            /** Whether the resident listening runs now. */
+            readonly started: boolean;
+            /** The system refused to start it from the background; the switch is kept and takes effect when the plugin is opened next. */
+            readonly restartNeeded: boolean;
+        }
+
+        interface ResidentHit {
+            readonly keyword: string;
+            readonly matchedText?: string;
+            readonly action: ResidentAction;
+            /** Epoch milliseconds of the hit. */
+            readonly timeMillis: number;
+        }
+
+        /**
+         * The resident wake words of the plugin (feature `speechResident`; a plugin without it answers `FEATURE_UNAVAILABLE`).
+         * Every member resolves asynchronously, as the rest of this module does.
+         */
+        interface Resident {
+            get(callOptions?: CallOptions): Promise<ResidentConfig>;
+            /** Validated by the host first (`INVALID_OPTIONS` / `LIMIT_EXCEEDED`); resolves the stored configuration. */
+            set(config: ResidentConfigInput, callOptions?: CallOptions): Promise<ResidentConfig>;
+            enable(callOptions?: CallOptions): Promise<ResidentSwitch>;
+            disable(callOptions?: CallOptions): Promise<ResidentSwitch>;
+            /** Whether the resident wake words are on; false when the plugin cannot tell, never rejected. */
+            readonly enabled: Promise<boolean>;
+            /**
+             * Adds a hit listener; the first one registers the watch and the promise settles once it is registered (it
+             * rejects and the listener is removed when the plugin refuses). The execution stays alive while a listener exists.
+             */
+            on(event: 'hit', listener: (hit: ResidentHit) => void): Promise<void>;
+            /** Removes the listener (the most recent registration of it), or every listener without one; the last one ends the watch. */
+            off(event: 'hit', listener?: ((hit: ResidentHit) => void) | null): Promise<void>;
         }
 
         interface SynthesisOptions {
@@ -260,6 +378,8 @@ declare module "speech" {
         interface ReadyEvent {
             readonly sessionId: string;
             readonly modelId: string;
+            /** With `keepLoaded`: the lease that keeps the engines loaded, for {@link API.release}. */
+            readonly leaseId?: string;
         }
 
         interface PartialEvent {
@@ -360,6 +480,10 @@ declare module "speech" {
             warning: Problem;
             error: SpeechError;
             end: WakeEndEvent;
+            /** With `background`: the session yielded the microphone to another session. */
+            paused: Readonly<Record<string, unknown>> | undefined;
+            /** With `background`: keyword spotting resumed after the session it yielded to ended. */
+            resumed: Readonly<Record<string, unknown>> | undefined;
         }
 
         /**

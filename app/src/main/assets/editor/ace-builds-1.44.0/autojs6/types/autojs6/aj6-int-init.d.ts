@@ -101,6 +101,10 @@ declare let $epub: Internal.Epub;
 declare let gallery: Internal.Gallery;
 declare let $gallery: Internal.Gallery;
 
+/** Pictures, analysis frames and preview of the external 3-Prism Camera plugin. Available since AutoJs6 6.8.1. */
+declare let camera: Internal.Camera;
+declare let $camera: Internal.Camera;
+
 /** Offline speech recognition, wake words and synthesis of the external 3-Macaw Speech plugin. Available since AutoJs6 6.8.0. */
 declare let speech: Internal.Speech;
 declare let $speech: Internal.Speech;

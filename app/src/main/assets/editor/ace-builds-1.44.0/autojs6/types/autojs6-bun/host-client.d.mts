@@ -1,6 +1,6 @@
 /** Types for the explicit SDK module at process.env.AUTOJS6_HOST_CLIENT_MODULE. */
 export declare const SDK_VERSION: 1;
-export type HostCapability = "agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.power" | "device.audio" | "device.identifiers" | "media.control" | "media.library" | "dialogs.control" | "events.observe" | "events.notification" | "events.toast" | "events.key" | "events.touch" | "events.key.intercept" | "notifications.post" | "notifications.settings" | "database.control" | "shell.control" | "shell.root" | "shell.shizuku" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "accessibility.gesture" | "accessibility.service" | "clipboard.control" | "ui.layout" | "ui.compose" | "screen.record.microphone" | "screen.record.playback" | "ui.toast" | "device.info" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
+export type HostCapability = "agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "camera.control" | "mediastudio.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.power" | "device.audio" | "device.identifiers" | "media.control" | "media.library" | "dialogs.control" | "events.observe" | "events.notification" | "events.toast" | "events.key" | "events.touch" | "events.key.intercept" | "notifications.post" | "notifications.settings" | "database.control" | "shell.control" | "shell.root" | "shell.shizuku" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "accessibility.gesture" | "accessibility.service" | "clipboard.control" | "ui.layout" | "ui.compose" | "screen.record.microphone" | "screen.record.playback" | "ui.toast" | "device.info" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
   | "autojs.control" | "autojs.manage" | "settings.control" | "settings.write" | "sysprops.control" | "memory.control" | "memory.dump"
   | "installer.control" | "installer.mutate" | "engines.control" | "engines.exec" | "plugintools.control"
   | "terminal.control" | "floaty.control" | "floaty.raw" | "floaty.touch"
@@ -13,7 +13,7 @@ export declare class HostCallError extends Error {
   readonly status: number;
   constructor(code: string, message: string, capability?: string | null, status?: number);
 }
-export declare const HOST_API_METHODS: Readonly<Record<"agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.audio" | "dialogs.control" | "events.observe" | "notifications.post" | "database.control" | "shell.control" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "clipboard.control" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
+export declare const HOST_API_METHODS: Readonly<Record<"agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "camera.control" | "mediastudio.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.audio" | "dialogs.control" | "events.observe" | "notifications.post" | "database.control" | "shell.control" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "clipboard.control" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
   | "autojs.control" | "settings.control" | "sysprops.control" | "memory.control" | "installer.control" | "engines.control" | "plugintools.control", readonly string[]>>;
 export declare const OPENCC_CONVERSION_TYPES: readonly [
   "hk2s", "hk2t", "jp2t", "s2hk", "s2t", "s2tw", "s2twp", "t2hk", "t2s", "t2tw", "t2jp", "tw2s", "tw2t", "tw2sp",
@@ -3201,6 +3201,8 @@ export namespace RuntimeSpeech {
         readonly SpeechError: ErrorConstructor;
         readonly models: Models;
         readonly speaker: Speaker;
+        /** Resident wake words the plugin listens for while no script runs (feature `speechResident`, AutoJs6 6.8.1 and later). */
+        readonly resident: Resident;
         isAvailable(callOptions?: CallOptions): Promise<boolean>;
         capabilities(callOptions?: CallOptions): Promise<Capabilities>;
         /** Returns a pending session. Attach ready/error/end listeners before feeding audio. */
@@ -3221,6 +3223,20 @@ export namespace RuntimeSpeech {
         synthesize(text: string, path: string, options?: SynthesisOptions | null, callOptions?: CallOptions): Promise<SynthesisResult>;
         synthesizeAsync(text: string, path: string, options?: SynthesisOptions | null, callOptions?: CallOptions): Promise<SynthesisResult>;
         speak(text: string, options?: SpeakOptions | null, callOptions?: CallOptions): Promise<RuntimeTts.Result>;
+        /**
+         * Loads the engines of a model ahead of the first session and holds them with a lease of this client (feature
+         * `speechPrepare`, AutoJs6 6.8.1 and later); the host waits at most 2 minutes for the load. The lease lasts until
+         * {@link release}, {@link close} or the end of the execution.
+         */
+        prepare(options?: PrepareOptions | null, callOptions?: CallOptions): Promise<PrepareResult>;
+        prepareAsync(options?: PrepareOptions | null, callOptions?: CallOptions): Promise<PrepareResult>;
+        /**
+         * Returns a lease of this client (of `prepare`, or the `leaseId` of a `keepLoaded` session's `ready` event) and
+         * resolves whether the plugin still held it; false for a lease this client does not hold. Without an id it returns
+         * every lease of this client and resolves how many the plugin still held (0 without asking the plugin when none is held).
+         */
+        release(leaseId: string, callOptions?: CallOptions): Promise<boolean>;
+        release(leaseId?: null, callOptions?: CallOptions): Promise<number>;
         /** Cancels this facade's operations/sessions and releases resources. A later call opens a new client. */
         close(): Promise<boolean>;
     }
@@ -3244,10 +3260,14 @@ export namespace RuntimeSpeech {
             | 'ENGINE_FAILED'
             | 'IO_FAILED'
             | 'TIMEOUT'
+            | 'FEATURE_UNAVAILABLE'
+            | 'RESIDENT_UNAVAILABLE'
+            | 'LEASE_NOT_FOUND'
             | 'INTERNAL';
 
         /** What the plugin implements; a call whose feature is missing fails with `PLUGIN_INCOMPATIBLE`. */
-        type Feature = 'asr' | 'asrStreaming' | 'vad' | 'kws' | 'tts' | 'ttsSystemEngine' | 'models' | 'audioDecode' | 'speaker' | 'diarization' | 'languageId' | 'audioTagging';
+        type Feature = 'asr' | 'asrStreaming' | 'vad' | 'kws' | 'tts' | 'ttsSystemEngine' | 'models' | 'audioDecode' | 'speaker' | 'diarization' | 'languageId' | 'audioTagging'
+            | 'speechPrepare' | 'speechResident' | 'speechBackgroundWake';
 
         /** Model kinds: recognition, synthesis, keyword spotting (wake words) and voice activity detection. */
         type Kind = 'asr' | 'tts' | 'kws' | 'vad' | 'speaker' | 'segment' | 'langid' | 'tagger';
@@ -3334,10 +3354,16 @@ export namespace RuntimeSpeech {
             maxDurationMillis?: number;
             /** Ends the session when neither speech nor new text comes within it (audio time), 0 to 1800000, 0 never; default 15000. */
             timeoutMillis?: number;
+            /**
+             * Keeps the engines loaded after the session ends, as a lease of this client whose id the `ready` event carries
+             * (feature `speechPrepare`, AutoJs6 6.8.1 and later): `true` until {@link API.release} or the end of the
+             * execution, or 1 to 1440 minutes; `false`, `0` and absence keep nothing. Larger values are `LIMIT_EXCEEDED`.
+             */
+            keepLoaded?: boolean | number;
         }
 
         /** Dictation options of the rounds that follow wake word hits; they always record the microphone. */
-        interface RoundOptions extends Omit<ListenOptions, 'source'> {
+        interface RoundOptions extends Omit<ListenOptions, 'source' | 'keepLoaded'> {
             source?: 'mic';
         }
 
@@ -3372,6 +3398,98 @@ export namespace RuntimeSpeech {
             minIntervalMillis?: number;
             /** `true` or dictation options: each hit is followed by one dictation round, the `listen` of the `wake` event. */
             thenListen?: boolean | RoundOptions;
+            /** As {@link ListenOptions.keepLoaded}; never inside `thenListen`. */
+            keepLoaded?: boolean | number;
+            /**
+             * Yields the microphone to every other microphone session and resumes after it, with `paused` / `resumed`
+             * events (feature `speechBackgroundWake`, AutoJs6 6.8.1 and later); default false.
+             */
+            background?: boolean;
+        }
+
+        interface PrepareOptions {
+            /** Model id; default the default model of `kind`, as `listen` / `wake` would load. */
+            model?: string;
+            /** Language hint of the recognition model. */
+            language?: string;
+            /** `'asr'` (default) or `'kws'`. */
+            kind?: 'asr' | 'kws';
+        }
+
+        interface PrepareResult {
+            /** The lease to give to {@link API.release}. */
+            readonly leaseId: string;
+            readonly modelId: string | null;
+            /** How long the load took, 0 when the engines were loaded already. */
+            readonly loadMillis: number;
+        }
+
+        /** The action of a resident wake word: `'open'` the plugin's panel, run a `'script'`, send a `'broadcast'` or only `'notify'`. */
+        type ResidentAction = 'open' | 'script' | 'broadcast' | 'notify' | (string & {});
+
+        interface ResidentRuleObject {
+            /** 1 to 32 characters, not repeated (after trimming) within the rules. */
+            keyword: string;
+            /** Default `'open'`. */
+            action?: ResidentAction;
+            /** Exactly with `'script'`: the script to run, resolved against the working directory. */
+            script?: string;
+            /** Only with `'script'`: at most 1024 characters. */
+            arguments?: string;
+        }
+
+        /** A keyword (action `'open'`) or a rule object. */
+        type ResidentRule = string | ResidentRuleObject;
+
+        /** At most 10 rules; `set` replaces every rule. */
+        type ResidentConfigInput = { rules: readonly ResidentRule[] } | readonly ResidentRule[];
+
+        interface ResidentConfig {
+            readonly enabled: boolean;
+            readonly rules: StoredResidentRule[];
+        }
+
+        interface StoredResidentRule {
+            readonly keyword: string;
+            readonly action: ResidentAction;
+            readonly script?: string;
+            readonly arguments?: string;
+        }
+
+        interface ResidentSwitch {
+            /** Whether the resident listening runs now. */
+            readonly started: boolean;
+            /** The system refused to start it from the background; the switch is kept and takes effect when the plugin is opened next. */
+            readonly restartNeeded: boolean;
+        }
+
+        interface ResidentHit {
+            readonly keyword: string;
+            readonly matchedText?: string;
+            readonly action: ResidentAction;
+            /** Epoch milliseconds of the hit. */
+            readonly timeMillis: number;
+        }
+
+        /**
+         * The resident wake words of the plugin (feature `speechResident`; a plugin without it answers `FEATURE_UNAVAILABLE`).
+         * Every member resolves asynchronously, as the rest of this module does.
+         */
+        interface Resident {
+            get(callOptions?: CallOptions): Promise<ResidentConfig>;
+            /** Validated by the host first (`INVALID_OPTIONS` / `LIMIT_EXCEEDED`); resolves the stored configuration. */
+            set(config: ResidentConfigInput, callOptions?: CallOptions): Promise<ResidentConfig>;
+            enable(callOptions?: CallOptions): Promise<ResidentSwitch>;
+            disable(callOptions?: CallOptions): Promise<ResidentSwitch>;
+            /** Whether the resident wake words are on; false when the plugin cannot tell, never rejected. */
+            readonly enabled: Promise<boolean>;
+            /**
+             * Adds a hit listener; the first one registers the watch and the promise settles once it is registered (it
+             * rejects and the listener is removed when the plugin refuses). The execution stays alive while a listener exists.
+             */
+            on(event: 'hit', listener: (hit: ResidentHit) => void): Promise<void>;
+            /** Removes the listener (the most recent registration of it), or every listener without one; the last one ends the watch. */
+            off(event: 'hit', listener?: ((hit: ResidentHit) => void) | null): Promise<void>;
         }
 
         interface SynthesisOptions {
@@ -3454,6 +3572,8 @@ export namespace RuntimeSpeech {
         interface ReadyEvent {
             readonly sessionId: string;
             readonly modelId: string;
+            /** With `keepLoaded`: the lease that keeps the engines loaded, for {@link API.release}. */
+            readonly leaseId?: string;
         }
 
         interface PartialEvent {
@@ -3554,6 +3674,10 @@ export namespace RuntimeSpeech {
             warning: Problem;
             error: SpeechError;
             end: WakeEndEvent;
+            /** With `background`: the session yielded the microphone to another session. */
+            paused: Readonly<Record<string, unknown>> | undefined;
+            /** With `background`: keyword spotting resumed after the session it yielded to ended. */
+            resumed: Readonly<Record<string, unknown>> | undefined;
         }
 
         /**
@@ -7604,12 +7728,670 @@ export namespace RuntimeGallery {
   }
 // END GENERATED PLUGIN FAMILY TYPES
 
+// BEGIN GENERATED CAMERA TYPES
+export namespace RuntimeCamera {
+    /** No deadline by default: requestPermission and the viewfinder of `capture({ui: true})` wait for the user. */
+    type CallOptions = Pick<AutomationCallOptions, "signal" | "timeoutMs">;
+
+    interface API {
+        readonly CameraError: CameraErrorConstructor;
+        /** Whether the 3-Prism Camera plugin is installed, enabled and compatible. */
+        isAvailable(callOptions?: CallOptions): Promise<boolean>;
+        capabilities(callOptions?: CallOptions): Promise<Capabilities>;
+        list(callOptions?: CallOptions): Promise<CameraInfo[]>;
+        /** Asks for the plugin's camera permission; needs AutoJs6 in the foreground (UI_REQUIRES_FOREGROUND). */
+        requestPermission(callOptions?: CallOptions): Promise<boolean>;
+        /**
+         * One picture. Without `ui` the plugin takes it in the background (with the camera of an open session of this
+         * script when there is one); `ui: true` opens the plugin's viewfinder and answers null when the user leaves it.
+         * The script recycles the image with `recycle`.
+         */
+        capture(options?: ModuleCaptureOptions | null, callOptions?: CallOptions): Promise<ImageHandle | null>;
+        captureAsync(options?: ModuleCaptureOptions | null, callOptions?: CallOptions): Promise<ImageHandle | null>;
+        /** Opens a camera session; it lasts until `close()`, the end of the execution or the plugin closes it. */
+        open(options?: OpenOptions | null, callOptions?: CallOptions): Promise<CameraSession>;
+        /**
+         * Frees a picture of `capture` (module or session) with the camera capability alone (host 6.8.1, build 6641 or
+         * later); analysis frames are recycled by the module. Idempotent: a handle recycled before answers true as well.
+         * Other images reject with INVALID_ARGUMENT; free them with `images.recycle`.
+         */
+        recycle(image: ImageHandle): Promise<boolean>;
+    }
+
+        type ErrorCode =
+            | 'PLUGIN_NOT_INSTALLED'
+            | 'PLUGIN_DISABLED'
+            | 'HOST_VERSION_TOO_LOW'
+            | 'PERMISSION_DENIED'
+            | 'CAMERA_BUSY'
+            | 'CAMERA_UNAVAILABLE'
+            | 'CAMERA_DISABLED'
+            | 'UI_REQUIRES_FOREGROUND'
+            | 'UNSUPPORTED'
+            | 'INVALID_ARGUMENT'
+            | 'SESSION_CLOSED'
+            | 'TIMEOUT'
+            | 'LIMIT_EXCEEDED'
+            | 'INTERNAL'
+            /** callOptions.signal ended the call. */
+            | 'CANCELLED';
+
+        interface ErrorDetails {
+            readonly holder: string | null;
+            readonly cameraId: string | null;
+            readonly limit: number | null;
+            readonly reason: string | null;
+        }
+
+        /** `name` is `'CameraError'`; `toString()` yields `CameraError [CODE]: message`; `message` is not enumerable. */
+        interface CameraError extends Error {
+            readonly name: 'CameraError';
+            readonly code: ErrorCode | string;
+            readonly details: ErrorDetails;
+        }
+
+        interface CameraErrorConstructor {
+            (message?: string, code?: ErrorCode | string, details?: Partial<ErrorDetails> | null): CameraError;
+            new(message?: string, code?: ErrorCode | string, details?: Partial<ErrorDetails> | null): CameraError;
+            readonly prototype: CameraError;
+        }
+
+        type Facing = 'back' | 'front';
+        type FlashMode = 'off' | 'on' | 'auto';
+        type CloseReason = 'script' | 'host' | 'pluginUi' | 'cameraDisconnected' | 'policy' | 'error' | string;
+
+        interface Capabilities {
+            readonly contractVersion: number | null;
+            readonly features: string[];
+            readonly engineVersion: string | null;
+            readonly permissionGranted: boolean | null;
+            readonly sharedMemory: boolean | null;
+            readonly cameraCount: number | null;
+        }
+
+        interface CameraInfo {
+            readonly id: string;
+            readonly facing: Facing | string;
+            readonly hasFlash: boolean;
+            readonly sensorRotation: number;
+            readonly zoomRange: number[];
+            readonly exposureRange: number[];
+            readonly exposureStep: number;
+            /** `"WxH"` strings. */
+            readonly analysisResolutions: string[];
+            readonly captureResolutions: string[];
+        }
+
+        interface OpenOptions {
+            /**
+             * `facing` and `id` exclude each other. Left out (with `id` too), the plugin opens the camera chosen on its
+             * settings page (the back camera unless the user changed it, host build 6641 or later); `state().facing` / `id`
+             * give the camera in effect.
+             */
+            facing?: Facing;
+            id?: string;
+            /**
+             * Analysis resolution `"WxH"`. Left out, the plugin takes the default of its settings page (640x480 unless the
+             * user changed it); `state().resolution` and the frames give the size in effect.
+             */
+            resolution?: string;
+            /** Target frame rate. Left out, the plugin takes the default of its settings page (the camera's own rate unless changed). */
+            fps?: number;
+            /** Frames turned upright, true by default. */
+            upright?: boolean;
+            mirror?: boolean;
+            flashMode?: FlashMode;
+        }
+
+        interface AnalyzeOptions {
+            resolution?: string;
+            fps?: number;
+            upright?: boolean;
+            mirror?: boolean;
+        }
+
+        interface CaptureOptions {
+            /** Also saves the picture to this path. */
+            path?: string;
+            quality?: number;
+            flashMode?: FlashMode;
+            resolution?: string;
+            mirror?: boolean;
+        }
+
+        interface ModuleCaptureOptions extends CaptureOptions {
+            /** Opens the plugin's viewfinder (AutoJs6 in the foreground, no session of this script open). */
+            ui?: boolean;
+            facing?: Facing;
+            id?: string;
+        }
+
+        interface FocusOptions {
+            size?: number;
+            autoCancelMillis?: number;
+        }
+
+        interface FrameMeta {
+            readonly seq: number;
+            readonly width: number;
+            readonly height: number;
+            readonly rotationDegrees: number;
+            readonly upright: boolean;
+            readonly mirrored: boolean;
+            /** Milliseconds. */
+            readonly timestamp: number;
+            readonly facing: Facing | string;
+            /** Frames of this analysis replaced by newer ones before the script pulled them. */
+            readonly dropped: number;
+        }
+
+        interface ZoomState {
+            readonly ratio: number;
+            readonly min: number;
+            readonly max: number;
+            readonly linear: number;
+        }
+
+        interface ExposureState {
+            readonly index: number;
+            readonly min: number;
+            readonly max: number;
+            readonly step: number;
+        }
+
+        interface SessionState {
+            readonly open: boolean;
+            readonly previewing: boolean;
+            readonly analyzing: boolean;
+            readonly id: string | null;
+            readonly facing: Facing | string | null;
+            readonly resolution: string | null;
+            readonly fps: number | null;
+            readonly previewMirrored: boolean | null;
+            readonly torch: boolean | null;
+            readonly flashMode: FlashMode | string | null;
+            readonly zoom: number | null;
+            readonly exposure: number | null;
+            readonly frames: number | null;
+            readonly dropped: number;
+            readonly holder: string | null;
+        }
+
+        /**
+         * The image is valid only until the callback (or the Promise it returns) settles: the facade recycles it then (D11).
+         * A callback that returns a Promise holds the next frame back until it settles; frames that arrive meanwhile replace
+         * each other and count in `dropped`. Keep a picture with `images.copy` before returning.
+         */
+        type FrameCallback = (this: CameraSession, image: ImageHandle, meta: FrameMeta) => unknown;
+
+        interface CameraSession {
+            readonly holder: string | null;
+            /** Frames dropped in the current analysis, or in the last one after it stopped. */
+            readonly dropped: number;
+            /** The close reason, null while open. */
+            readonly reason: CloseReason | null;
+            isClosed(): boolean;
+            /** Starts the analysis (an analysis already running stops first) and pulls frames until stopAnalysis or close. */
+            analyze(callback?: FrameCallback | null, options?: AnalyzeOptions | null): Promise<this>;
+            analyze(options?: AnalyzeOptions | null): Promise<this>;
+            stopAnalysis(): Promise<this>;
+            /** Rejects with UNSUPPORTED: a JS runtime has no preview view. */
+            preview(...args: unknown[]): Promise<never>;
+            stopPreview(): Promise<never>;
+            capture(options?: CaptureOptions | null): Promise<ImageHandle | null>;
+            captureAsync(options?: CaptureOptions | null): Promise<ImageHandle | null>;
+            torch(on: boolean): Promise<this>;
+            flashMode(mode: FlashMode): Promise<this>;
+            zoom(ratio: number): Promise<this>;
+            zoomLinear(linear: number): Promise<this>;
+            exposure(index: number): Promise<this>;
+            zoomState(): Promise<ZoomState>;
+            exposureState(): Promise<ExposureState>;
+            /** x and y in 0..1 of the analysis frame. */
+            focusAt(x: number, y: number, options?: FocusOptions | null): Promise<boolean>;
+            state(): Promise<SessionState>;
+            /** Ends the session (reason `script`); idempotent. */
+            close(): Promise<void>;
+            /** Listeners run on this runtime's JS thread; the image of `frame` is valid only while the listener runs. */
+            on(event: 'frame', listener: (this: CameraSession, image: ImageHandle, meta: FrameMeta) => void): this;
+            on(event: 'dropped', listener: (this: CameraSession, total: number, lastSeq: number) => void): this;
+            on(event: 'error', listener: (this: CameraSession, error: CameraError) => void): this;
+            /** `pluginUi`: the plugin's viewfinder took the camera; the execution ends after the close listeners ran (Q7). */
+            on(event: 'close', listener: (this: CameraSession, reason: CloseReason) => void): this;
+            on(event: string, listener: (...args: any[]) => void): this;
+            addListener(event: string, listener: (...args: any[]) => void): this;
+            once(event: 'close', listener: (this: CameraSession, reason: CloseReason) => void): this;
+            once(event: string, listener: (...args: any[]) => void): this;
+            /** Without a listener, removes every listener of the event. */
+            off(event: string, listener?: (...args: any[]) => void): this;
+            removeListener(event: string, listener?: (...args: any[]) => void): this;
+            removeAllListeners(event?: string): this;
+            listenerCount(event: string): number;
+            toString(): string;
+        }
+  }
+// END GENERATED CAMERA TYPES
+
+// BEGIN GENERATED MEDIA STUDIO TYPES
+export namespace RuntimeVideo {
+    interface API {
+        readonly MediaStudioError: MediaStudioErrorConstructor;
+        /** Whether the 3-Slate Studio plugin is installed, enabled and compatible. */
+        isAvailable(): Promise<boolean>;
+        /** The plugin's version, contract version and the operations it runs. */
+        version(): Promise<VersionInfo>;
+        /** The running tasks of this script (video and audio). */
+        tasks(): Promise<TaskInfo[]>;
+        /** Cancels every running task of this script and answers how many. */
+        cancelAll(): Promise<number>;
+        /**
+         * Starts a screen recording (by AutoJs6, no plugin needed) and answers its handle; the execution end saves a
+         * recording that is still running. Without a path the file goes to `Movies/AutoJs6/screen-<yyyyMMdd-HHmmss>.mp4`.
+         */
+        record(path?: string | null, options?: RecordOptions | null): Promise<ScreenRecording>;
+        record(options?: RecordOptions | null): Promise<ScreenRecording>;
+
+        probe(src: string): Promise<MediaInfo>;
+        probeAsync(src: string): Promise<MediaInfo>;
+        trim(src: string, options: TrimOptions, output?: Output): Promise<ProcessResult>;
+        trimAsync(src: string, options: TrimOptions, output?: Output): Promise<ProcessResult>;
+        concat(sources: string[], options?: ConcatOptions | null, output?: Output): Promise<ProcessResult>;
+        concat(sources: string[], output?: Output, options?: ConcatOptions | null): Promise<ProcessResult>;
+        concatAsync(sources: string[], options?: ConcatOptions | null, output?: Output): Promise<ProcessResult>;
+        concatAsync(sources: string[], output?: Output, options?: ConcatOptions | null): Promise<ProcessResult>;
+        /** factor 0.25 - 8. */
+        speed(src: string, options: SpeedOptions, output?: Output): Promise<ProcessResult>;
+        speedAsync(src: string, options: SpeedOptions, output?: Output): Promise<ProcessResult>;
+        transform(src: string, options: TransformOptions, output?: Output): Promise<ProcessResult>;
+        transformAsync(src: string, options: TransformOptions, output?: Output): Promise<ProcessResult>;
+        overlay(src: string, overlays: Overlay[], output?: Output, options?: ProcessOptions | null): Promise<ProcessResult>;
+        overlayAsync(src: string, overlays: Overlay[], output?: Output, options?: ProcessOptions | null): Promise<ProcessResult>;
+        /** Answers the paths of the extracted frames. */
+        frames(src: string, options?: FramesOptions | null, outputDir?: Output): Promise<string[]>;
+        framesAsync(src: string, options?: FramesOptions | null, outputDir?: Output): Promise<string[]>;
+        /** One frame at `at` milliseconds; the script recycles the image. */
+        frame(src: string, at: number, options?: FrameOptions | null): Promise<ImageHandle>;
+        frameAsync(src: string, at: number, options?: FrameOptions | null): Promise<ImageHandle>;
+        thumbnail(src: string, options?: ThumbnailOptions | null, output?: Output): Promise<ProcessResult>;
+        thumbnailAsync(src: string, options?: ThumbnailOptions | null, output?: Output): Promise<ProcessResult>;
+        toGif(src: string, options?: GifOptions | null, output?: Output): Promise<ProcessResult>;
+        toGifAsync(src: string, options?: GifOptions | null, output?: Output): Promise<ProcessResult>;
+        extractAudio(src: string, options?: ExtractAudioOptions | null, output?: Output): Promise<ProcessResult>;
+        extractAudioAsync(src: string, options?: ExtractAudioOptions | null, output?: Output): Promise<ProcessResult>;
+        removeAudio(src: string, output?: Output, options?: ProcessOptions | null): Promise<ProcessResult>;
+        removeAudioAsync(src: string, output?: Output, options?: ProcessOptions | null): Promise<ProcessResult>;
+        transcode(src: string, options?: TranscodeOptions | null, output?: Output): Promise<ProcessResult>;
+        transcodeAsync(src: string, options?: TranscodeOptions | null, output?: Output): Promise<ProcessResult>;
+        /** Multi-track composition of a timeline (3-Slate Studio roadmap appendix B.4; times in milliseconds). */
+        compose(timeline: Timeline, output?: Output, options?: ProcessOptions | null): Promise<ProcessResult>;
+        composeAsync(timeline: Timeline, output?: Output, options?: ProcessOptions | null): Promise<ProcessResult>;
+        /** `subtitles` is a subtitle file path or an array of cues. */
+        burnSubtitles(src: string, subtitles: string | SubtitleCue[], style?: SubtitleStyle | null, output?: Output): Promise<ProcessResult>;
+        burnSubtitlesAsync(src: string, subtitles: string | SubtitleCue[], style?: SubtitleStyle | null, output?: Output): Promise<ProcessResult>;
+        readonly subtitles: Subtitles;
+    }
+
+        interface Subtitles {
+            /** Reads an SRT / ASS file into cues. */
+            parse(path: string): Promise<SubtitleCue[]>;
+            parseAsync(path: string): Promise<SubtitleCue[]>;
+            /** Writes cues; the third argument is the format or options, the format follows the extension when omitted. */
+            write(path: string, cues: SubtitleCue[], format?: SubtitleFormat | SubtitleWriteOptions | null): Promise<ProcessResult>;
+            writeAsync(path: string, cues: SubtitleCue[], format?: SubtitleFormat | SubtitleWriteOptions | null): Promise<ProcessResult>;
+        }
+
+        /** A path, or null (or omitted) for the default output next to the source (3-Slate Studio D14). */
+        type Output = string | null;
+
+        type ErrorCode =
+            | 'PLUGIN_UNAVAILABLE'
+            | 'PLUGIN_DISABLED'
+            | 'PLUGIN_INCOMPATIBLE'
+            | 'INVALID_OPTIONS'
+            | 'LIMIT_EXCEEDED'
+            | 'TASK_LIMIT'
+            | 'UNSUPPORTED_FORMAT'
+            | 'CODEC_ERROR'
+            | 'IO_ERROR'
+            | 'STORAGE_PERMISSION_DENIED'
+            | 'TASK_CANCELLED'
+            | 'TASK_NOT_FOUND'
+            | 'LIBRARY_MISSING'
+            | 'PERMISSION_DENIED'
+            | 'INTERNAL_ERROR';
+
+        /** `name` is `'MediaStudioError'`; `toString()` yields `MediaStudioError [CODE, task N]: message`; `message` is not enumerable. */
+        interface MediaStudioError extends Error {
+            readonly name: 'MediaStudioError';
+            readonly code: ErrorCode | string;
+            /** The plugin task, null when the call failed before a task started. */
+            readonly taskId: number | null;
+            /** A request the host refused for a capability (project.json or a Bun grant). */
+            readonly capability?: string;
+            readonly missingCapabilities?: string[];
+        }
+
+        interface MediaStudioErrorConstructor {
+            (message?: string, code?: ErrorCode | string, taskId?: number | null): MediaStudioError;
+            new(message?: string, code?: ErrorCode | string, taskId?: number | null): MediaStudioError;
+            readonly prototype: MediaStudioError;
+        }
+
+        interface Progress {
+            /** 0 - 100. */
+            readonly percent: number;
+            readonly stage: string;
+            readonly etaMillis: number;
+            readonly taskId: number;
+        }
+
+        /**
+         * Options of a processing call. `onProgress` runs on this runtime's JS thread; when it throws (or its Promise
+         * rejects) it receives no more progress and the call rejects with that error, unless the task failed. The host
+         * drops intermediate progress when more than 16 events are pending.
+         */
+        interface ProcessOptions {
+            onProgress?: (progress: Progress) => unknown;
+            [option: string]: unknown;
+        }
+
+        interface VersionInfo {
+            readonly packageName: string;
+            readonly versionName: string;
+            readonly versionCode: number;
+            readonly contractVersion: number;
+            readonly ops: string[];
+        }
+
+        interface TaskInfo {
+            readonly taskId: number;
+            readonly op: string;
+            readonly [key: string]: unknown;
+        }
+
+        interface ProcessResult {
+            readonly path: string;
+            readonly durationMillis?: number;
+            readonly width?: number;
+            readonly height?: number;
+            readonly sizeBytes?: number;
+            readonly mime?: string;
+            readonly codec?: string;
+            readonly warnings?: string[];
+            readonly taskId: number;
+            readonly [key: string]: unknown;
+        }
+
+        interface MediaInfo {
+            readonly path: string;
+            readonly durationMillis?: number;
+            readonly mime?: string;
+            readonly sizeBytes?: number;
+            readonly taskId: number;
+            readonly [key: string]: unknown;
+        }
+
+        interface TrimOptions extends ProcessOptions {
+            /** Milliseconds. */
+            start: number;
+            end?: number;
+            duration?: number;
+        }
+
+        type ConcatOptions = ProcessOptions;
+
+        interface SpeedOptions extends ProcessOptions {
+            factor: number;
+            keepPitch?: boolean;
+        }
+
+        interface TransformOptions extends ProcessOptions {
+            width?: number;
+            height?: number;
+            scale?: number;
+            rotate?: number;
+            crop?: {x: number, y: number, width: number, height: number} | null;
+            flip?: 'horizontal' | 'vertical' | string;
+        }
+
+        interface Overlay {
+            type: 'text' | 'image';
+            text?: string;
+            src?: string;
+            /** Milliseconds. */
+            from?: number;
+            to?: number;
+            /** Pixels or a percentage string such as `"50%"`. */
+            x?: number | string;
+            y?: number | string;
+            [option: string]: unknown;
+        }
+
+        interface FramesOptions extends ProcessOptions {
+            at?: number;
+            times?: number[];
+            every?: number;
+            count?: number;
+            width?: number;
+            format?: 'png' | 'jpg' | 'webp' | string;
+        }
+
+        interface FrameOptions {
+            width?: number;
+            height?: number;
+            [option: string]: unknown;
+        }
+
+        interface ThumbnailOptions extends ProcessOptions {
+            at?: number;
+            width?: number;
+            height?: number;
+        }
+
+        interface GifOptions extends ProcessOptions {
+            start?: number;
+            end?: number;
+            fps?: number;
+            width?: number;
+            loop?: number | boolean;
+            dither?: boolean | string;
+        }
+
+        interface ExtractAudioOptions extends ProcessOptions {
+            format?: 'm4a' | 'wav' | 'flac' | 'ogg' | string;
+        }
+
+        interface TranscodeOptions extends ProcessOptions {
+            codec?: 'h264' | 'h265' | string;
+            width?: number;
+            height?: number;
+            bitRate?: number;
+            frameRate?: number;
+            audio?: boolean | Record<string, unknown>;
+        }
+
+        interface Timeline {
+            width?: number;
+            height?: number;
+            frameRate?: number;
+            background?: string;
+            video?: {clips: Record<string, unknown>[]}[];
+            audio?: {clips: Record<string, unknown>[]}[];
+            overlays?: Overlay[];
+            subtitles?: {src?: string, cues?: SubtitleCue[], style?: SubtitleStyle};
+            [option: string]: unknown;
+        }
+
+        type SubtitleFormat = 'srt' | 'ass' | string;
+
+        interface SubtitleWriteOptions extends ProcessOptions {
+            format?: SubtitleFormat;
+        }
+
+        interface SubtitleCue {
+            /** Milliseconds. */
+            start: number;
+            end: number;
+            text: string;
+            [key: string]: unknown;
+        }
+
+        interface SubtitleStyle extends ProcessOptions {
+            fontSize?: number;
+            color?: string;
+            stroke?: string;
+            align?: 'top' | 'center' | 'bottom' | string;
+        }
+
+        /** `"none"` / false / null (default), `"mic"` / `"microphone"`, `"playback"`, `"mixed"` or a track object. */
+        type RecordAudio = false | null | 'none' | 'mic' | 'microphone' | 'playback' | 'mixed' | AudioTrack;
+
+        interface AudioTrack {
+            source?: 'mic' | 'microphone' | 'playback' | 'mixed';
+            sampleRate?: number;
+            channels?: number;
+            bitRate?: number;
+        }
+
+        interface RecordOptions {
+            audio?: RecordAudio;
+            /** Width and height go together; the default is the capture size rounded down to even numbers. */
+            width?: number;
+            height?: number;
+            frameRate?: number;
+            bitRate?: number;
+            /** Milliseconds, 0 (default) for no limit. */
+            maxDuration?: number;
+            /** Runs once on this runtime's JS thread after the recording ended; the script stays alive until then. */
+            onStop?: (info: RecordStopInfo) => unknown;
+            [option: string]: unknown;
+        }
+
+        interface RecordingStatus {
+            readonly id: string;
+            readonly state: string;
+            readonly path: string;
+            readonly audio: AudioTrack | null;
+            readonly elapsedMillis: number;
+            readonly maxDurationMillis: number;
+            readonly error: string | null;
+            readonly [key: string]: unknown;
+        }
+
+        interface RecordResult {
+            readonly id: string;
+            readonly path: string;
+            readonly reason: string;
+            readonly sizeBytes: number;
+            readonly durationMillis: number;
+            readonly mime: string;
+            readonly audio: AudioTrack | null;
+            readonly [key: string]: unknown;
+        }
+
+        /** The result, or `{id, path, reason: 'recorder-error', error}` when the recording failed. */
+        type RecordStopInfo = RecordResult | {readonly id: string, readonly path: string, readonly reason: string, readonly error: string | null};
+
+        interface Recording {
+            readonly id: string;
+            readonly path: string;
+            /** Stops and saves the recording. */
+            stop(): Promise<RecordResult>;
+            /** Stops and deletes the file; answers whether a running recording was cancelled. */
+            cancel(): Promise<boolean>;
+            status(): Promise<RecordingStatus>;
+        }
+
+        interface ScreenRecording extends Recording {
+            /** The current screen frame of the recording; the script recycles the image. */
+            capture(): Promise<ImageHandle>;
+        }
+  }
+
+export namespace RuntimeAudio {
+    interface API {
+        readonly MediaStudioError: RuntimeVideo.MediaStudioErrorConstructor;
+        isAvailable(): Promise<boolean>;
+        version(): Promise<RuntimeVideo.VersionInfo>;
+        /** The running tasks of this script (video and audio). */
+        tasks(): Promise<RuntimeVideo.TaskInfo[]>;
+        cancelAll(): Promise<number>;
+        /**
+         * Starts a sound recording (by AutoJs6, no plugin needed) and answers its handle; the execution end saves a
+         * recording that is still running. Without a path the file goes to `Music/AutoJs6/audio-<yyyyMMdd-HHmmss>.<ext>`.
+         */
+        record(path?: string | null, options?: RecordOptions | null): Promise<RuntimeVideo.Recording>;
+        record(options?: RecordOptions | null): Promise<RuntimeVideo.Recording>;
+
+        probe(src: string): Promise<RuntimeVideo.MediaInfo>;
+        probeAsync(src: string): Promise<RuntimeVideo.MediaInfo>;
+        trim(src: string, options: RuntimeVideo.TrimOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        trimAsync(src: string, options: RuntimeVideo.TrimOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        concat(sources: string[], output?: RuntimeVideo.Output, options?: RuntimeVideo.ProcessOptions | null): Promise<RuntimeVideo.ProcessResult>;
+        concat(sources: string[], options?: RuntimeVideo.ProcessOptions | null, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        concatAsync(sources: string[], output?: RuntimeVideo.Output, options?: RuntimeVideo.ProcessOptions | null): Promise<RuntimeVideo.ProcessResult>;
+        concatAsync(sources: string[], options?: RuntimeVideo.ProcessOptions | null, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        mix(inputs: MixInput[], output?: RuntimeVideo.Output, options?: RuntimeVideo.ProcessOptions | null): Promise<RuntimeVideo.ProcessResult>;
+        mixAsync(inputs: MixInput[], output?: RuntimeVideo.Output, options?: RuntimeVideo.ProcessOptions | null): Promise<RuntimeVideo.ProcessResult>;
+        volume(src: string, options: VolumeOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        volumeAsync(src: string, options: VolumeOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        convert(src: string, options: ConvertOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        convertAsync(src: string, options: ConvertOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        speed(src: string, options: RuntimeVideo.SpeedOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+        speedAsync(src: string, options: RuntimeVideo.SpeedOptions, output?: RuntimeVideo.Output): Promise<RuntimeVideo.ProcessResult>;
+    }
+
+        interface MixInput {
+            src: string;
+            volume?: number;
+            /** Milliseconds. */
+            at?: number;
+        }
+
+        interface VolumeOptions extends RuntimeVideo.ProcessOptions {
+            gain?: number;
+            normalize?: boolean;
+            /** Milliseconds. */
+            fadeIn?: number;
+            fadeOut?: number;
+        }
+
+        interface ConvertOptions extends RuntimeVideo.ProcessOptions {
+            format: 'm4a' | 'wav' | 'flac' | 'ogg' | string;
+            sampleRate?: number;
+            channels?: number;
+            bitRate?: number;
+        }
+
+        interface RecordOptions {
+            /** `mic` (default), `playback` (Android 10+, the screen capture consent) or `mixed`. */
+            source?: 'mic' | 'microphone' | 'playback' | 'mixed';
+            /** Follows the extension of the path when omitted. */
+            format?: 'm4a' | 'wav';
+            sampleRate?: number;
+            channels?: number;
+            bitRate?: number;
+            /** Milliseconds, 0 (default) for no limit. */
+            maxDuration?: number;
+            /** Runs once on this runtime's JS thread after the recording ended; the script stays alive until then. */
+            onStop?: (info: RuntimeVideo.RecordStopInfo) => unknown;
+            [option: string]: unknown;
+        }
+  }
+// END GENERATED MEDIA STUDIO TYPES
+
 export interface HostClient {
   readonly ai: RuntimeAi.API;
   readonly flow: RuntimeFlow.API;
   readonly mail: RuntimeMail.API;
   readonly epub: RuntimeEpub.API;
   readonly gallery: RuntimeGallery.API;
+  /** Rhino's camera through 3-Prism Camera; needs camera.control only, frames are recycled with it (Q31 (b)). */
+  readonly camera: RuntimeCamera.API;
+  /** Rhino's video / audio: recording by AutoJs6, processing by 3-Slate Studio; needs mediastudio.control, and recording
+   *  screen.capture with screen.record (sound: screen.record.microphone or screen.record.playback). */
+  readonly video: RuntimeVideo.API;
+  readonly audio: RuntimeAudio.API;
   readonly speech: RuntimeSpeech.API;
   readonly tts: RuntimeTts.API;
   readonly java: RuntimeJava.API;

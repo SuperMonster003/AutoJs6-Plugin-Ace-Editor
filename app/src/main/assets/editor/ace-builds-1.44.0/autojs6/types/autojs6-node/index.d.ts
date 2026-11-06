@@ -93,3 +93,6 @@
 /// <reference path="./mail.d.ts" />
 /// <reference path="./epub.d.ts" />
 /// <reference path="./gallery.d.ts" />
+/// <reference path="./camera.d.ts" />
+/// <reference path="./video.d.ts" />
+/// <reference path="./audio.d.ts" />

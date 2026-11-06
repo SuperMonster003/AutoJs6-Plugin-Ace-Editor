@@ -190,6 +190,7 @@ Les installations de production doivent utiliser une signature approuvée par Au
 
 * `Fonctionnalité` Déclarations des catégories de plugins de settings.categories et settings.export (AutoJs6 6.8.1): la liste des catégories inclut les plugins officiels découverts, avec kind `'plugin'`, label, available et reason, export accepte les identifiants de catégorie formés de `plugin:` et d'un nom de paquet, et skipped gagne la raison `'unavailable'`, avec les types Settings.PluginCategoryId, Settings.PluginUnavailableReason
 * `Fonctionnalité` Propriété facultative reason de l'AgentLinkStatus renvoyé par ai.agent.status (AutoJs6 6.8.1), qui indique pourquoi la connexion n'a pas pu être établie lorsque errorCode vaut `'PLUGIN_UNAVAILABLE'`; inclut le type AgentUnavailableReason
+* `Fonctionnalité` Déclarations du module global camera / $camera (AutoJs6 6.8.1, nécessite le plugin 3-Prism Camera): méthodes du module, la CameraSession, options, métadonnées des images et CameraError; l'image d'un rappel de trame n'est valide que pendant le rappel, appelez clone pour la garder; isAvailable, capabilities, list et requestPermission déclarent la forme à rappel et la forme Promise du thread UI; les déclarations camera de Node.js / Bun sont synchronisées
 * `Amélioration` Déclarations intégrées mises à niveau vers @sm003/autojs6-dts 4.88.0
 
 # v2.49.0

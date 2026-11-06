@@ -190,6 +190,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 
 * `新增` settings.categories 与 settings.export 的插件分类声明 (AutoJs6 6.8.1): 分类列表包含已发现的官方插件, kind 为 `'plugin'` 并带 label, available 与 reason, export 接受 `plugin:` 加包名的分类 id, skipped 的原因增加 `'unavailable'`, 含 Settings.PluginCategoryId, Settings.PluginUnavailableReason 类型
 * `新增` ai.agent.status 返回的 AgentLinkStatus 增加可选属性 reason (AutoJs6 6.8.1), 在 errorCode 为 `'PLUGIN_UNAVAILABLE'` 时说明连接未能建立的原因; 含 AgentUnavailableReason 类型
+* `新增` 全局模块 camera / $camera 的声明 (AutoJs6 6.8.1, 需要 3-Prism Camera 插件): 模块方法, CameraSession 会话, 选项, 帧元数据与 CameraError; 帧回调中的图像只在回调期间有效, 需要保留时调用 clone; isAvailable, capabilities, list 与 requestPermission 同时声明回调形式与 UI 线程的 Promise 形式; 同步 Node.js / Bun 的 camera 声明
 * `优化` 捆绑声明升级至 @sm003/autojs6-dts 4.88.0
 
 # v2.49.0
