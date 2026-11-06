@@ -581,6 +581,29 @@ declare namespace AutoJs6 {
         isInrt: boolean;
     }
 
+    interface Camera {
+        CameraError: Camera.ErrorConstructor;
+        isAvailable(): boolean;
+        isAvailable<R extends Promise<boolean>>(): R;
+        isAvailable(callback: Camera.DiscoveryCallback<boolean>): void;
+        capabilities(): Camera.Capabilities;
+        capabilities<R extends Promise<Camera.Capabilities>>(): R;
+        capabilities(callback: Camera.DiscoveryCallback<Camera.Capabilities>): void;
+        requestPermission(): boolean;
+        requestPermission<R extends Promise<boolean>>(): R;
+        requestPermission(callback: Camera.DiscoveryCallback<boolean>): void;
+        list(): Camera.CameraInfo[];
+        list<R extends Promise<Camera.CameraInfo[]>>(): R;
+        list(callback: Camera.DiscoveryCallback<Camera.CameraInfo[]>): void;
+        open(options?: Camera.OpenOptions): Camera.Session;
+        capture(options?: Camera.ModuleCaptureOptions): ImageWrapper | null;
+        captureAsync(options?: Camera.ModuleCaptureOptions): Promise<ImageWrapper | null>;
+    }
+
+    interface Camera_CameraError {
+        prototype: CameraError;
+    }
+
     interface Cheerio {
         default(selector?: CheerioContent, context?: CheerioContent, root?: CheerioContent, options?: CheerioOptions): Cheerio;
         merge<T extends ArrayLike<HtmlNode> & { length: number; }>(first: T, second: ArrayLike<HtmlNode>): T;
@@ -6308,7 +6331,7 @@ declare namespace AutoJs6 {
     interface Settings {
         isEnabled(key: Settings.Key | string): boolean;
         setEnabled(key: Settings.Key | string, enabled: boolean): void;
-        export(path?: string | null, categories?: Settings.CategoryId | string | (Settings.CategoryId | string)[] | null): Settings.ExportResult;
+        export(path?: string | null, categories?: Settings.CategoryId | Settings.PluginCategoryId | string | (Settings.CategoryId | Settings.PluginCategoryId | string)[] | null): Settings.ExportResult;
         categories(): Settings.Category[];
     }
 
@@ -6419,7 +6442,12 @@ declare namespace AutoJs6 {
         detectLanguageAsync(file: string, options?: Speech.DetectLanguageOptions | null): Promise<Speech.LanguageDetection>;
         tag(file: string, options?: Speech.TagOptions | null): Speech.Tagging;
         tagAsync(file: string, options?: Speech.TagOptions | null): Promise<Speech.Tagging>;
+        prepare(options?: Speech.PrepareOptions | null): Speech.Lease;
+        prepareAsync(options?: Speech.PrepareOptions | null): Promise<Speech.Lease>;
+        release(leaseId: string): boolean;
+        release(): number;
         models: Speech.Models;
+        resident: Speech.Resident;
         speaker: Speech.Speaker;
         SpeechError: Speech.ErrorConstructor;
     }
@@ -6433,6 +6461,16 @@ declare namespace AutoJs6 {
         setDefault(kind: Kind, id: string): ModelInfo;
         getDefault(kind: Kind): ModelInfo | null;
         refreshCatalog(): { version: number; updated: boolean; };
+    }
+
+    interface Speech_resident {
+        get(): ResidentConfig;
+        set(config: { rules: readonly (string | ResidentRule)[]; } | readonly (string | ResidentRule)[]): ResidentConfig;
+        enable(): ResidentSwitch;
+        disable(): ResidentSwitch;
+        enabled: boolean;
+        on(event: "hit", listener: (hit: ResidentHit) => void): void;
+        off(event: "hit", listener?: (hit: ResidentHit) => void): void;
     }
 
     interface Speech_speaker {
@@ -6910,6 +6948,7 @@ declare const axios: AutoJs6.Axios;
 declare const barcode: AutoJs6.Barcode;
 declare const base64: AutoJs6.Base64;
 declare const BuildConfig: AutoJs6.BuildConfig;
+declare const camera: AutoJs6.Camera;
 declare const cheerio: AutoJs6.Cheerio;
 declare const Color: AutoJs6.Color;
 declare const colors: AutoJs6.Colors;

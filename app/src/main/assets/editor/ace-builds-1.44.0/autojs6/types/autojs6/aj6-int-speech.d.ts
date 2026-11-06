@@ -3,7 +3,7 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 5.1.3
 //
-// Last modified: Oct 29, 2026
+// Last modified: Nov 6, 2026
 
 /// <reference path="./index.d.ts" />
 
@@ -11,6 +11,7 @@
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/speech/Speech.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/speech/SpeechModels.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/speech/SpeechSpeaker.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/speech/SpeechResident.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/speech/SpeechSession.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/speech/SpeechWakeSession.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/speech/SpeechJsErrors.kt
@@ -85,6 +86,10 @@ declare namespace Internal {
          * session silently. Open microphone sessions that should keep recording in the background
          * while AutoJs6 is visible (or while its accessibility service is bound): a session
          * opened later reports silenced audio as a `warning` with `PERMISSION_DENIED` and goes on.
+         *
+         * Since 3-Macaw Speech 1.6.0 (AutoJs6 6.8.1) the background holders, the plugin's resident
+         * wake word and wake sessions opened with `background: true`, never make a dictation fail:
+         * they pause while it records and resume after it ends.
          * @since 6.8.0
          * @example
          * let session = speech.listen({ language: 'zh', maxDurationMillis: 10000 });
@@ -122,6 +127,13 @@ declare namespace Internal {
          * round, the `listen` session of the `wake` event, after which spotting resumes. A wake
          * session, its rounds included, is the plugin's one microphone session. The script keeps
          * running until its `end` event.
+         *
+         * With `background: true` (feature `speechBackgroundWake`, 3-Macaw Speech 1.6.0, AutoJs6
+         * 6.8.1) the session is a background holder next to the plugin's resident wake word: every
+         * other microphone session pauses it (`paused`) instead of failing with `SESSION_BUSY`, and
+         * it resumes in the order the holders started once that session ended (`resumed`). At most 4
+         * such sessions run in the whole plugin; a `thenListen` round of one holds the microphone
+         * like a dictation.
          * @since 6.8.0
          * @example
          * let wake = speech.wake(['hello macaw'], { thenListen: { silenceEndMillis: 1200 } });
@@ -208,8 +220,58 @@ declare namespace Internal {
         /** {@link tag} settled on the script thread; usable on the UI thread. @since 6.8.0 */
         tagAsync(file: string, options?: Speech.TagOptions | null): Promise<Speech.Tagging>;
 
+        /**
+         * Loads the engine of a model before the first session and holds it with a lease of this
+         * script, so the plugin's idle release (5 minutes by default) leaves it loaded and later
+         * sessions skip the model load. `kind: 'asr'` (default) loads the engine of the model's
+         * default dictation (no hotwords, punctuation on), `'kws'` the engine of its wake sessions;
+         * synthesis is not prepared. An engine that is loaded already answers `loadMillis` 0 and
+         * still a new lease. All scripts of one AutoJs6 hold at most 16 leases, sessions with
+         * `keepLoaded` included (`LIMIT_EXCEEDED` beyond); the leases return at {@link release} or
+         * when the script exits. Needs the feature `speechPrepare` (3-Macaw Speech 1.6.0, contract
+         * version 3), else `FEATURE_UNAVAILABLE`. Blocking (at most 2 minutes); refuses the UI thread.
+         * @since 6.8.1
+         * @example
+         * let lease = speech.prepare({ kind: 'kws' });
+         * console.log(lease.modelId, lease.loadMillis);
+         */
+        prepare(options?: Speech.PrepareOptions | null): Speech.Lease;
+
+        /** {@link prepare} settled on the script thread; usable on the UI thread. @since 6.8.1 */
+        prepareAsync(options?: Speech.PrepareOptions | null): Promise<Speech.Lease>;
+
+        /**
+         * Returns one lease of this script (from {@link prepare}, or the `leaseId` of the `ready`
+         * event of a session opened with `keepLoaded`); whether the plugin still held it. A lease
+         * this script does not hold, returned or expired already, or lost to a restart of the plugin
+         * process answers false.
+         * @since 6.8.1
+         */
+        release(leaseId: string): boolean;
+
+        /**
+         * Returns every lease of this script; the number the plugin still held. Without leases it
+         * does not reach the plugin and answers 0.
+         * @since 6.8.1
+         */
+        release(): number;
+
         /** Model catalog and installed models of the plugin. @since 6.8.0 */
         readonly models: Speech.Models;
+
+        /**
+         * The plugin's resident wake word: up to 10 keywords the plugin spots in the background,
+         * each with its action (feature `speechResident`, 3-Macaw Speech 1.6.0; an earlier plugin
+         * refuses every call with `FEATURE_UNAVAILABLE`, `enabled` reads false). It is a background
+         * holder: a microphone session of a script pauses it.
+         * @since 6.8.1
+         * @example
+         * speech.resident.set(['hello macaw', { keyword: 'open memo', action: 'script', script: './memo.js' }]);
+         * let state = speech.resident.enable();
+         * if (state.restartNeeded) toast('Starts the next time 3-Macaw Speech opens');
+         * speech.resident.on('hit', hit => console.log(hit.keyword, hit.action));
+         */
+        readonly resident: Speech.Resident;
 
         /**
          * Speaker voiceprints the plugin keeps (feature `speaker`, 3-Macaw Speech 1.3.0 and later;
@@ -245,9 +307,16 @@ declare namespace Internal {
             | 'TIMEOUT'
             | 'SPEAKER_NOT_FOUND'
             | 'AUDIO_TOO_SHORT'
+            | 'FEATURE_UNAVAILABLE'
+            | 'RESIDENT_UNAVAILABLE'
+            | 'LEASE_NOT_FOUND'
             | 'INTERNAL';
 
-        /** What the plugin implements; a call whose feature is missing fails with `PLUGIN_INCOMPATIBLE`. */
+        /**
+         * What the plugin implements; a call whose feature is missing fails with `PLUGIN_INCOMPATIBLE`,
+         * or with `FEATURE_UNAVAILABLE` for the three features of contract version 3 (3-Macaw Speech
+         * 1.6.0, AutoJs6 6.8.1).
+         */
         type Feature =
             | 'asr'
             | 'asrStreaming'
@@ -260,7 +329,10 @@ declare namespace Internal {
             | 'speaker'
             | 'diarization'
             | 'languageId'
-            | 'audioTagging';
+            | 'audioTagging'
+            | 'speechPrepare'
+            | 'speechResident'
+            | 'speechBackgroundWake';
 
         /**
          * Model kinds: recognition, synthesis, keyword spotting (wake words), voice activity
@@ -318,7 +390,7 @@ declare namespace Internal {
         }
 
         interface Capabilities {
-            /** Speech contract version: 1, or 2 from 3-Macaw Speech 1.3.0 (speakers and the offline analyses). */
+            /** Speech contract version: 1, 2 from 3-Macaw Speech 1.3.0 (speakers and the offline analyses), 3 from 3-Macaw Speech 1.6.0 with AutoJs6 6.8.1. */
             readonly contractVersion: number;
             readonly features: (Feature | (string & {}))[];
             /** Version of the plugin's model catalog. */
@@ -366,10 +438,17 @@ declare namespace Internal {
             maxDurationMillis?: number;
             /** Ends the session when neither speech nor new text comes within it (audio time), 0 to 1800000, 0 never; default 15000. */
             timeoutMillis?: number;
+            /**
+             * Keeps the session's engine loaded after the session: `true` until {@link Speech.release}
+             * or the script's exit, a number for that many more minutes (1 to 1440, `LIMIT_EXCEEDED`
+             * beyond); `false`, 0 or none keeps nothing. The `ready` event names the lease. Needs the
+             * feature `speechPrepare`. @since 6.8.1
+             */
+            keepLoaded?: boolean | number;
         }
 
         /** Dictation options of the rounds that follow wake word hits; they always record the microphone. */
-        interface RoundOptions extends Omit<ListenOptions, 'source'> {
+        interface RoundOptions extends Omit<ListenOptions, 'source' | 'keepLoaded'> {
             source?: 'mic';
         }
 
@@ -404,6 +483,32 @@ declare namespace Internal {
             minIntervalMillis?: number;
             /** `true` or dictation options: each hit is followed by one dictation round, the `listen` of the `wake` event. */
             thenListen?: boolean | RoundOptions;
+            /** Keeps the wake word engine loaded after the session, as {@link ListenOptions.keepLoaded}. @since 6.8.1 */
+            keepLoaded?: boolean | number;
+            /**
+             * Opens the session as a background holder: other microphone sessions pause it (`paused`)
+             * instead of failing with `SESSION_BUSY`, and it resumes after them (`resumed`). Needs the
+             * feature `speechBackgroundWake`. @since 6.8.1
+             */
+            background?: boolean;
+        }
+
+        interface PrepareOptions {
+            /** `'asr'` (default) prepares the dictation engine, `'kws'` the wake word engine. */
+            kind?: 'asr' | 'kws';
+            /** Model id; default the default model of the kind. */
+            model?: string;
+            /** Language hint of `'asr'`, as in {@link RecognizeOptions.language}. */
+            language?: string;
+        }
+
+        /** @since 6.8.1 */
+        interface Lease {
+            /** `lease-` and a UUID; give it to {@link Speech.release}. */
+            readonly leaseId: string;
+            readonly modelId: string;
+            /** Load time of this call, 0 when the engine was loaded already. */
+            readonly loadMillis: number;
         }
 
         interface SynthesisOptions {
@@ -486,6 +591,8 @@ declare namespace Internal {
         interface ReadyEvent {
             readonly sessionId: string;
             readonly modelId: string;
+            /** The lease of a session opened with `keepLoaded`. @since 6.8.1 */
+            readonly leaseId?: string;
         }
 
         interface PartialEvent {
@@ -579,10 +686,25 @@ declare namespace Internal {
             readonly reason: EndReason;
         }
 
+        /**
+         * Why a background wake session paused (the kind of session that took the microphone) or
+         * resumed (the kind that just ended): a dictation or `thenListen` round, a wake session
+         * without `background`, or a screen of the plugin.
+         */
+        type PauseReason = 'listen' | 'wake' | 'plugin';
+
+        interface PauseEvent {
+            readonly reason: PauseReason | (string & {});
+        }
+
         interface WakeEvents {
             ready: ReadyEvent;
             wake: WakeEvent;
             warning: Problem;
+            /** Only a session opened with `background: true`: it yields the microphone and stays active. @since 6.8.1 */
+            paused: PauseEvent;
+            /** Only a session opened with `background: true`: spotting starts again. @since 6.8.1 */
+            resumed: PauseEvent;
             error: SpeechError;
             end: WakeEndEvent;
         }
@@ -918,6 +1040,81 @@ declare namespace Internal {
             readonly modelId: string;
             /** With `timeline: true`: one entry per 10 second window. */
             readonly timeline?: TagWindow[];
+        }
+
+        /**
+         * What a resident keyword does: `'open'` opens the plugin's voice sheet (a "Tap to speak"
+         * notification when the plugin cannot open a screen from the background), `'script'` has
+         * AutoJs6 run `script` in the background (its `execArgv` carries `keyword`, `matchedText`,
+         * `arguments`, `timeMillis` and `source` `'resident-wake'`), `'broadcast'` sends
+         * `org.autojs.plugin.speech.action.RESIDENT_HIT` to AutoJs6 (extras `keyword`,
+         * `matchedText`, `timeMillis`), `'notify'` only posts a notification.
+         */
+        type ResidentAction = 'open' | 'script' | 'broadcast' | 'notify';
+
+        interface ResidentRule {
+            /** 1 to 32 characters after trimming, distinct among the rules. */
+            keyword: string;
+            /** Default `'open'`. */
+            action?: ResidentAction;
+            /** The script of `'script'` (required there); a relative path resolves against the working directory and is saved absolute. */
+            script?: string;
+            /** At most 1024 characters, the `arguments` of the script's `execArgv`. */
+            arguments?: string;
+        }
+
+        interface ResidentConfig {
+            readonly enabled: boolean;
+            /** In order. */
+            readonly rules: ResidentRule[];
+        }
+
+        interface ResidentSwitch {
+            /** Whether the plugin listens now. */
+            readonly started: boolean;
+            /**
+             * The switch is on but Android did not let the plugin start listening from the
+             * background; it starts when the plugin opens or its "Tap to resume" notification is tapped.
+             */
+            readonly restartNeeded: boolean;
+        }
+
+        interface ResidentHit {
+            readonly keyword: string;
+            /** The word the wake word model reported. */
+            readonly matchedText?: string;
+            readonly action: ResidentAction;
+            /** Epoch milliseconds of the hit. */
+            readonly timeMillis: number;
+        }
+
+        /** @since 6.8.1 */
+        interface Resident {
+            /** The switch and the rules. */
+            get(): ResidentConfig;
+            /**
+             * Replaces the rules (at most 10, `LIMIT_EXCEEDED` beyond; other violations and keywords
+             * the wake word model cannot spell are `INVALID_OPTIONS`); a string is a rule with the
+             * action `'open'`. Answers the saved configuration.
+             */
+            set(config: { rules: readonly (string | ResidentRule)[] } | readonly (string | ResidentRule)[]): ResidentConfig;
+            /**
+             * Turns the resident wake word on after the checks of the plugin's settings:
+             * `PERMISSION_DENIED` without the microphone permission, `RESIDENT_UNAVAILABLE` without a
+             * wake word model, with rules it cannot spell, or while 3-Stone AI or 3-Stove Agent listens.
+             */
+            enable(): ResidentSwitch;
+            /** Turns the resident wake word off. */
+            disable(): ResidentSwitch;
+            /** Whether it is on; false when no plugin answers or the feature is missing, never throws. */
+            readonly enabled: boolean;
+            /**
+             * Every hit, whatever the keyword's action (not the hits ignored while the sheet is shown
+             * or refused by the speaker check). The script keeps running while a listener is registered.
+             */
+            on(event: 'hit', listener: (hit: ResidentHit) => void): void;
+            /** Removes the listener, or every listener without one. */
+            off(event: 'hit', listener?: (hit: ResidentHit) => void): void;
         }
     }
 }

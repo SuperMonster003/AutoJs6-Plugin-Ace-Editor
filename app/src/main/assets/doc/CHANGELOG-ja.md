@@ -11,6 +11,7 @@
 * `機能` settings.categories と settings.export のプラグインカテゴリ宣言 (AutoJs6 6.8.1): カテゴリ一覧に検出された公式プラグインを含め, kind は `'plugin'` で label, available, reason 付き, export は `plugin:` とパッケージ名からなるカテゴリ id を受け付け, skipped の理由に `'unavailable'` を追加; Settings.PluginCategoryId, Settings.PluginUnavailableReason 型を追加
 * `機能` ai.agent.status が返す AgentLinkStatus の省略可能なプロパティ reason (AutoJs6 6.8.1), errorCode が `'PLUGIN_UNAVAILABLE'` のとき接続できなかった理由を示す; AgentUnavailableReason 型を含む
 * `機能` グローバルモジュール camera / $camera の宣言 (AutoJs6 6.8.1, 3-Prism Camera プラグインが必要): モジュールメソッド, CameraSession セッション, オプション, フレームのメタデータと CameraError; フレームコールバックの画像はコールバックの実行中だけ有効で, 保持するには clone を呼び出します; isAvailable, capabilities, list と requestPermission はコールバック形式と UI スレッドの Promise 形式の両方を宣言; Node.js / Bun の camera 宣言を同期
+* `機能` speech の宣言に 3-Macaw Speech 1.6.0 の新 API を追加 (AutoJs6 6.8.1): エンジンの事前読み込み prepare, prepareAsync, release, listen / wake の keepLoaded オプション, wake の background オプション (ほかのマイクセッションが来ると一時停止して譲る) と paused / resumed イベント, 常駐ウェイクワード speech.resident (get, set, enable, disable, enabled, on, off), エラーコード FEATURE_UNAVAILABLE, RESIDENT_UNAVAILABLE, LEASE_NOT_FOUND
 * `改善` 同梱の宣言を @sm003/autojs6-dts 4.88.0 に更新
 
 # v2.49.0

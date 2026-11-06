@@ -65,6 +65,11 @@
                 "doc": "AutoJs6 BuildConfig API"
             },
             {
+                "name": "camera",
+                "type": "module",
+                "doc": "AutoJs6 Camera API"
+            },
+            {
                 "name": "cheerio",
                 "type": "module",
                 "doc": "AutoJs6 cheerio API"
@@ -3559,6 +3564,11 @@
                 "doc": "Alias of gallery"
             },
             {
+                "name": "$camera",
+                "type": "module",
+                "doc": "Alias of camera"
+            },
+            {
                 "name": "$speech",
                 "type": "module",
                 "doc": "Alias of speech"
@@ -6564,6 +6574,84 @@
                     "type": "variable",
                     "doc": "isInrt: boolean;",
                     "signature": "isInrt: boolean;"
+                }
+            ],
+            "camera": [
+                {
+                    "name": "CameraError",
+                    "type": "variable",
+                    "doc": "CameraError: Camera.ErrorConstructor;",
+                    "signature": "CameraError: Camera.ErrorConstructor;"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;",
+                    "signatures": [
+                        "isAvailable(): boolean;",
+                        "isAvailable<R extends Promise<boolean>>(): R;",
+                        "isAvailable(callback: Camera.DiscoveryCallback<boolean>): void;"
+                    ]
+                },
+                {
+                    "name": "capabilities",
+                    "type": "function",
+                    "doc": "capabilities(): Camera.Capabilities;",
+                    "signature": "capabilities(): Camera.Capabilities;",
+                    "signatures": [
+                        "capabilities(): Camera.Capabilities;",
+                        "capabilities<R extends Promise<Camera.Capabilities>>(): R;",
+                        "capabilities(callback: Camera.DiscoveryCallback<Camera.Capabilities>): void;"
+                    ]
+                },
+                {
+                    "name": "requestPermission",
+                    "type": "function",
+                    "doc": "requestPermission(): boolean;",
+                    "signature": "requestPermission(): boolean;",
+                    "signatures": [
+                        "requestPermission(): boolean;",
+                        "requestPermission<R extends Promise<boolean>>(): R;",
+                        "requestPermission(callback: Camera.DiscoveryCallback<boolean>): void;"
+                    ]
+                },
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(): Camera.CameraInfo[];",
+                    "signature": "list(): Camera.CameraInfo[];",
+                    "signatures": [
+                        "list(): Camera.CameraInfo[];",
+                        "list<R extends Promise<Camera.CameraInfo[]>>(): R;",
+                        "list(callback: Camera.DiscoveryCallback<Camera.CameraInfo[]>): void;"
+                    ]
+                },
+                {
+                    "name": "open",
+                    "type": "function",
+                    "doc": "open(options?: Camera.OpenOptions): Camera.Session;",
+                    "signature": "open(options?: Camera.OpenOptions): Camera.Session;"
+                },
+                {
+                    "name": "capture",
+                    "type": "function",
+                    "doc": "capture(options?: Camera.ModuleCaptureOptions): ImageWrapper | null;",
+                    "signature": "capture(options?: Camera.ModuleCaptureOptions): ImageWrapper | null;"
+                },
+                {
+                    "name": "captureAsync",
+                    "type": "function",
+                    "doc": "captureAsync(options?: Camera.ModuleCaptureOptions): Promise<ImageWrapper | null>;",
+                    "signature": "captureAsync(options?: Camera.ModuleCaptureOptions): Promise<ImageWrapper | null>;"
+                }
+            ],
+            "camera.CameraError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: CameraError;",
+                    "signature": "prototype: CameraError;"
                 }
             ],
             "cheerio": [
@@ -38195,8 +38283,8 @@
                 {
                     "name": "export",
                     "type": "function",
-                    "doc": "export(path?: string | null, categories?: Settings.CategoryId | string | (Settings.CategoryId | string)[] | null): Settings.ExportResult;",
-                    "signature": "export(path?: string | null, categories?: Settings.CategoryId | string | (Settings.CategoryId | string)[] | null): Settings.ExportResult;"
+                    "doc": "export(path?: string | null, categories?: Settings.CategoryId | Settings.PluginCategoryId | string | (Settings.CategoryId | Settings.PluginCategoryId | string)[] | null): Settings.ExportResult;",
+                    "signature": "export(path?: string | null, categories?: Settings.CategoryId | Settings.PluginCategoryId | string | (Settings.CategoryId | Settings.PluginCategoryId | string)[] | null): Settings.ExportResult;"
                 },
                 {
                     "name": "categories",
@@ -38731,10 +38819,38 @@
                     "signature": "tagAsync(file: string, options?: Speech.TagOptions | null): Promise<Speech.Tagging>;"
                 },
                 {
+                    "name": "prepare",
+                    "type": "function",
+                    "doc": "prepare(options?: Speech.PrepareOptions | null): Speech.Lease;",
+                    "signature": "prepare(options?: Speech.PrepareOptions | null): Speech.Lease;"
+                },
+                {
+                    "name": "prepareAsync",
+                    "type": "function",
+                    "doc": "prepareAsync(options?: Speech.PrepareOptions | null): Promise<Speech.Lease>;",
+                    "signature": "prepareAsync(options?: Speech.PrepareOptions | null): Promise<Speech.Lease>;"
+                },
+                {
+                    "name": "release",
+                    "type": "function",
+                    "doc": "release(leaseId: string): boolean;",
+                    "signature": "release(leaseId: string): boolean;",
+                    "signatures": [
+                        "release(leaseId: string): boolean;",
+                        "release(): number;"
+                    ]
+                },
+                {
                     "name": "models",
                     "type": "variable",
                     "doc": "models: Speech.Models;",
                     "signature": "models: Speech.Models;"
+                },
+                {
+                    "name": "resident",
+                    "type": "variable",
+                    "doc": "resident: Speech.Resident;",
+                    "signature": "resident: Speech.Resident;"
                 },
                 {
                     "name": "speaker",
@@ -38797,6 +38913,50 @@
                     "type": "function",
                     "doc": "refreshCatalog(): { version: number; updated: boolean; };",
                     "signature": "refreshCatalog(): { version: number; updated: boolean; };"
+                }
+            ],
+            "speech.resident": [
+                {
+                    "name": "get",
+                    "type": "function",
+                    "doc": "get(): ResidentConfig;",
+                    "signature": "get(): ResidentConfig;"
+                },
+                {
+                    "name": "set",
+                    "type": "function",
+                    "doc": "set(config: { rules: readonly (string | ResidentRule)[]; } | readonly (string | ResidentRule)[]): ResidentConfig;",
+                    "signature": "set(config: { rules: readonly (string | ResidentRule)[]; } | readonly (string | ResidentRule)[]): ResidentConfig;"
+                },
+                {
+                    "name": "enable",
+                    "type": "function",
+                    "doc": "enable(): ResidentSwitch;",
+                    "signature": "enable(): ResidentSwitch;"
+                },
+                {
+                    "name": "disable",
+                    "type": "function",
+                    "doc": "disable(): ResidentSwitch;",
+                    "signature": "disable(): ResidentSwitch;"
+                },
+                {
+                    "name": "enabled",
+                    "type": "variable",
+                    "doc": "enabled: boolean;",
+                    "signature": "enabled: boolean;"
+                },
+                {
+                    "name": "on",
+                    "type": "function",
+                    "doc": "on(event: \"hit\", listener: (hit: ResidentHit) => void): void;",
+                    "signature": "on(event: \"hit\", listener: (hit: ResidentHit) => void): void;"
+                },
+                {
+                    "name": "off",
+                    "type": "function",
+                    "doc": "off(event: \"hit\", listener?: (hit: ResidentHit) => void): void;",
+                    "signature": "off(event: \"hit\", listener?: (hit: ResidentHit) => void): void;"
                 }
             ],
             "speech.speaker": [
@@ -41032,6 +41192,7 @@
             "$mail": "mail",
             "$epub": "epub",
             "$gallery": "gallery",
+            "$camera": "camera",
             "$speech": "speech",
             "$terminal": "terminal",
             "$media": "media",
