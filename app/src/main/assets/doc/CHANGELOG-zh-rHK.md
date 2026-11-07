@@ -13,6 +13,7 @@
 * `新增` 全域模組 camera / $camera 的宣告 (AutoJs6 6.8.1, 需要 3-Prism Camera 插件): 模組方法, CameraSession 工作階段, 選項, 幀中繼資料與 CameraError; 幀回呼中的影像只在回呼期間有效, 需要保留時呼叫 clone; isAvailable, capabilities, list 與 requestPermission 同時宣告回呼形式與 UI 執行緒的 Promise 形式; 同步 Node.js / Bun 的 camera 宣告
 * `新增` speech 聲明補全 3-Macaw Speech 1.6.0 的新 API (AutoJs6 6.8.1): 引擎預熱 prepare, prepareAsync 與 release, listen / wake 的 keepLoaded 選項, wake 的 background 選項 (其他麥克風會話到來時暫停讓出) 與 paused / resumed 事件, 常駐喚醒 speech.resident (get, set, enable, disable, enabled, on, off), 以及錯誤碼 FEATURE_UNAVAILABLE, RESIDENT_UNAVAILABLE 與 LEASE_NOT_FOUND
 * `新增` 全局模組 alarms / $alarms 的宣告 (AutoJs6 6.8.1, 需要 3-Chime Alarm 插件, 僅 Rhino): 鬧鐘的新增, 查詢, 修改與刪除, 帶方法的鬧鐘快照, 選項與重複規則, 按事件名稱區分類型的事件 (on / once 的回呼參數與 currentEvent), 登記腳本, alarms.ringtones, 不需要插件的 alarms.system, 以及帶 hint 的 AlarmError
+* `新增` 全局模組 video / $video 與 audio / $audio 的宣告與補全 (AutoJs6 6.8.1, 僅 Rhino): 輸入 video. 或 audio. 時提示 AutoJs6 內建的錄屏與錄音, 需要 3-Slate Studio 插件的各加工方法及其 Async 形態, 以及選項欄位, 錄製句柄, 多軌時間線, 字幕與 MediaStudioError; 同步 Node.js / Bun 的 video / audio 宣告
 * `優化` 捆綁聲明升級至 @sm003/autojs6-dts 4.88.0
 
 # v2.49.0

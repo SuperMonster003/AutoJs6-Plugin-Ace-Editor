@@ -25,13 +25,14 @@
     ".changelog/CHANGELOG-*.md"
   ],
   "scripts": {
-    "test": "node tools/verify-api-coverage.mjs && node tools/verify-runtime-declarations.mjs",
+    "test": "node tools/verify-api-coverage.mjs && node tools/verify-runtime-declarations.mjs && node tools/verify-media-studio-declarations.mjs",
     "prepack": "",
     "docs:generate": "python .python/generate_markdown.py",
     "docs:check": "python .python/generate_markdown.py --check",
     "docs:test": "python -m unittest discover -s .python/tests",
     "test:api": "node tools/verify-api-coverage.mjs",
     "test:runtimes": "node tools/verify-runtime-declarations.mjs",
+    "test:media-studio": "node tools/verify-media-studio-declarations.mjs",
     "test:imgui": "node tools/verify-imgui-examples.mjs",
     "sync:runtimes": "node tools/sync-runtime-declarations.mjs"
   },

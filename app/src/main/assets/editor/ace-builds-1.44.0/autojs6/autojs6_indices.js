@@ -35,6 +35,11 @@
                 "doc": "AutoJs6 Arrayx API"
             },
             {
+                "name": "audio",
+                "type": "module",
+                "doc": "AutoJs6 Audio API"
+            },
+            {
                 "name": "auto",
                 "type": "module",
                 "doc": "AutoJs6 Auto API"
@@ -423,6 +428,11 @@
                 "name": "util",
                 "type": "module",
                 "doc": "AutoJs6 Util API"
+            },
+            {
+                "name": "video",
+                "type": "module",
+                "doc": "AutoJs6 Video API"
             },
             {
                 "name": "wait",
@@ -3579,6 +3589,16 @@
                 "doc": "Alias of alarms"
             },
             {
+                "name": "$video",
+                "type": "module",
+                "doc": "Alias of video"
+            },
+            {
+                "name": "$audio",
+                "type": "module",
+                "doc": "Alias of audio"
+            },
+            {
                 "name": "$speech",
                 "type": "module",
                 "doc": "Alias of speech"
@@ -5138,6 +5158,188 @@
                     "type": "function",
                     "doc": "shuffle<T>(arr: T[]): T[];",
                     "signature": "shuffle<T>(arr: T[]): T[];"
+                }
+            ],
+            "audio": [
+                {
+                    "name": "MediaStudioError",
+                    "type": "variable",
+                    "doc": "MediaStudioError: MediaStudio.ErrorConstructor;",
+                    "signature": "MediaStudioError: MediaStudio.ErrorConstructor;"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "version",
+                    "type": "function",
+                    "doc": "version(): MediaStudio.VersionInfo;",
+                    "signature": "version(): MediaStudio.VersionInfo;"
+                },
+                {
+                    "name": "tasks",
+                    "type": "function",
+                    "doc": "tasks(): MediaStudio.TaskInfo[];",
+                    "signature": "tasks(): MediaStudio.TaskInfo[];"
+                },
+                {
+                    "name": "cancelAll",
+                    "type": "function",
+                    "doc": "cancelAll(): number;",
+                    "signature": "cancelAll(): number;"
+                },
+                {
+                    "name": "record",
+                    "type": "function",
+                    "doc": "record(path?: string | null, options?: Audio.RecordOptions | null): Audio.AudioRecording;",
+                    "signature": "record(path?: string | null, options?: Audio.RecordOptions | null): Audio.AudioRecording;",
+                    "signatures": [
+                        "record(path?: string | null, options?: Audio.RecordOptions | null): Audio.AudioRecording;",
+                        "record(options: Audio.RecordOptions | null, path?: string | null): Audio.AudioRecording;"
+                    ]
+                },
+                {
+                    "name": "probe",
+                    "type": "function",
+                    "doc": "probe(src: string): MediaStudio.MediaInfo;",
+                    "signature": "probe(src: string): MediaStudio.MediaInfo;"
+                },
+                {
+                    "name": "probeAsync",
+                    "type": "function",
+                    "doc": "probeAsync(src: string): Promise<MediaStudio.MediaInfo>;",
+                    "signature": "probeAsync(src: string): Promise<MediaStudio.MediaInfo>;"
+                },
+                {
+                    "name": "trim",
+                    "type": "function",
+                    "doc": "trim(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "trim(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "trim(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "trim(src: string, output: MediaStudio.Output, options: Audio.TrimOptions): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "trimAsync",
+                    "type": "function",
+                    "doc": "trimAsync(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "trimAsync(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "trimAsync(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "trimAsync(src: string, output: MediaStudio.Output, options: Audio.TrimOptions): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "concat",
+                    "type": "function",
+                    "doc": "concat(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): MediaStudio.Result;",
+                    "signature": "concat(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): MediaStudio.Result;",
+                    "signatures": [
+                        "concat(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): MediaStudio.Result;",
+                        "concat(sources: string[], options: Audio.ConcatOptions | null, output?: MediaStudio.Output): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "concatAsync",
+                    "type": "function",
+                    "doc": "concatAsync(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): Promise<MediaStudio.Result>;",
+                    "signature": "concatAsync(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "concatAsync(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): Promise<MediaStudio.Result>;",
+                        "concatAsync(sources: string[], options: Audio.ConcatOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "mix",
+                    "type": "function",
+                    "doc": "mix(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): MediaStudio.Result;",
+                    "signature": "mix(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): MediaStudio.Result;",
+                    "signatures": [
+                        "mix(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): MediaStudio.Result;",
+                        "mix(inputs: (string | Audio.MixInput)[], options: Audio.MixOptions | null, output?: MediaStudio.Output): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "mixAsync",
+                    "type": "function",
+                    "doc": "mixAsync(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): Promise<MediaStudio.Result>;",
+                    "signature": "mixAsync(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "mixAsync(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): Promise<MediaStudio.Result>;",
+                        "mixAsync(inputs: (string | Audio.MixInput)[], options: Audio.MixOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "volume",
+                    "type": "function",
+                    "doc": "volume(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "volume(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "volume(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "volume(src: string, output: MediaStudio.Output, options: Audio.VolumeOptions): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "volumeAsync",
+                    "type": "function",
+                    "doc": "volumeAsync(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "volumeAsync(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "volumeAsync(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "volumeAsync(src: string, output: MediaStudio.Output, options: Audio.VolumeOptions): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "convert",
+                    "type": "function",
+                    "doc": "convert(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "convert(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "convert(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "convert(src: string, output: string, options?: Partial<Audio.ConvertOptions> | null): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "convertAsync",
+                    "type": "function",
+                    "doc": "convertAsync(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "convertAsync(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "convertAsync(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "convertAsync(src: string, output: string, options?: Partial<Audio.ConvertOptions> | null): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "speed",
+                    "type": "function",
+                    "doc": "speed(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "speed(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "speed(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "speed(src: string, output: MediaStudio.Output, options: Audio.SpeedOptions): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "speedAsync",
+                    "type": "function",
+                    "doc": "speedAsync(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "speedAsync(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "speedAsync(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "speedAsync(src: string, output: MediaStudio.Output, options: Audio.SpeedOptions): Promise<MediaStudio.Result>;"
+                    ]
+                }
+            ],
+            "audio.MediaStudioError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: MediaStudioError;",
+                    "signature": "prototype: MediaStudioError;"
                 }
             ],
             "auto": [
@@ -41040,6 +41242,372 @@
                     ]
                 }
             ],
+            "video": [
+                {
+                    "name": "MediaStudioError",
+                    "type": "variable",
+                    "doc": "MediaStudioError: MediaStudio.ErrorConstructor;",
+                    "signature": "MediaStudioError: MediaStudio.ErrorConstructor;"
+                },
+                {
+                    "name": "subtitles",
+                    "type": "variable",
+                    "doc": "subtitles: Video.Subtitles;",
+                    "signature": "subtitles: Video.Subtitles;"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "version",
+                    "type": "function",
+                    "doc": "version(): MediaStudio.VersionInfo;",
+                    "signature": "version(): MediaStudio.VersionInfo;"
+                },
+                {
+                    "name": "tasks",
+                    "type": "function",
+                    "doc": "tasks(): MediaStudio.TaskInfo[];",
+                    "signature": "tasks(): MediaStudio.TaskInfo[];"
+                },
+                {
+                    "name": "cancelAll",
+                    "type": "function",
+                    "doc": "cancelAll(): number;",
+                    "signature": "cancelAll(): number;"
+                },
+                {
+                    "name": "record",
+                    "type": "function",
+                    "doc": "record(path?: string | null, options?: Video.RecordOptions | null): Video.ScreenRecording;",
+                    "signature": "record(path?: string | null, options?: Video.RecordOptions | null): Video.ScreenRecording;",
+                    "signatures": [
+                        "record(path?: string | null, options?: Video.RecordOptions | null): Video.ScreenRecording;",
+                        "record(options: Video.RecordOptions | null, path?: string | null): Video.ScreenRecording;"
+                    ]
+                },
+                {
+                    "name": "probe",
+                    "type": "function",
+                    "doc": "probe(src: string): MediaStudio.MediaInfo;",
+                    "signature": "probe(src: string): MediaStudio.MediaInfo;"
+                },
+                {
+                    "name": "probeAsync",
+                    "type": "function",
+                    "doc": "probeAsync(src: string): Promise<MediaStudio.MediaInfo>;",
+                    "signature": "probeAsync(src: string): Promise<MediaStudio.MediaInfo>;"
+                },
+                {
+                    "name": "trim",
+                    "type": "function",
+                    "doc": "trim(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "trim(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "trim(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "trim(src: string, output: MediaStudio.Output, options: Video.TrimOptions): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "trimAsync",
+                    "type": "function",
+                    "doc": "trimAsync(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "trimAsync(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "trimAsync(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "trimAsync(src: string, output: MediaStudio.Output, options: Video.TrimOptions): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "concat",
+                    "type": "function",
+                    "doc": "concat(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "concat(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "concat(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "concat(sources: string[], output: MediaStudio.Output, options?: Video.ConcatOptions | null): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "concatAsync",
+                    "type": "function",
+                    "doc": "concatAsync(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "concatAsync(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "concatAsync(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "concatAsync(sources: string[], output: MediaStudio.Output, options?: Video.ConcatOptions | null): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "speed",
+                    "type": "function",
+                    "doc": "speed(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "speed(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "speed(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "speed(src: string, output: MediaStudio.Output, options: Video.SpeedOptions): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "speedAsync",
+                    "type": "function",
+                    "doc": "speedAsync(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "speedAsync(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "speedAsync(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "speedAsync(src: string, output: MediaStudio.Output, options: Video.SpeedOptions): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "transform",
+                    "type": "function",
+                    "doc": "transform(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "transform(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "transform(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "transform(src: string, output: MediaStudio.Output, options: Video.TransformOptions): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "transformAsync",
+                    "type": "function",
+                    "doc": "transformAsync(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "transformAsync(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "transformAsync(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "transformAsync(src: string, output: MediaStudio.Output, options: Video.TransformOptions): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "overlay",
+                    "type": "function",
+                    "doc": "overlay(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): MediaStudio.Result;",
+                    "signature": "overlay(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): MediaStudio.Result;",
+                    "signatures": [
+                        "overlay(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): MediaStudio.Result;",
+                        "overlay(src: string, overlays: Video.Overlay[], options: Video.OverlayOptions | null, output?: MediaStudio.Output): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "overlayAsync",
+                    "type": "function",
+                    "doc": "overlayAsync(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): Promise<MediaStudio.Result>;",
+                    "signature": "overlayAsync(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "overlayAsync(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): Promise<MediaStudio.Result>;",
+                        "overlayAsync(src: string, overlays: Video.Overlay[], options: Video.OverlayOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "frames",
+                    "type": "function",
+                    "doc": "frames(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): string[];",
+                    "signature": "frames(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): string[];",
+                    "signatures": [
+                        "frames(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): string[];",
+                        "frames(src: string, outputDir: MediaStudio.Output, options: Video.FramesOptions): string[];"
+                    ]
+                },
+                {
+                    "name": "framesAsync",
+                    "type": "function",
+                    "doc": "framesAsync(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): Promise<string[]>;",
+                    "signature": "framesAsync(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): Promise<string[]>;",
+                    "signatures": [
+                        "framesAsync(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): Promise<string[]>;",
+                        "framesAsync(src: string, outputDir: MediaStudio.Output, options: Video.FramesOptions): Promise<string[]>;"
+                    ]
+                },
+                {
+                    "name": "frame",
+                    "type": "function",
+                    "doc": "frame(src: string, at: number, options?: Video.FrameOptions | null): ImageWrapper;",
+                    "signature": "frame(src: string, at: number, options?: Video.FrameOptions | null): ImageWrapper;"
+                },
+                {
+                    "name": "frameAsync",
+                    "type": "function",
+                    "doc": "frameAsync(src: string, at: number, options?: Video.FrameOptions | null): Promise<ImageWrapper>;",
+                    "signature": "frameAsync(src: string, at: number, options?: Video.FrameOptions | null): Promise<ImageWrapper>;"
+                },
+                {
+                    "name": "thumbnail",
+                    "type": "function",
+                    "doc": "thumbnail(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "thumbnail(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "thumbnail(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "thumbnail(src: string, output: MediaStudio.Output, options?: Video.ThumbnailOptions | null): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "thumbnailAsync",
+                    "type": "function",
+                    "doc": "thumbnailAsync(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "thumbnailAsync(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "thumbnailAsync(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "thumbnailAsync(src: string, output: MediaStudio.Output, options?: Video.ThumbnailOptions | null): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "toGif",
+                    "type": "function",
+                    "doc": "toGif(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "toGif(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "toGif(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "toGif(src: string, output: MediaStudio.Output, options?: Video.ToGifOptions | null): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "toGifAsync",
+                    "type": "function",
+                    "doc": "toGifAsync(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "toGifAsync(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "toGifAsync(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "toGifAsync(src: string, output: MediaStudio.Output, options?: Video.ToGifOptions | null): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "extractAudio",
+                    "type": "function",
+                    "doc": "extractAudio(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "extractAudio(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "extractAudio(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "extractAudio(src: string, output: MediaStudio.Output, options?: Video.ExtractAudioOptions | null): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "extractAudioAsync",
+                    "type": "function",
+                    "doc": "extractAudioAsync(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "extractAudioAsync(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "extractAudioAsync(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "extractAudioAsync(src: string, output: MediaStudio.Output, options?: Video.ExtractAudioOptions | null): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "removeAudio",
+                    "type": "function",
+                    "doc": "removeAudio(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): MediaStudio.Result;",
+                    "signature": "removeAudio(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): MediaStudio.Result;",
+                    "signatures": [
+                        "removeAudio(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): MediaStudio.Result;",
+                        "removeAudio(src: string, options: Video.RemoveAudioOptions | null, output?: MediaStudio.Output): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "removeAudioAsync",
+                    "type": "function",
+                    "doc": "removeAudioAsync(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): Promise<MediaStudio.Result>;",
+                    "signature": "removeAudioAsync(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "removeAudioAsync(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): Promise<MediaStudio.Result>;",
+                        "removeAudioAsync(src: string, options: Video.RemoveAudioOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "transcode",
+                    "type": "function",
+                    "doc": "transcode(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "transcode(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "transcode(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "transcode(src: string, output: MediaStudio.Output, options?: Video.TranscodeOptions | null): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "transcodeAsync",
+                    "type": "function",
+                    "doc": "transcodeAsync(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "transcodeAsync(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "transcodeAsync(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "transcodeAsync(src: string, output: MediaStudio.Output, options?: Video.TranscodeOptions | null): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "compose",
+                    "type": "function",
+                    "doc": "compose(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): MediaStudio.Result;",
+                    "signature": "compose(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): MediaStudio.Result;",
+                    "signatures": [
+                        "compose(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): MediaStudio.Result;",
+                        "compose(timeline: Video.Timeline, options: Video.ComposeOptions | null, output?: MediaStudio.Output): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "composeAsync",
+                    "type": "function",
+                    "doc": "composeAsync(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): Promise<MediaStudio.Result>;",
+                    "signature": "composeAsync(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "composeAsync(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): Promise<MediaStudio.Result>;",
+                        "composeAsync(timeline: Video.Timeline, options: Video.ComposeOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;"
+                    ]
+                },
+                {
+                    "name": "burnSubtitles",
+                    "type": "function",
+                    "doc": "burnSubtitles(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signature": "burnSubtitles(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                    "signatures": [
+                        "burnSubtitles(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): MediaStudio.Result;",
+                        "burnSubtitles(src: string, subtitles: string | MediaStudio.SubtitleCue[], output: MediaStudio.Output, style?: Video.BurnSubtitlesStyle | null): MediaStudio.Result;"
+                    ]
+                },
+                {
+                    "name": "burnSubtitlesAsync",
+                    "type": "function",
+                    "doc": "burnSubtitlesAsync(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signature": "burnSubtitlesAsync(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                    "signatures": [
+                        "burnSubtitlesAsync(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;",
+                        "burnSubtitlesAsync(src: string, subtitles: string | MediaStudio.SubtitleCue[], output: MediaStudio.Output, style?: Video.BurnSubtitlesStyle | null): Promise<MediaStudio.Result>;"
+                    ]
+                }
+            ],
+            "video.MediaStudioError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: MediaStudioError;",
+                    "signature": "prototype: MediaStudioError;"
+                }
+            ],
+            "video.subtitles": [
+                {
+                    "name": "parse",
+                    "type": "function",
+                    "doc": "parse(path: string): MediaStudio.SubtitleCue[];",
+                    "signature": "parse(path: string): MediaStudio.SubtitleCue[];"
+                },
+                {
+                    "name": "parseAsync",
+                    "type": "function",
+                    "doc": "parseAsync(path: string): Promise<MediaStudio.SubtitleCue[]>;",
+                    "signature": "parseAsync(path: string): Promise<MediaStudio.SubtitleCue[]>;"
+                },
+                {
+                    "name": "write",
+                    "type": "function",
+                    "doc": "write(path: string, cues: MediaStudio.SubtitleCue[], format?: MediaStudio.SubtitleFormat | Video.SubtitlesWriteOptions | null): MediaStudio.Result;",
+                    "signature": "write(path: string, cues: MediaStudio.SubtitleCue[], format?: MediaStudio.SubtitleFormat | Video.SubtitlesWriteOptions | null): MediaStudio.Result;"
+                },
+                {
+                    "name": "writeAsync",
+                    "type": "function",
+                    "doc": "writeAsync(path: string, cues: MediaStudio.SubtitleCue[], format?: MediaStudio.SubtitleFormat | Video.SubtitlesWriteOptions | null): Promise<MediaStudio.Result>;",
+                    "signature": "writeAsync(path: string, cues: MediaStudio.SubtitleCue[], format?: MediaStudio.SubtitleFormat | Video.SubtitlesWriteOptions | null): Promise<MediaStudio.Result>;"
+                }
+            ],
             "wait": [
                 {
                     "name": "async",
@@ -41446,6 +42014,8 @@
             "$gallery": "gallery",
             "$camera": "camera",
             "$alarms": "alarms",
+            "$video": "video",
+            "$audio": "audio",
             "$speech": "speech",
             "$terminal": "terminal",
             "$media": "media",

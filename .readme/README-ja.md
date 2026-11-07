@@ -193,6 +193,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 * `機能` グローバルモジュール camera / $camera の宣言 (AutoJs6 6.8.1, 3-Prism Camera プラグインが必要): モジュールメソッド, CameraSession セッション, オプション, フレームのメタデータと CameraError; フレームコールバックの画像はコールバックの実行中だけ有効で, 保持するには clone を呼び出します; isAvailable, capabilities, list と requestPermission はコールバック形式と UI スレッドの Promise 形式の両方を宣言; Node.js / Bun の camera 宣言を同期
 * `機能` speech の宣言に 3-Macaw Speech 1.6.0 の新 API を追加 (AutoJs6 6.8.1): エンジンの事前読み込み prepare, prepareAsync, release, listen / wake の keepLoaded オプション, wake の background オプション (ほかのマイクセッションが来ると一時停止して譲る) と paused / resumed イベント, 常駐ウェイクワード speech.resident (get, set, enable, disable, enabled, on, off), エラーコード FEATURE_UNAVAILABLE, RESIDENT_UNAVAILABLE, LEASE_NOT_FOUND
 * `機能` グローバルモジュール alarms / $alarms の宣言 (AutoJs6 6.8.1, 3-Chime Alarm プラグインが必要, Rhino のみ): アラームの作成, 取得, 変更と削除, メソッド付きのアラームスナップショット, オプションと繰り返しルール, イベント名で型が決まるイベント (on / once のコールバック引数と currentEvent), 登録スクリプト, alarms.ringtones, プラグイン不要の alarms.system, hint 付きの AlarmError
+* `機能` グローバルモジュール video / $video と audio / $audio の宣言と補完 (AutoJs6 6.8.1, Rhino のみ): video. または audio. と入力すると, AutoJs6 自体の画面録画と録音, 3-Slate Studio プラグインが必要な各加工メソッドとその Async 形式, およびオプションのフィールド, 録画ハンドル, マルチトラックのタイムライン, 字幕と MediaStudioError を候補に表示; Node.js / Bun の video / audio 宣言を同期
 * `改善` 同梱の宣言を @sm003/autojs6-dts 4.88.0 に更新
 
 # v2.49.0

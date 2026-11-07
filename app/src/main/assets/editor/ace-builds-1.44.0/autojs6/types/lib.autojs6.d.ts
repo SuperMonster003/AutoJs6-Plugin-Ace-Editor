@@ -231,6 +231,46 @@ declare namespace AutoJs6 {
         shuffle<T>(arr: T[]): T[];
     }
 
+    interface Audio {
+        MediaStudioError: MediaStudio.ErrorConstructor;
+        isAvailable(): boolean;
+        version(): MediaStudio.VersionInfo;
+        tasks(): MediaStudio.TaskInfo[];
+        cancelAll(): number;
+        record(path?: string | null, options?: Audio.RecordOptions | null): Audio.AudioRecording;
+        record(options: Audio.RecordOptions | null, path?: string | null): Audio.AudioRecording;
+        probe(src: string): MediaStudio.MediaInfo;
+        probeAsync(src: string): Promise<MediaStudio.MediaInfo>;
+        trim(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;
+        trim(src: string, output: MediaStudio.Output, options: Audio.TrimOptions): MediaStudio.Result;
+        trimAsync(src: string, options: Audio.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        trimAsync(src: string, output: MediaStudio.Output, options: Audio.TrimOptions): Promise<MediaStudio.Result>;
+        concat(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): MediaStudio.Result;
+        concat(sources: string[], options: Audio.ConcatOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        concatAsync(sources: string[], output?: MediaStudio.Output, options?: Audio.ConcatOptions | null): Promise<MediaStudio.Result>;
+        concatAsync(sources: string[], options: Audio.ConcatOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        mix(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): MediaStudio.Result;
+        mix(inputs: (string | Audio.MixInput)[], options: Audio.MixOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        mixAsync(inputs: (string | Audio.MixInput)[], output?: MediaStudio.Output, options?: Audio.MixOptions | null): Promise<MediaStudio.Result>;
+        mixAsync(inputs: (string | Audio.MixInput)[], options: Audio.MixOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        volume(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): MediaStudio.Result;
+        volume(src: string, output: MediaStudio.Output, options: Audio.VolumeOptions): MediaStudio.Result;
+        volumeAsync(src: string, options: Audio.VolumeOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        volumeAsync(src: string, output: MediaStudio.Output, options: Audio.VolumeOptions): Promise<MediaStudio.Result>;
+        convert(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): MediaStudio.Result;
+        convert(src: string, output: string, options?: Partial<Audio.ConvertOptions> | null): MediaStudio.Result;
+        convertAsync(src: string, options: Audio.ConvertOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        convertAsync(src: string, output: string, options?: Partial<Audio.ConvertOptions> | null): Promise<MediaStudio.Result>;
+        speed(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;
+        speed(src: string, output: MediaStudio.Output, options: Audio.SpeedOptions): MediaStudio.Result;
+        speedAsync(src: string, options: Audio.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        speedAsync(src: string, output: MediaStudio.Output, options: Audio.SpeedOptions): Promise<MediaStudio.Result>;
+    }
+
+    interface Audio_MediaStudioError {
+        prototype: MediaStudioError;
+    }
+
     interface Auto {
         start(): boolean;
         enable(): boolean;
@@ -6901,6 +6941,84 @@ declare namespace AutoJs6 {
         search(releaseTimestamp: number): VersionCodes.SearchResult;
     }
 
+    interface Video {
+        MediaStudioError: MediaStudio.ErrorConstructor;
+        subtitles: Video.Subtitles;
+        isAvailable(): boolean;
+        version(): MediaStudio.VersionInfo;
+        tasks(): MediaStudio.TaskInfo[];
+        cancelAll(): number;
+        record(path?: string | null, options?: Video.RecordOptions | null): Video.ScreenRecording;
+        record(options: Video.RecordOptions | null, path?: string | null): Video.ScreenRecording;
+        probe(src: string): MediaStudio.MediaInfo;
+        probeAsync(src: string): Promise<MediaStudio.MediaInfo>;
+        trim(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): MediaStudio.Result;
+        trim(src: string, output: MediaStudio.Output, options: Video.TrimOptions): MediaStudio.Result;
+        trimAsync(src: string, options: Video.TrimOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        trimAsync(src: string, output: MediaStudio.Output, options: Video.TrimOptions): Promise<MediaStudio.Result>;
+        concat(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        concat(sources: string[], output: MediaStudio.Output, options?: Video.ConcatOptions | null): MediaStudio.Result;
+        concatAsync(sources: string[], options?: Video.ConcatOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        concatAsync(sources: string[], output: MediaStudio.Output, options?: Video.ConcatOptions | null): Promise<MediaStudio.Result>;
+        speed(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): MediaStudio.Result;
+        speed(src: string, output: MediaStudio.Output, options: Video.SpeedOptions): MediaStudio.Result;
+        speedAsync(src: string, options: Video.SpeedOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        speedAsync(src: string, output: MediaStudio.Output, options: Video.SpeedOptions): Promise<MediaStudio.Result>;
+        transform(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): MediaStudio.Result;
+        transform(src: string, output: MediaStudio.Output, options: Video.TransformOptions): MediaStudio.Result;
+        transformAsync(src: string, options: Video.TransformOptions, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        transformAsync(src: string, output: MediaStudio.Output, options: Video.TransformOptions): Promise<MediaStudio.Result>;
+        overlay(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): MediaStudio.Result;
+        overlay(src: string, overlays: Video.Overlay[], options: Video.OverlayOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        overlayAsync(src: string, overlays: Video.Overlay[], output?: MediaStudio.Output, options?: Video.OverlayOptions | null): Promise<MediaStudio.Result>;
+        overlayAsync(src: string, overlays: Video.Overlay[], options: Video.OverlayOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        frames(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): string[];
+        frames(src: string, outputDir: MediaStudio.Output, options: Video.FramesOptions): string[];
+        framesAsync(src: string, options: Video.FramesOptions, outputDir?: MediaStudio.Output): Promise<string[]>;
+        framesAsync(src: string, outputDir: MediaStudio.Output, options: Video.FramesOptions): Promise<string[]>;
+        frame(src: string, at: number, options?: Video.FrameOptions | null): ImageWrapper;
+        frameAsync(src: string, at: number, options?: Video.FrameOptions | null): Promise<ImageWrapper>;
+        thumbnail(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        thumbnail(src: string, output: MediaStudio.Output, options?: Video.ThumbnailOptions | null): MediaStudio.Result;
+        thumbnailAsync(src: string, options?: Video.ThumbnailOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        thumbnailAsync(src: string, output: MediaStudio.Output, options?: Video.ThumbnailOptions | null): Promise<MediaStudio.Result>;
+        toGif(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        toGif(src: string, output: MediaStudio.Output, options?: Video.ToGifOptions | null): MediaStudio.Result;
+        toGifAsync(src: string, options?: Video.ToGifOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        toGifAsync(src: string, output: MediaStudio.Output, options?: Video.ToGifOptions | null): Promise<MediaStudio.Result>;
+        extractAudio(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        extractAudio(src: string, output: MediaStudio.Output, options?: Video.ExtractAudioOptions | null): MediaStudio.Result;
+        extractAudioAsync(src: string, options?: Video.ExtractAudioOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        extractAudioAsync(src: string, output: MediaStudio.Output, options?: Video.ExtractAudioOptions | null): Promise<MediaStudio.Result>;
+        removeAudio(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): MediaStudio.Result;
+        removeAudio(src: string, options: Video.RemoveAudioOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        removeAudioAsync(src: string, output?: MediaStudio.Output, options?: Video.RemoveAudioOptions | null): Promise<MediaStudio.Result>;
+        removeAudioAsync(src: string, options: Video.RemoveAudioOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        transcode(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        transcode(src: string, output: MediaStudio.Output, options?: Video.TranscodeOptions | null): MediaStudio.Result;
+        transcodeAsync(src: string, options?: Video.TranscodeOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        transcodeAsync(src: string, output: MediaStudio.Output, options?: Video.TranscodeOptions | null): Promise<MediaStudio.Result>;
+        compose(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): MediaStudio.Result;
+        compose(timeline: Video.Timeline, options: Video.ComposeOptions | null, output?: MediaStudio.Output): MediaStudio.Result;
+        composeAsync(timeline: Video.Timeline, output?: MediaStudio.Output, options?: Video.ComposeOptions | null): Promise<MediaStudio.Result>;
+        composeAsync(timeline: Video.Timeline, options: Video.ComposeOptions | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        burnSubtitles(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): MediaStudio.Result;
+        burnSubtitles(src: string, subtitles: string | MediaStudio.SubtitleCue[], output: MediaStudio.Output, style?: Video.BurnSubtitlesStyle | null): MediaStudio.Result;
+        burnSubtitlesAsync(src: string, subtitles: string | MediaStudio.SubtitleCue[], style?: Video.BurnSubtitlesStyle | null, output?: MediaStudio.Output): Promise<MediaStudio.Result>;
+        burnSubtitlesAsync(src: string, subtitles: string | MediaStudio.SubtitleCue[], output: MediaStudio.Output, style?: Video.BurnSubtitlesStyle | null): Promise<MediaStudio.Result>;
+    }
+
+    interface Video_MediaStudioError {
+        prototype: MediaStudioError;
+    }
+
+    interface Video_subtitles {
+        parse(path: string): MediaStudio.SubtitleCue[];
+        parseAsync(path: string): Promise<MediaStudio.SubtitleCue[]>;
+        write(path: string, cues: MediaStudio.SubtitleCue[], format?: MediaStudio.SubtitleFormat | Video.SubtitlesWriteOptions | null): MediaStudio.Result;
+        writeAsync(path: string, cues: MediaStudio.SubtitleCue[], format?: MediaStudio.SubtitleFormat | Video.SubtitlesWriteOptions | null): Promise<MediaStudio.Result>;
+    }
+
     interface Wait {
         async(cond: Flow<T = any>.SelectorCond, options: Flow.WaitOptions & { resultType: "[]"; }, onOk?: Flow.OnOk<UiObject[]>, onErr?: Flow.OnErr): Flow<UiObject[]>;
         async(cond: Flow<T = any>.SelectorCond, timeout?: number, interval?: number, onOk?: Flow.OnOk<UiObject, any> | undefined, onErr?: Flow.OnErr): Flow<UiObject>;
@@ -6995,6 +7113,7 @@ declare const ai: AutoJs6.Ai;
 declare const alarms: AutoJs6.Alarms;
 declare const app: AutoJs6.App;
 declare const Arrayx: AutoJs6.Arrayx;
+declare const audio: AutoJs6.Audio;
 declare const auto: AutoJs6.Auto;
 declare const autojs: AutoJs6.Autojs;
 declare const automator: AutoJs6.Automator;
@@ -7073,6 +7192,7 @@ declare const toast: AutoJs6.Toast;
 declare const tts: AutoJs6.Tts;
 declare const ui: AutoJs6.Ui;
 declare const util: AutoJs6.Util;
+declare const video: AutoJs6.Video;
 declare const wait: AutoJs6.Wait;
 declare const web: AutoJs6.Web;
 declare const WebSocket: AutoJs6.WebSocket;

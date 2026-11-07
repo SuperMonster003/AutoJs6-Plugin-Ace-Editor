@@ -109,6 +109,14 @@ declare let $camera: Internal.Camera;
 declare let alarms: Internal.Alarms;
 declare let $alarms: Internal.Alarms;
 
+/** Screen recording by AutoJs6 and video processing of the external 3-Slate Studio plugin, Rhino scripts only. Available since AutoJs6 6.8.1. */
+declare let video: Internal.Video;
+declare let $video: Internal.Video;
+
+/** Sound recording by AutoJs6 and audio processing of the external 3-Slate Studio plugin, Rhino scripts only. Available since AutoJs6 6.8.1. */
+declare let audio: Internal.Audio;
+declare let $audio: Internal.Audio;
+
 /** Offline speech recognition, wake words and synthesis of the external 3-Macaw Speech plugin. Available since AutoJs6 6.8.0. */
 declare let speech: Internal.Speech;
 declare let $speech: Internal.Speech;
