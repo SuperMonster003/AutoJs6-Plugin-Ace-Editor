@@ -20,6 +20,11 @@
                 "doc": "AutoJs6 Ai API"
             },
             {
+                "name": "alarms",
+                "type": "module",
+                "doc": "AutoJs6 Alarms API"
+            },
+            {
                 "name": "app",
                 "type": "module",
                 "doc": "Application and intent helpers"
@@ -3569,6 +3574,11 @@
                 "doc": "Alias of camera"
             },
             {
+                "name": "$alarms",
+                "type": "module",
+                "doc": "Alias of alarms"
+            },
+            {
                 "name": "$speech",
                 "type": "module",
                 "doc": "Alias of speech"
@@ -4276,6 +4286,248 @@
                     "type": "function",
                     "doc": "context(): AgentExecutionContext | null;",
                     "signature": "context(): AgentExecutionContext | null;"
+                }
+            ],
+            "alarms": [
+                {
+                    "name": "AlarmError",
+                    "type": "variable",
+                    "doc": "AlarmError: Alarms.ErrorConstructor;",
+                    "signature": "AlarmError: Alarms.ErrorConstructor;"
+                },
+                {
+                    "name": "ringtones",
+                    "type": "variable",
+                    "doc": "ringtones: Alarms.Ringtones;",
+                    "signature": "ringtones: Alarms.Ringtones;"
+                },
+                {
+                    "name": "system",
+                    "type": "variable",
+                    "doc": "system: Alarms.System;",
+                    "signature": "system: Alarms.System;"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "capabilities",
+                    "type": "function",
+                    "doc": "capabilities(): Alarms.Capabilities;",
+                    "signature": "capabilities(): Alarms.Capabilities;"
+                },
+                {
+                    "name": "openPlugin",
+                    "type": "function",
+                    "doc": "openPlugin(page?: Alarms.PluginPage): void;",
+                    "signature": "openPlugin(page?: Alarms.PluginPage): void;"
+                },
+                {
+                    "name": "add",
+                    "type": "function",
+                    "doc": "add(options: Alarms.AlarmOptions): Alarms.Alarm;",
+                    "signature": "add(options: Alarms.AlarmOptions): Alarms.Alarm;"
+                },
+                {
+                    "name": "get",
+                    "type": "function",
+                    "doc": "get(id: string): Alarms.Alarm | null;",
+                    "signature": "get(id: string): Alarms.Alarm | null;"
+                },
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(filter?: Alarms.AlarmFilter): Alarms.Alarm[];",
+                    "signature": "list(filter?: Alarms.AlarmFilter): Alarms.Alarm[];"
+                },
+                {
+                    "name": "update",
+                    "type": "function",
+                    "doc": "update(id: string, patch: Alarms.AlarmPatch): Alarms.Alarm;",
+                    "signature": "update(id: string, patch: Alarms.AlarmPatch): Alarms.Alarm;"
+                },
+                {
+                    "name": "remove",
+                    "type": "function",
+                    "doc": "remove(id: string): boolean;",
+                    "signature": "remove(id: string): boolean;"
+                },
+                {
+                    "name": "setEnabled",
+                    "type": "function",
+                    "doc": "setEnabled(id: string, enabled: boolean): Alarms.Alarm;",
+                    "signature": "setEnabled(id: string, enabled: boolean): Alarms.Alarm;"
+                },
+                {
+                    "name": "skipNext",
+                    "type": "function",
+                    "doc": "skipNext(id: string): Alarms.Alarm;",
+                    "signature": "skipNext(id: string): Alarms.Alarm;"
+                },
+                {
+                    "name": "cancelSkip",
+                    "type": "function",
+                    "doc": "cancelSkip(id: string): Alarms.Alarm;",
+                    "signature": "cancelSkip(id: string): Alarms.Alarm;"
+                },
+                {
+                    "name": "upcoming",
+                    "type": "function",
+                    "doc": "upcoming(count?: number, filter?: Alarms.AlarmFilter): Alarms.Occurrence[];",
+                    "signature": "upcoming(count?: number, filter?: Alarms.AlarmFilter): Alarms.Occurrence[];"
+                },
+                {
+                    "name": "preview",
+                    "type": "function",
+                    "doc": "preview(options: Alarms.AlarmOptions, count?: number): number[];",
+                    "signature": "preview(options: Alarms.AlarmOptions, count?: number): number[];"
+                },
+                {
+                    "name": "ringing",
+                    "type": "function",
+                    "doc": "ringing(): Alarms.Ringing[];",
+                    "signature": "ringing(): Alarms.Ringing[];"
+                },
+                {
+                    "name": "dismiss",
+                    "type": "function",
+                    "doc": "dismiss(id?: string | null): boolean;",
+                    "signature": "dismiss(id?: string | null): boolean;"
+                },
+                {
+                    "name": "snooze",
+                    "type": "function",
+                    "doc": "snooze(id?: string | null, minutes?: number): boolean;",
+                    "signature": "snooze(id?: string | null, minutes?: number): boolean;"
+                },
+                {
+                    "name": "on",
+                    "type": "function",
+                    "doc": "on<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;",
+                    "signature": "on<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;"
+                },
+                {
+                    "name": "once",
+                    "type": "function",
+                    "doc": "once<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;",
+                    "signature": "once<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;"
+                },
+                {
+                    "name": "off",
+                    "type": "function",
+                    "doc": "off(): void;",
+                    "signature": "off(): void;",
+                    "signatures": [
+                        "off(): void;",
+                        "off(event: Alarms.EventName): void;",
+                        "off(listener: (event: any) => void): void;",
+                        "off(event: Alarms.EventName, listener: (event: any) => void): void;"
+                    ]
+                },
+                {
+                    "name": "currentEvent",
+                    "type": "function",
+                    "doc": "currentEvent(): Alarms.AlarmEvent | null;",
+                    "signature": "currentEvent(): Alarms.AlarmEvent | null;"
+                },
+                {
+                    "name": "bind",
+                    "type": "function",
+                    "doc": "bind(id: string, script: string, options?: Alarms.BindOptions): Alarms.Binding;",
+                    "signature": "bind(id: string, script: string, options?: Alarms.BindOptions): Alarms.Binding;"
+                },
+                {
+                    "name": "unbind",
+                    "type": "function",
+                    "doc": "unbind(id: string, script?: string): number;",
+                    "signature": "unbind(id: string, script?: string): number;"
+                },
+                {
+                    "name": "bindings",
+                    "type": "function",
+                    "doc": "bindings(id?: string): Alarms.Binding[];",
+                    "signature": "bindings(id?: string): Alarms.Binding[];"
+                }
+            ],
+            "alarms.AlarmError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: AlarmError;",
+                    "signature": "prototype: AlarmError;"
+                }
+            ],
+            "alarms.ringtones": [
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(): Ringtone[];",
+                    "signature": "list(): Ringtone[];"
+                },
+                {
+                    "name": "getDefault",
+                    "type": "function",
+                    "doc": "getDefault(): Ringtone | null;",
+                    "signature": "getDefault(): Ringtone | null;"
+                }
+            ],
+            "alarms.system": [
+                {
+                    "name": "setAlarm",
+                    "type": "function",
+                    "doc": "setAlarm(options: System.SetAlarmOptions): boolean;",
+                    "signature": "setAlarm(options: System.SetAlarmOptions): boolean;"
+                },
+                {
+                    "name": "setTimer",
+                    "type": "function",
+                    "doc": "setTimer(options: System.SetTimerOptions): boolean;",
+                    "signature": "setTimer(options: System.SetTimerOptions): boolean;"
+                },
+                {
+                    "name": "showAlarms",
+                    "type": "function",
+                    "doc": "showAlarms(options?: System.PackageOptions): boolean;",
+                    "signature": "showAlarms(options?: System.PackageOptions): boolean;"
+                },
+                {
+                    "name": "showTimers",
+                    "type": "function",
+                    "doc": "showTimers(options?: System.PackageOptions): boolean;",
+                    "signature": "showTimers(options?: System.PackageOptions): boolean;"
+                },
+                {
+                    "name": "dismissAlarm",
+                    "type": "function",
+                    "doc": "dismissAlarm(options?: System.DismissAlarmOptions): boolean;",
+                    "signature": "dismissAlarm(options?: System.DismissAlarmOptions): boolean;"
+                },
+                {
+                    "name": "snoozeAlarm",
+                    "type": "function",
+                    "doc": "snoozeAlarm(options?: System.SnoozeAlarmOptions): boolean;",
+                    "signature": "snoozeAlarm(options?: System.SnoozeAlarmOptions): boolean;"
+                },
+                {
+                    "name": "dismissTimer",
+                    "type": "function",
+                    "doc": "dismissTimer(options?: System.PackageOptions): boolean;",
+                    "signature": "dismissTimer(options?: System.PackageOptions): boolean;"
+                },
+                {
+                    "name": "next",
+                    "type": "function",
+                    "doc": "next(): System.NextAlarm | null;",
+                    "signature": "next(): System.NextAlarm | null;"
+                },
+                {
+                    "name": "handlers",
+                    "type": "function",
+                    "doc": "handlers(action?: System.Action): string[];",
+                    "signature": "handlers(action?: System.Action): string[];"
                 }
             ],
             "app": [
@@ -41193,6 +41445,7 @@
             "$epub": "epub",
             "$gallery": "gallery",
             "$camera": "camera",
+            "$alarms": "alarms",
             "$speech": "speech",
             "$terminal": "terminal",
             "$media": "media",

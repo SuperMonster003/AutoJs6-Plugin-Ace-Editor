@@ -105,6 +105,10 @@ declare let $gallery: Internal.Gallery;
 declare let camera: Internal.Camera;
 declare let $camera: Internal.Camera;
 
+/** Alarms of the external 3-Chime Alarm plugin and the system clock app (`alarms.system`), Rhino scripts only. Available since AutoJs6 6.8.1. */
+declare let alarms: Internal.Alarms;
+declare let $alarms: Internal.Alarms;
+
 /** Offline speech recognition, wake words and synthesis of the external 3-Macaw Speech plugin. Available since AutoJs6 6.8.0. */
 declare let speech: Internal.Speech;
 declare let $speech: Internal.Speech;

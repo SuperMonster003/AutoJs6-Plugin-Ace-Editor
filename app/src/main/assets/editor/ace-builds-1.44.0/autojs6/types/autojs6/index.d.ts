@@ -1,5 +1,6 @@
 /// <reference path="./aj6-declarations.d.ts" />
 /// <reference path="./aj6-int-ai.d.ts" />
+/// <reference path="./aj6-int-alarms.d.ts" />
 /// <reference path="./aj6-int-app.d.ts" />
 /// <reference path="./aj6-int-array-observe.d.ts" />
 /// <reference path="./aj6-int-autojs.d.ts" />

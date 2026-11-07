@@ -65,6 +65,59 @@ declare namespace AutoJs6 {
         context(): AgentExecutionContext | null;
     }
 
+    interface Alarms {
+        AlarmError: Alarms.ErrorConstructor;
+        ringtones: Alarms.Ringtones;
+        system: Alarms.System;
+        isAvailable(): boolean;
+        capabilities(): Alarms.Capabilities;
+        openPlugin(page?: Alarms.PluginPage): void;
+        add(options: Alarms.AlarmOptions): Alarms.Alarm;
+        get(id: string): Alarms.Alarm | null;
+        list(filter?: Alarms.AlarmFilter): Alarms.Alarm[];
+        update(id: string, patch: Alarms.AlarmPatch): Alarms.Alarm;
+        remove(id: string): boolean;
+        setEnabled(id: string, enabled: boolean): Alarms.Alarm;
+        skipNext(id: string): Alarms.Alarm;
+        cancelSkip(id: string): Alarms.Alarm;
+        upcoming(count?: number, filter?: Alarms.AlarmFilter): Alarms.Occurrence[];
+        preview(options: Alarms.AlarmOptions, count?: number): number[];
+        ringing(): Alarms.Ringing[];
+        dismiss(id?: string | null): boolean;
+        snooze(id?: string | null, minutes?: number): boolean;
+        on<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;
+        once<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;
+        off(): void;
+        off(event: Alarms.EventName): void;
+        off(listener: (event: any) => void): void;
+        off(event: Alarms.EventName, listener: (event: any) => void): void;
+        currentEvent(): Alarms.AlarmEvent | null;
+        bind(id: string, script: string, options?: Alarms.BindOptions): Alarms.Binding;
+        unbind(id: string, script?: string): number;
+        bindings(id?: string): Alarms.Binding[];
+    }
+
+    interface Alarms_AlarmError {
+        prototype: AlarmError;
+    }
+
+    interface Alarms_ringtones {
+        list(): Ringtone[];
+        getDefault(): Ringtone | null;
+    }
+
+    interface Alarms_system {
+        setAlarm(options: System.SetAlarmOptions): boolean;
+        setTimer(options: System.SetTimerOptions): boolean;
+        showAlarms(options?: System.PackageOptions): boolean;
+        showTimers(options?: System.PackageOptions): boolean;
+        dismissAlarm(options?: System.DismissAlarmOptions): boolean;
+        snoozeAlarm(options?: System.SnoozeAlarmOptions): boolean;
+        dismissTimer(options?: System.PackageOptions): boolean;
+        next(): System.NextAlarm | null;
+        handlers(action?: System.Action): string[];
+    }
+
     interface App {
         autojs: Internal.Autojs;
         versionCode: number;
@@ -6939,6 +6992,7 @@ declare namespace AutoJs6 {
 
 declare const activity: AutoJs6.Activity;
 declare const ai: AutoJs6.Ai;
+declare const alarms: AutoJs6.Alarms;
 declare const app: AutoJs6.App;
 declare const Arrayx: AutoJs6.Arrayx;
 declare const auto: AutoJs6.Auto;
