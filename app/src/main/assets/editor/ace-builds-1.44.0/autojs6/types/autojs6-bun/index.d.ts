@@ -191,7 +191,12 @@ declare module "autojs6:bun-host" {
       /** Opaque native BGR Mat, released through recycle. matToImage makes an independent RGB image. */
       imread(path: string): Promise<MatHandle>;
       matToImage(mat: MatHandle): Promise<ImageHandle>;
-      getScreenCaptureOptions(): Promise<{ readonly width: number; readonly height: number; readonly orientation: "auto" | "portrait" | "landscape" } | null>;
+      /**
+       * Frame size and orientation of the screen capture session, with its sharing state at the time of the call: shared is true
+       * while other scripts, executions or web pages use the session too, and participants counts every participant of the session
+       * (this execution included); both are absent before AutoJs6 6.8.1. Null when this execution holds no screen capture authorization.
+       */
+      getScreenCaptureOptions(): Promise<{ readonly width: number; readonly height: number; readonly orientation: "auto" | "portrait" | "landscape"; readonly shared?: boolean; readonly participants?: number } | null>;
       requestScreenCaptureAsync(options?: ScreenCaptureOptions): Promise<boolean>;
       isGrayscale(image: ImageInput): Promise<boolean>;
       inRange(image: ImageInput, lower: ImageColor, upper: ImageColor): Promise<ImageHandle>;

@@ -14,7 +14,7 @@
 * `機能` speech の宣言に 3-Macaw Speech 1.6.0 の新 API を追加 (AutoJs6 6.8.1): エンジンの事前読み込み prepare, prepareAsync, release, listen / wake の keepLoaded オプション, wake の background オプション (ほかのマイクセッションが来ると一時停止して譲る) と paused / resumed イベント, 常駐ウェイクワード speech.resident (get, set, enable, disable, enabled, on, off), エラーコード FEATURE_UNAVAILABLE, RESIDENT_UNAVAILABLE, LEASE_NOT_FOUND
 * `機能` グローバルモジュール alarms / $alarms の宣言 (AutoJs6 6.8.1, 3-Chime Alarm プラグインが必要, Rhino のみ): アラームの作成, 取得, 変更と削除, メソッド付きのアラームスナップショット, オプションと繰り返しルール, イベント名で型が決まるイベント (on / once のコールバック引数と currentEvent), 登録スクリプト, alarms.ringtones, プラグイン不要の alarms.system, hint 付きの AlarmError
 * `機能` グローバルモジュール video / $video と audio / $audio の宣言と補完 (AutoJs6 6.8.1, Rhino のみ): video. または audio. と入力すると, AutoJs6 自体の画面録画と録音, 3-Slate Studio プラグインが必要な各加工メソッドとその Async 形式, およびオプションのフィールド, 録画ハンドル, マルチトラックのタイムライン, 字幕と MediaStudioError を候補に表示; Node.js / Bun の video / audio 宣言を同期
-* `機能` images.getScreenCaptureOptions が返す ScreenCapturer.Options に isShared (shared プロパティとしても読める) と participants を追加 (AutoJs6 6.8.1), 画面キャプチャセッションを複数の参加者が共有しているかと参加者数を表す; stopScreenCapture に共有セッションは最後の参加者が抜けてから解放されることを記載
+* `機能` images.getScreenCaptureOptions が返す ScreenCapturer.Options に isShared (shared プロパティとしても読める) と participants を追加 (AutoJs6 6.8.1), 画面キャプチャセッションを複数の参加者が共有しているかと参加者数を表す; stopScreenCapture に共有セッションは最後の参加者が抜けてから解放されることを記載; Node.js / Bun の getScreenCaptureOptions 宣言を同期 (戻り値に shared と participants を追加)
 * `改善` 同梱の宣言を @sm003/autojs6-dts 4.88.0 に更新
 
 # v2.49.0

@@ -169,7 +169,12 @@ declare module "image" {
       /** Opaque native BGR Mat, released through recycle. matToImage makes an independent RGB image. */
       imread(path: string, options?: AutoJs6Node.BridgeCallOptions): Promise<MatHandle>;
       matToImage(mat: MatHandle, options?: AutoJs6Node.BridgeCallOptions): Promise<AutoJs6Node.ImageHandle>;
-      getScreenCaptureOptions(options?: AutoJs6Node.BridgeCallOptions): Promise<{ readonly width: number; readonly height: number; readonly orientation: "auto" | "portrait" | "landscape" } | null>;
+      /**
+       * Frame size and orientation of the screen capture session, with its sharing state at the time of the call: shared is true
+       * while other scripts, executions or web pages use the session too, and participants counts every participant of the session
+       * (this execution included); both are absent before AutoJs6 6.8.1. Null when this execution holds no screen capture authorization.
+       */
+      getScreenCaptureOptions(options?: AutoJs6Node.BridgeCallOptions): Promise<{ readonly width: number; readonly height: number; readonly orientation: "auto" | "portrait" | "landscape"; readonly shared?: boolean; readonly participants?: number } | null>;
       requestScreenCaptureAsync(options?: CaptureScreenOptions & { width?: number; height?: number }): Promise<boolean>;
       isGrayscale(image: ImageInput, options?: AutoJs6Node.BridgeCallOptions): Promise<boolean>;
       inRange(image: ImageInput, lower: ColorInput, upper: ColorInput, options?: AutoJs6Node.BridgeCallOptions): Promise<AutoJs6Node.ImageHandle>;
