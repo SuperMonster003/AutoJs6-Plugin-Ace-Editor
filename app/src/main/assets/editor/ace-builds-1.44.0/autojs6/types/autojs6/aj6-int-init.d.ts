@@ -2113,7 +2113,7 @@ declare class ContinuationResult extends org.autojs.autojs.rhino.continuation.Co
     /* Empty body. */
 }
 
-declare class ContinuationCreator extends org.autojs.autojs.runtime.api.augment.continuation.Creator {
+declare class ContinuationCreator extends org.autojs.autojs.runtime.api.modules.continuation.Creator {
     /* Empty body. */
 }
 

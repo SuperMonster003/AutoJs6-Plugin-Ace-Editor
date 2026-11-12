@@ -194,6 +194,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 * `新增` speech 声明补全 3-Macaw Speech 1.6.0 的新 API (AutoJs6 6.8.1): 引擎预热 prepare, prepareAsync 与 release, listen / wake 的 keepLoaded 选项, wake 的 background 选项 (其他麦克风会话到来时暂停让出) 与 paused / resumed 事件, 常驻唤醒 speech.resident (get, set, enable, disable, enabled, on, off), 以及错误码 FEATURE_UNAVAILABLE, RESIDENT_UNAVAILABLE 与 LEASE_NOT_FOUND
 * `新增` 全局模块 alarms / $alarms 的声明 (AutoJs6 6.8.1, 需要 3-Chime Alarm 插件, 仅 Rhino): 闹钟的新建, 查询, 修改与删除, 带方法的闹钟快照, 选项与重复规则, 按事件名区分类型的事件 (on / once 的回调参数与 currentEvent), 登记脚本, alarms.ringtones, 不需要插件的 alarms.system, 以及带 hint 的 AlarmError
 * `新增` 全局模块 video / $video 与 audio / $audio 的声明与补全 (AutoJs6 6.8.1, 仅 Rhino): 输入 video. 或 audio. 时提示 AutoJs6 自带的录屏与录音, 需要 3-Slate Studio 插件的各加工方法及其 Async 形态, 以及选项字段, 录制句柄, 多轨时间线, 字幕与 MediaStudioError; 同步 Node.js / Bun 的 video / audio 声明
+* `新增` images.getScreenCaptureOptions 返回的 ScreenCapturer.Options 增加 isShared (也可读作 shared 属性) 与 participants (AutoJs6 6.8.1), 分别表示屏幕捕获会话是否由多个参与者共享与参与者数量; stopScreenCapture 说明共享会话在最后一个参与者退出后才释放
 * `优化` 捆绑声明升级至 @sm003/autojs6-dts 4.88.0
 
 # v2.49.0

@@ -183,25 +183,28 @@ declare namespace org {
 					export class RemoteApkBuildClient {
 						public static readonly INSTANCE: __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient;
 						public static readonly STATUS_NOT_AVAILABLE: number;
-						public static buildBlocking(context: __javaRoots.androidRoot.content.Context, projectConfig: __javaRoots.orgRoot.autojs.autojs.project.ProjectConfig, outApk: __javaRoots.javaRoot.io.File, cancelSignal: __javaRoots.javaRoot.util.concurrent.atomic.AtomicBoolean, progressListener: __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.ProgressListener, preferredPluginPackageName: string): __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.BuildOutcome;
+						public static buildBlocking(context: __javaRoots.androidRoot.content.Context, projectConfig: __javaRoots.orgRoot.autojs.autojs.project.ProjectConfig, outApk: __javaRoots.javaRoot.io.File, cancelSignal: __javaRoots.javaRoot.util.concurrent.atomic.AtomicBoolean, progressListener: __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.ProgressListener, preferredPluginPackageName: string, stallListener: __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.StallListener): __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.BuildOutcome;
 						public outcomeForCaughtFailure$app(error: __javaRoots.javaRoot.lang.Throwable, cancelRequested: boolean): __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.BuildOutcome;
 						protected constructor();
 					}
 					export namespace RemoteApkBuildClient {
 						export class BuildOutcome {
 							public readonly errors: __javaRoots.javaRoot.util.List<string>;
+							public readonly notices: __javaRoots.javaRoot.util.List<string>;
 							public readonly status: number;
 							public readonly success: boolean;
 							public readonly updatedProjectConfigJson: string;
 							public readonly warnings: __javaRoots.javaRoot.util.List<string>;
-							public constructor(status: number, warnings: __javaRoots.javaRoot.util.List<string>, errors: __javaRoots.javaRoot.util.List<string>, updatedProjectConfigJson: string);
+							public constructor(status: number, warnings: __javaRoots.javaRoot.util.List<string>, errors: __javaRoots.javaRoot.util.List<string>, updatedProjectConfigJson: string, notices: __javaRoots.javaRoot.util.List<string>);
 							public component1(): number;
 							public component2(): __javaRoots.javaRoot.util.List<string>;
 							public component3(): __javaRoots.javaRoot.util.List<string>;
 							public component4(): string;
-							public copy(status: number, warnings: __javaRoots.javaRoot.util.List<string>, errors: __javaRoots.javaRoot.util.List<string>, updatedProjectConfigJson: string): __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.BuildOutcome;
+							public component5(): __javaRoots.javaRoot.util.List<string>;
+							public copy(status: number, warnings: __javaRoots.javaRoot.util.List<string>, errors: __javaRoots.javaRoot.util.List<string>, updatedProjectConfigJson: string, notices: __javaRoots.javaRoot.util.List<string>): __javaRoots.orgRoot.autojs.autojs.apkbuilder.template.RemoteApkBuildClient.BuildOutcome;
 							public equals(other: any): boolean;
 							public getErrors(): __javaRoots.javaRoot.util.List<string>;
+							public getNotices(): __javaRoots.javaRoot.util.List<string>;
 							public getStatus(): number;
 							public getUpdatedProjectConfigJson(): string;
 							public getWarnings(): __javaRoots.javaRoot.util.List<string>;
@@ -215,6 +218,13 @@ declare namespace org {
 						}
 						export interface ProgressListener {
 							onProgress(param0: __javaRoots.orgRoot.autojs.plugin.apkbuilder.template.ApkBuildProgress): void;
+						}
+						export class StallListener {
+							public constructor(implementation: StallListener);
+							public constructor();
+						}
+						export interface StallListener {
+							onStallChanged(param0: string, param1: number): void;
 						}
 					}
 				}
@@ -358,19 +368,25 @@ declare namespace org {
 			export namespace core {
 				export namespace accessibility {
 					export abstract class AccessibilityBridge {
+						public static readonly DEFAULT_FLAGS: number;
 						public static readonly FLAG_APP_WINDOWS_FALLBACK: number;
 						public static readonly FLAG_EVENT_ASSISTED_POLLING: number;
 						public static readonly FLAG_FIND_ON_UI_THREAD: number;
+						public static readonly FLAG_NO_FAST_PATH: number;
+						public static readonly FLAG_NO_REFRESH_ON_HIT: number;
 						public static readonly FLAG_USE_SHELL: number;
 						public static readonly FLAG_USE_USAGE_STATS: number;
 						public static readonly MODE_FAST: number;
 						public static readonly MODE_NORMAL: number;
 						public readonly config: __javaRoots.orgRoot.autojs.autojs.runtime.accessibility.AccessibilityConfig;
 						public readonly eventAssistedPolling: boolean;
+						public readonly fastPathEnabled$app: boolean;
+						public readonly fastPathLedger$app: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Ledger;
 						public readonly flags: number;
 						public readonly infoProvider: __javaRoots.orgRoot.autojs.autojs.core.activity.ActivityInfoProvider;
 						public readonly notificationObserver: __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityNotificationObserver;
 						public readonly pulse: __javaRoots.orgRoot.autojs.autojs.core.accessibility.event.A11yEventPulse;
+						public readonly refreshOnHit$app: boolean;
 						public readonly rootInActiveWindow: __javaRoots.androidRoot.view.accessibility.AccessibilityNodeInfo;
 						public readonly rootInCurrentWindow: __javaRoots.androidRoot.view.accessibility.AccessibilityNodeInfo;
 						public readonly scriptOwnerId: string;
@@ -383,6 +399,7 @@ declare namespace org {
 						public ensureServiceStarted(): void;
 						public ensureServiceStarted(param0: boolean): void;
 						public getConfig(): __javaRoots.orgRoot.autojs.autojs.runtime.accessibility.AccessibilityConfig;
+						public getFastPathLedger$app(): __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Ledger;
 						public getFlags(): number;
 						public getInfoProvider(): __javaRoots.orgRoot.autojs.autojs.core.activity.ActivityInfoProvider;
 						public getNotificationObserver(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityNotificationObserver;
@@ -395,6 +412,8 @@ declare namespace org {
 						public getTap(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityBridge.Tap;
 						public getWindowRootPolicy(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.window.WindowRootPolicy<__javaRoots.androidRoot.view.accessibility.AccessibilityWindowInfo>;
 						public isEventAssistedPolling(): boolean;
+						public isFastPathEnabled$app(): boolean;
+						public isRefreshOnHit$app(): boolean;
 						public post(r: __javaRoots.javaRoot.lang.Runnable): void;
 						public releasePulse(): void;
 						public setAccessibilityListener(listener: __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityServiceCallback): void;
@@ -504,6 +523,7 @@ declare namespace org {
 			export namespace core {
 				export namespace accessibility {
 					export class AccessibilityService extends __javaRoots.androidRoot.accessibilityservice.AccessibilityService {
+						public static readonly PRIORITY_FOREGROUND_TRACKER: number;
 						public static readonly PRIORITY_KEY_INTERCEPTOR: number;
 						public static readonly PRIORITY_KEY_OBSERVER: number;
 						public static readonly PRIORITY_OBSERVER: number;
@@ -775,7 +795,7 @@ declare namespace org {
 						public findOne(): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 						public findOne(timeout: number): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 						public findOneOf$app(root: __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
-						public findWithin$app(max: number, budget: number): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObjectCollection;
+						public findWithin$app(max: number, budget: number, attempt: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt, trace: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Trace): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObjectCollection;
 						public focus(): boolean;
 						public getBridge$app(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityBridge;
 						public getSearchAlgorithm$app(): __javaRoots.orgRoot.autojs.autojs.core.automator.search.SearchAlgorithm;
@@ -822,6 +842,7 @@ declare namespace org {
 						public untilFind(): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObjectCollection;
 						public untilFindOne(): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 						public useAlgorithm$app(name: string): void;
+						public verified$app(found: __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject, unbounded: boolean, again: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.orgRoot.autojs.autojs.core.automator.UiObject>): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 						/** @deprecated */
 						public waitFor(): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObjectCollection;
 						public performAction(...args: any[]): any;
@@ -996,6 +1017,9 @@ declare namespace org {
 						public minWidth(value: number): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public multiLine(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public multiLine(b: boolean): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
+						public normalize(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
+						public normalize(options: __javaRoots.javaRoot.util.Map<any, any>): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
+						public normalize(b: boolean): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public packageName(s: string): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public packageName(app: __javaRoots.orgRoot.autojs.autojs.util.App): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public packageName(regex: __javaRoots.orgRoot.mozilla.javascript.regexp.NativeRegExp): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
@@ -1011,6 +1035,7 @@ declare namespace org {
 						public packageNameStartsWith(prefix: string): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public password(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public password(b: boolean): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
+						public prefer(...keys: string[]): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public right(value: number): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public right(min: number, max: number): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 						public row(d: number): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
@@ -1757,6 +1782,7 @@ declare namespace org {
 						public previousSibling(): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 						/** @deprecated */
 						public recycle(): void;
+						public refresh(): boolean;
 						public right(): number;
 						public row(): number;
 						public rowCount(): number;
@@ -1807,6 +1833,7 @@ declare namespace org {
 					export interface UiObject extends __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<__javaRoots.orgRoot.autojs.autojs.core.automator.UiObject> {}
 					export namespace UiObject {
 						export class Companion {
+							public createDescendant$app(info: __javaRoots.androidRoot.view.accessibility.AccessibilityNodeInfo, root: __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject, depth: number): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 							public createRoot(root: __javaRoots.androidRoot.view.accessibility.AccessibilityNodeInfo): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 							public createRoot$app(root: __javaRoots.androidRoot.view.accessibility.AccessibilityNodeInfo, allocator: __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityNodeInfoAllocator, bridge: __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityBridge): __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject;
 							public detect(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, w: __javaRoots.orgRoot.autojs.autojs.core.automator.UiObject, compass: string, resultType: any, callback: __javaRoots.orgRoot.mozilla.javascript.Callable): any;
@@ -2139,13 +2166,52 @@ declare namespace org {
 							public static readonly OTHERS: string;
 							public constructor();
 							public constructor(clock: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.javaRoot.lang.Long>);
+							public recordFastPath(event: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent): void;
 							public recordQuery(selector: string, elapsed: number, attempts: number, found: boolean): void;
+							public recordRefind(): void;
 							public recordSearch(selector: string, elapsed: number): void;
 							public recordStep(name: string, elapsed: number, rejected: boolean): void;
 							public reset(): void;
 							public snapshot(): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.Snapshot;
 						}
 						export namespace A11yStats {
+							export class FastPathCounts {
+								public readonly empty: boolean;
+								public readonly fallbacks: number;
+								public readonly hits: number;
+								public readonly mismatches: number;
+								public readonly misses: number;
+								public readonly walks: number;
+								public constructor(hits: number, misses: number, fallbacks: number, mismatches: number, walks: number);
+								public component1(): number;
+								public component2(): number;
+								public component3(): number;
+								public component4(): number;
+								public component5(): number;
+								public copy(hits: number, misses: number, fallbacks: number, mismatches: number, walks: number): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathCounts;
+								public equals(other: any): boolean;
+								public getFallbacks(): number;
+								public getHits(): number;
+								public getMismatches(): number;
+								public getMisses(): number;
+								public getWalks(): number;
+								public hashCode(): number;
+								public isEmpty(): boolean;
+								public toString(): string;
+							}
+							export class FastPathEvent extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent> {
+								public static readonly FALLBACK: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent;
+								public static readonly HIT: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent;
+								public static readonly MISMATCH: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent;
+								public static readonly MISS: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent;
+								public static readonly WALK: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent;
+								public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent>;
+								public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent>;
+								public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent;
+								public static values(): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathEvent[];
+								protected constructor();
+								public static valueOf(...args: any[]): any;
+							}
 							export class QueryTiming {
 								public readonly attempts: number;
 								public readonly averageMillis: number;
@@ -2153,14 +2219,16 @@ declare namespace org {
 								public readonly found: number;
 								public readonly maxMillis: number;
 								public readonly missed: number;
+								public readonly refinds: number;
 								public readonly totalMillis: number;
-								public constructor(count: number, found: number, attempts: number, totalMillis: number, maxMillis: number);
+								public constructor(count: number, found: number, attempts: number, totalMillis: number, maxMillis: number, refinds: number);
 								public component1(): number;
 								public component2(): number;
 								public component3(): number;
 								public component4(): number;
 								public component5(): number;
-								public copy(count: number, found: number, attempts: number, totalMillis: number, maxMillis: number): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.QueryTiming;
+								public component6(): number;
+								public copy(count: number, found: number, attempts: number, totalMillis: number, maxMillis: number, refinds: number): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.QueryTiming;
 								public equals(other: any): boolean;
 								public getAttempts(): number;
 								public getAverageMillis(): number;
@@ -2168,6 +2236,7 @@ declare namespace org {
 								public getFound(): number;
 								public getMaxMillis(): number;
 								public getMissed(): number;
+								public getRefinds(): number;
 								public getTotalMillis(): number;
 								public hashCode(): number;
 								public toString(): string;
@@ -2193,6 +2262,7 @@ declare namespace org {
 							}
 							export class Snapshot {
 								public readonly elapsed: number;
+								public readonly fastPath: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathCounts;
 								public readonly now: number;
 								public readonly queries: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.QueryTiming;
 								public readonly searches: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.Timing;
@@ -2200,8 +2270,9 @@ declare namespace org {
 								public readonly since: number;
 								public readonly slowest: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.SelectorStats;
 								public readonly steps: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.StepStats>;
-								public constructor(since: number, now: number, searches: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.Timing, queries: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.QueryTiming, selectors: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.SelectorStats>, steps: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.StepStats>);
+								public constructor(since: number, now: number, searches: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.Timing, queries: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.QueryTiming, selectors: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.SelectorStats>, steps: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.StepStats>, fastPath: __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathCounts);
 								public getElapsed(): number;
+								public getFastPath(): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.FastPathCounts;
 								public getNow(): number;
 								public getQueries(): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.QueryTiming;
 								public getSearches(): __javaRoots.orgRoot.autojs.autojs.core.automator.diagnostics.A11yStats.Timing;
@@ -2337,8 +2408,10 @@ declare namespace org {
 					export namespace filter {
 						export class BooleanFilter {
 							public static readonly DEFAULT: boolean;
+							public readonly cost: number;
 							public constructor(mBooleanSupplier: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.BooleanFilter.BooleanSupplier, mExceptedValue: __javaRoots.javaRoot.lang.Boolean);
 							public filter(node: __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<any>): boolean;
+							public getCost(): number;
 							public toString(): string;
 						}
 						export interface BooleanFilter extends __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter {}
@@ -2366,9 +2439,151 @@ declare namespace org {
 						export class Filter {
 							public constructor(implementation: Filter);
 							public constructor();
+							public static readonly COST_ACTIONS: number;
+							public static readonly COST_BOUNDS: number;
+							public static readonly COST_PROPERTY: number;
+							public static readonly COST_REGEX: number;
+							public static readonly COST_RESOURCE: number;
+							public static readonly COST_SCRIPT: number;
+							public static readonly COST_STRING: number;
+							public static readonly COST_UNKNOWN: number;
 						}
 						export interface Filter {
+							readonly cost: number;
 							filter(param0: __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<any>): boolean;
+							getCost(): number;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace automator {
+					export namespace filter {
+						export class NormalizeOptions {
+							public static readonly CASE_INSENSITIVE: string;
+							public static readonly FULL_WIDTH: string;
+							public static readonly NFKC: string;
+							public static readonly TRIM: string;
+							public static readonly WHITESPACE: string;
+							public readonly caseInsensitive: boolean;
+							public readonly fullWidth: boolean;
+							public readonly nfkc: boolean;
+							public readonly off: boolean;
+							public readonly trim: boolean;
+							public readonly whitespace: boolean;
+							public constructor();
+							public constructor(trim: boolean, caseInsensitive: boolean, fullWidth: boolean, whitespace: boolean, nfkc: boolean);
+							public apply(value: string, lowerCase: boolean): string;
+							public component1(): boolean;
+							public component2(): boolean;
+							public component3(): boolean;
+							public component4(): boolean;
+							public component5(): boolean;
+							public copy(trim: boolean, caseInsensitive: boolean, fullWidth: boolean, whitespace: boolean, nfkc: boolean): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.NormalizeOptions;
+							public equals(other: any): boolean;
+							public getCaseInsensitive(): boolean;
+							public getFullWidth(): boolean;
+							public getNfkc(): boolean;
+							public getTrim(): boolean;
+							public getWhitespace(): boolean;
+							public hashCode(): number;
+							public isOff(): boolean;
+							public of(property: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.NormalizeOptions;
+							public toString(): string;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace automator {
+					export namespace filter {
+						export class Preference {
+							public readonly keys: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key>;
+							public readonly visibleOnly: boolean;
+							public constructor(keys: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key>, scale: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Source);
+							public best<N extends __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<N>>(nodes: __javaRoots.javaRoot.util.List<N>): N;
+							public getKeys(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key>;
+							public getVisibleOnly(): boolean;
+							public toString(): string;
+						}
+						export namespace Preference {
+							export class Key extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key> {
+								public static readonly AREA: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key;
+								public static readonly CENTER: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key;
+								public static readonly CLICKABLE: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key;
+								public static readonly ENABLED: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key;
+								public static readonly TOP: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key;
+								public static readonly VISIBLE: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key;
+								public readonly label: string;
+								public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key>;
+								public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key>;
+								public getLabel(): string;
+								public toString(): string;
+								public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key;
+								public static values(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference.Key[];
+								protected constructor();
+								public static valueOf(...args: any[]): any;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace automator {
+					export namespace filter {
+						export class ScreenScale {
+							public readonly height: number;
+							public readonly width: number;
+							public constructor(width: number, height: number);
+							public constructor(widthSupplier: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.javaRoot.lang.Integer>, heightSupplier: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.javaRoot.lang.Integer>);
+							public ceil(axis: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis, value: number): number;
+							public floor(axis: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis, value: number): number;
+							public getHeight(): number;
+							public getWidth(): number;
+							public round(axis: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis, value: number): number;
+							public side(axis: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis): number;
+							public toString(): string;
+						}
+						export namespace ScreenScale {
+							export class Axis extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis> {
+								public static readonly X: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis;
+								public static readonly Y: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis;
+								public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis>;
+								public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis>;
+								public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis;
+								public static values(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Axis[];
+								protected constructor();
+								public static valueOf(...args: any[]): any;
+							}
+							export class Source {
+								public constructor(implementation: Source);
+								public constructor();
+								public static readonly default: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Source;
+								public static fixed(width: number, height: number): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Source;
+								public static getDefault(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Source;
+								public static setDefault(_set___: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale.Source): void;
+							}
+							export interface Source {
+								scale(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.ScreenScale;
+							}
 						}
 					}
 				}
@@ -2383,15 +2598,81 @@ declare namespace org {
 				export namespace automator {
 					export namespace filter {
 						export class Selector {
+							public readonly cost: number;
+							public readonly effectiveFilters: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter>;
 							public readonly filters: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter>;
+							public readonly normalization: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.NormalizeOptions;
+							public readonly preference: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference;
 							public constructor();
 							public add(filter: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter): boolean;
 							public append(uiSelector: __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector): boolean;
 							public filter(node: __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<any>): boolean;
+							public getCost(): number;
+							public getEffectiveFilters(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter>;
 							public getFilters(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter>;
+							public getNormalization(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.NormalizeOptions;
+							public getPreference(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Preference;
+							public snapshot(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter;
 							public toString(): string;
 						}
 						export interface Selector extends __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter {}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace automator {
+					export namespace filter {
+						export abstract class StringMatcher {
+							public readonly argument: string;
+							public readonly exact$app: string;
+							public readonly pattern$app: boolean;
+							public readonly suffix: string;
+							public describe(property: any): string;
+							public getArgument(): string;
+							public getExact$app(): string;
+							public getSuffix(): string;
+							public isPattern$app(): boolean;
+							public matches(param0: string): boolean;
+							public normalized$app(options: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.NormalizeOptions): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringMatcher;
+							public toString(): string;
+							protected constructor();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace automator {
+					export namespace filter {
+						export abstract class StringProperty extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty> {
+							public static readonly CLASS_NAME: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly CONTENT: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly DESC: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly ID: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly ID_ENTRY: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly ID_HEX: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly PACKAGE_NAME: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly TEXT: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty>;
+							public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty>;
+							public test(param0: __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<any>, param1: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringMatcher): boolean;
+							public toString(): string;
+							public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty;
+							public static values(): __javaRoots.orgRoot.autojs.autojs.core.automator.filter.StringProperty[];
+							protected constructor();
+							public static valueOf(...args: any[]): any;
+						}
 					}
 				}
 			}
@@ -2407,17 +2688,19 @@ declare namespace org {
 						export class PollPolicy {
 							public static readonly DEFAULT_INTERVAL: number;
 							public static readonly EVENT_ASSISTED_INTERVAL: number;
+							public static readonly EVENT_MIN_SPACING: number;
 							public static readonly UNBOUNDED: number;
 							public readonly backoff: number;
 							public readonly eventAssisted: boolean;
 							public readonly interval: number;
 							public readonly maxInterval: number;
+							public readonly minSpacing: number;
 							public readonly noop: boolean;
 							public readonly timeout: number;
 							public readonly times: number;
 							public readonly unbounded: boolean;
 							public constructor();
-							public constructor(timeout: number, interval: number, times: number, backoff: number, maxInterval: number, eventAssisted: boolean);
+							public constructor(timeout: number, interval: number, times: number, backoff: number, maxInterval: number, eventAssisted: boolean, minSpacing: number);
 							public assisted(minInterval: number): __javaRoots.orgRoot.autojs.autojs.core.automator.query.PollPolicy;
 							public component1(): number;
 							public component2(): number;
@@ -2425,12 +2708,14 @@ declare namespace org {
 							public component4(): number;
 							public component5(): number;
 							public component6(): boolean;
-							public copy(timeout: number, interval: number, times: number, backoff: number, maxInterval: number, eventAssisted: boolean): __javaRoots.orgRoot.autojs.autojs.core.automator.query.PollPolicy;
+							public component7(): number;
+							public copy(timeout: number, interval: number, times: number, backoff: number, maxInterval: number, eventAssisted: boolean, minSpacing: number): __javaRoots.orgRoot.autojs.autojs.core.automator.query.PollPolicy;
 							public equals(other: any): boolean;
 							public getBackoff(): number;
 							public getEventAssisted(): boolean;
 							public getInterval(): number;
 							public getMaxInterval(): number;
+							public getMinSpacing(): number;
 							public getTimeout(): number;
 							public getTimes(): number;
 							public hashCode(): number;
@@ -2468,6 +2753,77 @@ declare namespace org {
 								public getRound(): number;
 								public getTimedOut$app(): boolean;
 								public setRound$app(_set___: number): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace automator {
+					export namespace search {
+						export class FastPath {
+							public static readonly INSTANCE: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath;
+							public static readonly KIND_ID: string;
+							public static readonly VERIFY_INTERVAL: number;
+							public decide<N extends __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<N>, C>(roots: __javaRoots.javaRoot.util.List<N>, key: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Key, filter: __javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter, single: boolean, attempt: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt, lookup: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Lookup<N, C>): __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Outcome<N>;
+							public keyOf(filters: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.automator.filter.Filter>): __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Key;
+							protected constructor();
+						}
+						export namespace FastPath {
+							export class Attempt extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt> {
+								public static readonly FULL: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt;
+								public static readonly INTERMEDIATE: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt;
+								public static readonly SINGLE: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt;
+								public static readonly WALK: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt;
+								public readonly looksUp: boolean;
+								public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt>;
+								public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt>;
+								public getLooksUp(): boolean;
+								public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt;
+								public static values(): __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Attempt[];
+								protected constructor();
+								public static valueOf(...args: any[]): any;
+							}
+							export abstract class Key {
+								public readonly kind: string;
+								public getKind(): string;
+								public toString(): string;
+								protected constructor();
+							}
+							export class Ledger {
+								public constructor();
+								public clear(): void;
+								public isUnreliable(packageName: string, kind: string): boolean;
+								public markUnreliable(packageName: string, kind: string): void;
+							}
+							export class Lookup<N extends __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<N>, C> {
+								public constructor(implementation: Lookup<N, C>);
+								public constructor();
+							}
+							export interface Lookup<N extends __javaRoots.orgRoot.autojs.autojs.core.automator.UiNode<N>, C> {
+								attach(param0: N, param1: C): N;
+								candidates(param0: N, param1: __javaRoots.orgRoot.autojs.autojs.core.automator.search.FastPath.Key): __javaRoots.javaRoot.util.List<C>;
+								release(param0: C): void;
+								releaseNode(param0: N): void;
+							}
+							export abstract class Outcome<N> {
+								protected constructor();
+							}
+							export class Trace {
+								public readonly lookedUp: boolean;
+								public readonly walked: boolean;
+								public constructor();
+								public getLookedUp(): boolean;
+								public getWalked(): boolean;
+								public reset(): void;
+								public setLookedUp(_set___: boolean): void;
+								public setWalked(_set___: boolean): void;
 							}
 						}
 					}
@@ -2535,6 +2891,54 @@ declare namespace org {
 						public emit(eventName: string, ...args: any[]): boolean;
 						public onBroadcast(eventName: string, ...args: any[]): boolean;
 						public unregister(): void;
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace console {
+					export class ConsoleEntryStore {
+						public static readonly DIRECTORY_NAME: string;
+						public static readonly FILE_NAME: string;
+						public static readonly FLUSH_DELAY_MS: number;
+						public static readonly MAX_BYTES: number;
+						public static readonly MAX_ENTRIES: number;
+						public static readonly MAX_ENTRY_CHARS: number;
+						public static readonly TRUNCATED_MARK: string;
+						public constructor(directory: __javaRoots.javaRoot.io.File);
+						public constructor(directory: __javaRoots.javaRoot.io.File, maxEntries: number);
+						public constructor(directory: __javaRoots.javaRoot.io.File, maxEntries: number, maxBytes: number);
+						public constructor(directory: __javaRoots.javaRoot.io.File, maxEntries: number, maxBytes: number, maxEntryChars: number);
+						public constructor(directory: __javaRoots.javaRoot.io.File, maxEntries: number, maxBytes: number, maxEntryChars: number, flushDelayMs: number);
+						public constructor(directory: __javaRoots.javaRoot.io.File, maxEntries: number, maxBytes: number, maxEntryChars: number, flushDelayMs: number, executor: __javaRoots.javaRoot.util.concurrent.ScheduledExecutorService);
+						public append(level: number, timestamp: number, content: string): void;
+						public clear(): __javaRoots.javaRoot.util.concurrent.Future<any>;
+						public flushNow(): __javaRoots.javaRoot.util.concurrent.Future<any>;
+						public restore(consumer: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>): __javaRoots.javaRoot.util.concurrent.Future<any>;
+						public shutdown(): void;
+					}
+					export namespace ConsoleEntryStore {
+						export class Record {
+							public readonly level: number;
+							public readonly text: string;
+							public readonly timestamp: number;
+							public constructor(level: number, timestamp: number, text: string);
+							public component1(): number;
+							public component2(): number;
+							public component3(): string;
+							public copy(level: number, timestamp: number, text: string): __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleEntryStore.Record;
+							public equals(other: any): boolean;
+							public getLevel(): number;
+							public getText(): string;
+							public getTimestamp(): number;
+							public hashCode(): number;
+							public toString(): string;
+						}
 					}
 				}
 			}
@@ -2635,6 +3039,7 @@ declare namespace org {
 						public readonly parent: __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleImpl;
 						public readonly pendingInputCount: number;
 						public readonly position: __javaRoots.orgRoot.opencv.core.Point;
+						public readonly restoredEntryCount: __javaRoots.javaRoot.lang.Integer;
 						public readonly runtimeExited: boolean;
 						public readonly showing: boolean;
 						public readonly size: __javaRoots.orgRoot.opencv.core.Size;
@@ -2679,6 +3084,7 @@ declare namespace org {
 						public getParent(): __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleImpl;
 						public getPendingInputCount(): number;
 						public getPosition(): __javaRoots.orgRoot.opencv.core.Point;
+						public getRestoredEntryCount(): __javaRoots.javaRoot.lang.Integer;
 						public getSize(): __javaRoots.orgRoot.opencv.core.Size;
 						public getTimeFormat(): string;
 						public getTitle(): string;
@@ -2869,6 +3275,7 @@ declare namespace org {
 						export interface LogListener {
 							onInputRequestsChanged(pendingCount: number): void;
 							onLogClear(): void;
+							onLogRestored(count: number): void;
 							onNewLog(param0: __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleImpl.LogEntry): void;
 						}
 					}
@@ -2971,6 +3378,7 @@ declare namespace org {
 						public constructor(context: __javaRoots.androidRoot.content.Context);
 						public constructor(context: __javaRoots.androidRoot.content.Context, attrs: __javaRoots.androidRoot.util.AttributeSet);
 						public constructor(context: __javaRoots.androidRoot.content.Context, attrs: __javaRoots.androidRoot.util.AttributeSet, defStyleAttr: number);
+						public captureScrollAnchor(): __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleView.ScrollAnchor;
 						public clearInputFocus(): void;
 						public createClickableContent(content: string): string;
 						public export(fileName: string): void;
@@ -3000,8 +3408,11 @@ declare namespace org {
 						public isTitleBarVisible(): boolean;
 						public onInputRequestsChanged(pendingCount: number): void;
 						public onLogClear(): void;
+						public onLogRestored(count: number): void;
 						public onNewLog(logEntry: __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleImpl.LogEntry): void;
+						public restoreDisplayState(state: __javaRoots.androidRoot.os.Bundle): void;
 						public restoreTimePreferences$app(settings: __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleTimeSettings): void;
+						public saveDisplayState(outState: __javaRoots.androidRoot.os.Bundle): void;
 						public setAssertTextColor(color: number): void;
 						public setBackgroundDrawables(titleBar: __javaRoots.androidRoot.graphics.drawable.Drawable, content: __javaRoots.androidRoot.graphics.drawable.Drawable): void;
 						public setColorful(value: boolean): void;
@@ -3076,6 +3487,22 @@ declare namespace org {
 						}
 						export interface OnStackFrameClickListener {
 							onStackFrameClick(param0: string, param1: number, param2: number): void;
+						}
+						export class ScrollAnchor {
+							public readonly entryId: number;
+							public readonly followsNewest: boolean;
+							public readonly offsetPx: number;
+							public constructor(followsNewest: boolean, entryId: number, offsetPx: number);
+							public component1(): boolean;
+							public component2(): number;
+							public component3(): number;
+							public copy(followsNewest: boolean, entryId: number, offsetPx: number): __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleView.ScrollAnchor;
+							public equals(other: any): boolean;
+							public getEntryId(): number;
+							public getFollowsNewest(): boolean;
+							public getOffsetPx(): number;
+							public hashCode(): number;
+							public toString(): string;
 						}
 					}
 				}
@@ -3154,6 +3581,8 @@ declare namespace org {
 				export namespace console {
 					export class GlobalConsole extends __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleImpl {
 						public constructor(uiHandler: __javaRoots.orgRoot.autojs.autojs.tool.UiHandler);
+						public attachEntryStore(store: __javaRoots.orgRoot.autojs.autojs.core.console.ConsoleEntryStore): void;
+						public clear(): void;
 						public println(level: number, charSequence: string): string;
 					}
 				}
@@ -4854,6 +5283,282 @@ declare namespace org {
 			export namespace core {
 				export namespace image {
 					export namespace capture {
+						export class ScreenCaptureCompatibility {
+							public static readonly INSTANCE: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility;
+							public static check(request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, shareable: boolean): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+							public static describe(reason: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason, request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec): string;
+							public static orientationName(orientation: number): string;
+							protected constructor();
+						}
+						export namespace ScreenCaptureCompatibility {
+							export class Notice {
+								public readonly message: string;
+								public readonly reason: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public readonly request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public readonly session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public constructor(reason: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason, request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec);
+								public component1(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public component2(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public component3(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public copy(reason: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason, request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Notice;
+								public equals(other: any): boolean;
+								public getMessage(): string;
+								public getReason(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public getRequest(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public getSession(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public hashCode(): number;
+								public toString(): string;
+							}
+							export class Reason extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason> {
+								public static readonly ASYNC_REQUEST: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static readonly EXCLUSIVE_SESSION: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static readonly ORIENTATION: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static readonly PRIVATE_SESSION: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static readonly SCOPE: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static readonly SHARING_DISABLED: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static readonly SIZE: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason>;
+								public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason>;
+								public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason;
+								public static values(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Reason[];
+								protected constructor();
+								public static valueOf(...args: any[]): any;
+							}
+							export class Spec {
+								public readonly async: boolean;
+								public readonly hasExplicitSize: boolean;
+								public readonly height: number;
+								public readonly orientation: number;
+								public readonly scope: string;
+								public readonly width: number;
+								public constructor(orientation: number, width: number, height: number, scope: string, isAsync: boolean);
+								public component1(): number;
+								public component2(): number;
+								public component3(): number;
+								public component4(): string;
+								public component5(): boolean;
+								public copy(orientation: number, width: number, height: number, scope: string, isAsync: boolean): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public equals(other: any): boolean;
+								public getHasExplicitSize(): boolean;
+								public getHeight(): number;
+								public getOrientation(): number;
+								public getScope(): string;
+								public getWidth(): number;
+								public hashCode(): number;
+								public isAsync(): boolean;
+								public toString(): string;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace image {
+					export namespace capture {
+						export class ScreenCaptureLease {
+							public readonly closed: boolean;
+							public readonly ownerName: string;
+							public readonly participants: number;
+							public readonly session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession;
+							public readonly shared: boolean;
+							public readonly valid: boolean;
+							public constructor(table: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable, session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession, ownerName: string, callback: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Callback);
+							public capture<T>(reader: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession.FrameReader<T>): T;
+							public close(): void;
+							public getOwnerName(): string;
+							public getParticipants(): number;
+							public getSession(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession;
+							public isClosed(): boolean;
+							public isShared(): boolean;
+							public isValid(): boolean;
+							public markClosed$app(): boolean;
+							public notifyStopped$app(replaced: boolean): void;
+							public options(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options;
+							public toString(): string;
+						}
+						export interface ScreenCaptureLease extends __javaRoots.javaRoot.io.Closeable {}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace image {
+					export namespace capture {
+						export class ScreenCaptureLeaseTable {
+							public constructor(backend: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Backend);
+							public acquire(request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Request, callback: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Callback): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Ticket;
+							public close$app(lease: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLease): void;
+							public join(request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Request, callback: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Callback): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLease;
+							public leaseCount(): number;
+							public participants(session: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession): number;
+							public pendingCount(): number;
+							public sessionCount(): number;
+						}
+						export namespace ScreenCaptureLeaseTable {
+							export class Backend {
+								public constructor(implementation: Backend);
+								public constructor();
+							}
+							export interface Backend {
+								readonly sharingEnabled: boolean;
+								isSharingEnabled(): boolean;
+								log(param0: string): void;
+								open(param0: number, param1: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, param2: any, param3: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.javaRoot.lang.Boolean>, param4: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>): __javaRoots.javaRoot.lang.Runnable;
+							}
+							export class Callback {
+								public constructor(implementation: Callback);
+								public constructor();
+							}
+							export interface Callback {
+								onDenied(): void;
+								onFailed(param0: __javaRoots.javaRoot.lang.Throwable): void;
+								onGranted(param0: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLease): void;
+								onNotice(notice: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Notice): void;
+								onSessionStopped(lease: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLease, replaced: boolean): void;
+							}
+							export abstract class Opening {
+								protected constructor();
+							}
+							export class Pending {
+								public readonly dismiss: __javaRoots.javaRoot.lang.Runnable;
+								public readonly id: number;
+								public readonly replaces: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession>;
+								public readonly shareable: boolean;
+								public readonly spec: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public readonly waiters: __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Waiter>;
+								public constructor(id: number, spec: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, shareable: boolean, replaces: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession>);
+								public getDismiss(): __javaRoots.javaRoot.lang.Runnable;
+								public getId(): number;
+								public getReplaces(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession>;
+								public getShareable(): boolean;
+								public getSpec(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public getWaiters(): __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Waiter>;
+								public setDismiss(_set___: __javaRoots.javaRoot.lang.Runnable): void;
+							}
+							export class Request {
+								public readonly context: any;
+								public readonly ownerName: string;
+								public readonly spec: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+								public constructor(spec: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, ownerName: string, context: any);
+								public getContext(): any;
+								public getOwnerName(): string;
+								public getSpec(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+							}
+							export class Ticket {
+								public constructor(this$0: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable, waiter: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Waiter, pending: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Pending);
+								public cancel(): void;
+								public cancel(dismissConsent: boolean): void;
+							}
+							export class Waiter {
+								public readonly callback: __javaRoots.javaRoot.lang.ref.WeakReference<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Callback>;
+								public readonly cancelled: boolean;
+								public readonly request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Request;
+								public constructor(request: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Request, callback: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Callback);
+								public getCallback(): __javaRoots.javaRoot.lang.ref.WeakReference<__javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Callback>;
+								public getCancelled(): boolean;
+								public getRequest(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLeaseTable.Request;
+								public setCancelled(_set___: boolean): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace image {
+					export namespace capture {
+						export class ScreenCaptureSession {
+							public static readonly THREAD_PREFIX: string;
+							public readonly capturer: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer;
+							public readonly ended: boolean;
+							public readonly id: number;
+							public readonly options: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options;
+							public readonly readyUptimeMillis: number;
+							public readonly recording: boolean;
+							public readonly recordingOwner: string;
+							public readonly shareable: boolean;
+							public readonly spec: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+							public constructor(id: number, spec: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec, isShareable: boolean, engine: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession.Engine);
+							public beginRecording(ownerName: string): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession.RecordingSlot;
+							public capture<T>(reader: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession.FrameReader<T>): T;
+							public getCapturer(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer;
+							public getId(): number;
+							public getOptions(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options;
+							public getReadyUptimeMillis(): number;
+							public getRecordingOwner(): string;
+							public getSpec(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureCompatibility.Spec;
+							public isEnded(): boolean;
+							public isRecording(): boolean;
+							public isShareable(): boolean;
+							public markEnded$app(): boolean;
+							public recordingFrame(): __javaRoots.androidRoot.graphics.Bitmap;
+							public release$app(): void;
+							public setOnStoppedListener$app(listener: __javaRoots.javaRoot.lang.Runnable): void;
+							public toString(): string;
+						}
+						export namespace ScreenCaptureSession {
+							export class Engine {
+								public constructor(implementation: Engine);
+								public constructor();
+							}
+							export interface Engine {
+								readonly capturer: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer;
+								readonly frameLock: any;
+								readonly readyUptimeMillis: number;
+								readonly stopped: boolean;
+								getCapturer(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer;
+								getFrameLock(): any;
+								getReadyUptimeMillis(): number;
+								isStopped(): boolean;
+								release(): void;
+								setOnStoppedListener(param0: __javaRoots.javaRoot.lang.Runnable): void;
+							}
+							export class FrameReader<T> {
+								public constructor(implementation: FrameReader<T>);
+								public constructor();
+							}
+							export interface FrameReader<T> {
+								read(param0: __javaRoots.androidRoot.media.Image): T;
+							}
+							export class RecordingSlot {
+								public readonly frames: any;
+								public readonly ownerName: string;
+								public constructor(this$0: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureSession, ownerName: string);
+								public close(): void;
+								public getFrames(): any;
+								public getOwnerName(): string;
+								public setFrames(_set___: any): void;
+							}
+							export interface RecordingSlot extends __javaRoots.javaRoot.io.Closeable {}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace core {
+				export namespace image {
+					export namespace capture {
 						export class ScreenCapturer {
 							public static readonly ORIENTATION_AUTO: number;
 							public static readonly ORIENTATION_LANDSCAPE: number;
@@ -4862,13 +5567,16 @@ declare namespace org {
 							public readonly audioProjection: __javaRoots.androidRoot.media.projection.MediaProjection;
 							public readonly captureDimensions: __javaRoots.androidRoot.graphics.Point;
 							public readonly options: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options;
+							public readonly recording: boolean;
 							public readonly released: boolean;
 							public constructor(context: __javaRoots.androidRoot.content.Context, data: __javaRoots.androidRoot.content.Intent, options: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options, handler: __javaRoots.androidRoot.os.Handler);
+							public constructor(context: __javaRoots.androidRoot.content.Context, data: __javaRoots.androidRoot.content.Intent, options: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options, handler: __javaRoots.androidRoot.os.Handler, callbackLooper: __javaRoots.androidRoot.os.Looper, frameLock: any);
 							public capture(): __javaRoots.androidRoot.media.Image;
 							public detachRecordingSurface(): void;
 							public getAudioProjection(): __javaRoots.androidRoot.media.projection.MediaProjection;
 							public getCaptureDimensions(): __javaRoots.androidRoot.graphics.Point;
 							public getOptions(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options;
+							public isRecording(): boolean;
 							public isReleased(): boolean;
 							public onConfigurationChanged(configuration: __javaRoots.androidRoot.content.res.Configuration): void;
 							public release(): void;
@@ -4890,13 +5598,17 @@ declare namespace org {
 							}
 							export class Options extends __javaRoots.javaRoot.lang.Record {
 								public readonly async: boolean;
+								public readonly shared: boolean;
 								public constructor(width: number, height: number, orientation: number, density: number, isAsync: boolean);
+								public constructor(width: number, height: number, orientation: number, density: number, isAsync: boolean, isShared: boolean, participants: number);
 								public density(): number;
 								public equals(o: any): boolean;
 								public hashCode(): number;
 								public height(): number;
 								public isAsync(): boolean;
+								public isShared(): boolean;
 								public orientation(): number;
+								public participants(): number;
 								public toString(): string;
 								public width(): number;
 							}
@@ -5873,7 +6585,7 @@ declare namespace org {
 			export namespace core {
 				export namespace looper {
 					export class SettlementLatch {
-						public constructor(queue: __javaRoots.orgRoot.autojs.autojs.core.looper.SettlementLatch.CallbackQueue, mayBlock: boolean);
+						public constructor(queue: __javaRoots.orgRoot.autojs.autojs.core.looper.SettlementLatch.CallbackQueue, mayBlock: boolean, microtasks: __javaRoots.javaRoot.lang.Runnable);
 						public await(): any;
 						public settle(value: any): void;
 					}
@@ -6247,10 +6959,11 @@ declare namespace org {
 							public detect(context: __javaRoots.androidRoot.content.Context, target: __javaRoots.orgRoot.autojs.autojs.core.plugin.ocr.OcrPluginHost.Discovered, bitmap: __javaRoots.androidRoot.graphics.Bitmap, options: __javaRoots.orgRoot.autojs.plugin.paddle.ocr.api.OcrOptions, callTimeoutMs: number, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
 							public discover(context: __javaRoots.androidRoot.content.Context, packageName: string, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
 							public getAUTOMATIC_ENGINE_ORDER(): __javaRoots.javaRoot.util.List<string>;
+							public isRightToLeft(context: __javaRoots.androidRoot.content.Context, target: __javaRoots.orgRoot.autojs.autojs.core.plugin.ocr.OcrPluginHost.Discovered): boolean;
 							public probe(context: __javaRoots.androidRoot.content.Context, packageName: string, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
 							public recognizeText(context: __javaRoots.androidRoot.content.Context, target: __javaRoots.orgRoot.autojs.autojs.core.plugin.ocr.OcrPluginHost.Discovered, bitmap: __javaRoots.androidRoot.graphics.Bitmap, options: __javaRoots.orgRoot.autojs.plugin.paddle.ocr.api.OcrOptions, callTimeoutMs: number, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
-							public select(context: __javaRoots.androidRoot.content.Context, engineId: string, engine: string, variant: string, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
-							public selectOrThrow(context: __javaRoots.androidRoot.content.Context, engineId: string, engine: string, variant: string, moduleLabel: string, automatic: boolean, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
+							public select(context: __javaRoots.androidRoot.content.Context, engineId: string, engine: string, variant: string, profile: string, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
+							public selectOrThrow(context: __javaRoots.androidRoot.content.Context, engineId: string, engine: string, variant: string, profile: string, moduleLabel: string, automatic: boolean, $completion: __javaRoots.kotlinRoot.coroutines.Continuation<any>): any;
 							protected constructor();
 						}
 						export namespace OcrPluginHost {
@@ -6285,6 +6998,8 @@ declare namespace org {
 					export class DeploymentKind extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind> {
 						public static readonly CREATE_DIRECTORY: __javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind;
 						public static readonly DOWNLOAD_EDITOR_FONT: __javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind;
+						public static readonly ENABLE_PLUGIN: __javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind;
+						public static readonly INSTALL_PLUGIN: __javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind;
 						public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind>;
 						public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind>;
 						public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.core.pref.DeploymentKind;
@@ -10193,14 +10908,21 @@ declare namespace org {
 				export class AutoJsContext extends __javaRoots.orgRoot.mozilla.javascript.Context {
 					public readonly continuations: __javaRoots.javaRoot.util.HashSet<any>;
 					public readonly rhinoJavaScriptEngine: __javaRoots.orgRoot.autojs.autojs.engine.RhinoJavaScriptEngine;
+					public readonly thread: __javaRoots.javaRoot.lang.Thread;
 					public constructor(factory: __javaRoots.orgRoot.mozilla.javascript.ContextFactory);
 					public bind(engine: __javaRoots.orgRoot.autojs.autojs.engine.RhinoJavaScriptEngine, apply: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>): void;
 					public captureContinuation(): __javaRoots.orgRoot.mozilla.javascript.ContinuationPending;
+					public forwardTask(home: __javaRoots.orgRoot.mozilla.javascript.Context, owner: __javaRoots.orgRoot.mozilla.javascript.Scriptable, task: __javaRoots.javaRoot.lang.Runnable): boolean;
 					public getContinuations(): __javaRoots.javaRoot.util.HashSet<any>;
 					public getRhinoJavaScriptEngine(): __javaRoots.orgRoot.autojs.autojs.engine.RhinoJavaScriptEngine;
+					public getThread(): __javaRoots.javaRoot.lang.Thread;
 					public hasPendingContinuation(): boolean;
+					public microtaskCheckpoint(loop: __javaRoots.orgRoot.autojs.autojs.rhino.ScriptEventLoop): void;
 					public release(engine: __javaRoots.orgRoot.autojs.autojs.engine.RhinoJavaScriptEngine): void;
 					public resumeContinuation(continuation: any, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, functionResult: any): any;
+					public resumeContinuationWithError(continuation: any, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, error: any): any;
+					public runMicrotasks(): void;
+					public runTask(loop: __javaRoots.orgRoot.autojs.autojs.rhino.ScriptEventLoop, task: __javaRoots.javaRoot.lang.Runnable): void;
 					public setRhinoJavaScriptEngine(_set___: __javaRoots.orgRoot.autojs.autojs.engine.RhinoJavaScriptEngine): void;
 					public resumeContinuation(...args: any[]): any;
 				}
@@ -10302,8 +11024,28 @@ declare namespace org {
 	export namespace autojs {
 		export namespace autojs {
 			export namespace rhino {
-				export class TopLevelScope extends __javaRoots.orgRoot.mozilla.javascript.ImporterTopLevel {
+				export class ScriptEventLoop {
+					public constructor(implementation: ScriptEventLoop);
 					public constructor();
+				}
+				export interface ScriptEventLoop {
+					hasTimer(param0: __javaRoots.javaRoot.lang.Thread): boolean;
+					post(param0: __javaRoots.javaRoot.lang.Thread, param1: __javaRoots.javaRoot.lang.Runnable): void;
+					reportUnhandledRejection(param0: string): void;
+				}
+			}
+		}
+	}
+}
+declare namespace org {
+	export namespace autojs {
+		export namespace autojs {
+			export namespace rhino {
+				export class TopLevelScope extends __javaRoots.orgRoot.mozilla.javascript.ImporterTopLevel {
+					public readonly eventLoop: __javaRoots.orgRoot.autojs.autojs.rhino.ScriptEventLoop;
+					public constructor();
+					public getEventLoop(): __javaRoots.orgRoot.autojs.autojs.rhino.ScriptEventLoop;
+					public setEventLoop(eventLoop: __javaRoots.orgRoot.autojs.autojs.rhino.ScriptEventLoop): void;
 				}
 			}
 		}
@@ -10318,7 +11060,8 @@ declare namespace org {
 						public readonly context: __javaRoots.orgRoot.autojs.autojs.rhino.AutoJsContext;
 						public readonly pending: __javaRoots.orgRoot.mozilla.javascript.ContinuationPending;
 						public readonly scope: __javaRoots.orgRoot.mozilla.javascript.VarScope;
-						public constructor(context: __javaRoots.orgRoot.autojs.autojs.rhino.AutoJsContext, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, mTimer: __javaRoots.orgRoot.autojs.autojs.core.looper.Timer);
+						public constructor(context: __javaRoots.orgRoot.autojs.autojs.rhino.AutoJsContext, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, post: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>);
+						public constructor(context: __javaRoots.orgRoot.autojs.autojs.rhino.AutoJsContext, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, timer: __javaRoots.orgRoot.autojs.autojs.core.looper.Timer);
 						public getContext(): __javaRoots.orgRoot.autojs.autojs.rhino.AutoJsContext;
 						public getPending(): __javaRoots.orgRoot.mozilla.javascript.ContinuationPending;
 						public getScope(): __javaRoots.orgRoot.mozilla.javascript.VarScope;
@@ -10332,7 +11075,6 @@ declare namespace org {
 							public constructor(result: any, error: any);
 							public static failure(error: any): __javaRoots.orgRoot.autojs.autojs.rhino.continuation.Continuation.Result;
 							public static getOrThrow(o: any): any;
-							public static handle(o: any): any;
 							public static success(result: any): __javaRoots.orgRoot.autojs.autojs.rhino.continuation.Continuation.Result;
 						}
 					}
@@ -10387,6 +11129,7 @@ declare namespace org {
 					public callListener(func: __javaRoots.orgRoot.mozilla.javascript.Callable, target: any, args: any[]): any;
 					public getEngine(): __javaRoots.orgRoot.autojs.autojs.engine.RhinoJavaScriptEngine;
 					public isJavaPrimitiveWrap(): boolean;
+					public parseJson(text: string): any;
 					public setJavaPrimitiveWrap(b: boolean): void;
 					public setup(engine: __javaRoots.orgRoot.autojs.autojs.engine.RhinoJavaScriptEngine): void;
 					public toArray(o: __javaRoots.javaRoot.lang.Iterable<any>): __javaRoots.orgRoot.mozilla.javascript.NativeArray;
@@ -10406,7 +11149,6 @@ declare namespace org {
 				export class ScriptRuntime {
 					public readonly accessibilityBridge: __javaRoots.orgRoot.autojs.autojs.core.accessibility.AccessibilityBridge;
 					public readonly app: __javaRoots.orgRoot.autojs.autojs.runtime.api.AppUtils;
-					public augmentedApp: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
 					public readonly automator: __javaRoots.orgRoot.autojs.autojs.core.accessibility.SimpleActionAutomator;
 					public readonly barcode: __javaRoots.orgRoot.autojs.autojs.runtime.api.Barcode;
 					public readonly bridges: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptBridges;
@@ -10439,7 +11181,6 @@ declare namespace org {
 					public readonly toaster: __javaRoots.orgRoot.autojs.autojs.runtime.api.Toaster;
 					public readonly ui: __javaRoots.orgRoot.autojs.autojs.runtime.api.UI;
 					public readonly util: __javaRoots.orgRoot.autojs.autojs.runtime.api.Util;
-					public readonly augmentedApp$app: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
 					public readonly augmentedAutojs$app: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
 					public readonly augmentedOcrMLKit$app: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
 					public readonly augmentedOcrPaddle$app: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
@@ -10449,6 +11190,7 @@ declare namespace org {
 					public readonly consoleTimeTable$app: __javaRoots.orgRoot.autojs.autojs.runtime.ConsoleTimeTable;
 					public readonly coroutineContext: __javaRoots.kotlinRoot.coroutines.CoroutineContext;
 					public readonly coroutineScope: __javaRoots.kotlinxRoot.coroutines.CoroutineScope;
+					public readonly eventLoop$app: __javaRoots.orgRoot.autojs.autojs.rhino.ScriptEventLoop;
 					public readonly exiting: boolean;
 					public readonly info: __javaRoots.orgRoot.autojs.autojs.core.activity.ActivityInfoProvider;
 					public readonly javaPrimitiveWrap: boolean;
@@ -10471,14 +11213,14 @@ declare namespace org {
 					public static readonly applicationContext: __javaRoots.androidRoot.content.Context;
 					public beforeSetUiContent(view: __javaRoots.androidRoot.view.View): void;
 					public cancelScriptJobs(): void;
-					public composeForTsx$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.Compose;
+					public composeForTsx$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.Compose;
 					public createContinuation(): __javaRoots.orgRoot.autojs.autojs.rhino.continuation.Continuation;
 					public createContinuation(scope: __javaRoots.orgRoot.mozilla.javascript.Scriptable): __javaRoots.orgRoot.autojs.autojs.rhino.continuation.Continuation;
 					public exit(): void;
 					public exit(e: __javaRoots.javaRoot.lang.Throwable): void;
+					public extendJsBuiltIn$app(name: string): boolean;
 					public extendJsBuiltIns(): void;
 					public static getApplicationContext(): __javaRoots.androidRoot.content.Context;
-					public getAugmentedApp$app(): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
 					public getAugmentedAutojs$app(): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
 					public getAugmentedOcrMLKit$app(): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
 					public getAugmentedOcrPaddle$app(): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
@@ -10488,6 +11230,7 @@ declare namespace org {
 					public getConsoleTimeTable$app(): __javaRoots.orgRoot.autojs.autojs.runtime.ConsoleTimeTable;
 					public getCoroutineContext(): __javaRoots.kotlinRoot.coroutines.CoroutineContext;
 					public getCoroutineScope(): __javaRoots.kotlinxRoot.coroutines.CoroutineScope;
+					public getEventLoop$app(): __javaRoots.orgRoot.autojs.autojs.rhino.ScriptEventLoop;
 					public getEvents(): __javaRoots.orgRoot.autojs.autojs.runtime.api.Events;
 					public getInfo(): __javaRoots.orgRoot.autojs.autojs.core.activity.ActivityInfoProvider;
 					public getJs_Module$app(): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
@@ -10535,6 +11278,7 @@ declare namespace org {
 					public loadJarWithR8(program: string, keepRules: string[], orderedClasspath: string[], consumerRules: string[], consumerRuleClasspathOrdinals: number[], exportDirectory: string): void;
 					public onExit(): void;
 					public static popException(message: string): void;
+					public static popException(message: string, guidance: string): void;
 					public putProperty(key: string, value: any): any;
 					public removeProperty(key: string): any;
 					public requestPermissions(permissions: string[]): void;
@@ -10542,7 +11286,6 @@ declare namespace org {
 					public retraceR8Stack(obfuscatedStackTrace: string, mapping: string, retraceMetadata: string): string;
 					public selector(): __javaRoots.orgRoot.autojs.autojs.core.accessibility.UiSelector;
 					public static setApplicationContext(context: __javaRoots.androidRoot.content.Context): void;
-					public setAugmentedApp$app(_set___: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject): void;
 					public setClip(text: string): void;
 					public setEvents(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.Events): void;
 					public setExiting(_set___: boolean): void;
@@ -11379,6 +12122,7 @@ declare namespace org {
 				export namespace api {
 					export class Images {
 						public readonly colorFinder: __javaRoots.orgRoot.autojs.autojs.core.image.RhinoColorFinder;
+						public readonly screenCaptureLease: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLease;
 						public readonly screenCaptureOptions: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options;
 						public readonly screenCapturer: __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer;
 						public constructor(context: __javaRoots.androidRoot.content.Context, scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime);
@@ -11404,6 +12148,7 @@ declare namespace org {
 						public fromBase64(data: string): __javaRoots.orgRoot.autojs.autojs.core.image.ImageWrapper;
 						public fromBytes(bytes: number[]): __javaRoots.orgRoot.autojs.autojs.core.image.ImageWrapper;
 						public getMeanColor(image: __javaRoots.orgRoot.autojs.autojs.core.image.ImageWrapper, rect: __javaRoots.orgRoot.opencv.core.Rect): number;
+						public getScreenCaptureLease(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCaptureLease;
 						public getScreenCaptureOptions(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer.Options;
 						public getScreenCapturer(): __javaRoots.orgRoot.autojs.autojs.core.image.capture.ScreenCapturer;
 						public hasActiveScreenCapturer(): boolean;
@@ -14139,7 +14884,7 @@ declare namespace org {
 			export namespace runtime {
 				export namespace api {
 					export class Ocr {
-						public mode: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode;
+						public mode: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode;
 						public constructor();
 					}
 				}
@@ -14170,9 +14915,11 @@ declare namespace org {
 					export class OcrResult {
 						public readonly bounds: __javaRoots.androidRoot.graphics.Rect;
 						public readonly confidence: number;
+						public readonly extras: __javaRoots.orgRoot.mozilla.javascript.NativeObject;
 						public readonly label: string;
 						public readonly text: string;
 						public constructor(text: string, confidence: number, bounds: __javaRoots.androidRoot.graphics.Rect);
+						public constructor(text: string, confidence: number, bounds: __javaRoots.androidRoot.graphics.Rect, extras: __javaRoots.orgRoot.mozilla.javascript.NativeObject);
 						public compareTo(other: __javaRoots.orgRoot.autojs.autojs.runtime.api.OcrResult): number;
 						public toString(): string;
 						public compareTo(...args: any[]): any;
@@ -14475,6 +15222,7 @@ declare namespace org {
 						public static readonly deviceScreenDensity: number;
 						public static readonly deviceScreenHeight: number;
 						public static readonly deviceScreenWidth: number;
+						public static readonly displayLandscape: boolean;
 						public static readonly orientation: number;
 						public static readonly rotation: number;
 						public static readonly screenLandscape: boolean;
@@ -14490,6 +15238,7 @@ declare namespace org {
 						public static getRotation(): number;
 						public static init(activity: __javaRoots.androidRoot.app.Activity): void;
 						public static initIfNeeded(activity: __javaRoots.androidRoot.app.Activity): void;
+						public static isDisplayLandscape(): boolean;
 						public static isScreenLandscape(): boolean;
 						public static isScreenPortrait(): boolean;
 						public rescaleX(x: number): number;
@@ -14725,6 +15474,7 @@ declare namespace org {
 						public setInterval(callback: __javaRoots.orgRoot.mozilla.javascript.Callable, interval: number, ...args: any[]): number;
 						public setTimeout(callback: __javaRoots.orgRoot.mozilla.javascript.Callable): number;
 						public setTimeout(callback: __javaRoots.orgRoot.mozilla.javascript.Callable, delay: number, ...args: any[]): number;
+						public timerOfThread(thread: __javaRoots.javaRoot.lang.Thread): __javaRoots.orgRoot.autojs.autojs.core.looper.Timer;
 					}
 				}
 			}
@@ -14907,161 +15657,46 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
-						export abstract class Augmentable extends __javaRoots.orgRoot.autojs.autojs.rhino.ArgumentGuards {
-							public static readonly AS_FUNCTIONAL_TO_STRING: number;
-							public static readonly AS_GLOBAL: number;
-							public static readonly AS_IGNORED: number;
-							public static readonly AS_LITERAL_TO_STRING: number;
-							public readonly globalAssignmentFunctions: __javaRoots.javaRoot.util.List<any>;
-							public readonly globalAssignmentGetters: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<string, any>>;
-							public readonly globalAssignmentJavaClasses: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<string, __javaRoots.kotlinRoot.reflect.KClass<any>>>;
-							public readonly globalAssignmentProperties: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-							public readonly key: string;
-							public readonly keys: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.AugmentableKey>;
-							public readonly scriptErrorPassThroughFunctions: __javaRoots.javaRoot.util.Set<string>;
-							public readonly scriptErrorPassThroughInvoke: boolean;
-							public readonly selfAssignmentFunctions: __javaRoots.javaRoot.util.List<any>;
-							public readonly selfAssignmentGetters: __javaRoots.javaRoot.util.List<any>;
-							public readonly selfAssignmentGettersAndSetters: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Triple<string, any, any>>;
-							public readonly selfAssignmentJavaClasses: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<string, __javaRoots.kotlinRoot.reflect.KClass<any>>>;
-							public readonly selfAssignmentProperties: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-							public constructor();
-							public constructor(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime);
-							public assign(target: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject, proto: any, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime): void;
-							public assignWithRuntime(target: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, proto: any): void;
-							public augment(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, additionalAttributes: number, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							public augment(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, proto: any, additionalAttributes: number, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							/** @deprecated */
-							public augment(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, proto: any, withDollarPrefix: boolean, additionalAttributes: number, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							/** @deprecated */
-							public augment(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, withDollarPrefix: boolean, additionalAttributes: number, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							public augmentFunctionsBy$app(destination: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject, functions: __javaRoots.javaRoot.util.Collection<__javaRoots.kotlinRoot.Pair<__javaRoots.kotlinRoot.Pair<string, string>, __javaRoots.javaRoot.lang.Integer>>): void;
-							public augmentWithRuntime(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, additionalAttributes: number): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							public augmentWithRuntime(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, proto: any, additionalAttributes: number): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							/** @deprecated */
-							public augmentWithRuntime(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, proto: any, withDollarPrefix: boolean, additionalAttributes: number): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							/** @deprecated */
-							public augmentWithRuntime(target: __javaRoots.orgRoot.mozilla.javascript.Scriptable, specifiedRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, withDollarPrefix: boolean, additionalAttributes: number): __javaRoots.orgRoot.mozilla.javascript.ScriptableObject;
-							public getGlobalAssignmentFunctions(): __javaRoots.javaRoot.util.List<any>;
-							public getGlobalAssignmentGetters(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<string, any>>;
-							public getGlobalAssignmentJavaClasses(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<string, __javaRoots.kotlinRoot.reflect.KClass<any>>>;
-							public getGlobalAssignmentProperties(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-							public getKey(): string;
-							public getKeys(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.AugmentableKey>;
-							public getScriptErrorPassThroughFunctions(): __javaRoots.javaRoot.util.Set<string>;
-							public getScriptErrorPassThroughInvoke(): boolean;
-							public getSelfAssignmentFunctions(): __javaRoots.javaRoot.util.List<any>;
-							public getSelfAssignmentGetters(): __javaRoots.javaRoot.util.List<any>;
-							public getSelfAssignmentGettersAndSetters(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Triple<string, any, any>>;
-							public getSelfAssignmentJavaClasses(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<string, __javaRoots.kotlinRoot.reflect.KClass<any>>>;
-							public getSelfAssignmentProperties(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-							public put(o: __javaRoots.orgRoot.mozilla.javascript.Scriptable, name: string, value: any): void;
-							public put(o: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject, items: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<string, any>>): void;
-							public put(o: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject, item: __javaRoots.kotlinRoot.Pair<string, any>): void;
-							public putIfAbsent(o: __javaRoots.orgRoot.mozilla.javascript.ScriptableObject, item: __javaRoots.kotlinRoot.Pair<string, any>): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-declare namespace org {
-	export namespace autojs {
-		export namespace autojs {
-			export namespace runtime {
-				export namespace api {
-					export namespace augment {
-						export class AugmentableKey {
-							public readonly name: string;
-							public readonly withDollarPrefix: boolean;
-							public constructor(name: string, withDollarPrefix: boolean);
-							public component1(): string;
-							public component2(): boolean;
-							public copy(name: string, withDollarPrefix: boolean): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.AugmentableKey;
-							public equals(other: any): boolean;
-							public getName(): string;
-							public getWithDollarPrefix(): boolean;
-							public hashCode(): number;
-							public toString(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-declare namespace org {
-	export namespace autojs {
-		export namespace autojs {
-			export namespace runtime {
-				export namespace api {
-					export namespace augment {
-						export class Invokable {
-							public constructor(implementation: Invokable);
-							public constructor();
-						}
-						export interface Invokable {
-							invoke(...args: any[]): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-declare namespace org {
-	export namespace autojs {
-		export namespace autojs {
-			export namespace runtime {
-				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
-							export class Compose extends __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.Augmentable {
-								public readonly globalAssignmentProperties: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-								public readonly graph$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeGraph;
-								public readonly keys: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.AugmentableKey>;
-								public readonly memoFrame$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Frame;
-								public readonly platform$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform;
-								public readonly reactive$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime;
+							export class Compose extends __javaRoots.orgRoot.autojs.autojs.rhino.ArgumentGuards {
+								public readonly graph$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeGraph;
+								public readonly memoFrame$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Frame;
+								public readonly platform$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform;
+								public readonly reactive$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime;
 								public readonly scope$app: __javaRoots.orgRoot.autojs.autojs.rhino.TopLevelScope;
-								public readonly scriptErrorPassThroughInvoke: boolean;
-								public readonly selfAssignmentGetters: __javaRoots.javaRoot.util.List<any>;
-								public readonly selfAssignmentProperties: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-								public readonly values$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues;
+								public readonly scriptProperties: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
+								public readonly values$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues;
 								public constructor(runtime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime);
-								public constructor(runtime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, platform: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform, values: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues);
+								public constructor(runtime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, platform: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform, values: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues);
 								public batch$app(_function_: __javaRoots.orgRoot.mozilla.javascript.Function): any;
 								public beforeSetContentView(view: any): void;
 								public call$app(_function_: __javaRoots.orgRoot.mozilla.javascript.Function, receiver: __javaRoots.orgRoot.mozilla.javascript.Scriptable, args: any[]): any;
 								public checkThread$app(): void;
 								public close(): void;
 								public createTsx$app(_type_: any, props: any, children: __javaRoots.javaRoot.util.List<any>): any;
-								public ended$app(session: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptSession): void;
-								public getGlobalAssignmentProperties(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-								public getGraph$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeGraph;
-								public getKeys(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.AugmentableKey>;
-								public getMemoFrame$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Frame;
-								public getPlatform$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform;
-								public getReactive$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime;
+								public ended$app(session: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptSession): void;
+								public getGraph$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeGraph;
+								public getMemoFrame$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Frame;
+								public getPlatform$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform;
+								public getReactive$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime;
 								public getScope$app(): __javaRoots.orgRoot.autojs.autojs.rhino.TopLevelScope;
-								public getScriptErrorPassThroughInvoke(): boolean;
-								public getSelfAssignmentGetters(): __javaRoots.javaRoot.util.List<any>;
-								public getSelfAssignmentProperties(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
-								public getValues$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues;
+								public getScriptProperties(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Pair<any, any>>;
+								public getValues$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues;
 								public guardError$app<T>(action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): T;
 								public guarded$app<T>(action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): T;
 								public invoke(...args: any[]): any;
 								public isTsxType$app(_type_: any): boolean;
-								public post$app(args: any[], session: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptSession): void;
+								public post$app(args: any[], session: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptSession): void;
 								public renderFailure$app(failure: __javaRoots.javaRoot.lang.Throwable): __javaRoots.javaRoot.lang.Throwable;
 								public reportRenderFailure$app(failure: __javaRoots.javaRoot.lang.Throwable): void;
-								public setMemoFrame$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Frame): void;
+								public sessionsValue$app(): any;
+								public setMemoFrame$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Frame): void;
 								public usable$app(): void;
-								public validateNativeViews$app(session: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptSession, views: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.interop.AndroidViewBindingV1>): void;
+								public validateNativeViews$app(session: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptSession, views: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.interop.AndroidViewBindingV1>): void;
+								public versionValue$app(): any;
 							}
-							export interface Compose extends __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.Invokable, __javaRoots.javaRoot.io.Closeable {}
+							export interface Compose extends __javaRoots.javaRoot.io.Closeable {}
 						}
 					}
 				}
@@ -15074,7 +15709,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeDialogOptions {
 								public readonly cancelable: boolean;
@@ -15083,7 +15718,7 @@ declare namespace org {
 								public constructor(_type_: string, cancelable: boolean);
 								public component1(): string;
 								public component2(): boolean;
-								public copy(_type_: string, cancelable: boolean): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeDialogOptions;
+								public copy(_type_: string, cancelable: boolean): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeDialogOptions;
 								public equals(other: any): boolean;
 								public getCancelable(): boolean;
 								public getType(): string;
@@ -15102,7 +15737,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeFloatyControl {
 								public constructor(implementation: ComposeFloatyControl);
@@ -15136,7 +15771,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeFloatyOptions {
 								public readonly focusable: boolean;
@@ -15155,7 +15790,7 @@ declare namespace org {
 								public component5(): __javaRoots.javaRoot.lang.Integer;
 								public component6(): boolean;
 								public component7(): boolean;
-								public copy(raw: boolean, x: __javaRoots.javaRoot.lang.Integer, y: __javaRoots.javaRoot.lang.Integer, width: __javaRoots.javaRoot.lang.Integer, height: __javaRoots.javaRoot.lang.Integer, touchable: boolean, focusable: boolean): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyOptions;
+								public copy(raw: boolean, x: __javaRoots.javaRoot.lang.Integer, y: __javaRoots.javaRoot.lang.Integer, width: __javaRoots.javaRoot.lang.Integer, height: __javaRoots.javaRoot.lang.Integer, touchable: boolean, focusable: boolean): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyOptions;
 								public equals(other: any): boolean;
 								public getFocusable(): boolean;
 								public getHeight(): __javaRoots.javaRoot.lang.Integer;
@@ -15179,13 +15814,13 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeFloatyWindow extends __javaRoots.orgRoot.mozilla.javascript.NativeObject {
 								public readonly className: string;
 								public readonly entries: __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 								public readonly keys: __javaRoots.javaRoot.util.Set<any>;
-								public constructor(owner: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.Compose, session: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptSession, control: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyControl, raw: boolean);
+								public constructor(owner: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.Compose, session: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptSession, control: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyControl, raw: boolean);
 								public entrySet(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 								public getClassName(): string;
 								public getEntries(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
@@ -15211,66 +15846,66 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeMemoCache {
 								public static readonly MAX_DEPENDENCIES: number;
 								public constructor();
-								public begin(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Frame;
+								public begin(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Frame;
 								public clear(): void;
-								public commit(frame: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Frame, resolved: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>): void;
+								public commit(frame: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Frame, resolved: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>): void;
 							}
 							export namespace ComposeMemoCache {
 								export class Entry {
-									public readonly children: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
+									public readonly children: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
 									public readonly dependencies: __javaRoots.javaRoot.util.List<any>;
 									public readonly identity: any;
-									public readonly node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-									public readonly reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>;
-									public constructor(identity: any, dependencies: __javaRoots.javaRoot.util.List<any>, reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>, node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, children: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope);
-									public getChildren(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
+									public readonly node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+									public readonly reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>;
+									public constructor(identity: any, dependencies: __javaRoots.javaRoot.util.List<any>, reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>, node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, children: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope);
+									public getChildren(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
 									public getDependencies(): __javaRoots.javaRoot.util.List<any>;
 									public getIdentity(): any;
-									public getNode(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-									public getReads(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>;
-									public setNode(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): void;
+									public getNode(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+									public getReads(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>;
+									public setNode(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): void;
 								}
 								export class Frame {
 									public readonly calls: number;
-									public readonly created: __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Entry>;
-									public readonly current: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Frame.Level;
-									public readonly next: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
-									public readonly previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-									public readonly used: __javaRoots.javaRoot.util.Set<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
-									public constructor(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope);
+									public readonly created: __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Entry>;
+									public readonly current: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Frame.Level;
+									public readonly next: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
+									public readonly previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+									public readonly used: __javaRoots.javaRoot.util.Set<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
+									public constructor(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope);
 									public getCalls(): number;
-									public getCreated(): __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Entry>;
-									public getCurrent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Frame.Level;
-									public getNext(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
-									public getPreviousRoot(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-									public getUsed(): __javaRoots.javaRoot.util.Set<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
-									public nested<T>(previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope, next: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope, action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): T;
+									public getCreated(): __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Entry>;
+									public getCurrent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Frame.Level;
+									public getNext(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
+									public getPreviousRoot(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+									public getUsed(): __javaRoots.javaRoot.util.Set<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
+									public nested<T>(previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope, next: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope, action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): T;
 									public setCalls(_set___: number): void;
 								}
 								export class Scope {
-									public readonly keyed: __javaRoots.javaRoot.util.HashMap<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Entry>;
-									public readonly ordered: __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Entry>;
+									public readonly keyed: __javaRoots.javaRoot.util.HashMap<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Entry>;
+									public readonly ordered: __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Entry>;
 									public constructor();
-									public add(key: string, entry: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Entry): void;
-									public getKeyed(): __javaRoots.javaRoot.util.HashMap<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Entry>;
-									public getOrdered(): __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Entry>;
+									public add(key: string, entry: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Entry): void;
+									public getKeyed(): __javaRoots.javaRoot.util.HashMap<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Entry>;
+									public getOrdered(): __javaRoots.javaRoot.util.ArrayList<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Entry>;
 								}
 								export namespace Frame {
 									export class Level {
 										public readonly keys: __javaRoots.javaRoot.util.HashSet<string>;
-										public readonly next: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
+										public readonly next: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
 										public readonly ordinal: number;
-										public readonly previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
-										public constructor(previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope, next: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope);
+										public readonly previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
+										public constructor(previous: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope, next: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope);
 										public getKeys(): __javaRoots.javaRoot.util.HashSet<string>;
-										public getNext(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
+										public getNext(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
 										public getOrdinal(): number;
-										public getPrevious(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeMemoCache.Scope;
+										public getPrevious(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeMemoCache.Scope;
 										public setOrdinal(_set___: number): void;
 									}
 								}
@@ -15287,15 +15922,15 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeModifier extends __javaRoots.orgRoot.mozilla.javascript.NativeObject {
 								public readonly className: string;
 								public readonly entries: __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 								public readonly keys: __javaRoots.javaRoot.util.Set<any>;
-								public constructor(values: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues, scope: __javaRoots.orgRoot.mozilla.javascript.Scriptable);
-								public constructor(values: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope);
-								public append(name: string, arguments: any[]): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeModifier;
+								public constructor(values: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues, scope: __javaRoots.orgRoot.mozilla.javascript.Scriptable);
+								public constructor(values: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope);
+								public append(name: string, arguments: any[]): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeModifier;
 								public entrySet(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 								public getClassName(): string;
 								public getEntries(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
@@ -15322,7 +15957,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNativeViewLease {
 								public readonly id: number;
@@ -15330,7 +15965,7 @@ declare namespace org {
 								public constructor(id: number, view: __javaRoots.androidRoot.view.View);
 								public component1(): number;
 								public component2(): __javaRoots.androidRoot.view.View;
-								public copy(id: number, view: __javaRoots.androidRoot.view.View): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNativeViewLease;
+								public copy(id: number, view: __javaRoots.androidRoot.view.View): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNativeViewLease;
 								public equals(other: any): boolean;
 								public getId(): number;
 								public getView(): __javaRoots.androidRoot.view.View;
@@ -15349,55 +15984,55 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNode {
-								public readonly affinity$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding;
-								public readonly children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
+								public readonly affinity$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding;
+								public readonly children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
 								public readonly deferredEdit$app: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiCommand.Edit;
-								public readonly editor$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeEditor;
-								public readonly graph$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeGraph;
-								public readonly js: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeNativeObject;
+								public readonly editor$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeEditor;
+								public readonly graph$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeGraph;
+								public readonly js: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeNativeObject;
 								public readonly key: string;
 								public readonly mountedOnce$app: boolean;
 								public readonly nodeId: number;
-								public readonly parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public readonly parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public readonly stableId$app: number;
-								public readonly state$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeState;
+								public readonly state$app: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeState;
 								public readonly type: string;
-								public constructor(graph: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeGraph, _type_: string, key: string, stableId: number);
-								public append(child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public blur(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public clear(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public edit(edit: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public focus(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public constructor(graph: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeGraph, _type_: string, key: string, stableId: number);
+								public append(child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public blur(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public clear(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public edit(edit: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public focus(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public get(name: string): any;
-								public getAffinity$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding;
-								public getChildren(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
+								public getAffinity$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding;
+								public getChildren(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
 								public getDeferredEdit$app(): __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiCommand.Edit;
-								public getEditor$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeEditor;
-								public getGraph$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeGraph;
-								public getJs(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeNativeObject;
+								public getEditor$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeEditor;
+								public getGraph$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeGraph;
+								public getJs(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeNativeObject;
 								public getKey(): string;
 								public getMountedOnce$app(): boolean;
 								public getNodeId(): number;
-								public getParent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public getParent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public getStableId$app(): number;
-								public getState$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeState;
+								public getState$app(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeState;
 								public getType(): string;
-								public insert(index: number, child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public off(name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public on(name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public remove(child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public replace(children: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public scrollTo(target: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public set(properties: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public setAffinity$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding): void;
+								public insert(index: number, child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public off(name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public on(name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public remove(child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public replace(children: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public scrollTo(target: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public set(properties: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public setAffinity$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding): void;
 								public setDeferredEdit$app(_set___: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiCommand.Edit): void;
-								public setEditor$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeEditor): void;
+								public setEditor$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeEditor): void;
 								public setMountedOnce$app(_set___: boolean): void;
-								public setState$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeState): void;
-								public slot(name: string, child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public setState$app(_set___: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeState): void;
+								public slot(name: string, child: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public toString(): string;
 							}
 						}
@@ -15412,7 +16047,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeBinding {
 								public constructor(implementation: ComposeNodeBinding);
@@ -15422,7 +16057,7 @@ declare namespace org {
 								readonly closed: boolean;
 								execute(param0: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiCommand): void;
 								isClosed(): boolean;
-								publish(param0: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeSnapshot): void;
+								publish(param0: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeSnapshot): void;
 							}
 						}
 					}
@@ -15436,7 +16071,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeEditor {
 								public readonly end: number;
@@ -15449,7 +16084,7 @@ declare namespace org {
 								public component2(): number;
 								public component3(): number;
 								public component4(): number;
-								public copy(text: string, start: number, end: number, sequence: number): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeEditor;
+								public copy(text: string, start: number, end: number, sequence: number): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeEditor;
 								public equals(other: any): boolean;
 								public getEnd(): number;
 								public getSequence(): number;
@@ -15470,45 +16105,45 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeGraph {
 								public readonly scope: __javaRoots.orgRoot.mozilla.javascript.VarScope;
 								public readonly translateError: __javaRoots.kotlinRoot.jvm.functions.Function1<__javaRoots.javaRoot.lang.Throwable, __javaRoots.javaRoot.lang.RuntimeException>;
 								public readonly tsxOwner$app: any;
-								public readonly values: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues;
-								public constructor(scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, values: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues, invokeCallback: __javaRoots.kotlinRoot.jvm.functions.Function3<any, any, any, __javaRoots.kotlinRoot.Unit>, checkThread: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>, translateError: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.lang.RuntimeException>, warn: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, prepareView: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.androidRoot.view.View>);
-								public accept(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding, snapshot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeSnapshot): void;
+								public readonly values: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues;
+								public constructor(scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, values: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues, invokeCallback: __javaRoots.kotlinRoot.jvm.functions.Function3<any, any, any, __javaRoots.kotlinRoot.Unit>, checkThread: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>, translateError: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.lang.RuntimeException>, warn: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, prepareView: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.androidRoot.view.View>);
+								public accept(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding, snapshot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeSnapshot): void;
 								public close(): void;
-								public command$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, command: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiCommand): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public create(_type_: string, props: any, children: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public edit$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public errorNodeId$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): __javaRoots.javaRoot.lang.Integer;
-								public get$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, name: string): any;
+								public command$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, command: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiCommand): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public create(_type_: string, props: any, children: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public edit$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public errorNodeId$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): __javaRoots.javaRoot.lang.Integer;
+								public get$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, name: string): any;
 								public getScope(): __javaRoots.orgRoot.mozilla.javascript.VarScope;
 								public getTranslateError(): __javaRoots.kotlinRoot.jvm.functions.Function1<__javaRoots.javaRoot.lang.Throwable, __javaRoots.javaRoot.lang.RuntimeException>;
 								public getTsxOwner$app(): any;
-								public getValues(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues;
-								public hasBinding$app(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding): boolean;
-								public insert$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, index: number, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public isMounted$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): boolean;
-								public mount(root: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding, replacing: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding): void;
-								public node(value: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public off$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public on$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public reconcile(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, draftRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public reject(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding, snapshot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeSnapshot): void;
-								public remove$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public render(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, resolved: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>, build: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public replace$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public retainedIn$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, root: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): boolean;
-								public root$app(value: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public scrollTo$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public set$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, props: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public slot$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, name: string, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public snapshot(root: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeSnapshot;
+								public getValues(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues;
+								public hasBinding$app(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding): boolean;
+								public insert$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, index: number, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public isMounted$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): boolean;
+								public mount(root: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding, replacing: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding): void;
+								public node(value: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public off$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public on$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, name: string, callback: __javaRoots.orgRoot.mozilla.javascript.Function): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public reconcile(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, draftRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public reject(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding, snapshot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeSnapshot): void;
+								public remove$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public render(previousRoot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, resolved: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>, build: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public replace$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public retainedIn$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, root: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): boolean;
+								public root$app(value: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public scrollTo$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public set$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, props: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public slot$app(parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, name: string, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public snapshot(root: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeSnapshot;
 								public transaction<T>(action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): T;
-								public unmount(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding): void;
+								public unmount(binding: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding): void;
 							}
 							export interface ComposeNodeGraph extends __javaRoots.javaRoot.lang.AutoCloseable {}
 						}
@@ -15523,7 +16158,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeListeners {
 								public readonly functions: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.mozilla.javascript.Function>;
@@ -15531,7 +16166,7 @@ declare namespace org {
 								public constructor(token: number, functions: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.mozilla.javascript.Function>);
 								public component1(): number;
 								public component2(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.mozilla.javascript.Function>;
-								public copy(token: number, functions: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.mozilla.javascript.Function>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeListeners;
+								public copy(token: number, functions: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.mozilla.javascript.Function>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeListeners;
 								public equals(other: any): boolean;
 								public getFunctions(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.mozilla.javascript.Function>;
 								public getToken(): number;
@@ -15550,19 +16185,19 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeNativeObject extends __javaRoots.orgRoot.mozilla.javascript.NativeObject {
 								public readonly className: string;
 								public readonly entries: __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 								public readonly keys: __javaRoots.javaRoot.util.Set<any>;
-								public readonly node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public constructor(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode);
+								public readonly node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public constructor(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode);
 								public entrySet(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 								public getClassName(): string;
 								public getEntries(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 								public getKeys(): __javaRoots.javaRoot.util.Set<any>;
-								public getNode(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public getNode(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public getSize(): number;
 								public getValues(): __javaRoots.javaRoot.util.Collection<any>;
 								public keySet(): __javaRoots.javaRoot.util.Set<any>;
@@ -15586,16 +16221,16 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeRef {
 								public constructor(implementation: ComposeNodeRef);
 								public constructor();
 							}
 							export interface ComposeNodeRef {
-								readonly current: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								getCurrent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								setCurrent(param0: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode): void;
+								readonly current: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								getCurrent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								setCurrent(param0: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode): void;
 							}
 						}
 					}
@@ -15609,25 +16244,25 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeSnapshot {
 								public readonly callbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.kotlinRoot.jvm.functions.Function1<__javaRoots.orgRoot.autojs.plugin.compose.api.model.UiEvent, __javaRoots.kotlinRoot.Unit>>;
-								public readonly editors$app: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeEditor>;
-								public readonly refs: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
+								public readonly editors$app: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeEditor>;
+								public readonly refs: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
 								public readonly retainedImages: __javaRoots.javaRoot.util.List<any>;
-								public readonly root: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public readonly root: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public readonly scriptCallbackCount: number;
-								public readonly states$app: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeState>;
+								public readonly states$app: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeState>;
 								public readonly tree: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiTree;
-								public constructor(root: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, tree: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiTree, callbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>>, retainedImages: __javaRoots.javaRoot.util.List<any>, refs: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>, scriptCallbackCount: number, states: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeState>, editors: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeEditor>);
+								public constructor(root: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, tree: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiTree, callbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>>, retainedImages: __javaRoots.javaRoot.util.List<any>, refs: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>, scriptCallbackCount: number, states: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeState>, editors: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeEditor>);
 								public getCallbacks(): __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.kotlinRoot.jvm.functions.Function1<__javaRoots.orgRoot.autojs.plugin.compose.api.model.UiEvent, __javaRoots.kotlinRoot.Unit>>;
-								public getEditors$app(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeEditor>;
-								public getRefs(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
+								public getEditors$app(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeEditor>;
+								public getRefs(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
 								public getRetainedImages(): __javaRoots.javaRoot.util.List<any>;
-								public getRoot(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public getRoot(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public getScriptCallbackCount(): number;
-								public getStates$app(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeState>;
+								public getStates$app(): __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeState>;
 								public getTree(): __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiTree;
 							}
 						}
@@ -15642,48 +16277,48 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeNodeState {
-								public readonly children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
-								public readonly explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeModifier;
+								public readonly children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
+								public readonly explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeModifier;
 								public readonly images: __javaRoots.javaRoot.util.Map<string, __javaRoots.javaRoot.util.List<any>>;
-								public readonly listeners: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeListeners>;
+								public readonly listeners: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeListeners>;
 								public readonly modifier: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>;
 								public readonly modifierCallbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.orgRoot.mozilla.javascript.Function>;
-								public readonly nativeView: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNativeViewLease;
-								public readonly parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public readonly nativeView: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNativeViewLease;
+								public readonly parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public readonly props: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
-								public readonly ref: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef;
-								public readonly slots: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
+								public readonly ref: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef;
+								public readonly slots: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
 								public readonly source: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
 								public constructor();
-								public constructor(source: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, props: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, modifier: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>, explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeModifier, modifierCallbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.orgRoot.mozilla.javascript.Function>, listeners: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeListeners>, images: __javaRoots.javaRoot.util.Map<string, __javaRoots.javaRoot.util.List<any>>, nativeView: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNativeViewLease, children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>, slots: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>, parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, ref: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef);
+								public constructor(source: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, props: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, modifier: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>, explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeModifier, modifierCallbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.orgRoot.mozilla.javascript.Function>, listeners: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeListeners>, images: __javaRoots.javaRoot.util.Map<string, __javaRoots.javaRoot.util.List<any>>, nativeView: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNativeViewLease, children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>, slots: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>, parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, ref: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef);
 								public component1(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
-								public component10(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
-								public component11(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
-								public component12(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef;
+								public component10(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
+								public component11(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
+								public component12(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef;
 								public component2(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
 								public component3(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>;
-								public component4(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeModifier;
+								public component4(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeModifier;
 								public component5(): __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.orgRoot.mozilla.javascript.Function>;
-								public component6(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeListeners>;
+								public component6(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeListeners>;
 								public component7(): __javaRoots.javaRoot.util.Map<string, __javaRoots.javaRoot.util.List<any>>;
-								public component8(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNativeViewLease;
-								public component9(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
-								public copy(source: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, props: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, modifier: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>, explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeModifier, modifierCallbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.orgRoot.mozilla.javascript.Function>, listeners: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeListeners>, images: __javaRoots.javaRoot.util.Map<string, __javaRoots.javaRoot.util.List<any>>, nativeView: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNativeViewLease, children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>, slots: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>, parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, ref: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeState;
+								public component8(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNativeViewLease;
+								public component9(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
+								public copy(source: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, props: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, modifier: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>, explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeModifier, modifierCallbacks: __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.orgRoot.mozilla.javascript.Function>, listeners: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeListeners>, images: __javaRoots.javaRoot.util.Map<string, __javaRoots.javaRoot.util.List<any>>, nativeView: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNativeViewLease, children: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>, slots: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>, parent: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, ref: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeState;
 								public equals(other: any): boolean;
-								public getChildren(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
-								public getExplicitModifier(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeModifier;
+								public getChildren(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
+								public getExplicitModifier(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeModifier;
 								public getImages(): __javaRoots.javaRoot.util.Map<string, __javaRoots.javaRoot.util.List<any>>;
-								public getListeners(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeListeners>;
+								public getListeners(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeListeners>;
 								public getModifier(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>;
 								public getModifierCallbacks(): __javaRoots.javaRoot.util.Map<__javaRoots.javaRoot.lang.Integer, __javaRoots.orgRoot.mozilla.javascript.Function>;
-								public getNativeView(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNativeViewLease;
-								public getParent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode;
+								public getNativeView(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNativeViewLease;
+								public getParent(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode;
 								public getProps(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
-								public getRef(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeRef;
-								public getSlots(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode>;
+								public getRef(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeRef;
+								public getSlots(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode>;
 								public getSource(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
 								public hashCode(): number;
 								public toString(): string;
@@ -15700,45 +16335,45 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeReactiveRuntime {
 								public readonly rendering: boolean;
 								public constructor(scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, checkThread: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>, post: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, onError: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>);
 								public batch<T>(action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): T;
 								public close(): void;
-								public isCurrent(reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>): boolean;
+								public isCurrent(reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>): boolean;
 								public isRendering(): boolean;
-								public reaction(action: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.Reaction;
-								public record<T>(action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): __javaRoots.kotlinRoot.Pair<T, __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>>;
-								public replay(reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>): void;
-								public state(initial: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State;
+								public reaction(action: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.Reaction;
+								public record<T>(action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): __javaRoots.kotlinRoot.Pair<T, __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>>;
+								public replay(reads: __javaRoots.javaRoot.util.Map<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State, __javaRoots.javaRoot.lang.Long>): void;
+								public state(initial: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State;
 							}
 							export interface ComposeReactiveRuntime extends __javaRoots.javaRoot.io.Closeable {}
 							export namespace ComposeReactiveRuntime {
 								export class Reaction {
-									public readonly reads$app: __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State>;
+									public readonly reads$app: __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State>;
 									public constructor(this$0: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>);
 									public close(): void;
-									public getReads$app(): __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State>;
+									public getReads$app(): __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State>;
 									public invalidate(): void;
 									public run(): void;
-									public setReads$app(_set___: __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.State>): void;
+									public setReads$app(_set___: __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.State>): void;
 								}
 								export interface Reaction extends __javaRoots.javaRoot.io.Closeable {}
 								export class State extends __javaRoots.orgRoot.mozilla.javascript.NativeObject {
 									public readonly className: string;
 									public readonly entries: __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 									public readonly keys: __javaRoots.javaRoot.util.Set<any>;
-									public readonly subscribers$app: __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.Reaction>;
+									public readonly subscribers$app: __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.Reaction>;
 									public readonly version$app: number;
-									public constructor(this$0: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime, initial: any);
+									public constructor(this$0: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime, initial: any);
 									public entrySet(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 									public getClassName(): string;
 									public getEntries(): __javaRoots.javaRoot.util.Set<__javaRoots.javaRoot.util.Map.Entry<any, any>>;
 									public getKeys(): __javaRoots.javaRoot.util.Set<any>;
 									public getSize(): number;
-									public getSubscribers$app(): __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeReactiveRuntime.Reaction>;
+									public getSubscribers$app(): __javaRoots.javaRoot.util.LinkedHashSet<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeReactiveRuntime.Reaction>;
 									public getValues(): __javaRoots.javaRoot.util.Collection<any>;
 									public getVersion$app(): number;
 									public keySet(): __javaRoots.javaRoot.util.Set<any>;
@@ -15763,7 +16398,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeScriptPlatform {
 								public constructor(implementation: ComposeScriptPlatform);
@@ -15773,17 +16408,17 @@ declare namespace org {
 								readonly dispatcher: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ScriptUiDispatcher;
 								readonly mainExecutor: __javaRoots.javaRoot.util.concurrent.Executor;
 								container(value: any): any;
-								createContainerRenderer(sessionId: number, container: any, beforeMount: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, onDestroyed: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform.Opened;
-								createDialogRenderer(sessionId: number, options: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeDialogOptions, beforeMount: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, onDestroyed: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>, onFailure: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform.Opened;
-								createFloatyRenderer(sessionId: number, options: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyOptions, beforeMount: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, onDestroyed: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>, onFailure: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform.Opened;
-								createRenderer(param0: number, param1: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, param2: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform.Opened;
+								createContainerRenderer(sessionId: number, container: any, beforeMount: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, onDestroyed: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform.Opened;
+								createDialogRenderer(sessionId: number, options: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeDialogOptions, beforeMount: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, onDestroyed: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>, onFailure: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform.Opened;
+								createFloatyRenderer(sessionId: number, options: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyOptions, beforeMount: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, onDestroyed: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>, onFailure: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform.Opened;
+								createRenderer(param0: number, param1: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, param2: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform.Opened;
 								errorMessage(error: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeUiError): string;
 								getDispatcher(): __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ScriptUiDispatcher;
 								getMainExecutor(): __javaRoots.javaRoot.util.concurrent.Executor;
 								post(param0: number, param1: __javaRoots.kotlinRoot.jvm.functions.Function0<__javaRoots.kotlinRoot.Unit>): void;
 								prepareView(value: any, factory: __javaRoots.kotlinRoot.jvm.functions.Function2<any, any, any>): __javaRoots.androidRoot.view.View;
 								report(param0: __javaRoots.javaRoot.lang.Throwable): void;
-								resolveImage(param0: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues.ResolvedImage;
+								resolveImage(param0: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues.ResolvedImage;
 								validateViews(views: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.interop.AndroidViewBindingV1>, container: any, renderer: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer): void;
 								version(): __javaRoots.javaRoot.util.Map<string, any>;
 								warn(param0: string): void;
@@ -15794,20 +16429,20 @@ declare namespace org {
 									public readonly lifetime: __javaRoots.javaRoot.io.Closeable;
 									public readonly renderer: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer;
 									public readonly watchInvalidation: __javaRoots.kotlinRoot.jvm.functions.Function1<__javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, __javaRoots.javaRoot.io.Closeable>;
-									public readonly window: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyControl;
-									public constructor(renderer: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer, components: __javaRoots.javaRoot.util.Set<string>, window: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyControl, lifetime: __javaRoots.javaRoot.io.Closeable, watchInvalidation: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.io.Closeable>);
+									public readonly window: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyControl;
+									public constructor(renderer: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer, components: __javaRoots.javaRoot.util.Set<string>, window: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyControl, lifetime: __javaRoots.javaRoot.io.Closeable, watchInvalidation: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.io.Closeable>);
 									public component1(): __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer;
 									public component2(): __javaRoots.javaRoot.util.Set<string>;
-									public component3(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyControl;
+									public component3(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyControl;
 									public component4(): __javaRoots.javaRoot.io.Closeable;
 									public component5(): __javaRoots.kotlinRoot.jvm.functions.Function1<__javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, __javaRoots.javaRoot.io.Closeable>;
-									public copy(renderer: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer, components: __javaRoots.javaRoot.util.Set<string>, window: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyControl, lifetime: __javaRoots.javaRoot.io.Closeable, watchInvalidation: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.io.Closeable>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptPlatform.Opened;
+									public copy(renderer: __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer, components: __javaRoots.javaRoot.util.Set<string>, window: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyControl, lifetime: __javaRoots.javaRoot.io.Closeable, watchInvalidation: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.io.Closeable>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptPlatform.Opened;
 									public equals(other: any): boolean;
 									public getComponents(): __javaRoots.javaRoot.util.Set<string>;
 									public getLifetime(): __javaRoots.javaRoot.io.Closeable;
 									public getRenderer(): __javaRoots.orgRoot.autojs.autojs.core.plugin.compose.ComposeSessionRenderer;
 									public getWatchInvalidation(): __javaRoots.kotlinRoot.jvm.functions.Function1<__javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.kotlinRoot.Unit>, __javaRoots.javaRoot.io.Closeable>;
-									public getWindow(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyControl;
+									public getWindow(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyControl;
 									public hashCode(): number;
 									public toString(): string;
 								}
@@ -15824,7 +16459,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeScriptSession {
 								public readonly closed: boolean;
@@ -15835,11 +16470,11 @@ declare namespace org {
 								public readonly js: __javaRoots.orgRoot.mozilla.javascript.NativeObject;
 								public readonly mountedView: any;
 								public readonly uiRoot: boolean;
-								public constructor(owner: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.Compose, id: number, initialTheme: __javaRoots.orgRoot.autojs.plugin.compose.api.model.ThemeSpec, floatyOptions: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyOptions, replacingUi: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding, container: any, dialogOptions: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeDialogOptions);
+								public constructor(owner: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.Compose, id: number, initialTheme: __javaRoots.orgRoot.autojs.plugin.compose.api.model.ThemeSpec, floatyOptions: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyOptions, replacingUi: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding, container: any, dialogOptions: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeDialogOptions);
 								public attach(): void;
 								public close(): void;
 								public execute(command: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiCommand): void;
-								public floatingWindow(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeFloatyWindow;
+								public floatingWindow(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeFloatyWindow;
 								public getContainer(): any;
 								public getId(): number;
 								public getJs(): __javaRoots.orgRoot.mozilla.javascript.NativeObject;
@@ -15848,14 +16483,14 @@ declare namespace org {
 								public isDialog(): boolean;
 								public isFloaty(): boolean;
 								public isUiRoot(): boolean;
-								public nativeLease$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNode, view: __javaRoots.androidRoot.view.View): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNativeViewLease;
+								public nativeLease$app(node: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNode, view: __javaRoots.androidRoot.view.View): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNativeViewLease;
 								public nativeViews$app(): __javaRoots.javaRoot.util.Set<__javaRoots.androidRoot.view.View>;
 								public open(source: any): void;
-								public publish(snapshot: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeSnapshot): void;
+								public publish(snapshot: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeSnapshot): void;
 								public setTheme(theme: __javaRoots.orgRoot.autojs.plugin.compose.api.model.ThemeSpec): void;
 								public stopRenderer(): void;
 							}
-							export interface ComposeScriptSession extends __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeNodeBinding, __javaRoots.javaRoot.io.Closeable {}
+							export interface ComposeScriptSession extends __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeNodeBinding, __javaRoots.javaRoot.io.Closeable {}
 						}
 					}
 				}
@@ -15868,19 +16503,19 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace compose {
 							export class ComposeScriptValues {
 								public constructor();
-								public constructor(imageResolver: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues.ResolvedImage>, colorParser: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.lang.Integer>);
+								public constructor(imageResolver: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues.ResolvedImage>, colorParser: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.lang.Integer>);
 								public arrayValues(raw: any, component: string, prop: string, maximum: number): __javaRoots.javaRoot.util.List<any>;
 								public contextual$app<T>(component: string, prop: string, action: __javaRoots.kotlinRoot.jvm.functions.Function0<T>): T;
 								public eventName(component: string, name: string): string;
 								public integer(component: string, prop: string, raw: any, minimum: number, maximum: number): number;
 								public modifierArgument$app(component: string, name: string, raw: any, _type_: __javaRoots.orgRoot.autojs.plugin.compose.api.catalog.ValueType): __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue;
-								public normalize(component: string, raw: __javaRoots.javaRoot.util.Map<string, any>, explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeModifier, allocateCallback: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.lang.Integer>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues.ConvertedProperties;
+								public normalize(component: string, raw: __javaRoots.javaRoot.util.Map<string, any>, explicitModifier: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeModifier, allocateCallback: __javaRoots.kotlinRoot.jvm.functions.Function1<any, __javaRoots.javaRoot.lang.Integer>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues.ConvertedProperties;
 								public objectProperties(value: any, component: string): __javaRoots.javaRoot.util.Map<string, any>;
-								public property(component: string, name: string, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues.ConvertedProperty;
+								public property(component: string, name: string, raw: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues.ConvertedProperty;
 								public theme(raw: any): __javaRoots.orgRoot.autojs.plugin.compose.api.model.ThemeSpec;
 								public toRaw(value: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue, scope: __javaRoots.orgRoot.mozilla.javascript.Scriptable): any;
 								public toRaw(value: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue, scope: __javaRoots.orgRoot.mozilla.javascript.VarScope): any;
@@ -15894,7 +16529,7 @@ declare namespace org {
 									public component1(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
 									public component2(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>;
 									public component3(): __javaRoots.javaRoot.util.List<any>;
-									public copy(props: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, modifier: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>, retainedImages: __javaRoots.javaRoot.util.List<any>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues.ConvertedProperties;
+									public copy(props: __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>, modifier: __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>, retainedImages: __javaRoots.javaRoot.util.List<any>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues.ConvertedProperties;
 									public equals(other: any): boolean;
 									public getModifier(): __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.plugin.compose.api.model.ModifierOp>;
 									public getProps(): __javaRoots.javaRoot.util.Map<string, __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue>;
@@ -15910,7 +16545,7 @@ declare namespace org {
 									public component1(): string;
 									public component2(): __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue;
 									public component3(): __javaRoots.javaRoot.util.List<any>;
-									public copy(name: string, value: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue, retainedImages: __javaRoots.javaRoot.util.List<any>): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues.ConvertedProperty;
+									public copy(name: string, value: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue, retainedImages: __javaRoots.javaRoot.util.List<any>): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues.ConvertedProperty;
 									public equals(other: any): boolean;
 									public getName(): string;
 									public getRetainedImages(): __javaRoots.javaRoot.util.List<any>;
@@ -15924,7 +16559,7 @@ declare namespace org {
 									public constructor(reference: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue.BitmapRef, owner: any);
 									public component1(): __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue.BitmapRef;
 									public component2(): any;
-									public copy(reference: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue.BitmapRef, owner: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.compose.ComposeScriptValues.ResolvedImage;
+									public copy(reference: __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue.BitmapRef, owner: any): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.compose.ComposeScriptValues.ResolvedImage;
 									public equals(other: any): boolean;
 									public getOwner(): any;
 									public getReference(): __javaRoots.orgRoot.autojs.plugin.compose.api.model.UiValue.BitmapRef;
@@ -15944,7 +16579,7 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace continuation {
 							export class Creator {
 								public constructor(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, scope: __javaRoots.orgRoot.mozilla.javascript.Scriptable);
@@ -15965,43 +16600,37 @@ declare namespace org {
 		export namespace autojs {
 			export namespace runtime {
 				export namespace api {
-					export namespace augment {
+					export namespace modules {
 						export namespace ocr {
-							export class Ocr extends __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.Augmentable {
-								public readonly selfAssignmentFunctions: __javaRoots.javaRoot.util.List<__javaRoots.javaRoot.io.Serializable>;
-								public readonly selfAssignmentGettersAndSetters: __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Triple<string, any, any>>;
+							export class Ocr extends __javaRoots.orgRoot.autojs.autojs.rhino.ArgumentGuards {
 								public constructor(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime);
 								public static detect(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, args: any[]): __javaRoots.orgRoot.mozilla.javascript.NativeArray;
-								public getSelfAssignmentFunctions(): __javaRoots.javaRoot.util.List<__javaRoots.javaRoot.io.Serializable>;
-								public getSelfAssignmentGettersAndSetters(): __javaRoots.javaRoot.util.List<__javaRoots.kotlinRoot.Triple<string, any, any>>;
 								public invoke(...args: any[]): __javaRoots.orgRoot.mozilla.javascript.NativeArray;
+								public static modeValue$app(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime): any;
 								public static recognizeText(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, args: any[]): __javaRoots.orgRoot.mozilla.javascript.NativeArray;
 								public static summary(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, args: any[]): string;
 								public static tap(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, args: any[]): __javaRoots.orgRoot.mozilla.javascript.Undefined;
 								public static toString(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, args: any[]): string;
-								public getSelfAssignmentFunctions(...args: any[]): any;
-								public invoke(...args: any[]): any;
 							}
-							export interface Ocr extends __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.Invokable {}
 							export namespace Ocr {
 								export namespace Companion {
-									export class OcrMode extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode> {
-										public static readonly AUTO: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode;
-										public static readonly MLKIT: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode;
-										public static readonly PADDLE: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode;
-										public static readonly RAPID: __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode;
+									export class OcrMode extends __javaRoots.javaRoot.lang.Enum<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode> {
+										public static readonly AUTO: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode;
+										public static readonly MLKIT: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode;
+										public static readonly PADDLE: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode;
+										public static readonly RAPID: __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode;
 										public readonly detect: __javaRoots.kotlinRoot.jvm.functions.Function4<__javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, __javaRoots.orgRoot.autojs.autojs.core.image.ImageWrapper, __javaRoots.orgRoot.mozilla.javascript.NativeObject, __javaRoots.orgRoot.autojs.autojs.core.plugin.ocr.OcrPluginHost.Discovered, __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.OcrResult>>;
 										public readonly engine: string;
 										public readonly recognizeText: __javaRoots.kotlinRoot.jvm.functions.Function4<__javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, __javaRoots.orgRoot.autojs.autojs.core.image.ImageWrapper, __javaRoots.orgRoot.mozilla.javascript.NativeObject, __javaRoots.orgRoot.autojs.autojs.core.plugin.ocr.OcrPluginHost.Discovered, __javaRoots.javaRoot.util.List<string>>;
 										public readonly value: string;
-										public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode>;
+										public static readonly entries: __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode>;
 										public getDetect(): __javaRoots.kotlinRoot.jvm.functions.Function4<__javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, __javaRoots.orgRoot.autojs.autojs.core.image.ImageWrapper, __javaRoots.orgRoot.mozilla.javascript.NativeObject, __javaRoots.orgRoot.autojs.autojs.core.plugin.ocr.OcrPluginHost.Discovered, __javaRoots.javaRoot.util.List<__javaRoots.orgRoot.autojs.autojs.runtime.api.OcrResult>>;
 										public getEngine(): string;
-										public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode>;
+										public static getEntries(): __javaRoots.kotlinRoot.enums.EnumEntries<__javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode>;
 										public getRecognizeText(): __javaRoots.kotlinRoot.jvm.functions.Function4<__javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, __javaRoots.orgRoot.autojs.autojs.core.image.ImageWrapper, __javaRoots.orgRoot.mozilla.javascript.NativeObject, __javaRoots.orgRoot.autojs.autojs.core.plugin.ocr.OcrPluginHost.Discovered, __javaRoots.javaRoot.util.List<string>>;
 										public getValue(): string;
-										public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode;
-										public static values(): __javaRoots.orgRoot.autojs.autojs.runtime.api.augment.ocr.Ocr.Companion.OcrMode[];
+										public static valueOf(value: string): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode;
+										public static values(): __javaRoots.orgRoot.autojs.autojs.runtime.api.modules.ocr.Ocr.Companion.OcrMode[];
 										protected constructor();
 										public static valueOf(...args: any[]): any;
 									}
@@ -16111,10 +16740,12 @@ declare namespace org {
 							public static readonly ACCESSIBILITY_PULSE: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly ACCESSIBILITY_TAP: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly AI: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
+							public static readonly CAMERA: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly CLASS_LOADERS: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly CLOSEABLES: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly COMPOSE: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly CONSOLE: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
+							public static readonly DEVICE: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly EPUB: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly EVENTS: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
 							public static readonly EXIT_EVENT: __javaRoots.orgRoot.autojs.autojs.runtime.resource.RuntimeResourceScope.Stage;
@@ -18887,8 +19518,8 @@ declare namespace org {
 					public static getStandardObjects(): __javaRoots.orgRoot.mozilla.javascript.TopLevel;
 					public static getTopLevelScope(scope: __javaRoots.orgRoot.mozilla.javascript.Scriptable): __javaRoots.orgRoot.mozilla.javascript.TopLevel;
 					public static getUNDEFINED(): __javaRoots.orgRoot.mozilla.javascript.Undefined;
-					public handleAsyncOperation(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, func: __javaRoots.kotlinRoot.jvm.functions.Function0<any>): __javaRoots.orgRoot.mozilla.javascript.NativeObject;
-					public handleAsyncOperation<T>(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, operation: __javaRoots.kotlinRoot.jvm.functions.Function0<T>, uiMapper: __javaRoots.kotlinRoot.jvm.functions.Function1<any, any>): __javaRoots.orgRoot.mozilla.javascript.NativeObject;
+					public handleAsyncOperation(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, func: __javaRoots.kotlinRoot.jvm.functions.Function0<any>): __javaRoots.orgRoot.mozilla.javascript.Scriptable;
+					public handleAsyncOperation<T>(scriptRuntime: __javaRoots.orgRoot.autojs.autojs.runtime.ScriptRuntime, operation: __javaRoots.kotlinRoot.jvm.functions.Function0<T>, uiMapper: __javaRoots.kotlinRoot.jvm.functions.Function1<any, any>): __javaRoots.orgRoot.mozilla.javascript.Scriptable;
 					public static hashCodeOfScriptable(other: any): __javaRoots.javaRoot.lang.Integer;
 					public static initNativeArrayPrototype(a: __javaRoots.orgRoot.mozilla.javascript.NativeArray): __javaRoots.orgRoot.mozilla.javascript.NativeArray;
 					public static initNativeArrayPrototype(scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, a: __javaRoots.orgRoot.mozilla.javascript.NativeArray): __javaRoots.orgRoot.mozilla.javascript.NativeArray;
@@ -18896,6 +19527,7 @@ declare namespace org {
 					public static initNativeObjectPrototype(scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, o: __javaRoots.orgRoot.mozilla.javascript.NativeObject): __javaRoots.orgRoot.mozilla.javascript.NativeObject;
 					public initNewBaseFunction$app(baseFunction: __javaRoots.orgRoot.mozilla.javascript.BaseFunction): void;
 					public initNewBaseFunction$app(scope: __javaRoots.orgRoot.mozilla.javascript.VarScope, baseFunction: __javaRoots.orgRoot.mozilla.javascript.BaseFunction): void;
+					public static invokeForScript(method: __javaRoots.javaRoot.lang.reflect.Method, receiver: any, ...args: any[]): any;
 					public static isBackgroundThread(): boolean;
 					public static isInteger(o: any): boolean;
 					public static isMainThread(): boolean;
@@ -19144,6 +19776,10 @@ declare namespace org {
 	}
 }
 // Generics information:
+//org.autojs.autojs.apkbuilder.ApkBuildLibraryCatalog.selectBestPluginVariantCandidate..inlined.compareBy.1:1
+//org.autojs.autojs.apkbuilder.ApkBuildLibraryCatalog.selectBestPluginVariantCandidate..inlined.thenByDescending.1:1
+//org.autojs.autojs.apkbuilder.ApkBuilder.Companion.selectBestPluginVariantCandidate..inlined.compareBy.1:1
+//org.autojs.autojs.apkbuilder.ApkBuilder.Companion.selectBestPluginVariantCandidate..inlined.thenByDescending.1:1
 //org.autojs.autojs.apkbuilder.template.ApkBuilderTemplatePluginHost.openTemplate..inlined.compareByDescending.1:1
 //org.autojs.autojs.apkbuilder.template.ApkBuilderTemplatePluginHost.openTemplate..inlined.thenBy.1:1
 //org.autojs.autojs.apkbuilder.template.ApkBuilderTemplatePluginHost.openTemplate..inlined.thenByDescending.1:1
@@ -19226,11 +19862,32 @@ declare namespace org {
 //org.autojs.autojs.core.automator.diagnostics.A11yStats.snapshot..inlined.compareByDescending.2:1
 //org.autojs.autojs.core.automator.diagnostics.A11yStats.snapshot..inlined.thenByDescending.1:1
 //org.autojs.autojs.core.automator.diagnostics.A11yStats.snapshot..inlined.thenByDescending.2:1
+//org.autojs.autojs.core.automator.diagnostics.PickExplanation:1
+//org.autojs.autojs.core.automator.diagnostics.PickExplanation.Hop:1
 //org.autojs.autojs.core.automator.diagnostics.SelectorExplanation:1
 //org.autojs.autojs.core.automator.event.EventWaiter:1
 //org.autojs.autojs.core.automator.event.EventWaiter.Result:1
+//org.autojs.autojs.core.automator.filter.Preference.comparator..inlined.compareBy.1:1
+//org.autojs.autojs.core.automator.filter.Preference.comparator..inlined.compareBy.2:1
+//org.autojs.autojs.core.automator.filter.Preference.comparator..inlined.compareBy.3:1
+//org.autojs.autojs.core.automator.filter.Preference.comparator..inlined.compareBy.4:1
+//org.autojs.autojs.core.automator.filter.Preference.comparator..inlined.compareBy.5:1
+//org.autojs.autojs.core.automator.filter.Preference.comparator..inlined.compareByDescending.1:1
+//org.autojs.autojs.core.automator.filter.Selector.Plan.special..inlined.sortedBy.1:1
+//org.autojs.autojs.core.automator.pick.NodeMethodTable.special..inlined.compareBy.1:1
+//org.autojs.autojs.core.automator.pick.NodeMethodTable.special..inlined.thenBy.1:1
+//org.autojs.autojs.core.automator.pick.NodeMethodTable.special..inlined.thenBy.2:1
+//org.autojs.autojs.core.automator.pick.PickArguments:1
+//org.autojs.autojs.core.automator.pick.PickExecutor:1
+//org.autojs.autojs.core.automator.pick.PickRequest:1
+//org.autojs.autojs.core.automator.pick.PickTarget:1
+//org.autojs.autojs.core.automator.pick.PickVerdict:1
+//org.autojs.autojs.core.automator.pick.PickVerdict.Accepted:1
+//org.autojs.autojs.core.automator.pick.PickVerdict.Refused:1
+//org.autojs.autojs.core.automator.search.FastPath.Lookup:2
+//org.autojs.autojs.core.automator.search.FastPath.Outcome:1
+//org.autojs.autojs.core.automator.search.FastPath.Outcome.Hit:1
 //org.autojs.autojs.core.automator.search.LazySearch:1
-//org.autojs.autojs.core.automator.selector.SelectorStringParser.suggest..inlined.sortedBy.1:1
 //org.autojs.autojs.core.automator.toolkit.ActionPerformer:1
 //org.autojs.autojs.core.automator.toolkit.AppLauncher:1
 //org.autojs.autojs.core.automator.toolkit.ListCollector:1
@@ -19253,6 +19910,7 @@ declare namespace org {
 //org.autojs.autojs.core.automator.toolkit.ToolkitBindings:1
 //org.autojs.autojs.core.console.StackFrameParser.parse..inlined.sortedBy.1:1
 //org.autojs.autojs.core.image.Shootable:1
+//org.autojs.autojs.core.image.capture.ScreenCaptureSession.FrameReader:1
 //org.autojs.autojs.core.internal.Functions.Func0:1
 //org.autojs.autojs.core.internal.Functions.Func1:2
 //org.autojs.autojs.core.internal.Functions.Func2:3
@@ -19297,6 +19955,7 @@ declare namespace org {
 //org.autojs.autojs.core.plugin.ai.SessionCoordinatorCloseSlot:1
 //org.autojs.autojs.core.plugin.ai.TargetListingCloseRegistry:1
 //org.autojs.autojs.core.plugin.ai.TargetListingCloseSlot:1
+//org.autojs.autojs.core.plugin.alarm.AlarmPluginHost.call.1:1
 //org.autojs.autojs.core.plugin.barcode.BarcodePluginHost.retryAfterBinderFailure.1:1
 //org.autojs.autojs.core.plugin.barcode.BarcodePluginHost.withImagePfdService.1:1
 //org.autojs.autojs.core.plugin.barcode.BarcodePluginHost.withImagePfdServiceOnce.1:1
@@ -19309,6 +19968,13 @@ declare namespace org {
 //org.autojs.autojs.core.plugin.bun.BunBoundedBinderCallLane.Call:1
 //org.autojs.autojs.core.plugin.bun.BunBoundedBinderCallLane.CallOutcome:1
 //org.autojs.autojs.core.plugin.bun.BunBoundedBinderCallLane.CallOutcome.Success:1
+//org.autojs.autojs.core.plugin.camera.CameraCalls.Arrived:1
+//org.autojs.autojs.core.plugin.camera.CameraCalls.bounded.1:1
+//org.autojs.autojs.core.plugin.camera.CameraFrameSlot:1
+//org.autojs.autojs.core.plugin.camera.CameraFrameSlot.Offer:1
+//org.autojs.autojs.core.plugin.camera.CameraFrameSlot.Offer.Accepted:1
+//org.autojs.autojs.core.plugin.camera.CameraPluginHost.call.1:1
+//org.autojs.autojs.core.plugin.camera.CameraPluginHost.lease.1:1
 //org.autojs.autojs.core.plugin.center.PluginCenterActionPositionPolicy.apply..inlined.sortedBy.1:1
 //org.autojs.autojs.core.plugin.center.PluginCenterAttentionLedger.special..inlined.sortedBy.1:1
 //org.autojs.autojs.core.plugin.center.PluginCenterAttentionPolicy.apply..inlined.sortedByDescending.1:1
@@ -19330,14 +19996,17 @@ declare namespace org {
 //org.autojs.autojs.core.plugin.center.PluginCenterSortPolicy.comparatorForSortField..inlined.compareBy.7:1
 //org.autojs.autojs.core.plugin.center.PluginCenterSortPolicy.comparatorForSortField..inlined.compareBy.8:1
 //org.autojs.autojs.core.plugin.center.PluginCenterSortPolicy.comparatorForSortField..inlined.compareBy.9:1
+//org.autojs.autojs.core.plugin.center.PluginIndexMirrorSession.Fetched:1
+//org.autojs.autojs.core.plugin.center.PluginIndexMirrorSession.orderedUrls..inlined.sortedBy.1:1
 //org.autojs.autojs.core.plugin.center.PluginInfoServiceHost.withInfoService.1:1
 //org.autojs.autojs.core.plugin.center.PluginReleaseTargetPolicy.resolve..inlined.sortedByDescending.1:1
 //org.autojs.autojs.core.plugin.center.PluginSettingsFragment.onCreatePreferences..inlined.sortedByDescending.1:1
 //org.autojs.autojs.core.plugin.center.PluginVariantPriorityActivity.applyStoredOrder..inlined.compareBy.1:1
 //org.autojs.autojs.core.plugin.center.PluginVariantPriorityActivity.applyStoredOrder..inlined.thenBy.1:1
 //org.autojs.autojs.core.plugin.center.PluginVariantPriorityActivity.applyStoredOrder..inlined.thenByDescending.1:1
-//org.autojs.autojs.core.plugin.center.PluginVariantPriorityStore.selectByPriority..inlined.compareBy.1:1
-//org.autojs.autojs.core.plugin.center.PluginVariantPriorityStore.selectByPriority..inlined.thenByDescending.1:1
+//org.autojs.autojs.core.plugin.center.PluginVariantPriorityStore.selectWithoutStoredOrder..inlined.compareBy.1:1
+//org.autojs.autojs.core.plugin.center.PluginVariantPriorityStore.selectWithoutStoredOrder..inlined.thenBy.1:1
+//org.autojs.autojs.core.plugin.center.PluginVariantPriorityStore.selectWithoutStoredOrder..inlined.thenByDescending.1:1
 //org.autojs.autojs.core.plugin.center.PluginVisibilityStore.listHidden..inlined.sortedBy.1:1
 //org.autojs.autojs.core.plugin.center.wizard.PluginInstallWizardLoader.buildItems..inlined.compareBy.1:1
 //org.autojs.autojs.core.plugin.dex.CloseOnceSlot:1
@@ -19373,6 +20042,7 @@ declare namespace org {
 //org.autojs.autojs.core.plugin.explorer.ExplorerActionRegistry.refresh.2.invokeSuspend..inlined.compareByDescending.1:1
 //org.autojs.autojs.core.plugin.explorer.ExplorerActionRegistry.refresh.2.invokeSuspend..inlined.thenBy.1:1
 //org.autojs.autojs.core.plugin.explorer.ExplorerActionRegistry.refresh.2.invokeSuspend..inlined.thenBy.2:1
+//org.autojs.autojs.core.plugin.explorer.ExplorerActionRegistry.refresh.2.invokeSuspend..inlined.thenBy.3:1
 //org.autojs.autojs.core.plugin.explorer.output.ExplorerActionOutputTransactionStore.list.lambda.0..inlined.sortedBy.1:1
 //org.autojs.autojs.core.plugin.explorer.session.ExplorerActionHostSession.validateAndSyncOutputTree..inlined.sortedByDescending.1:1
 //org.autojs.autojs.core.plugin.explorer.session.ExplorerActionOutputBatchStore.list..inlined.sortedBy.1:1
@@ -19381,6 +20051,7 @@ declare namespace org {
 //org.autojs.autojs.core.plugin.explorer.session.ExplorerActionReplacementHistoryStore.cleanupLocked..inlined.sortedBy.2:1
 //org.autojs.autojs.core.plugin.explorer.session.ExplorerActionReplacementHistoryStore.makeRoomForLocked..inlined.sortedBy.1:1
 //org.autojs.autojs.core.plugin.explorer.session.ExplorerActionTargetTrashBatchStore.list.lambda.0..inlined.sortedByDescending.1:1
+//org.autojs.autojs.core.plugin.javapackage.PackagedJavaPackages.payloadZip.lambda.1.0.0..inlined.sortedBy.1:1
 //org.autojs.autojs.core.plugin.jvm.JvmSourceExactBindingLinkState:2
 //org.autojs.autojs.core.plugin.jvm.JvmSourceExactBindingLinkState.CloseResult:2
 //org.autojs.autojs.core.plugin.jvm.JvmSourceExactBindingLinkState.Link:2
@@ -19389,6 +20060,8 @@ declare namespace org {
 //org.autojs.autojs.core.plugin.lua.LuaBoundedBinderCallLane.Call:1
 //org.autojs.autojs.core.plugin.lua.LuaBoundedBinderCallLane.CallOutcome:1
 //org.autojs.autojs.core.plugin.lua.LuaBoundedBinderCallLane.CallOutcome.Success:1
+//org.autojs.autojs.core.plugin.mediastudio.MediaStudioPluginHost.call.1:1
+//org.autojs.autojs.core.plugin.mediastudio.MediaStudioPluginHost.lease.1:1
 //org.autojs.autojs.core.plugin.ocr.OcrPluginHost.retryAfterBinderFailure.1:1
 //org.autojs.autojs.core.plugin.ocr.OcrPluginHost.withImagePfdService.1:1
 //org.autojs.autojs.core.plugin.ocr.OcrPluginHost.withImagePfdServiceOnce.1:1
@@ -19464,6 +20137,7 @@ declare namespace org {
 //org.autojs.autojs.core.pref.archive.SettingsImportPlanner.Owners.familiesByStore.lambda.1..inlined.sortedByDescending.1:1
 //org.autojs.autojs.core.pref.archive.SettingsImportPlanner.plan..inlined.sortedBy.1:1
 //org.autojs.autojs.core.pref.archive.SettingsKeyMigrations.migrate..inlined.sortedBy.1:1
+//org.autojs.autojs.core.record.RecordingStopListener:1
 //org.autojs.autojs.core.ui.BiMap:2
 //org.autojs.autojs.core.ui.BiMaps.BiMapBuilder:2
 //org.autojs.autojs.core.ui.BiMaps.BiMapImpl:2
@@ -19568,12 +20242,12 @@ declare namespace org {
 //org.autojs.autojs.engine.NodeWorkManagerBridgeScheduler.list..inlined.sortedBy.1:1
 //org.autojs.autojs.engine.RuntimeAgentAccessStore.applications..inlined.sortedBy.1:1
 //org.autojs.autojs.engine.RuntimeJavaSubclassGenerator.methods..inlined.sortedBy.1:1
+//org.autojs.autojs.engine.RuntimeOperationClients:1
 //org.autojs.autojs.engine.RuntimeSpeechBridge.Client.withAudio.1:1
 //org.autojs.autojs.engine.ScriptEngine:1
 //org.autojs.autojs.engine.ScriptEngine.AbstractScriptEngine:1
 //org.autojs.autojs.engine.module.SingleFlightSoftCache:2
 //org.autojs.autojs.engine.module.SingleFlightSoftCache.CacheReference:2
-//org.autojs.autojs.engine.module.SingleFlightStrongCache:2
 //org.autojs.autojs.event.EventDispatcher:1
 //org.autojs.autojs.event.EventDispatcher.Event:1
 //org.autojs.autojs.model.autocomplete.DictionaryTree:1
@@ -19586,6 +20260,7 @@ declare namespace org {
 //org.autojs.autojs.model.explorer.PrivilegedEditSessions.findRecoverable..inlined.sortedByDescending.1:1
 //org.autojs.autojs.model.explorer.PrivilegedExplorerEntryItem.typeFromName..inlined.compareBy.1:1
 //org.autojs.autojs.model.explorer.PrivilegedExplorerEntryItem.typeFromName..inlined.thenBy.1:1
+//org.autojs.autojs.pluginclient.RemoteServerStarter:1
 //org.autojs.autojs.project.AgentScriptCatalog.listScripts.scan..inlined.compareBy.1:1
 //org.autojs.autojs.project.AgentScriptCatalog.listScripts.scan..inlined.thenBy.1:1
 //org.autojs.autojs.project.FuzzyDeserializer:1
@@ -19593,16 +20268,21 @@ declare namespace org {
 //org.autojs.autojs.rhino.AutoJsContext.Binding:1
 //org.autojs.autojs.rhino.ClassFileDexer.dexOutputs..inlined.sortedBy.1:1
 //org.autojs.autojs.rhino.OwnedDexLoaders:1
-//org.autojs.autojs.runtime.api.augment.installer.InstallerBlockingWait:1
-//org.autojs.autojs.runtime.api.augment.proxy.JavaProxyObject:1
-//org.autojs.autojs.runtime.api.augment.selector.SelectorMethodResolver.resolve..inlined.sortedBy.1:1
-//org.autojs.autojs.runtime.api.augment.terminal.TerminalBlockingWait:1
-//org.autojs.autojs.runtime.api.augment.util.VersionCodes.Searcher.searchAll..inlined.sortedByDescending.1:1
 //org.autojs.autojs.runtime.api.gallery.GalleryService.host.1:1
 //org.autojs.autojs.runtime.api.installer.InstallerService.call.1:1
 //org.autojs.autojs.runtime.api.modules.ScriptModuleBinding:1
 //org.autojs.autojs.runtime.api.modules.ScriptModuleMounter.Node.special..inlined.sortedBy.1:1
+//org.autojs.autojs.runtime.api.modules.camera.CameraPendingCalls:1
+//org.autojs.autojs.runtime.api.modules.camera.CameraPendingCalls.Call:1
+//org.autojs.autojs.runtime.api.modules.installer.InstallerBlockingWait:1
+//org.autojs.autojs.runtime.api.modules.ocr.OcrLineMerger.Segment:1
+//org.autojs.autojs.runtime.api.modules.pinyin.PinyinOptions.Choice:1
+//org.autojs.autojs.runtime.api.modules.proxy.JavaProxyObject:1
+//org.autojs.autojs.runtime.api.modules.selector.SelectorMethodResolver.resolve..inlined.sortedBy.1:1
+//org.autojs.autojs.runtime.api.modules.settings.SettingsScriptExport.pluginCategories..inlined.sortedBy.1:1
+//org.autojs.autojs.runtime.api.modules.terminal.TerminalBlockingWait:1
 //org.autojs.autojs.runtime.api.modules.util.UtilVersionCodesModule.searchAll..inlined.sortedByDescending.1:1
+//org.autojs.autojs.runtime.api.modules.util.VersionCodes.Searcher.searchAll..inlined.sortedByDescending.1:1
 //org.autojs.autojs.runtime.api.terminal.TerminalService.guarded.1:1
 //org.autojs.autojs.runtime.api.tts.AndroidTtsBackend.engines.lambda.0..inlined.sortedBy.1:1
 //org.autojs.autojs.runtime.api.tts.TtsBackendKt.resolveTtsModelVoice..inlined.sortedBy.1:1
@@ -19704,6 +20384,7 @@ declare namespace org {
 //org.autojs.autojs.ui.edit.theme.ColorThemeGenerator.generate..inlined.thenByDescending.1:1
 //org.autojs.autojs.ui.edit.toolbar.ToolbarFragment:1
 //org.autojs.autojs.ui.explorer.ExplorerNavigationHistory:1
+//org.autojs.autojs.ui.explorer.ExplorerOptionsMenu.pluginGroups..inlined.sortedByDescending.1:1
 //org.autojs.autojs.ui.explorer.ExplorerRenameDialogMenuEntry:1
 //org.autojs.autojs.ui.explorer.ExplorerRenameDialogMenuEntry.PluginAction:1
 //org.autojs.autojs.ui.explorer.ExplorerSelectionActionLayout.Companion.of..inlined.sortedBy.1:1
@@ -19716,6 +20397,8 @@ declare namespace org {
 //org.autojs.autojs.ui.main.scripts.ApkInfoDialogManager.showMoreInfoDialog.1.1:1
 //org.autojs.autojs.ui.settings.DexCompilerPreference.discoverEligibleCandidates..inlined.compareBy.1:1
 //org.autojs.autojs.ui.settings.DexCompilerPreference.discoverEligibleCandidates..inlined.thenBy.1:1
+//org.autojs.autojs.ui.settings.DisplayReleaseHistoryActivity.loadPluginReleaseHistory.2:1
+//org.autojs.autojs.ui.settings.DisplayReleaseHistoryActivity.onCreate.2.1:1
 //org.autojs.autojs.ui.settings.DisplayReleaseHistoryActivity.showCategoryFilterDialog.3.1.2.1:1
 //org.autojs.autojs.ui.settings.DisplayReleaseHistoryActivity.showProcessLogs.job.1.1.1:1
 //org.autojs.autojs.ui.settings.R8CompilerPreference.discoverEligibleCandidates..inlined.compareBy.1:1
@@ -19731,6 +20414,10 @@ declare namespace org {
 //org.autojs.autojs.ui.settings.codegen.CodeGenModelsViewModel.build..inlined.thenByDescending.1:1
 //org.autojs.autojs.ui.settings.codegen.CodeGenModelsViewModel.build.lambda.9..inlined.sortedByDescending.1:1
 //org.autojs.autojs.ui.settings.transfer.DeploymentProgressDialog.follow.2:1
+//org.autojs.autojs.ui.settings.transfer.SettingsExporter.pluginExports..inlined.compareBy.1:1
+//org.autojs.autojs.ui.settings.transfer.SettingsExporter.pluginExports..inlined.thenBy.1:1
+//org.autojs.autojs.ui.settings.transfer.SettingsPluginChoices.special..inlined.compareBy.1:1
+//org.autojs.autojs.ui.settings.transfer.SettingsPluginChoices.special..inlined.thenBy.1:1
 //org.autojs.autojs.ui.shortcut.ShortcutBackupFragment.onViewCreated.1.1.1:1
 //org.autojs.autojs.ui.storage.BaseSearchSortListActivity:2
 //org.autojs.autojs.ui.storage.BatchRenameHistoryActivity.sortItems..inlined.compareBy.1:1

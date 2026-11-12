@@ -14,6 +14,7 @@
 * `기능` speech 선언에 3-Macaw Speech 1.6.0의 새 API 추가 (AutoJs6 6.8.1): 엔진 미리 로드 prepare, prepareAsync, release, listen / wake의 keepLoaded 옵션, wake의 background 옵션 (다른 마이크 세션이 오면 일시 중지하고 양보)과 paused / resumed 이벤트, 상주 호출어 speech.resident (get, set, enable, disable, enabled, on, off), 오류 코드 FEATURE_UNAVAILABLE, RESIDENT_UNAVAILABLE, LEASE_NOT_FOUND
 * `기능` 전역 모듈 alarms / $alarms 선언 (AutoJs6 6.8.1, 3-Chime Alarm 플러그인 필요, Rhino 전용): 알람의 추가, 조회, 변경과 삭제, 메서드가 있는 알람 스냅숏, 옵션과 반복 규칙, 이벤트 이름으로 타입이 정해지는 이벤트 (on / once 콜백 인수와 currentEvent), 등록 스크립트, alarms.ringtones, 플러그인이 필요 없는 alarms.system, hint가 있는 AlarmError
 * `기능` 전역 모듈 video / $video 및 audio / $audio 선언과 자동 완성 (AutoJs6 6.8.1, Rhino 전용): video. 또는 audio.를 입력하면 AutoJs6 자체의 화면 녹화와 녹음, 3-Slate Studio 플러그인이 필요한 각 가공 메서드와 Async 형태, 그리고 옵션 필드, 녹화 핸들, 멀티 트랙 타임라인, 자막과 MediaStudioError를 제안; Node.js / Bun의 video / audio 선언 동기화
+* `기능` images.getScreenCaptureOptions 가 반환하는 ScreenCapturer.Options 에 isShared (shared 속성으로도 읽을 수 있음) 와 participants 추가 (AutoJs6 6.8.1), 여러 참여자가 화면 캡처 세션을 공유하는지와 참여자 수를 나타냄; stopScreenCapture 에 공유 세션은 마지막 참여자가 나간 뒤에 해제된다는 설명 추가
 * `개선` 번들 선언을 @sm003/autojs6-dts 4.88.0으로 업그레이드
 
 # v2.49.0

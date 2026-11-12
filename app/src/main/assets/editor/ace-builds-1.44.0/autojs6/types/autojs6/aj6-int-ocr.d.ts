@@ -162,7 +162,7 @@ declare namespace Internal {
          * and other values are dropped. Results merged by mergeLine keep only the keys equal in every part.
          * @see https://docs.autojs6.com/#/dataTypes?id=p-extras
          */
-        interface ResultExtras {
+        interface ResultExtras extends org.mozilla.javascript.NativeObject {
             /** Vertices of the text quadrilateral as [x1, y1, x2, y2, ...], in the same coordinates as bounds. */
             quad?: number[];
             /** The execution provider that actually ran (PP-OCRv3 ONNX Runtime). */

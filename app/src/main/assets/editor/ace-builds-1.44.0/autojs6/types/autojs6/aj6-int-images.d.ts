@@ -1198,8 +1198,28 @@ declare namespace Internal {
         requestScreenCaptureAsync(options: Images.ScreenCaptureOptions): Promise<boolean>;
         requestScreenCaptureAsync(width: number, height: number): Promise<boolean>;
 
+        /**
+         * Leaves the screen capture session of the current script.
+         * Since AutoJs6 6.8.1 a shared session keeps running for its other participants
+         * and is released when the last participant leaves.
+         * zh-CN: 退出当前脚本所在的屏幕捕获会话. 6.8.1 起共享会话在仍有其他参与者时继续运行, 最后一个参与者退出后释放.
+         * @see https://docs.autojs6.com/#/image?id=screen-capture-session-sharing
+         */
         stopScreenCapture(): void;
 
+        /**
+         * Returns a snapshot of the screen capture session held by the current script,
+         * or null when the script holds none.
+         * Since AutoJs6 6.8.1 the snapshot also tells whether the session is shared
+         * (isShared(), or the shared property) and how many participants it has (participants()).
+         * zh-CN: 返回当前脚本所在屏幕捕获会话的快照, 未持有会话时返回 null. 6.8.1 起快照增加是否共享 (isShared() 或 shared 属性) 与参与者数量 (participants()).
+         * @example
+         * images.requestScreenCapture();
+         * let options = images.getScreenCaptureOptions();
+         * console.log(options.width(), options.height(), options.isAsync());
+         * console.log(options.shared, options.participants()); // e.g. true 2
+         * @see https://docs.autojs6.com/#/image?id=m-images-getscreencaptureoptions
+         */
         getScreenCaptureOptions(): org.autojs.autojs.core.image.capture.ScreenCapturer.Options | null;
 
         /**
