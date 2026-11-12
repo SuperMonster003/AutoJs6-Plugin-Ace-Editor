@@ -4328,6 +4328,18 @@
                     "signature": "system: Alarms.System;"
                 },
                 {
+                    "name": "timers",
+                    "type": "variable",
+                    "doc": "timers: Alarms.Timers;",
+                    "signature": "timers: Alarms.Timers;"
+                },
+                {
+                    "name": "stopwatch",
+                    "type": "variable",
+                    "doc": "stopwatch: Alarms.Stopwatch;",
+                    "signature": "stopwatch: Alarms.Stopwatch;"
+                },
+                {
                     "name": "isAvailable",
                     "type": "function",
                     "doc": "isAvailable(): boolean;",
@@ -4494,6 +4506,44 @@
                     "signature": "getDefault(): Ringtone | null;"
                 }
             ],
+            "alarms.stopwatch": [
+                {
+                    "name": "state",
+                    "type": "function",
+                    "doc": "state(): StopwatchState;",
+                    "signature": "state(): StopwatchState;"
+                },
+                {
+                    "name": "start",
+                    "type": "function",
+                    "doc": "start(): StopwatchState;",
+                    "signature": "start(): StopwatchState;"
+                },
+                {
+                    "name": "pause",
+                    "type": "function",
+                    "doc": "pause(): StopwatchState;",
+                    "signature": "pause(): StopwatchState;"
+                },
+                {
+                    "name": "resume",
+                    "type": "function",
+                    "doc": "resume(): StopwatchState;",
+                    "signature": "resume(): StopwatchState;"
+                },
+                {
+                    "name": "lap",
+                    "type": "function",
+                    "doc": "lap(): Lap;",
+                    "signature": "lap(): Lap;"
+                },
+                {
+                    "name": "reset",
+                    "type": "function",
+                    "doc": "reset(): StopwatchState;",
+                    "signature": "reset(): StopwatchState;"
+                }
+            ],
             "alarms.system": [
                 {
                     "name": "setAlarm",
@@ -4548,6 +4598,56 @@
                     "type": "function",
                     "doc": "handlers(action?: System.Action): string[];",
                     "signature": "handlers(action?: System.Action): string[];"
+                }
+            ],
+            "alarms.timers": [
+                {
+                    "name": "start",
+                    "type": "function",
+                    "doc": "start(duration: Duration, options?: TimerOptions): Timer;",
+                    "signature": "start(duration: Duration, options?: TimerOptions): Timer;"
+                },
+                {
+                    "name": "get",
+                    "type": "function",
+                    "doc": "get(id: string): Timer | null;",
+                    "signature": "get(id: string): Timer | null;"
+                },
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(): Timer[];",
+                    "signature": "list(): Timer[];"
+                },
+                {
+                    "name": "pause",
+                    "type": "function",
+                    "doc": "pause(id: string): Timer;",
+                    "signature": "pause(id: string): Timer;"
+                },
+                {
+                    "name": "resume",
+                    "type": "function",
+                    "doc": "resume(id: string): Timer;",
+                    "signature": "resume(id: string): Timer;"
+                },
+                {
+                    "name": "addTime",
+                    "type": "function",
+                    "doc": "addTime(id: string, millis: Duration): Timer;",
+                    "signature": "addTime(id: string, millis: Duration): Timer;"
+                },
+                {
+                    "name": "reset",
+                    "type": "function",
+                    "doc": "reset(id: string): Timer;",
+                    "signature": "reset(id: string): Timer;"
+                },
+                {
+                    "name": "cancel",
+                    "type": "function",
+                    "doc": "cancel(id: string): boolean;",
+                    "signature": "cancel(id: string): boolean;"
                 }
             ],
             "app": [

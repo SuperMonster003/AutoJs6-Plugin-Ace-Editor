@@ -69,6 +69,8 @@ declare namespace AutoJs6 {
         AlarmError: Alarms.ErrorConstructor;
         ringtones: Alarms.Ringtones;
         system: Alarms.System;
+        timers: Alarms.Timers;
+        stopwatch: Alarms.Stopwatch;
         isAvailable(): boolean;
         capabilities(): Alarms.Capabilities;
         openPlugin(page?: Alarms.PluginPage): void;
@@ -106,6 +108,15 @@ declare namespace AutoJs6 {
         getDefault(): Ringtone | null;
     }
 
+    interface Alarms_stopwatch {
+        state(): StopwatchState;
+        start(): StopwatchState;
+        pause(): StopwatchState;
+        resume(): StopwatchState;
+        lap(): Lap;
+        reset(): StopwatchState;
+    }
+
     interface Alarms_system {
         setAlarm(options: System.SetAlarmOptions): boolean;
         setTimer(options: System.SetTimerOptions): boolean;
@@ -116,6 +127,17 @@ declare namespace AutoJs6 {
         dismissTimer(options?: System.PackageOptions): boolean;
         next(): System.NextAlarm | null;
         handlers(action?: System.Action): string[];
+    }
+
+    interface Alarms_timers {
+        start(duration: Duration, options?: TimerOptions): Timer;
+        get(id: string): Timer | null;
+        list(): Timer[];
+        pause(id: string): Timer;
+        resume(id: string): Timer;
+        addTime(id: string, millis: Duration): Timer;
+        reset(id: string): Timer;
+        cancel(id: string): boolean;
     }
 
     interface App {

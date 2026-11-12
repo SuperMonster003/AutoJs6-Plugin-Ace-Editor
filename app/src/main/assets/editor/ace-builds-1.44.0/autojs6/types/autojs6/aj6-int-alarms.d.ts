@@ -3,13 +3,17 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 5.1.3
 //
-// Last modified: Nov 7, 2026
+// Last modified: Nov 12, 2026
 
 /// <reference path="./index.d.ts" />
 
 /**
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsModule.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/Alarms.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsTimersModule.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsTimers.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsStopwatchModule.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsStopwatch.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsRingtonesModule.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsSystemModule.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsSystem.kt
@@ -29,7 +33,8 @@ declare namespace Internal {
      * they ring while AutoJs6 is not running; scripts read and change every alarm, the ones the user created in the
      * plugin's screens included (the plugin shows who created and last changed each alarm). While the plugin is missing,
      * disabled or too old the calls throw an `AlarmError` whose `code` is `PLUGIN_UNAVAILABLE`, `PLUGIN_DISABLED` or
-     * `PLUGIN_INCOMPATIBLE`; {@link isAvailable} probes without throwing. {@link system} needs no plugin.
+     * `PLUGIN_INCOMPATIBLE`; {@link isAvailable} probes without throwing. {@link system} needs no plugin; {@link timers}
+     * and {@link stopwatch} need plugin 1.1.0 or later (`PLUGIN_INCOMPATIBLE` on 1.0.x).
      *
      * Every call is synchronous (15 seconds at most, 60 for a ringtone file import). Unknown option keys are refused by
      * name with `INVALID_OPTIONS`; weekday numbers are 0 (Sunday) to 6 (Saturday); relative paths resolve against the
@@ -46,6 +51,12 @@ declare namespace Internal {
         /** The system clock app through `AlarmClock` Intents; needs no plugin. @since 6.8.1 */
         readonly system: Alarms.System;
 
+        /** The plugin's timers (plugin 1.1.0 or later). @since 6.8.1 */
+        readonly timers: Alarms.Timers;
+
+        /** The plugin's single stopwatch (plugin 1.1.0 or later). @since 6.8.1 */
+        readonly stopwatch: Alarms.Stopwatch;
+
         /** Whether a compatible, enabled and authorized 3-Chime Alarm plugin answers; never throws. @since 6.8.1 */
         isAvailable(): boolean;
 
@@ -53,7 +64,7 @@ declare namespace Internal {
         capabilities(): Alarms.Capabilities;
 
         /**
-         * Opens a screen of the plugin (default the alarm list). Plugin 1.0.0 has no timer or stopwatch screen and opens
+         * Opens a screen of the plugin (default the alarm list). Plugin 1.0.x has no timer or stopwatch screen and opens
          * the alarm list for `'timers'` and `'stopwatch'`; `UNSUPPORTED` when the plugin has no screen to open.
          * @since 6.8.1
          */
@@ -121,28 +132,29 @@ declare namespace Internal {
          */
         preview(options: Alarms.AlarmOptions, count?: number): number[];
 
-        /** The sounding, then the waiting, then the snoozed alarms. @since 6.8.1 */
+        /** The sounding, then the waiting, then the snoozed alarms and timers (`kind`). @since 6.8.1 */
         ringing(): Alarms.Ringing[];
 
         /**
-         * Dismisses the round of the alarm `id`, or without `id` every sounding and waiting alarm and every snooze;
-         * whether anything was dismissed.
+         * Dismisses the round of the alarm or timer `id`, or without `id` every sounding and waiting alarm or timer and
+         * every snooze; whether anything was dismissed. A dismissed timer is deleted.
          * @since 6.8.1
          */
         dismiss(id?: string | null): boolean;
 
         /**
-         * Snoozes the alarm `id`, or without `id` (pass `null` to give `minutes`) every sounding and waiting alarm, for
-         * `minutes` (1 - 60, default the alarm's `snooze.minutes`); `false` when snoozing is off, `max` is reached, the
-         * alarm already snoozes or the plugin cannot schedule exact alarms.
+         * Snoozes the alarm or timer `id`, or without `id` (pass `null` to give `minutes`) every sounding and waiting one,
+         * for `minutes` (1 - 60, default the alarm's `snooze.minutes`, for a timer the plugin's settings); `false` when
+         * snoozing is off, `max` is reached, it already snoozes or the plugin cannot schedule exact alarms.
          * @since 6.8.1
          */
         snooze(id?: string | null, minutes?: number): boolean;
 
         /**
-         * Listens to an alarm event of any alarm. The first listener is registered with the plugin before the call
-         * returns, so a missing plugin throws here. The listener runs on the script thread; the script keeps running
-         * until the listener is removed or the script ends. Plugin 1.0.0 has no `beforeRing` (`PLUGIN_INCOMPATIBLE`).
+         * Listens to an event of any alarm or timer (`kind`). The first listener is registered with the plugin before the
+         * call returns, so a missing plugin throws here. The listener runs on the script thread; the script keeps running
+         * until the listener is removed or the script ends. Plugin 1.1.0 and earlier have no `beforeRing`
+         * (`PLUGIN_INCOMPATIBLE`).
          * @since 6.8.1
          */
         on<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;
@@ -170,7 +182,9 @@ declare namespace Internal {
          * the script or AutoJs6 is not running. At most 5 scripts per alarm; binding a script again replaces its row;
          * `NOT_FOUND` when the plugin does not know the alarm. The file is not checked here (a missing file is skipped
          * when the event comes). Each (occurrence, event, script) starts once; nothing starts before the first unlock
-         * after boot or while AutoJs6 is force-stopped.
+         * after boot or while AutoJs6 is force-stopped. A timer id (`t_`, plugin 1.1.0 or later) takes only `ring`,
+         * `snooze`, `dismiss` and `silence` and no `leadSeconds`; its bindings go when the timer is dismissed, silenced
+         * or cancelled.
          * @since 6.8.1
          */
         bind(id: string, script: string, options?: Alarms.BindOptions): Alarms.Binding;
@@ -304,14 +318,14 @@ declare namespace Internal {
             max?: number;
         }
 
-        /** Needs the plugin feature `holidays` (not in plugin 1.0.0, `PLUGIN_INCOMPATIBLE`). */
+        /** Needs the plugin feature `holidays` (not in plugin 1.1.0 and earlier, `PLUGIN_INCOMPATIBLE`). */
         interface HolidayFilter {
             /** ISO 3166-1 alpha-2 with an optional subdivision (`'CN'`, `'US-CA'`). */
             region?: string;
             mode: 'skip' | 'only' | 'workdays';
         }
 
-        /** Needs the plugin feature `challenges` (not in plugin 1.0.0, `PLUGIN_INCOMPATIBLE`). */
+        /** Needs the plugin feature `challenges` (not in plugin 1.1.0 and earlier, `PLUGIN_INCOMPATIBLE`). */
         interface DismissOptions {
             challenge?: 'none' | 'math' | 'shake' | 'type' | 'script';
             math?: { difficulty?: number; count?: number };
@@ -444,7 +458,7 @@ declare namespace Internal {
 
         interface Ringing {
             readonly id: string;
-            /** `'alarm'` in plugin 1.0.0. */
+            /** `'timer'` for a timer (plugin 1.1.0 or later). */
             readonly kind: 'alarm' | 'timer';
             readonly label: string | null;
             /** When the round started. */
@@ -470,10 +484,156 @@ declare namespace Internal {
             getDefault(): Ringtone | null;
         }
 
+        /**
+         * A duration: integer milliseconds (`90000`), or a string of whole hours, minutes and seconds such as `'25m'`,
+         * `'1h30m'`, `'90s'` or `'1h 30m 15s'` (each unit at most once and in this order, any case, spaces allowed).
+         * Decimals (`'1.5h'`), bare digits (`'90'`) and other units (`'1d'`) are `INVALID_OPTIONS`.
+         */
+        type Duration = number | string;
+
+        /** `'ringing'` includes a snoozed timer. */
+        type TimerState = 'running' | 'paused' | 'ringing';
+
+        /**
+         * `alarms.timers`: the plugin's timers, the ones its timer screen shows (plugin 1.1.0 or later, feature `timers`;
+         * `PLUGIN_INCOMPATIBLE` on 1.0.x). At most 20 timers; a duration and the remaining time stay within 1 second -
+         * 100 hours. A due timer rings like an alarm (`kind` `'timer'` ring / snooze / dismiss / silence events) and is
+         * deleted once dismissed or silenced. A ringing or snoozed timer only takes dismiss, snooze and cancel: pause,
+         * resume, addTime and reset throw `INVALID_OPTIONS`. Unknown ids: `get` answers `null`, `cancel` `false`, the
+         * others throw `NOT_FOUND`.
+         *
+         * Timers count on the elapsed-time clock within one boot. After a reboot a running timer is restored from the
+         * wall-clock end it recorded (the time switched off counts; the clock at boot may differ from the one before by a
+         * few seconds, and network time does not correct it). Up to 5 minutes overdue it rings late with `scheduledAt` the
+         * original end; more than 5 minutes overdue it leaves a missed timer notification and is deleted without an event.
+         */
+        interface Timers {
+            /**
+             * Starts a new timer at once. `LIMIT_EXCEEDED` with 20 timers; `PERMISSION_REQUIRED` without the exact alarm
+             * permission (Android 12 - 12L). A local ringtone file is imported after the plugin is checked for timers.
+             * @since 6.8.1
+             */
+            start(duration: Duration, options?: TimerOptions): Timer;
+            /** The timer, or `null` when the id is unknown. @since 6.8.1 */
+            get(id: string): Timer | null;
+            /** Every timer in start order. @since 6.8.1 */
+            list(): Timer[];
+            /** Pauses a running timer, keeping the remaining time; a paused one is answered unchanged. @since 6.8.1 */
+            pause(id: string): Timer;
+            /**
+             * Continues from the remaining time; a running one is answered unchanged. `PERMISSION_REQUIRED` without the
+             * exact alarm permission (Android 12 - 12L).
+             * @since 6.8.1
+             */
+            resume(id: string): Timer;
+            /**
+             * Adds `millis` (negative removes time, `'-1m'` works too) to the remaining time of a running or paused timer;
+             * `durationMillis` stays. `INVALID_OPTIONS`, the timer unchanged, when the result leaves 1 second - 100 hours.
+             * @since 6.8.1
+             */
+            addTime(id: string, millis: Duration): Timer;
+            /** Sets the remaining time back to `durationMillis` and pauses; call `resume` to start again. @since 6.8.1 */
+            reset(id: string): Timer;
+            /**
+             * Deletes the timer, ending a ringing or snoozed one first with a `dismiss` event (`by` `'script'`); its bindings
+             * go afterwards. `false` when the id is unknown.
+             * @since 6.8.1
+             */
+            cancel(id: string): boolean;
+        }
+
+        /**
+         * The options of `timers.start`, written as in {@link AlarmOptions}; other keys are `INVALID_OPTIONS`. No snooze
+         * option: snoozing uses the plugin's settings. `sound.source`, `vibrate` and `autoSilenceMinutes` left out take
+         * the plugin's defaults when the timer rings.
+         */
+        interface TimerOptions {
+            /** At most 100 characters. */
+            label?: string;
+            /** A local audio file is imported into the plugin. */
+            sound?: SoundOptions;
+            /** Not `null`. */
+            vibrate?: boolean | number[];
+            /** Needs `text`. */
+            speak?: SpeakOptions;
+            /** 1 - 60. */
+            autoSilenceMinutes?: number;
+        }
+
+        /**
+         * A snapshot of a timer at the time of the call. Every key is present (`null` when not set); the methods call the
+         * module function of the same name with the snapshot's `id`.
+         */
+        interface Timer {
+            /** Starts with `t_`. */
+            readonly id: string;
+            readonly label: string | null;
+            /** The starting duration; `addTime` leaves it. */
+            readonly durationMillis: number;
+            /** At the time of the call; 0 while ringing. */
+            readonly remainingMillis: number;
+            readonly state: TimerState;
+            /** When it is due; only while running. */
+            readonly endsAt: number | null;
+            readonly sound: SoundOptions | null;
+            readonly vibrate: boolean | number[] | null;
+            readonly speak: SpeakOptions | null;
+            readonly autoSilenceMinutes: number | null;
+
+            pause(): Timer;
+            resume(): Timer;
+            addTime(millis: Duration): Timer;
+            reset(): Timer;
+            cancel(): boolean;
+            /** `alarms.bind(id, script, options)`; only `ring`, `snooze`, `dismiss` and `silence`. */
+            bind(script: string, options?: BindOptions): Binding;
+        }
+
+        /**
+         * `alarms.stopwatch`: the plugin's single stopwatch, the one its stopwatch screen shows (plugin 1.1.0 or later,
+         * feature `stopwatch`; `PLUGIN_INCOMPATIBLE` on 1.0.x). It counts on the elapsed-time clock; after a reboot a
+         * running stopwatch is paused with the time counted up to that boot (the plugin cannot know when the phone went
+         * off, so it usually counts less than a minute too much).
+         */
+        interface Stopwatch {
+            /** @since 6.8.1 */
+            state(): StopwatchState;
+            /** From 0 when idle, from the pause when paused; a running one is answered unchanged. @since 6.8.1 */
+            start(): StopwatchState;
+            /** A stopwatch that is not running is answered unchanged. @since 6.8.1 */
+            pause(): StopwatchState;
+            /** The same as `start`. @since 6.8.1 */
+            resume(): StopwatchState;
+            /**
+             * Records a lap of the running stopwatch; `INVALID_OPTIONS` when not running, `LIMIT_EXCEEDED` after 100 laps.
+             * @since 6.8.1
+             */
+            lap(): Lap;
+            /** Stops, clears the time and the laps; back to `'idle'`. @since 6.8.1 */
+            reset(): StopwatchState;
+        }
+
+        /** A plain object of the state at the time of the call. */
+        interface StopwatchState {
+            readonly state: 'idle' | 'running' | 'paused';
+            readonly elapsedMillis: number;
+            /** In recording order. */
+            readonly laps: Lap[];
+        }
+
+        interface Lap {
+            /** From 1. */
+            readonly index: number;
+            /** The time since the previous lap. */
+            readonly lapMillis: number;
+            /** The elapsed time when recorded. */
+            readonly totalMillis: number;
+        }
+
         type EventName = 'beforeRing' | 'ring' | 'snooze' | 'dismiss' | 'silence' | 'miss' | 'skip' | 'change';
 
         interface BindOptions {
-            /** Default `['ring']`; not empty. */
+            /** Default `['ring']`; not empty. A timer takes only `ring`, `snooze`, `dismiss` and `silence`. */
             events?: EventName | EventName[];
             /** The `beforeRing` lead in seconds (15 - 300, default 60); only together with `beforeRing`. */
             leadSeconds?: number;
@@ -490,7 +650,7 @@ declare namespace Internal {
 
         interface EventBase {
             readonly type: EventName;
-            /** `'alarm'` in plugin 1.0.0. */
+            /** `'timer'` for a timer (plugin 1.1.0 or later): only ring, snooze, dismiss and silence, `alarmId` is the timer id. */
             readonly kind: 'alarm' | 'timer';
             readonly alarmId: string;
             readonly label: string | null;
@@ -501,7 +661,7 @@ declare namespace Internal {
             readonly occurrence: string;
         }
 
-        /** Needs the plugin feature `beforeRing` (not in plugin 1.0.0). */
+        /** Needs the plugin feature `beforeRing` (not in plugin 1.1.0 and earlier). */
         interface BeforeRingEvent extends EventBase {
             readonly type: 'beforeRing';
             readonly deadline: number;
@@ -540,7 +700,7 @@ declare namespace Internal {
 
         interface SkipEvent extends EventBase {
             readonly type: 'skip';
-            /** `'skipNext'` in plugin 1.0.0. */
+            /** Only `'skipNext'` in plugin 1.1.0 and earlier. */
             readonly reason: 'skipNext' | 'holiday' | 'script';
             readonly detail?: string;
         }
@@ -577,6 +737,9 @@ declare namespace Internal {
             readonly maxAlarms: number;
             readonly maxEnabledAlarms: number;
             readonly maxTimers: number;
+            readonly minTimerMillis: number;
+            readonly maxTimerMillis: number;
+            readonly maxStopwatchLaps: number;
             readonly maxBindingsPerAlarm: number;
             readonly maxLabelChars: number;
             readonly maxTagChars: number;
@@ -602,7 +765,7 @@ declare namespace Internal {
             readonly packageName: string;
             /** 1. */
             readonly contractVersion: number;
-            /** `['alarms']` in plugin 1.0.0; later `timers`, `stopwatch`, `holidays`, `beforeRing`, `challenges`. */
+            /** `['alarms']` in plugin 1.0.x, `'timers'` and `'stopwatch'` added in 1.1.0; later `holidays`, `beforeRing`, `challenges`. */
             readonly features: string[];
             /** What the plugin holds right now; only a missing exact alarm permission makes calls fail. */
             readonly permissions: { readonly exactAlarm: boolean; readonly notifications: boolean; readonly fullScreen: boolean };
