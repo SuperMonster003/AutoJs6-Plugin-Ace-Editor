@@ -15,7 +15,8 @@
         "全局模組 alarms / $alarms 的宣告 (AutoJs6 6.8.1, 需要 3-Chime Alarm 插件, 僅 Rhino): 鬧鐘的新增, 查詢, 修改與刪除, 帶方法的鬧鐘快照, 選項與重複規則, 按事件名稱區分類型的事件 (on / once 的回呼參數與 currentEvent), 登記腳本, alarms.ringtones, 不需要插件的 alarms.system, 以及帶 hint 的 AlarmError",
         "alarms 宣告補全 3-Chime Alarm 1.1.0 的計時器 (alarms.timers) 與秒錶 (alarms.stopwatch) (AutoJs6 6.8.1): 輸入 alarms.timers. 或 alarms.stopwatch. 時提示開始, 暫停, 繼續, 加減時間, 重置, 取消與計圈等方法, 以及帶方法的計時器快照, TimerOptions, 時長類型 Duration (毫秒數或 `'25m'` 這樣的字串), StopwatchState 與 Lap, kind 為 `'timer'` 的事件",
         "全局模組 video / $video 與 audio / $audio 的宣告與補全 (AutoJs6 6.8.1, 僅 Rhino): 輸入 video. 或 audio. 時提示 AutoJs6 內建的錄屏與錄音, 需要 3-Slate Studio 插件的各加工方法及其 Async 形態, 以及選項欄位, 錄製句柄, 多軌時間線, 字幕與 MediaStudioError; 同步 Node.js / Bun 的 video / audio 宣告",
-        "images.getScreenCaptureOptions 返回的 ScreenCapturer.Options 增加 isShared (也可讀作 shared 屬性) 與 participants (AutoJs6 6.8.1), 分別表示屏幕捕獲會話是否由多個參與者共享及參與者數量; stopScreenCapture 說明共享會話在最後一個參與者退出後才釋放; 同步 Node.js / Bun 的 getScreenCaptureOptions 宣告 (返回值增加 shared 與 participants)"
+        "images.getScreenCaptureOptions 返回的 ScreenCapturer.Options 增加 isShared (也可讀作 shared 屬性) 與 participants (AutoJs6 6.8.1), 分別表示屏幕捕獲會話是否由多個參與者共享及參與者數量; stopScreenCapture 說明共享會話在最後一個參與者退出後才釋放; 同步 Node.js / Bun 的 getScreenCaptureOptions 宣告 (返回值增加 shared 與 participants)",
+        "http 模塊的 RequestBuilderOptions 增加 proxy 選項, ClientBuilderOptions 增加 proxy 屬性 (AutoJs6 6.8.1): 頂層 proxy 只對本次請求生效, client.proxy 保存到當前腳本的共享客戶端, 設為 null 恢復跟隨系統代理; 含 Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject 與 java.net.Proxy) 與 Http.ProxyObject ({ host, port, type }) 類型"
       ],
       "improvement": [
         "捆綁聲明升級至 @sm003/autojs6-dts 4.88.0"

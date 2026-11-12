@@ -16,6 +16,7 @@
 * `기능` alarms 선언에 3-Chime Alarm 1.1.0의 타이머 (alarms.timers)와 스톱워치 (alarms.stopwatch) 추가 (AutoJs6 6.8.1): alarms.timers. 또는 alarms.stopwatch.를 입력하면 시작, 일시정지, 재개, 시간 추가와 줄이기, 초기화, 취소, 랩 등의 메서드를 제안; 메서드가 있는 타이머 스냅숏, TimerOptions, 시간을 나타내는 Duration 타입 (밀리초, 또는 `'25m'` 같은 문자열), StopwatchState와 Lap, kind가 `'timer'`인 이벤트도 포함
 * `기능` 전역 모듈 video / $video 및 audio / $audio 선언과 자동 완성 (AutoJs6 6.8.1, Rhino 전용): video. 또는 audio.를 입력하면 AutoJs6 자체의 화면 녹화와 녹음, 3-Slate Studio 플러그인이 필요한 각 가공 메서드와 Async 형태, 그리고 옵션 필드, 녹화 핸들, 멀티 트랙 타임라인, 자막과 MediaStudioError를 제안; Node.js / Bun의 video / audio 선언 동기화
 * `기능` images.getScreenCaptureOptions 가 반환하는 ScreenCapturer.Options 에 isShared (shared 속성으로도 읽을 수 있음) 와 participants 추가 (AutoJs6 6.8.1), 여러 참여자가 화면 캡처 세션을 공유하는지와 참여자 수를 나타냄; stopScreenCapture 에 공유 세션은 마지막 참여자가 나간 뒤에 해제된다는 설명 추가; Node.js / Bun의 getScreenCaptureOptions 선언 동기화 (반환값에 shared 와 participants 추가)
+* `기능` http 모듈의 RequestBuilderOptions 에 proxy 옵션, ClientBuilderOptions 에 proxy 속성 추가 (AutoJs6 6.8.1): 최상위 proxy 는 현재 요청에만 적용되고, client.proxy 는 현재 스크립트의 공유 클라이언트에 저장되며, null 이면 시스템 프록시를 다시 따름; Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject 와 java.net.Proxy) 과 Http.ProxyObject ({ host, port, type }) 타입 포함
 * `개선` 번들 선언을 @sm003/autojs6-dts 4.88.0으로 업그레이드
 
 # v2.49.0

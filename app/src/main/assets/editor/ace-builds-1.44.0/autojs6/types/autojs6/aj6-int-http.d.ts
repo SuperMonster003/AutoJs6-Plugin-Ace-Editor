@@ -406,6 +406,45 @@ declare namespace Http {
 
     interface ClientBuilderOptions {
         [methodName: string]: any;
+
+        /**
+         * Proxy kept in the shared client of the current script: later requests of the same script use it even when
+         * they omit client, until client.proxy is set again. Accepts the same forms as the top-level proxy option
+         * (AutoJs6 6.8.1) besides java.net.Proxy; null clears it and follows the system proxy again.
+         * To use another proxy for one request only, use the top-level proxy option of RequestBuilderOptions.
+         */
+        proxy?: Http.ProxyOption | null;
+    }
+
+    /**
+     * Ways of naming a proxy (AutoJs6 6.8.1):
+     *
+     * - `"host:port"` or `"http://host:port"`: HTTP proxy (an IPv6 host goes in brackets, e.g. `"[::1]:8080"`).
+     * - `"socks5://host:port"` or `"socks://host:port"`: SOCKS5 proxy.
+     * - `"direct"`: no proxy, same as java.net.Proxy.NO_PROXY.
+     * - a ProxyObject `{ host, port, type }`.
+     * - a java.net.Proxy.
+     *
+     * User name and password are not accepted in the address; give an okhttp3.Authenticator via client.proxyAuthenticator.
+     * A wrong value (e.g. no port, a port outside 1 - 65535, `"https://"` or `"socks4://"`) throws an error that lists
+     * the accepted forms, and the request is not sent.
+     */
+    type ProxyOption = string | Http.ProxyObject | java.net.Proxy;
+
+    interface ProxyObject {
+        /**
+         * Host name or IP address; may be omitted when type is `"direct"`.
+         */
+        host?: string;
+        /**
+         * Integer or numeric string, 1 - 65535; may be omitted when type is `"direct"`.
+         */
+        port?: number | string;
+        /**
+         * `"socks5"` is the same as `"socks"`.
+         * @default 'http'
+         */
+        type?: 'http' | 'socks' | 'socks5' | 'direct' | java.net.Proxy.Type;
     }
 
     // noinspection SpellCheckingInspection
@@ -458,6 +497,13 @@ declare namespace Http {
         client?: Http.ClientBuilderOptions;
         isInsecure?: boolean;
         insecure?: boolean;
+        /**
+         * Proxy for the current request only (AutoJs6 6.8.1). It is applied after the client options are kept and is
+         * not written to the shared client, so later requests of the same script still use client.proxy or the system
+         * proxy. Omitted or null: client.proxy if set, otherwise the system proxy.
+         * @see Http.ProxyOption
+         */
+        proxy?: Http.ProxyOption | null;
         /**
          * Timeout (milliseconds) for readTimeout/writeTimeout/connectTimeout.
          * @default 30e3

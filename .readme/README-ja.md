@@ -196,6 +196,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 * `機能` alarms の宣言に 3-Chime Alarm 1.1.0 のタイマー (alarms.timers) とストップウォッチ (alarms.stopwatch) を追加 (AutoJs6 6.8.1): alarms.timers. または alarms.stopwatch. と入力すると開始, 一時停止, 再開, 時間の追加と短縮, リセット, キャンセル, ラップなどのメソッドを候補表示; メソッド付きのタイマースナップショット, TimerOptions, 時間を表す Duration 型 (ミリ秒, または `'25m'` のような文字列), StopwatchState と Lap, kind が `'timer'` のイベントも含む
 * `機能` グローバルモジュール video / $video と audio / $audio の宣言と補完 (AutoJs6 6.8.1, Rhino のみ): video. または audio. と入力すると, AutoJs6 自体の画面録画と録音, 3-Slate Studio プラグインが必要な各加工メソッドとその Async 形式, およびオプションのフィールド, 録画ハンドル, マルチトラックのタイムライン, 字幕と MediaStudioError を候補に表示; Node.js / Bun の video / audio 宣言を同期
 * `機能` images.getScreenCaptureOptions が返す ScreenCapturer.Options に isShared (shared プロパティとしても読める) と participants を追加 (AutoJs6 6.8.1), 画面キャプチャセッションを複数の参加者が共有しているかと参加者数を表す; stopScreenCapture に共有セッションは最後の参加者が抜けてから解放されることを記載; Node.js / Bun の getScreenCaptureOptions 宣言を同期 (戻り値に shared と participants を追加)
+* `機能` http モジュールの RequestBuilderOptions に proxy オプション, ClientBuilderOptions に proxy プロパティを追加 (AutoJs6 6.8.1): トップレベルの proxy は現在のリクエストにだけ適用され, client.proxy は現在のスクリプトの共有クライアントに保存され, null でシステムのプロキシに戻る; Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject と java.net.Proxy) と Http.ProxyObject ({ host, port, type }) 型を含む
 * `改善` 同梱の宣言を @sm003/autojs6-dts 4.88.0 に更新
 
 # v2.49.0

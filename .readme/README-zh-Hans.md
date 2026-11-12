@@ -196,6 +196,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 * `新增` alarms 声明补全 3-Chime Alarm 1.1.0 的计时器 (alarms.timers) 与秒表 (alarms.stopwatch) (AutoJs6 6.8.1): 输入 alarms.timers. 或 alarms.stopwatch. 时提示开始, 暂停, 继续, 加减时间, 重置, 取消与计圈等方法, 以及带方法的计时器快照, TimerOptions, 时长类型 Duration (毫秒数或 `'25m'` 这样的字符串), StopwatchState 与 Lap, kind 为 `'timer'` 的事件
 * `新增` 全局模块 video / $video 与 audio / $audio 的声明与补全 (AutoJs6 6.8.1, 仅 Rhino): 输入 video. 或 audio. 时提示 AutoJs6 自带的录屏与录音, 需要 3-Slate Studio 插件的各加工方法及其 Async 形态, 以及选项字段, 录制句柄, 多轨时间线, 字幕与 MediaStudioError; 同步 Node.js / Bun 的 video / audio 声明
 * `新增` images.getScreenCaptureOptions 返回的 ScreenCapturer.Options 增加 isShared (也可读作 shared 属性) 与 participants (AutoJs6 6.8.1), 分别表示屏幕捕获会话是否由多个参与者共享与参与者数量; stopScreenCapture 说明共享会话在最后一个参与者退出后才释放; 同步 Node.js / Bun 的 getScreenCaptureOptions 声明 (返回值增加 shared 与 participants)
+* `新增` http 模块的 RequestBuilderOptions 增加 proxy 选项, ClientBuilderOptions 增加 proxy 属性 (AutoJs6 6.8.1): 顶层 proxy 只对本次请求生效, client.proxy 保存到当前脚本的共享客户端, 设为 null 恢复跟随系统代理; 含 Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject 与 java.net.Proxy) 与 Http.ProxyObject ({ host, port, type }) 类型
 * `优化` 捆绑声明升级至 @sm003/autojs6-dts 4.88.0
 
 # v2.49.0
