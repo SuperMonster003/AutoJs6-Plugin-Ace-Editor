@@ -8712,10 +8712,12 @@ declare module "autojs6:bun-host" {
         /** `'1-3,5,8-'`, a page number (from 1) or a list of both. */
         type PageRange = string | number | Array<number | string>;
 
+        type ProgressStage = 'opening' | 'processing' | 'writing' | 'ocr' | string;
+
         interface Progress {
             readonly opId: number;
             readonly percent: number;
-            readonly stage: string;
+            readonly stage: ProgressStage;
             readonly current: number;
             readonly total: number;
         }
@@ -8879,13 +8881,26 @@ declare module "autojs6:bun-host" {
             readonly sizeBytes: number;
         }
 
+        type OcrMode = 'mlkit' | 'paddle' | 'rapid' | 'auto';
+
+        /** The OCR engine of `ocr: true` / `'always'`; left out, any installed one. */
+        interface OcrOptions {
+            mode?: OcrMode;
+            engineId?: string;
+            engine?: string;
+            variant?: string;
+            profile?: string;
+        }
+
         interface TextOptions extends PasswordOptions {
             pages?: PageRange;
-            layout?: boolean;
+            /** `'reading'` (default) sorts the text by position, `'raw'` keeps the content stream order. */
+            layout?: 'reading' | 'raw';
             /** `true` recognizes pages without a text layer, `'always'` every page (needs the ocr capability). */
             ocr?: boolean | 'always';
             ocrDpi?: number;
-            ocrOptions?: object;
+            /** Needs `ocr` true or `'always'`. */
+            ocrOptions?: OcrOptions;
         }
 
         interface SearchOptions extends PasswordOptions {
@@ -8928,7 +8943,8 @@ declare module "autojs6:bun-host" {
         }
 
         interface MergeOptions extends ProgressOptions {
-            outline?: string;
+            /** `'merge'` (default) gives the output one outline entry per input (see `displayNames`), `'none'` gives it none. */
+            outline?: 'merge' | 'none';
             /** One per input, null for an input without a password. */
             passwords?: Array<string | null>;
             /**
@@ -8949,13 +8965,14 @@ declare module "autojs6:bun-host" {
             pages?: PageRange;
         }
 
-        type PageSize = string | [number, number];
+        /** `'fit'`, `'A4'` or `'Letter'` (any case), or `[width, height]` in points. */
+        type PageSize = 'fit' | 'A4' | 'Letter' | string | [number, number];
 
         interface FromImagesOptions extends ProgressOptions {
             pageSize?: PageSize;
             margin?: number;
-            fit?: string;
-            orientation?: string;
+            fit?: 'contain' | 'cover';
+            orientation?: 'auto' | 'portrait' | 'landscape';
             /** 1 to 100, or `'lossless'`. */
             quality?: number | 'lossless';
         }
@@ -9108,8 +9125,12 @@ declare module "autojs6:bun-host" {
             readonly pageCount: number;
         }
 
-        /** `finished` after `close({finish: true})`, `overflow` when the script stopped taking events, `error` when the bridge failed. */
-        type CloseReason = 'host' | 'finished' | 'overflow' | 'error' | string;
+        /**
+         * `closed`: the user or the system closed the viewer; `replaced`: another `view` took the viewer; `timeout`: the viewer
+         * never claimed the session; `host`: `close()`; `finished`: `close({finish: true})`; `overflow`: the script stopped
+         * taking events; `error`: the plugin process died or the bridge failed.
+         */
+        type CloseReason = 'closed' | 'replaced' | 'timeout' | 'host' | 'finished' | 'overflow' | 'error' | string;
 
         interface CloseEvent {
             readonly reason: CloseReason;
