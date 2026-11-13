@@ -465,6 +465,11 @@
                 "doc": "AutoJs6 WorkManager API"
             },
             {
+                "name": "xlsx",
+                "type": "module",
+                "doc": "AutoJs6 Xlsx API"
+            },
+            {
                 "name": "yolo",
                 "type": "module",
                 "doc": "AutoJs6 Yolo API"
@@ -3597,6 +3602,11 @@
                 "name": "$pdf",
                 "type": "module",
                 "doc": "Alias of pdf"
+            },
+            {
+                "name": "$xlsx",
+                "type": "module",
+                "doc": "Alias of xlsx"
             },
             {
                 "name": "$video",
@@ -42471,6 +42481,324 @@
                     "signature": "queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];"
                 }
             ],
+            "xlsx": [
+                {
+                    "name": "XlsxError",
+                    "type": "variable",
+                    "doc": "XlsxError: Xlsx.XlsxErrorConstructor;",
+                    "signature": "XlsxError: Xlsx.XlsxErrorConstructor;"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "info",
+                    "type": "function",
+                    "doc": "info(path: string, options?: Xlsx.SourceOptions | null): Xlsx.SheetFileInfo;",
+                    "signature": "info(path: string, options?: Xlsx.SourceOptions | null): Xlsx.SheetFileInfo;"
+                },
+                {
+                    "name": "infoAsync",
+                    "type": "function",
+                    "doc": "infoAsync(path: string, options?: Xlsx.SourceOptions | null): Xlsx.XlsxPromise<Xlsx.SheetFileInfo>;",
+                    "signature": "infoAsync(path: string, options?: Xlsx.SourceOptions | null): Xlsx.XlsxPromise<Xlsx.SheetFileInfo>;"
+                },
+                {
+                    "name": "sheetNames",
+                    "type": "function",
+                    "doc": "sheetNames(path: string, options?: Xlsx.SourceOptions | null): string[];",
+                    "signature": "sheetNames(path: string, options?: Xlsx.SourceOptions | null): string[];"
+                },
+                {
+                    "name": "sheetNamesAsync",
+                    "type": "function",
+                    "doc": "sheetNamesAsync(path: string, options?: Xlsx.SourceOptions | null): Xlsx.XlsxPromise<string[]>;",
+                    "signature": "sheetNamesAsync(path: string, options?: Xlsx.SourceOptions | null): Xlsx.XlsxPromise<string[]>;"
+                },
+                {
+                    "name": "read",
+                    "type": "function",
+                    "doc": "read(path: string, options?: Xlsx.ReadOptions | null): any[];",
+                    "signature": "read(path: string, options?: Xlsx.ReadOptions | null): any[];"
+                },
+                {
+                    "name": "readAsync",
+                    "type": "function",
+                    "doc": "readAsync(path: string, options?: Xlsx.ReadOptions | null): Xlsx.XlsxPromise<any[]>;",
+                    "signature": "readAsync(path: string, options?: Xlsx.ReadOptions | null): Xlsx.XlsxPromise<any[]>;"
+                },
+                {
+                    "name": "readAll",
+                    "type": "function",
+                    "doc": "readAll(path: string, options?: Xlsx.ReadAllOptions | null): { [sheetName: string]: any[] };",
+                    "signature": "readAll(path: string, options?: Xlsx.ReadAllOptions | null): { [sheetName: string]: any[] };"
+                },
+                {
+                    "name": "readAllAsync",
+                    "type": "function",
+                    "doc": "readAllAsync(path: string, options?: Xlsx.ReadAllOptions | null): Xlsx.XlsxPromise<{ [sheetName: string]: any[] }>;",
+                    "signature": "readAllAsync(path: string, options?: Xlsx.ReadAllOptions | null): Xlsx.XlsxPromise<{ [sheetName: string]: any[] }>;"
+                },
+                {
+                    "name": "write",
+                    "type": "function",
+                    "doc": "write(path: string, rows: Xlsx.Rows, options?: Xlsx.WriteOptions | null): Xlsx.SheetResult;",
+                    "signature": "write(path: string, rows: Xlsx.Rows, options?: Xlsx.WriteOptions | null): Xlsx.SheetResult;"
+                },
+                {
+                    "name": "writeAsync",
+                    "type": "function",
+                    "doc": "writeAsync(path: string, rows: Xlsx.Rows, options?: (Xlsx.WriteOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "writeAsync(path: string, rows: Xlsx.Rows, options?: (Xlsx.WriteOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                },
+                {
+                    "name": "writeAll",
+                    "type": "function",
+                    "doc": "writeAll(path: string, sheets: { [sheetName: string]: Xlsx.Rows }, options?: Xlsx.WriteAllOptions | null): Xlsx.SheetResult;",
+                    "signature": "writeAll(path: string, sheets: { [sheetName: string]: Xlsx.Rows }, options?: Xlsx.WriteAllOptions | null): Xlsx.SheetResult;"
+                },
+                {
+                    "name": "writeAllAsync",
+                    "type": "function",
+                    "doc": "writeAllAsync(path: string, sheets: { [sheetName: string]: Xlsx.Rows }, options?: (Xlsx.WriteAllOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "writeAllAsync(path: string, sheets: { [sheetName: string]: Xlsx.Rows }, options?: (Xlsx.WriteAllOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                },
+                {
+                    "name": "append",
+                    "type": "function",
+                    "doc": "append(path: string, rows: Xlsx.Rows, options?: Xlsx.AppendOptions | null): Xlsx.SheetResult;",
+                    "signature": "append(path: string, rows: Xlsx.Rows, options?: Xlsx.AppendOptions | null): Xlsx.SheetResult;"
+                },
+                {
+                    "name": "appendAsync",
+                    "type": "function",
+                    "doc": "appendAsync(path: string, rows: Xlsx.Rows, options?: (Xlsx.AppendOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "appendAsync(path: string, rows: Xlsx.Rows, options?: (Xlsx.AppendOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                },
+                {
+                    "name": "convert",
+                    "type": "function",
+                    "doc": "convert(path: string, output: Xlsx.Output, options?: Xlsx.ConvertOptions | null): Xlsx.SheetResult;",
+                    "signature": "convert(path: string, output: Xlsx.Output, options?: Xlsx.ConvertOptions | null): Xlsx.SheetResult;",
+                    "signatures": [
+                        "convert(path: string, output: Xlsx.Output, options?: Xlsx.ConvertOptions | null): Xlsx.SheetResult;",
+                        "convert(path: string, options?: Xlsx.ConvertOptions): Xlsx.SheetResult;"
+                    ]
+                },
+                {
+                    "name": "convertAsync",
+                    "type": "function",
+                    "doc": "convertAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ConvertOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "convertAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ConvertOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signatures": [
+                        "convertAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ConvertOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                        "convertAsync(path: string, options?: Xlsx.ConvertOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                    ]
+                },
+                {
+                    "name": "toCsv",
+                    "type": "function",
+                    "doc": "toCsv(path: string, output: Xlsx.Output, options?: Xlsx.ToCsvOptions | null): Xlsx.SheetResult;",
+                    "signature": "toCsv(path: string, output: Xlsx.Output, options?: Xlsx.ToCsvOptions | null): Xlsx.SheetResult;",
+                    "signatures": [
+                        "toCsv(path: string, output: Xlsx.Output, options?: Xlsx.ToCsvOptions | null): Xlsx.SheetResult;",
+                        "toCsv(path: string, options?: Xlsx.ToCsvOptions): Xlsx.SheetResult;"
+                    ]
+                },
+                {
+                    "name": "toCsvAsync",
+                    "type": "function",
+                    "doc": "toCsvAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ToCsvOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "toCsvAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ToCsvOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signatures": [
+                        "toCsvAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ToCsvOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                        "toCsvAsync(path: string, options?: Xlsx.ToCsvOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                    ]
+                },
+                {
+                    "name": "merge",
+                    "type": "function",
+                    "doc": "merge(inputs: string[], output: Xlsx.Output, options?: Xlsx.MergeOptions | null): Xlsx.SheetResult;",
+                    "signature": "merge(inputs: string[], output: Xlsx.Output, options?: Xlsx.MergeOptions | null): Xlsx.SheetResult;",
+                    "signatures": [
+                        "merge(inputs: string[], output: Xlsx.Output, options?: Xlsx.MergeOptions | null): Xlsx.SheetResult;",
+                        "merge(inputs: string[], options?: Xlsx.MergeOptions): Xlsx.SheetResult;"
+                    ]
+                },
+                {
+                    "name": "mergeAsync",
+                    "type": "function",
+                    "doc": "mergeAsync(inputs: string[], output: Xlsx.Output, options?: (Xlsx.MergeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "mergeAsync(inputs: string[], output: Xlsx.Output, options?: (Xlsx.MergeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signatures": [
+                        "mergeAsync(inputs: string[], output: Xlsx.Output, options?: (Xlsx.MergeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                        "mergeAsync(inputs: string[], options?: Xlsx.MergeOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                    ]
+                },
+                {
+                    "name": "split",
+                    "type": "function",
+                    "doc": "split(path: string, outputDir: Xlsx.Output, options?: Xlsx.SplitOptions | null): Xlsx.SplitResult;",
+                    "signature": "split(path: string, outputDir: Xlsx.Output, options?: Xlsx.SplitOptions | null): Xlsx.SplitResult;",
+                    "signatures": [
+                        "split(path: string, outputDir: Xlsx.Output, options?: Xlsx.SplitOptions | null): Xlsx.SplitResult;",
+                        "split(path: string, options?: Xlsx.SplitOptions): Xlsx.SplitResult;"
+                    ]
+                },
+                {
+                    "name": "splitAsync",
+                    "type": "function",
+                    "doc": "splitAsync(path: string, outputDir: Xlsx.Output, options?: (Xlsx.SplitOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SplitResult>;",
+                    "signature": "splitAsync(path: string, outputDir: Xlsx.Output, options?: (Xlsx.SplitOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SplitResult>;",
+                    "signatures": [
+                        "splitAsync(path: string, outputDir: Xlsx.Output, options?: (Xlsx.SplitOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SplitResult>;",
+                        "splitAsync(path: string, options?: Xlsx.SplitOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SplitResult>;"
+                    ]
+                },
+                {
+                    "name": "dedupe",
+                    "type": "function",
+                    "doc": "dedupe(path: string, output: Xlsx.Output, options?: Xlsx.DedupeOptions | null): Xlsx.SheetResult;",
+                    "signature": "dedupe(path: string, output: Xlsx.Output, options?: Xlsx.DedupeOptions | null): Xlsx.SheetResult;",
+                    "signatures": [
+                        "dedupe(path: string, output: Xlsx.Output, options?: Xlsx.DedupeOptions | null): Xlsx.SheetResult;",
+                        "dedupe(path: string, options?: Xlsx.DedupeOptions): Xlsx.SheetResult;"
+                    ]
+                },
+                {
+                    "name": "dedupeAsync",
+                    "type": "function",
+                    "doc": "dedupeAsync(path: string, output: Xlsx.Output, options?: (Xlsx.DedupeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "dedupeAsync(path: string, output: Xlsx.Output, options?: (Xlsx.DedupeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signatures": [
+                        "dedupeAsync(path: string, output: Xlsx.Output, options?: (Xlsx.DedupeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                        "dedupeAsync(path: string, options?: Xlsx.DedupeOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                    ]
+                },
+                {
+                    "name": "recalc",
+                    "type": "function",
+                    "doc": "recalc(path: string, options?: Xlsx.RecalcOptions | null): Xlsx.SheetResult;",
+                    "signature": "recalc(path: string, options?: Xlsx.RecalcOptions | null): Xlsx.SheetResult;"
+                },
+                {
+                    "name": "recalcAsync",
+                    "type": "function",
+                    "doc": "recalcAsync(path: string, options?: (Xlsx.RecalcOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "recalcAsync(path: string, options?: (Xlsx.RecalcOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                },
+                {
+                    "name": "encrypt",
+                    "type": "function",
+                    "doc": "encrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;",
+                    "signature": "encrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;",
+                    "signatures": [
+                        "encrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;",
+                        "encrypt(path: string, options: Xlsx.CryptOptions): Xlsx.SheetResult;"
+                    ]
+                },
+                {
+                    "name": "encryptAsync",
+                    "type": "function",
+                    "doc": "encryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "encryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signatures": [
+                        "encryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                        "encryptAsync(path: string, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                    ]
+                },
+                {
+                    "name": "decrypt",
+                    "type": "function",
+                    "doc": "decrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;",
+                    "signature": "decrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;",
+                    "signatures": [
+                        "decrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;",
+                        "decrypt(path: string, options: Xlsx.CryptOptions): Xlsx.SheetResult;"
+                    ]
+                },
+                {
+                    "name": "decryptAsync",
+                    "type": "function",
+                    "doc": "decryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signature": "decryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                    "signatures": [
+                        "decryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;",
+                        "decryptAsync(path: string, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;"
+                    ]
+                },
+                {
+                    "name": "sniff",
+                    "type": "function",
+                    "doc": "sniff(path: string): Xlsx.SniffResult;",
+                    "signature": "sniff(path: string): Xlsx.SniffResult;"
+                },
+                {
+                    "name": "sniffAsync",
+                    "type": "function",
+                    "doc": "sniffAsync(path: string, options?: Xlsx.ProgressOptions | null): Xlsx.XlsxPromise<Xlsx.SniffResult>;",
+                    "signature": "sniffAsync(path: string, options?: Xlsx.ProgressOptions | null): Xlsx.XlsxPromise<Xlsx.SniffResult>;"
+                },
+                {
+                    "name": "open",
+                    "type": "function",
+                    "doc": "open(path: string, options?: Xlsx.OpenOptions | null): Xlsx.Workbook;",
+                    "signature": "open(path: string, options?: Xlsx.OpenOptions | null): Xlsx.Workbook;"
+                },
+                {
+                    "name": "openAsync",
+                    "type": "function",
+                    "doc": "openAsync(path: string, options?: Xlsx.OpenOptions | null): Xlsx.XlsxPromise<Xlsx.Workbook>;",
+                    "signature": "openAsync(path: string, options?: Xlsx.OpenOptions | null): Xlsx.XlsxPromise<Xlsx.Workbook>;"
+                },
+                {
+                    "name": "create",
+                    "type": "function",
+                    "doc": "create(options?: Xlsx.CreateOptions | null): Xlsx.Workbook;",
+                    "signature": "create(options?: Xlsx.CreateOptions | null): Xlsx.Workbook;"
+                },
+                {
+                    "name": "createAsync",
+                    "type": "function",
+                    "doc": "createAsync(options?: Xlsx.CreateOptions | null): Xlsx.XlsxPromise<Xlsx.Workbook>;",
+                    "signature": "createAsync(options?: Xlsx.CreateOptions | null): Xlsx.XlsxPromise<Xlsx.Workbook>;"
+                },
+                {
+                    "name": "createWriter",
+                    "type": "function",
+                    "doc": "createWriter(path: string, options?: Xlsx.WriterOptions | null): Xlsx.Writer;",
+                    "signature": "createWriter(path: string, options?: Xlsx.WriterOptions | null): Xlsx.Writer;"
+                },
+                {
+                    "name": "createWriterAsync",
+                    "type": "function",
+                    "doc": "createWriterAsync(path: string, options?: Xlsx.WriterOptions | null): Xlsx.XlsxPromise<Xlsx.Writer>;",
+                    "signature": "createWriterAsync(path: string, options?: Xlsx.WriterOptions | null): Xlsx.XlsxPromise<Xlsx.Writer>;"
+                },
+                {
+                    "name": "view",
+                    "type": "function",
+                    "doc": "view(pathOrRows: string | Xlsx.Rows, options?: Xlsx.ViewOptions | null): Xlsx.SheetViewSession;",
+                    "signature": "view(pathOrRows: string | Xlsx.Rows, options?: Xlsx.ViewOptions | null): Xlsx.SheetViewSession;"
+                },
+                {
+                    "name": "viewAsync",
+                    "type": "function",
+                    "doc": "viewAsync(pathOrRows: string | Xlsx.Rows, options?: Xlsx.ViewOptions | null): Xlsx.XlsxPromise<Xlsx.SheetViewSession>;",
+                    "signature": "viewAsync(pathOrRows: string | Xlsx.Rows, options?: Xlsx.ViewOptions | null): Xlsx.XlsxPromise<Xlsx.SheetViewSession>;"
+                }
+            ],
+            "xlsx.XlsxError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: XlsxError;",
+                    "signature": "prototype: XlsxError;"
+                }
+            ],
             "yolo": [
                 {
                     "name": "load",
@@ -42559,6 +42887,7 @@
             "$camera": "camera",
             "$alarms": "alarms",
             "$pdf": "pdf",
+            "$xlsx": "xlsx",
             "$video": "video",
             "$audio": "audio",
             "$speech": "speech",

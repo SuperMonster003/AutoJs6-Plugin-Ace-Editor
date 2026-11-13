@@ -7201,6 +7201,69 @@ declare namespace AutoJs6 {
         queryIntentTasks(options?: Tasks.Query.Intent | null): IntentTask$[];
     }
 
+    interface Xlsx {
+        XlsxError: Xlsx.XlsxErrorConstructor;
+        isAvailable(): boolean;
+        info(path: string, options?: Xlsx.SourceOptions | null): Xlsx.SheetFileInfo;
+        infoAsync(path: string, options?: Xlsx.SourceOptions | null): Xlsx.XlsxPromise<Xlsx.SheetFileInfo>;
+        sheetNames(path: string, options?: Xlsx.SourceOptions | null): string[];
+        sheetNamesAsync(path: string, options?: Xlsx.SourceOptions | null): Xlsx.XlsxPromise<string[]>;
+        read(path: string, options?: Xlsx.ReadOptions | null): any[];
+        readAsync(path: string, options?: Xlsx.ReadOptions | null): Xlsx.XlsxPromise<any[]>;
+        readAll(path: string, options?: Xlsx.ReadAllOptions | null): { [sheetName: string]: any[] };
+        readAllAsync(path: string, options?: Xlsx.ReadAllOptions | null): Xlsx.XlsxPromise<{ [sheetName: string]: any[] }>;
+        write(path: string, rows: Xlsx.Rows, options?: Xlsx.WriteOptions | null): Xlsx.SheetResult;
+        writeAsync(path: string, rows: Xlsx.Rows, options?: (Xlsx.WriteOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        writeAll(path: string, sheets: { [sheetName: string]: Xlsx.Rows }, options?: Xlsx.WriteAllOptions | null): Xlsx.SheetResult;
+        writeAllAsync(path: string, sheets: { [sheetName: string]: Xlsx.Rows }, options?: (Xlsx.WriteAllOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        append(path: string, rows: Xlsx.Rows, options?: Xlsx.AppendOptions | null): Xlsx.SheetResult;
+        appendAsync(path: string, rows: Xlsx.Rows, options?: (Xlsx.AppendOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        convert(path: string, output: Xlsx.Output, options?: Xlsx.ConvertOptions | null): Xlsx.SheetResult;
+        convert(path: string, options?: Xlsx.ConvertOptions): Xlsx.SheetResult;
+        convertAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ConvertOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        convertAsync(path: string, options?: Xlsx.ConvertOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        toCsv(path: string, output: Xlsx.Output, options?: Xlsx.ToCsvOptions | null): Xlsx.SheetResult;
+        toCsv(path: string, options?: Xlsx.ToCsvOptions): Xlsx.SheetResult;
+        toCsvAsync(path: string, output: Xlsx.Output, options?: (Xlsx.ToCsvOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        toCsvAsync(path: string, options?: Xlsx.ToCsvOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        merge(inputs: string[], output: Xlsx.Output, options?: Xlsx.MergeOptions | null): Xlsx.SheetResult;
+        merge(inputs: string[], options?: Xlsx.MergeOptions): Xlsx.SheetResult;
+        mergeAsync(inputs: string[], output: Xlsx.Output, options?: (Xlsx.MergeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        mergeAsync(inputs: string[], options?: Xlsx.MergeOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        split(path: string, outputDir: Xlsx.Output, options?: Xlsx.SplitOptions | null): Xlsx.SplitResult;
+        split(path: string, options?: Xlsx.SplitOptions): Xlsx.SplitResult;
+        splitAsync(path: string, outputDir: Xlsx.Output, options?: (Xlsx.SplitOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SplitResult>;
+        splitAsync(path: string, options?: Xlsx.SplitOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SplitResult>;
+        dedupe(path: string, output: Xlsx.Output, options?: Xlsx.DedupeOptions | null): Xlsx.SheetResult;
+        dedupe(path: string, options?: Xlsx.DedupeOptions): Xlsx.SheetResult;
+        dedupeAsync(path: string, output: Xlsx.Output, options?: (Xlsx.DedupeOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        dedupeAsync(path: string, options?: Xlsx.DedupeOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        recalc(path: string, options?: Xlsx.RecalcOptions | null): Xlsx.SheetResult;
+        recalcAsync(path: string, options?: (Xlsx.RecalcOptions & Xlsx.ProgressOptions) | null): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        encrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;
+        encrypt(path: string, options: Xlsx.CryptOptions): Xlsx.SheetResult;
+        encryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        encryptAsync(path: string, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        decrypt(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions): Xlsx.SheetResult;
+        decrypt(path: string, options: Xlsx.CryptOptions): Xlsx.SheetResult;
+        decryptAsync(path: string, output: Xlsx.Output, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        decryptAsync(path: string, options: Xlsx.CryptOptions & Xlsx.ProgressOptions): Xlsx.XlsxPromise<Xlsx.SheetResult>;
+        sniff(path: string): Xlsx.SniffResult;
+        sniffAsync(path: string, options?: Xlsx.ProgressOptions | null): Xlsx.XlsxPromise<Xlsx.SniffResult>;
+        open(path: string, options?: Xlsx.OpenOptions | null): Xlsx.Workbook;
+        openAsync(path: string, options?: Xlsx.OpenOptions | null): Xlsx.XlsxPromise<Xlsx.Workbook>;
+        create(options?: Xlsx.CreateOptions | null): Xlsx.Workbook;
+        createAsync(options?: Xlsx.CreateOptions | null): Xlsx.XlsxPromise<Xlsx.Workbook>;
+        createWriter(path: string, options?: Xlsx.WriterOptions | null): Xlsx.Writer;
+        createWriterAsync(path: string, options?: Xlsx.WriterOptions | null): Xlsx.XlsxPromise<Xlsx.Writer>;
+        view(pathOrRows: string | Xlsx.Rows, options?: Xlsx.ViewOptions | null): Xlsx.SheetViewSession;
+        viewAsync(pathOrRows: string | Xlsx.Rows, options?: Xlsx.ViewOptions | null): Xlsx.XlsxPromise<Xlsx.SheetViewSession>;
+    }
+
+    interface Xlsx_XlsxError {
+        prototype: XlsxError;
+    }
+
     interface Yolo {
         load(modelDir: string, options: Yolo.LoadOptions): Yolo.Detector;
     }
@@ -7310,6 +7373,7 @@ declare const web: AutoJs6.Web;
 declare const WebSocket: AutoJs6.WebSocket;
 declare const work_manager: AutoJs6.Work_manager;
 declare const workManager: AutoJs6.WorkManager;
+declare const xlsx: AutoJs6.Xlsx;
 declare const yolo: AutoJs6.Yolo;
 declare const zip: AutoJs6.Zip;
 declare function sleep(...args: any[]): any;

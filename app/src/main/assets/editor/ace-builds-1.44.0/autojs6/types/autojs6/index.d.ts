@@ -76,6 +76,7 @@
 /// <reference path="./aj6-int-util.d.ts" />
 /// <reference path="./aj6-int-video.d.ts" />
 /// <reference path="./aj6-int-web.d.ts" />
+/// <reference path="./aj6-int-xlsx.d.ts" />
 /// <reference path="./aj6-int-yolo.d.ts" />
 /// <reference path="./aj6-int-zip.d.ts" />
 /// <reference path="./aj6-int-mathx.d.ts" />

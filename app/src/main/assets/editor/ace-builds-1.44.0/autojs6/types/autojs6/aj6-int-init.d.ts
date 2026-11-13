@@ -113,6 +113,10 @@ declare let $alarms: Internal.Alarms;
 declare let pdf: Internal.Pdf;
 declare let $pdf: Internal.Pdf;
 
+/** Reading, writing, conversion, editing and viewing of xlsx, xlsm, xls, csv and tsv files through the external 3-Tally Sheet plugin. Available since AutoJs6 6.8.1. */
+declare let xlsx: Internal.Xlsx;
+declare let $xlsx: Internal.Xlsx;
+
 /** Screen recording by AutoJs6 and video processing of the external 3-Slate Studio plugin, Rhino scripts only. Available since AutoJs6 6.8.1. */
 declare let video: Internal.Video;
 declare let $video: Internal.Video;
