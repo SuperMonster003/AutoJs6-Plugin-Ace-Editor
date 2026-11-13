@@ -47,6 +47,9 @@ CASES = {
     'video-record-options': ('video.record({', 'fr'),
     'audio-mix-options': ("audio.mix(['/sdcard/a.m4a', '/sdcard/b.m4a'], {", 'fo'),
     'video-subtitles-members': ('video.subtitles.', 'pa'),
+    'pdf-members': ('pdf.', 'r'),
+    'pdf-alias-members': ('$pdf.', 'me'),
+    'pdf-render-options': ("pdf.render('/sdcard/a.pdf', 0, {", 'd'),
     # No suggestion list: the highlighting of a few lines, the last call with an option value the declarations reject.
     'highlight': ("let r = video.record({frameRate: 30});\nlet m = audio.probe('/sdcard/a.m4a');\n"
                   "video.transform('/sdcard/a.mp4', {flip: 'diagonal'});\nlet n = ", '1'),
