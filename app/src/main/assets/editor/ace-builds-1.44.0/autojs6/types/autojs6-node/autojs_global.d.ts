@@ -928,6 +928,8 @@ declare namespace AutoJs6Node {
     readonly camera: typeof import("camera");
     readonly video: typeof import("video");
     readonly audio: typeof import("audio");
+    readonly pdf: typeof import("pdf");
+    readonly xlsx: typeof import("xlsx");
     readonly speech: typeof import("speech");
     readonly tts: typeof import("tts");
     readonly java: AutoJsJavaFacade;

@@ -6145,6 +6145,84 @@ declare namespace AutoJs6 {
         hasProperSpacing(text: string): boolean;
     }
 
+    interface Pdf {
+        PdfError: Pdf.PdfErrorConstructor;
+        isAvailable(): boolean;
+        isAvailableAsync(): Pdf.PdfPromise<boolean>;
+        info(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfInfo;
+        infoAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfInfo>;
+        text(path: string, options?: Pdf.TextOptions | null): Pdf.Texts;
+        textAsync(path: string, options?: Pdf.TextOptions | null): Pdf.PdfPromise<Pdf.Texts>;
+        outline(path: string, options?: Pdf.PasswordOptions | null): Pdf.OutlineItem[];
+        outlineAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.OutlineItem[]>;
+        search(path: string, keyword: string, options?: Pdf.SearchOptions | null): Pdf.SearchHit[];
+        searchAsync(path: string, keyword: string, options?: Pdf.SearchOptions | null): Pdf.PdfPromise<Pdf.SearchHit[]>;
+        render(path: string, page: number, options?: Pdf.RenderOptions | null): ImageWrapper;
+        renderAsync(path: string, page: number, options?: Pdf.RenderOptions | null): Pdf.PdfPromise<ImageWrapper>;
+        renderToFile(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.RenderedFile;
+        renderToFile(path: string, page: number, options?: Pdf.RenderToFileOptions): Pdf.RenderedFile;
+        renderToFileAsync(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.PdfPromise<Pdf.RenderedFile>;
+        renderToFileAsync(path: string, page: number, options?: Pdf.RenderToFileOptions): Pdf.PdfPromise<Pdf.RenderedFile>;
+        images(path: string, options?: Pdf.PagesOptions | null): Pdf.ImageInfo[];
+        imagesAsync(path: string, options?: Pdf.PagesOptions | null): Pdf.PdfPromise<Pdf.ImageInfo[]>;
+        extractImages(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PathsResult;
+        extractImages(path: string, options?: Pdf.ExtractImagesOptions): Pdf.PathsResult;
+        extractImagesAsync(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PdfPromise<Pdf.PathsResult>;
+        extractImagesAsync(path: string, options?: Pdf.ExtractImagesOptions): Pdf.PdfPromise<Pdf.PathsResult>;
+        merge(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfResult;
+        merge(inputs: string[], options?: Pdf.MergeOptions): Pdf.PdfResult;
+        mergeAsync(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        mergeAsync(inputs: string[], options?: Pdf.MergeOptions): Pdf.PdfPromise<Pdf.PdfResult>;
+        split(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PathsResult;
+        split(path: string, options: Pdf.SplitOptions): Pdf.PathsResult;
+        splitAsync(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PdfPromise<Pdf.PathsResult>;
+        splitAsync(path: string, options: Pdf.SplitOptions): Pdf.PdfPromise<Pdf.PathsResult>;
+        extract(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;
+        extract(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;
+        extractAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        extractAsync(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        delete(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;
+        delete(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;
+        deleteAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        deleteAsync(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        reorder(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfResult;
+        reorder(path: string, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfResult;
+        reorderAsync(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        reorderAsync(path: string, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        rotate(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfResult;
+        rotate(path: string, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfResult;
+        rotateAsync(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        rotateAsync(path: string, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        fromImages(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfResult;
+        fromImages(images: string[], options?: Pdf.FromImagesOptions): Pdf.PdfResult;
+        fromImagesAsync(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        fromImagesAsync(images: string[], options?: Pdf.FromImagesOptions): Pdf.PdfPromise<Pdf.PdfResult>;
+        fromText(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfResult;
+        fromText(text: string, options?: Pdf.FromTextOptions): Pdf.PdfResult;
+        fromTextAsync(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        fromTextAsync(text: string, options?: Pdf.FromTextOptions): Pdf.PdfPromise<Pdf.PdfResult>;
+        fromHtml(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfResult;
+        fromHtml(htmlOrPath: string, options?: Pdf.FromHtmlOptions): Pdf.PdfResult;
+        fromHtmlAsync(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        fromHtmlAsync(htmlOrPath: string, options?: Pdf.FromHtmlOptions): Pdf.PdfPromise<Pdf.PdfResult>;
+        encrypt(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfResult;
+        encrypt(path: string, options: Pdf.EncryptOptions): Pdf.PdfResult;
+        encryptAsync(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfPromise<Pdf.PdfResult>;
+        encryptAsync(path: string, options: Pdf.EncryptOptions): Pdf.PdfPromise<Pdf.PdfResult>;
+        decrypt(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;
+        decrypt(path: string, options?: Pdf.PasswordOptions): Pdf.PdfResult;
+        decryptAsync(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;
+        decryptAsync(path: string, options?: Pdf.PasswordOptions): Pdf.PdfPromise<Pdf.PdfResult>;
+        open(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfDocument;
+        openAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfDocument>;
+        view(path: string, options?: Pdf.ViewOptions | null): Pdf.PdfViewSession;
+        viewAsync(path: string, options?: Pdf.ViewOptions | null): Pdf.PdfPromise<Pdf.PdfViewSession>;
+    }
+
+    interface Pdf_PdfError {
+        prototype: PdfError;
+    }
+
     interface Pinyin {
         STYLE_NORMAL: PinyinStyle;
         STYLE_TONE: PinyinStyle;
@@ -7197,6 +7275,7 @@ declare const ocr: AutoJs6.Ocr;
 declare const opencc: AutoJs6.Opencc;
 declare const Packages: AutoJs6.Packages;
 declare const pangu: AutoJs6.Pangu;
+declare const pdf: AutoJs6.Pdf;
 declare const pinyin: AutoJs6.Pinyin;
 declare const pinyin4j: AutoJs6.Pinyin4j;
 declare const plugins: AutoJs6.Plugins;

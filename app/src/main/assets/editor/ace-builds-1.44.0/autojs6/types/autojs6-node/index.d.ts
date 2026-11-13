@@ -96,3 +96,5 @@
 /// <reference path="./camera.d.ts" />
 /// <reference path="./video.d.ts" />
 /// <reference path="./audio.d.ts" />
+/// <reference path="./pdf.d.ts" />
+/// <reference path="./xlsx.d.ts" />

@@ -3,7 +3,7 @@
 declare module "autojs6:bun-host" {
     /** Types for the explicit SDK module at process.env.AUTOJS6_HOST_CLIENT_MODULE. */
     export const SDK_VERSION: 1;
-    export type HostCapability = "agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "camera.control" | "mediastudio.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.power" | "device.audio" | "device.identifiers" | "media.control" | "media.library" | "dialogs.control" | "events.observe" | "events.notification" | "events.toast" | "events.key" | "events.touch" | "events.key.intercept" | "notifications.post" | "notifications.settings" | "database.control" | "shell.control" | "shell.root" | "shell.shizuku" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "accessibility.gesture" | "accessibility.service" | "clipboard.control" | "ui.layout" | "ui.compose" | "screen.record.microphone" | "screen.record.playback" | "ui.toast" | "device.info" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
+    export type HostCapability = "agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "camera.control" | "mediastudio.control" | "pdf.control" | "xlsx.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.power" | "device.audio" | "device.identifiers" | "media.control" | "media.library" | "dialogs.control" | "events.observe" | "events.notification" | "events.toast" | "events.key" | "events.touch" | "events.key.intercept" | "notifications.post" | "notifications.settings" | "database.control" | "shell.control" | "shell.root" | "shell.shizuku" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "accessibility.gesture" | "accessibility.service" | "clipboard.control" | "ui.layout" | "ui.compose" | "screen.record.microphone" | "screen.record.playback" | "ui.toast" | "device.info" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
       | "autojs.control" | "autojs.manage" | "settings.control" | "settings.write" | "sysprops.control" | "memory.control" | "memory.dump"
       | "installer.control" | "installer.mutate" | "engines.control" | "engines.exec" | "plugintools.control"
       | "terminal.control" | "floaty.control" | "floaty.raw" | "floaty.touch"
@@ -16,7 +16,7 @@ declare module "autojs6:bun-host" {
       readonly status: number;
       constructor(code: string, message: string, capability?: string | null, status?: number);
     }
-    export const HOST_API_METHODS: Readonly<Record<"agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "camera.control" | "mediastudio.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.audio" | "dialogs.control" | "events.observe" | "notifications.post" | "database.control" | "shell.control" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "clipboard.control" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
+    export const HOST_API_METHODS: Readonly<Record<"agent.control" | "ai.control" | "flow.control" | "mail.control" | "epub.control" | "theme.control" | "gallery.control" | "camera.control" | "mediastudio.control" | "pdf.control" | "xlsx.control" | "batchrename.control" | "speech.control" | "tts.control" | "java.interop" | "android.objects" | "tasks.control" | "device.control" | "device.audio" | "dialogs.control" | "events.observe" | "notifications.post" | "database.control" | "shell.control" | "sensors.control" | "files.control" | "storage.control" | "mediainfo.control" | "app.control" | "accessibility.control" | "clipboard.control" | "text.pinyin" | "text.pinyin4j" | "text.opencc" | "image.process" | "image.files" | "screen.capture" | "screen.record" | "screen.metrics" | "console.control" | "ocr.control" | "barcode.control" | "yolo.control"
       | "autojs.control" | "settings.control" | "sysprops.control" | "memory.control" | "installer.control" | "engines.control" | "plugintools.control", readonly string[]>>;
     export const OPENCC_CONVERSION_TYPES: readonly [
       "hk2s", "hk2t", "jp2t", "s2hk", "s2t", "s2tw", "s2twp", "t2hk", "t2s", "t2tw", "t2jp", "tw2s", "tw2t", "tw2sp",
@@ -8704,6 +8704,960 @@ declare module "autojs6:bun-host" {
       }
     // END GENERATED MEDIA STUDIO TYPES
 
+    // BEGIN GENERATED PDF TYPES
+    export namespace RuntimePdf {
+        /** A call in progress: `cancel()` (or an abort of `options.signal`) answers true when it stopped a running call, which then rejects with CANCELLED. */
+        type PdfPromise<T> = Promise<T> & { cancel(): boolean };
+
+        /** `'1-3,5,8-'`, a page number (from 1) or a list of both. */
+        type PageRange = string | number | Array<number | string>;
+
+        interface Progress {
+            readonly opId: number;
+            readonly percent: number;
+            readonly stage: string;
+            readonly current: number;
+            readonly total: number;
+        }
+
+        /** `AbortController#signal` or `AbortSignal.timeout(ms)`. */
+        interface AbortSignalLike {
+            readonly aborted: boolean;
+            readonly reason?: unknown;
+            addEventListener(type: 'abort', listener: () => void, options?: { once?: boolean }): void;
+            removeEventListener(type: 'abort', listener: () => void): void;
+        }
+
+        /**
+         * A throwing or rejecting `onProgress` cancels the call, which rejects with that error. An abort of `signal` is the
+         * call's `cancel()`, and a signal aborted already rejects at once: both reject with CANCELLED whose `cause` is the
+         * abort's reason. `timeoutMs` is `signal: AbortSignal.timeout(timeoutMs)` beside `signal`: whichever comes first
+         * cancels the call, and an expired timeout rejects with CANCELLED whose `cause` is the TimeoutError DOMException of
+         * `AbortSignal.timeout`. Both apply until the call settles (for `open` and `view`, until the document or the viewer is
+         * ready); the methods of a viewer session leave both alone.
+         */
+        interface ProgressOptions {
+            onProgress?: ((progress: Progress) => unknown) | null;
+            signal?: AbortSignalLike | null;
+            /** Milliseconds, more than 0 and at most 2147483647; a fraction rounds up. */
+            timeoutMs?: number | null;
+        }
+
+        interface PasswordOptions extends ProgressOptions {
+            password?: string;
+        }
+
+        /** The codes of the 3-Paper PDF contract (appendix C.3); a call without a declared capability rejects with ERR_AUTOJS6_CAPABILITY_NOT_DECLARED. */
+        type ErrorCode =
+            | 'PLUGIN_UNAVAILABLE'
+            | 'PLUGIN_DISABLED'
+            | 'PLUGIN_INCOMPATIBLE'
+            | 'INVALID_ARGUMENT'
+            | 'FILE_NOT_FOUND'
+            | 'INVALID_PDF'
+            | 'PASSWORD_REQUIRED'
+            | 'WRONG_PASSWORD'
+            | 'PERMISSION_DENIED'
+            | 'PAGE_OUT_OF_RANGE'
+            | 'LIMIT_EXCEEDED'
+            | 'SESSION_CLOSED'
+            | 'UI_REQUIRES_FOREGROUND'
+            | 'OCR_UNAVAILABLE'
+            | 'STORAGE_PERMISSION_DENIED'
+            | 'CANCELLED'
+            | 'TIMEOUT'
+            | 'UNSUPPORTED'
+            | 'IO_ERROR'
+            | 'INTERNAL';
+
+        /** `name` is `'PdfError'`; `toString()` yields `PdfError [CODE]: message`; only `code` is enumerable. */
+        interface PdfError extends Error {
+            readonly name: 'PdfError';
+            readonly code: ErrorCode | string;
+            readonly cause?: unknown;
+        }
+
+        interface PdfErrorConstructor {
+            (message?: string, code?: ErrorCode | string, cause?: unknown): PdfError;
+            new(message?: string, code?: ErrorCode | string, cause?: unknown): PdfError;
+            readonly prototype: PdfError;
+        }
+
+        interface PageInfo {
+            readonly width: number | null;
+            readonly height: number | null;
+            readonly rotation: number;
+        }
+
+        interface Permissions {
+            readonly print: boolean;
+            readonly copy: boolean;
+            readonly modify: boolean;
+            readonly annotate: boolean;
+            readonly fillForms: boolean;
+            readonly extractForAccessibility: boolean;
+            readonly assemble: boolean;
+            readonly printHighQuality: boolean;
+        }
+
+        interface PdfInfo {
+            readonly pageCount: number;
+            readonly pages: PageInfo[];
+            readonly title: string | null;
+            readonly author: string | null;
+            readonly subject: string | null;
+            readonly keywords: string | null;
+            readonly creator: string | null;
+            readonly producer: string | null;
+            readonly creationDate: string | null;
+            readonly modificationDate: string | null;
+            readonly version: string | null;
+            readonly encrypted: boolean;
+            readonly permissions: Permissions;
+            readonly sizeBytes: number | null;
+        }
+
+        /** The pages of the request in order, with whether each text came from the text layer or from OCR. */
+        interface TextResult {
+            readonly texts: string[];
+            readonly pages: number[];
+            readonly sources: Array<'text' | 'ocr'>;
+        }
+
+        interface OutlineItem {
+            readonly title: string;
+            /** Null when the entry has no page destination. */
+            readonly page: number | null;
+            readonly level: number;
+            readonly children: OutlineItem[];
+        }
+
+        /** `rect` is the union of `rects` (`[left, top, right, bottom]` in points); a hit that wraps lines has several rects. */
+        interface SearchHit {
+            readonly page: number;
+            readonly rect: number[] | null;
+            readonly rects: number[][];
+            readonly context: string;
+        }
+
+        interface ImageInfo {
+            readonly page: number;
+            /** From 0 inside its page. */
+            readonly index: number;
+            readonly width: number;
+            readonly height: number;
+            readonly format: string | null;
+        }
+
+        /** A written PDF file. */
+        interface PdfResult {
+            readonly path: string;
+            readonly pageCount: number;
+            readonly sizeBytes: number | null;
+            readonly warnings: string[];
+        }
+
+        interface PathsResult {
+            readonly paths: string[];
+            readonly warnings: string[];
+        }
+
+        interface RenderedFile {
+            readonly path: string;
+            readonly width: number;
+            readonly height: number;
+            readonly format: string;
+            readonly sizeBytes: number | null;
+        }
+
+        /** `render` with `encoding: 'base64'`: the encoded image (at most 16 MiB, else LIMIT_EXCEEDED). */
+        interface RenderedBase64 {
+            readonly base64: string;
+            readonly width: number;
+            readonly height: number;
+            readonly format: string;
+            readonly sizeBytes: number;
+        }
+
+        interface TextOptions extends PasswordOptions {
+            pages?: PageRange;
+            layout?: boolean;
+            /** `true` recognizes pages without a text layer, `'always'` every page (needs the ocr capability). */
+            ocr?: boolean | 'always';
+            ocrDpi?: number;
+            ocrOptions?: object;
+        }
+
+        interface SearchOptions extends PasswordOptions {
+            pages?: PageRange;
+            caseSensitive?: boolean;
+            wholeWord?: boolean;
+            limit?: number;
+        }
+
+        /** At most one of `dpi` (144 by default), `scale`, `width` and `height`. */
+        interface RenderOptions extends PasswordOptions {
+            dpi?: number;
+            scale?: number;
+            width?: number;
+            height?: number;
+            transparent?: boolean;
+        }
+
+        /**
+         * `render` writes a PNG to `<cwd>/.pdf-render/` by default; `output` names the file, `encoding: 'base64'` answers the
+         * image instead of writing it (the two exclude each other).
+         */
+        interface ModuleRenderOptions extends RenderOptions {
+            output?: string;
+            encoding?: 'base64';
+        }
+
+        interface RenderToFileOptions extends RenderOptions {
+            format?: 'png' | 'jpeg' | 'jpg' | 'webp';
+            quality?: number;
+        }
+
+        interface PagesOptions extends PasswordOptions {
+            pages?: PageRange;
+        }
+
+        interface ExtractImagesOptions extends PagesOptions {
+            /** Placeholders `{name}`, `{page}` and `{index}`. */
+            namePattern?: string;
+        }
+
+        interface MergeOptions extends ProgressOptions {
+            outline?: string;
+            /** One per input, null for an input without a password. */
+            passwords?: Array<string | null>;
+            /**
+             * One outline title per input, null for the file name without `.pdf` (what an absent option gives); a blank name
+             * takes the document's title. Names past the size limit of the options reject with LIMIT_EXCEEDED.
+             */
+            displayNames?: Array<string | null>;
+        }
+
+        interface SplitOptions extends PasswordOptions {
+            ranges?: PageRange[];
+            every?: number;
+            /** Placeholders `{name}` and `{index}`. */
+            namePattern?: string;
+        }
+
+        interface RotateOptions extends PasswordOptions {
+            pages?: PageRange;
+        }
+
+        type PageSize = string | [number, number];
+
+        interface FromImagesOptions extends ProgressOptions {
+            pageSize?: PageSize;
+            margin?: number;
+            fit?: string;
+            orientation?: string;
+            /** 1 to 100, or `'lossless'`. */
+            quality?: number | 'lossless';
+        }
+
+        interface FromTextOptions extends ProgressOptions {
+            pageSize?: PageSize;
+            margin?: number;
+            fontSize?: number;
+            lineSpacing?: number;
+            title?: string;
+            fontPath?: string;
+        }
+
+        interface FromHtmlOptions extends ProgressOptions {
+            pageSize?: PageSize;
+            margin?: number;
+            baseUrl?: string;
+            timeout?: number;
+            /** Whether the scripts of the page run (default true); remote requests stay unanswered either way. */
+            javaScript?: boolean;
+        }
+
+        interface EncryptOptions extends PasswordOptions {
+            userPassword?: string;
+            ownerPassword?: string;
+            /** Names of granted permissions, or `{ print: true, copy: false, ... }`. */
+            permissions?: Array<keyof Permissions> | Partial<Record<keyof Permissions, boolean>>;
+            keyLength?: 128 | 256;
+        }
+
+        interface SaveOptions extends PasswordOptions {
+            pages?: PageRange;
+            delete?: PageRange;
+            order?: number[];
+            rotate?: number | { degrees: number, pages?: PageRange };
+        }
+
+        interface ViewOptions extends ProgressOptions {
+            page?: number;
+            search?: string;
+            password?: string;
+        }
+
+        /** The output argument may be left out (or null) for the default output. */
+        type Output = string | null | undefined;
+
+        interface API {
+            readonly PdfError: PdfErrorConstructor;
+            /** Whether the 3-Paper PDF plugin is installed, enabled and compatible. */
+            isAvailable(): PdfPromise<boolean>;
+            isAvailableAsync(): PdfPromise<boolean>;
+            info(path: string, options?: PasswordOptions | null): PdfPromise<PdfInfo>;
+            infoAsync(path: string, options?: PasswordOptions | null): PdfPromise<PdfInfo>;
+            text(path: string, options?: TextOptions | null): PdfPromise<TextResult>;
+            textAsync(path: string, options?: TextOptions | null): PdfPromise<TextResult>;
+            outline(path: string, options?: PasswordOptions | null): PdfPromise<OutlineItem[]>;
+            outlineAsync(path: string, options?: PasswordOptions | null): PdfPromise<OutlineItem[]>;
+            search(path: string, keyword: string, options?: SearchOptions | null): PdfPromise<SearchHit[]>;
+            searchAsync(path: string, keyword: string, options?: SearchOptions | null): PdfPromise<SearchHit[]>;
+            render(path: string, page: number, options: ModuleRenderOptions & { encoding: 'base64' }): PdfPromise<RenderedBase64>;
+            render(path: string, page: number, options?: ModuleRenderOptions | null): PdfPromise<RenderedFile>;
+            renderAsync(path: string, page: number, options: ModuleRenderOptions & { encoding: 'base64' }): PdfPromise<RenderedBase64>;
+            renderAsync(path: string, page: number, options?: ModuleRenderOptions | null): PdfPromise<RenderedFile>;
+            renderToFile(path: string, page: number, output?: Output, options?: RenderToFileOptions | null): PdfPromise<RenderedFile>;
+            renderToFileAsync(path: string, page: number, output?: Output, options?: RenderToFileOptions | null): PdfPromise<RenderedFile>;
+            images(path: string, options?: PagesOptions | null): PdfPromise<ImageInfo[]>;
+            imagesAsync(path: string, options?: PagesOptions | null): PdfPromise<ImageInfo[]>;
+            extractImages(path: string, outputDir?: Output, options?: ExtractImagesOptions | null): PdfPromise<PathsResult>;
+            extractImagesAsync(path: string, outputDir?: Output, options?: ExtractImagesOptions | null): PdfPromise<PathsResult>;
+            merge(inputs: string[], output?: Output, options?: MergeOptions | null): PdfPromise<PdfResult>;
+            mergeAsync(inputs: string[], output?: Output, options?: MergeOptions | null): PdfPromise<PdfResult>;
+            split(path: string, outputDir: Output, options: SplitOptions): PdfPromise<PathsResult>;
+            split(path: string, options: SplitOptions): PdfPromise<PathsResult>;
+            splitAsync(path: string, outputDir: Output, options: SplitOptions): PdfPromise<PathsResult>;
+            splitAsync(path: string, options: SplitOptions): PdfPromise<PathsResult>;
+            extract(path: string, output: Output, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            extract(path: string, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            extractAsync(path: string, output: Output, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            extractAsync(path: string, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            delete(path: string, output: Output, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            delete(path: string, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            deleteAsync(path: string, output: Output, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            deleteAsync(path: string, pages: PageRange, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            reorder(path: string, output: Output, order: number[], options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            reorder(path: string, order: number[], options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            reorderAsync(path: string, output: Output, order: number[], options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            reorderAsync(path: string, order: number[], options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            /** `degrees` is a multiple of 90. */
+            rotate(path: string, output: Output, degrees: number, options?: RotateOptions | null): PdfPromise<PdfResult>;
+            rotate(path: string, degrees: number, options?: RotateOptions | null): PdfPromise<PdfResult>;
+            rotateAsync(path: string, output: Output, degrees: number, options?: RotateOptions | null): PdfPromise<PdfResult>;
+            rotateAsync(path: string, degrees: number, options?: RotateOptions | null): PdfPromise<PdfResult>;
+            fromImages(images: string[], output?: Output, options?: FromImagesOptions | null): PdfPromise<PdfResult>;
+            fromImagesAsync(images: string[], output?: Output, options?: FromImagesOptions | null): PdfPromise<PdfResult>;
+            fromText(text: string, output?: Output, options?: FromTextOptions | null): PdfPromise<PdfResult>;
+            fromTextAsync(text: string, output?: Output, options?: FromTextOptions | null): PdfPromise<PdfResult>;
+            /** A string containing `<` is HTML, any other string a path; remote URLs are not loaded. */
+            fromHtml(htmlOrPath: string, output?: Output, options?: FromHtmlOptions | null): PdfPromise<PdfResult>;
+            fromHtmlAsync(htmlOrPath: string, output?: Output, options?: FromHtmlOptions | null): PdfPromise<PdfResult>;
+            /** Needs `userPassword` or `ownerPassword`; AES-256 by default. */
+            encrypt(path: string, output: Output, options: EncryptOptions): PdfPromise<PdfResult>;
+            encrypt(path: string, options: EncryptOptions): PdfPromise<PdfResult>;
+            encryptAsync(path: string, output: Output, options: EncryptOptions): PdfPromise<PdfResult>;
+            encryptAsync(path: string, options: EncryptOptions): PdfPromise<PdfResult>;
+            decrypt(path: string, output?: Output, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            decryptAsync(path: string, output?: Output, options?: PasswordOptions | null): PdfPromise<PdfResult>;
+            /** Keeps the document open in the plugin until `close()` or the end of the execution (8 per script at most). */
+            open(path: string, options?: PasswordOptions | null): PdfPromise<PdfDocument>;
+            openAsync(path: string, options?: PasswordOptions | null): PdfPromise<PdfDocument>;
+            /** Opens the plugin's viewer; an open session keeps the script alive until its `close` event. */
+            view(path: string, options?: ViewOptions | null): PdfPromise<PdfViewSession>;
+            viewAsync(path: string, options?: ViewOptions | null): PdfPromise<PdfViewSession>;
+        }
+
+        /** Calls after `close()` reject with SESSION_CLOSED. */
+        interface PdfDocument {
+            readonly path: string;
+            readonly pageCount: number;
+            readonly isClosed: boolean;
+            info(): PdfPromise<PdfInfo>;
+            infoAsync(): PdfPromise<PdfInfo>;
+            pageSize(page: number): PdfPromise<PageInfo>;
+            pageSizeAsync(page: number): PdfPromise<PageInfo>;
+            text(pagesOrOptions?: PageRange | TextOptions | null): PdfPromise<TextResult>;
+            textAsync(pagesOrOptions?: PageRange | TextOptions | null): PdfPromise<TextResult>;
+            outline(): PdfPromise<OutlineItem[]>;
+            outlineAsync(): PdfPromise<OutlineItem[]>;
+            search(keyword: string, options?: SearchOptions | null): PdfPromise<SearchHit[]>;
+            searchAsync(keyword: string, options?: SearchOptions | null): PdfPromise<SearchHit[]>;
+            render(page: number, options: ModuleRenderOptions & { encoding: 'base64' }): PdfPromise<RenderedBase64>;
+            render(page: number, options?: ModuleRenderOptions | null): PdfPromise<RenderedFile>;
+            renderAsync(page: number, options: ModuleRenderOptions & { encoding: 'base64' }): PdfPromise<RenderedBase64>;
+            renderAsync(page: number, options?: ModuleRenderOptions | null): PdfPromise<RenderedFile>;
+            renderToFile(page: number, output?: Output, options?: RenderToFileOptions | null): PdfPromise<RenderedFile>;
+            renderToFileAsync(page: number, output?: Output, options?: RenderToFileOptions | null): PdfPromise<RenderedFile>;
+            images(options?: PagesOptions | null): PdfPromise<ImageInfo[]>;
+            imagesAsync(options?: PagesOptions | null): PdfPromise<ImageInfo[]>;
+            extractImages(outputDir?: Output, options?: ExtractImagesOptions | null): PdfPromise<PathsResult>;
+            extractImagesAsync(outputDir?: Output, options?: ExtractImagesOptions | null): PdfPromise<PathsResult>;
+            /** Applies `pages`, `delete`, `order` and `rotate` in one write. */
+            save(output?: Output, options?: SaveOptions | null): PdfPromise<PdfResult>;
+            saveAsync(output?: Output, options?: SaveOptions | null): PdfPromise<PdfResult>;
+            /** Idempotent: the same Promise on every call; it never rejects. */
+            close(): Promise<void>;
+            toString(): string;
+        }
+
+        interface PageEvent {
+            readonly page: number;
+            readonly pageCount: number;
+        }
+
+        /** `finished` after `close({finish: true})`, `overflow` when the script stopped taking events, `error` when the bridge failed. */
+        type CloseReason = 'host' | 'finished' | 'overflow' | 'error' | string;
+
+        interface CloseEvent {
+            readonly reason: CloseReason;
+        }
+
+        interface ViewState {
+            readonly page: number;
+            readonly pageCount: number;
+            readonly zoom: number | null;
+            readonly token: string | null;
+            readonly visible: boolean;
+        }
+
+        /** Events wait (32 per name at most) until a listener is added. */
+        interface PdfViewSession {
+            readonly path: string;
+            readonly page: number;
+            readonly pageCount: number;
+            readonly isClosed: boolean;
+            readonly reason: CloseReason | null;
+            addListener(event: 'page', listener: (this: PdfViewSession, event: PageEvent) => void): this;
+            addListener(event: 'close', listener: (this: PdfViewSession, event: CloseEvent) => void): this;
+            on(event: 'page', listener: (this: PdfViewSession, event: PageEvent) => void): this;
+            on(event: 'close', listener: (this: PdfViewSession, event: CloseEvent) => void): this;
+            once(event: 'page', listener: (this: PdfViewSession, event: PageEvent) => void): this;
+            once(event: 'close', listener: (this: PdfViewSession, event: CloseEvent) => void): this;
+            removeListener(event: 'page' | 'close', listener: (...args: any[]) => void): this;
+            off(event: 'page' | 'close', listener: (...args: any[]) => void): this;
+            removeAllListeners(event?: 'page' | 'close'): this;
+            listenerCount(event: 'page' | 'close'): number;
+            goTo(page: number): Promise<PdfViewSession>;
+            state(): PdfPromise<ViewState>;
+            /** `finish: true` also closes the viewer screen; a closed session answers at once. */
+            close(options?: { finish?: boolean } | null): Promise<PdfViewSession>;
+            toString(): string;
+        }
+      }
+    // END GENERATED PDF TYPES
+
+    // BEGIN GENERATED XLSX TYPES
+    export namespace RuntimeXlsx {
+        /** A call in progress: `cancel()` answers true when it stopped a running call, which then rejects with CANCELLED. */
+        type XlsxPromise<T> = Promise<T> & { cancel(): boolean };
+
+        /** A cell value: strings, numbers, booleans, dates (Date) and null for an empty cell. */
+        type CellValue = string | number | boolean | Date | null;
+
+        /** Rows as arrays of cells, or as objects keyed by the header row. */
+        type Rows = CellValue[][] | Array<Record<string, CellValue>>;
+
+        /** A sheet by name or by its index from 1. */
+        type SheetRef = string | number;
+
+        interface Progress {
+            readonly opId: number;
+            readonly percent: number;
+            readonly stage: string;
+            readonly current: number;
+            readonly total: number;
+        }
+
+        /** A throwing or rejecting `onProgress` cancels the call, which rejects with that error. */
+        interface ProgressOptions {
+            onProgress?: ((progress: Progress) => unknown) | null;
+        }
+
+        interface PasswordOptions extends ProgressOptions {
+            password?: string | null;
+        }
+
+        /** The codes of the 3-Tally Sheet contract (appendix C.3); a call without a declared capability rejects with ERR_AUTOJS6_CAPABILITY_NOT_DECLARED. */
+        type ErrorCode =
+            | 'PLUGIN_UNAVAILABLE'
+            | 'PLUGIN_DISABLED'
+            | 'PLUGIN_INCOMPATIBLE'
+            | 'INVALID_ARGUMENT'
+            | 'FILE_NOT_FOUND'
+            | 'INVALID_FILE'
+            | 'UNSUPPORTED_FORMAT'
+            | 'PASSWORD_REQUIRED'
+            | 'WRONG_PASSWORD'
+            | 'SHEET_NOT_FOUND'
+            | 'RANGE_INVALID'
+            | 'LIMIT_EXCEEDED'
+            | 'TOO_MANY_HANDLES'
+            | 'READ_ONLY'
+            | 'FORMULA_ERROR'
+            | 'SESSION_CLOSED'
+            | 'UI_REQUIRES_FOREGROUND'
+            | 'STORAGE_PERMISSION_DENIED'
+            | 'CANCELLED'
+            | 'TIMEOUT'
+            | 'UNSUPPORTED'
+            | 'IO_ERROR'
+            | 'INTERNAL';
+
+        /** `name` is `'XlsxError'`; `toString()` yields `XlsxError [CODE]: message`; only `code` is enumerable. */
+        interface XlsxError extends Error {
+            readonly name: 'XlsxError';
+            readonly code: ErrorCode | string;
+        }
+
+        interface XlsxErrorConstructor {
+            (message?: string, code?: ErrorCode | string): XlsxError;
+            new(message?: string, code?: ErrorCode | string): XlsxError;
+            readonly prototype: XlsxError;
+        }
+
+        interface SheetSummary {
+            readonly name: string;
+            readonly index: number;
+            readonly rows: number;
+            readonly cols: number;
+            readonly dimension: string | null;
+            readonly hidden: boolean;
+        }
+
+        interface SheetFileInfo {
+            readonly format: 'xlsx' | 'xls' | 'csv' | 'tsv' | string;
+            readonly sheets: SheetSummary[];
+            readonly sizeBytes: number;
+            readonly encrypted: boolean;
+            readonly encoding: string | null;
+            readonly delimiter: string | null;
+            readonly hasBom: boolean | null;
+            readonly dateSystem: string | null;
+        }
+
+        interface SheetResult {
+            readonly path: string;
+            readonly format: string;
+            readonly sheets: Array<{ readonly name: string, readonly rows: number, readonly cols: number }>;
+            readonly sizeBytes: number;
+            readonly warnings: string[];
+            /** `dedupe` only: the rows removed. */
+            readonly removed?: number;
+        }
+
+        /** A cell with `cells: true`: `t` is n(umber), s(tring), b(oolean), d(ate), e(rror) or z (empty). */
+        interface CellDetail {
+            readonly v: CellValue;
+            readonly f: string | null;
+            readonly t: 'n' | 's' | 'b' | 'd' | 'e' | 'z';
+            readonly text: string;
+            readonly style: Record<string, unknown> | null;
+            readonly ref: string;
+            readonly merged: string | null;
+        }
+
+        interface SniffResult {
+            readonly format: string;
+            readonly encoding: string | null;
+            readonly delimiter: string | null;
+            readonly hasBom: boolean;
+            readonly confidence: number;
+        }
+
+        /** Appendix B.7: font, fill, border, align, valign, wrap, numFmt, indent and rotation. */
+        type StyleSpec = Record<string, unknown>;
+
+        interface ReadOptions extends PasswordOptions {
+            sheet?: SheetRef;
+            range?: string;
+            /** true: the first row names the keys of object rows; an array names them itself. */
+            header?: boolean | string[];
+            cells?: boolean;
+            formatted?: boolean;
+            blankRows?: boolean;
+            trim?: boolean;
+            limit?: number;
+            encoding?: string;
+            delimiter?: string;
+            parseNumbers?: boolean;
+            parseBooleans?: boolean;
+        }
+
+        interface LayoutOptions {
+            styles?: { header?: StyleSpec, body?: StyleSpec, columns?: Record<string, StyleSpec> };
+            columnWidths?: Record<string, number | 'auto'> | Array<number | 'auto'>;
+            rowHeights?: Record<string, number>;
+            merges?: string[];
+            freeze?: string | { rows?: number, cols?: number };
+            autoFilter?: boolean | string;
+        }
+
+        interface WriteOptions extends PasswordOptions, LayoutOptions {
+            sheet?: string;
+            /** An array writes the header row and orders the keys of object rows; false writes none. */
+            header?: boolean | string[];
+            format?: 'xlsx' | 'xls' | 'csv' | 'tsv';
+            encoding?: string;
+            delimiter?: string;
+            bom?: boolean;
+            dateFormat?: string;
+            formulas?: boolean;
+            evaluate?: boolean;
+        }
+
+        /** `password: null` or `''` removes the encryption when saving; left out, the password of the file stays. */
+        interface AppendOptions extends PasswordOptions, LayoutOptions {
+            sheet?: SheetRef;
+            header?: boolean | string[];
+            createIfMissing?: boolean;
+            dateFormat?: string;
+            formulas?: boolean;
+            encoding?: string;
+            delimiter?: string;
+        }
+
+        interface ConvertOptions extends PasswordOptions {
+            sheet?: SheetRef;
+            encoding?: string;
+            delimiter?: string;
+            bom?: boolean;
+            parseNumbers?: boolean;
+            formatted?: boolean;
+        }
+
+        interface MergeOptions extends ProgressOptions {
+            mode?: 'sheets' | 'rows';
+            header?: boolean;
+            sheetNames?: string[];
+            passwords?: Record<string, string> | Array<string | null>;
+            /**
+             * Encrypts an xlsx, xlsm or xls output with this password; `null` or `''` writes it unencrypted. Left out, the
+             * password of the first input opened with one encrypts the output, with a warning. Not available for a csv or tsv
+             * output.
+             */
+            outputPassword?: string | null;
+        }
+
+        interface SplitOptions extends PasswordOptions {
+            by?: 'sheet' | { rows: number } | { column: string };
+            namePattern?: string;
+            /** false: row 1 is a data row, not a header repeated atop every output of a split by rows or by column. */
+            header?: boolean;
+        }
+
+        interface DedupeOptions extends PasswordOptions {
+            sheet?: SheetRef;
+            columns?: Array<string | number>;
+            keep?: 'first' | 'last';
+            header?: boolean;
+        }
+
+        interface RecalcOptions extends PasswordOptions {
+            output?: string;
+        }
+
+        interface OpenOptions extends PasswordOptions {
+            mode?: 'auto' | 'full' | 'stream';
+        }
+
+        interface WriterOptions extends ProgressOptions {
+            sheet?: string;
+            header?: boolean | string[];
+            format?: 'xlsx' | 'csv' | 'tsv';
+            encoding?: string;
+            delimiter?: string;
+            bom?: boolean;
+        }
+
+        interface ViewOptions extends PasswordOptions {
+            title?: string;
+            sheet?: SheetRef;
+            header?: boolean | string[];
+            columns?: string[];
+            /** true is 'row', false 'none' (the default); 'cell' selects single cells, `col` of the select event names the column. */
+            selectable?: boolean | 'row' | 'cell' | 'none';
+        }
+
+        interface API {
+            readonly XlsxError: XlsxErrorConstructor;
+            /** Whether the 3-Tally Sheet plugin is installed, enabled and compatible. */
+            isAvailable(): XlsxPromise<boolean>;
+            info(path: string, options?: PasswordOptions | null): XlsxPromise<SheetFileInfo>;
+            infoAsync(path: string, options?: PasswordOptions | null): XlsxPromise<SheetFileInfo>;
+            sheetNames(path: string, options?: PasswordOptions | null): XlsxPromise<string[]>;
+            sheetNamesAsync(path: string, options?: PasswordOptions | null): XlsxPromise<string[]>;
+            /** More than 1,000,000 cells reject with LIMIT_EXCEEDED; `Sheet.eachRow` streams any size. */
+            read(path: string, options?: ReadOptions | null): XlsxPromise<any[]>;
+            readAsync(path: string, options?: ReadOptions | null): XlsxPromise<any[]>;
+            readAll(path: string, options?: ReadOptions | null): XlsxPromise<Record<string, any[]>>;
+            readAllAsync(path: string, options?: ReadOptions | null): XlsxPromise<Record<string, any[]>>;
+            write(path: string, rows: Rows, options?: WriteOptions | null): XlsxPromise<SheetResult>;
+            writeAsync(path: string, rows: Rows, options?: WriteOptions | null): XlsxPromise<SheetResult>;
+            writeAll(path: string, sheets: Record<string, Rows>, options?: WriteOptions | null): XlsxPromise<SheetResult>;
+            writeAllAsync(path: string, sheets: Record<string, Rows>, options?: WriteOptions | null): XlsxPromise<SheetResult>;
+            /** Layout options apply to the appended rows; an existing csv / tsv file takes none. */
+            append(path: string, rows: Rows, options?: AppendOptions | null): XlsxPromise<SheetResult>;
+            appendAsync(path: string, rows: Rows, options?: AppendOptions | null): XlsxPromise<SheetResult>;
+            convert(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
+            convertAsync(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
+            toCsv(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
+            toCsvAsync(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
+            merge(inputs: string[], output?: string | null, options?: MergeOptions | null): XlsxPromise<SheetResult>;
+            mergeAsync(inputs: string[], output?: string | null, options?: MergeOptions | null): XlsxPromise<SheetResult>;
+            split(path: string, outputDir?: string | null, options?: SplitOptions | null): XlsxPromise<{ readonly paths: string[] }>;
+            splitAsync(path: string, outputDir?: string | null, options?: SplitOptions | null): XlsxPromise<{ readonly paths: string[] }>;
+            dedupe(path: string, output?: string | null, options?: DedupeOptions | null): XlsxPromise<SheetResult>;
+            dedupeAsync(path: string, output?: string | null, options?: DedupeOptions | null): XlsxPromise<SheetResult>;
+            recalc(path: string, options?: RecalcOptions | null): XlsxPromise<SheetResult>;
+            recalcAsync(path: string, options?: RecalcOptions | null): XlsxPromise<SheetResult>;
+            encrypt(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
+            encryptAsync(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
+            decrypt(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
+            decryptAsync(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
+            sniff(path: string, options?: ProgressOptions | null): XlsxPromise<SniffResult>;
+            sniffAsync(path: string, options?: ProgressOptions | null): XlsxPromise<SniffResult>;
+            /** Keeps the workbook open in the plugin until `close()` or the end of the execution (16 per script at most). */
+            open(path: string, options?: OpenOptions | null): XlsxPromise<Workbook>;
+            openAsync(path: string, options?: OpenOptions | null): XlsxPromise<Workbook>;
+            /** A workbook in memory; `save(output)` writes it. */
+            create(options?: { format?: 'xlsx' | 'xls' } | null): XlsxPromise<Workbook>;
+            createAsync(options?: { format?: 'xlsx' | 'xls' } | null): XlsxPromise<Workbook>;
+            /** A streaming writer (xlsx, csv or tsv); the end of the execution discards an unfinished file. */
+            createWriter(output: string, options?: WriterOptions | null): XlsxPromise<Writer>;
+            createWriterAsync(output: string, options?: WriterOptions | null): XlsxPromise<Writer>;
+            /**
+             * Opens the plugin's viewer on a file or on rows; an open session keeps the script alive until its `close` event.
+             * While the viewer shows the previous session of the same thread (the main thread or one Worker), the new one replaces it in place (AutoJs6 need not be
+             * in the foreground) and the previous session ends with reason 'replaced'.
+             */
+            view(pathOrRows: string | Rows, options?: ViewOptions | null): XlsxPromise<SheetViewSession>;
+            viewAsync(pathOrRows: string | Rows, options?: ViewOptions | null): XlsxPromise<SheetViewSession>;
+        }
+
+        interface WorkbookProperties {
+            readonly format: string;
+            readonly mode: string;
+            readonly isClosed: boolean;
+        }
+
+        interface SaveOptions extends PasswordOptions {
+            format?: 'xlsx' | 'xls' | 'csv' | 'tsv';
+            evaluate?: boolean;
+        }
+
+        /** Calls after `close()` reject with SESSION_CLOSED; a `mode: 'stream'` workbook answers READ_ONLY to edits. */
+        interface Workbook {
+            readonly format: string;
+            readonly mode: 'full' | 'stream' | string;
+            readonly isClosed: boolean;
+            info(): XlsxPromise<SheetFileInfo>;
+            infoAsync(): XlsxPromise<SheetFileInfo>;
+            sheetNames(): XlsxPromise<string[]>;
+            sheetNamesAsync(): XlsxPromise<string[]>;
+            sheet(nameOrIndex: SheetRef): XlsxPromise<Sheet>;
+            sheetAsync(nameOrIndex: SheetRef): XlsxPromise<Sheet>;
+            addSheet(name: string, options?: { index?: number } | null): XlsxPromise<Sheet>;
+            addSheetAsync(name: string, options?: { index?: number } | null): XlsxPromise<Sheet>;
+            removeSheet(nameOrIndex: SheetRef): XlsxPromise<unknown>;
+            removeSheetAsync(nameOrIndex: SheetRef): XlsxPromise<unknown>;
+            renameSheet(nameOrIndex: SheetRef, name: string): XlsxPromise<unknown>;
+            renameSheetAsync(nameOrIndex: SheetRef, name: string): XlsxPromise<unknown>;
+            copySheet(nameOrIndex: SheetRef, name: string): XlsxPromise<Sheet>;
+            copySheetAsync(nameOrIndex: SheetRef, name: string): XlsxPromise<Sheet>;
+            moveSheet(nameOrIndex: SheetRef, index: number): XlsxPromise<unknown>;
+            moveSheetAsync(nameOrIndex: SheetRef, index: number): XlsxPromise<unknown>;
+            setSheetHidden(nameOrIndex: SheetRef, hidden: boolean): XlsxPromise<unknown>;
+            setSheetHiddenAsync(nameOrIndex: SheetRef, hidden: boolean): XlsxPromise<unknown>;
+            /** Answers a style id for `Sheet.setStyle` and the `style` of cells and rows. */
+            createStyle(spec: StyleSpec): XlsxPromise<number>;
+            createStyleAsync(spec: StyleSpec): XlsxPromise<number>;
+            recalc(): XlsxPromise<unknown>;
+            recalcAsync(): XlsxPromise<unknown>;
+            /** Without `output` saves back to the opened file (not for streams or workbooks in memory). */
+            save(output?: string | null, options?: SaveOptions | null): XlsxPromise<SheetResult>;
+            saveAsync(output?: string | null, options?: SaveOptions | null): XlsxPromise<SheetResult>;
+            properties(): XlsxPromise<WorkbookProperties>;
+            /** Idempotent: the same Promise on every call, after the calls before it; it never rejects. */
+            close(): Promise<void>;
+            closeAsync(): Promise<void>;
+            toString(): string;
+        }
+
+        interface SheetProperties {
+            readonly name: string;
+            readonly index: number;
+            readonly rows: number;
+            readonly cols: number;
+            readonly dimension: string | null;
+        }
+
+        interface EachRowOptions {
+            batch?: number;
+            from?: number;
+            to?: number;
+            header?: boolean | string[];
+            cells?: boolean;
+            formatted?: boolean;
+        }
+
+        interface RowChunk {
+            readonly rows: any[];
+            readonly startRow: number;
+        }
+
+        /** A `for await` loop's `break` (or `cancel()`) stops the reader. */
+        interface RowIterator extends AsyncIterableIterator<RowChunk> {
+            cancel(): boolean;
+        }
+
+        /** `name` follows renames; the other figures come from `properties()`. */
+        interface Sheet {
+            readonly name: string;
+            read(options?: ReadOptions | null): XlsxPromise<any[]>;
+            readAsync(options?: ReadOptions | null): XlsxPromise<any[]>;
+            cell(ref: string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+            cell(row: number, col: number | string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+            cellAsync(ref: string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+            cellAsync(row: number, col: number | string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+            set(ref: string, value: CellValue | { v?: CellValue, f?: string, style?: number | StyleSpec }): XlsxPromise<unknown>;
+            setAsync(ref: string, value: CellValue | { v?: CellValue, f?: string, style?: number | StyleSpec }): XlsxPromise<unknown>;
+            setRows(startRow: number, rows: Rows, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
+            setRowsAsync(startRow: number, rows: Rows, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
+            append(rows: Rows): XlsxPromise<unknown>;
+            appendAsync(rows: Rows): XlsxPromise<unknown>;
+            insertRows(at: number, count?: number): XlsxPromise<unknown>;
+            insertRowsAsync(at: number, count?: number): XlsxPromise<unknown>;
+            deleteRows(at: number, count?: number): XlsxPromise<unknown>;
+            deleteRowsAsync(at: number, count?: number): XlsxPromise<unknown>;
+            insertColumns(at: number | string, count?: number): XlsxPromise<unknown>;
+            insertColumnsAsync(at: number | string, count?: number): XlsxPromise<unknown>;
+            deleteColumns(at: number | string, count?: number): XlsxPromise<unknown>;
+            deleteColumnsAsync(at: number | string, count?: number): XlsxPromise<unknown>;
+            clear(range?: string): XlsxPromise<unknown>;
+            clearAsync(range?: string): XlsxPromise<unknown>;
+            setStyle(range: string, style: number | StyleSpec): XlsxPromise<unknown>;
+            setStyleAsync(range: string, style: number | StyleSpec): XlsxPromise<unknown>;
+            setColumnWidth(col: number | string, width: number | 'auto'): XlsxPromise<unknown>;
+            setColumnWidthAsync(col: number | string, width: number | 'auto'): XlsxPromise<unknown>;
+            setRowHeight(row: number, height: number): XlsxPromise<unknown>;
+            setRowHeightAsync(row: number, height: number): XlsxPromise<unknown>;
+            merge(range: string): XlsxPromise<unknown>;
+            mergeAsync(range: string): XlsxPromise<unknown>;
+            unmerge(range: string): XlsxPromise<unknown>;
+            unmergeAsync(range: string): XlsxPromise<unknown>;
+            merges(): XlsxPromise<string[]>;
+            mergesAsync(): XlsxPromise<string[]>;
+            freeze(rows: number, cols?: number): XlsxPromise<unknown>;
+            freezeAsync(rows: number, cols?: number): XlsxPromise<unknown>;
+            autoFilter(range: string): XlsxPromise<unknown>;
+            autoFilterAsync(range: string): XlsxPromise<unknown>;
+            setHyperlink(ref: string, url: string, options?: { label?: string } | null): XlsxPromise<unknown>;
+            setHyperlinkAsync(ref: string, url: string, options?: { label?: string } | null): XlsxPromise<unknown>;
+            setComment(ref: string, text: string, options?: { author?: string } | null): XlsxPromise<unknown>;
+            setCommentAsync(ref: string, text: string, options?: { author?: string } | null): XlsxPromise<unknown>;
+            addImage(path: string, options: { from: string, to?: string, width?: number, height?: number }): XlsxPromise<unknown>;
+            addImageAsync(path: string, options: { from: string, to?: string, width?: number, height?: number }): XlsxPromise<unknown>;
+            /** Appendix B.7: cellIs, expression, top10, duplicateValues, uniqueValues, colorScale, dataBar and iconSet. */
+            addConditionalFormat(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
+            addConditionalFormatAsync(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
+            conditionalFormats(): XlsxPromise<Array<Record<string, unknown>>>;
+            conditionalFormatsAsync(): XlsxPromise<Array<Record<string, unknown>>>;
+            /** Appendix B.7: list, whole, decimal, date, time, textLength, custom and any. */
+            addValidation(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
+            addValidationAsync(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
+            validations(): XlsxPromise<Array<Record<string, unknown>>>;
+            validationsAsync(): XlsxPromise<Array<Record<string, unknown>>>;
+            clearRules(range: string): XlsxPromise<unknown>;
+            clearRulesAsync(range: string): XlsxPromise<unknown>;
+            find(keyword: string, options?: { regex?: boolean, caseSensitive?: boolean, range?: string } | null): XlsxPromise<Array<Record<string, unknown>>>;
+            findAsync(keyword: string, options?: { regex?: boolean, caseSensitive?: boolean, range?: string } | null): XlsxPromise<Array<Record<string, unknown>>>;
+            sort(col: number | string, options?: { desc?: boolean, hasHeader?: boolean, range?: string } | null): XlsxPromise<unknown>;
+            sortAsync(col: number | string, options?: { desc?: boolean, hasHeader?: boolean, range?: string } | null): XlsxPromise<unknown>;
+            /**
+             * Streams the sheet: with a callback, answers the rows delivered (a callback answering false stops, a Promise it
+             * answers is awaited); without one, an async iterator of chunks that starts at its first `next()`. A consumer two
+             * chunks behind pauses the reader.
+             */
+            eachRow(callback: (rows: any[], startRow: number) => unknown, options?: EachRowOptions | null): XlsxPromise<number>;
+            eachRow(options?: EachRowOptions | null): RowIterator;
+            eachRowAsync(callback: (rows: any[], startRow: number) => unknown, options?: EachRowOptions | null): XlsxPromise<number>;
+            eachRowAsync(options?: EachRowOptions | null): RowIterator;
+            properties(): XlsxPromise<SheetProperties>;
+            toString(): string;
+        }
+
+        /**
+         * Rows of `addRow` without options leave in chunks of 1000; `rowCount` counts the rows added so far. Calls after
+         * `close()` or `abort()` reject with SESSION_CLOSED. A csv / tsv target has one sheet.
+         */
+        interface Writer {
+            readonly format: string;
+            readonly rowCount: number;
+            /** `header` false writes no header row; an array writes it and orders the keys of object rows. */
+            addSheet(name: string, options?: { header?: boolean | string[], columnWidths?: LayoutOptions['columnWidths'], freeze?: LayoutOptions['freeze'], autoFilter?: boolean } | null): XlsxPromise<unknown>;
+            addSheetAsync(name: string, options?: { header?: boolean | string[], columnWidths?: LayoutOptions['columnWidths'], freeze?: LayoutOptions['freeze'], autoFilter?: boolean } | null): XlsxPromise<unknown>;
+            addRow(values: CellValue[] | Record<string, CellValue>, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
+            addRowAsync(values: CellValue[] | Record<string, CellValue>, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
+            addRows(rows: Rows): XlsxPromise<unknown>;
+            addRowsAsync(rows: Rows): XlsxPromise<unknown>;
+            close(options?: ProgressOptions | null): XlsxPromise<SheetResult>;
+            closeAsync(options?: ProgressOptions | null): XlsxPromise<SheetResult>;
+            /** Discards the file; idempotent. */
+            abort(): XlsxPromise<unknown>;
+            abortAsync(): XlsxPromise<unknown>;
+            toString(): string;
+        }
+
+        interface SelectEvent {
+            readonly sheet: string;
+            readonly row: number;
+            readonly col: number;
+            readonly values: any[];
+        }
+
+        /** `finished` after `close({finish: true})`, `overflow` when the script stopped taking events, `error` when the bridge failed. */
+        type CloseReason = 'closed' | 'finished' | 'replaced' | 'timeout' | 'overflow' | 'error' | string;
+
+        interface CloseEvent {
+            readonly reason: CloseReason;
+        }
+
+        interface ViewState {
+            readonly sheet: string;
+            readonly row: number;
+            readonly col: number;
+            readonly rows: number;
+            readonly cols: number;
+            readonly token: string | null;
+        }
+
+        /** Events wait (32 per name at most) until a listener is added. */
+        interface SheetViewSession {
+            readonly isClosed: boolean;
+            readonly reason: CloseReason | null;
+            addListener(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
+            addListener(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
+            on(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
+            on(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
+            once(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
+            once(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
+            removeListener(event: 'select' | 'close', listener: (...args: any[]) => void): this;
+            off(event: 'select' | 'close', listener: (...args: any[]) => void): this;
+            removeAllListeners(event?: 'select' | 'close'): this;
+            listenerCount(event: 'select' | 'close'): number;
+            update(rowsOrPath: string | Rows): XlsxPromise<SheetViewSession>;
+            select(row: number): XlsxPromise<SheetViewSession>;
+            state(): XlsxPromise<ViewState>;
+            /** `finish: true` also closes the viewer screen; a closed session answers at once. */
+            close(options?: { finish?: boolean } | null): XlsxPromise<SheetViewSession>;
+            toString(): string;
+        }
+      }
+    // END GENERATED XLSX TYPES
+
     export interface HostClient {
       readonly ai: RuntimeAi.API;
       readonly flow: RuntimeFlow.API;
@@ -8716,6 +9670,10 @@ declare module "autojs6:bun-host" {
        *  screen.capture with screen.record (sound: screen.record.microphone or screen.record.playback). */
       readonly video: RuntimeVideo.API;
       readonly audio: RuntimeAudio.API;
+      /** Rhino's pdf through 3-Paper PDF; needs pdf.control, and a text with ocr true or 'always' also ocr.control. */
+      readonly pdf: RuntimePdf.API;
+      /** Rhino's xlsx through 3-Tally Sheet; needs xlsx.control for every operation, reading, writing and the viewer. */
+      readonly xlsx: RuntimeXlsx.API;
       readonly speech: RuntimeSpeech.API;
       readonly tts: RuntimeTts.API;
       readonly java: RuntimeJava.API;

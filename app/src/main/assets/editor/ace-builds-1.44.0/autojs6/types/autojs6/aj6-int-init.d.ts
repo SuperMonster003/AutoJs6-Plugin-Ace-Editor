@@ -109,6 +109,10 @@ declare let $camera: Internal.Camera;
 declare let alarms: Internal.Alarms;
 declare let $alarms: Internal.Alarms;
 
+/** Reading, rendering, page operations, creation and viewing of PDF files through the external 3-Paper PDF plugin. Available since AutoJs6 6.8.1. */
+declare let pdf: Internal.Pdf;
+declare let $pdf: Internal.Pdf;
+
 /** Screen recording by AutoJs6 and video processing of the external 3-Slate Studio plugin, Rhino scripts only. Available since AutoJs6 6.8.1. */
 declare let video: Internal.Video;
 declare let $video: Internal.Video;

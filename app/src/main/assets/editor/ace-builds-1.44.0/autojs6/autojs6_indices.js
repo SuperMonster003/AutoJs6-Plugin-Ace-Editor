@@ -290,6 +290,11 @@
                 "doc": "AutoJs6 Pangu API"
             },
             {
+                "name": "pdf",
+                "type": "module",
+                "doc": "AutoJs6 Pdf API"
+            },
+            {
                 "name": "pinyin",
                 "type": "module",
                 "doc": "AutoJs6 Pinyin API"
@@ -3587,6 +3592,11 @@
                 "name": "$alarms",
                 "type": "module",
                 "doc": "Alias of alarms"
+            },
+            {
+                "name": "$pdf",
+                "type": "module",
+                "doc": "Alias of pdf"
             },
             {
                 "name": "$video",
@@ -37660,6 +37670,390 @@
                     "signature": "hasProperSpacing(text: string): boolean;"
                 }
             ],
+            "pdf": [
+                {
+                    "name": "PdfError",
+                    "type": "variable",
+                    "doc": "PdfError: Pdf.PdfErrorConstructor;",
+                    "signature": "PdfError: Pdf.PdfErrorConstructor;"
+                },
+                {
+                    "name": "isAvailable",
+                    "type": "function",
+                    "doc": "isAvailable(): boolean;",
+                    "signature": "isAvailable(): boolean;"
+                },
+                {
+                    "name": "isAvailableAsync",
+                    "type": "function",
+                    "doc": "isAvailableAsync(): Pdf.PdfPromise<boolean>;",
+                    "signature": "isAvailableAsync(): Pdf.PdfPromise<boolean>;"
+                },
+                {
+                    "name": "info",
+                    "type": "function",
+                    "doc": "info(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfInfo;",
+                    "signature": "info(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfInfo;"
+                },
+                {
+                    "name": "infoAsync",
+                    "type": "function",
+                    "doc": "infoAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfInfo>;",
+                    "signature": "infoAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfInfo>;"
+                },
+                {
+                    "name": "text",
+                    "type": "function",
+                    "doc": "text(path: string, options?: Pdf.TextOptions | null): Pdf.Texts;",
+                    "signature": "text(path: string, options?: Pdf.TextOptions | null): Pdf.Texts;"
+                },
+                {
+                    "name": "textAsync",
+                    "type": "function",
+                    "doc": "textAsync(path: string, options?: Pdf.TextOptions | null): Pdf.PdfPromise<Pdf.Texts>;",
+                    "signature": "textAsync(path: string, options?: Pdf.TextOptions | null): Pdf.PdfPromise<Pdf.Texts>;"
+                },
+                {
+                    "name": "outline",
+                    "type": "function",
+                    "doc": "outline(path: string, options?: Pdf.PasswordOptions | null): Pdf.OutlineItem[];",
+                    "signature": "outline(path: string, options?: Pdf.PasswordOptions | null): Pdf.OutlineItem[];"
+                },
+                {
+                    "name": "outlineAsync",
+                    "type": "function",
+                    "doc": "outlineAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.OutlineItem[]>;",
+                    "signature": "outlineAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.OutlineItem[]>;"
+                },
+                {
+                    "name": "search",
+                    "type": "function",
+                    "doc": "search(path: string, keyword: string, options?: Pdf.SearchOptions | null): Pdf.SearchHit[];",
+                    "signature": "search(path: string, keyword: string, options?: Pdf.SearchOptions | null): Pdf.SearchHit[];"
+                },
+                {
+                    "name": "searchAsync",
+                    "type": "function",
+                    "doc": "searchAsync(path: string, keyword: string, options?: Pdf.SearchOptions | null): Pdf.PdfPromise<Pdf.SearchHit[]>;",
+                    "signature": "searchAsync(path: string, keyword: string, options?: Pdf.SearchOptions | null): Pdf.PdfPromise<Pdf.SearchHit[]>;"
+                },
+                {
+                    "name": "render",
+                    "type": "function",
+                    "doc": "render(path: string, page: number, options?: Pdf.RenderOptions | null): ImageWrapper;",
+                    "signature": "render(path: string, page: number, options?: Pdf.RenderOptions | null): ImageWrapper;"
+                },
+                {
+                    "name": "renderAsync",
+                    "type": "function",
+                    "doc": "renderAsync(path: string, page: number, options?: Pdf.RenderOptions | null): Pdf.PdfPromise<ImageWrapper>;",
+                    "signature": "renderAsync(path: string, page: number, options?: Pdf.RenderOptions | null): Pdf.PdfPromise<ImageWrapper>;"
+                },
+                {
+                    "name": "renderToFile",
+                    "type": "function",
+                    "doc": "renderToFile(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.RenderedFile;",
+                    "signature": "renderToFile(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.RenderedFile;",
+                    "signatures": [
+                        "renderToFile(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.RenderedFile;",
+                        "renderToFile(path: string, page: number, options?: Pdf.RenderToFileOptions): Pdf.RenderedFile;"
+                    ]
+                },
+                {
+                    "name": "renderToFileAsync",
+                    "type": "function",
+                    "doc": "renderToFileAsync(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.PdfPromise<Pdf.RenderedFile>;",
+                    "signature": "renderToFileAsync(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.PdfPromise<Pdf.RenderedFile>;",
+                    "signatures": [
+                        "renderToFileAsync(path: string, page: number, output: Pdf.Output, options?: Pdf.RenderToFileOptions | null): Pdf.PdfPromise<Pdf.RenderedFile>;",
+                        "renderToFileAsync(path: string, page: number, options?: Pdf.RenderToFileOptions): Pdf.PdfPromise<Pdf.RenderedFile>;"
+                    ]
+                },
+                {
+                    "name": "images",
+                    "type": "function",
+                    "doc": "images(path: string, options?: Pdf.PagesOptions | null): Pdf.ImageInfo[];",
+                    "signature": "images(path: string, options?: Pdf.PagesOptions | null): Pdf.ImageInfo[];"
+                },
+                {
+                    "name": "imagesAsync",
+                    "type": "function",
+                    "doc": "imagesAsync(path: string, options?: Pdf.PagesOptions | null): Pdf.PdfPromise<Pdf.ImageInfo[]>;",
+                    "signature": "imagesAsync(path: string, options?: Pdf.PagesOptions | null): Pdf.PdfPromise<Pdf.ImageInfo[]>;"
+                },
+                {
+                    "name": "extractImages",
+                    "type": "function",
+                    "doc": "extractImages(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PathsResult;",
+                    "signature": "extractImages(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PathsResult;",
+                    "signatures": [
+                        "extractImages(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PathsResult;",
+                        "extractImages(path: string, options?: Pdf.ExtractImagesOptions): Pdf.PathsResult;"
+                    ]
+                },
+                {
+                    "name": "extractImagesAsync",
+                    "type": "function",
+                    "doc": "extractImagesAsync(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PdfPromise<Pdf.PathsResult>;",
+                    "signature": "extractImagesAsync(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PdfPromise<Pdf.PathsResult>;",
+                    "signatures": [
+                        "extractImagesAsync(path: string, outputDir: Pdf.Output, options?: Pdf.ExtractImagesOptions | null): Pdf.PdfPromise<Pdf.PathsResult>;",
+                        "extractImagesAsync(path: string, options?: Pdf.ExtractImagesOptions): Pdf.PdfPromise<Pdf.PathsResult>;"
+                    ]
+                },
+                {
+                    "name": "merge",
+                    "type": "function",
+                    "doc": "merge(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfResult;",
+                    "signature": "merge(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "merge(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfResult;",
+                        "merge(inputs: string[], options?: Pdf.MergeOptions): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "mergeAsync",
+                    "type": "function",
+                    "doc": "mergeAsync(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "mergeAsync(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "mergeAsync(inputs: string[], output: Pdf.Output, options?: Pdf.MergeOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "mergeAsync(inputs: string[], options?: Pdf.MergeOptions): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "split",
+                    "type": "function",
+                    "doc": "split(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PathsResult;",
+                    "signature": "split(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PathsResult;",
+                    "signatures": [
+                        "split(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PathsResult;",
+                        "split(path: string, options: Pdf.SplitOptions): Pdf.PathsResult;"
+                    ]
+                },
+                {
+                    "name": "splitAsync",
+                    "type": "function",
+                    "doc": "splitAsync(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PdfPromise<Pdf.PathsResult>;",
+                    "signature": "splitAsync(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PdfPromise<Pdf.PathsResult>;",
+                    "signatures": [
+                        "splitAsync(path: string, outputDir: Pdf.Output, options: Pdf.SplitOptions): Pdf.PdfPromise<Pdf.PathsResult>;",
+                        "splitAsync(path: string, options: Pdf.SplitOptions): Pdf.PdfPromise<Pdf.PathsResult>;"
+                    ]
+                },
+                {
+                    "name": "extract",
+                    "type": "function",
+                    "doc": "extract(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signature": "extract(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "extract(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                        "extract(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "extractAsync",
+                    "type": "function",
+                    "doc": "extractAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "extractAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "extractAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "extractAsync(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "delete",
+                    "type": "function",
+                    "doc": "delete(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signature": "delete(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "delete(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                        "delete(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "deleteAsync",
+                    "type": "function",
+                    "doc": "deleteAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "deleteAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "deleteAsync(path: string, output: Pdf.Output, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "deleteAsync(path: string, pages: Pdf.PageRange, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "reorder",
+                    "type": "function",
+                    "doc": "reorder(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signature": "reorder(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "reorder(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                        "reorder(path: string, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "reorderAsync",
+                    "type": "function",
+                    "doc": "reorderAsync(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "reorderAsync(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "reorderAsync(path: string, output: Pdf.Output, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "reorderAsync(path: string, order: number[], options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "rotate",
+                    "type": "function",
+                    "doc": "rotate(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfResult;",
+                    "signature": "rotate(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "rotate(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfResult;",
+                        "rotate(path: string, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "rotateAsync",
+                    "type": "function",
+                    "doc": "rotateAsync(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "rotateAsync(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "rotateAsync(path: string, output: Pdf.Output, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "rotateAsync(path: string, degrees: number, options?: Pdf.RotateOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "fromImages",
+                    "type": "function",
+                    "doc": "fromImages(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfResult;",
+                    "signature": "fromImages(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "fromImages(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfResult;",
+                        "fromImages(images: string[], options?: Pdf.FromImagesOptions): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "fromImagesAsync",
+                    "type": "function",
+                    "doc": "fromImagesAsync(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "fromImagesAsync(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "fromImagesAsync(images: string[], output: Pdf.Output, options?: Pdf.FromImagesOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "fromImagesAsync(images: string[], options?: Pdf.FromImagesOptions): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "fromText",
+                    "type": "function",
+                    "doc": "fromText(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfResult;",
+                    "signature": "fromText(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "fromText(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfResult;",
+                        "fromText(text: string, options?: Pdf.FromTextOptions): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "fromTextAsync",
+                    "type": "function",
+                    "doc": "fromTextAsync(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "fromTextAsync(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "fromTextAsync(text: string, output: Pdf.Output, options?: Pdf.FromTextOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "fromTextAsync(text: string, options?: Pdf.FromTextOptions): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "fromHtml",
+                    "type": "function",
+                    "doc": "fromHtml(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfResult;",
+                    "signature": "fromHtml(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "fromHtml(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfResult;",
+                        "fromHtml(htmlOrPath: string, options?: Pdf.FromHtmlOptions): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "fromHtmlAsync",
+                    "type": "function",
+                    "doc": "fromHtmlAsync(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "fromHtmlAsync(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "fromHtmlAsync(htmlOrPath: string, output: Pdf.Output, options?: Pdf.FromHtmlOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "fromHtmlAsync(htmlOrPath: string, options?: Pdf.FromHtmlOptions): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "encrypt",
+                    "type": "function",
+                    "doc": "encrypt(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfResult;",
+                    "signature": "encrypt(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfResult;",
+                    "signatures": [
+                        "encrypt(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfResult;",
+                        "encrypt(path: string, options: Pdf.EncryptOptions): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "encryptAsync",
+                    "type": "function",
+                    "doc": "encryptAsync(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "encryptAsync(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "encryptAsync(path: string, output: Pdf.Output, options: Pdf.EncryptOptions): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "encryptAsync(path: string, options: Pdf.EncryptOptions): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "decrypt",
+                    "type": "function",
+                    "doc": "decrypt(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signature": "decrypt(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                    "signatures": [
+                        "decrypt(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfResult;",
+                        "decrypt(path: string, options?: Pdf.PasswordOptions): Pdf.PdfResult;"
+                    ]
+                },
+                {
+                    "name": "decryptAsync",
+                    "type": "function",
+                    "doc": "decryptAsync(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signature": "decryptAsync(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                    "signatures": [
+                        "decryptAsync(path: string, output: Pdf.Output, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfResult>;",
+                        "decryptAsync(path: string, options?: Pdf.PasswordOptions): Pdf.PdfPromise<Pdf.PdfResult>;"
+                    ]
+                },
+                {
+                    "name": "open",
+                    "type": "function",
+                    "doc": "open(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfDocument;",
+                    "signature": "open(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfDocument;"
+                },
+                {
+                    "name": "openAsync",
+                    "type": "function",
+                    "doc": "openAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfDocument>;",
+                    "signature": "openAsync(path: string, options?: Pdf.PasswordOptions | null): Pdf.PdfPromise<Pdf.PdfDocument>;"
+                },
+                {
+                    "name": "view",
+                    "type": "function",
+                    "doc": "view(path: string, options?: Pdf.ViewOptions | null): Pdf.PdfViewSession;",
+                    "signature": "view(path: string, options?: Pdf.ViewOptions | null): Pdf.PdfViewSession;"
+                },
+                {
+                    "name": "viewAsync",
+                    "type": "function",
+                    "doc": "viewAsync(path: string, options?: Pdf.ViewOptions | null): Pdf.PdfPromise<Pdf.PdfViewSession>;",
+                    "signature": "viewAsync(path: string, options?: Pdf.ViewOptions | null): Pdf.PdfPromise<Pdf.PdfViewSession>;"
+                }
+            ],
+            "pdf.PdfError": [
+                {
+                    "name": "prototype",
+                    "type": "variable",
+                    "doc": "prototype: PdfError;",
+                    "signature": "prototype: PdfError;"
+                }
+            ],
             "pinyin": [
                 {
                     "name": "STYLE_NORMAL",
@@ -42164,6 +42558,7 @@
             "$gallery": "gallery",
             "$camera": "camera",
             "$alarms": "alarms",
+            "$pdf": "pdf",
             "$video": "video",
             "$audio": "audio",
             "$speech": "speech",

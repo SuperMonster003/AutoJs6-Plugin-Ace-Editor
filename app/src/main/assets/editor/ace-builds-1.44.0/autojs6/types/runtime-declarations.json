@@ -11,7 +11,7 @@
     "autojs6-node/app.d.ts": "759150b9a37c005b23e7df63080fae6b4a6ae06f7071d7f1fedfbf9d6561145a",
     "autojs6-node/audio.d.ts": "5d7ae2cd7a62cef0f350bca28dfd0f59d0c3f150ac8c100b3d262b3558c31d0f",
     "autojs6-node/autojs.d.ts": "3cb17de51097c8fe5bf3e67c4b0452d66b06b00926b98e3beefd0336236ca0e6",
-    "autojs6-node/autojs_global.d.ts": "b22b7ff0803ffbab144ef386318cbfd1f2f00c250aac2db751333dab2c3a1c97",
+    "autojs6-node/autojs_global.d.ts": "d3e906b5145af19cf8d04b33bca90fb14c78af3f2204e03b96da75c54068d134",
     "autojs6-node/automation.d.ts": "aabb9755e6902ab4c21b4b3e8e1fc9c58470fb1ed51f320606bb118bc7313902",
     "autojs6-node/axios.d.ts": "7f20df43fdc90a7c71779a3db4c721fd307e34d85f6d80f27f5e358e0c49d794",
     "autojs6-node/barcode.d.ts": "257435f7a2399f1d3648ee9cd2ae847a1444c2bdb187fdb606e91c4b3222a73c",
@@ -44,7 +44,7 @@
     "autojs6-node/https.d.ts": "ab177de789de0adef3af9cf1d0ad2e867db0291480987124c4f63ad5b17cb99e",
     "autojs6-node/image.d.ts": "a98da68938d339f315e6c3d9f242db9011b9717f0ffa15f9551f146a3c8e2b51",
     "autojs6-node/images.d.ts": "bba57a733bd277b311316c47faca09a2df36658dd79996b2c82c0015bf1ec872",
-    "autojs6-node/index.d.ts": "875deb37345c7a5e8b54aee21c4e3701233b62d54ca408e4cbd221c1bae0d392",
+    "autojs6-node/index.d.ts": "91d28c167e1b569309fd8b2b3f6278e313f9458fb1255fa3bbad511d5e59a8c1",
     "autojs6-node/input_observer.d.ts": "caf71af9d95caf256374f0a034d2e19ebf11ae9ff3e79b655de48b874ab1186f",
     "autojs6-node/installer.d.ts": "5e1f42124c9ed16203b67eb94495dd3def99df92c039ecad21acbda7818ab244",
     "autojs6-node/java.d.ts": "f49c50ccf87ef5af1f716c973c95b6c444a9ebcce44a8c394ff93dcb6f527776",
@@ -65,6 +65,7 @@
     "autojs6-node/ocr.d.ts": "3d67c30c04e8308d4384706f160a16595138600c7e7580d7f4960f37dc134b15",
     "autojs6-node/opencc.d.ts": "81d0404a01b4ee42285a1372979e9f0079d88229aedc59268c10e922c21b6900",
     "autojs6-node/package_manager.d.ts": "49eaec22490aad85021b95f1c6dda374ae85b22030acc425f9407c5b05cacc01",
+    "autojs6-node/pdf.d.ts": "94bed911dcc54bfa5c6983499a2e55da033ac85f0c18564fbd188216ae7541c7",
     "autojs6-node/pinyin.d.ts": "7184022d3775cc25d51df1906ed61c5555b92b8f18eedbd92b16af903059ee9a",
     "autojs6-node/pinyin4j.d.ts": "da4137e4256bf3dd85503b798a3d79f014632704e51e95c264b9479732dd0db1",
     "autojs6-node/plugins.d.ts": "bf964ea41d5d7cc4e47c754ee26bc2daef7b6be43dbb3cb2999287c7f807a010",
@@ -72,7 +73,7 @@
     "autojs6-node/profile_capabilities.d.ts": "5d18fe4fb2d0495463fa9d14817fe552992e2143c0751b5ea6d47aa441619a1b",
     "autojs6-node/recorder.d.ts": "7ba0e113088f4426097b087df97017940f69a7d75cab695b7f456caf9ea38a69",
     "autojs6-node/rhino.d.ts": "88cdb6e302780fccdc27dbd1db368567bb6be1e0f5604eb610d09fe28cd50959",
-    "autojs6-node/rhino_compat.d.ts": "5a636e1c41976e2258ca4cac92803625c97468f9fa040f00deed24ebffb1d89d",
+    "autojs6-node/rhino_compat.d.ts": "898ded91f34c3687053ca9537bfc20c20082217c42b013f2d0d93ae813a7e67a",
     "autojs6-node/s13n.d.ts": "612c4bae55c52907ffa46ae5f8d620e6d45d3d82eb98958dec6dcfa58a4e2143",
     "autojs6-node/screen_metrics.d.ts": "5c21b73c91013f8cc89af83a72a799f1af9b28f36aa0b91457a47a885dd73b32",
     "autojs6-node/screen_recorder.d.ts": "67bba3a883960d21a0a4dbe5249923bb8f6d6e8fa3036563366e31f09afadb6f",
@@ -100,8 +101,9 @@
     "autojs6-node/websocket.d.ts": "f9412a8fe65abdab7d1f14f09bf75a4371a84657ba3f91de42e6c96e512a5923",
     "autojs6-node/work_manager.d.ts": "5d77db1003ae945c3ce7f9061b4e8609a29f8fe3b2a830a0c0fae051c67a2e68",
     "autojs6-node/worker_threads.d.ts": "6b29835d34c6f622309dcc6bd2c05693e8d3f66820be9ba6583313e004b0c9a3",
+    "autojs6-node/xlsx.d.ts": "3f1953b49afb1b70e0a35e9f52230bb3080671c53ffd3a3e2a984273f519583e",
     "autojs6-node/zip.d.ts": "f52e600d2fb5f6546ff994636bb03621cde1c334503c7446223bf0f20390a351",
-    "autojs6-bun/host-client.d.mts": "c99d091915030ea813e4ac6a9860099085a3592e66bfea10e6d00a969ca7e3fa",
-    "autojs6-bun/index.d.ts": "a98e41064dadeb725af831d18547e177426d112dde3205fa3cb9748cfbfb270f"
+    "autojs6-bun/host-client.d.mts": "1a855deddbea63c5f1f371101e0dbdce1af88a2bfe607ee047aa997b482f3346",
+    "autojs6-bun/index.d.ts": "d12dbe2b55cd0440def7ee89910d02ddfeb56c3b18f73380d70342eb8d9360e9"
   }
 }
