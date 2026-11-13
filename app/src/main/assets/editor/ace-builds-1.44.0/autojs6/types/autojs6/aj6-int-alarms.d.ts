@@ -333,9 +333,11 @@ declare namespace Internal {
 
         /**
          * Needs the plugin feature `holidays` (plugin 1.2.0 or later, `PLUGIN_INCOMPATIBLE` before). A ring the filter
-         * removes sends a `skip` event with reason `'holiday'` and no `beforeRing`; `upcoming` and `preview` count it. A
-         * year without any data rings by the weekday rules alone. Makeup workdays are only as accurate as the upstream
-         * data.
+         * removes from the days it would ring on (a holiday among the days of the rule for `'skip'`, a holiday off the
+         * weekend for `'workdays'`) sends a `skip` event with reason `'holiday'` and no `beforeRing`; days that would not
+         * ring anyway (a non-holiday for `'only'`, a weekend for `'workdays'`) send no `skip`. `upcoming` and `preview`
+         * count the filter. A year without any data rings by the weekday rules alone. Makeup workdays are only as accurate
+         * as the upstream data.
          */
         interface HolidayFilter {
             /**
@@ -737,7 +739,8 @@ declare namespace Internal {
             events?: EventName | EventName[];
             /**
              * How long before the due time the plugin sends `beforeRing`, in seconds (15 - 300, default 60); only together
-             * with `beforeRing` (plugin 1.2.0 or later).
+             * with `beforeRing` (plugin 1.2.0 or later). Several `beforeRing` bindings of one alarm take the smallest value
+             * (an omitted one counts as 60) and get one `beforeRing` per ring; with live listeners only it is 60 seconds.
              */
             leadSeconds?: number;
         }
@@ -896,8 +899,16 @@ declare namespace Internal {
             readonly features: string[];
             /** What the plugin holds right now; only a missing exact alarm permission makes calls fail. */
             readonly permissions: { readonly exactAlarm: boolean; readonly notifications: boolean; readonly fullScreen: boolean };
+            /** The same as the `version` of `alarms.holidays.info()`; `null` without the feature `holidays`. */
             readonly holidayDataVersion: string | null;
-            /** For example missing or estimated holiday data of the default region or of the regions alarms use. */
+            /**
+             * English sentences, empty when there is nothing to note. The default region and the holiday regions of the
+             * enabled alarms are checked (a sentence appears once): a region that cannot be resolved (an unknown code, or
+             * no data for the default region), whose alarms ring by the weekday rules only; a region whose data lacks the
+             * current year (the covered years are named), whose alarms ring by the weekday rules only that year; a region
+             * whose current or next year is estimated (the first estimated year is named), makeup workdays and adjusted
+             * days off not announced yet.
+             */
             readonly warnings: string[];
             readonly limits: Limits;
         }
