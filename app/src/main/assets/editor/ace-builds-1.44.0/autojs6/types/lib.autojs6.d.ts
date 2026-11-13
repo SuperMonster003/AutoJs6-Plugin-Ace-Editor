@@ -71,6 +71,7 @@ declare namespace AutoJs6 {
         system: Alarms.System;
         timers: Alarms.Timers;
         stopwatch: Alarms.Stopwatch;
+        holidays: Alarms.Holidays;
         isAvailable(): boolean;
         capabilities(): Alarms.Capabilities;
         openPlugin(page?: Alarms.PluginPage): void;
@@ -101,6 +102,16 @@ declare namespace AutoJs6 {
 
     interface Alarms_AlarmError {
         prototype: AlarmError;
+    }
+
+    interface Alarms_holidays {
+        regions(): HolidayRegion[];
+        isHoliday(date?: string | Date | number | null, region?: string | null): boolean;
+        isWorkday(date?: string | Date | number | null, region?: string | null): boolean;
+        list(region: string | null, year: number): HolidayEntry[];
+        info(): HolidayInfo | null;
+        refresh(): HolidayInfo | null;
+        refreshAsync(): Promise<HolidayInfo | null>;
     }
 
     interface Alarms_ringtones {

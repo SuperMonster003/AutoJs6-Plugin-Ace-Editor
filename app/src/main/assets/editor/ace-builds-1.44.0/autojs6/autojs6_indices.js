@@ -4340,6 +4340,12 @@
                     "signature": "stopwatch: Alarms.Stopwatch;"
                 },
                 {
+                    "name": "holidays",
+                    "type": "variable",
+                    "doc": "holidays: Alarms.Holidays;",
+                    "signature": "holidays: Alarms.Holidays;"
+                },
+                {
                     "name": "isAvailable",
                     "type": "function",
                     "doc": "isAvailable(): boolean;",
@@ -4490,6 +4496,50 @@
                     "type": "variable",
                     "doc": "prototype: AlarmError;",
                     "signature": "prototype: AlarmError;"
+                }
+            ],
+            "alarms.holidays": [
+                {
+                    "name": "regions",
+                    "type": "function",
+                    "doc": "regions(): HolidayRegion[];",
+                    "signature": "regions(): HolidayRegion[];"
+                },
+                {
+                    "name": "isHoliday",
+                    "type": "function",
+                    "doc": "isHoliday(date?: string | Date | number | null, region?: string | null): boolean;",
+                    "signature": "isHoliday(date?: string | Date | number | null, region?: string | null): boolean;"
+                },
+                {
+                    "name": "isWorkday",
+                    "type": "function",
+                    "doc": "isWorkday(date?: string | Date | number | null, region?: string | null): boolean;",
+                    "signature": "isWorkday(date?: string | Date | number | null, region?: string | null): boolean;"
+                },
+                {
+                    "name": "list",
+                    "type": "function",
+                    "doc": "list(region: string | null, year: number): HolidayEntry[];",
+                    "signature": "list(region: string | null, year: number): HolidayEntry[];"
+                },
+                {
+                    "name": "info",
+                    "type": "function",
+                    "doc": "info(): HolidayInfo | null;",
+                    "signature": "info(): HolidayInfo | null;"
+                },
+                {
+                    "name": "refresh",
+                    "type": "function",
+                    "doc": "refresh(): HolidayInfo | null;",
+                    "signature": "refresh(): HolidayInfo | null;"
+                },
+                {
+                    "name": "refreshAsync",
+                    "type": "function",
+                    "doc": "refreshAsync(): Promise<HolidayInfo | null>;",
+                    "signature": "refreshAsync(): Promise<HolidayInfo | null>;"
                 }
             ],
             "alarms.ringtones": [

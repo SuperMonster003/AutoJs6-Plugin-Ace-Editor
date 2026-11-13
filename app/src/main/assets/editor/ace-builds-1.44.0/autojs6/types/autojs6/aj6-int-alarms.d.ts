@@ -3,7 +3,7 @@
 // Definitions by: SuperMonster003 <https://github.com/SuperMonster003>
 // TypeScript Version: 5.1.3
 //
-// Last modified: Nov 12, 2026
+// Last modified: Nov 13, 2026
 
 /// <reference path="./index.d.ts" />
 
@@ -14,6 +14,10 @@
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsTimers.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsStopwatchModule.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsStopwatch.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsHolidaysModule.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsHolidays.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmDecisions.kt
+ * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/core/plugin/alarm/AlarmBeforeRing.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsRingtonesModule.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsSystemModule.kt
  * @Source %AutoJs6%/app/src/main/java/org/autojs/autojs/runtime/api/modules/alarms/AlarmsSystem.kt
@@ -34,9 +38,12 @@ declare namespace Internal {
      * plugin's screens included (the plugin shows who created and last changed each alarm). While the plugin is missing,
      * disabled or too old the calls throw an `AlarmError` whose `code` is `PLUGIN_UNAVAILABLE`, `PLUGIN_DISABLED` or
      * `PLUGIN_INCOMPATIBLE`; {@link isAvailable} probes without throwing. {@link system} needs no plugin; {@link timers}
-     * and {@link stopwatch} need plugin 1.1.0 or later (`PLUGIN_INCOMPATIBLE` on 1.0.x).
+     * and {@link stopwatch} need plugin 1.1.0 or later (`PLUGIN_INCOMPATIBLE` on 1.0.x); {@link holidays}, the
+     * `holidays` alarm option and the `beforeRing` event need plugin 1.2.0 or later (`PLUGIN_INCOMPATIBLE` asking to
+     * update to 1.2.0 on older plugins).
      *
-     * Every call is synchronous (15 seconds at most, 60 for a ringtone file import). Unknown option keys are refused by
+     * Every call but `holidays.refreshAsync` is synchronous (15 seconds at most, 60 for a ringtone file import, 120 for a
+     * holiday data refresh). Unknown option keys are refused by
      * name with `INVALID_OPTIONS`; weekday numbers are 0 (Sunday) to 6 (Saturday); relative paths resolve against the
      * script's working directory; times are epoch milliseconds, and a `Date` is accepted wherever a time is.
      */
@@ -56,6 +63,9 @@ declare namespace Internal {
 
         /** The plugin's single stopwatch (plugin 1.1.0 or later). @since 6.8.1 */
         readonly stopwatch: Alarms.Stopwatch;
+
+        /** The plugin's holiday data (plugin 1.2.0 or later). @since 6.8.1 */
+        readonly holidays: Alarms.Holidays;
 
         /** Whether a compatible, enabled and authorized 3-Chime Alarm plugin answers; never throws. @since 6.8.1 */
         isAvailable(): boolean;
@@ -154,7 +164,7 @@ declare namespace Internal {
          * Listens to an event of any alarm or timer (`kind`). The first listener is registered with the plugin before the
          * call returns, so a missing plugin throws here. The listener runs on the script thread; the script keeps running
          * until the listener is removed or the script ends. Plugin 1.1.0 and earlier have no `beforeRing`
-         * (`PLUGIN_INCOMPATIBLE`).
+         * (`PLUGIN_INCOMPATIBLE`, update to 1.2.0); a `beforeRing` event has the `skip` / `ring` methods.
          * @since 6.8.1
          */
         on<E extends Alarms.EventName>(event: E, listener: (event: Alarms.EventOf<E>) => void): Alarms.Subscription;
@@ -172,7 +182,9 @@ declare namespace Internal {
         off(event: Alarms.EventName, listener: (event: any) => void): void;
 
         /**
-         * The event a binding started this script with (`engines.myEngine().execArgv.alarm`, a plain object), or `null`.
+         * The event a binding started this script with, or `null`; the same content as `engines.myEngine().execArgv.alarm`
+         * (a plain object without methods). A `beforeRing` event also has the non-enumerable `skip` / `ring` methods.
+         * Needs no plugin.
          * @since 6.8.1
          */
         currentEvent(): Alarms.AlarmEvent | null;
@@ -184,7 +196,8 @@ declare namespace Internal {
          * when the event comes). Each (occurrence, event, script) starts once; nothing starts before the first unlock
          * after boot or while AutoJs6 is force-stopped. A timer id (`t_`, plugin 1.1.0 or later) takes only `ring`,
          * `snooze`, `dismiss` and `silence` and no `leadSeconds`; its bindings go when the timer is dismissed, silenced
-         * or cancelled.
+         * or cancelled. `beforeRing` needs plugin 1.2.0 or later (`PLUGIN_INCOMPATIBLE`); the started script decides
+         * through `alarms.currentEvent().skip()` / `.ring()`.
          * @since 6.8.1
          */
         bind(id: string, script: string, options?: Alarms.BindOptions): Alarms.Binding;
@@ -318,10 +331,23 @@ declare namespace Internal {
             max?: number;
         }
 
-        /** Needs the plugin feature `holidays` (not in plugin 1.1.0 and earlier, `PLUGIN_INCOMPATIBLE`). */
+        /**
+         * Needs the plugin feature `holidays` (plugin 1.2.0 or later, `PLUGIN_INCOMPATIBLE` before). A ring the filter
+         * removes sends a `skip` event with reason `'holiday'` and no `beforeRing`; `upcoming` and `preview` count it. A
+         * year without any data rings by the weekday rules alone. Makeup workdays are only as accurate as the upstream
+         * data.
+         */
         interface HolidayFilter {
-            /** ISO 3166-1 alpha-2 with an optional subdivision (`'CN'`, `'US-CA'`). */
+            /**
+             * ISO 3166-1 alpha-2 with an optional subdivision of the data (`'CN'`, `'US-CA'`); default the plugin's
+             * default region.
+             */
             region?: string;
+            /**
+             * `'skip'` drops the holidays from the days of the rule, `'only'` keeps only them, `'workdays'` rings on every
+             * workday (makeup workdays included) whatever the weekdays, with `repeat` omitted or a `daily` rule of
+             * interval 1.
+             */
             mode: 'skip' | 'only' | 'workdays';
         }
 
@@ -630,12 +656,89 @@ declare namespace Internal {
             readonly totalMillis: number;
         }
 
+        /**
+         * `alarms.holidays`: the holiday data of the plugin (plugin 1.2.0 or later, feature `holidays`;
+         * `PLUGIN_INCOMPATIBLE` asking to update to 1.2.0 before), the data the `holidays` alarm option uses. A region is
+         * an ISO 3166-1 alpha-2 code, case-insensitive, with an optional `-` and a subdivision code of the data kept as
+         * written (`'CN'`, `'US-CA'`, `'AU-NSW Western'`); omitted or `null` means the plugin's default region. A date is
+         * `'YYYY-MM-DD'`, a `Date` or a timestamp (its date in the device zone); omitted or `null` means today.
+         * `INVALID_OPTIONS` for a malformed region or date, `HOLIDAY_DATA_MISSING` for a region or year without data.
+         * Holidays and makeup workdays are only as accurate as the upstream data; for regions with makeup workdays the
+         * years not announced yet are estimated from the rules (see `HolidayRegion.estimatedFrom`).
+         */
+        interface Holidays {
+            /** The regions with holiday data. @since 6.8.1 */
+            regions(): HolidayRegion[];
+            /** Whether the date is a holiday of the region (a plain weekend or a makeup workday is not). @since 6.8.1 */
+            isHoliday(date?: string | Date | number | null, region?: string | null): boolean;
+            /**
+             * Whether the date is a workday of the region: not on its weekend (from the data, it may differ by year or
+             * subdivision) and not a holiday, or a makeup workday; the rule of the `'workdays'` holiday mode.
+             * @since 6.8.1
+             */
+            isWorkday(date?: string | Date | number | null, region?: string | null): boolean;
+            /** The holidays and makeup workdays of the year (1 - 9999); pass `null` for the default region. @since 6.8.1 */
+            list(region: string | null, year: number): HolidayEntry[];
+            /** The data the plugin uses, or `null` when it has none; no network access. @since 6.8.1 */
+            info(): HolidayInfo | null;
+            /**
+             * Checks for and downloads a data update now, blocking for 120 seconds at most (`TIMEOUT`); `SESSION_CLOSED`
+             * when the plugin process ends meanwhile.
+             * @since 6.8.1
+             */
+            refresh(): HolidayInfo | null;
+            /**
+             * The Promise form of {@link refresh}; failures and argument errors reject with an `AlarmError`, the end of
+             * the script cancels it.
+             * @since 6.8.1
+             */
+            refreshAsync(): Promise<HolidayInfo | null>;
+        }
+
+        /** Other keys of the plugin pass through. */
+        interface HolidayRegion {
+            /** ISO 3166-1 alpha-2. */
+            readonly code: string;
+            readonly name: string;
+            /** `[first, last]`, estimated years included. */
+            readonly years: [number, number];
+            readonly hasMakeupWorkdays: boolean;
+            /** The data is estimated from this year on (only regions with makeup workdays). */
+            readonly estimatedFrom?: number;
+            /** Subdivisions with data of their own; `region` is the country code, `-` and `code` (`'US-CA'`). */
+            readonly subdivisions?: { readonly code: string; readonly name: string }[];
+            readonly [key: string]: unknown;
+        }
+
+        interface HolidayEntry {
+            /** `'YYYY-MM-DD'`. */
+            readonly date: string;
+            /** In the device language when the data has it; may end with "(estimated)"; empty for a makeup workday. */
+            readonly name: string;
+            /** `'workday'` is a makeup workday. */
+            readonly type: 'holiday' | 'workday';
+        }
+
+        /** Other keys of the plugin pass through. */
+        interface HolidayInfo {
+            readonly version: string;
+            readonly source: string;
+            /** When the data was generated. */
+            readonly updatedAt: number;
+            /** The regions with estimated years and those years `[first, last]`. */
+            readonly estimated?: { readonly region: string; readonly years: [number, number] }[];
+            readonly [key: string]: unknown;
+        }
+
         type EventName = 'beforeRing' | 'ring' | 'snooze' | 'dismiss' | 'silence' | 'miss' | 'skip' | 'change';
 
         interface BindOptions {
             /** Default `['ring']`; not empty. A timer takes only `ring`, `snooze`, `dismiss` and `silence`. */
             events?: EventName | EventName[];
-            /** The `beforeRing` lead in seconds (15 - 300, default 60); only together with `beforeRing`. */
+            /**
+             * How long before the due time the plugin sends `beforeRing`, in seconds (15 - 300, default 60); only together
+             * with `beforeRing` (plugin 1.2.0 or later).
+             */
             leadSeconds?: number;
         }
 
@@ -661,11 +764,34 @@ declare namespace Internal {
             readonly occurrence: string;
         }
 
-        /** Needs the plugin feature `beforeRing` (not in plugin 1.1.0 and earlier). */
+        /**
+         * Needs the plugin feature `beforeRing` (plugin 1.2.0 or later). Sent before the due time (`BindOptions.leadSeconds`,
+         * default 60 seconds) so that a script decides this ring before `deadline`. The listener argument and
+         * `alarms.currentEvent()` have the non-enumerable `skip` / `ring` methods; `execArgv.alarm` has none. Arguments are
+         * checked first; only the first decision of a script for an occurrence is sent (`true`), later ones and calls at or
+         * after the deadline answer `false` and send nothing, as does a call that runs into the deadline; other failures
+         * throw an `AlarmError` and may be retried. `true` only means the plugin received it: any `skip` wins, the `ring`
+         * overrides are merged in arrival order. Without a decision in time (no script, a script error, AutoJs6 stopped)
+         * the alarm rings as configured; AutoJs6 does not stop the script at the deadline.
+         */
         interface BeforeRingEvent extends EventBase {
             readonly type: 'beforeRing';
+            /** The cut-off for a decision; when the plugin gives none, the host takes `scheduledAt` minus 5 seconds. */
             readonly deadline: number;
+            /**
+             * Skips this ring (a `skip` event with reason `'script'` and this reason as `detail`); `reason` is trimmed, at
+             * most 100 characters (`LIMIT_EXCEEDED`), none when empty.
+             */
+            skip(reason?: string): boolean;
+            /**
+             * Rings this time, with `label`, `sound`, `speak` and `vibrate` changed for this ring only (as the timer
+             * options; a local sound file is imported first, within the deadline).
+             */
+            ring(overrides?: RingOverrides): boolean;
         }
+
+        /** The overrides of `BeforeRingEvent.ring`; other keys are `INVALID_OPTIONS`. */
+        type RingOverrides = Pick<TimerOptions, 'label' | 'sound' | 'speak' | 'vibrate'>;
 
         interface RingEvent extends EventBase {
             readonly type: 'ring';
@@ -700,8 +826,9 @@ declare namespace Internal {
 
         interface SkipEvent extends EventBase {
             readonly type: 'skip';
-            /** Only `'skipNext'` in plugin 1.1.0 and earlier. */
+            /** Only `'skipNext'` in plugin 1.1.0 and earlier; `'holiday'` (the holiday filter) and `'script'` from 1.2.0. */
             readonly reason: 'skipNext' | 'holiday' | 'script';
+            /** The reason a script gave to `skip` (reason `'script'`), absent when it gave none. */
             readonly detail?: string;
         }
 
@@ -765,11 +892,12 @@ declare namespace Internal {
             readonly packageName: string;
             /** 1. */
             readonly contractVersion: number;
-            /** `['alarms']` in plugin 1.0.x, `'timers'` and `'stopwatch'` added in 1.1.0; later `holidays`, `beforeRing`, `challenges`. */
+            /** `['alarms']` in plugin 1.0.x, `'timers'` and `'stopwatch'` added in 1.1.0, `'holidays'` and `'beforeRing'` in 1.2.0; later `challenges`. */
             readonly features: string[];
             /** What the plugin holds right now; only a missing exact alarm permission makes calls fail. */
             readonly permissions: { readonly exactAlarm: boolean; readonly notifications: boolean; readonly fullScreen: boolean };
             readonly holidayDataVersion: string | null;
+            /** For example missing or estimated holiday data of the default region or of the regions alarms use. */
             readonly warnings: string[];
             readonly limits: Limits;
         }
