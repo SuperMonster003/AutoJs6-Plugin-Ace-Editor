@@ -644,9 +644,17 @@ declare module "xlsx" {
         | ValidationBase & { type: 'any' }
         | ValidationBase & { type: 'unknown', readonly description: string };
 
-    /** `name` follows renames; the other figures come from `properties()`. */
+    /** `name` follows renames; `properties()` answers every live figure at once. */
     interface Sheet {
         readonly name: string;
+        /**
+         * As the Rhino live properties, each read of `index` / `rows` / `cols` / `dimension` asks the plugin again after the
+         * calls before it; in Node.js and Bun the read answers a Promise of the figure.
+         */
+        readonly index: XlsxPromise<number>;
+        readonly rows: XlsxPromise<number>;
+        readonly cols: XlsxPromise<number>;
+        readonly dimension: XlsxPromise<string | null>;
         read(options?: SheetReadOptions | null): XlsxPromise<any[]>;
         readAsync(options?: SheetReadOptions | null): XlsxPromise<any[]>;
         cell(ref: string, options?: { cells?: boolean, formatted?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
@@ -729,6 +737,9 @@ declare module "xlsx" {
      * Rows of `addRow` without options leave in chunks of 1000; `rowCount` counts the rows added so far (header rows not
      * counted). A call that fails keeps the rows the plugin did not take: the next call sends them first, and `rowCount`
      * counts them once (a host without that count keeps every row of the failed call). Wait for a call before retrying it.
+     * Calls not awaited keep the script order: after a failed or cancelled send the later calls wait for the host to tell
+     * the rows it took. A cancelled send rejects with CANCELLED once the host answered; the rows the plugin took before
+     * the cancel stay counted and are not sent again (a host without that count is given up after 30 s as if it took none).
      * After `close()` (whether it succeeds or not) or `abort()`, every call but `abort()` rejects with SESSION_CLOSED and
      * `rowCount` stays. A csv / tsv target has one sheet.
      */
@@ -777,20 +788,48 @@ declare module "xlsx" {
         readonly visible: boolean;
     }
 
-    /** Events wait (32 per name at most) until a listener is added. */
+    type ViewListener = (this: SheetViewSession, ...args: any[]) => void;
+
+    /**
+     * The viewer's `select` / `close` events wait (32 per name at most) until a listener is added. The listener members
+     * follow AutoJs6's EventEmitter: `emitSticky` keeps its arguments for the later `on` / `addListener` / `once` (called
+     * at once; a `once` listener is then not added), at most `getMaxListeners()` listeners of a name (10, 0 for no limit),
+     * `newListener` / `removeListener` events, and `getTimer()` is `null`.
+     */
     interface SheetViewSession {
         readonly isClosed: boolean;
         readonly reason: CloseReason | null;
         addListener(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
         addListener(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
+        addListener(event: string, listener: ViewListener): this;
         on(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
         on(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
+        on(event: string, listener: ViewListener): this;
         once(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
         once(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
-        removeListener(event: 'select' | 'close', listener: (...args: any[]) => void): this;
-        off(event: 'select' | 'close', listener: (...args: any[]) => void): this;
-        removeAllListeners(event?: 'select' | 'close'): this;
-        listenerCount(event: 'select' | 'close'): number;
+        once(event: string, listener: ViewListener): this;
+        /** Adds before the other listeners of the name; sticky arguments are not applied. */
+        prependListener(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
+        prependListener(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
+        prependListener(event: string, listener: ViewListener): this;
+        prependOnceListener(event: 'select', listener: (this: SheetViewSession, event: SelectEvent) => void): this;
+        prependOnceListener(event: 'close', listener: (this: SheetViewSession, event: CloseEvent) => void): this;
+        prependOnceListener(event: string, listener: ViewListener): this;
+        removeListener(event: string, listener: (...args: any[]) => void): this;
+        off(event: string, listener: (...args: any[]) => void): this;
+        removeAllListeners(event?: string): this;
+        /** Calls the listeners of the name in order with these arguments; whether there was one. */
+        emit(event: string, ...args: any[]): boolean;
+        /** Emits, then keeps the arguments for the listeners added later with `on` / `addListener` / `once`. */
+        emitSticky(event: string, ...args: any[]): boolean;
+        /** The names that had a listener, until `removeAllListeners`. */
+        eventNames(): string[];
+        listenerCount(event: string): number;
+        listeners(event: string): Array<(...args: any[]) => void>;
+        getMaxListeners(): number;
+        setMaxListeners(maxListeners: number): this;
+        /** Always `null`: the session has no timer of its own. */
+        getTimer(): null;
         update(rowsOrPath: string | Rows): XlsxPromise<SheetViewSession>;
         /** Moves the selection to a row (from 1) without a `select` event. */
         select(row: number): XlsxPromise<SheetViewSession>;
