@@ -55,9 +55,10 @@ declare namespace Internal {
      * in the device's time zone. A script holds at most 16 open workbooks and writers (`TOO_MANY_HANDLES`); the script's
      * exit closes them.
      *
-     * Apps packaged by AutoJs6 use the module too: projects that may read files get the plugin's runtime permission
-     * (`org.autojs.plugin.xlsx.permission.RUNTIME`) and reach the plugin through its packaged entry; handles and viewer
-     * sessions serve only the app that created them.
+     * Apps packaged by AutoJs6 use the module too: packaging adds the plugin's runtime permission
+     * (`org.autojs.plugin.xlsx.permission.RUNTIME`) to every Rhino project, to Node.js projects that may read files and to
+     * Bun projects granted `xlsx.control`, so `project.json` needs no entry for it. The app reaches the plugin through its
+     * packaged entry; handles and viewer sessions serve only the app that created them.
      *
      * @see https://docs.autojs6.com/#/xlsx
      */
@@ -603,9 +604,9 @@ declare namespace Internal {
             format?: Format;
             /** The source format when its extension does not say it. */
             sourceFormat?: Format;
-            /** The encoding of a csv / tsv output (or of the source when it becomes a workbook). */
+            /** The encoding of a csv / tsv output (or, without `sourceEncoding`, of the source when it becomes a workbook). */
             encoding?: string;
-            /** The encoding of a csv / tsv source (detected by default). */
+            /** The encoding of a csv / tsv source, whatever the output format (detected by default). */
             sourceEncoding?: string;
             delimiter?: string;
             bom?: boolean;
@@ -618,6 +619,7 @@ declare namespace Internal {
             sheet?: SheetRef;
             /** Default UTF-8. */
             encoding?: string;
+            /** The encoding of a csv / tsv source (detected by default). */
             sourceEncoding?: string;
             delimiter?: string;
             bom?: boolean;
@@ -1026,7 +1028,8 @@ declare namespace Internal {
 
         /**
          * The streaming writer of {@link Xlsx.createWriter}. Each method has an `xxxAsync` form (only `closeAsync` reports
-         * progress).
+         * progress). After `close()` (whether it succeeds or not) or `abort()`, every call but `abort()` is `SESSION_CLOSED`,
+         * a buffered `addRow()` included, and `rowCount` stays.
          * @see https://docs.autojs6.com/#/xlsxWriterType
          */
         interface Writer {
@@ -1037,7 +1040,10 @@ declare namespace Internal {
             /** Starts a new sheet (workbooks only). */
             addSheet(name: string, options?: WriterSheetOptions | null): void;
             addSheetAsync(name: string, options?: WriterSheetOptions | null): XlsxPromise<void>;
-            /** Adds a row of cells or an object; a row with its own `style` is sent alone. */
+            /**
+             * Adds a row of cells or an object. Rows without `style` are buffered and sent in chunks (the chunks sent before
+             * a failure leave the buffer, so a later call sends only the rest); a row with its own `style` is sent alone.
+             */
             addRow(values: CellInput[] | { [column: string]: CellInput }, options?: { style?: StyleSpec } | null): void;
             addRowAsync(values: CellInput[] | { [column: string]: CellInput }, options?: { style?: StyleSpec } | null): XlsxPromise<void>;
             addRows(rows: Rows): void;
