@@ -353,13 +353,28 @@ declare namespace Internal {
             mode: 'skip' | 'only' | 'workdays';
         }
 
-        /** Needs the plugin feature `challenges` (not in plugin 1.1.0 and earlier, `PLUGIN_INCOMPATIBLE`). */
+        /**
+         * A dismiss challenge; needs plugin 1.3.0 or later (feature `challenges`): with plugin 1.2.0 and earlier a
+         * non-null `dismiss` is `PLUGIN_INCOMPATIBLE`, `null` is fine. Members left out are not stored and take the
+         * plugin's defaults when the alarm rings; every member is stored whatever `challenge` is, and `update` merges
+         * `dismiss` member by member. The notification's dismiss button and the system clock's `dismissAlarm` open the
+         * challenge; `alarms.dismiss` and the plugin's tools dismiss under any challenge.
+         */
         interface DismissOptions {
+            /** Default `'none'`; `'script'` waits for a script to call `alarms.dismiss`. */
             challenge?: 'none' | 'math' | 'shake' | 'type' | 'script';
+            /** `difficulty` 1 - 3 (default 2), `count` questions 1 - 20 (default 3). */
             math?: { difficulty?: number; count?: number };
+            /** Shakes, 1 - 300 (default 30). */
             shake?: { count?: number };
+            /** 1 - 200 characters, not all whitespace; left out, a built-in sentence in the plugin's language each round. */
             type?: { text?: string };
+            /** The challenge used when the script condition cannot run (default `'none'`). */
             script?: { fallback?: 'none' | 'math' | 'shake' | 'type' };
+            /**
+             * Default true; `false` forbids snoozing from the ringing screen, the notification and the system clock while
+             * the challenge is on, not from `alarms.snooze` or the plugin's tools.
+             */
             allowSnooze?: boolean;
         }
 
@@ -393,7 +408,10 @@ declare namespace Internal {
             speak?: SpeakOptions;
             /** `false` forbids snoozing. */
             snooze?: boolean | SnoozeOptions;
-            /** Minutes before an unanswered alarm stops (1 - 60), with a `silence` event. */
+            /**
+             * Minutes before an unanswered alarm stops (1 - 60), with a `silence` event; left out with a dismiss
+             * challenge, the larger of the plugin's default and 30.
+             */
             autoSilenceMinutes?: number;
             dismiss?: DismissOptions | null;
         }
@@ -493,7 +511,11 @@ declare namespace Internal {
             readonly since: number;
             readonly snoozed: boolean;
             readonly snoozeCount: number;
-            readonly challenge: string | null;
+            /**
+             * The challenge in effect for a sounding round (the fallback after the script condition fell back), the
+             * alarm's challenge when waiting or snoozed; `null` without one (always with plugin 1.2.0 and earlier).
+             */
+            readonly challenge: 'math' | 'shake' | 'type' | 'script' | null;
         }
 
         interface Ringtone {
@@ -799,11 +821,13 @@ declare namespace Internal {
         interface RingEvent extends EventBase {
             readonly type: 'ring';
             readonly snoozeCount: number;
+            /** The alarm's dismiss challenge, absent without one (plugin 1.3.0 or later). */
+            readonly challenge?: 'math' | 'shake' | 'type' | 'script';
         }
 
         interface SnoozeEvent extends EventBase {
             readonly type: 'snooze';
-            readonly by: 'user' | 'script' | 'tool' | 'challenge';
+            readonly by: 'user' | 'script' | 'tool';
             readonly minutes: number;
             readonly snoozeCount: number;
         }
@@ -811,9 +835,16 @@ declare namespace Internal {
         /** Also ends the round of an alarm removed or disabled while ringing, waiting or snoozed. */
         interface DismissEvent extends EventBase {
             readonly type: 'dismiss';
-            /** A system clock Intent counts as `'user'`. */
+            /**
+             * A system clock Intent and the emergency dismiss (5 presses of a volume key within 4 seconds) count as
+             * `'user'`; `'challenge'` when the user completed the dismiss challenge (plugin 1.3.0 or later).
+             */
             readonly by: 'user' | 'script' | 'tool' | 'challenge';
-            readonly challenge: string | null;
+            /**
+             * The challenge in effect (the completed one for `by` `'challenge'`, `'script'` while waiting for a script),
+             * absent without one (plugin 1.3.0 or later).
+             */
+            readonly challenge?: 'math' | 'shake' | 'type' | 'script';
         }
 
         interface SilenceEvent extends EventBase {
@@ -895,7 +926,7 @@ declare namespace Internal {
             readonly packageName: string;
             /** 1. */
             readonly contractVersion: number;
-            /** `['alarms']` in plugin 1.0.x, `'timers'` and `'stopwatch'` added in 1.1.0, `'holidays'` and `'beforeRing'` in 1.2.0; later `challenges`. */
+            /** `['alarms']` in plugin 1.0.x, `'timers'` and `'stopwatch'` added in 1.1.0, `'holidays'` and `'beforeRing'` in 1.2.0, `'challenges'` in 1.3.0. */
             readonly features: string[];
             /** What the plugin holds right now; only a missing exact alarm permission makes calls fail. */
             readonly permissions: { readonly exactAlarm: boolean; readonly notifications: boolean; readonly fullScreen: boolean };
