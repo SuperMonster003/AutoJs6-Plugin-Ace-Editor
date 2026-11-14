@@ -135,6 +135,11 @@
                 "doc": "AutoJs6 dayjs API"
             },
             {
+                "name": "debugging",
+                "type": "module",
+                "doc": "AutoJs6 Debugging API"
+            },
+            {
                 "name": "device",
                 "type": "module",
                 "doc": "Device information and controls"
@@ -3607,6 +3612,11 @@
                 "name": "$xlsx",
                 "type": "module",
                 "doc": "Alias of xlsx"
+            },
+            {
+                "name": "$debugging",
+                "type": "module",
+                "doc": "Alias of debugging"
             },
             {
                 "name": "$video",
@@ -13606,6 +13616,50 @@
                     "type": "function",
                     "doc": "extend<T>(plugin: (option: T | undefined, dayjsClass: { new (...args: unknown[]): Dayjs; }, factory: DayjsFactory) => void, option?: T): DayjsFactory;",
                     "signature": "extend<T>(plugin: (option: T | undefined, dayjsClass: { new (...args: unknown[]): Dayjs; }, factory: DayjsFactory) => void, option?: T): DayjsFactory;"
+                }
+            ],
+            "debugging": [
+                {
+                    "name": "isAttached",
+                    "type": "function",
+                    "doc": "isAttached(): boolean;",
+                    "signature": "isAttached(): boolean;"
+                },
+                {
+                    "name": "waitForAttach",
+                    "type": "function",
+                    "doc": "waitForAttach(timeout?: number | null): boolean;",
+                    "signature": "waitForAttach(timeout?: number | null): boolean;"
+                },
+                {
+                    "name": "breakpoint",
+                    "type": "function",
+                    "doc": "breakpoint(): void;",
+                    "signature": "breakpoint(): void;"
+                },
+                {
+                    "name": "on",
+                    "type": "function",
+                    "doc": "on<E extends Debugging.EventName>(event: E, listener: Debugging.Listener<E>): Debugging.Subscription;",
+                    "signature": "on<E extends Debugging.EventName>(event: E, listener: Debugging.Listener<E>): Debugging.Subscription;"
+                },
+                {
+                    "name": "once",
+                    "type": "function",
+                    "doc": "once<E extends Debugging.EventName>(event: E, listener: Debugging.Listener<E>): Debugging.Subscription;",
+                    "signature": "once<E extends Debugging.EventName>(event: E, listener: Debugging.Listener<E>): Debugging.Subscription;"
+                },
+                {
+                    "name": "off",
+                    "type": "function",
+                    "doc": "off(): void;",
+                    "signature": "off(): void;",
+                    "signatures": [
+                        "off(): void;",
+                        "off(event: Debugging.EventName): void;",
+                        "off(listener: (...args: any[]) => void): void;",
+                        "off(event: Debugging.EventName, listener: (...args: any[]) => void): void;"
+                    ]
                 }
             ],
             "device": [
@@ -42888,6 +42942,7 @@
             "$alarms": "alarms",
             "$pdf": "pdf",
             "$xlsx": "xlsx",
+            "$debugging": "debugging",
             "$video": "video",
             "$audio": "audio",
             "$speech": "speech",

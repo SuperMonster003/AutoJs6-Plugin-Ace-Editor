@@ -15,6 +15,7 @@
 /// <reference path="./aj6-int-continuation.d.ts" />
 /// <reference path="./aj6-int-converter.d.ts" />
 /// <reference path="./aj6-int-crypto.d.ts" />
+/// <reference path="./aj6-int-debugging.d.ts" />
 /// <reference path="./aj6-int-device.d.ts" />
 /// <reference path="./aj6-int-dialogs.d.ts" />
 /// <reference path="./aj6-int-engines.d.ts" />

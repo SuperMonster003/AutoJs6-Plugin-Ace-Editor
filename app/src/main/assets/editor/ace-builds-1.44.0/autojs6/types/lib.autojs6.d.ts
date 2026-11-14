@@ -1870,6 +1870,18 @@ declare namespace AutoJs6 {
         extend<T>(plugin: (option: T | undefined, dayjsClass: { new (...args: unknown[]): Dayjs; }, factory: DayjsFactory) => void, option?: T): DayjsFactory;
     }
 
+    interface Debugging {
+        isAttached(): boolean;
+        waitForAttach(timeout?: number | null): boolean;
+        breakpoint(): void;
+        on<E extends Debugging.EventName>(event: E, listener: Debugging.Listener<E>): Debugging.Subscription;
+        once<E extends Debugging.EventName>(event: E, listener: Debugging.Listener<E>): Debugging.Subscription;
+        off(): void;
+        off(event: Debugging.EventName): void;
+        off(listener: (...args: any[]) => void): void;
+        off(event: Debugging.EventName, listener: (...args: any[]) => void): void;
+    }
+
     interface Device {
         brands: org.autojs.autojs.util.RomUtils.Brand;
         manufacturers: org.autojs.autojs.runtime.api.Device.Manufacturers;
@@ -7307,6 +7319,7 @@ declare const continuation: AutoJs6.Continuation;
 declare const crypto: AutoJs6.Crypto;
 declare const cvt: AutoJs6.Cvt;
 declare const dayjs: AutoJs6.Dayjs;
+declare const debugging: AutoJs6.Debugging;
 declare const device: AutoJs6.Device;
 declare const dialogs: AutoJs6.Dialogs;
 declare const engines: AutoJs6.Engines;

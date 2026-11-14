@@ -117,6 +117,10 @@ declare let $pdf: Internal.Pdf;
 declare let xlsx: Internal.Xlsx;
 declare let $xlsx: Internal.Xlsx;
 
+/** Whether the script is being debugged, waiting for a debugger, breakpoints in code and the attach / detach / pause / resume events, Rhino scripts only. Available since AutoJs6 6.8.1. */
+declare let debugging: Internal.Debugging;
+declare let $debugging: Internal.Debugging;
+
 /** Screen recording by AutoJs6 and video processing of the external 3-Slate Studio plugin, Rhino scripts only. Available since AutoJs6 6.8.1. */
 declare let video: Internal.Video;
 declare let $video: Internal.Video;
