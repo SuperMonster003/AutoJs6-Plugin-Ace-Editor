@@ -50,6 +50,10 @@ CASES = {
     'pdf-members': ('pdf.', 'r'),
     'pdf-alias-members': ('$pdf.', 'me'),
     'pdf-render-options': ("pdf.render('/sdcard/a.pdf', 0, {", 'd'),
+    'xlsx-members': ('xlsx.', 'r'),
+    'xlsx-alias-members': ('$xlsx.', 'wr'),
+    'xlsx-write-options': ("xlsx.write('/sdcard/a.xlsx', [['a', 1]], {", 'fr'),
+    'xlsx-sheet-members': ("let sh = xlsx.open('/sdcard/a.xlsx').sheet(0);\nsh.", 'set'),
     # No suggestion list: the highlighting of a few lines, the last call with an option value the declarations reject.
     'highlight': ("let r = video.record({frameRate: 30});\nlet m = audio.probe('/sdcard/a.m4a');\n"
                   "video.transform('/sdcard/a.mp4', {flip: 'diagonal'});\nlet n = ", '1'),
