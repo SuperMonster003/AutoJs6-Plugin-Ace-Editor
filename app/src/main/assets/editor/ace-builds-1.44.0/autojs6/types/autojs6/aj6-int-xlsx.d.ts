@@ -793,13 +793,15 @@ declare namespace Internal {
         /** A cell with `cells: true`: `t` is n(umber), s(tring), b(oolean), d(ate), e(rror) or z (empty). */
         interface CellDetail {
             readonly v: CellValue;
-            readonly f: string | null;
+            /** The formula (without `=`); only on a formula cell. */
+            readonly f?: string;
             readonly t: 'n' | 's' | 'b' | 'd' | 'e' | 'z';
             readonly text: string;
-            readonly style: StyleSpec | null;
+            /** The style id, 0 for the default style (ids as from `Workbook.createStyle`). */
+            readonly style: number;
             readonly ref: string;
-            /** The merged range holding the cell. */
-            readonly merged: string | null;
+            /** The merged range holding the cell; only from `Sheet.cell` with `cells: true` on a merged cell. */
+            readonly merged?: string;
         }
 
         interface SniffResult {
@@ -837,8 +839,13 @@ declare namespace Internal {
         interface RuleBase {
             priority?: number;
             stopIfTrue?: boolean;
-            /** Read back only: the ranges, separated by spaces. */
-            readonly range?: string;
+        }
+
+        /** A rule read back by `Sheet.conditionalFormats` / `Sheet.validations`. */
+        interface RuleEntry<R> {
+            /** The ranges of the rule, separated by spaces. */
+            readonly range: string;
+            readonly rule: R;
         }
 
         type CellIsOperator = 'between' | 'notBetween' | 'eq' | 'ne' | 'gt' | 'lt' | 'ge' | 'le' | string;
@@ -862,8 +869,6 @@ declare namespace Internal {
             allowBlank?: boolean;
             prompt?: { title?: string, text?: string } | false;
             error?: { title?: string, text?: string, style?: 'stop' | 'warning' | 'info' } | false;
-            /** Read back only. */
-            readonly range?: string;
         }
 
         /** A data validation (csv / tsv none). */
@@ -1001,12 +1006,12 @@ declare namespace Internal {
             addImageAsync(path: string, options: { from: string, to?: string, width?: number, height?: number }): XlsxPromise<void>;
             addConditionalFormat(range: string, rule: ConditionalFormatRule): void;
             addConditionalFormatAsync(range: string, rule: ConditionalFormatRule): XlsxPromise<void>;
-            conditionalFormats(): ConditionalFormatRule[];
-            conditionalFormatsAsync(): XlsxPromise<ConditionalFormatRule[]>;
+            conditionalFormats(): RuleEntry<ConditionalFormatRule>[];
+            conditionalFormatsAsync(): XlsxPromise<RuleEntry<ConditionalFormatRule>[]>;
             addValidation(range: string, rule: ValidationRule): void;
             addValidationAsync(range: string, rule: ValidationRule): XlsxPromise<void>;
-            validations(): ValidationRule[];
-            validationsAsync(): XlsxPromise<ValidationRule[]>;
+            validations(): RuleEntry<ValidationRule>[];
+            validationsAsync(): XlsxPromise<RuleEntry<ValidationRule>[]>;
             /** Removes the conditional formats and validations touching a range; answers how many. */
             clearRules(range: string): number;
             clearRulesAsync(range: string): XlsxPromise<number>;
@@ -1086,7 +1091,10 @@ declare namespace Internal {
         interface SheetViewSession extends EventEmitter$ {
             /** Replaces the shown content with rows or another file. */
             update(rowsOrPath: Rows | string): this;
-            /** Selects a row (from 1); a `select` event follows. */
+            /**
+             * Moves the selection to a row (from 1) and keeps the column; no `select` event follows (only the user's taps
+             * send one). A row past the content leaves the selection.
+             */
             select(row: number): this;
             /** The viewer's current state, read from the plugin. */
             state(): ViewState;
