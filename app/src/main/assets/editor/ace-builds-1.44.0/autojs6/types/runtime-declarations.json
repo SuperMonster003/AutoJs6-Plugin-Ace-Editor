@@ -101,9 +101,9 @@
     "autojs6-node/websocket.d.ts": "f9412a8fe65abdab7d1f14f09bf75a4371a84657ba3f91de42e6c96e512a5923",
     "autojs6-node/work_manager.d.ts": "5d77db1003ae945c3ce7f9061b4e8609a29f8fe3b2a830a0c0fae051c67a2e68",
     "autojs6-node/worker_threads.d.ts": "6b29835d34c6f622309dcc6bd2c05693e8d3f66820be9ba6583313e004b0c9a3",
-    "autojs6-node/xlsx.d.ts": "3f1953b49afb1b70e0a35e9f52230bb3080671c53ffd3a3e2a984273f519583e",
+    "autojs6-node/xlsx.d.ts": "58e21c5f458d4385254cd0c9f34ec81f11483c627ccc618e038bc5b373a87c69",
     "autojs6-node/zip.d.ts": "f52e600d2fb5f6546ff994636bb03621cde1c334503c7446223bf0f20390a351",
-    "autojs6-bun/host-client.d.mts": "35712372ff65c45ddfec96da1dfc25048ae76eaead7c2dca8d6aa32f828e0224",
-    "autojs6-bun/index.d.ts": "b4a71e1f0d0ef9b2948970002dc8354b9ed059a139d17aad8339894da8272f9f"
+    "autojs6-bun/host-client.d.mts": "186f2cdde3518fbd8c2030cbef22f415ead29176a3152f959496e82723f8d131",
+    "autojs6-bun/index.d.ts": "8f065cdfdd6a6993919f1d455384788822c4012fa2b8a8b0f7609be02c45375d"
   }
 }

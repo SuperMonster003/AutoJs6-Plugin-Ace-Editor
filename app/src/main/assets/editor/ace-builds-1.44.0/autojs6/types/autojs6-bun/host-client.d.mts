@@ -9172,17 +9172,37 @@ export namespace RuntimeXlsx {
     /** A call in progress: `cancel()` answers true when it stopped a running call, which then rejects with CANCELLED. */
     type XlsxPromise<T> = Promise<T> & { cancel(): boolean };
 
-    /** A cell value: strings, numbers, booleans, dates (Date) and null for an empty cell. */
+    /** A path; null or undefined for the default output (`/sdcard/Documents/3-Tally Sheet/<source>-<operation>-<time>.<ext>`). */
+    type Output = string | null | undefined;
+
+    type Format = 'xlsx' | 'xlsm' | 'xls' | 'csv' | 'tsv';
+
+    /** A cell value: strings, numbers, booleans, dates (Date) and null for an empty cell; an error cell reads as its text (`'#DIV/0!'`). */
     type CellValue = string | number | boolean | Date | null;
 
-    /** Rows as arrays of cells, or as objects keyed by the header row. */
-    type Rows = CellValue[][] | Array<Record<string, CellValue>>;
+    /** A cell to write with a formula (`f`, without `=`) or a style (an id from `createStyle`, or a spec). */
+    interface CellObject {
+        v?: CellValue;
+        f?: string | null;
+        style?: number | StyleSpec | null;
+    }
+
+    type CellInput = CellValue | CellObject;
+
+    /** Cells in column order, or an object keyed by header name or column letters. */
+    type Row = CellInput[] | { [column: string]: CellInput };
+
+    type Rows = Row[];
 
     /** A sheet by name or by its index from 1. */
     type SheetRef = string | number;
 
+    /** A column by number (from 1) or by letters (`'C'`). */
+    type ColumnRef = number | string;
+
     interface Progress {
         readonly opId: number;
+        /** 0 to 100. */
         readonly percent: number;
         readonly stage: string;
         readonly current: number;
@@ -9194,7 +9214,8 @@ export namespace RuntimeXlsx {
         onProgress?: ((progress: Progress) => unknown) | null;
     }
 
-    interface PasswordOptions extends ProgressOptions {
+    interface PasswordOptions {
+        /** Opens an encrypted input. */
         password?: string | null;
     }
 
@@ -9246,7 +9267,7 @@ export namespace RuntimeXlsx {
     }
 
     interface SheetFileInfo {
-        readonly format: 'xlsx' | 'xls' | 'csv' | 'tsv' | string;
+        readonly format: Format | string;
         readonly sheets: SheetSummary[];
         readonly sizeBytes: number;
         readonly encrypted: boolean;
@@ -9258,7 +9279,7 @@ export namespace RuntimeXlsx {
 
     interface SheetResult {
         readonly path: string;
-        readonly format: string;
+        readonly format: Format | string;
         readonly sheets: Array<{ readonly name: string, readonly rows: number, readonly cols: number }>;
         readonly sizeBytes: number;
         readonly warnings: string[];
@@ -9266,71 +9287,176 @@ export namespace RuntimeXlsx {
         readonly removed?: number;
     }
 
+    interface SplitOutput {
+        readonly name: string;
+        readonly format: Format | string;
+        readonly sheets: Array<{ readonly name: string, readonly rows: number, readonly cols: number }>;
+        readonly sizeBytes: number;
+        readonly warnings: string[];
+    }
+
+    interface SplitResult {
+        readonly paths: string[];
+        readonly outputs: SplitOutput[];
+        readonly warnings: string[];
+    }
+
+    /** `Workbook.recalc()`: formulas found and evaluated. */
+    interface RecalcSummary {
+        readonly formulas: number;
+        readonly evaluated: number;
+        readonly warnings: string[];
+    }
+
     /** A cell with `cells: true`: `t` is n(umber), s(tring), b(oolean), d(ate), e(rror) or z (empty). */
     interface CellDetail {
         readonly v: CellValue;
-        readonly f: string | null;
+        /** The formula (without `=`); only on a formula cell. */
+        readonly f?: string;
         readonly t: 'n' | 's' | 'b' | 'd' | 'e' | 'z';
         readonly text: string;
-        readonly style: Record<string, unknown> | null;
+        /** The style id, 0 for the default style. */
+        readonly style: number;
         readonly ref: string;
-        readonly merged: string | null;
+        /** The merged range holding the cell; only from `Sheet.cell` with `cells: true` on a merged cell. */
+        readonly merged?: string;
     }
 
     interface SniffResult {
-        readonly format: string;
+        readonly format: Format | string;
         readonly encoding: string | null;
         readonly delimiter: string | null;
         readonly hasBom: boolean;
+        /** 0 to 1. */
         readonly confidence: number;
     }
 
-    /** Appendix B.7: font, fill, border, align, valign, wrap, numFmt, indent and rotation. */
-    type StyleSpec = Record<string, unknown>;
+    type BorderStyle =
+        | 'none' | 'thin' | 'medium' | 'thick' | 'dashed' | 'dotted' | 'double' | 'hair'
+        | 'mediumDashed' | 'dashDot' | 'mediumDashDot' | 'dashDotDot' | 'mediumDashDotDot' | 'slantedDashDot';
 
-    interface ReadOptions extends PasswordOptions {
-        sheet?: SheetRef;
-        range?: string;
-        /** true: the first row names the keys of object rows; an array names them itself. */
-        header?: boolean | string[];
-        cells?: boolean;
-        formatted?: boolean;
-        blankRows?: boolean;
-        trim?: boolean;
-        limit?: number;
+    interface BorderSide {
+        style?: BorderStyle;
+        /** `'#RRGGBB'`. */
+        color?: string;
+    }
+
+    interface FontSpec {
+        name?: string;
+        size?: number;
+        bold?: boolean;
+        italic?: boolean;
+        underline?: boolean | 'none' | 'single' | 'double' | 'singleAccounting' | 'doubleAccounting';
+        strike?: boolean;
+        /** `'#RRGGBB'`. */
+        color?: string;
+    }
+
+    /** Appendix B.7; properties left out keep the cell's current values when a spec is laid over existing cells. */
+    interface StyleSpec {
+        font?: FontSpec;
+        /** `'#RRGGBB'` or `'none'`. */
+        fill?: string;
+        border?: BorderStyle | { top?: BorderStyle | BorderSide, bottom?: BorderStyle | BorderSide, left?: BorderStyle | BorderSide, right?: BorderStyle | BorderSide };
+        align?: 'general' | 'left' | 'center' | 'right' | 'fill' | 'justify' | 'centerAcross' | 'distributed';
+        valign?: 'top' | 'middle' | 'bottom' | 'justify' | 'distributed';
+        wrap?: boolean;
+        /** An Excel number format, such as `'0.00%'` or `'yyyy-mm-dd'`. */
+        numFmt?: string;
+        indent?: number;
+        /** -90 to 90, or 255 for vertical text. */
+        rotation?: number;
+    }
+
+    /** The width of a column in characters (at most 255), or `'auto'` to fit the content. */
+    type ColumnWidth = number | 'auto';
+
+    /** How an input is opened. */
+    interface SourceOptions extends PasswordOptions {
+        /** The input's format when its extension does not say it. */
+        format?: Format;
+        /** csv / tsv: detected by default. */
         encoding?: string;
         delimiter?: string;
+        /** csv / tsv: numeric text becomes numbers (default true). */
         parseNumbers?: boolean;
         parseBooleans?: boolean;
     }
 
-    interface LayoutOptions {
-        styles?: { header?: StyleSpec, body?: StyleSpec, columns?: Record<string, StyleSpec> };
-        columnWidths?: Record<string, number | 'auto'> | Array<number | 'auto'>;
-        rowHeights?: Record<string, number>;
-        merges?: string[];
-        freeze?: string | { rows?: number, cols?: number };
-        autoFilter?: boolean | string;
+    interface OpenOptions extends SourceOptions {
+        /** `'auto'` (default), `'full'` (LIMIT_EXCEEDED over 1,000,000 cells) or `'stream'` (read-only). */
+        mode?: 'auto' | 'full' | 'stream';
     }
 
-    interface WriteOptions extends PasswordOptions, LayoutOptions {
-        sheet?: string;
+    interface SheetReadOptions {
+        range?: string;
+        from?: number;
+        to?: number;
+        /** Object rows keyed by the first row. */
+        header?: boolean;
+        /** {@link CellDetail} cells instead of values. */
+        cells?: boolean;
+        formatted?: boolean;
+        /** Default true for array rows, false for object rows. */
+        blankRows?: boolean;
+        trim?: boolean;
+        /** At most this many rows; 0 for none. */
+        limit?: number;
+    }
+
+    interface ReadOptions extends OpenOptions, SheetReadOptions {
+        /** The first sheet by default. */
+        sheet?: SheetRef;
+    }
+
+    interface ReadAllOptions extends OpenOptions, SheetReadOptions {
+    }
+
+    /** Layout of the written block, applied after its rows (csv and tsv take none). */
+    interface LayoutOptions {
+        /** Specs for the header row, the body rows, and columns keyed by letters or numbers. */
+        styles?: { header?: StyleSpec, body?: StyleSpec, columns?: { [column: string]: StyleSpec } };
+        /** `'auto'` for every written column, an array by column (null skips one), or an object keyed by column. */
+        columnWidths?: 'auto' | Array<ColumnWidth | null> | { [column: string]: ColumnWidth };
+        /** Points (at most 409), keyed by row number. */
+        rowHeights?: { [row: number]: number };
+        merges?: string | string[];
+        /** Rows to freeze, or `{ rows, cols }`. */
+        freeze?: number | { rows?: number, cols?: number };
+        /** `true` (or `'*'`) for the written block, or an A1 range. */
+        autoFilter?: true | string;
+    }
+
+    interface WriteAllOptions extends LayoutOptions {
         /** An array writes the header row and orders the keys of object rows; false writes none. */
         header?: boolean | string[];
-        format?: 'xlsx' | 'xls' | 'csv' | 'tsv';
+        /** The extension by default. */
+        format?: Format;
         encoding?: string;
         delimiter?: string;
         bom?: boolean;
+        /** Encrypts the output (workbooks only). */
+        password?: string | null;
+        /** Default `'yyyy-mm-dd hh:mm:ss'`. */
         dateFormat?: string;
+        /** Strings starting with `=` become formulas; default false. */
         formulas?: boolean;
+        /** Default true. */
         evaluate?: boolean;
     }
 
+    interface WriteOptions extends WriteAllOptions {
+        /** Default `'Sheet1'`. */
+        sheet?: string;
+    }
+
     /** `password: null` or `''` removes the encryption when saving; left out, the password of the file stays. */
-    interface AppendOptions extends PasswordOptions, LayoutOptions {
+    interface AppendOptions extends LayoutOptions {
         sheet?: SheetRef;
+        /** Used when the append creates the file. */
         header?: boolean | string[];
         createIfMissing?: boolean;
+        password?: string | null;
         dateFormat?: string;
         formulas?: boolean;
         encoding?: string;
@@ -9338,37 +9464,61 @@ export namespace RuntimeXlsx {
     }
 
     interface ConvertOptions extends PasswordOptions {
+        /** The sheet to write into csv / tsv; the first by default. */
         sheet?: SheetRef;
+        /** The target format; the output's extension by default. */
+        format?: Format;
+        sourceFormat?: Format;
         encoding?: string;
+        /** The encoding of a csv / tsv source (detected by default). */
+        sourceEncoding?: string;
         delimiter?: string;
         bom?: boolean;
         parseNumbers?: boolean;
         formatted?: boolean;
     }
 
-    interface MergeOptions extends ProgressOptions {
+    interface ToCsvOptions extends PasswordOptions {
+        sheet?: SheetRef;
+        /** Default UTF-8. */
+        encoding?: string;
+        sourceEncoding?: string;
+        delimiter?: string;
+        bom?: boolean;
+        formatted?: boolean;
+    }
+
+    interface MergeOptions {
         mode?: 'sheets' | 'rows';
         header?: boolean;
+        /** One sheet name per input. */
         sheetNames?: string[];
-        passwords?: Record<string, string> | Array<string | null>;
+        /** One per input, null for an input without a password. */
+        passwords?: Array<string | null>;
         /**
          * Encrypts an xlsx, xlsm or xls output with this password; `null` or `''` writes it unencrypted. Left out, the
          * password of the first input opened with one encrypts the output, with a warning. Not available for a csv or tsv
          * output.
          */
         outputPassword?: string | null;
+        /** The output's extension or the first input by default. */
+        format?: Format;
     }
 
     interface SplitOptions extends PasswordOptions {
-        by?: 'sheet' | { rows: number } | { column: string };
+        by?: 'sheet' | { rows: number } | { column: ColumnRef };
+        /** Placeholders `{name}`, `{index}` and `{value}`. */
         namePattern?: string;
+        /** The sheet to split by rows or by column; the first by default. */
+        sheet?: SheetRef;
         /** false: row 1 is a data row, not a header repeated atop every output of a split by rows or by column. */
         header?: boolean;
     }
 
     interface DedupeOptions extends PasswordOptions {
         sheet?: SheetRef;
-        columns?: Array<string | number>;
+        /** All columns by default. */
+        columns?: ColumnRef | ColumnRef[];
         keep?: 'first' | 'last';
         header?: boolean;
     }
@@ -9377,73 +9527,120 @@ export namespace RuntimeXlsx {
         output?: string;
     }
 
-    interface OpenOptions extends PasswordOptions {
-        mode?: 'auto' | 'full' | 'stream';
+    interface CryptOptions {
+        password: string;
     }
 
-    interface WriterOptions extends ProgressOptions {
+    interface CreateOptions {
+        /** Default `'xlsx'`. */
+        format?: Format;
+        /** The name of the first sheet; default `'Sheet1'`. */
         sheet?: string;
-        header?: boolean | string[];
-        format?: 'xlsx' | 'csv' | 'tsv';
+    }
+
+    interface WriterSheetOptions {
+        /** `true` / null (default): the first row (or the keys of the first object row) is the header; false: none; names: the header row. */
+        header?: boolean | string[] | null;
+        columnWidths?: LayoutOptions['columnWidths'];
+        freeze?: LayoutOptions['freeze'];
+        autoFilter?: true | string;
+    }
+
+    interface WriterOptions extends WriterSheetOptions {
+        sheet?: string;
+        /** The extension by default; xls rejects with UNSUPPORTED_FORMAT. */
+        format?: Format;
         encoding?: string;
         delimiter?: string;
         bom?: boolean;
+        /** Encrypts the output (xlsx / xlsm). */
+        password?: string | null;
     }
 
-    interface ViewOptions extends PasswordOptions {
+    interface ViewColumn {
+        /** A column number, letters, or a header name. */
+        key: number | string;
+        title?: string;
+        /** In dp. */
+        width?: number;
+        align?: 'left' | 'center' | 'right';
+    }
+
+    interface ViewOptions {
         title?: string;
         sheet?: SheetRef;
-        header?: boolean | string[];
-        columns?: string[];
+        header?: boolean;
+        columns?: ColumnRef[] | ViewColumn[];
         /** true is 'row', false 'none' (the default); 'cell' selects single cells, `col` of the select event names the column. */
         selectable?: boolean | 'row' | 'cell' | 'none';
+        password?: string | null;
+        format?: Format;
+        encoding?: string;
+        delimiter?: string;
     }
 
     interface API {
         readonly XlsxError: XlsxErrorConstructor;
         /** Whether the 3-Tally Sheet plugin is installed, enabled and compatible. */
         isAvailable(): XlsxPromise<boolean>;
-        info(path: string, options?: PasswordOptions | null): XlsxPromise<SheetFileInfo>;
-        infoAsync(path: string, options?: PasswordOptions | null): XlsxPromise<SheetFileInfo>;
-        sheetNames(path: string, options?: PasswordOptions | null): XlsxPromise<string[]>;
-        sheetNamesAsync(path: string, options?: PasswordOptions | null): XlsxPromise<string[]>;
+        info(path: string, options?: SourceOptions | null): XlsxPromise<SheetFileInfo>;
+        infoAsync(path: string, options?: SourceOptions | null): XlsxPromise<SheetFileInfo>;
+        sheetNames(path: string, options?: SourceOptions | null): XlsxPromise<string[]>;
+        sheetNamesAsync(path: string, options?: SourceOptions | null): XlsxPromise<string[]>;
         /** More than 1,000,000 cells reject with LIMIT_EXCEEDED; `Sheet.eachRow` streams any size. */
         read(path: string, options?: ReadOptions | null): XlsxPromise<any[]>;
         readAsync(path: string, options?: ReadOptions | null): XlsxPromise<any[]>;
-        readAll(path: string, options?: ReadOptions | null): XlsxPromise<Record<string, any[]>>;
-        readAllAsync(path: string, options?: ReadOptions | null): XlsxPromise<Record<string, any[]>>;
-        write(path: string, rows: Rows, options?: WriteOptions | null): XlsxPromise<SheetResult>;
-        writeAsync(path: string, rows: Rows, options?: WriteOptions | null): XlsxPromise<SheetResult>;
-        writeAll(path: string, sheets: Record<string, Rows>, options?: WriteOptions | null): XlsxPromise<SheetResult>;
-        writeAllAsync(path: string, sheets: Record<string, Rows>, options?: WriteOptions | null): XlsxPromise<SheetResult>;
+        readAll(path: string, options?: ReadAllOptions | null): XlsxPromise<Record<string, any[]>>;
+        readAllAsync(path: string, options?: ReadAllOptions | null): XlsxPromise<Record<string, any[]>>;
+        write(path: string, rows: Rows, options?: (WriteOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        writeAsync(path: string, rows: Rows, options?: (WriteOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        writeAll(path: string, sheets: Record<string, Rows>, options?: (WriteAllOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        writeAllAsync(path: string, sheets: Record<string, Rows>, options?: (WriteAllOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
         /** Layout options apply to the appended rows; an existing csv / tsv file takes none. */
-        append(path: string, rows: Rows, options?: AppendOptions | null): XlsxPromise<SheetResult>;
-        appendAsync(path: string, rows: Rows, options?: AppendOptions | null): XlsxPromise<SheetResult>;
-        convert(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
-        convertAsync(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
-        toCsv(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
-        toCsvAsync(input: string, output?: string | null, options?: ConvertOptions | null): XlsxPromise<SheetResult>;
-        merge(inputs: string[], output?: string | null, options?: MergeOptions | null): XlsxPromise<SheetResult>;
-        mergeAsync(inputs: string[], output?: string | null, options?: MergeOptions | null): XlsxPromise<SheetResult>;
-        split(path: string, outputDir?: string | null, options?: SplitOptions | null): XlsxPromise<{ readonly paths: string[] }>;
-        splitAsync(path: string, outputDir?: string | null, options?: SplitOptions | null): XlsxPromise<{ readonly paths: string[] }>;
-        dedupe(path: string, output?: string | null, options?: DedupeOptions | null): XlsxPromise<SheetResult>;
-        dedupeAsync(path: string, output?: string | null, options?: DedupeOptions | null): XlsxPromise<SheetResult>;
-        recalc(path: string, options?: RecalcOptions | null): XlsxPromise<SheetResult>;
-        recalcAsync(path: string, options?: RecalcOptions | null): XlsxPromise<SheetResult>;
-        encrypt(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
-        encryptAsync(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
-        decrypt(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
-        decryptAsync(path: string, output: string | null, options: PasswordOptions): XlsxPromise<SheetResult>;
+        append(path: string, rows: Rows, options?: (AppendOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        appendAsync(path: string, rows: Rows, options?: (AppendOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        convert(input: string, output: Output, options?: (ConvertOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        convert(input: string, options?: ConvertOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        convertAsync(input: string, output: Output, options?: (ConvertOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        convertAsync(input: string, options?: ConvertOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        toCsv(input: string, output: Output, options?: (ToCsvOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        toCsv(input: string, options?: ToCsvOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        toCsvAsync(input: string, output: Output, options?: (ToCsvOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        toCsvAsync(input: string, options?: ToCsvOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        /** 2 to 64 inputs. */
+        merge(inputs: string[], output: Output, options?: (MergeOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        merge(inputs: string[], options?: MergeOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        mergeAsync(inputs: string[], output: Output, options?: (MergeOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        mergeAsync(inputs: string[], options?: MergeOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        /** At most 256 outputs in `outputDir` (a new directory by default). */
+        split(path: string, outputDir: Output, options?: (SplitOptions & ProgressOptions) | null): XlsxPromise<SplitResult>;
+        split(path: string, options?: SplitOptions & ProgressOptions): XlsxPromise<SplitResult>;
+        splitAsync(path: string, outputDir: Output, options?: (SplitOptions & ProgressOptions) | null): XlsxPromise<SplitResult>;
+        splitAsync(path: string, options?: SplitOptions & ProgressOptions): XlsxPromise<SplitResult>;
+        dedupe(path: string, output: Output, options?: (DedupeOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        dedupe(path: string, options?: DedupeOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        dedupeAsync(path: string, output: Output, options?: (DedupeOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        dedupeAsync(path: string, options?: DedupeOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        recalc(path: string, options?: (RecalcOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        recalcAsync(path: string, options?: (RecalcOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        encrypt(path: string, output: Output, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        encrypt(path: string, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        encryptAsync(path: string, output: Output, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        encryptAsync(path: string, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        /** `password` opens the input. */
+        decrypt(path: string, output: Output, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        decrypt(path: string, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        decryptAsync(path: string, output: Output, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        decryptAsync(path: string, options: CryptOptions & ProgressOptions): XlsxPromise<SheetResult>;
         sniff(path: string, options?: ProgressOptions | null): XlsxPromise<SniffResult>;
         sniffAsync(path: string, options?: ProgressOptions | null): XlsxPromise<SniffResult>;
         /** Keeps the workbook open in the plugin until `close()` or the end of the execution (16 per script at most). */
         open(path: string, options?: OpenOptions | null): XlsxPromise<Workbook>;
         openAsync(path: string, options?: OpenOptions | null): XlsxPromise<Workbook>;
         /** A workbook in memory; `save(output)` writes it. */
-        create(options?: { format?: 'xlsx' | 'xls' } | null): XlsxPromise<Workbook>;
-        createAsync(options?: { format?: 'xlsx' | 'xls' } | null): XlsxPromise<Workbook>;
-        /** A streaming writer (xlsx, csv or tsv); the end of the execution discards an unfinished file. */
+        create(options?: CreateOptions | null): XlsxPromise<Workbook>;
+        createAsync(options?: CreateOptions | null): XlsxPromise<Workbook>;
+        /** A streaming writer (xlsx, xlsm, csv or tsv); the end of the execution discards an unfinished file. */
         createWriter(output: string, options?: WriterOptions | null): XlsxPromise<Writer>;
         createWriterAsync(output: string, options?: WriterOptions | null): XlsxPromise<Writer>;
         /**
@@ -9456,20 +9653,25 @@ export namespace RuntimeXlsx {
     }
 
     interface WorkbookProperties {
-        readonly format: string;
-        readonly mode: string;
+        readonly format: Format | string;
+        readonly mode: 'full' | 'stream' | string | null;
         readonly isClosed: boolean;
     }
 
-    interface SaveOptions extends PasswordOptions {
-        format?: 'xlsx' | 'xls' | 'csv' | 'tsv';
+    interface SaveOptions {
+        /** A string encrypts the output; `null` or `''` removes the encryption; left out, the file keeps its own. */
+        password?: string | null;
+        /** The output's extension by default. */
+        format?: Format;
+        /** Default true. */
         evaluate?: boolean;
     }
 
     /** Calls after `close()` reject with SESSION_CLOSED; a `mode: 'stream'` workbook answers READ_ONLY to edits. */
     interface Workbook {
-        readonly format: string;
-        readonly mode: 'full' | 'stream' | string;
+        readonly format: Format | string;
+        /** null for a workbook made by `create`. */
+        readonly mode: 'full' | 'stream' | string | null;
         readonly isClosed: boolean;
         info(): XlsxPromise<SheetFileInfo>;
         infoAsync(): XlsxPromise<SheetFileInfo>;
@@ -9479,24 +9681,26 @@ export namespace RuntimeXlsx {
         sheetAsync(nameOrIndex: SheetRef): XlsxPromise<Sheet>;
         addSheet(name: string, options?: { index?: number } | null): XlsxPromise<Sheet>;
         addSheetAsync(name: string, options?: { index?: number } | null): XlsxPromise<Sheet>;
-        removeSheet(nameOrIndex: SheetRef): XlsxPromise<unknown>;
-        removeSheetAsync(nameOrIndex: SheetRef): XlsxPromise<unknown>;
-        renameSheet(nameOrIndex: SheetRef, name: string): XlsxPromise<unknown>;
-        renameSheetAsync(nameOrIndex: SheetRef, name: string): XlsxPromise<unknown>;
+        removeSheet(nameOrIndex: SheetRef): XlsxPromise<void>;
+        removeSheetAsync(nameOrIndex: SheetRef): XlsxPromise<void>;
+        renameSheet(nameOrIndex: SheetRef, name: string): XlsxPromise<void>;
+        renameSheetAsync(nameOrIndex: SheetRef, name: string): XlsxPromise<void>;
         copySheet(nameOrIndex: SheetRef, name: string): XlsxPromise<Sheet>;
         copySheetAsync(nameOrIndex: SheetRef, name: string): XlsxPromise<Sheet>;
-        moveSheet(nameOrIndex: SheetRef, index: number): XlsxPromise<unknown>;
-        moveSheetAsync(nameOrIndex: SheetRef, index: number): XlsxPromise<unknown>;
-        setSheetHidden(nameOrIndex: SheetRef, hidden: boolean): XlsxPromise<unknown>;
-        setSheetHiddenAsync(nameOrIndex: SheetRef, hidden: boolean): XlsxPromise<unknown>;
+        moveSheet(nameOrIndex: SheetRef, index: number): XlsxPromise<void>;
+        moveSheetAsync(nameOrIndex: SheetRef, index: number): XlsxPromise<void>;
+        setSheetHidden(nameOrIndex: SheetRef, hidden: boolean): XlsxPromise<void>;
+        setSheetHiddenAsync(nameOrIndex: SheetRef, hidden: boolean): XlsxPromise<void>;
         /** Answers a style id for `Sheet.setStyle` and the `style` of cells and rows. */
         createStyle(spec: StyleSpec): XlsxPromise<number>;
         createStyleAsync(spec: StyleSpec): XlsxPromise<number>;
-        recalc(): XlsxPromise<unknown>;
-        recalcAsync(): XlsxPromise<unknown>;
+        recalc(): XlsxPromise<RecalcSummary>;
+        recalcAsync(): XlsxPromise<RecalcSummary>;
         /** Without `output` saves back to the opened file (not for streams or workbooks in memory). */
-        save(output?: string | null, options?: SaveOptions | null): XlsxPromise<SheetResult>;
-        saveAsync(output?: string | null, options?: SaveOptions | null): XlsxPromise<SheetResult>;
+        save(output: Output, options?: (SaveOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        save(options?: SaveOptions & ProgressOptions): XlsxPromise<SheetResult>;
+        saveAsync(output: Output, options?: (SaveOptions & ProgressOptions) | null): XlsxPromise<SheetResult>;
+        saveAsync(options?: SaveOptions & ProgressOptions): XlsxPromise<SheetResult>;
         properties(): XlsxPromise<WorkbookProperties>;
         /** Idempotent: the same Promise on every call, after the calls before it; it never rejects. */
         close(): Promise<void>;
@@ -9513,12 +9717,16 @@ export namespace RuntimeXlsx {
     }
 
     interface EachRowOptions {
+        /** Rows per chunk, 1 to 1000; default 1000. */
         batch?: number;
         from?: number;
         to?: number;
-        header?: boolean | string[];
+        range?: string;
+        header?: boolean;
         cells?: boolean;
         formatted?: boolean;
+        blankRows?: boolean;
+        trim?: boolean;
     }
 
     interface RowChunk {
@@ -9531,69 +9739,135 @@ export namespace RuntimeXlsx {
         cancel(): boolean;
     }
 
+    interface FindOptions {
+        regex?: boolean;
+        caseSensitive?: boolean;
+        range?: string;
+        /** 1 to 1000; default 100. */
+        limit?: number;
+        offset?: number;
+    }
+
+    interface FindHit {
+        readonly sheet: string;
+        readonly ref: string;
+        readonly row: number;
+        readonly col: number;
+        readonly text: string;
+    }
+
+    /** `'min'`, `'max'`, or a threshold of a color scale, data bar or icon set. */
+    type RulePoint = 'min' | 'max' | { type: 'num' | 'percent' | 'percentile' | 'formula', value: number | string, gte?: boolean };
+
+    /** Rule styles take only `font.color`, `font.bold`, `font.italic`, `fill`, `border` and `numFmt`. */
+    interface RuleBase {
+        priority?: number;
+        stopIfTrue?: boolean;
+    }
+
+    /** A rule read back by `conditionalFormats()` / `validations()`. */
+    interface RuleEntry<R> {
+        /** The ranges of the rule, separated by spaces. */
+        readonly range: string;
+        readonly rule: R;
+    }
+
+    type CellIsOperator = 'between' | 'notBetween' | 'eq' | 'ne' | 'gt' | 'lt' | 'ge' | 'le' | string;
+
+    /** Appendix B.7 (xls supports only cellIs and expression); a rule read back without a mapping is `{ type: 'unknown', description }`. */
+    type ConditionalFormatRule =
+        | RuleBase & { type: 'cellIs', operator?: CellIsOperator, value: number | string, value2?: number | string, style?: StyleSpec }
+        | RuleBase & { type: 'expression', formula: string, style?: StyleSpec }
+        | RuleBase & { type: 'top10', rank?: number, bottom?: boolean, percent?: boolean, style?: StyleSpec }
+        | RuleBase & { type: 'duplicateValues' | 'uniqueValues', style?: StyleSpec }
+        | RuleBase & { type: 'colorScale', colors: string[], points?: RulePoint[] }
+        | RuleBase & { type: 'dataBar', color?: string, showValue?: boolean, points?: RulePoint[] }
+        | RuleBase & { type: 'iconSet', set?: string, reverse?: boolean, showValue?: boolean, points?: RulePoint[] }
+        | RuleBase & { type: 'unknown', readonly description: string };
+
+    interface ValidationBase {
+        /** Default true. */
+        allowBlank?: boolean;
+        prompt?: { title?: string, text?: string } | false;
+        error?: { title?: string, text?: string, style?: 'stop' | 'warning' | 'info' } | false;
+    }
+
+    /** Appendix B.7 (csv / tsv none). */
+    type ValidationRule =
+        | ValidationBase & { type: 'list', values?: string[], formula?: string, showDropdown?: boolean }
+        | ValidationBase & { type: 'whole' | 'decimal' | 'date' | 'time' | 'textLength', operator?: CellIsOperator, min?: number | string | Date, max?: number | string | Date, value?: number | string | Date }
+        | ValidationBase & { type: 'custom', formula: string }
+        | ValidationBase & { type: 'any' }
+        | ValidationBase & { type: 'unknown', readonly description: string };
+
     /** `name` follows renames; the other figures come from `properties()`. */
     interface Sheet {
         readonly name: string;
-        read(options?: ReadOptions | null): XlsxPromise<any[]>;
-        readAsync(options?: ReadOptions | null): XlsxPromise<any[]>;
-        cell(ref: string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
-        cell(row: number, col: number | string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
-        cellAsync(ref: string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
-        cellAsync(row: number, col: number | string, options?: { cells?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
-        set(ref: string, value: CellValue | { v?: CellValue, f?: string, style?: number | StyleSpec }): XlsxPromise<unknown>;
-        setAsync(ref: string, value: CellValue | { v?: CellValue, f?: string, style?: number | StyleSpec }): XlsxPromise<unknown>;
-        setRows(startRow: number, rows: Rows, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
-        setRowsAsync(startRow: number, rows: Rows, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
-        append(rows: Rows): XlsxPromise<unknown>;
-        appendAsync(rows: Rows): XlsxPromise<unknown>;
-        insertRows(at: number, count?: number): XlsxPromise<unknown>;
-        insertRowsAsync(at: number, count?: number): XlsxPromise<unknown>;
-        deleteRows(at: number, count?: number): XlsxPromise<unknown>;
-        deleteRowsAsync(at: number, count?: number): XlsxPromise<unknown>;
-        insertColumns(at: number | string, count?: number): XlsxPromise<unknown>;
-        insertColumnsAsync(at: number | string, count?: number): XlsxPromise<unknown>;
-        deleteColumns(at: number | string, count?: number): XlsxPromise<unknown>;
-        deleteColumnsAsync(at: number | string, count?: number): XlsxPromise<unknown>;
-        clear(range?: string): XlsxPromise<unknown>;
-        clearAsync(range?: string): XlsxPromise<unknown>;
-        setStyle(range: string, style: number | StyleSpec): XlsxPromise<unknown>;
-        setStyleAsync(range: string, style: number | StyleSpec): XlsxPromise<unknown>;
-        setColumnWidth(col: number | string, width: number | 'auto'): XlsxPromise<unknown>;
-        setColumnWidthAsync(col: number | string, width: number | 'auto'): XlsxPromise<unknown>;
-        setRowHeight(row: number, height: number): XlsxPromise<unknown>;
-        setRowHeightAsync(row: number, height: number): XlsxPromise<unknown>;
-        merge(range: string): XlsxPromise<unknown>;
-        mergeAsync(range: string): XlsxPromise<unknown>;
-        unmerge(range: string): XlsxPromise<unknown>;
-        unmergeAsync(range: string): XlsxPromise<unknown>;
+        read(options?: SheetReadOptions | null): XlsxPromise<any[]>;
+        readAsync(options?: SheetReadOptions | null): XlsxPromise<any[]>;
+        cell(ref: string, options?: { cells?: boolean, formatted?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+        cell(row: number, col: ColumnRef, options?: { cells?: boolean, formatted?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+        cellAsync(ref: string, options?: { cells?: boolean, formatted?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+        cellAsync(row: number, col: ColumnRef, options?: { cells?: boolean, formatted?: boolean } | null): XlsxPromise<CellValue | CellDetail>;
+        set(ref: string, value: CellInput): XlsxPromise<void>;
+        setAsync(ref: string, value: CellInput): XlsxPromise<void>;
+        /** Answers the rows written. */
+        setRows(startRow: number, rows: Rows, options?: { style?: number | StyleSpec, dateFormat?: string, formulas?: boolean } | null): XlsxPromise<number>;
+        setRowsAsync(startRow: number, rows: Rows, options?: { style?: number | StyleSpec, dateFormat?: string, formulas?: boolean } | null): XlsxPromise<number>;
+        /** Writes rows after the last row; answers the rows written. */
+        append(rows: Rows): XlsxPromise<number>;
+        appendAsync(rows: Rows): XlsxPromise<number>;
+        insertRows(at: number, count?: number): XlsxPromise<void>;
+        insertRowsAsync(at: number, count?: number): XlsxPromise<void>;
+        deleteRows(at: number, count?: number): XlsxPromise<void>;
+        deleteRowsAsync(at: number, count?: number): XlsxPromise<void>;
+        insertColumns(at: ColumnRef, count?: number): XlsxPromise<void>;
+        insertColumnsAsync(at: ColumnRef, count?: number): XlsxPromise<void>;
+        deleteColumns(at: ColumnRef, count?: number): XlsxPromise<void>;
+        deleteColumnsAsync(at: ColumnRef, count?: number): XlsxPromise<void>;
+        /** Clears the values of a range, or of the whole sheet. */
+        clear(range?: string | null): XlsxPromise<void>;
+        clearAsync(range?: string | null): XlsxPromise<void>;
+        /** Lays a spec over the cells' styles (or replaces them with a style id); answers the style id. */
+        setStyle(range: string, style: number | StyleSpec): XlsxPromise<number>;
+        setStyleAsync(range: string, style: number | StyleSpec): XlsxPromise<number>;
+        setColumnWidth(col: ColumnRef, width: ColumnWidth): XlsxPromise<void>;
+        setColumnWidthAsync(col: ColumnRef, width: ColumnWidth): XlsxPromise<void>;
+        setRowHeight(row: number, height: number): XlsxPromise<void>;
+        setRowHeightAsync(row: number, height: number): XlsxPromise<void>;
+        merge(range: string): XlsxPromise<void>;
+        mergeAsync(range: string): XlsxPromise<void>;
+        unmerge(range: string): XlsxPromise<void>;
+        unmergeAsync(range: string): XlsxPromise<void>;
         merges(): XlsxPromise<string[]>;
         mergesAsync(): XlsxPromise<string[]>;
-        freeze(rows: number, cols?: number): XlsxPromise<unknown>;
-        freezeAsync(rows: number, cols?: number): XlsxPromise<unknown>;
-        autoFilter(range: string): XlsxPromise<unknown>;
-        autoFilterAsync(range: string): XlsxPromise<unknown>;
-        setHyperlink(ref: string, url: string, options?: { label?: string } | null): XlsxPromise<unknown>;
-        setHyperlinkAsync(ref: string, url: string, options?: { label?: string } | null): XlsxPromise<unknown>;
-        setComment(ref: string, text: string, options?: { author?: string } | null): XlsxPromise<unknown>;
-        setCommentAsync(ref: string, text: string, options?: { author?: string } | null): XlsxPromise<unknown>;
-        addImage(path: string, options: { from: string, to?: string, width?: number, height?: number }): XlsxPromise<unknown>;
-        addImageAsync(path: string, options: { from: string, to?: string, width?: number, height?: number }): XlsxPromise<unknown>;
-        /** Appendix B.7: cellIs, expression, top10, duplicateValues, uniqueValues, colorScale, dataBar and iconSet. */
-        addConditionalFormat(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
-        addConditionalFormatAsync(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
-        conditionalFormats(): XlsxPromise<Array<Record<string, unknown>>>;
-        conditionalFormatsAsync(): XlsxPromise<Array<Record<string, unknown>>>;
-        /** Appendix B.7: list, whole, decimal, date, time, textLength, custom and any. */
-        addValidation(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
-        addValidationAsync(range: string, rule: Record<string, unknown>): XlsxPromise<unknown>;
-        validations(): XlsxPromise<Array<Record<string, unknown>>>;
-        validationsAsync(): XlsxPromise<Array<Record<string, unknown>>>;
-        clearRules(range: string): XlsxPromise<unknown>;
-        clearRulesAsync(range: string): XlsxPromise<unknown>;
-        find(keyword: string, options?: { regex?: boolean, caseSensitive?: boolean, range?: string } | null): XlsxPromise<Array<Record<string, unknown>>>;
-        findAsync(keyword: string, options?: { regex?: boolean, caseSensitive?: boolean, range?: string } | null): XlsxPromise<Array<Record<string, unknown>>>;
-        sort(col: number | string, options?: { desc?: boolean, hasHeader?: boolean, range?: string } | null): XlsxPromise<unknown>;
-        sortAsync(col: number | string, options?: { desc?: boolean, hasHeader?: boolean, range?: string } | null): XlsxPromise<unknown>;
+        /** `freeze(0)` unfreezes. */
+        freeze(rows: number, cols?: number): XlsxPromise<void>;
+        freezeAsync(rows: number, cols?: number): XlsxPromise<void>;
+        /** An A1 range, or `true` / `'*'` for the used range. */
+        autoFilter(range: true | string): XlsxPromise<void>;
+        autoFilterAsync(range: true | string): XlsxPromise<void>;
+        setHyperlink(ref: string, url: string, options?: { label?: string } | null): XlsxPromise<void>;
+        setHyperlinkAsync(ref: string, url: string, options?: { label?: string } | null): XlsxPromise<void>;
+        setComment(ref: string, text: string, options?: { author?: string } | null): XlsxPromise<void>;
+        setCommentAsync(ref: string, text: string, options?: { author?: string } | null): XlsxPromise<void>;
+        addImage(path: string, options: { from: string, to?: string, width?: number, height?: number }): XlsxPromise<void>;
+        addImageAsync(path: string, options: { from: string, to?: string, width?: number, height?: number }): XlsxPromise<void>;
+        addConditionalFormat(range: string, rule: ConditionalFormatRule): XlsxPromise<void>;
+        addConditionalFormatAsync(range: string, rule: ConditionalFormatRule): XlsxPromise<void>;
+        conditionalFormats(): XlsxPromise<RuleEntry<ConditionalFormatRule>[]>;
+        conditionalFormatsAsync(): XlsxPromise<RuleEntry<ConditionalFormatRule>[]>;
+        addValidation(range: string, rule: ValidationRule): XlsxPromise<void>;
+        addValidationAsync(range: string, rule: ValidationRule): XlsxPromise<void>;
+        validations(): XlsxPromise<RuleEntry<ValidationRule>[]>;
+        validationsAsync(): XlsxPromise<RuleEntry<ValidationRule>[]>;
+        /** Removes the conditional formats and validations touching a range; answers how many. */
+        clearRules(range: string): XlsxPromise<number>;
+        clearRulesAsync(range: string): XlsxPromise<number>;
+        find(keyword: string, options?: FindOptions | null): XlsxPromise<FindHit[]>;
+        findAsync(keyword: string, options?: FindOptions | null): XlsxPromise<FindHit[]>;
+        sort(col: ColumnRef, options?: { desc?: boolean, hasHeader?: boolean, range?: string } | null): XlsxPromise<void>;
+        sortAsync(col: ColumnRef, options?: { desc?: boolean, hasHeader?: boolean, range?: string } | null): XlsxPromise<void>;
         /**
          * Streams the sheet: with a callback, answers the rows delivered (a callback answering false stops, a Promise it
          * answers is awaited); without one, an async iterator of chunks that starts at its first `next()`. A consumer two
@@ -9608,32 +9882,37 @@ export namespace RuntimeXlsx {
     }
 
     /**
-     * Rows of `addRow` without options leave in chunks of 1000; `rowCount` counts the rows added so far. Calls after
-     * `close()` or `abort()` reject with SESSION_CLOSED. A csv / tsv target has one sheet.
+     * Rows of `addRow` without options leave in chunks of 1000; `rowCount` counts the rows added so far (header rows not
+     * counted). A call that fails keeps the rows the plugin did not take: the next call sends them first, and `rowCount`
+     * counts them once (a host without that count keeps every row of the failed call). Wait for a call before retrying it.
+     * After `close()` (whether it succeeds or not) or `abort()`, every call but `abort()` rejects with SESSION_CLOSED and
+     * `rowCount` stays. A csv / tsv target has one sheet.
      */
     interface Writer {
-        readonly format: string;
+        readonly format: Format | string;
         readonly rowCount: number;
-        /** `header` false writes no header row; an array writes it and orders the keys of object rows. */
-        addSheet(name: string, options?: { header?: boolean | string[], columnWidths?: LayoutOptions['columnWidths'], freeze?: LayoutOptions['freeze'], autoFilter?: boolean } | null): XlsxPromise<unknown>;
-        addSheetAsync(name: string, options?: { header?: boolean | string[], columnWidths?: LayoutOptions['columnWidths'], freeze?: LayoutOptions['freeze'], autoFilter?: boolean } | null): XlsxPromise<unknown>;
-        addRow(values: CellValue[] | Record<string, CellValue>, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
-        addRowAsync(values: CellValue[] | Record<string, CellValue>, options?: { style?: number | StyleSpec } | null): XlsxPromise<unknown>;
-        addRows(rows: Rows): XlsxPromise<unknown>;
-        addRowsAsync(rows: Rows): XlsxPromise<unknown>;
+        /** Starts a new sheet (workbooks only). */
+        addSheet(name: string, options?: WriterSheetOptions | null): XlsxPromise<void>;
+        addSheetAsync(name: string, options?: WriterSheetOptions | null): XlsxPromise<void>;
+        /** A row with its own `style` is sent alone. */
+        addRow(values: CellInput[] | { [column: string]: CellInput }, options?: { style?: StyleSpec } | null): XlsxPromise<void>;
+        addRowAsync(values: CellInput[] | { [column: string]: CellInput }, options?: { style?: StyleSpec } | null): XlsxPromise<void>;
+        addRows(rows: Rows): XlsxPromise<void>;
+        addRowsAsync(rows: Rows): XlsxPromise<void>;
         close(options?: ProgressOptions | null): XlsxPromise<SheetResult>;
         closeAsync(options?: ProgressOptions | null): XlsxPromise<SheetResult>;
         /** Discards the file; idempotent. */
-        abort(): XlsxPromise<unknown>;
-        abortAsync(): XlsxPromise<unknown>;
+        abort(): XlsxPromise<void>;
+        abortAsync(): XlsxPromise<void>;
         toString(): string;
     }
 
     interface SelectEvent {
         readonly sheet: string;
         readonly row: number;
+        /** 0 when a whole row was selected. */
         readonly col: number;
-        readonly values: any[];
+        readonly values: CellValue[];
     }
 
     /** `finished` after `close({finish: true})`, `overflow` when the script stopped taking events, `error` when the bridge failed. */
@@ -9644,12 +9923,14 @@ export namespace RuntimeXlsx {
     }
 
     interface ViewState {
-        readonly sheet: string;
+        readonly sheet: string | null;
         readonly row: number;
         readonly col: number;
         readonly rows: number;
         readonly cols: number;
         readonly token: string | null;
+        /** Whether the viewer is on screen. */
+        readonly visible: boolean;
     }
 
     /** Events wait (32 per name at most) until a listener is added. */
@@ -9667,6 +9948,7 @@ export namespace RuntimeXlsx {
         removeAllListeners(event?: 'select' | 'close'): this;
         listenerCount(event: 'select' | 'close'): number;
         update(rowsOrPath: string | Rows): XlsxPromise<SheetViewSession>;
+        /** Moves the selection to a row (from 1) without a `select` event. */
         select(row: number): XlsxPromise<SheetViewSession>;
         state(): XlsxPromise<ViewState>;
         /** `finish: true` also closes the viewer screen; a closed session answers at once. */
