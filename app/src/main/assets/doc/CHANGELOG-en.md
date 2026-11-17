@@ -6,7 +6,7 @@
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `Feature` Plugin category declarations of settings.categories and settings.export (AutoJs6 6.8.1): the category list includes the discovered official plugins, with kind `'plugin'`, label, available and reason, export accepts category ids made of `plugin:` and a package name, and skipped gains the reason `'unavailable'`, with the Settings.PluginCategoryId, Settings.PluginUnavailableReason types
 * `Feature` Optional property reason of the AgentLinkStatus returned by ai.agent.status (AutoJs6 6.8.1), which tells why the connection could not be made when errorCode is `'PLUGIN_UNAVAILABLE'`; includes the AgentUnavailableReason type
@@ -23,6 +23,7 @@
 * `Feature` ScreenCapturer.Options returned by images.getScreenCaptureOptions gains isShared (also readable as the shared property) and participants (AutoJs6 6.8.1), telling whether several participants share the screen capture session and how many participants it has; stopScreenCapture notes that a shared session is released only after its last participant leaves; the Node.js / Bun getScreenCaptureOptions declarations are synced (the result gains shared and participants)
 * `Feature` RequestBuilderOptions of the http module gains the proxy option and ClientBuilderOptions the proxy property (AutoJs6 6.8.1): the top-level proxy applies to the current request only, client.proxy is kept in the shared client of the current script, and null returns to the system proxy; includes the Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject and java.net.Proxy) and Http.ProxyObject ({ host, port, type }) types
 * `Improvement` Bundled declarations upgraded to @sm003/autojs6-dts 4.88.0
+* `Improvement` Editor font downloads are retried automatically when interrupted, and retries as well as downloads started again after a cancel continue from where the download stopped (resumable downloads); when one download URL fails, the next one is used without downloading the part already received again
 
 # v2.49.0
 

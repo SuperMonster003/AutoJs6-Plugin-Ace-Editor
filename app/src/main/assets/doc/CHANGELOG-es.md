@@ -6,7 +6,7 @@
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `Función` Declaraciones de categorías de plugins de settings.categories y settings.export (AutoJs6 6.8.1): la lista de categorías incluye los plugins oficiales detectados, con kind `'plugin'`, label, available y reason, export acepta ids de categoría formados por `plugin:` y un nombre de paquete, y skipped añade el motivo `'unavailable'`, con los tipos Settings.PluginCategoryId, Settings.PluginUnavailableReason
 * `Función` Propiedad opcional reason del AgentLinkStatus devuelto por ai.agent.status (AutoJs6 6.8.1), que indica por qué no se pudo establecer la conexión cuando errorCode es `'PLUGIN_UNAVAILABLE'`; incluye el tipo AgentUnavailableReason
@@ -23,6 +23,7 @@
 * `Función` ScreenCapturer.Options devuelto por images.getScreenCaptureOptions añade isShared (también legible como la propiedad shared) y participants (AutoJs6 6.8.1), que indican si varios participantes comparten la sesión de captura de pantalla y cuántos participantes tiene; stopScreenCapture aclara que una sesión compartida solo se libera cuando sale su último participante; se sincronizan las declaraciones getScreenCaptureOptions de Node.js / Bun (el valor devuelto añade shared y participants)
 * `Función` RequestBuilderOptions del módulo http añade la opción proxy y ClientBuilderOptions la propiedad proxy (AutoJs6 6.8.1): el proxy de nivel superior solo se aplica a la solicitud actual, client.proxy se guarda en el cliente compartido del script actual, y null vuelve al proxy del sistema; incluye los tipos Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject y java.net.Proxy) y Http.ProxyObject ({ host, port, type })
 * `Mejora` Declaraciones incluidas actualizadas a @sm003/autojs6-dts 4.88.0
+* `Mejora` Las descargas interrumpidas de fuentes del editor se reintentan automáticamente, y tanto los reintentos como las descargas reiniciadas tras cancelarlas continúan desde donde se detuvo la descarga (descarga reanudable); si una URL de descarga falla, se usa la siguiente sin volver a descargar la parte ya recibida
 
 # v2.49.0
 

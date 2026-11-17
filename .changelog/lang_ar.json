@@ -6,7 +6,7 @@
   "changelog_label_dependency": "تبعية",
   "$data": {
     "v2.50.0": {
-      "released_date": "2026/11/05",
+      "released_date": "2026/11/17",
       "feature": [
         "تعريفات فئات الإضافات في settings.categories و settings.export (AutoJs6 6.8.1): تتضمن قائمة الفئات الإضافات الرسمية المكتشفة, مع kind بالقيمة `'plugin'` و label و available و reason, وتقبل export معرفات فئات مكونة من `plugin:` واسم الحزمة, وتضاف إلى skipped القيمة `'unavailable'`, مع الأنواع Settings.PluginCategoryId, Settings.PluginUnavailableReason",
         "الخاصية الاختيارية reason في AgentLinkStatus الذي تعيده ai.agent.status (AutoJs6 6.8.1), وتوضح سبب تعذر إنشاء الاتصال عندما تكون قيمة errorCode هي `'PLUGIN_UNAVAILABLE'`; تتضمن النوع AgentUnavailableReason",
@@ -24,7 +24,8 @@
         "أضيف الخيار proxy إلى RequestBuilderOptions في الوحدة http والخاصية proxy إلى ClientBuilderOptions (AutoJs6 6.8.1): يسري proxy في المستوى الأعلى على الطلب الحالي فقط, ويُحفظ client.proxy في العميل المشترك للسكربت الحالي, وتعيد القيمة null اتباع وكيل النظام; مع النوعين Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, و ProxyObject و java.net.Proxy) و Http.ProxyObject ({ host, port, type })"
       ],
       "improvement": [
-        "ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.88.0"
+        "ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.88.0",
+        "إعادة محاولة تنزيل خطوط المحرر تلقائيا عند انقطاعه, وتستأنف المحاولات والتنزيلات التي تبدأ من جديد بعد الإلغاء من حيث توقف التنزيل (استئناف التنزيل); وإذا فشل أحد روابط التنزيل يُستخدم الرابط التالي دون إعادة تنزيل الجزء الذي تم استلامه"
       ]
     },
     "v2.49.0": {

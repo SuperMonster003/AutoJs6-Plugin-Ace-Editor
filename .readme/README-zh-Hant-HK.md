@@ -186,7 +186,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `新增` settings.categories 與 settings.export 的插件分類宣告 (AutoJs6 6.8.1): 分類清單包含已發現的官方插件, kind 為 `'plugin'` 並帶 label, available 與 reason, export 接受 `plugin:` 加套件名稱的分類 id, skipped 的原因增加 `'unavailable'`, 含 Settings.PluginCategoryId, Settings.PluginUnavailableReason 類型
 * `新增` ai.agent.status 返回的 AgentLinkStatus 增加可選屬性 reason (AutoJs6 6.8.1), 在 errorCode 為 `'PLUGIN_UNAVAILABLE'` 時說明連接未能建立的原因; 含 AgentUnavailableReason 類型
@@ -203,6 +203,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 * `新增` images.getScreenCaptureOptions 返回的 ScreenCapturer.Options 增加 isShared (也可讀作 shared 屬性) 與 participants (AutoJs6 6.8.1), 分別表示屏幕捕獲會話是否由多個參與者共享及參與者數量; stopScreenCapture 說明共享會話在最後一個參與者退出後才釋放; 同步 Node.js / Bun 的 getScreenCaptureOptions 宣告 (返回值增加 shared 與 participants)
 * `新增` http 模塊的 RequestBuilderOptions 增加 proxy 選項, ClientBuilderOptions 增加 proxy 屬性 (AutoJs6 6.8.1): 頂層 proxy 只對本次請求生效, client.proxy 保存到當前腳本的共享客戶端, 設為 null 恢復跟隨系統代理; 含 Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject 與 java.net.Proxy) 與 Http.ProxyObject ({ host, port, type }) 類型
 * `優化` 捆綁聲明升級至 @sm003/autojs6-dts 4.88.0
+* `優化` 編輯器字體下載中斷時自動重試, 重試及取消後再次下載都從中斷處繼續 (斷點續傳); 一個下載網址失敗時改用下一個網址, 已下載的部分無需重新下載
 
 # v2.49.0
 

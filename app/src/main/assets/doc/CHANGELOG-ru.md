@@ -6,7 +6,7 @@
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `Функция` Объявления категорий плагинов settings.categories и settings.export (AutoJs6 6.8.1): список категорий включает найденные официальные плагины с kind `'plugin'`, label, available и reason, export принимает id категорий из `plugin:` и имени пакета, у skipped появилась причина `'unavailable'`, с типами Settings.PluginCategoryId, Settings.PluginUnavailableReason
 * `Функция` Необязательное свойство reason объекта AgentLinkStatus, возвращаемого ai.agent.status (AutoJs6 6.8.1), которое при errorCode `'PLUGIN_UNAVAILABLE'` указывает, почему не удалось установить соединение; включает тип AgentUnavailableReason
@@ -23,6 +23,7 @@
 * `Функция` ScreenCapturer.Options, возвращаемый images.getScreenCaptureOptions, получил isShared (читается и как свойство shared) и participants (AutoJs6 6.8.1): используют ли сеанс захвата экрана несколько участников и сколько их; в описании stopScreenCapture сказано, что общий сеанс освобождается только после выхода последнего участника; объявления getScreenCaptureOptions для Node.js / Bun синхронизированы (результат получил shared и participants)
 * `Функция` RequestBuilderOptions модуля http получил параметр proxy, а ClientBuilderOptions - свойство proxy (AutoJs6 6.8.1): proxy верхнего уровня действует только для текущего запроса, client.proxy сохраняется в общем клиенте текущего скрипта, null возвращает системный прокси; добавлены типы Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject и java.net.Proxy) и Http.ProxyObject ({ host, port, type })
 * `Улучшение` Встроенные объявления обновлены до @sm003/autojs6-dts 4.88.0
+* `Улучшение` Прерванные загрузки шрифтов редактора автоматически повторяются, причем повторные попытки и загрузки, запущенные снова после отмены, продолжаются с места остановки (докачка); если один URL загрузки не работает, используется следующий, а уже полученная часть не загружается заново
 
 # v2.49.0
 

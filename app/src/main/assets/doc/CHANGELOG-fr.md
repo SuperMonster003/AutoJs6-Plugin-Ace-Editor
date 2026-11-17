@@ -6,7 +6,7 @@
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `Fonctionnalité` Déclarations des catégories de plugins de settings.categories et settings.export (AutoJs6 6.8.1): la liste des catégories inclut les plugins officiels découverts, avec kind `'plugin'`, label, available et reason, export accepte les identifiants de catégorie formés de `plugin:` et d'un nom de paquet, et skipped gagne la raison `'unavailable'`, avec les types Settings.PluginCategoryId, Settings.PluginUnavailableReason
 * `Fonctionnalité` Propriété facultative reason de l'AgentLinkStatus renvoyé par ai.agent.status (AutoJs6 6.8.1), qui indique pourquoi la connexion n'a pas pu être établie lorsque errorCode vaut `'PLUGIN_UNAVAILABLE'`; inclut le type AgentUnavailableReason
@@ -23,6 +23,7 @@
 * `Fonctionnalité` ScreenCapturer.Options renvoyé par images.getScreenCaptureOptions gagne isShared (lisible aussi comme propriété shared) et participants (AutoJs6 6.8.1), qui indiquent si plusieurs participants partagent la session de capture d'écran et combien de participants elle compte; stopScreenCapture précise qu'une session partagée n'est libérée qu'après le départ de son dernier participant; les déclarations getScreenCaptureOptions de Node.js / Bun sont synchronisées (la valeur de retour gagne shared et participants)
 * `Fonctionnalité` RequestBuilderOptions du module http gagne l'option proxy et ClientBuilderOptions la propriété proxy (AutoJs6 6.8.1): le proxy de premier niveau ne s'applique qu'à la requête en cours, client.proxy est conservé dans le client partagé du script en cours, et null revient au proxy du système; avec les types Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject et java.net.Proxy) et Http.ProxyObject ({ host, port, type })
 * `Amélioration` Déclarations intégrées mises à niveau vers @sm003/autojs6-dts 4.88.0
+* `Amélioration` Les téléchargements interrompus des polices de l'éditeur sont relancés automatiquement, et les nouvelles tentatives comme les téléchargements relancés après une annulation reprennent là où le téléchargement s'est arrêté (reprise de téléchargement); quand une URL de téléchargement échoue, la suivante est utilisée sans retélécharger la partie déjà reçue
 
 # v2.49.0
 

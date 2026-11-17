@@ -6,7 +6,7 @@
   "changelog_label_dependency": "Dependency",
   "$data": {
     "v2.50.0": {
-      "released_date": "2026/11/05",
+      "released_date": "2026/11/17",
       "feature": [
         "Plugin category declarations of settings.categories and settings.export (AutoJs6 6.8.1): the category list includes the discovered official plugins, with kind `'plugin'`, label, available and reason, export accepts category ids made of `plugin:` and a package name, and skipped gains the reason `'unavailable'`, with the Settings.PluginCategoryId, Settings.PluginUnavailableReason types",
         "Optional property reason of the AgentLinkStatus returned by ai.agent.status (AutoJs6 6.8.1), which tells why the connection could not be made when errorCode is `'PLUGIN_UNAVAILABLE'`; includes the AgentUnavailableReason type",
@@ -24,7 +24,8 @@
         "RequestBuilderOptions of the http module gains the proxy option and ClientBuilderOptions the proxy property (AutoJs6 6.8.1): the top-level proxy applies to the current request only, client.proxy is kept in the shared client of the current script, and null returns to the system proxy; includes the Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject and java.net.Proxy) and Http.ProxyObject ({ host, port, type }) types"
       ],
       "improvement": [
-        "Bundled declarations upgraded to @sm003/autojs6-dts 4.88.0"
+        "Bundled declarations upgraded to @sm003/autojs6-dts 4.88.0",
+        "Editor font downloads are retried automatically when interrupted, and retries as well as downloads started again after a cancel continue from where the download stopped (resumable downloads); when one download URL fails, the next one is used without downloading the part already received again"
       ]
     },
     "v2.49.0": {

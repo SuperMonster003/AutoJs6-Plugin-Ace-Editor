@@ -6,7 +6,7 @@
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `기능` settings.categories 및 settings.export 플러그인 분류 선언 (AutoJs6 6.8.1): 분류 목록에 발견된 공식 플러그인을 포함하며 kind는 `'plugin'`이고 label, available, reason 포함, export는 `plugin:`과 패키지 이름으로 된 분류 id를 받고 skipped 사유에 `'unavailable'` 추가; Settings.PluginCategoryId, Settings.PluginUnavailableReason 타입 추가
 * `기능` ai.agent.status가 반환하는 AgentLinkStatus의 선택 속성 reason (AutoJs6 6.8.1), errorCode가 `'PLUGIN_UNAVAILABLE'`일 때 연결하지 못한 이유를 나타냄; AgentUnavailableReason 타입 포함
@@ -23,6 +23,7 @@
 * `기능` images.getScreenCaptureOptions 가 반환하는 ScreenCapturer.Options 에 isShared (shared 속성으로도 읽을 수 있음) 와 participants 추가 (AutoJs6 6.8.1), 여러 참여자가 화면 캡처 세션을 공유하는지와 참여자 수를 나타냄; stopScreenCapture 에 공유 세션은 마지막 참여자가 나간 뒤에 해제된다는 설명 추가; Node.js / Bun의 getScreenCaptureOptions 선언 동기화 (반환값에 shared 와 participants 추가)
 * `기능` http 모듈의 RequestBuilderOptions 에 proxy 옵션, ClientBuilderOptions 에 proxy 속성 추가 (AutoJs6 6.8.1): 최상위 proxy 는 현재 요청에만 적용되고, client.proxy 는 현재 스크립트의 공유 클라이언트에 저장되며, null 이면 시스템 프록시를 다시 따름; Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject 와 java.net.Proxy) 과 Http.ProxyObject ({ host, port, type }) 타입 포함
 * `개선` 번들 선언을 @sm003/autojs6-dts 4.88.0으로 업그레이드
+* `개선` 편집기 글꼴 다운로드가 중단되면 자동으로 다시 시도하며, 재시도와 취소 후 다시 시작한 다운로드는 중단된 위치부터 이어서 받음 (이어받기); 다운로드 URL 하나가 실패하면 다음 URL로 바꾸며 이미 받은 부분은 다시 받지 않음
 
 # v2.49.0
 

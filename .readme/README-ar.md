@@ -186,7 +186,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `ميزة` تعريفات فئات الإضافات في settings.categories و settings.export (AutoJs6 6.8.1): تتضمن قائمة الفئات الإضافات الرسمية المكتشفة, مع kind بالقيمة `'plugin'` و label و available و reason, وتقبل export معرفات فئات مكونة من `plugin:` واسم الحزمة, وتضاف إلى skipped القيمة `'unavailable'`, مع الأنواع Settings.PluginCategoryId, Settings.PluginUnavailableReason
 * `ميزة` الخاصية الاختيارية reason في AgentLinkStatus الذي تعيده ai.agent.status (AutoJs6 6.8.1), وتوضح سبب تعذر إنشاء الاتصال عندما تكون قيمة errorCode هي `'PLUGIN_UNAVAILABLE'`; تتضمن النوع AgentUnavailableReason
@@ -203,6 +203,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 * `ميزة` أضيف إلى ScreenCapturer.Options الذي تعيده images.getScreenCaptureOptions كل من isShared (ويمكن قراءتها أيضا كخاصية shared) و participants (AutoJs6 6.8.1), وتبينان ما إذا كان عدة مشاركين يتشاركون جلسة التقاط الشاشة وعدد المشاركين فيها; ويوضح وصف stopScreenCapture أن الجلسة المشتركة لا تحرر إلا بعد مغادرة آخر مشارك; ومزامنة تعريفات getScreenCaptureOptions في Node.js / Bun (مع إضافة shared و participants إلى القيمة المعادة)
 * `ميزة` أضيف الخيار proxy إلى RequestBuilderOptions في الوحدة http والخاصية proxy إلى ClientBuilderOptions (AutoJs6 6.8.1): يسري proxy في المستوى الأعلى على الطلب الحالي فقط, ويُحفظ client.proxy في العميل المشترك للسكربت الحالي, وتعيد القيمة null اتباع وكيل النظام; مع النوعين Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, و ProxyObject و java.net.Proxy) و Http.ProxyObject ({ host, port, type })
 * `تحسين` ترقية التصريحات المضمنة إلى @sm003/autojs6-dts 4.88.0
+* `تحسين` إعادة محاولة تنزيل خطوط المحرر تلقائيا عند انقطاعه, وتستأنف المحاولات والتنزيلات التي تبدأ من جديد بعد الإلغاء من حيث توقف التنزيل (استئناف التنزيل); وإذا فشل أحد روابط التنزيل يُستخدم الرابط التالي دون إعادة تنزيل الجزء الذي تم استلامه
 
 # v2.49.0
 

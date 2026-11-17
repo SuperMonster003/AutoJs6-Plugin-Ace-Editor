@@ -186,7 +186,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 
 # v2.50.0
 
-###### 2026/11/05
+###### 2026/11/17
 
 * `機能` settings.categories と settings.export のプラグインカテゴリ宣言 (AutoJs6 6.8.1): カテゴリ一覧に検出された公式プラグインを含め, kind は `'plugin'` で label, available, reason 付き, export は `plugin:` とパッケージ名からなるカテゴリ id を受け付け, skipped の理由に `'unavailable'` を追加; Settings.PluginCategoryId, Settings.PluginUnavailableReason 型を追加
 * `機能` ai.agent.status が返す AgentLinkStatus の省略可能なプロパティ reason (AutoJs6 6.8.1), errorCode が `'PLUGIN_UNAVAILABLE'` のとき接続できなかった理由を示す; AgentUnavailableReason 型を含む
@@ -203,6 +203,7 @@ adb install -r .\app\build\outputs\apk\debug\autojs6-plugin-ace-editor-v2.50.0-u
 * `機能` images.getScreenCaptureOptions が返す ScreenCapturer.Options に isShared (shared プロパティとしても読める) と participants を追加 (AutoJs6 6.8.1), 画面キャプチャセッションを複数の参加者が共有しているかと参加者数を表す; stopScreenCapture に共有セッションは最後の参加者が抜けてから解放されることを記載; Node.js / Bun の getScreenCaptureOptions 宣言を同期 (戻り値に shared と participants を追加)
 * `機能` http モジュールの RequestBuilderOptions に proxy オプション, ClientBuilderOptions に proxy プロパティを追加 (AutoJs6 6.8.1): トップレベルの proxy は現在のリクエストにだけ適用され, client.proxy は現在のスクリプトの共有クライアントに保存され, null でシステムのプロキシに戻る; Http.ProxyOption (`'host:port'`, `'http://...'`, `'socks5://...'`, `'direct'`, ProxyObject と java.net.Proxy) と Http.ProxyObject ({ host, port, type }) 型を含む
 * `改善` 同梱の宣言を @sm003/autojs6-dts 4.88.0 に更新
+* `改善` エディタのフォントのダウンロードが中断されたときに自動で再試行し, 再試行やキャンセル後の再ダウンロードは中断した位置から続行 (レジューム); ダウンロード URL の一つが失敗したときは次の URL に切り替え, ダウンロード済みの部分は再ダウンロードしない
 
 # v2.49.0
 
