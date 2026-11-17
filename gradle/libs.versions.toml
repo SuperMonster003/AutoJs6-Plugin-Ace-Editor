@@ -77,12 +77,14 @@ junit-jupiter = "5.13.4"
 junit-quickcheck-core = "1.0"
 junit-quickcheck-generators = "1.0"
 kotlin-csv-jvm = "1.10.0"
+kotlinx-coroutines-core = "1.9.0"
 leakcanary = "2.14"
 licensesdialog = "2.2.0"
 material = "1.13.0"
 materialprogressbar = "1.6.1"
 multidex = "2.0.1"
 opencc = "1.2.2"
+org-json = "20231013"
 paho-android-service = "1.1.1"
 paho-client-mqttv3 = "1.2.5"
 pinyin4j = "2.5.1"
@@ -155,6 +157,7 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 junit-quickcheck-core = { module = "com.pholser:junit-quickcheck-core", version.ref = "junit-quickcheck-core" }
 junit-quickcheck-generators = { module = "com.pholser:junit-quickcheck-generators", version.ref = "junit-quickcheck-generators" }
 kotlin-csv-jvm = { module = "com.github.doyaaaaaken:kotlin-csv-jvm", version.ref = "kotlin-csv-jvm" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
 ksp-version-codes-processor = { module = "logic:ksp-version-codes-processor" }
 leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 licensesdialog = { module = "de.psdev.licensesdialog:licensesdialog", version.ref = "licensesdialog" }
@@ -165,6 +168,7 @@ materialprogressbar = { module = "me.zhanghai.android.materialprogressbar:librar
 multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 opencc = { module = "com.github.brooklet:android-opencc", version.ref = "opencc" }
+org-json = { module = "org.json:json", version.ref = "org-json" }
 paho-android-service = { module = "org.eclipse.paho:org.eclipse.paho.android.service", version.ref = "paho-android-service" }
 paho-client-mqttv3 = { module = "org.eclipse.paho:org.eclipse.paho.client.mqttv3", version.ref = "paho-client-mqttv3" }
 pinyin4j = { module = "com.belerweb:pinyin4j", version.ref = "pinyin4j" }

@@ -4,37 +4,72 @@ import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.autojs.plugin.downloadkit.DownloadFailure
+import org.autojs.plugin.downloadkit.DownloadFailureKind
+import org.autojs.plugin.downloadkit.DownloadFetcher
+import org.autojs.plugin.downloadkit.DownloadListener
+import org.autojs.plugin.downloadkit.DownloadOutcome
+import org.autojs.plugin.downloadkit.DownloadRequest
+import org.autojs.plugin.downloadkit.DownloadStore
 import java.io.Closeable
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.security.MessageDigest
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 interface FontDownloadConnection : Closeable {
     val contentLength: Long
     val inputStream: InputStream
     fun cancel()
+
+    /**
+     * The HTTP status of the response; a connection that only gives a whole body keeps 200 (plugin-center P12).
+     * zh-CN: 应答的 HTTP 状态码; 只给出完整正文的连接保持 200 (plugin-center P12).
+     */
+    val responseCode: Int get() = HttpURLConnection.HTTP_OK
+
+    /** A response header ([name] in any case), null when absent. zh-CN: 应答头 ([name] 不区分大小写), 没有时为 null. */
+    fun header(name: String): String? = null
+
+    /** The URL that answered, after redirects; null when unknown. zh-CN: 重定向之后实际应答的 URL; 未知时为 null. */
+    val finalUrl: String? get() = null
 }
 
 fun interface FontDownloadSource {
     @Throws(IOException::class)
     fun open(url: String): FontDownloadConnection
+
+    /**
+     * Opens [url] with request [headers] (`Range`, `If-Range`, `Accept-Encoding`, ...) for the shared download kit
+     * (plugin-center P12, T24). A source that cannot send them keeps this default: the kit then sees whole 200 responses
+     * only and starts every attempt over.
+     * zh-CN: 带请求头 [headers] (`Range`, `If-Range`, `Accept-Encoding` 等) 打开 [url], 供共用下载库使用 (plugin-center P12, T24).
+     * 无法发送请求头的来源保留此默认实现: 共用库只会看到完整的 200 应答, 每次尝试都从头开始.
+     */
+    @Throws(IOException::class)
+    fun open(url: String, headers: Map<String, String>): FontDownloadConnection = open(url)
 }
 
 class OkHttpFontDownloadSource(
     private val client: OkHttpClient = OkHttpClient(),
 ) : FontDownloadSource {
-    override fun open(url: String): FontDownloadConnection {
-        val call = client.newCall(Request.Builder().url(url).get().build())
-        return OkHttpConnection(call, url)
+    override fun open(url: String): FontDownloadConnection = open(url, emptyMap())
+
+    override fun open(url: String, headers: Map<String, String>): FontDownloadConnection {
+        val request = Request.Builder().url(url).get().apply {
+            headers.forEach { (name, value) -> header(name, value) }
+        }.build()
+        return OkHttpConnection(client.newCall(request), url)
     }
 
     private class OkHttpConnection(
@@ -53,8 +88,18 @@ class OkHttpFontDownloadSource(
 
         override val inputStream: InputStream
             get() = stream ?: synchronized(lock) {
-                stream ?: response().body!!.byteStream().also { stream = it }
+                stream ?: response().let { received ->
+                    // Only the body of a successful answer is read. zh-CN: 只读取成功应答的正文.
+                    if (!received.isSuccessful) throw IOException("HTTP ${received.code} while downloading font from $url")
+                    received.body!!.byteStream()
+                }.also { stream = it }
             }
+
+        override val responseCode: Int get() = response().code
+
+        override fun header(name: String): String? = response().header(name)
+
+        override val finalUrl: String get() = response().request.url.toString()
 
         override fun cancel() {
             call.cancel()
@@ -75,11 +120,6 @@ class OkHttpFontDownloadSource(
                     call.cancel()
                     throw e
                 }
-                if (!received.isSuccessful) {
-                    val code = received.code
-                    received.close()
-                    throw IOException("HTTP $code while downloading font from $url")
-                }
                 if (received.body == null) {
                     received.close()
                     throw IOException("Empty font response body from $url")
@@ -87,6 +127,106 @@ class OkHttpFontDownloadSource(
                 received.also { response = it }
             }
         }
+    }
+}
+
+/**
+ * The connections the shared download kit opens through a [FontDownloadSource] (plugin-center P12, T24); [open] is the
+ * opener of a [DownloadFetcher]. [wanted] tells whether a live download still needs a URL; [cancel] cuts the connections
+ * of the URLs no live download needs, so a cancelled download stops at once and leaves its `.part` for the next one.
+ * zh-CN: 共用下载库经 [FontDownloadSource] 打开的连接 (plugin-center P12, T24); [open] 是 [DownloadFetcher] 的连接打开函数. [wanted] 判断是否仍有
+ * 进行中的下载需要某个 URL; [cancel] 切断不再被任何下载需要的 URL 的连接, 让取消的下载立即停止, 并把 `.part` 留给下一次.
+ */
+internal class FontSourceConnections(
+    private val source: FontDownloadSource,
+    private val wanted: (url: String) -> Boolean,
+) {
+    private val live = LinkedHashSet<Connection>()
+
+    fun open(url: URL): HttpURLConnection = Connection(url)
+
+    /** Cuts the connections of [urls] that no live download wants. zh-CN: 切断 [urls] 中不再被任何下载需要的连接. */
+    fun cancel(urls: Collection<String>) {
+        val candidates = synchronized(live) { live.filter { it.requested in urls } }
+        candidates.filterNot { wanted(it.requested) }.forEach(Connection::cut)
+    }
+
+    private inner class Connection(url: URL) : HttpURLConnection(url) {
+        val requested: String = url.toString()
+
+        @Volatile
+        private var opened: FontDownloadConnection? = null
+
+        @Volatile
+        private var cutRequested = false
+
+        override fun connect() {
+            if (connected) return
+            val headers = LinkedHashMap<String, String>()
+            requestProperties.forEach { (name, values) -> if (name != null) headers[name] = values.joinToString(",") }
+            opened = source.open(requested, headers)
+            connected = true
+            synchronized(live) { live += this }
+            // A download cancelled while this connection was being opened. zh-CN: 打开连接期间被取消的下载.
+            if (cutRequested || !wanted(requested)) cut()
+        }
+
+        fun cut() {
+            cutRequested = true
+            runCatching { opened?.cancel() }
+        }
+
+        private fun opened(): FontDownloadConnection {
+            connect()
+            return opened ?: throw IOException("Font download connection is closed")
+        }
+
+        override fun getResponseCode(): Int = opened().responseCode
+
+        override fun getResponseMessage(): String? = null
+
+        override fun getHeaderField(name: String?): String? = name?.let { opened?.header(it) }
+
+        override fun getHeaderField(n: Int): String? = null
+
+        override fun getHeaderFieldKey(n: Int): String? = null
+
+        override fun getContentLengthLong(): Long = runCatching { opened?.contentLength }.getOrNull() ?: -1L
+
+        override fun getContentLength(): Int = contentLengthLong.let { if (it > Int.MAX_VALUE) -1 else it.toInt() }
+
+        override fun getInputStream(): InputStream = opened().inputStream
+
+        override fun getURL(): URL = opened?.finalUrl?.let { runCatching { URL(it) }.getOrNull() } ?: super.getURL()
+
+        override fun usingProxy(): Boolean = false
+
+        override fun disconnect() {
+            synchronized(live) { live -= this }
+            runCatching { opened?.close() }
+        }
+    }
+
+    companion object {
+
+        /**
+         * Hands the verified [source] of the download store over to [target], the empty staging file of a model or font store:
+         * a rename on the same file system, a copy otherwise.
+         * zh-CN: 把下载仓库中已校验的 [source] 交给 [target] (模型或字体仓库的空暂存文件): 同一文件系统上改名, 否则复制.
+         */
+        @Throws(IOException::class)
+        fun moveInto(source: File, target: File) {
+            if (target.exists() && !target.delete()) throw IOException("Unable to replace the staging file ${target.name}")
+            if (source.renameTo(target)) return
+            source.inputStream().use { input ->
+                FileOutputStream(target).use { output ->
+                    input.copyTo(output)
+                    output.flush()
+                    output.fd.sync()
+                }
+            }
+        }
+
     }
 }
 
@@ -131,9 +271,20 @@ class FontMirrorsExhaustedException(fontId: String, failures: List<Throwable>) :
 }
 
 /**
- * Streams WOFF2 files into [FontStore]. Requests for the same id and digest share one transfer;
- * cancellation is per transfer-retaining subscriber and cancels the network call only after the
- * last such subscriber leaves. Non-retaining observers can attach without changing task lifetime.
+ * Downloads WOFF2 files into [FontStore]. Requests for the same id and digest share one transfer; cancellation is per
+ * transfer-retaining subscriber and cancels the network call only after the last such subscriber leaves. Non-retaining
+ * observers can attach without changing task lifetime.
+ *
+ * The transfer is the shared download kit (plugin-center P12, T19, T24): the mirrors of the artifact are tried in order,
+ * a cut transfer is retried (2 s, 5 s) and continued with `Range`, the next mirror continues the bytes already on disk, and
+ * a cancelled download leaves them in [downloadDirectory] for the next request. The kit is only a staging area (T20): the
+ * verified file is moved into a part file of [store] and installed through [FontStore.installVerifiedPart], which checks
+ * size, SHA-256 and the WOFF2 header again; the entry of the kit is then removed.
+ *
+ * zh-CN: 把 WOFF2 文件下载进 [FontStore]. 同一 id 与摘要的请求共享一个传输; 取消按持有传输的订阅者计算, 最后一个这样的订阅者离开后才取消网络请求;
+ * 不持有传输的观察者可以附加而不改变任务的生命周期. 传输由共用下载库完成 (plugin-center P12, T19, T24): 按顺序尝试产物的各个镜像, 中断的传输自动重试
+ * (2 s, 5 s) 并以 `Range` 续传, 下一个镜像接着磁盘上已有的字节继续, 取消的下载把字节留在 [downloadDirectory] 供下次请求使用. 共用库只作暂存 (T20):
+ * 校验通过的文件移入 [store] 的 part 文件, 经 [FontStore.installVerifiedPart] 再次检查大小, SHA-256 与 WOFF2 头后落库, 随后删除共用库中的条目.
  */
 class FontDownloader(
     private val store: FontStore,
@@ -141,13 +292,31 @@ class FontDownloader(
     private val workerExecutor: ExecutorService = defaultWorkerExecutor(),
     private val callbackExecutor: Executor = Executor(Runnable::run),
     private val commitValidator: FontDownloadCommitValidator = FontDownloadCommitValidator { },
+    downloadDirectory: File = File(store.rootDirectory, DOWNLOADS_DIRECTORY_NAME),
+    retryDelaysMillis: LongArray = DownloadFetcher.DEFAULT_RETRY_DELAYS_MILLIS,
+    log: (String) -> Unit = {},
 ) : Closeable {
     private val lock = Any()
     private val nextSubscriberId = AtomicLong()
     private val activeByFontId = hashMapOf<String, SharedTask>()
+    private val connections = FontSourceConnections(source, ::isWanted)
+
+    /** One store and one fetcher per download directory (download-kit.md 4.5). zh-CN: 每个下载目录一个仓库与一个取包器. */
+    internal val downloads = DownloadStore(downloadDirectory, DOWNLOAD_FILE_NAME, log = log, logName = "Ace font store")
+    private val fetcher = DownloadFetcher(downloads, retryDelaysMillis, connections::open, log = log, logName = "Ace font")
 
     @Volatile
     private var closed = false
+
+    init {
+        // Bytes of cancelled or failed downloads expire with the default limits (`.part` after 3 days).
+        // zh-CN: 取消或失败的下载留下的字节按默认期限过期 (`.part` 3 天).
+        try {
+            workerExecutor.execute { runCatching { downloads.cleanup() } }
+        } catch (_: RejectedExecutionException) {
+            // Cleaned up by the next downloader. zh-CN: 由下一个下载器清理.
+        }
+    }
 
     @JvmOverloads
     fun enqueue(font: RemoteFont, listener: FontDownloadListener? = null): FontDownloadSubscription {
@@ -242,15 +411,17 @@ class FontDownloader(
     /** Atomically cancels every subscriber for [fontId], unless durable commit has begun. */
     fun cancel(fontId: String): Boolean {
         val subscribers: List<Subscriber>
+        val task: SharedTask
         synchronized(lock) {
-            val task = activeByFontId[fontId] ?: return false
+            task = activeByFontId[fontId] ?: return false
             if (task.committing) return false
             task.cancelled = true
-            task.connection?.cancel()
+            task.cancelFlag.set(true)
             subscribers = task.subscribers.values.toList()
             task.subscribers.clear()
             if (activeByFontId[fontId] === task) activeByFontId.remove(fontId)
         }
+        connections.cancel(task.font.artifact.urls)
         subscribers.forEach { subscriber ->
             subscriber.future.cancelFromDownloader()
             dispatch(subscriber, FontDownloadEvent.Cancelled)
@@ -264,18 +435,21 @@ class FontDownloader(
 
     override fun close() {
         val subscribers = mutableListOf<Subscriber>()
+        val cancelledUrls = mutableListOf<String>()
         synchronized(lock) {
             if (closed) return
             closed = true
             val cancellable = activeByFontId.values.filterNot { it.committing }
             cancellable.forEach { task ->
                 task.cancelled = true
-                task.connection?.cancel()
+                task.cancelFlag.set(true)
+                cancelledUrls += task.font.artifact.urls
                 subscribers += task.subscribers.values
                 task.subscribers.clear()
                 if (activeByFontId[task.font.id] === task) activeByFontId.remove(task.font.id)
             }
         }
+        connections.cancel(cancelledUrls)
         subscribers.forEach { subscriber ->
             subscriber.future.cancelFromDownloader()
             dispatch(subscriber, FontDownloadEvent.Cancelled)
@@ -288,29 +462,21 @@ class FontDownloader(
         var partFile: File? = null
         try {
             checkNotCancelled(task)
-            partFile = store.createPartFile(task.font)
-            val failures = mutableListOf<Throwable>()
-            var downloaded = false
-            for (url in task.font.artifact.urls) {
-                checkNotCancelled(task)
-                runCatching {
-                    // FileOutputStream truncates the payload for each mirror. The companion lease
-                    // remains locked for the transfer's entire lifetime.
-                    streamUrl(task, url, partFile)
-                }.onSuccess {
-                    downloaded = true
-                }.onFailure { failure ->
-                    if (failure is CancellationException || isCancelled(task)) throw CancellationException()
-                    failures += failure
-                }
-                if (downloaded) break
-            }
-            if (!downloaded) throw FontMirrorsExhaustedException(task.font.id, failures)
+            val ready = fetch(task)
             beginCommit(task)
-            val committedPart = requireNotNull(partFile)
+            val part = store.createPartFile(task.font)
+            partFile = part
+            downloads.usingKey(ready.key) {
+                try {
+                    FontSourceConnections.moveInto(ready.file, part)
+                } finally {
+                    // The download store is only a staging area (T20). zh-CN: 下载仓库只作暂存 (T20).
+                    downloads.remove(ready.key)
+                }
+            }
             val installed = store.withCatalogAuthorizationLock {
                 commitValidator.validate(task.font)
-                store.installVerifiedPart(task.font, committedPart)
+                store.installVerifiedPart(task.font, part)
             }
             partFile = null
             finishSuccess(task, installed)
@@ -327,72 +493,57 @@ class FontDownloader(
             finishFailure(task, e)
         } finally {
             partFile?.let(store::discardPart)
-            synchronized(lock) { task.connection = null }
         }
     }
 
-    private fun streamUrl(task: SharedTask, url: String, partFile: File) {
+    /**
+     * Fetches the artifact through the shared download kit: Ready, or a [CancellationException], or a
+     * [FontMirrorsExhaustedException] listing the reason of every mirror.
+     * zh-CN: 经共用下载库获取产物: 返回 Ready, 或抛出 [CancellationException], 或抛出列出每个镜像原因的 [FontMirrorsExhaustedException].
+     */
+    private fun fetch(task: SharedTask): DownloadOutcome.Ready {
         val artifact = task.font.artifact
-        val connection = source.open(url)
-        synchronized(lock) {
-            task.connection = connection
-            if (task.cancelled || !task.hasRetainingSubscribers()) connection.cancel()
-        }
-        connection.use {
-            checkNotCancelled(task)
-            if (connection.contentLength >= 0 && connection.contentLength != artifact.sizeBytes) {
-                throw FontFileValidationException(
-                    "Font Content-Length mismatch: expected ${artifact.sizeBytes}, received ${connection.contentLength}",
-                )
+        notify(task, FontDownloadEvent.Progress(0, artifact.sizeBytes))
+        val request = DownloadRequest(artifact.urls, artifact.sha256, artifact.sizeBytes)
+        val listener = object : DownloadListener {
+            private var started = false
+
+            override suspend fun onProgress(downloadedBytes: Long, totalBytes: Long) {
+                // The first report is where the transfer starts, e.g. the bytes of a resumed part.
+                // zh-CN: 第一次报告的是传输的起点, 例如续传的 part 已有的字节数.
+                reportProgress(task, downloadedBytes, immediate = !started)
+                started = true
             }
-            val digest = MessageDigest.getInstance("SHA-256")
-            val header = ByteArray(FontFileVerifier.WOFF2_HEADER_SIZE.toInt())
-            var headerBytes = 0
-            var downloaded = 0L
-            var lastReported = 0L
-            FileOutputStream(partFile).use { output ->
-                val buffer = ByteArray(DOWNLOAD_BUFFER_BYTES)
-                notify(task, FontDownloadEvent.Progress(0, artifact.sizeBytes))
-                while (true) {
-                    checkNotCancelled(task)
-                    val read = connection.inputStream.read(buffer)
-                    if (read < 0) break
-                    if (read == 0) continue
-                    downloaded += read
-                    if (downloaded > artifact.sizeBytes || downloaded > FontFileVerifier.MAX_FONT_BYTES) {
-                        throw FontFileValidationException("Downloaded font exceeds its declared size")
-                    }
-                    output.write(buffer, 0, read)
-                    digest.update(buffer, 0, read)
-                    if (headerBytes < header.size) {
-                        val copy = minOf(read, header.size - headerBytes)
-                        buffer.copyInto(header, headerBytes, 0, copy)
-                        headerBytes += copy
-                    }
-                    if (downloaded - lastReported >= PROGRESS_GRANULARITY_BYTES || downloaded == artifact.sizeBytes) {
-                        lastReported = downloaded
-                        notify(task, FontDownloadEvent.Progress(downloaded, artifact.sizeBytes))
-                    }
-                }
-                output.flush()
-                output.fd.sync()
-            }
-            FontFileVerifier.validateResult(
-                header = header,
-                headerBytes = headerBytes,
-                total = downloaded,
-                digest = digest.digest(),
-                expectedSize = artifact.sizeBytes,
-                expectedSha256 = artifact.sha256,
-            )
         }
+        return when (val outcome = fetcher.fetchBlocking(request, task.cancelFlag, listener)) {
+            is DownloadOutcome.Ready -> outcome.also { reportProgress(task, artifact.sizeBytes) }
+            is DownloadOutcome.Failed -> throw FontMirrorsExhaustedException(task.font.id, mirrorFailures(outcome.failure))
+            DownloadOutcome.Cancelled -> throw CancellationException()
+        }
+    }
+
+    /**
+     * Progress never goes back; it is reported in steps of 64 KiB, at the end, and [immediate]ly when asked.
+     * zh-CN: 进度不回退; 每 64 KiB, 结束时, 以及 [immediate] 为真时报告.
+     */
+    private fun reportProgress(task: SharedTask, downloaded: Long, immediate: Boolean = false) {
+        val size = task.font.artifact.sizeBytes
+        val bytes = downloaded.coerceIn(0L, size)
         synchronized(lock) {
-            if (task.connection === connection) task.connection = null
+            val last = task.lastProgress?.bytesDownloaded ?: -1L
+            if (bytes <= last) return
+            if (!immediate && bytes < size && last >= 0 && bytes - last < PROGRESS_GRANULARITY_BYTES) return
         }
+        notify(task, FontDownloadEvent.Progress(bytes, size))
+    }
+
+    private fun isWanted(url: String): Boolean = synchronized(lock) {
+        activeByFontId.values.any { !it.cancelled && it.hasRetainingSubscribers() && url in it.font.artifact.urls }
     }
 
     private fun cancelSubscriber(task: SharedTask, subscriberId: Long): Boolean {
         val subscriber: Subscriber
+        var cut = false
         synchronized(lock) {
             val current = task.subscribers[subscriberId] ?: return false
             if (task.committing && current.retainsTransfer) return false
@@ -400,10 +551,12 @@ class FontDownloader(
             subscriber = current
             if (subscriber.retainsTransfer && !task.hasRetainingSubscribers()) {
                 task.cancelled = true
-                task.connection?.cancel()
+                task.cancelFlag.set(true)
+                cut = true
                 if (activeByFontId[task.font.id] === task) activeByFontId.remove(task.font.id)
             }
         }
+        if (cut) connections.cancel(task.font.artifact.urls)
         val cancelled = subscriber.future.cancelFromDownloader()
         dispatch(subscriber, FontDownloadEvent.Cancelled)
         return cancelled
@@ -487,7 +640,9 @@ class FontDownloader(
 
     private class SharedTask(val font: RemoteFont) {
         val subscribers = linkedMapOf<Long, Subscriber>()
-        var connection: FontDownloadConnection? = null
+
+        /** Leaves the transfer of the download kit. zh-CN: 离开共用下载库的传输. */
+        val cancelFlag = AtomicBoolean(false)
         var cancelled: Boolean = false
         var committing: Boolean = false
         var lastProgress: FontDownloadEvent.Progress? = null
@@ -514,11 +669,34 @@ class FontDownloader(
     }
 
     companion object {
-        private const val DOWNLOAD_BUFFER_BYTES = 64 * 1024
         private const val PROGRESS_GRANULARITY_BYTES = 64L * 1024L
+
+        /** The download store under the font store root; the leading dot keeps it apart from the font directories. */
+        internal const val DOWNLOADS_DIRECTORY_NAME = ".downloads"
+        private const val DOWNLOAD_FILE_NAME = "font.woff2"
 
         private fun defaultWorkerExecutor(): ExecutorService = Executors.newFixedThreadPool(2) { runnable ->
             Thread(runnable, "AceFontDownloader").apply { isDaemon = true }
         }
+
+        /**
+         * The reason of every mirror, in order, as the exceptions of the former downloader: a size or SHA-256 mismatch is a
+         * [FontFileValidationException] (an integrity failure for the font dialog), an HTTP error or a network error an
+         * [IOException].
+         * zh-CN: 按顺序给出每个镜像的原因, 用原下载器的异常表示: 大小或 SHA-256 不符为 [FontFileValidationException] (字体对话框据此显示完整性失败),
+         * HTTP 错误与网络错误为 [IOException].
+         */
+        private fun mirrorFailures(failure: DownloadFailure): List<Throwable> =
+            failure.mirrors.ifEmpty { listOf(failure.toMirror()) }.map { mirror ->
+                val where = mirror.host ?: mirror.url
+                when (mirror.kind) {
+                    DownloadFailureKind.SIZE_MISMATCH -> FontFileValidationException("Font size mismatch from $where: ${mirror.message}")
+                    DownloadFailureKind.CHECKSUM_MISMATCH -> FontFileValidationException("Font SHA-256 mismatch from $where")
+                    DownloadFailureKind.HTTP_STATUS -> IOException("HTTP ${mirror.httpStatus} while downloading font from ${mirror.url}")
+                    DownloadFailureKind.SECURITY -> SecurityException("${mirror.message} (font from ${mirror.url})")
+                    DownloadFailureKind.NETWORK -> IOException("${mirror.message} (font from ${mirror.url}, ${mirror.retries} retries)")
+                    DownloadFailureKind.OTHER -> FontDownloadException("${mirror.message} (font from ${mirror.url})")
+                }
+            }
     }
 }

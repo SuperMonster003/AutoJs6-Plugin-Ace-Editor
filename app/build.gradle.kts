@@ -673,6 +673,15 @@ dependencies {
     implementation(files("$rootDir/libs/common-plugin-api.aar"))
     compileOnly(files("$rootDir/libs/editor-api.aar"))
     testImplementation(files("$rootDir/libs/editor-api.aar"))
+    // Shared download kit of the official plugins (AutoJs6 plugin-center roadmap phase 2, D22 / D26 / T31): the release AAR
+    // of AutoJs6 `:plugin-api:download-kit:assembleRelease` at b38fb2c46 (the last commit of plugin-api/download-kit),
+    // 172207 bytes, SHA-256 31d4cdd169c6d05f08066716e95307576ca4976525257dbe023802cbc5e81364. It carries no transitive
+    // dependencies: kotlinx-coroutines-core is declared below, org.json comes from the platform (a real one for JVM tests).
+    // zh-CN: 官方插件共用下载库 (AutoJs6 plugin-center 路线图第二期, D22 / D26 / T31): AutoJs6 `b38fb2c46` (plugin-api/download-kit 的最近提交) 的
+    // `:plugin-api:download-kit:assembleRelease` 产出的 release AAR, 172207 字节, SHA-256 见上. 不带传递依赖: 下方声明 kotlinx-coroutines-core,
+    // org.json 由平台提供 (JVM 测试用真实实现).
+    implementation(files("$rootDir/libs/download-kit.aar"))
+    implementation(libs.kotlinx.coroutines.core)
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.21")
     implementation("org.jetbrains.kotlin:kotlin-parcelize-runtime:2.2.21")
@@ -684,6 +693,7 @@ dependencies {
     implementation(libs.webkit)
 
     testImplementation(libs.junit)
+    testImplementation(libs.org.json)
     androidTestImplementation(libs.test.espresso.core)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.runner)

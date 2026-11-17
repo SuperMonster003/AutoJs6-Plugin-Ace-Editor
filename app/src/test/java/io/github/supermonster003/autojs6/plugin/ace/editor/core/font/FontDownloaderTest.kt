@@ -277,6 +277,10 @@ class FontDownloaderTest {
             assertTrue(cancelled.cancel())
 
             val retry = downloader.enqueue(font)
+            // P12 (T5 of the shared download kit): the retry gets a task of its own but may join the transfer that is still
+            // running for the same file; once the stuck connection ends, that transfer retries with a new connection.
+            // zh-CN: P12 (共用下载库的 T5): 重试得到自己的任务, 但可能并入同一文件仍在运行的传输; 卡住的连接结束后, 该传输以新的连接重试.
+            first.release.countDown()
             assertNotNull(retry.future.get(5, TimeUnit.SECONDS))
             assertEquals(2, opens.get())
         } finally {
