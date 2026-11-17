@@ -7625,7 +7625,7 @@ declare module "autojs6:bun-host" {
                 /** Replace an existing `output`; without `output`, replace the source. Default false. */
                 overwrite?: boolean;
                 format?: Format;
-                /** 1 to 100; default 92. */
+                /** 1 to 100; default 92. Given for PNG output it asks for lossy PNG (3-Maple Image 3.5.0 and later); left out, PNG stays lossless. */
                 quality?: number;
                 /** Keep the capture details of the source; default false. */
                 keepExif?: boolean;
@@ -7640,7 +7640,7 @@ declare module "autojs6:bun-host" {
             interface ConvertOptions extends OutputOptions {
                 /** WebP only; lossy below Android 11. */
                 lossless?: boolean;
-                /** Largest file size in bytes; JPEG and lossy WebP only, not with `quality`. */
+                /** Largest file size in bytes; JPEG, lossy WebP and PNG (written lossy; 3-Maple Image 3.5.0 and later), not with `quality`. */
                 targetBytes?: number;
                 /** Inferred from `percent`, `longEdge` or `width` / `height` when absent; default `'original'`. */
                 sizeMode?: SizeMode;
